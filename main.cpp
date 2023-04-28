@@ -18,7 +18,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		MyEngine::BeginFrame();
 
-		MyEngine::DrawTriangle();
+		MyEngine::DrawTriangle(
+			{ },
+			{},
+			{},
+			0xFFFFFFFF
+		);
 
 		MyEngine::EndFrame();
 	}
