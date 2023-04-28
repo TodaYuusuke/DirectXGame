@@ -1,21 +1,4 @@
 #include "MyEngine.h"
-#include <cstdint>
-#include <format>
-
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <cassert>
-
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
-
-#include <dxgidebug.h>
-#pragma comment(lib, "dxguid.lib")
-
-#include <dxcapi.h>
-#pragma comment(lib,"dxcompiler.lib")
-
-#include "math/Vector4.h"
 
 /// <summary>
 /// ライブラリの初期化
@@ -53,7 +36,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 
 	// ウィンドウの生成
-	HWND hwnd = CreateWindow(
+	hwnd = CreateWindow(
 		wc.lpszClassName,				// 利用するクラス名
 		ConvertString(title).c_str(),	// タイトルバーの文字（何でもいい）
 		WS_OVERLAPPEDWINDOW,			// よく見るウィンドウスタイル
@@ -73,7 +56,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 #ifdef _DEBUG
 
-	ID3D12Debug1* debugController = nullptr;
+	debugController = nullptr;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		// デバッグレイヤーを有効化する
 		debugController->EnableDebugLayer();
@@ -86,7 +69,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region DirectX
 
 	// DXGIファクトリーの生成
-	IDXGIFactory7* dxgiFactory = nullptr;
+	dxgiFactory = nullptr;
 	// HRESULTはWindow系のエラーコードであり、
 	// 関数が成功したかどうかをSUCCEEDEDマクロで判定できる
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
@@ -95,7 +78,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 
 	// 使用するアダプタ用の変数
-	IDXGIAdapter4* useAdapter = nullptr;
+	useAdapter = nullptr;
 	// 良い順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; i++) {
 		// アダプターの情報を取得する
@@ -114,7 +97,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	assert(useAdapter != nullptr);
 
 
-	ID3D12Device* device = nullptr;
+	device = nullptr;
 	// 機能レベルとログ出力用の文字列
 	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_12_2, D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0,
@@ -173,20 +156,20 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region コマンドキュー生成
 
 	// コマンドキューを生成する
-	ID3D12CommandQueue* commandQueue = nullptr;
+	commandQueue = nullptr;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	// コマンドキューの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	// コマンドアロケーターを生成する
-	ID3D12CommandAllocator* commandAllocateor = nullptr;
+	commandAllocateor = nullptr;
 	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocateor));
 	// コマンドアロケーターの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	// コマンドリストを生成する
-	ID3D12GraphicsCommandList* commandList = nullptr;
+	commandList = nullptr;
 	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocateor, nullptr, IID_PPV_ARGS(&commandList));
 	// コマンドリストの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -196,7 +179,6 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region ダブルバッファリング
 
 	// スワップチェーンを生成する
-	IDXGISwapChain4* swapChain = nullptr;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	swapChainDesc.Width = kClientwidth;								// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
 	swapChainDesc.Height = kClientheight;							// 画面の高さ。ウィンドウのクライアント領域を同じものにしておく 
@@ -206,6 +188,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	swapChainDesc.BufferCount = 2;									// ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		// モニタにうつしたら、中身を廃棄
 	// コマンドキュー、ウィンドウハンドル、設定を渡して生成する
+	swapChain = nullptr;
 	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, hwnd, &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 
@@ -214,7 +197,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region ディスクリプタとデスクリプタヒープ
 
 	// ディスクリプタヒープを生成
-	ID3D12DescriptorHeap* rtvDescriptorHeep = nullptr;
+	rtvDescriptorHeep = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeepDesc{};
 	rtvDescriptorHeepDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	// レンダーターゲットビュー用
 	rtvDescriptorHeepDesc.NumDescriptors = 2;						// ダブルバッファ用に2つ、多くても別にかまわない
@@ -224,7 +207,6 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 
 	// SwapChainからResourceを引っ張ってくる
-	ID3D12Resource* swapChainResources[2] = { nullptr };
 	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
 	// うまく取得できなければ起動できない
 	assert(SUCCEEDED(hr));
@@ -239,7 +221,6 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	// ディスクリプタの先頭を取得する
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeep->GetCPUDescriptorHandleForHeapStart();
 	// RTVを2つ作るのでディスクリプタを2つ用意
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
 	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をこちらで指定してあげる必要がある
 	rtvHandles[0] = rtvStartHandle;
 	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
@@ -253,13 +234,13 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region FenceとEventを生成
 
 	// 初期値0でFenceを作る
-	ID3D12Fence* fence = nullptr;
-	uint64_t fenceValue = 0;
+	fence = nullptr;
+	fenceValue = 0;
 	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	assert(SUCCEEDED(hr));
 
 	//FenceのSignalを待つためのイベントを作成する
-	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	assert(fenceEvent != nullptr);
 
 #pragma endregion
@@ -288,15 +269,15 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	// シリアライズしてバイナリにする
-	ID3DBlob* signatureBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
+	signatureBlob = nullptr;
+	errorBlob = nullptr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	// バイナリを元に生成
-	ID3D12RootSignature* rootSignature = nullptr;
+	rootSignature = nullptr;
 	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(hr));
 
@@ -339,12 +320,12 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region PixelShader
 
 	// シェーダーをコンパイルする
-	IDxcBlob* pixelShaderBlob = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
+	pixelShaderBlob = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 
 #pragma endregion
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;	// RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;	// InputLayout
 	graphicsPipelineStateDesc.VS = { vertexShaderBlob->GetBufferPointer(),vertexShaderBlob->GetBufferSize() };	// VertexShader
@@ -360,7 +341,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// 実際に生成
-	ID3D12PipelineState* graphicsPipelineState = nullptr;
+	graphicsPipelineState = nullptr;
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
@@ -384,54 +365,26 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	// バッファの場合はこれにする決まり
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 実際に頂点リソースを作る
-	ID3D12Resource* vertexResource = nullptr;
+	vertexResource = nullptr;
 	hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
-
-#pragma endregion
-
-#pragma region VertexBufferViewを作成
-
-	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	// リソースの先頭アドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	// 使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
-	// 1頂点あたりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
-
-#pragma endregion
-
-#pragma region Resourceにデータを書き込む
-
-	// 頂点リソースにデータを書き込む
-	Vector4* vertexData = nullptr;
-	// 書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	// 左下
-	vertexData[0] = { -0.5f,-0.5f,0.0f,1.0f };
-	// 上
-	vertexData[1] = { 0.0f,0.5f,0.0f,1.0f };
-	// 右下
-	vertexData[2] = { 0.5f,-0.5f,0.0f,1.0f };
 
 #pragma endregion
 
 #pragma region ViewportとScissor(シザー)
 
 	// ビューポート
-	D3D12_VIEWPORT viewport{};
+	viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = kClientwidth;
-	viewport.Height = kClientheight;
+	viewport.Width = (float)kClientwidth;
+	viewport.Height = (float)kClientheight;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
 	// シザー矩形
-	D3D12_RECT scissorRect{};
+	scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
 	scissorRect.right = kClientwidth;
@@ -469,7 +422,6 @@ void MyEngine::BeginFrame() {
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 
 	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier{};
 	// 今回のバリアはTransition
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	// Noneにしておく
@@ -489,6 +441,9 @@ void MyEngine::BeginFrame() {
 	// 指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	// 青っぽい色。RGBAの順
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
+
+	commandList->RSSetViewports(1, &viewport);			// viewportを設定
+	commandList->RSSetScissorRects(1, &scissorRect);	// Scirssorを設定
 }
 /// <summary>
 /// フレーム終了
@@ -504,7 +459,7 @@ void MyEngine::EndFrame() {
 
 
 	// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
-	hr = commandList->Close();
+	HRESULT hr = commandList->Close();
 	assert(SUCCEEDED(hr));
 
 
@@ -580,8 +535,52 @@ void MyEngine::Finalize() {
 	}
 }
 
+#pragma region 描画関数
 
+void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
 
+#pragma region VertexBufferViewを作成
+
+	// 頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	// リソースの先頭アドレスから使う
+	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	// 使用するリソースのサイズは頂点3つ分のサイズ
+	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
+	// 1頂点あたりのサイズ
+	vertexBufferView.StrideInBytes = sizeof(Vector4);
+
+#pragma endregion
+
+#pragma region Resourceにデータを書き込む
+
+	// 頂点リソースにデータを書き込む
+	Vector4* vertexData = nullptr;
+	// 書き込むためのアドレスを取得
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	// 左下
+	vertexData[0] = { pos1.x,pos1.y,pos1.z,1.0f };
+	// 上
+	vertexData[1] = { pos2.x,pos2.y,pos2.z,1.0f };
+	// 右下
+	vertexData[2] = { pos3.x,pos3.y,pos3.z,1.0f };
+
+#pragma endregion
+
+	// コマンドを積む
+	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
+	commandList->SetGraphicsRootSignature(rootSignature);
+	commandList->SetPipelineState(graphicsPipelineState);		// PSOを設定
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);	// VBVを設定
+	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
+	commandList->DrawInstanced(3, 1, 0, 0);
+}
+
+#pragma endregion
+
+#pragma region その他関数
 //ーーーーーーーーーーーーーー//
 //　　　　その他の関数　　　　//
 //ーーーーーーーーーーーーーー//
@@ -706,3 +705,63 @@ IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, ID
 	// 実行用のバイナリを返却
 	return shaderBlob;
 }
+#pragma endregion
+
+
+#pragma region メンバ変数
+//ーーーーーーーーーーーーー//
+//　　　　メンバ変数　　　　//
+//ーーーーーーーーーーーーー//
+
+// ウィンドウ
+HWND MyEngine::hwnd;
+
+// フェンス
+ID3D12Fence* MyEngine::fence;
+uint16_t MyEngine::fenceValue;
+// フェンスイベント
+HANDLE MyEngine::fenceEvent;
+// コマンドキュー
+ID3D12CommandQueue* MyEngine::commandQueue;
+// コマンドアロケーター
+ID3D12CommandAllocator* MyEngine::commandAllocateor;
+// コマンドリスト
+ID3D12GraphicsCommandList* MyEngine::commandList;
+// スワップチェーン
+IDXGISwapChain4* MyEngine::swapChain;
+// ディスクリプタ
+D3D12_CPU_DESCRIPTOR_HANDLE MyEngine::rtvHandles[2];
+// ディスクリプタヒープ
+ID3D12DescriptorHeap* MyEngine::rtvDescriptorHeep;
+// スワップチェーンリソース
+ID3D12Resource* MyEngine::swapChainResources[2];
+// トランジションバリア
+D3D12_RESOURCE_BARRIER MyEngine::barrier;
+// デバイス
+ID3D12Device* MyEngine::device;
+// 使用するアダプタ用の変数
+IDXGIAdapter4* MyEngine::useAdapter;
+// ファクトリーの生成
+IDXGIFactory7* MyEngine::dxgiFactory;
+// 実際に頂点リソースを作る
+ID3D12Resource* MyEngine::vertexResource;
+// グラフィックスパイプライン
+ID3D12PipelineState* MyEngine::graphicsPipelineState;
+// シリアライズ
+ID3DBlob* MyEngine::signatureBlob;
+ID3DBlob* MyEngine::errorBlob;
+// RootSignature
+ID3D12RootSignature* MyEngine::rootSignature;
+// PixelShader
+IDxcBlob* MyEngine::pixelShaderBlob;
+// VertexShader
+IDxcBlob* MyEngine::vertexShaderBlob;
+
+// ビューポート
+D3D12_VIEWPORT MyEngine::viewport;
+// シザー矩形
+D3D12_RECT MyEngine::scissorRect;
+
+// DEBUG
+ID3D12Debug1* MyEngine::debugController;
+#pragma endregion
