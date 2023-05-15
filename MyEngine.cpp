@@ -8,51 +8,11 @@
 /// <param name="height">ウィンドウの縦幅</param>
 void MyEngine::Initialize(const char* title, int width, int height) {
 
-#pragma region ウィンドウ生成
+	// インスタンスを受け取る
+	win_ = Win::GetInstance();
 
-	WNDCLASS wc{};
-	// ウィンドウプロシージャ
-	wc.lpfnWndProc = WindowProc;
-	// ウィンドウクラス名(なんでもいい) ... const charをLPCWSTRに変換できないのので一度放置
-	wc.lpszClassName = L"CG2WindowClass";
-	// インスタンスハンドル
-	wc.hInstance = GetModuleHandle(nullptr);
-	// カーソル
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-
-	// ウィンドウクラスを登録する
-	RegisterClass(&wc);
-
-
-	// クライアント領域のサイズ
-	const int32_t kClientwidth = width;
-	const int32_t kClientheight = height;
-
-	// ウィンドウサイズを表す構造体にクライアント領域を入れる
-	RECT wrc = { 0,0,kClientwidth,kClientheight };
-
-	// クライアント領域を元に実際のサイズにwrcを変更してもらう
-	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
-
-
-	// ウィンドウの生成
-	hwnd = CreateWindow(
-		wc.lpszClassName,				// 利用するクラス名
-		ConvertString(title).c_str(),	// タイトルバーの文字（何でもいい）
-		WS_OVERLAPPEDWINDOW,			// よく見るウィンドウスタイル
-		CW_USEDEFAULT,					// 表示X座標（Windowsに任せる）
-		CW_USEDEFAULT,					// 表示Y座標（WindowsOSに任せる）
-		wrc.right - wrc.left,			// ウィンドウ横幅
-		wrc.bottom - wrc.top,			// ウィンドウ縦幅
-		nullptr,						// 親ウィンドウハンドル
-		nullptr,						// メニューハンドル
-		wc.hInstance,					// インスタンスハンドル
-		nullptr);						// オプション
-
-	// ウィンドウを表示する
-	ShowWindow(hwnd, SW_SHOW);
-
-#pragma endregion
+	// 初期化
+	win_->Initialize(title, width, height);
 
 #ifdef _DEBUG
 
@@ -180,8 +140,8 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 	// スワップチェーンを生成する
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	swapChainDesc.Width = kClientwidth;								// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = kClientheight;							// 画面の高さ。ウィンドウのクライアント領域を同じものにしておく 
+	swapChainDesc.Width = win_->GetClientWidth();								// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
+	swapChainDesc.Height = win_->GetClientHeight();							// 画面の高さ。ウィンドウのクライアント領域を同じものにしておく 
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;				// 色の形式
 	swapChainDesc.SampleDesc.Count = 1;								// マルチサンプルしない
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// 描画のターゲットとして利用する
@@ -189,7 +149,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		// モニタにうつしたら、中身を廃棄
 	// コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	swapChain = nullptr;
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, hwnd, &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, win_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 
 #pragma endregion
@@ -376,8 +336,8 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	// ビューポート
 	viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = (float)kClientwidth;
-	viewport.Height = (float)kClientheight;
+	viewport.Width = (float)win_->GetClientWidth();
+	viewport.Height = (float)win_->GetClientHeight();
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -387,9 +347,9 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = kClientwidth;
+	scissorRect.right = win_->GetClientWidth();
 	scissorRect.top = 0;
-	scissorRect.bottom = kClientheight;
+	scissorRect.bottom = win_->GetClientHeight();
 
 #pragma endregion
 
@@ -418,17 +378,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 /// </summary>
 /// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
 bool MyEngine::ProcessMessage() {
-	MSG msg{};
-	if(msg.message != WM_QUIT) {
-		// Windowにメッセージが来てたら最優先で処理させる
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		return true;
-	}
-
-	return false;
+	return !win_->ProcessMessage();
 }
 
 
@@ -547,7 +497,7 @@ void MyEngine::Finalize() {
 #ifdef _DEBUG
 	debugController->Release();
 #endif // _DEBUG
-	CloseWindow(hwnd);
+	CloseWindow(win_->GetHWND());
 
 	// リソースリークチェック
 	IDXGIDebug1* debug;
@@ -605,41 +555,13 @@ void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned i
 //　　　　その他の関数　　　　//
 //ーーーーーーーーーーーーーー//
 
-// ウィンドウプロシージャ
-LRESULT CALLBACK MyEngine::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
-	// メッセージに応じてゲーム固有の処理を行う
-	switch (msg)
-	{
-		// ウィンドウが破棄された
-		case WM_DESTROY:
-			// OSに対して、アプリの終了を伝える
-			PostQuitMessage(0);
-			break;
-	}
 
-	return DefWindowProc(hwnd_, msg, wparam, lparam);
-}
 
 // ログの表示
 void MyEngine::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
 
-// string -> wstringへの変換
-std::wstring MyEngine::ConvertString(const std::string& str) {
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-
-	return result;
-}
 
 // wstring -> stringへの変換
 std::string MyEngine::ConvertString(const std::wstring& str) {
@@ -734,8 +656,8 @@ IDxcBlob* MyEngine::CompileShader(const std::wstring& filePath, const wchar_t* p
 //　　　　メンバ変数　　　　//
 //ーーーーーーーーーーーーー//
 
-// ウィンドウ
-HWND MyEngine::hwnd;
+
+Win* MyEngine::win_;
 
 // フェンス
 ID3D12Fence* MyEngine::fence;

@@ -3,7 +3,9 @@
 //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー//
 
 #pragma once
-#include <Windows.h>
+
+#include "Win.h"
+
 #include <cstdint>
 #include <format>
 
@@ -71,13 +73,9 @@ public: // メンバ関数
 	//ーーーーーーーーーーーーーー//
 private:
 
-	// ウィンドウプロシージャ
-	static LRESULT CALLBACK WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam);
 	// ログの表示
 	static void Log(const std::string& message);
 
-	// string -> wstringへの変換
-	static std::wstring ConvertString(const std::string& str);
 	// wstring -> stringへの変換
 	static std::string ConvertString(const std::wstring& str);
 
@@ -93,7 +91,7 @@ private:
 private:
 
 	// ウィンドウ
-	static HWND hwnd;
+	static Win* win_;
 
 	// フェンス
 	static ID3D12Fence* fence;
