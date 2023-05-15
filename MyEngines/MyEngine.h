@@ -6,7 +6,6 @@
 
 #include "WinApp.h"
 
-#include <cstdint>
 #include <format>
 
 #include <d3d12.h>

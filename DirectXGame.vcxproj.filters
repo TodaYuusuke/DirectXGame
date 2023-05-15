@@ -27,25 +27,21 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MyEngine.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
+    <ClCompile Include="MyEngines\DirectX.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Win.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
+    <ClCompile Include="MyEngines\MyEngine.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
+    <ClCompile Include="MyEngines\Object.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
+    <ClCompile Include="MyEngines\WinApp.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Object3d.VS.hlsl" />
-    <FxCompile Include="Object3d.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Matrix4x4.h">
@@ -60,17 +56,25 @@
     <ClInclude Include="math\Vector4.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="Win.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="MyEngines\DirectX.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngine.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="MyEngines\MyEngine.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="MyEngines\Object.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="MyEngines\WinApp.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Object3d.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Object3d.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

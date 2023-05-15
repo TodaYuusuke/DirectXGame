@@ -89,37 +89,27 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyEngine\DirectX.cpp" />
-    <ClCompile Include="MyEngine\MyEngine.cpp" />
-    <ClCompile Include="MyEngine\Object.cpp" />
-    <ClCompile Include="MyEngine\WinApp.cpp" />
+    <ClCompile Include="MyEngines\DirectX.cpp" />
+    <ClCompile Include="MyEngines\MyEngine.cpp" />
+    <ClCompile Include="MyEngines\Object.cpp" />
+    <ClCompile Include="MyEngines\WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Object3d.PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Object3d.VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="MyEngine\DirectX.h" />
-    <ClInclude Include="MyEngine\MyEngine.h" />
-    <ClInclude Include="MyEngine\Object.h" />
-    <ClInclude Include="MyEngine\WinApp.h" />
+    <ClInclude Include="MyEngines\DirectX.h" />
+    <ClInclude Include="MyEngines\MyEngine.h" />
+    <ClInclude Include="MyEngines\Object.h" />
+    <ClInclude Include="MyEngines\WinApp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Object3d.PS.hlsl" />
+    <FxCompile Include="Resources\Object3d.VS.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
