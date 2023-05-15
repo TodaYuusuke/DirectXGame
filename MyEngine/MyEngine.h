@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Win.h"
+#include "WinApp.h"
 
 #include <cstdint>
 #include <format>
@@ -22,8 +22,8 @@
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
 
-#include "math/Vector4.h"
-#include "math/Vector3.h"
+#include "../math/Vector4.h"
+#include "../math/Vector3.h"
 
 class MyEngine
 {
@@ -91,7 +91,7 @@ private:
 private:
 
 	// ウィンドウ
-	static Win* win_;
+	static WinApp* winApp_;
 
 	// フェンス
 	static ID3D12Fence* fence;

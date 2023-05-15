@@ -9,10 +9,10 @@
 void MyEngine::Initialize(const char* title, int width, int height) {
 
 	// インスタンスを受け取る
-	win_ = Win::GetInstance();
+	winApp_ = WinApp::GetInstance();
 
 	// 初期化
-	win_->Initialize(title, width, height);
+	winApp_->Initialize(title, width, height);
 
 #ifdef _DEBUG
 
@@ -140,8 +140,8 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 	// スワップチェーンを生成する
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	swapChainDesc.Width = win_->GetClientWidth();								// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = win_->GetClientHeight();							// 画面の高さ。ウィンドウのクライアント領域を同じものにしておく 
+	swapChainDesc.Width = winApp_->GetClientWidth();								// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
+	swapChainDesc.Height = winApp_->GetClientHeight();							// 画面の高さ。ウィンドウのクライアント領域を同じものにしておく 
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;				// 色の形式
 	swapChainDesc.SampleDesc.Count = 1;								// マルチサンプルしない
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// 描画のターゲットとして利用する
@@ -149,7 +149,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		// モニタにうつしたら、中身を廃棄
 	// コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	swapChain = nullptr;
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, win_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winApp_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 
 #pragma endregion
@@ -336,8 +336,8 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	// ビューポート
 	viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = (float)win_->GetClientWidth();
-	viewport.Height = (float)win_->GetClientHeight();
+	viewport.Width = (float)winApp_->GetClientWidth();
+	viewport.Height = (float)winApp_->GetClientHeight();
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -347,9 +347,9 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = win_->GetClientWidth();
+	scissorRect.right = winApp_->GetClientWidth();
 	scissorRect.top = 0;
-	scissorRect.bottom = win_->GetClientHeight();
+	scissorRect.bottom = winApp_->GetClientHeight();
 
 #pragma endregion
 
@@ -378,7 +378,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 /// </summary>
 /// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
 bool MyEngine::ProcessMessage() {
-	return !win_->ProcessMessage();
+	return !winApp_->ProcessMessage();
 }
 
 
@@ -497,7 +497,7 @@ void MyEngine::Finalize() {
 #ifdef _DEBUG
 	debugController->Release();
 #endif // _DEBUG
-	CloseWindow(win_->GetHWND());
+	CloseWindow(winApp_->GetHWND());
 
 	// リソースリークチェック
 	IDXGIDebug1* debug;
@@ -657,7 +657,7 @@ IDxcBlob* MyEngine::CompileShader(const std::wstring& filePath, const wchar_t* p
 //ーーーーーーーーーーーーー//
 
 
-Win* MyEngine::win_;
+WinApp* MyEngine::winApp_;
 
 // フェンス
 ID3D12Fence* MyEngine::fence;

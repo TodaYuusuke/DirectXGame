@@ -88,11 +88,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyEngine.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Win.cpp" />
+    <ClCompile Include="MyEngine\DirectX.cpp" />
+    <ClCompile Include="MyEngine\MyEngine.cpp" />
+    <ClCompile Include="MyEngine\Object.cpp" />
+    <ClCompile Include="MyEngine\WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -112,14 +112,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectX.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="MyEngine.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Win.h" />
+    <ClInclude Include="MyEngine\DirectX.h" />
+    <ClInclude Include="MyEngine\MyEngine.h" />
+    <ClInclude Include="MyEngine\Object.h" />
+    <ClInclude Include="MyEngine\WinApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

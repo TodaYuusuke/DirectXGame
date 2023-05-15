@@ -2,14 +2,14 @@
 #include <Windows.h>
 #include <string>
 
-class Win
+class WinApp
 {
 public: // メンバ関数
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns>インスタンス</returns>
-	static Win* GetInstance();
+	static WinApp* GetInstance();
 
 	/// <summary>
 	/// 初期化

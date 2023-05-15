@@ -1,13 +1,13 @@
-#include "Win.h"
+#include "WinApp.h"
 #include <cstdint>
 
-Win* Win::GetInstance() {
-	static Win instance;
+WinApp* WinApp::GetInstance() {
+	static WinApp instance;
 	return &instance;
 }
 
 
-void Win::Initialize(const char* title, int width, int height) {
+void WinApp::Initialize(const char* title, int width, int height) {
 
 	// 初期化
 	wc_ = {};
@@ -56,7 +56,7 @@ void Win::Initialize(const char* title, int width, int height) {
 }
 
 
-LRESULT CALLBACK Win::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT CALLBACK WinApp::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージに応じてゲーム固有の処理を行う
 	switch (msg)
 	{
@@ -71,7 +71,7 @@ LRESULT CALLBACK Win::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lpa
 };
 
 
-std::wstring Win::ConvertString(const std::string& str) {
+std::wstring WinApp::ConvertString(const std::string& str) {
 	if (str.empty()) {
 		return std::wstring();
 	}
@@ -87,7 +87,7 @@ std::wstring Win::ConvertString(const std::string& str) {
 }
 
 
-bool Win::ProcessMessage() {
+bool WinApp::ProcessMessage() {
 	MSG msg{};
 	if (msg.message != WM_QUIT) {
 		// Windowにメッセージが来てたら最優先で処理させる
