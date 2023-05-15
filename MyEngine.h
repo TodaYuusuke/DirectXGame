@@ -26,7 +26,7 @@
 class MyEngine
 {
 public: // メンバ関数
-
+	 
 	/// <summary>
 	/// ライブラリの初期化
 	/// </summary>
@@ -72,17 +72,17 @@ public: // メンバ関数
 private:
 
 	// ウィンドウプロシージャ
-	LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	static LRESULT CALLBACK WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam);
 	// ログの表示
-	void Log(const std::string& message);
+	static void Log(const std::string& message);
 
 	// string -> wstringへの変換
-	std::wstring ConvertString(const std::string& str);
+	static std::wstring ConvertString(const std::string& str);
 	// wstring -> stringへの変換
-	std::string ConvertString(const std::wstring& str);
+	static std::string ConvertString(const std::wstring& str);
 
 	// シェーダーのコンパイル関数
-	IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
+	static IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
 #pragma endregion
 
 
@@ -141,7 +141,27 @@ private:
 	// シザー矩形
 	static D3D12_RECT scissorRect;
 
+	// 頂点バッファビューを作成する
+	static D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
+
 	// DEBUG
 	static ID3D12Debug1* debugController;
 #pragma endregion
+
+
+
+#pragma region 描画変数
+
+	// 三角形の最大数
+	static const int32_t kMaxTriangleCount = 32768;
+	// 三角形の頂点数
+	static const UINT kVertexCountTriangle = 3;
+
+	// 三角形の描画数
+	static int triangleCount;
+	// 頂点リソース
+	static Vector4* vertexData;
+
+#pragma endregion
+
 };

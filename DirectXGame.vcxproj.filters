@@ -16,13 +16,28 @@
     <Filter Include="ヘッダー ファイル\math">
       <UniqueIdentifier>{7ed6176d-4845-4214-92d1-86de53f1c091}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\MyEngine">
+      <UniqueIdentifier>{59e63d58-22ee-4793-bb7f-f98111db9cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyEngine">
+      <UniqueIdentifier>{f4945e0b-62a4-4128-817b-80f1c741216a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="MyEngine.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\MyEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Win.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -33,9 +48,6 @@
     <FxCompile Include="Object3d.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="math\Matrix4x4.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
@@ -47,6 +59,18 @@
     </ClInclude>
     <ClInclude Include="math\Vector4.h">
       <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Win.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="MyEngine.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

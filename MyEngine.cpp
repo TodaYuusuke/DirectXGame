@@ -313,7 +313,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 #pragma region VertexShader
 
 	// シェーダーをコンパイルする
-	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
+	vertexShaderBlob = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(vertexShaderBlob != nullptr);
 
 #pragma endregion
@@ -356,7 +356,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
 	// バッファリソース。テクスチャの場合はまた別の設定をする
 	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * 3; // リソースのサイズ。今回はVector4を3頂点分
+	vertexResourceDesc.Width = sizeof(Vector4) * kMaxTriangleCount * kVertexCountTriangle;; // リソースのサイズ。今回はVector4を3頂点分
 	// バッファの場合はこれらは1にする決まり
 	vertexResourceDesc.Height = 1;
 	vertexResourceDesc.DepthOrArraySize = 1;
@@ -391,6 +391,25 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	scissorRect.top = 0;
 	scissorRect.bottom = kClientheight;
 
+#pragma endregion
+
+
+#pragma region VertexBufferViewを作成
+
+	// 頂点バッファビューを作成する
+	vertexBufferView = {};
+	// リソースの先頭アドレスから使う
+	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	// 使用するリソースのサイズは頂点3つ分のサイズ
+	vertexBufferView.SizeInBytes = sizeof(Vector4) * kMaxTriangleCount * kVertexCountTriangle;
+	// 1頂点あたりのサイズ
+	vertexBufferView.StrideInBytes = sizeof(Vector4);
+
+	// 頂点リソースにデータを書き込む
+	vertexData = nullptr;
+
+	// 書き込むためのアドレスを取得
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 #pragma endregion
 }
 
@@ -444,6 +463,11 @@ void MyEngine::BeginFrame() {
 
 	commandList->RSSetViewports(1, &viewport);			// viewportを設定
 	commandList->RSSetScissorRects(1, &scissorRect);	// Scirssorを設定
+
+
+
+	// 三角形の描画数を初期化
+	triangleCount = 0;
 }
 /// <summary>
 /// フレーム終了
@@ -535,35 +559,25 @@ void MyEngine::Finalize() {
 	}
 }
 
+
+
 #pragma region 描画関数
 
 void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
 
-#pragma region VertexBufferViewを作成
-
-	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	// リソースの先頭アドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	// 使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
-	// 1頂点あたりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
-
-#pragma endregion
+	// 最大数を超えていないかチェック
+	assert(triangleCount < kMaxTriangleCount);
 
 #pragma region Resourceにデータを書き込む
 
-	// 頂点リソースにデータを書き込む
-	Vector4* vertexData = nullptr;
-	// 書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	int index = triangleCount * kVertexCountTriangle;
+
 	// 左下
-	vertexData[0] = { pos1.x,pos1.y,pos1.z,1.0f };
+	vertexData[index] = { pos1.x,pos1.y,pos1.z,1.0f };
 	// 上
-	vertexData[1] = { pos2.x,pos2.y,pos2.z,1.0f };
+	vertexData[index + 1] = { pos2.x,pos2.y,pos2.z,1.0f };
 	// 右下
-	vertexData[2] = { pos3.x,pos3.y,pos3.z,1.0f };
+	vertexData[index + 2] = { pos3.x,pos3.y,pos3.z,1.0f };
 
 #pragma endregion
 
@@ -575,10 +589,16 @@ void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned i
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
-	commandList->DrawInstanced(3, 1, 0, 0);
+	commandList->DrawInstanced(3, 1, triangleCount * 3, 0);
+
+	color;
+	// 描画数+1
+	triangleCount++;
 }
 
 #pragma endregion
+
+
 
 #pragma region その他関数
 //ーーーーーーーーーーーーーー//
@@ -586,7 +606,7 @@ void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned i
 //ーーーーーーーーーーーーーー//
 
 // ウィンドウプロシージャ
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT CALLBACK MyEngine::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージに応じてゲーム固有の処理を行う
 	switch (msg)
 	{
@@ -597,16 +617,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			break;
 	}
 
-	return DefWindowProc(hwnd, msg, wparam, lparam);
+	return DefWindowProc(hwnd_, msg, wparam, lparam);
 }
 
 // ログの表示
-void Log(const std::string& message) {
+void MyEngine::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
 
 // string -> wstringへの変換
-std::wstring ConvertString(const std::string& str) {
+std::wstring MyEngine::ConvertString(const std::string& str) {
 	if (str.empty()) {
 		return std::wstring();
 	}
@@ -622,7 +642,7 @@ std::wstring ConvertString(const std::string& str) {
 }
 
 // wstring -> stringへの変換
-std::string ConvertString(const std::wstring& str) {
+std::string MyEngine::ConvertString(const std::wstring& str) {
 	if (str.empty()) {
 		return std::string();
 	}
@@ -638,7 +658,7 @@ std::string ConvertString(const std::wstring& str) {
 }
 
 // シェーダーのコンパイル関数
-IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
+IDxcBlob* MyEngine::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 
 	/*-- 1.hlslファイルを読む --*/
 
@@ -708,6 +728,7 @@ IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, ID
 #pragma endregion
 
 
+
 #pragma region メンバ変数
 //ーーーーーーーーーーーーー//
 //　　　　メンバ変数　　　　//
@@ -762,6 +783,21 @@ D3D12_VIEWPORT MyEngine::viewport;
 // シザー矩形
 D3D12_RECT MyEngine::scissorRect;
 
+// 頂点バッファビューを作成する
+D3D12_VERTEX_BUFFER_VIEW MyEngine::vertexBufferView;
+
 // DEBUG
 ID3D12Debug1* MyEngine::debugController;
+
+
+
+#pragma region 描画変数
+
+// 三角形の描画数
+int MyEngine::triangleCount;
+// 頂点リソース
+Vector4* MyEngine::vertexData;
+
+#pragma endregion
+
 #pragma endregion
