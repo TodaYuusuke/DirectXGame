@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include <string>
+#include <cstdint>
 
 class WinApp
 {
@@ -21,10 +21,6 @@ public: // メンバ関数
 	/// </summary>
 	static LRESULT CALLBACK WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam);
 
-	/// <summary>
-	/// string -> wstringへの変換
-	/// </summary>
-	std::wstring ConvertString(const std::string& str);
 
 	/// <summary>
 	/// ウィンドウからのイベントをチェックする関数
@@ -51,6 +47,5 @@ private: // メンバ変数
 	// ウィンドウクラスの属性をまとめた構造体
 	WNDCLASS wc_;
 	// ウィンドウ
-	HWND hwnd_
-		;
+	HWND hwnd_;
 };

@@ -19,10 +19,6 @@ public: // メンバ関数
 	
 
 	/// <summary>
-	/// wstring -> stringへの変換
-	/// </summary>
-	static std::string ConvertString(const std::wstring& str);
-	/// <summary>
 	/// シェーダーのコンパイル関数
 	/// </summary>
 	//IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);

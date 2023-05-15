@@ -1,5 +1,6 @@
 #include "WinApp.h"
 #include <cstdint>
+#include "MyUtility.h"
 
 WinApp* WinApp::GetInstance() {
 	static WinApp instance;
@@ -40,7 +41,7 @@ void WinApp::Initialize(const char* title, int width, int height) {
 	// ウィンドウの生成
 	hwnd_ = CreateWindow(
 		wc_.lpszClassName,				// 利用するクラス名
-		ConvertString(title_).c_str(),	// タイトルバーの文字（何でもいい）
+		MyUtility::ConvertString(title_).c_str(),	// タイトルバーの文字（何でもいい）
 		WS_OVERLAPPEDWINDOW,			// よく見るウィンドウスタイル
 		CW_USEDEFAULT,					// 表示X座標（Windowsに任せる）
 		CW_USEDEFAULT,					// 表示Y座標（WindowsOSに任せる）
@@ -56,7 +57,7 @@ void WinApp::Initialize(const char* title, int width, int height) {
 }
 
 
-LRESULT CALLBACK WinApp::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージに応じてゲーム固有の処理を行う
 	switch (msg)
 	{
@@ -67,23 +68,7 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM 
 			break;
 	}
 
-	return DefWindowProc(hwnd_, msg, wparam, lparam);
-};
-
-
-std::wstring WinApp::ConvertString(const std::string& str) {
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-
-	return result;
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 

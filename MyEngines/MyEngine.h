@@ -72,14 +72,9 @@ public: // メンバ関数
 	//ーーーーーーーーーーーーーー//
 private:
 
-	// ログの表示
-	static void Log(const std::string& message);
-
-	// wstring -> stringへの変換
-	static std::string ConvertString(const std::wstring& str);
-
 	// シェーダーのコンパイル関数
 	static IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
+
 #pragma endregion
 
 
@@ -145,7 +140,7 @@ private:
 	static ID3D12Debug1* debugController;
 #pragma endregion
 
-
+	
 
 #pragma region 描画変数
 
