@@ -17,12 +17,6 @@ public: // メンバ関数
 	void Initialize(const char* title, int width, int height);
 
 	/// <summary>
-	/// ウィンドウプロシージャ
-	/// </summary>
-	static LRESULT CALLBACK WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam);
-
-
-	/// <summary>
 	/// ウィンドウからのイベントをチェックする関数
 	/// </summary>
 	/// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
@@ -30,9 +24,9 @@ public: // メンバ関数
 
 
 	// アクセサ
-	int32_t GetClientWidth() { return clientWidth_; }
-	int32_t GetClientHeight() { return clientHeight_; }
-	HWND GetHWND() { return hwnd_; }
+	int32_t GetClientWidth() const { return clientWidth_; }
+	int32_t GetClientHeight() const { return clientHeight_; }
+	HWND GetHWND() const { return hwnd_; }
 	
 private: // メンバ変数
 
@@ -48,4 +42,17 @@ private: // メンバ変数
 	WNDCLASS wc_;
 	// ウィンドウ
 	HWND hwnd_;
+
+
+private: // 非公開のメンバ関数
+	WinApp() = default;
+	~WinApp() = default;
+	WinApp(const WinApp&) = delete;
+	const WinApp& operator=(const WinApp&) = delete;
+
+	/// <summary>
+	/// ウィンドウプロシージャ
+	/// </summary>
+	static LRESULT CALLBACK WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam);
+
 };

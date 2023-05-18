@@ -7,7 +7,6 @@ WinApp* WinApp::GetInstance() {
 	return &instance;
 }
 
-
 void WinApp::Initialize(const char* title, int width, int height) {
 
 	// 初期化
@@ -56,22 +55,6 @@ void WinApp::Initialize(const char* title, int width, int height) {
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
-
-LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	// メッセージに応じてゲーム固有の処理を行う
-	switch (msg)
-	{
-		// ウィンドウが破棄された
-		case WM_DESTROY:
-			// OSに対して、アプリの終了を伝える
-			PostQuitMessage(0);
-			break;
-	}
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
-}
-
-
 bool WinApp::ProcessMessage() {
 	MSG msg{};
 	if (msg.message != WM_QUIT) {
@@ -88,4 +71,18 @@ bool WinApp::ProcessMessage() {
 	}
 
 	return false;
+}
+
+LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	// メッセージに応じてゲーム固有の処理を行う
+	switch (msg)
+	{
+		// ウィンドウが破棄された
+		case WM_DESTROY:
+			// OSに対して、アプリの終了を伝える
+			PostQuitMessage(0);
+			break;
+	}
+
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }

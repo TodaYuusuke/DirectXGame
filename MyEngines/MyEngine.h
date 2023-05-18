@@ -5,15 +5,9 @@
 #pragma once
 
 #include "WinApp.h"
+#include "DirectX.h"
 
-#include <format>
-
-#include <d3d12.h>
-#include <dxgi1_6.h>
 #include <cassert>
-
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
 
 #include <dxgidebug.h>
 #pragma comment(lib, "dxguid.lib")
@@ -24,8 +18,9 @@
 #include "../math/Vector4.h"
 #include "../math/Vector3.h"
 
+
 class MyEngine
-{
+{	
 public: // メンバ関数
 	 
 	/// <summary>
@@ -61,6 +56,7 @@ public: // メンバ関数
 
 #pragma region 描画関数
 
+	// 三角形描画関数
 	static void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color);
 
 #pragma endregion
@@ -86,34 +82,9 @@ private:
 
 	// ウィンドウ
 	static WinApp* winApp_;
+	// DirectX
+	static DirectX* directX_;
 
-	// フェンス
-	static ID3D12Fence* fence;
-	static uint16_t fenceValue;
-	// フェンスイベント
-	static HANDLE fenceEvent;
-	// コマンドキュー
-	static ID3D12CommandQueue* commandQueue;
-	// コマンドアロケーター
-	static ID3D12CommandAllocator* commandAllocateor;
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* commandList;
-	// スワップチェーン
-	static IDXGISwapChain4* swapChain;
-	// ディスクリプタ
-	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[];
-	// ディスクリプタヒープ
-	static ID3D12DescriptorHeap* rtvDescriptorHeep;
-	// スワップチェーンリソース
-	static ID3D12Resource* swapChainResources[];
-	// トランジションバリア
-	static D3D12_RESOURCE_BARRIER barrier;
-	// デバイス
-	static ID3D12Device* device;
-	// 使用するアダプタ用の変数
-	static IDXGIAdapter4* useAdapter;
-	// ファクトリーの生成
-	static IDXGIFactory7* dxgiFactory;
 	// 実際に頂点リソースを作る
 	static ID3D12Resource* vertexResource;
 	// グラフィックスパイプライン
@@ -136,8 +107,6 @@ private:
 	// 頂点バッファビューを作成する
 	static D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
-	// DEBUG
-	static ID3D12Debug1* debugController;
 #pragma endregion
 
 	
