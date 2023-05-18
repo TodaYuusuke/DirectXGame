@@ -43,8 +43,6 @@ public: // メンバ関数
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 	size_t GetBackBufferCount() const { return backBuffers_.size(); }
 
-
-	~DirectX() = default;
 private: // メンバ変数
 	// ウィンドウズアプリケーション管理
 	WinApp* winApp_ = nullptr;
@@ -66,7 +64,7 @@ private: // メンバ変数
 
 private: // 非公開のメンバ関数
 	DirectX() = default;
-	//~DirectX() = default;
+	~DirectX() = default;
 	DirectX(const DirectX&) = delete;
 	const DirectX& operator=(const DirectX&) = delete;
 
