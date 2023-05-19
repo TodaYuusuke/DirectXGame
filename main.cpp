@@ -13,15 +13,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//////////////////////////////////////
 
 	// 三角形の座標
-	Vector3 leftTrianglePos[3] = {
-		{ -0.5f,-0.5f,0.0f },
-		{ -0.5f,0.5f,0.0f },
-		{ -0.2f,0.0f,0.0f },
-	};
-	Vector3 rightTrianglePos[3] = {
-		{ 0.5f,0.5f,0.0f },
-		{ 0.5f,-0.5f,0.0f },
-		{ 0.2f,0.0f,0.0f },
+	const Vector3 ktrianglePos[3] = {
+		{ 0.0f,-1.0f,0.0f },
+		{ 0.2f,-1.2f,0.0f },
+		{ -0.2f,-1.2f,0.0f },
 	};
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -29,21 +24,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		MyEngine::BeginFrame();
 
-		// 左側の三角形を描画
-		MyEngine::DrawTriangle(
-			leftTrianglePos[0],
-			leftTrianglePos[1],
-			leftTrianglePos[2],
-			0xFFFFFFFF
-		);
-		// 右側の三角形を描画
-		MyEngine::DrawTriangle(
-			rightTrianglePos[0],
-			rightTrianglePos[1],
-			rightTrianglePos[2],
-			0xFFFFFFFF
-		);
-		
+		Vector3 translateY[3];
+		memcpy(translateY, ktrianglePos, sizeof(translateY));
+		// 三角形を描画
+		for (int i = 0; i < 10; i++) {
+			for (int index = 0; index < 3; index++) {
+				translateY[index].y += 0.2f;
+			}
+			MyEngine::DrawTriangle(
+				translateY[0],
+				translateY[1],
+				translateY[2],
+				0xFFFFFFFF
+			);
+		}
 
 		MyEngine::EndFrame();
 	}
