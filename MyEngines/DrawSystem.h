@@ -39,19 +39,18 @@ private: // メンバ変数
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 	};
+	
+	struct VectorPosColor {
+		Vector4 position;
+		Vector3 color;
+	};
 	struct VertexTriangle {
 		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 		// 三角形の頂点リソース
-		Vector4* vertexData_ = nullptr;
+		VectorPosColor* vertexData_ = nullptr;
 		// 三角形の描画数
 		int triangleCount_ = 0;
-
-		~VertexTriangle() {
-			if (vertexData_ != nullptr) {
-				delete[] vertexData_;
-			}
-		}
 	};
 
 	// 描画関連

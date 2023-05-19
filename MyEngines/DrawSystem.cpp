@@ -28,9 +28,9 @@ void DrawSystem::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned
 	int index = vertexTriangle_->triangleCount_ * kVertexCountTriangle_;
 
 	// vertexDataに代入
-	vertexTriangle_->vertexData_[index] = {pos1.x,pos1.y,pos1.z,1.0f};
-	vertexTriangle_->vertexData_[index + 1] = { pos2.x,pos2.y,pos2.z,1.0f };
-	vertexTriangle_->vertexData_[index + 2] = { pos3.x,pos3.y,pos3.z,1.0f };
+	vertexTriangle_->vertexData_[index].position = {pos1.x,pos1.y,pos1.z,1.0f};
+	vertexTriangle_->vertexData_[index + 1].position = { pos2.x,pos2.y,pos2.z,1.0f };
+	vertexTriangle_->vertexData_[index + 2].position = { pos3.x,pos3.y,pos3.z,1.0f };
 
 	// コマンドを積む
 	ID3D12GraphicsCommandList* commandList = directX_->GetCommandList();
@@ -184,7 +184,7 @@ ID3D12Resource* DrawSystem::CreateVertexResource() {
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
 	// バッファリソース。テクスチャの場合はまた別の設定をする
 	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * kMaxTriangleCount_ * kVertexCountTriangle_; // リソースのサイズ。今回はVector4を3頂点分
+	vertexResourceDesc.Width = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_; // リソースのサイズ。今回はVectorPosColorを3頂点分
 	// バッファの場合はこれらは1にする決まり
 	vertexResourceDesc.Height = 1;
 	vertexResourceDesc.DepthOrArraySize = 1;
@@ -206,9 +206,9 @@ D3D12_VERTEX_BUFFER_VIEW DrawSystem::CreateVertexBufferView(ID3D12Resource* vert
 	// リソースの先頭アドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	// 使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * kMaxTriangleCount_ * kVertexCountTriangle_;
+	vertexBufferView.SizeInBytes = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_;
 	// 1頂点あたりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
+	vertexBufferView.StrideInBytes = sizeof(VectorPosColor);
 
 
 	return vertexBufferView;
