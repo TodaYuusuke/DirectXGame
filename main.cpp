@@ -12,7 +12,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	/////　　　　初期化処理ここまで　　　　/////
 	//////////////////////////////////////
 
-	
+	// 三角形の座標
+	Vector3 leftTrianglePos[3] = {
+		{ -0.5f,-0.5f,0.0f },
+		{ -0.5f,0.5f,0.0f },
+		{ -0.2f,0.0f,0.0f },
+	};
+	Vector3 rightTrianglePos[3] = {
+		{ 0.5f,0.5f,0.0f },
+		{ 0.5f,-0.5f,0.0f },
+		{ 0.2f,0.0f,0.0f },
+	};
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (MyEngine::ProcessMessage()) {
 
@@ -20,22 +31,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// 左側の三角形を描画
 		MyEngine::DrawTriangle(
-			// 下
-			{ -0.5f,-0.5f,0.0f },
-			// 上
-			{ -0.5f,0.5f,0.0f },
-			// 右
-			{ -0.2f,0.0f,0.0f },
+			leftTrianglePos[0],
+			leftTrianglePos[1],
+			leftTrianglePos[2],
 			0xFFFFFFFF
 		);
 		// 右側の三角形を描画
 		MyEngine::DrawTriangle(
-			// 上
-			{ 0.5f,0.5f,0.0f },
-			// 下
-			{ 0.5f,-0.5f,0.0f },
-			// 左
-			{ 0.2f,0.0f,0.0f },
+			rightTrianglePos[0],
+			rightTrianglePos[1],
+			rightTrianglePos[2],
 			0xFFFFFFFF
 		);
 		
