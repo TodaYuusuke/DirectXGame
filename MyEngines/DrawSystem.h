@@ -50,7 +50,7 @@ private: // メンバ変数
 		// 三角形の頂点リソース
 		VectorPosColor* vertexData_ = nullptr;
 		// 三角形の描画数
-		int triangleCount_ = 0;
+		uint32_t triangleCount_ = 0;
 	};
 
 	// 描画関連
@@ -59,9 +59,9 @@ private: // メンバ変数
 	std::unique_ptr<VertexTriangle> vertexTriangle_;
 
 	// 三角形の最大数
-	const int32_t kMaxTriangleCount_ = 32768;
+	static const int32_t kMaxTriangleCount_ = 32768;
 	// 三角形の頂点数
-	const UINT kVertexCountTriangle_ = 3;
+	static const UINT kVertexCountTriangle_ = 3;
 
 private: // 非公開のメンバ関数
 	DrawSystem() = default;
