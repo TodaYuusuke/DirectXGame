@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <dxcapi.h>
+#pragma comment(lib,"dxcompiler.lib")
 #include <vector>
 
 class DrawSystem
