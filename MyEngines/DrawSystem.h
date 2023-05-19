@@ -29,43 +29,34 @@ private: // メンバ変数
 	// DirectX管理
 	DirectX* directX_ = nullptr;
 
+	// 構造体宣言
 	struct DXC {
 		Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_;
 		Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_;
 		Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_;
 	};
-	std::unique_ptr<DXC> dxc_;
-
-	// 描画関連
-	//std::unique_ptr<IDxcUtils> dxcUtils_;
-	//std::unique_ptr<IDxcCompiler3> dxcCompiler_;
-	//std::unique_ptr<IDxcIncludeHandler> includeHandler_;
-	//Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_;
-	//Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_;
-	//Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_;
-
 	struct PipelineSet {
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 	};
-	std::unique_ptr<PipelineSet> pipelineSet_;
-
-	//Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
-	//Microsoft::WRL::ComPtr<D3D12_INPUT_LAYOUT_DESC> inputLayoutDesc_;
-	//Microsoft::WRL::ComPtr<D3D12_BLEND_DESC> blendDesc_;
-	//Microsoft::WRL::ComPtr<D3D12_RASTERIZER_DESC> rasterizerDesc_;
-	//Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob_;
-	//Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob_;
-	//Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
-
 	struct VertexTriangle {
 		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 		// 三角形の頂点リソース
-		Vector4* vertexData_ = nullptr;;
+		Vector4* vertexData_ = nullptr;
 		// 三角形の描画数
 		int triangleCount_ = 0;
+
+		~VertexTriangle() {
+			if (vertexData_ != nullptr) {
+				delete[] vertexData_;
+			}
+		}
 	};
+
+	// 描画関連
+	std::unique_ptr<DXC> dxc_;
+	std::unique_ptr<PipelineSet> pipelineSet_;
 	std::unique_ptr<VertexTriangle> vertexTriangle_;
 
 	// 三角形の最大数

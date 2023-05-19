@@ -1,6 +1,7 @@
 #include "MyEngine.h"
 #include "MyUtility.h"
-#include <format>
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
 
 /// <summary>
 /// ライブラリの初期化

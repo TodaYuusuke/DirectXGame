@@ -87,14 +87,17 @@ void DrawSystem::CreateRootSignature(ID3D12RootSignature** rootSignature) {
 	// バイナリを元に生成
 	hr = directX_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature));
 	assert(SUCCEEDED(hr));
+
+	signatureBlob->Release();
+	//errorBlob->Release();
 }
 D3D12_INPUT_LAYOUT_DESC DrawSystem::CreateInputLayout() {
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[1] = {};
+	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[1] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
@@ -144,7 +147,9 @@ std::unique_ptr<DrawSystem::PipelineSet> DrawSystem::CreateGraphicsPipeLineState
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = pipelineSet->rootSignature_.Get();	// RootSignature
+		
 	graphicsPipelineStateDesc.InputLayout = CreateInputLayout();		// InputLayout
+	
 	graphicsPipelineStateDesc.BlendState = CreateBlendState();			// BlendState
 	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState();	// RasterizerState
 	graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
@@ -160,6 +165,9 @@ std::unique_ptr<DrawSystem::PipelineSet> DrawSystem::CreateGraphicsPipeLineState
 	// 実際に生成
 	hr = directX_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet->graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
+
+	vertexShader->Release();
+	pixelShader->Release();
 
 	return pipelineSet;
 }
@@ -202,8 +210,6 @@ D3D12_VERTEX_BUFFER_VIEW DrawSystem::CreateVertexBufferView(ID3D12Resource* vert
 	// 1頂点あたりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(Vector4);
 
-	// 書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(vertexTriangle_->vertexData_));
 
 	return vertexBufferView;
 }
@@ -214,6 +220,9 @@ std::unique_ptr<DrawSystem::VertexTriangle> DrawSystem::CreateVerTexTriangle() {
 
 	vertex->vertexResource_ = CreateVertexResource();
 	vertex->vertexBufferView_ = CreateVertexBufferView(vertex->vertexResource_.Get());
+
+	// 書き込むためのアドレスを取得
+	vertex->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertex->vertexData_));
 
 	return vertex;
 }
