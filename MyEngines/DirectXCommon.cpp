@@ -1,4 +1,4 @@
-#include "DirectX.h"
+#include "DirectXCommon.h"
 #include "MyUtility.h"
 
 #include <cassert>
@@ -6,12 +6,12 @@
 
 using namespace Microsoft::WRL;
 
-DirectX* DirectX::GetInstance() {
-	static DirectX instance;
+DirectXCommon* DirectXCommon::GetInstance() {
+	static DirectXCommon instance;
 	return &instance;
 }
 
-void DirectX::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
+void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
 
 	winApp_ = winApp;
 	backBufferWidth_ = backBufferWidth;
@@ -33,7 +33,7 @@ void DirectX::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBu
 	CreateFence();
 }
 
-void DirectX::PreDraw() {
+void DirectXCommon::PreDraw() {
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -79,7 +79,7 @@ void DirectX::PreDraw() {
 	commandList_->RSSetScissorRects(1, &scissorRect);
 }
 
-void DirectX::PostDraw() {
+void DirectXCommon::PostDraw() {
 	HRESULT hr = S_FALSE;
 
 	// これから書き込むバックバッファのインデックスを取得
@@ -123,7 +123,7 @@ void DirectX::PostDraw() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX::ClearRenderTarget() {
+void DirectXCommon::ClearRenderTarget() {
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -137,7 +137,7 @@ void DirectX::ClearRenderTarget() {
 	commandList_->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 }
 
-void DirectX::InitializeDXGIDevice() {
+void DirectXCommon::InitializeDXGIDevice() {
 	HRESULT hr = S_FALSE;
 
 #ifdef _DEBUG
@@ -237,7 +237,7 @@ void DirectX::InitializeDXGIDevice() {
 #endif // _DEBUG
 }
 
-void DirectX::InitializeCommand() {
+void DirectXCommon::InitializeCommand() {
 	HRESULT hr = S_FALSE;
 
 	// コマンドキューを生成する
@@ -257,7 +257,7 @@ void DirectX::InitializeCommand() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX::CreateSwapChain() {
+void DirectXCommon::CreateSwapChain() {
 	HRESULT hr = S_FALSE;
 
 	// スワップチェーンを生成する
@@ -278,7 +278,7 @@ void DirectX::CreateSwapChain() {
 	swapChain1->QueryInterface(IID_PPV_ARGS(&swapChain_));
 }
 
-void DirectX::CreateFinalRenderTargets() {
+void DirectXCommon::CreateFinalRenderTargets() {
 	HRESULT hr = S_FALSE;
 
 	// ディスクリプタヒープを生成
@@ -312,7 +312,7 @@ void DirectX::CreateFinalRenderTargets() {
 	}
 }
 
-void DirectX::CreateFence() {
+void DirectXCommon::CreateFence() {
 	HRESULT hr = S_FALSE;
 
 	// 初期値0でFenceを作る
@@ -321,7 +321,7 @@ void DirectX::CreateFence() {
 	assert(SUCCEEDED(hr));
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DirectX::GetDescriptorHandleIncrementSize(const D3D12_CPU_DESCRIPTOR_HANDLE &other, int offsetInDescriptors, UINT descriptorIncrementSize) {
+D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetDescriptorHandleIncrementSize(const D3D12_CPU_DESCRIPTOR_HANDLE &other, int offsetInDescriptors, UINT descriptorIncrementSize) {
 	// ディスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE handle;
 	if (offsetInDescriptors <= 0) {
@@ -334,7 +334,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DirectX::GetDescriptorHandleIncrementSize(const D3D1
 	return handle;
 }
 
-D3D12_RESOURCE_BARRIER DirectX::MakeResourceBarrier(ID3D12Resource* pResource, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) {
+D3D12_RESOURCE_BARRIER DirectXCommon::MakeResourceBarrier(ID3D12Resource* pResource, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) {
 
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier{};

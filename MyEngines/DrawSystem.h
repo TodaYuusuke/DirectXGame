@@ -1,5 +1,5 @@
 #pragma once
-#include "DirectX.h"
+#include "DirectXCommon.h"
 #include "../math/Vector3.h"
 #include "../math/Vector4.h"
 
@@ -7,6 +7,12 @@
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
 #include <vector>
+
+#if defined(_DEBUG) && defined(_CRTDBG_MAP_ALLOC) && !defined(NEW)
+#define NEW  ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#else
+#define NEW  new
+#endif
 
 class DrawSystem
 {
@@ -20,14 +26,14 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(DirectX* directX);
+	void Initialize(DirectXCommon* DirectXCommon);
 
 	// 描画関数たち
 	void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color);
 
 private: // メンバ変数
-	// DirectX管理
-	DirectX* directX_ = nullptr;
+	// DirectXCommon管理
+	DirectXCommon* DirectXCommon_ = nullptr;
 
 	// 構造体宣言
 	struct DXC {
@@ -72,11 +78,11 @@ private: // 非公開のメンバ関数
 	/// <summary>
 	/// DXC初期化
 	/// </summary>
-	std::unique_ptr<DXC> InitialzieDXC();
+	void InitialzieDXC();
 
 #pragma region PSO生成関連
 
-	void CreateRootSignature(ID3D12RootSignature**);
+	void CreateRootSignature();
 	D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
 	D3D12_BLEND_DESC CreateBlendState();
 	D3D12_RASTERIZER_DESC CreateRasterizerState();
@@ -88,26 +94,26 @@ private: // 非公開のメンバ関数
 	/// <summary>
 	/// グラフィックスパイプラインを作成
 	/// </summary>
-	std::unique_ptr<PipelineSet> CreateGraphicsPipeLineState();
+	void CreateGraphicsPipeLineState();
 
 #pragma region 頂点バッファ
 
 	/// <summary>
 	/// VertexResourceを作成
 	/// </summary>
-	ID3D12Resource* CreateVertexResource();
+	void CreateVertexResource();
 
 	/// <summary>
 	/// 頂点バッファビューを作成
 	/// </summary>
-	D3D12_VERTEX_BUFFER_VIEW CreateVertexBufferView(ID3D12Resource*);
+	void CreateVertexBufferView();
 
 #pragma endregion
 
 	/// <summary>
 	/// 三角形の頂点バッファを作成
 	/// </summary>
-	std::unique_ptr<VertexTriangle> CreateVerTexTriangle();
+	void CreateVerTexTriangle();
 
 	/// <summary>
 	/// シェーダーのコンパイル関数

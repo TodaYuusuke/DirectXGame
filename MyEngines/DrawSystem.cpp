@@ -11,12 +11,12 @@ DrawSystem* DrawSystem::GetInstance() {
 	return &instance;
 }
 
-void DrawSystem::Initialize(DirectX* directX) {
-	directX_ = directX;
+void DrawSystem::Initialize(DirectXCommon* DirectXCommon) {
+	DirectXCommon_ = DirectXCommon;
 
-	dxc_ = InitialzieDXC();
-	pipelineSet_ = CreateGraphicsPipeLineState();
-	vertexTriangle_ = CreateVerTexTriangle();
+	InitialzieDXC();
+	CreateGraphicsPipeLineState();
+	CreateVerTexTriangle();
 }
 
 void DrawSystem::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
@@ -33,7 +33,7 @@ void DrawSystem::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned
 	vertexTriangle_->vertexData_[index + 2].position = { pos3.x,pos3.y,pos3.z,1.0f };
 
 	// コマンドを積む
-	ID3D12GraphicsCommandList* commandList = directX_->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = DirectXCommon_->GetCommandList();
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
 	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
 	commandList->SetPipelineState(pipelineSet_->graphicsPipelineState_.Get());	// PSOを設定
@@ -50,28 +50,27 @@ void DrawSystem::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned
 
 
 
-std::unique_ptr<DrawSystem::DXC> DrawSystem::InitialzieDXC() {
+void DrawSystem::InitialzieDXC() {
 	HRESULT hr = S_FALSE;
 
-	std::unique_ptr<DXC> dxc = std::make_unique<DXC>();
+	dxc_ = std::make_unique<DXC>();
 
 	// DxcUtilsを初期化
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxc->dxcUtils_));
+	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxc_->dxcUtils_));
 	assert(SUCCEEDED(hr));
 	// DxcCompilerを初期化
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxc->dxcCompiler_));
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxc_->dxcCompiler_));
 	assert(SUCCEEDED(hr));
 
 	// 現時点でincludeはしないが、includeに対応するための設定を行っておく
-	hr = dxc->dxcUtils_->CreateDefaultIncludeHandler(&dxc->includeHandler_);
+	hr = dxc_->dxcUtils_->CreateDefaultIncludeHandler(&dxc_->includeHandler_);
 	assert(SUCCEEDED(hr));
 
-	return dxc;
 }
 
 #pragma region PSO生成関連
 
-void DrawSystem::CreateRootSignature(ID3D12RootSignature** rootSignature) {
+void DrawSystem::CreateRootSignature() {
 	HRESULT hr = S_FALSE;
 
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
@@ -85,7 +84,7 @@ void DrawSystem::CreateRootSignature(ID3D12RootSignature** rootSignature) {
 		assert(false);
 	}
 	// バイナリを元に生成
-	hr = directX_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature));
+	hr = DirectXCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->rootSignature_));
 	assert(SUCCEEDED(hr));
 
 	signatureBlob->Release();
@@ -135,21 +134,19 @@ IDxcBlob* DrawSystem::CreatePixelShader() {
 
 #pragma endregion
 
-std::unique_ptr<DrawSystem::PipelineSet> DrawSystem::CreateGraphicsPipeLineState() {
+void DrawSystem::CreateGraphicsPipeLineState() {
 	HRESULT hr = S_FALSE;
 
-	std::unique_ptr<PipelineSet> pipelineSet = std::make_unique<PipelineSet>();
+	pipelineSet_ = std::make_unique<PipelineSet>();
 
-	CreateRootSignature(&pipelineSet->rootSignature_);
+	CreateRootSignature();
 	
 	IDxcBlob* vertexShader = CreateVertexShader();
 	IDxcBlob* pixelShader = CreatePixelShader();
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = pipelineSet->rootSignature_.Get();	// RootSignature
-		
+	graphicsPipelineStateDesc.pRootSignature = pipelineSet_->rootSignature_.Get();	// RootSignature
 	graphicsPipelineStateDesc.InputLayout = CreateInputLayout();		// InputLayout
-	
 	graphicsPipelineStateDesc.BlendState = CreateBlendState();			// BlendState
 	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState();	// RasterizerState
 	graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
@@ -163,19 +160,15 @@ std::unique_ptr<DrawSystem::PipelineSet> DrawSystem::CreateGraphicsPipeLineState
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// 実際に生成
-	hr = directX_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet->graphicsPipelineState_));
+	hr = DirectXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
 
 	vertexShader->Release();
 	pixelShader->Release();
-
-	return pipelineSet;
 }
 
-ID3D12Resource* DrawSystem::CreateVertexResource() {
+void DrawSystem::CreateVertexResource() {
 	HRESULT hr = S_FALSE;
-
-	ID3D12Resource* vertexResouce;
 
 	// 頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
@@ -193,38 +186,30 @@ ID3D12Resource* DrawSystem::CreateVertexResource() {
 	// バッファの場合はこれにする決まり
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 実際に頂点リソースを作る
-	hr = directX_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResouce));
+	hr = DirectXCommon_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexTriangle_->vertexResource_));
 	assert(SUCCEEDED(hr));
-
-	return vertexResouce;
 }
 
-D3D12_VERTEX_BUFFER_VIEW DrawSystem::CreateVertexBufferView(ID3D12Resource* vertexResource) {
-
+void DrawSystem::CreateVertexBufferView() {
+	
 	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 	// リソースの先頭アドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexTriangle_->vertexBufferView_.BufferLocation = vertexTriangle_->vertexResource_.Get()->GetGPUVirtualAddress();
 	// 使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_;
+	vertexTriangle_->vertexBufferView_.SizeInBytes = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_;
 	// 1頂点あたりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(VectorPosColor);
-
-
-	return vertexBufferView;
+	vertexTriangle_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
 }
 
-std::unique_ptr<DrawSystem::VertexTriangle> DrawSystem::CreateVerTexTriangle() {
+void DrawSystem::CreateVerTexTriangle() {
 
-	std::unique_ptr<VertexTriangle> vertex = std::make_unique<VertexTriangle>();
+	vertexTriangle_ = std::make_unique<VertexTriangle>();
 
-	vertex->vertexResource_ = CreateVertexResource();
-	vertex->vertexBufferView_ = CreateVertexBufferView(vertex->vertexResource_.Get());
+	CreateVertexResource();
+	CreateVertexBufferView();
 
 	// 書き込むためのアドレスを取得
-	vertex->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertex->vertexData_));
-
-	return vertex;
+	vertexTriangle_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexTriangle_->vertexData_));
 }
 
 // シェーダーのコンパイル関数

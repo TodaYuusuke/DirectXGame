@@ -89,7 +89,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyEngines\DirectX.cpp" />
+    <ClCompile Include="MyEngines\DirectXCommon.cpp" />
     <ClCompile Include="MyEngines\MyEngine.cpp" />
     <ClCompile Include="MyEngines\MyUtility.cpp" />
     <ClCompile Include="MyEngines\DrawSystem.cpp" />
@@ -103,7 +103,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="MyEngines\DirectX.h" />
+    <ClInclude Include="MyEngines\DirectXCommon.h" />
     <ClInclude Include="MyEngines\MyEngine.h" />
     <ClInclude Include="MyEngines\MyUtility.h" />
     <ClInclude Include="MyEngines\DrawSystem.h" />

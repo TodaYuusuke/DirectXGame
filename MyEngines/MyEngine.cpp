@@ -13,13 +13,13 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 
 	// インスタンスを受け取る
 	winApp_ = WinApp::GetInstance();
-	directX_ = DirectX::GetInstance();
+	directXCommon_ = DirectXCommon::GetInstance();
 	drawSystem_ = DrawSystem::GetInstance();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
-	directX_->Initialize(winApp_, width, height);
-	drawSystem_->Initialize(directX_);
+	directXCommon_->Initialize(winApp_, width, height);
+	drawSystem_->Initialize(directXCommon_);
 }
 
 /// <summary>
@@ -35,13 +35,13 @@ bool MyEngine::ProcessMessage() {
 /// フレーム開始
 /// </summary>
 void MyEngine::BeginFrame() {
-	directX_->PreDraw();
+	directXCommon_->PreDraw();
 }
 /// <summary>
 /// フレーム終了
 /// </summary>
 void MyEngine::EndFrame() {
-	directX_->PostDraw();
+	directXCommon_->PostDraw();
 }
 
 
@@ -78,5 +78,5 @@ void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned i
 //ーーーーーーーーーーーーー//
 
 WinApp* MyEngine::winApp_ = nullptr;
-DirectX* MyEngine::directX_ = nullptr;
+DirectXCommon* MyEngine::directXCommon_ = nullptr;
 DrawSystem* MyEngine::drawSystem_ = nullptr;

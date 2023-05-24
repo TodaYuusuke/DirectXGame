@@ -24,23 +24,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MyEngines\DirectX.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MyEngines\MyEngine.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="MyEngines\DirectXCommon.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
     <ClCompile Include="MyEngines\DrawSystem.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
-    <ClCompile Include="MyEngines\WinApp.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="MyEngines\MyEngine.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
     <ClCompile Include="MyEngines\MyUtility.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\MyEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="MyEngines\WinApp.cpp">
+      <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,20 +59,20 @@
     <ClInclude Include="math\Vector4.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\DirectX.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MyEngines\MyEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="MyEngines\DirectXCommon.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
     <ClInclude Include="MyEngines\DrawSystem.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\WinApp.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="MyEngines\MyEngine.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
     <ClInclude Include="MyEngines\MyUtility.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="MyEngines\WinApp.h">
+      <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

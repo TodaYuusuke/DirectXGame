@@ -9,14 +9,14 @@
 #include <wrl.h>
 #include "WinApp.h"
 
-class DirectX
+class DirectXCommon
 {
 public: // メンバ関数
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns></returns>
-	static DirectX* GetInstance();
+	static DirectXCommon* GetInstance();
 
 	/// <summary>
 	/// 初期化
@@ -63,10 +63,10 @@ private: // メンバ変数
 
 
 private: // 非公開のメンバ関数
-	DirectX() = default;
-	~DirectX() = default;
-	DirectX(const DirectX&) = delete;
-	const DirectX& operator=(const DirectX&) = delete;
+	DirectXCommon() = default;
+	~DirectXCommon() = default;
+	DirectXCommon(const DirectXCommon&) = delete;
+	const DirectXCommon& operator=(const DirectXCommon&) = delete;
 
 	/// <summary>
 	/// DXGIデバイス初期化

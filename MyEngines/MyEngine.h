@@ -5,7 +5,7 @@
 #pragma once
 
 #include "WinApp.h"
-#include "DirectX.h"
+#include "DirectXCommon.h"
 #include "DrawSystem.h"
 
 
@@ -61,7 +61,7 @@ private:
 	// ウィンドウ
 	static WinApp* winApp_;
 	// DirectX
-	static DirectX* directX_;
+	static DirectXCommon* directXCommon_;
 	// 描画システム
 	static DrawSystem* drawSystem_;
 };
