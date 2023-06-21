@@ -49,7 +49,6 @@ private: // メンバ変数
 	};
 	struct VertexTriangle {
 		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;		// GPU上の頂点データの格納場所
-		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;	// マテリアルデータの格納場所
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};				// BufferLocationは頂点データ格納場所のアドレス
 		// 三角形の頂点リソース
 		VectorPosColor* vertexData_ = nullptr;
