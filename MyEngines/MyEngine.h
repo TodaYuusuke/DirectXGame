@@ -6,7 +6,7 @@
 
 #include "WinApp.h"
 #include "DirectXCommon.h"
-#include "DrawSystem.h"
+#include "DrawingProcessor.h"
 
 
 
@@ -63,5 +63,5 @@ private:
 	// DirectX
 	static DirectXCommon* directXCommon_;
 	// 描画システム
-	static DrawSystem* drawSystem_;
+	static DrawingProcessor* drawSystem_;
 };

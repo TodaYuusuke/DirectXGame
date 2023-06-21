@@ -1,4 +1,4 @@
-#include "DrawSystem.h"
+#include "DrawingProcessor.h"
 #include <cassert>
 #include <format>
 #include "MyUtility.h"
@@ -6,20 +6,20 @@
 
 using namespace Microsoft::WRL;
 
-DrawSystem* DrawSystem::GetInstance() {
-	static DrawSystem instance;
+DrawingProcessor* DrawingProcessor::GetInstance() {
+	static DrawingProcessor instance;
 	return &instance;
 }
 
-void DrawSystem::Initialize(DirectXCommon* DirectXCommon) {
-	DirectXCommon_ = DirectXCommon;
+void DrawingProcessor::Initialize(DirectXCommon* DirectXCommon) {
+	directXCommon_ = DirectXCommon;
 
 	InitialzieDXC();
 	CreateGraphicsPipeLineState();
 	CreateVerTexTriangle();
 }
 
-void DrawSystem::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
+void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
 
 	// 最大数を超えていないかチェック
 	assert(vertexTriangle_->triangleCount_ < kMaxTriangleCount_);
@@ -27,30 +27,34 @@ void DrawSystem::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned
 	// Resourceにデータを書き込む 
 	int index = vertexTriangle_->triangleCount_ * kVertexCountTriangle_;
 
-	// vertexDataに代入
-	vertexTriangle_->vertexData_[index].position = {pos1.x,pos1.y,pos1.z,1.0f};
+	// vertexDataに座標を代入
+	vertexTriangle_->vertexData_[index].position = { pos1.x,pos1.y,pos1.z,1.0f };
+	vertexTriangle_->vertexData_[index].color = HexColorToVector4(color);
 	vertexTriangle_->vertexData_[index + 1].position = { pos2.x,pos2.y,pos2.z,1.0f };
+	vertexTriangle_->vertexData_[index + 1].color = HexColorToVector4(color);
 	vertexTriangle_->vertexData_[index + 2].position = { pos3.x,pos3.y,pos3.z,1.0f };
+	vertexTriangle_->vertexData_[index + 2].color = HexColorToVector4(color);
 
 	// コマンドを積む
-	ID3D12GraphicsCommandList* commandList = DirectXCommon_->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
 	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
 	commandList->SetPipelineState(pipelineSet_->graphicsPipelineState_.Get());	// PSOを設定
 	commandList->IASetVertexBuffers(0, 1, &vertexTriangle_->vertexBufferView_);	// VBVを設定
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// マテリアルCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(0, vertexTriangle_->materialResource_->GetGPUVirtualAddress());
 	// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 	commandList->DrawInstanced(3, 1, vertexTriangle_->triangleCount_ * 3, 0);
 
-	color;
 	// 描画数+1
 	vertexTriangle_->triangleCount_++;
 }
 
 
 
-void DrawSystem::InitialzieDXC() {
+void DrawingProcessor::InitialzieDXC() {
 	HRESULT hr = S_FALSE;
 
 	dxc_ = std::make_unique<DXC>();
@@ -68,13 +72,28 @@ void DrawSystem::InitialzieDXC() {
 
 }
 
+#pragma region PipelineSet
+
 #pragma region PSO生成関連
 
-void DrawSystem::CreateRootSignature() {
+void DrawingProcessor::CreateRootSignature() {
 	HRESULT hr = S_FALSE;
 
+	// RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	// RootParameter作成。複数設定できるのに配列。今回は結果2つなので長さ2の配列
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
+	rootParameters[0].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;		// SRVを使う（色データ用）
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
+	rootParameters[1].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
+	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
+	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
+	
 	// シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
@@ -84,31 +103,42 @@ void DrawSystem::CreateRootSignature() {
 		assert(false);
 	}
 	// バイナリを元に生成
-	hr = DirectXCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->rootSignature_));
+	hr = directXCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->rootSignature_));
 	assert(SUCCEEDED(hr));
 
 	signatureBlob->Release();
 	//errorBlob->Release();
 }
-D3D12_INPUT_LAYOUT_DESC DrawSystem::CreateInputLayout() {
-	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[1] = {};
-	inputElementDescs[0].SemanticName = "POSITION";
-	inputElementDescs[0].SemanticIndex = 0;
-	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+D3D12_INPUT_LAYOUT_DESC DrawingProcessor::CreateInputLayout() {
+	// 頂点レイアウト
+	//static D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
+	//inputElementDescs[0].SemanticName = "POSITION";
+	//inputElementDescs[0].SemanticIndex = 0;
+	//inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	//inputElementDescs[1].SemanticName = "COLOR";
+	//inputElementDescs[1].SemanticIndex = 0;
+	//inputElementDescs[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
 	return inputLayoutDesc;
 }
-D3D12_BLEND_DESC DrawSystem::CreateBlendState() {
+D3D12_BLEND_DESC DrawingProcessor::CreateBlendState() {
 	// すべての色要素を書き込む
 	D3D12_BLEND_DESC blendDesc{};
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	return blendDesc;
 }
-D3D12_RASTERIZER_DESC DrawSystem::CreateRasterizerState() {
+D3D12_RASTERIZER_DESC DrawingProcessor::CreateRasterizerState() {
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面（時計回り）を表示しない
 	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
@@ -117,14 +147,14 @@ D3D12_RASTERIZER_DESC DrawSystem::CreateRasterizerState() {
 	
 	return rasterizerDesc;
 }
-IDxcBlob* DrawSystem::CreateVertexShader() {
+IDxcBlob* DrawingProcessor::CreateVertexShader() {
 	// シェーダーをコンパイルする
 	IDxcBlob* vertexShaderBlob{};
 	vertexShaderBlob = CompileShader(L"./Resources/Object3d.VS.hlsl", L"vs_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
 	assert(vertexShaderBlob != nullptr);
 	return vertexShaderBlob;
 }
-IDxcBlob* DrawSystem::CreatePixelShader() {
+IDxcBlob* DrawingProcessor::CreatePixelShader() {
 	// シェーダーをコンパイルする
 	IDxcBlob* pixelShaderBlob{};
 	pixelShaderBlob = CompileShader(L"./Resources/Object3d.PS.hlsl", L"ps_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
@@ -134,13 +164,13 @@ IDxcBlob* DrawSystem::CreatePixelShader() {
 
 #pragma endregion
 
-void DrawSystem::CreateGraphicsPipeLineState() {
+void DrawingProcessor::CreateGraphicsPipeLineState() {
 	HRESULT hr = S_FALSE;
 
 	pipelineSet_ = std::make_unique<PipelineSet>();
 
 	CreateRootSignature();
-	
+
 	IDxcBlob* vertexShader = CreateVertexShader();
 	IDxcBlob* pixelShader = CreatePixelShader();
 
@@ -160,15 +190,45 @@ void DrawSystem::CreateGraphicsPipeLineState() {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// 実際に生成
-	hr = DirectXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_));
+	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
 
 	vertexShader->Release();
 	pixelShader->Release();
 }
 
-void DrawSystem::CreateVertexResource() {
+#pragma endregion
+
+void DrawingProcessor::CreateVertexTriangleBufferView() {
+	// 頂点バッファビューを作成する
+	// リソースの先頭アドレスから使う
+	vertexTriangle_->vertexBufferView_.BufferLocation = vertexTriangle_->vertexResource_.Get()->GetGPUVirtualAddress();
+	// 使用するリソースのサイズ
+	vertexTriangle_->vertexBufferView_.SizeInBytes = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_;
+	// 1頂点あたりのサイズ
+	vertexTriangle_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
+}
+
+void DrawingProcessor::CreateVerTexTriangle() {
+
+	vertexTriangle_ = std::make_unique<VertexTriangle>();
+
+	vertexTriangle_->vertexResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_);
+	CreateVertexTriangleBufferView();
+	// 書き込むためのアドレスを取得
+	vertexTriangle_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexTriangle_->vertexData_));
+
+	// マテリアル用のリソースを作る。
+	vertexTriangle_->materialResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_);
+	// 書き込むためのアドレスを取得
+	vertexTriangle_->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexTriangle_->vertexData_->color));
+}
+
+
+ID3D12Resource* DrawingProcessor::CreateBufferResource(size_t sizeInBytes) {
 	HRESULT hr = S_FALSE;
+
+	ID3D12Resource* vertexResource;
 
 	// 頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
@@ -177,7 +237,7 @@ void DrawSystem::CreateVertexResource() {
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
 	// バッファリソース。テクスチャの場合はまた別の設定をする
 	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_; // リソースのサイズ。今回はVectorPosColorを3頂点分
+	vertexResourceDesc.Width = sizeInBytes; // リソースのサイズ
 	// バッファの場合はこれらは1にする決まり
 	vertexResourceDesc.Height = 1;
 	vertexResourceDesc.DepthOrArraySize = 1;
@@ -186,34 +246,13 @@ void DrawSystem::CreateVertexResource() {
 	// バッファの場合はこれにする決まり
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 実際に頂点リソースを作る
-	hr = DirectXCommon_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexTriangle_->vertexResource_));
+	hr = directXCommon_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
+
+	return vertexResource;
 }
 
-void DrawSystem::CreateVertexBufferView() {
-	
-	// 頂点バッファビューを作成する
-	// リソースの先頭アドレスから使う
-	vertexTriangle_->vertexBufferView_.BufferLocation = vertexTriangle_->vertexResource_.Get()->GetGPUVirtualAddress();
-	// 使用するリソースのサイズは頂点3つ分のサイズ
-	vertexTriangle_->vertexBufferView_.SizeInBytes = sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_;
-	// 1頂点あたりのサイズ
-	vertexTriangle_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
-}
-
-void DrawSystem::CreateVerTexTriangle() {
-
-	vertexTriangle_ = std::make_unique<VertexTriangle>();
-
-	CreateVertexResource();
-	CreateVertexBufferView();
-
-	// 書き込むためのアドレスを取得
-	vertexTriangle_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexTriangle_->vertexData_));
-}
-
-// シェーダーのコンパイル関数
-IDxcBlob* DrawSystem::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
+IDxcBlob* DrawingProcessor::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 
 	/*-- 1.hlslファイルを読む --*/
 
@@ -279,4 +318,15 @@ IDxcBlob* DrawSystem::CompileShader(const std::wstring& filePath, const wchar_t*
 	shaderResult->Release();
 	// 実行用のバイナリを返却
 	return shaderBlob;
+}
+
+Vector4 DrawingProcessor::HexColorToVector4(unsigned int color) {
+	Vector4 result;
+	float* f[4] = { &result.w, &result.z, &result.y, &result.x };
+	for (int i = 0; i < 4; i++) {
+		*f[i] = (float)(color % 0x100 / 0xFF);
+		color /= 0x100;
+	}
+
+	return result;
 }

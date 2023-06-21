@@ -14,7 +14,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
 	winApp_ = WinApp::GetInstance();
 	directXCommon_ = DirectXCommon::GetInstance();
-	drawSystem_ = DrawSystem::GetInstance();
+	drawSystem_ = DrawingProcessor::GetInstance();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
@@ -79,4 +79,4 @@ void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned i
 
 WinApp* MyEngine::winApp_ = nullptr;
 DirectXCommon* MyEngine::directXCommon_ = nullptr;
-DrawSystem* MyEngine::drawSystem_ = nullptr;
+DrawingProcessor* MyEngine::drawSystem_ = nullptr;

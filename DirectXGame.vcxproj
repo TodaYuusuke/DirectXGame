@@ -92,11 +92,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="MyEngines\DirectXCommon.cpp" />
     <ClCompile Include="MyEngines\MyEngine.cpp" />
     <ClCompile Include="MyEngines\MyUtility.cpp" />
-    <ClCompile Include="MyEngines\DrawSystem.cpp" />
+    <ClCompile Include="MyEngines\DrawingProcessor.cpp" />
     <ClCompile Include="MyEngines\WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Resources\Shape.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Matrix4x4.h" />
@@ -106,7 +110,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="MyEngines\DirectXCommon.h" />
     <ClInclude Include="MyEngines\MyEngine.h" />
     <ClInclude Include="MyEngines\MyUtility.h" />
-    <ClInclude Include="MyEngines\DrawSystem.h" />
+    <ClInclude Include="MyEngines\DrawingProcessor.h" />
     <ClInclude Include="MyEngines\WinApp.h" />
   </ItemGroup>
   <ItemGroup>

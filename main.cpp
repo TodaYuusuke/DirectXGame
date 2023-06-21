@@ -34,14 +34,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			leftTrianglePos[0],
 			leftTrianglePos[1],
 			leftTrianglePos[2],
-			0xFFFFFFFF
+			0x00FF00FF
 		);
 		// 右側の三角形を描画
 		MyEngine::DrawTriangle(
 			rightTrianglePos[0],
 			rightTrianglePos[1],
 			rightTrianglePos[2],
-			0xFFFFFFFF
+			0x0000FFFF
 		);
 		
 

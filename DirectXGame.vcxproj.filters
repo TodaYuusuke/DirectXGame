@@ -27,10 +27,7 @@
     <ClCompile Include="MyEngines\DirectXCommon.cpp">
       <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
-    <ClCompile Include="MyEngines\DrawSystem.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="MyEngines\DrawingProcessor.cpp">
       <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
     <ClCompile Include="MyEngines\MyEngine.cpp">
@@ -42,9 +39,15 @@
     <ClCompile Include="MyEngines\WinApp.cpp">
       <Filter>ソース ファイル\MyEngine</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Resources\Shape.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Matrix4x4.h">
@@ -62,7 +65,7 @@
     <ClInclude Include="MyEngines\DirectXCommon.h">
       <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\DrawSystem.h">
+    <ClInclude Include="MyEngines\DrawingProcessor.h">
       <Filter>ヘッダー ファイル\MyEngine</Filter>
     </ClInclude>
     <ClInclude Include="MyEngines\MyEngine.h">
