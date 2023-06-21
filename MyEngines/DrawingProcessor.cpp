@@ -44,7 +44,7 @@ void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, un
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// マテリアルCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(0, vertexTriangle_->materialResource_->GetGPUVirtualAddress());
+	//commandList->SetGraphicsRootConstantBufferView(0, vertexTriangle_->materialResource_->GetGPUVirtualAddress());
 	// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 	commandList->DrawInstanced(3, 1, vertexTriangle_->triangleCount_ * 3, 0);
 
@@ -217,11 +217,6 @@ void DrawingProcessor::CreateVerTexTriangle() {
 	CreateVertexTriangleBufferView();
 	// 書き込むためのアドレスを取得
 	vertexTriangle_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexTriangle_->vertexData_));
-
-	// マテリアル用のリソースを作る。
-	vertexTriangle_->materialResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxTriangleCount_ * kVertexCountTriangle_);
-	// 書き込むためのアドレスを取得
-	vertexTriangle_->materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexTriangle_->vertexData_->color));
 }
 
 
