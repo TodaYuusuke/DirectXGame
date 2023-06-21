@@ -34,7 +34,7 @@ void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, un
 	vertexTriangle_->vertexData_[index + 1].color = HexColorToVector4(color);
 	vertexTriangle_->vertexData_[index + 2].position = { pos3.x,pos3.y,pos3.z,1.0f };
 	vertexTriangle_->vertexData_[index + 2].color = HexColorToVector4(color);
-
+		
 	// コマンドを積む
 	ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
