@@ -8,8 +8,6 @@
 #include "DirectXCommon.h"
 #include "DrawingProcessor.h"
 
-
-
 class MyEngine
 {	
 public: // メンバ関数
@@ -48,7 +46,7 @@ public: // メンバ関数
 #pragma region 描画関数
 
 	// 三角形描画関数
-	static void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color);
+	static void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, DrawingProcessor::FillMode fillMode);
 
 #pragma endregion
 

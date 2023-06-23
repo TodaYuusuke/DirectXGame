@@ -12,11 +12,12 @@
 class DrawingProcessor
 {
 public: // メンバ関数
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static DrawingProcessor* GetInstance();
+
+	// コンストラクタ
+	DrawingProcessor() = default;
+	// デストラクタ
+	~DrawingProcessor() = default;
+
 
 	/// <summary>
 	/// 初期化
@@ -28,8 +29,13 @@ public: // メンバ関数
 	/// </summary>
 	void Reset();
 
+	enum FillMode {
+		kWireFrame,	// ワイヤーフレーム
+		kFill,		// 埋め立て
+	};
+
 	// 描画関数たち
-	void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color);
+	void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, FillMode fillMode);
 
 private: // メンバ変数
 	// DirectXCommon管理
@@ -46,7 +52,8 @@ private: // メンバ変数
 	};
 	struct PipelineSet {
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;			// リソースとシェーダーのバインディングを定義
-		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;	// グラフィックパイプラインの状態を定義
+		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateWireFrame_;	// グラフィックパイプラインの状態（WireFrame）を定義
+		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateFill_;	// グラフィックパイプラインの状態（Fill）を定義
 	};
 	struct CBuffer {
 		Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;	// 定数バッファ
@@ -77,8 +84,6 @@ private: // メンバ変数
 	static const UINT kVertexCountTriangle_ = 3;
 
 private: // 非公開のメンバ関数
-	DrawingProcessor() = default;
-	~DrawingProcessor() = default;
 	DrawingProcessor(const DrawingProcessor&) = delete;
 	const DrawingProcessor& operator=(const DrawingProcessor&) = delete;
 

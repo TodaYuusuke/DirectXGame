@@ -5,11 +5,11 @@
 class WinApp
 {
 public: // メンバ関数
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns>インスタンス</returns>
-	static WinApp* GetInstance();
+
+	// コンストラクタ
+	WinApp() = default;
+	// デストラクタ
+	~WinApp() = default;
 
 	/// <summary>
 	/// 初期化
@@ -45,8 +45,6 @@ private: // メンバ変数
 
 
 private: // 非公開のメンバ関数
-	WinApp() = default;
-	~WinApp() = default;
 	WinApp(const WinApp&) = delete;
 	const WinApp& operator=(const WinApp&) = delete;
 

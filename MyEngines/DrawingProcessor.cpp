@@ -6,11 +6,6 @@
 
 using namespace Microsoft::WRL;
 
-DrawingProcessor* DrawingProcessor::GetInstance() {
-	static DrawingProcessor instance;
-	return &instance;
-}
-
 void DrawingProcessor::Initialize(DirectXCommon* DirectXCommon) {
 	directXCommon_ = DirectXCommon;
 
@@ -24,7 +19,7 @@ void DrawingProcessor::Reset() {
 	vertexTriangle_->triangleCount_ = 0;
 }
 
-void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
+void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, FillMode fillMode) {
 	// 最大数を超えていないかチェック
 	assert(vertexTriangle_->triangleCount_ < kMaxTriangleCount_);
 
@@ -38,12 +33,22 @@ void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, un
 	vertexTriangle_->vertexData_[index + 1].color = HexColorToVector4(color);
 	vertexTriangle_->vertexData_[index + 2].position = { pos3.x,pos3.y,pos3.z,1.0f };
 	vertexTriangle_->vertexData_[index + 2].color = HexColorToVector4(color);
-	
+
 	// コマンドを積む
 	ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
 	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
-	commandList->SetPipelineState(pipelineSet_->graphicsPipelineState_.Get());	// PSOを設定
+	// PSOを設定
+	switch (fillMode)
+	{
+		case DrawingProcessor::kWireFrame:
+			commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateWireFrame_.Get());
+			break;
+		case DrawingProcessor::kFill:
+		default:
+			commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateFill_.Get());
+			break;
+	}
 	commandList->IASetVertexBuffers(0, 1, &vertexTriangle_->vertexBufferView_);	// VBVを設定
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -112,16 +117,6 @@ void DrawingProcessor::CreateRootSignature() {
 }
 D3D12_INPUT_LAYOUT_DESC DrawingProcessor::CreateInputLayout() {
 	// 頂点レイアウト
-	//static D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
-	//inputElementDescs[0].SemanticName = "POSITION";
-	//inputElementDescs[0].SemanticIndex = 0;
-	//inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	//inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	//inputElementDescs[1].SemanticName = "COLOR";
-	//inputElementDescs[1].SemanticIndex = 0;
-	//inputElementDescs[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	//inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
 	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
@@ -143,7 +138,7 @@ D3D12_RASTERIZER_DESC DrawingProcessor::CreateRasterizerState() {
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面（時計回り）を表示しない
 	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
-	// 三角形の中を塗りつぶす
+	// 埋め立てで設定
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	
 	return rasterizerDesc;
@@ -191,7 +186,11 @@ void DrawingProcessor::CreateGraphicsPipeLineState() {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// 実際に生成
-	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_));
+	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineStateFill_));
+	assert(SUCCEEDED(hr));
+	// ワイヤーフレームモードも生成
+	graphicsPipelineStateDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineStateWireFrame_));
 	assert(SUCCEEDED(hr));
 
 	vertexShader->Release();

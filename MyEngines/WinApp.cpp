@@ -2,11 +2,6 @@
 #include <cstdint>
 #include "MyUtility.h"
 
-WinApp* WinApp::GetInstance() {
-	static WinApp instance;
-	return &instance;
-}
-
 void WinApp::Initialize(const char* title, int width, int height) {
 
 	// 初期化

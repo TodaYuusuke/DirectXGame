@@ -12,11 +12,12 @@
 class DirectXCommon
 {
 public: // メンバ関数
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static DirectXCommon* GetInstance();
+
+	// コンストラクタ
+	DirectXCommon() = default;
+	// デストラクタ
+	~DirectXCommon() = default;
+
 
 	/// <summary>
 	/// 初期化
@@ -63,8 +64,6 @@ private: // メンバ変数
 
 
 private: // 非公開のメンバ関数
-	DirectXCommon() = default;
-	~DirectXCommon() = default;
 	DirectXCommon(const DirectXCommon&) = delete;
 	const DirectXCommon& operator=(const DirectXCommon&) = delete;
 

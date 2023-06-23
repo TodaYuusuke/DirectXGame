@@ -12,9 +12,9 @@
 void MyEngine::Initialize(const char* title, int width, int height) {
 
 	// インスタンスを受け取る
-	winApp_ = WinApp::GetInstance();
-	directXCommon_ = DirectXCommon::GetInstance();
-	drawSystem_ = DrawingProcessor::GetInstance();
+	winApp_ = new WinApp();
+	directXCommon_ = new DirectXCommon();
+	drawSystem_ = new DrawingProcessor();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
@@ -68,8 +68,8 @@ void MyEngine::Finalize() {
 
 #pragma region 描画関数
 
-void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
-	drawSystem_->DrawTriangle(pos1, pos2, pos3, color);
+void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, DrawingProcessor::FillMode fillMode) {
+	drawSystem_->DrawTriangle(pos1, pos2, pos3, color, fillMode);
 }
 
 #pragma endregion
