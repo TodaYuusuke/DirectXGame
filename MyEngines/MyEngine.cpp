@@ -42,6 +42,8 @@ void MyEngine::BeginFrame() {
 /// </summary>
 void MyEngine::EndFrame() {
 	directXCommon_->PostDraw();
+	// 描画数リセット
+	drawSystem_->Reset();
 }
 
 

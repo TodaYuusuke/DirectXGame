@@ -16,11 +16,15 @@ void DrawingProcessor::Initialize(DirectXCommon* DirectXCommon) {
 
 	InitialzieDXC();
 	CreateGraphicsPipeLineState();
-	CreateVerTexTriangle();
+	CreateConstantBuffer();
+	CreateVertexTriangle();
+}
+
+void DrawingProcessor::Reset() {
+	vertexTriangle_->triangleCount_ = 0;
 }
 
 void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color) {
-
 	// 最大数を超えていないかチェック
 	assert(vertexTriangle_->triangleCount_ < kMaxTriangleCount_);
 
@@ -34,7 +38,7 @@ void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, un
 	vertexTriangle_->vertexData_[index + 1].color = HexColorToVector4(color);
 	vertexTriangle_->vertexData_[index + 2].position = { pos3.x,pos3.y,pos3.z,1.0f };
 	vertexTriangle_->vertexData_[index + 2].color = HexColorToVector4(color);
-		
+	
 	// コマンドを積む
 	ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
@@ -43,8 +47,8 @@ void DrawingProcessor::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, un
 	commandList->IASetVertexBuffers(0, 1, &vertexTriangle_->vertexBufferView_);	// VBVを設定
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	// マテリアルCBufferの場所を設定
-	//commandList->SetGraphicsRootConstantBufferView(0, vertexTriangle_->materialResource_->GetGPUVirtualAddress());
+	// wvp用のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->wvpResource_->GetGPUVirtualAddress());
 	// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 	commandList->DrawInstanced(3, 1, vertexTriangle_->triangleCount_ * 3, 0);
 
@@ -83,14 +87,11 @@ void DrawingProcessor::CreateRootSignature() {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	// RootParameter作成。複数設定できるのに配列。今回は結果2つなので長さ2の配列
-	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	// RootParameter作成。複数設定できるのに配列。今回は結果1つなので長さ1の配列
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;		// SRVを使う（色データ用）
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
-	rootParameters[1].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
 	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
 	
@@ -199,6 +200,20 @@ void DrawingProcessor::CreateGraphicsPipeLineState() {
 
 #pragma endregion
 
+void DrawingProcessor::CreateConstantBuffer() {
+	
+	cBuffer_ = std::make_unique<CBuffer>();
+
+	// wvpのリソースを作る。サイズはMatrix4x4 1つ分
+	cBuffer_->wvpResource_ = CreateBufferResource(sizeof(Matrix4x4));
+	// データを書き込む
+	cBuffer_->wvpData_ = nullptr;
+	// 書き込むためのアドレスを取得
+	cBuffer_->wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&cBuffer_->wvpData_));
+	// 単位行列を書き込んでおく
+	*cBuffer_->wvpData_ = Matrix4x4::CreateIdentity4x4();
+}
+
 void DrawingProcessor::CreateVertexTriangleBufferView() {
 	// 頂点バッファビューを作成する
 	// リソースの先頭アドレスから使う
@@ -209,7 +224,7 @@ void DrawingProcessor::CreateVertexTriangleBufferView() {
 	vertexTriangle_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
 }
 
-void DrawingProcessor::CreateVerTexTriangle() {
+void DrawingProcessor::CreateVertexTriangle() {
 
 	vertexTriangle_ = std::make_unique<VertexTriangle>();
 

@@ -2,6 +2,7 @@
 #include "DirectXCommon.h"
 #include "../math/Vector3.h"
 #include "../math/Vector4.h"
+#include "../math/Matrix4x4.h"
 
 #include <memory>
 #include <dxcapi.h>
@@ -21,6 +22,11 @@ public: // メンバ関数
 	/// 初期化
 	/// </summary>
 	void Initialize(DirectXCommon* DirectXCommon);
+
+	/// <summary>
+	/// 描画数リセット
+	/// </summary>
+	void Reset();
 
 	// 描画関数たち
 	void DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color);
@@ -42,28 +48,31 @@ private: // メンバ変数
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;			// リソースとシェーダーのバインディングを定義
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;	// グラフィックパイプラインの状態を定義
 	};
+	struct CBuffer {
+		Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;	// 定数バッファ
+		Matrix4x4* wvpData_;	// 定数リソース
+	};
 	
 	struct VectorPosColor {
-		Vector4 position;
-		Vector4 color;
+		Vector4 position;	// 座標
+		Vector4 color;		// 色
 	};
 	struct VertexTriangle {
-		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;		// GPU上の頂点データの格納場所
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};				// BufferLocationは頂点データ格納場所のアドレス
-		// 三角形の頂点リソース
-		VectorPosColor* vertexData_ = nullptr;
-		// 三角形の描画数
-		uint32_t triangleCount_ = 0;
+		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;	// GPU上の頂点データの格納場所
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};			// BufferLocationは頂点データ格納場所のアドレス
+		VectorPosColor* vertexData_ = nullptr;	// 三角形の頂点リソース
+		uint32_t triangleCount_ = 0;			// 三角形の描画数
 	};
 
 	// 描画関連
 	std::unique_ptr<DXC> dxc_;
 	std::unique_ptr<PipelineSet> pipelineSet_;
+	std::unique_ptr<CBuffer> cBuffer_;
 	// 三角形
 	std::unique_ptr<VertexTriangle> vertexTriangle_;
 
 	// 三角形の最大数
-	static const int32_t kMaxTriangleCount_ = 32768;
+	static const int32_t kMaxTriangleCount_ = 256;
 	// 三角形の頂点数
 	static const UINT kVertexCountTriangle_ = 3;
 
@@ -98,7 +107,10 @@ private: // 非公開のメンバ関数
 
 #pragma endregion
 
-
+	/// <summary>
+	/// 定数バッファを作成
+	/// </summary>
+	void CreateConstantBuffer();
 
 	/// <summary>
 	/// 頂点バッファビューを作成
@@ -109,7 +121,7 @@ private: // 非公開のメンバ関数
 	/// <summary>
 	/// 三角形の頂点バッファを作成
 	/// </summary>
-	void CreateVerTexTriangle();
+	void CreateVertexTriangle();
 
 
 	/// <summary>
