@@ -1,10 +1,11 @@
 #include "DrawingProcessor.h"
 #include <cassert>
 #include <format>
-#include "MyUtility.h"
+#include "../utility/MyUtility.h"
 
 
 using namespace Microsoft::WRL;
+using namespace LWP;
 
 void DrawingProcessor::Initialize(DirectXCommon* DirectXCommon) {
 	directXCommon_ = DirectXCommon;

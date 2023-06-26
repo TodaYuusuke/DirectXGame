@@ -1,10 +1,11 @@
 #include "DirectXCommon.h"
-#include "MyUtility.h"
+#include "../utility/MyUtility.h"
 
 #include <cassert>
 #include <format>
 
 using namespace Microsoft::WRL;
+using namespace LWP;
 
 void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
 

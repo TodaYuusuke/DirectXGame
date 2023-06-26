@@ -88,40 +88,39 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\3d\DrawingProcessor.cpp" />
+    <ClCompile Include="Engine\base\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\base\WinApp.cpp" />
+    <ClCompile Include="Engine\math\Matrix4x4.cpp" />
+    <ClCompile Include="Engine\math\Vector3.cpp" />
+    <ClCompile Include="Engine\math\Vector4.cpp" />
+    <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="math\Matrix4x4.cpp" />
-    <ClCompile Include="math\Vector3.cpp" />
-    <ClCompile Include="math\Vector4.cpp" />
-    <ClCompile Include="MyEngines\DirectXCommon.cpp" />
-    <ClCompile Include="MyEngines\MyEngine.cpp" />
-    <ClCompile Include="MyEngines\MyUtility.cpp" />
-    <ClCompile Include="MyEngines\DrawingProcessor.cpp" />
-    <ClCompile Include="MyEngines\WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\Shape.hlsli">
+    <None Include="Engine\resources\Shape.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="math\Matrix4x4.h" />
-    <ClInclude Include="math\Vector2.h" />
-    <ClInclude Include="math\Vector3.h" />
-    <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="MyEngines\DirectXCommon.h" />
-    <ClInclude Include="MyEngines\MyEngine.h" />
-    <ClInclude Include="MyEngines\MyUtility.h" />
-    <ClInclude Include="MyEngines\DrawingProcessor.h" />
-    <ClInclude Include="MyEngines\WinApp.h" />
+    <ClInclude Include="Engine\3d\DrawingProcessor.h" />
+    <ClInclude Include="Engine\base\DirectXCommon.h" />
+    <ClInclude Include="Engine\base\WinApp.h" />
+    <ClInclude Include="Engine\math\Matrix4x4.h" />
+    <ClInclude Include="Engine\math\Vector2.h" />
+    <ClInclude Include="Engine\math\Vector3.h" />
+    <ClInclude Include="Engine\math\Vector4.h" />
+    <ClInclude Include="Engine\utility\MyUtility.h" />
+    <ClInclude Include="Engine\utility\namespace.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Object3d.PS.hlsl">
+    <FxCompile Include="Engine\resources\Object3d.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\Object3d.VS.hlsl">
+    <FxCompile Include="Engine\resources\Object3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

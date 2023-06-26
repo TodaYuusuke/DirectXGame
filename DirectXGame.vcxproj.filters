@@ -13,86 +13,98 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\math">
-      <UniqueIdentifier>{7ed6176d-4845-4214-92d1-86de53f1c091}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\MyEngine">
+    <Filter Include="LWP">
       <UniqueIdentifier>{59e63d58-22ee-4793-bb7f-f98111db9cbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\MyEngine">
-      <UniqueIdentifier>{f4945e0b-62a4-4128-817b-80f1c741216a}</UniqueIdentifier>
+    <Filter Include="LWP\Adapter">
+      <UniqueIdentifier>{42cec828-d06f-4e81-8fb7-5bc0a248197f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine">
+      <UniqueIdentifier>{a12865bf-59ac-4d55-959f-38f62fc595b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\base">
+      <UniqueIdentifier>{64c4f52d-473c-4cd6-b4a6-c98adcc7405a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\math">
+      <UniqueIdentifier>{94c93275-c8b8-4c42-bd37-72e59e7e3959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\3d">
+      <UniqueIdentifier>{87e10995-1e89-46d8-81ef-0691bd0d0494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource">
+      <UniqueIdentifier>{942cfc37-32f6-411e-bb5f-33d7739a3cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\utility">
+      <UniqueIdentifier>{96561714-0229-4621-ac64-ce68a404661d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyEngines\DirectXCommon.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="MyEngines\DrawingProcessor.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="MyEngines\MyEngine.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="MyEngines\MyUtility.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="MyEngines\WinApp.cpp">
-      <Filter>ソース ファイル\MyEngine</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="math\Matrix4x4.cpp">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClCompile Include="Engine\3d\DrawingProcessor.cpp">
+      <Filter>LWP\Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="math\Vector3.cpp">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClCompile Include="Engine\base\DirectXCommon.cpp">
+      <Filter>LWP\Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="math\Vector4.cpp">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClCompile Include="Engine\base\WinApp.cpp">
+      <Filter>LWP\Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Matrix4x4.cpp">
+      <Filter>LWP\Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Vector3.cpp">
+      <Filter>LWP\Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Vector4.cpp">
+      <Filter>LWP\Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\MyUtility.cpp">
+      <Filter>LWP\Engine\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\Shape.hlsli">
-      <Filter>リソース ファイル</Filter>
+    <None Include="Engine\resources\Shape.hlsli">
+      <Filter>LWP\Engine\resource</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="math\Matrix4x4.h">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClInclude Include="Engine\3d\DrawingProcessor.h">
+      <Filter>LWP\Engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="math\Vector2.h">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClInclude Include="Engine\base\DirectXCommon.h">
+      <Filter>LWP\Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="math\Vector3.h">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClInclude Include="Engine\base\WinApp.h">
+      <Filter>LWP\Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="math\Vector4.h">
-      <Filter>ヘッダー ファイル\math</Filter>
+    <ClInclude Include="Engine\math\Matrix4x4.h">
+      <Filter>LWP\Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\DirectXCommon.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="Engine\math\Vector2.h">
+      <Filter>LWP\Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\DrawingProcessor.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="Engine\math\Vector3.h">
+      <Filter>LWP\Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\MyEngine.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="Engine\math\Vector4.h">
+      <Filter>LWP\Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\MyUtility.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="Engine\utility\MyUtility.h">
+      <Filter>LWP\Engine\utility</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngines\WinApp.h">
-      <Filter>ヘッダー ファイル\MyEngine</Filter>
+    <ClInclude Include="Engine\utility\namespace.h">
+      <Filter>LWP\Engine\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Object3d.PS.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="Engine\resources\Object3d.PS.hlsl">
+      <Filter>LWP\Engine\resource</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Object3d.VS.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="Engine\resources\Object3d.VS.hlsl">
+      <Filter>LWP\Engine\resource</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

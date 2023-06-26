@@ -1,6 +1,8 @@
 #include "WinApp.h"
 #include <cstdint>
-#include "MyUtility.h"
+#include "../utility/MyUtility.h"
+
+using namespace LWP;
 
 void WinApp::Initialize(const char* title, int width, int height) {
 
