@@ -5,7 +5,6 @@
 
 
 using namespace Microsoft::WRL;
-using namespace LWP;
 
 void DrawingProcessor::Initialize(DirectXCommon* DirectXCommon) {
 	directXCommon_ = DirectXCommon;

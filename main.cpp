@@ -1,5 +1,5 @@
 #pragma once
-#include "MyEngines/MyEngine.h"
+#include "./Adapter/LWP.h"
 
 const char kWindowTitle[] = "CG2WindowClass";
 
@@ -7,6 +7,7 @@ const char kWindowTitle[] = "CG2WindowClass";
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	MyEngine::Initialize(kWindowTitle, 1280, 720);
+
 
 	//////////////////////////////////////
 	/////　　　　初期化処理ここまで　　　　/////

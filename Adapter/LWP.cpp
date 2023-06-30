@@ -1,5 +1,5 @@
-#include "MyEngine.h"
-#include "MyUtility.h"
+#include "LWP.h"
+#include "../Engine/utility/MyUtility.h"
 #include <dxgidebug.h>
 #pragma comment(lib, "dxguid.lib")
 
@@ -9,10 +9,10 @@
 /// <param name="title">ウィンドウタイトル</param>
 /// <param name="width">ウィンドウの横幅</param>
 /// <param name="height">ウィンドウの縦幅</param>
-void MyEngine::Initialize(const char* title, int width, int height) {
+void LWP::Adapter::Initialize(const char* title, int width, int height) {
 
 	// インスタンスを受け取る
-	winApp_ = new WinApp();
+	winApp_ = new Base::WinApp();
 	directXCommon_ = new DirectXCommon();
 	drawSystem_ = new DrawingProcessor();
 
@@ -26,7 +26,7 @@ void MyEngine::Initialize(const char* title, int width, int height) {
 /// ウィンドウからのイベントをチェックする関数
 /// </summary>
 /// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
-bool MyEngine::ProcessMessage() {
+bool Adapter::ProcessMessage() {
 	return !winApp_->ProcessMessage();
 }
 
@@ -34,13 +34,13 @@ bool MyEngine::ProcessMessage() {
 /// <summary>
 /// フレーム開始
 /// </summary>
-void MyEngine::BeginFrame() {
+void Adapter::BeginFrame() {
 	directXCommon_->PreDraw();
 }
 /// <summary>
 /// フレーム終了
 /// </summary>
-void MyEngine::EndFrame() {
+void Adapter::EndFrame() {
 	directXCommon_->PostDraw();
 	// 描画数リセット
 	drawSystem_->Reset();
@@ -50,7 +50,7 @@ void MyEngine::EndFrame() {
 /// <summary>
 /// ライブラリの終了
 /// </summary>
-void MyEngine::Finalize() {
+void Adapter::Finalize() {
 
 	CloseWindow(winApp_->GetHWND());
 
@@ -68,7 +68,7 @@ void MyEngine::Finalize() {
 
 #pragma region 描画関数
 
-void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, DrawingProcessor::FillMode fillMode) {
+void Adapter::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, DrawingProcessor::FillMode fillMode) {
 	drawSystem_->DrawTriangle(pos1, pos2, pos3, color, fillMode);
 }
 
@@ -79,6 +79,6 @@ void MyEngine::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned i
 //　　　　メンバ変数　　　　//
 //ーーーーーーーーーーーーー//
 
-WinApp* MyEngine::winApp_ = nullptr;
-DirectXCommon* MyEngine::directXCommon_ = nullptr;
-DrawingProcessor* MyEngine::drawSystem_ = nullptr;
+WinApp* Adapter::winApp_ = nullptr;
+DirectXCommon* Adapter::directXCommon_ = nullptr;
+DrawingProcessor* Adapter::drawSystem_ = nullptr;
