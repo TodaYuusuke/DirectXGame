@@ -95,6 +95,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\math\Vector4.cpp" />
+    <ClCompile Include="Engine\scene\TItle.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -114,6 +115,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\Vector2.h" />
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
+    <ClInclude Include="Engine\scene\IScene.h" />
+    <ClInclude Include="Engine\scene\TItle.h" />
     <ClInclude Include="Engine\utility\MyUtility.h" />
     <ClInclude Include="Engine\utility\namespace.h" />
   </ItemGroup>

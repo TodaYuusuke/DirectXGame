@@ -37,6 +37,9 @@
     <Filter Include="LWP\Engine\utility">
       <UniqueIdentifier>{96561714-0229-4621-ac64-ce68a404661d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LWP\Engine\scene">
+      <UniqueIdentifier>{42ca6928-c188-4a05-9b5d-3e3c076d2948}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="Adapter\LWP.cpp">
       <Filter>LWP\Adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\TItle.cpp">
+      <Filter>LWP\Engine\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="Adapter\LWP.h">
       <Filter>LWP\Adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\IScene.h">
+      <Filter>LWP\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\TItle.h">
+      <Filter>LWP\Engine\scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

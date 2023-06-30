@@ -25,7 +25,7 @@ namespace LWP {
 	class Adapter
 	{
 	public: // メンバ関数
-
+		h
 		/// <summary>
 		/// ライブラリの初期化
 		/// </summary>
