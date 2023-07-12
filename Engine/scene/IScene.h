@@ -1,4 +1,5 @@
 #pragma once
+#include "../../Adapter/LWP.h"
 
 class IScene {
 public:
@@ -13,5 +14,5 @@ public:
 
 
 	// 次のシーン（nullの間はシーン遷移しない）
-	IScene* nextScene = nullptr;
+	IScene* nextScene_ = nullptr;
 };

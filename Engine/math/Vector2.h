@@ -3,7 +3,10 @@
 /// <summary>
 /// 2次元ベクトル
 /// </summary>
-struct Vector2 final {
-	float x;
-	float y;
-};
+namespace LWP::Math {
+	class Vector2 final {
+	public:
+		float x;
+		float y;
+	};
+}

@@ -2,6 +2,8 @@
 #include <cstdint>
 #include "../utility/MyUtility.h"
 
+using namespace LWP::Base;
+
 void WinApp::Initialize(const char* title, int width, int height) {
 
 	// 初期化

@@ -40,12 +40,15 @@
     <Filter Include="LWP\Engine\scene">
       <UniqueIdentifier>{42ca6928-c188-4a05-9b5d-3e3c076d2948}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LWP\Engine\3d\Primitive">
+      <UniqueIdentifier>{dafb0a97-4036-41df-84f0-67fb18f7c45f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\DrawingProcessor.cpp">
+    <ClCompile Include="Engine\3d\PrimitiveController.cpp">
       <Filter>LWP\Engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
@@ -69,8 +72,20 @@
     <ClCompile Include="Adapter\LWP.cpp">
       <Filter>LWP\Adapter</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\TItle.cpp">
+    <ClCompile Include="Engine\scene\Title.cpp">
       <Filter>LWP\Engine\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\SceneController.cpp">
+      <Filter>LWP\Engine\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\GameScene.cpp">
+      <Filter>LWP\Engine\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Primitive\Triangle.cpp">
+      <Filter>LWP\Engine\3d\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\Color.cpp">
+      <Filter>LWP\Engine\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +95,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\3d\DrawingProcessor.h">
+    <ClInclude Include="Engine\3d\PrimitiveController.h">
       <Filter>LWP\Engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXCommon.h">
@@ -104,17 +119,35 @@
     <ClInclude Include="Engine\utility\MyUtility.h">
       <Filter>LWP\Engine\utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\namespace.h">
-      <Filter>LWP\Engine\utility</Filter>
-    </ClInclude>
     <ClInclude Include="Adapter\LWP.h">
       <Filter>LWP\Adapter</Filter>
     </ClInclude>
     <ClInclude Include="Engine\scene\IScene.h">
       <Filter>LWP\Engine\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\TItle.h">
+    <ClInclude Include="Engine\scene\Title.h">
       <Filter>LWP\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\SceneController.h">
+      <Filter>LWP\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\GameScene.h">
+      <Filter>LWP\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Primitive\Triangle.h">
+      <Filter>LWP\Engine\3d\Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Primitive\IPrimitive.h">
+      <Filter>LWP\Engine\3d\Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Math.h">
+      <Filter>LWP\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\Color.h">
+      <Filter>LWP\Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\3d.h">
+      <Filter>LWP\Engine\3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

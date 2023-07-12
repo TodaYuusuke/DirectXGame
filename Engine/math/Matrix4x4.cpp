@@ -1,5 +1,7 @@
 #include "Matrix4x4.h"
 
+using namespace LWP::Math;
+
 // *** オペーレーターオーバーロード *** //
 
 // Matrix4x4 Add(+) Matrix4x4

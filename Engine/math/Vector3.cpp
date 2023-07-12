@@ -1,5 +1,7 @@
 #include "Vector3.h"
 
+using namespace LWP::Math;
+
 // *** オペーレーターオーバーロード *** //
 
 // Vector3 Add(+) Vector3

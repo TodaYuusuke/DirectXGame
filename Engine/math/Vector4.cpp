@@ -1,5 +1,7 @@
 #include "Vector4.h"
 
+using namespace LWP::Math;
+
 // *** オペーレーターオーバーロード *** //
 
 // Vector4 Add(+) Vector4

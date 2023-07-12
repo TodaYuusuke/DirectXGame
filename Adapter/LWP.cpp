@@ -1,56 +1,67 @@
 #include "LWP.h"
+#include "../Engine/scene/SceneController.h"
 #include "../Engine/utility/MyUtility.h"
 #include <dxgidebug.h>
 #pragma comment(lib, "dxguid.lib")
 
-/// <summary>
-/// ライブラリの初期化
-/// </summary>
-/// <param name="title">ウィンドウタイトル</param>
-/// <param name="width">ウィンドウの横幅</param>
-/// <param name="height">ウィンドウの縦幅</param>
-void LWP::Adapter::Initialize(const char* title, int width, int height) {
+using namespace LWP;
 
+using namespace Base;
+using namespace Primitive;
+using namespace Math;
+using namespace Scene;
+
+void Engine::Run() {
+
+	const char kWindowTitle[] = "CG2WindowClass";
+	Initialize(kWindowTitle, 1280, 720);
+
+	// ウィンドウの×ボタンが押されるまでループ
+	while (ProcessMessage()) {
+		BeginFrame();
+
+		// 更新処理
+		sceneController_->Update();
+		// 描画処理
+		sceneController_->Draw();
+
+		EndFrame();
+	}
+	Finalize();
+}
+
+
+void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
-	winApp_ = new Base::WinApp();
+	winApp_ = new WinApp();
 	directXCommon_ = new DirectXCommon();
-	drawSystem_ = new DrawingProcessor();
+	primitiveController_ = new Primitive::Controller();
+	sceneController_ = new Scene::Controller();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
 	directXCommon_->Initialize(winApp_, width, height);
-	drawSystem_->Initialize(directXCommon_);
+	primitiveController_->Initialize(directXCommon_);
+	sceneController_->Initialize();
 }
 
-/// <summary>
-/// ウィンドウからのイベントをチェックする関数
-/// </summary>
-/// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
-bool Adapter::ProcessMessage() {
+bool Engine::ProcessMessage() {
 	return !winApp_->ProcessMessage();
 }
 
 
-/// <summary>
-/// フレーム開始
-/// </summary>
-void Adapter::BeginFrame() {
+void Engine::BeginFrame() {
 	directXCommon_->PreDraw();
 }
-/// <summary>
-/// フレーム終了
-/// </summary>
-void Adapter::EndFrame() {
+
+void Engine::EndFrame() {
 	directXCommon_->PostDraw();
 	// 描画数リセット
-	drawSystem_->Reset();
+	primitiveController_->Reset();
 }
 
 
-/// <summary>
-/// ライブラリの終了
-/// </summary>
-void Adapter::Finalize() {
+void Engine::Finalize() {
 
 	CloseWindow(winApp_->GetHWND());
 
@@ -66,19 +77,14 @@ void Adapter::Finalize() {
 
 
 
-#pragma region 描画関数
-
-void Adapter::DrawTriangle(Vector3 pos1, Vector3 pos2, Vector3 pos3, unsigned int color, DrawingProcessor::FillMode fillMode) {
-	drawSystem_->DrawTriangle(pos1, pos2, pos3, color, fillMode);
-}
-
-#pragma endregion
 
 
-//ーーーーーーーーーーーーー//
-//　　　　メンバ変数　　　　//
-//ーーーーーーーーーーーーー//
+// ウィンドウ
+Base::WinApp* Engine::winApp_;
+// DirectX
+Base::DirectXCommon* Engine::directXCommon_;
+// 描画システム
+Primitive::Controller* Engine::primitiveController_;
 
-WinApp* Adapter::winApp_ = nullptr;
-DirectXCommon* Adapter::directXCommon_ = nullptr;
-DrawingProcessor* Adapter::drawSystem_ = nullptr;
+// シーンマネージャー
+Scene::Controller* Engine::sceneController_;
