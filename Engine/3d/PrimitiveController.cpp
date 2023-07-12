@@ -28,19 +28,12 @@ void Controller::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 	// 1ループで三角形を１つ描画
 	for (int i = 0; i < vertexCount - 2; i++) {
 		// primitiveVertexに座標を代入
-		//primitiveVertex_->vertexData_[vertexIndex].position = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
-		//primitiveVertex_->vertexData_[vertexIndex].color = vertex[0].color.GetVector4();
-		//primitiveVertex_->vertexData_[vertexIndex + 1].position = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
-		//primitiveVertex_->vertexData_[vertexIndex + 1].color = vertex[i + 1].color.GetVector4();
-		//primitiveVertex_->vertexData_[vertexIndex + 2].position = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
-		//primitiveVertex_->vertexData_[vertexIndex + 2].color = vertex[i + 2].color.GetVector4();
-
-		primitiveVertex_->vertexData_[vertexIndex].position = { -0.5f,-0.5f,0.0f,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex].color = { 255.0f,0.0f,0.0f,255.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 1].position = { -0.5f,0.5f,0.0f,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 1].color = { 0.0f,0.0f,0.0f,255.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 2].position = { -0.2f,0.0f,0.0f,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 2].color = { 0.0f,0.0f,0.0f,255.0f };
+		primitiveVertex_->vertexData_[vertexIndex].position = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex].color = vertex[0].color.GetVector4();
+		primitiveVertex_->vertexData_[vertexIndex + 1].position = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex + 1].color = vertex[i + 1].color.GetVector4();
+		primitiveVertex_->vertexData_[vertexIndex + 2].position = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex + 2].color = vertex[i + 2].color.GetVector4();
 
 		// コマンドを積む
 		ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
@@ -342,5 +335,3 @@ IDxcBlob* Controller::CompileShader(const std::wstring& filePath, const wchar_t*
 	// 実行用のバイナリを返却
 	return shaderBlob;
 }
-
-

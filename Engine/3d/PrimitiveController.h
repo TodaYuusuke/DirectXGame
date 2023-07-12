@@ -142,6 +142,5 @@ namespace LWP::Primitive {
 		/// シェーダーのコンパイル関数
 		/// </summary>
 		IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
-
 	};
 }

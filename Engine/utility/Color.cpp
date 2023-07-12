@@ -17,6 +17,6 @@ Color::Color(int r, int g, int b, int a) {
 	A = static_cast<unsigned char>(a);
 }
 
-Vector4 Color::GetVector4() {
-	return { static_cast<float>(R),static_cast<float>(G),static_cast<float>(B),static_cast<float>(A) };
+Vector4 Color::GetVector4() {	
+	return { static_cast<float>(R) / 255.0f,static_cast<float>(G) / 255.0f,static_cast<float>(B) / 255.0f,static_cast<float>(A) / 255.0f };
 }
