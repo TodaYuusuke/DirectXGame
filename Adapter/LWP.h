@@ -13,8 +13,10 @@
 #include "../Engine/object/WorldTransform.h"
 
 #include "../Engine/primitive/Primitive.h"
+#include "../Engine/primitive/2d/IPrimitive.h"
 
 //#include "../Engine/scene/SceneController.h"
+
 
 // LightWeightParticle
 namespace LWP {
@@ -41,10 +43,7 @@ namespace LWP {
 	}
 
 	template<class T>
-	concept IsIPrimitive = std::is_base_of<IPrimitive, T>::value;
-
-	template<class TPrimitive>
-	requires IsIPrimitive<TPrimitive>
+	concept IsIPrimitive = std::is_base_of<Primitive::IPrimitive, T>::value;
 
 	class Engine {
 	public:
@@ -56,7 +55,8 @@ namespace LWP {
 		/// <summary>
 		/// 三角形のインスタンスを作成
 		/// </summary>
-		static std::function<TPrimitive>* CreatePrimitiveInstance() { return new std::function<TPrimitive>(primitiveController_); }
+		template <IsIPrimitive TPrimitive>
+		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveController_); }
 
 	private: // メンバ関数
 

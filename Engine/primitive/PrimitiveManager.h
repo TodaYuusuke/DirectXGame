@@ -1,21 +1,20 @@
 #pragma once
 #include "../base/DirectXCommon.h"
-#include "../math/Vector3.h"
-#include "../math/Vector4.h"
-#include "../math/Matrix4x4.h"
+#include "../math/Math.h"
 
 #include <memory>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
 #include <vector>
 
-class Vertex;
 
 namespace LWP::Primitive {
 	enum FillMode : int {
 		WireFrame,	// ワイヤーフレーム
 		Fill,		// 埋め立て
 	};
+
+	struct Vertex;
 
 	class Manager {
 	public: // メンバ関数
@@ -69,8 +68,8 @@ namespace LWP::Primitive {
 		};
 
 		struct VectorPosColor {
-			Math::Vector4 position;	// 座標
-			Math::Vector4 color;	// 色
+			Math::Vector4 position_;	// 座標
+			Math::Vector4 color_;	// 色
 		};
 		struct PrimitiveVertex {
 			Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;	// GPU上の頂点データの格納場所

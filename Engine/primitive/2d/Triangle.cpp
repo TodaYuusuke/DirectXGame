@@ -4,9 +4,9 @@
 using namespace LWP::Primitive;
 
 Triangle::Triangle(Manager* controller) {
-	controller_ = controller;
+	primitiveManager = controller;
 }
 
 void Triangle::Draw(FillMode fillmode) {
-	controller_->Draw(vertices, GetVertexCount(), fillmode);
+	primitiveManager->Draw(vertices, GetVertexCount(), fillmode);
 }

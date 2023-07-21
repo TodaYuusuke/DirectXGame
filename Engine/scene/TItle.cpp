@@ -4,10 +4,8 @@ using namespace LWP::Primitive;
 
 // 初期化
 void Title::Initialize() {
-	tri[0] = LWP::Engine::CreateTriangle();
-	tri[1] = LWP::Engine::CreateTriangle();
-	tri[0] = LWP::Engine
-	tri[1] = LWP::Engine::CreateTriangle();
+	tri[0] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
+	tri[1] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
 
 	// 三角形の座標
 	tri[0]->vertices[0].position = { -0.5f,-0.5f,0.0f };

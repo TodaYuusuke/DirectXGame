@@ -2,6 +2,7 @@
 #include <cassert>
 #include <format>
 #include "../utility/MyUtility.h"
+#include "2d/IPrimitive.h"
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;
@@ -28,12 +29,12 @@ void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 	// 1ループで三角形を１つ描画
 	for (int i = 0; i < vertexCount - 2; i++) {
 		// primitiveVertexに座標を代入
-		primitiveVertex_->vertexData_[vertexIndex].position = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex].color = vertex[0].color.GetVector4();
-		primitiveVertex_->vertexData_[vertexIndex + 1].position = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 1].color = vertex[i + 1].color.GetVector4();
-		primitiveVertex_->vertexData_[vertexIndex + 2].position = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 2].color = vertex[i + 2].color.GetVector4();
+		primitiveVertex_->vertexData_[vertexIndex].position_ = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex].color_ = vertex[0].color.GetVector4();
+		primitiveVertex_->vertexData_[vertexIndex + 1].position_ = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex + 1].color_ = vertex[i + 1].color.GetVector4();
+		primitiveVertex_->vertexData_[vertexIndex + 2].position_ = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex + 2].color_ = vertex[i + 2].color.GetVector4();
 
 		// コマンドを積む
 		ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();

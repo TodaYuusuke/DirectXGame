@@ -24,6 +24,6 @@ namespace LWP::Primitive {
 		virtual int GetVertexCount() const = 0;
 
 	protected:
-		Manager* controller_;
+		Manager* primitiveManager;
 	};
 }

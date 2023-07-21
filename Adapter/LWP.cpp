@@ -1,5 +1,5 @@
 #include "LWP.h"
-#include "../Engine/scene/SceneController.h"
+#include "../Engine/scene/SceneManager.h"
 #include "../Engine/utility/MyUtility.h"
 #include <dxgidebug.h>
 #pragma comment(lib, "dxguid.lib")
