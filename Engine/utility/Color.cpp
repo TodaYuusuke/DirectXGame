@@ -12,8 +12,8 @@ Color::Color() {
 
 Color::Color(int r, int g, int b, int a) {
 	R = static_cast<unsigned char>(r);
-	G = static_cast<unsigned char>(b);
-	B = static_cast<unsigned char>(g);
+	G = static_cast<unsigned char>(g);
+	B = static_cast<unsigned char>(b);
 	A = static_cast<unsigned char>(a);
 }
 
