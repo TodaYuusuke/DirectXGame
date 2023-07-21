@@ -3,7 +3,7 @@
 
 using namespace LWP::Primitive;
 
-Triangle::Triangle(Controller* controller) {
+Triangle::Triangle(Manager* controller) {
 	controller_ = controller;
 }
 

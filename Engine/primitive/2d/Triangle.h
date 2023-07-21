@@ -9,7 +9,7 @@ namespace LWP::Primitive {
 		: public IPrimitive {
 	public:
 		// コンストラクタ
-		Triangle(Controller*);
+		Triangle(Manager*);
 
 		/// 頂点（※必ず右回りに座標を配置すること）
 		Vertex vertices[3]{};

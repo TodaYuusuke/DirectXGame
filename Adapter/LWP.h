@@ -2,13 +2,19 @@
 //　　　　　　　　自作エンジン試作第２号くん　　　　　　　　//
 //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー//
 #pragma once
+#include <functional>
+
 #include "../Engine/base/WinApp.h"
 #include "../Engine/base/DirectXCommon.h"
 
-#include "../Engine/3d/3d.h"
+#include "../Engine/math/Math.h"
 
-#include "../Engine/math/math.h"
+#include "../Engine/object/ObjectManager.h"
+#include "../Engine/object/WorldTransform.h"
 
+#include "../Engine/primitive/Primitive.h"
+
+//#include "../Engine/scene/SceneController.h"
 
 // LightWeightParticle
 namespace LWP {
@@ -16,19 +22,29 @@ namespace LWP {
 		class WinApp;
 		class DirectXCommon;
 	}
-	namespace Primitive {
-		class Controller;
-		class Triangle;
-	}
 	namespace Math {
 		class Vector2;
 		class Vector3;
 		class Vector4;
 		class Matrix4x4;
 	}
-	namespace Scene {
-		class Controller;
+	namespace Object {
+		class Manager;
+		class WorldTransform;
 	}
+	namespace Primitive {
+		class Manager;
+		class Triangle;
+	}
+	namespace Scene {
+		class Manager;
+	}
+
+	template<class T>
+	concept IsIPrimitive = std::is_base_of<IPrimitive, T>::value;
+
+	template<class TPrimitive>
+	requires IsIPrimitive<TPrimitive>
 
 	class Engine {
 	public:
@@ -40,7 +56,7 @@ namespace LWP {
 		/// <summary>
 		/// 三角形のインスタンスを作成
 		/// </summary>
-		static Primitive::Triangle* CreateTriangle() { return new Primitive::Triangle(primitiveController_); }
+		static std::function<TPrimitive>* CreatePrimitiveInstance() { return new std::function<TPrimitive>(primitiveController_); }
 
 	private: // メンバ関数
 
@@ -80,9 +96,9 @@ namespace LWP {
 		// DirectX
 		static Base::DirectXCommon* directXCommon_;
 		// 描画システム
-		static Primitive::Controller* primitiveController_;
+		static Primitive::Manager* primitiveController_;
 
 		// シーンマネージャー
-		static Scene::Controller* sceneController_;
+		static Scene::Manager* sceneController_;
 	};
 }

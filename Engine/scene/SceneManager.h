@@ -2,7 +2,7 @@
 #include "IScene.h"
 
 namespace LWP::Scene {
-	class Controller final {
+	class Manager final {
 	public: // メンバ関数
 
 		// 初期化

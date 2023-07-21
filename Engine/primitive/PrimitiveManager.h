@@ -9,23 +9,21 @@
 #pragma comment(lib,"dxcompiler.lib")
 #include <vector>
 
+class Vertex;
+
 namespace LWP::Primitive {
-	class IPrimitive;
-	struct Vertex;
-	
 	enum FillMode : int {
 		WireFrame,	// ワイヤーフレーム
 		Fill,		// 埋め立て
 	};
 
-	class Controller
-	{
+	class Manager {
 	public: // メンバ関数
 
 		// コンストラクタ
-		Controller() = default;
+		Manager() = default;
 		// デストラクタ
-		~Controller() = default;
+		~Manager() = default;
 
 		/// <summary>
 		/// 初期化
@@ -36,6 +34,10 @@ namespace LWP::Primitive {
 		/// 描画数リセット
 		/// </summary>
 		void Reset();
+		/// <summary>
+		/// 定数バッファのポインタをセットする
+		/// </summary>
+		void SetwvpMatrix(Math::Matrix4x4* wvpMatrix) { cBuffer_->wvpData_ = wvpMatrix; }
 
 		/// <summary>
 		/// 汎用描画
@@ -89,8 +91,8 @@ namespace LWP::Primitive {
 		int vertexIndex = 0;
 
 	private: // 非公開のメンバ関数
-		Controller(const Controller&) = delete;
-		const Controller& operator=(const Controller&) = delete;
+		Manager(const Manager&) = delete;
+		const Manager& operator=(const Manager&) = delete;
 
 		/// <summary>
 		/// DXC初期化

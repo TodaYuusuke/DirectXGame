@@ -7,8 +7,9 @@
 using namespace LWP;
 
 using namespace Base;
-using namespace Primitive;
 using namespace Math;
+using namespace Object;
+using namespace Primitive;
 using namespace Scene;
 
 void Engine::Run() {
@@ -35,8 +36,8 @@ void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
 	winApp_ = new WinApp();
 	directXCommon_ = new DirectXCommon();
-	primitiveController_ = new Primitive::Controller();
-	sceneController_ = new Scene::Controller();
+	primitiveController_ = new Primitive::Manager();
+	sceneController_ = new Scene::Manager();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
@@ -84,7 +85,7 @@ Base::WinApp* Engine::winApp_;
 // DirectX
 Base::DirectXCommon* Engine::directXCommon_;
 // 描画システム
-Primitive::Controller* Engine::primitiveController_;
+Primitive::Manager* Engine::primitiveController_;
 
 // シーンマネージャー
-Scene::Controller* Engine::sceneController_;
+Scene::Manager* Engine::sceneController_;

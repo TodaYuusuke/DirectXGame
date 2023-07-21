@@ -6,7 +6,7 @@
 
 namespace LWP::Primitive {
 	// インスタンスをコントローラに格納させるため、コンストラクタでポインタを受け取る
-	class Controller;
+	class Manager;
 	enum FillMode : int;
 
 	struct Vertex {
@@ -24,6 +24,6 @@ namespace LWP::Primitive {
 		virtual int GetVertexCount() const = 0;
 
 	protected:
-		Controller* controller_;
+		Manager* controller_;
 	};
 }

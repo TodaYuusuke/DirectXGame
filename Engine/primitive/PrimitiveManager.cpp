@@ -1,4 +1,4 @@
-#include "3d.h"
+#include "PrimitiveManager.h"
 #include <cassert>
 #include <format>
 #include "../utility/MyUtility.h"
@@ -8,7 +8,7 @@ using namespace LWP::Base;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 
-void Controller::Initialize(DirectXCommon* DirectXCommon) {
+void Manager::Initialize(DirectXCommon* DirectXCommon) {
 	directXCommon_ = DirectXCommon;
 
 	InitialzieDXC();
@@ -17,11 +17,11 @@ void Controller::Initialize(DirectXCommon* DirectXCommon) {
 	CreatePrimitiveVertex();
 }
 
-void Controller::Reset() {
+void Manager::Reset() {
 	vertexIndex = 0;
 }
 
-void Controller::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
+void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 	// 最大数を超えていないかチェック
 	assert(vertexIndex < kMaxVertexCount);
 	vertex;
@@ -63,7 +63,7 @@ void Controller::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 }
 
 
-void Controller::InitialzieDXC() {
+void Manager::InitialzieDXC() {
 	HRESULT hr = S_FALSE;
 
 	dxc_ = std::make_unique<DXC>();
@@ -84,7 +84,7 @@ void Controller::InitialzieDXC() {
 
 #pragma region PSO生成関連
 
-void Controller::CreateRootSignature() {
+void Manager::CreateRootSignature() {
 	HRESULT hr = S_FALSE;
 
 	// RootSignature作成
@@ -114,7 +114,7 @@ void Controller::CreateRootSignature() {
 	signatureBlob->Release();
 	//errorBlob->Release();
 }
-D3D12_INPUT_LAYOUT_DESC Controller::CreateInputLayout() {
+D3D12_INPUT_LAYOUT_DESC Manager::CreateInputLayout() {
 	// 頂点レイアウト
 	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -127,7 +127,7 @@ D3D12_INPUT_LAYOUT_DESC Controller::CreateInputLayout() {
 
 	return inputLayoutDesc;
 }
-D3D12_BLEND_DESC Controller::CreateBlendState() {
+D3D12_BLEND_DESC Manager::CreateBlendState() {
 	// すべての色要素を書き込む
 	D3D12_BLEND_DESC blendDesc{};
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
@@ -141,7 +141,7 @@ D3D12_BLEND_DESC Controller::CreateBlendState() {
 	//blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	return blendDesc;
 }
-D3D12_RASTERIZER_DESC Controller::CreateRasterizerState() {
+D3D12_RASTERIZER_DESC Manager::CreateRasterizerState() {
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面（時計回り）を表示しない
 	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
@@ -150,24 +150,24 @@ D3D12_RASTERIZER_DESC Controller::CreateRasterizerState() {
 	
 	return rasterizerDesc;
 }
-IDxcBlob* Controller::CreateVertexShader() {
+IDxcBlob* Manager::CreateVertexShader() {
 	// シェーダーをコンパイルする
 	IDxcBlob* vertexShaderBlob{};
-	vertexShaderBlob = CompileShader(L"./Engine/resources/Object3d.VS.hlsl", L"vs_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
+	vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
 	assert(vertexShaderBlob != nullptr);
 	return vertexShaderBlob;
 }
-IDxcBlob* Controller::CreatePixelShader() {
+IDxcBlob* Manager::CreatePixelShader() {
 	// シェーダーをコンパイルする
 	IDxcBlob* pixelShaderBlob{};
-	pixelShaderBlob = CompileShader(L"./Engine/resources/Object3d.PS.hlsl", L"ps_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
+	pixelShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
 	assert(pixelShaderBlob != nullptr);
 	return pixelShaderBlob;
 }
 
 #pragma endregion
 
-void Controller::CreateGraphicsPipeLineState() {
+void Manager::CreateGraphicsPipeLineState() {
 	HRESULT hr = S_FALSE;
 
 	pipelineSet_ = std::make_unique<PipelineSet>();
@@ -206,7 +206,7 @@ void Controller::CreateGraphicsPipeLineState() {
 
 #pragma endregion
 
-void Controller::CreateConstantBuffer() {
+void Manager::CreateConstantBuffer() {
 	
 	cBuffer_ = std::make_unique<CBuffer>();
 
@@ -220,7 +220,7 @@ void Controller::CreateConstantBuffer() {
 	*cBuffer_->wvpData_ = Matrix4x4::CreateIdentity4x4();
 }
 
-void Controller::CreateVertexTriangleBufferView() {
+void Manager::CreateVertexTriangleBufferView() {
 	// 頂点バッファビューを作成する
 	// リソースの先頭アドレスから使う
 	primitiveVertex_->vertexBufferView_.BufferLocation = primitiveVertex_->vertexResource_.Get()->GetGPUVirtualAddress();
@@ -230,7 +230,7 @@ void Controller::CreateVertexTriangleBufferView() {
 	primitiveVertex_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
 }
 
-void Controller::CreatePrimitiveVertex() {
+void Manager::CreatePrimitiveVertex() {
 
 	primitiveVertex_ = std::make_unique<PrimitiveVertex>();
 
@@ -241,7 +241,7 @@ void Controller::CreatePrimitiveVertex() {
 }
 
 
-ID3D12Resource* Controller::CreateBufferResource(size_t sizeInBytes) {
+ID3D12Resource* Manager::CreateBufferResource(size_t sizeInBytes) {
 	HRESULT hr = S_FALSE;
 
 	ID3D12Resource* vertexResource;
@@ -268,7 +268,7 @@ ID3D12Resource* Controller::CreateBufferResource(size_t sizeInBytes) {
 	return vertexResource;
 }
 
-IDxcBlob* Controller::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
+IDxcBlob* Manager::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 
 	/*-- 1.hlslファイルを読む --*/
 
