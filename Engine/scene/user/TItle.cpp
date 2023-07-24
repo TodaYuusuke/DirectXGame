@@ -15,6 +15,7 @@ void Title::Initialize() {
 		tri[i]->vertices[2] = { -0.2f,0.0f,0.0f };
 
 		tri[i]->transform.translation.y = -0.8f + (i * 0.2f);
+		tri[i]->transform.rotation.y = 0.5f * i;
 	}
 	tri[0]->defaultColor = new Color(WHITE);
 	tri[1]->defaultColor = new Color(RED);
@@ -27,10 +28,9 @@ void Title::Initialize() {
 }
 // 更新
 void Title::Update() {
-	tri[1]->transform.translation.z -= 0.02f;
-	tri[2]->transform.translation.z += 0.02f;
-	tri[3]->transform.translation.x -= 0.02f;
-	tri[4]->transform.translation.x += 0.02f;
+	for (int i = 0; i < 8; i++) {
+		tri[i]->transform.rotation.y += 0.02f;
+	}
 }
 // 描画
 void Title::Draw() {
