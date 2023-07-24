@@ -11,7 +11,7 @@ namespace LWP::Primitive {
 
 	struct Vertex {
 		Math::Vector3 position;	// 座標
-		Utility::Color color;	// 色
+		Utility::Color color = { 255,255,255,255 };	// 色
 	};
 
 	class IPrimitive {

@@ -6,6 +6,7 @@ namespace LWP::Utility {
 	public:
 		Color();
 		Color(int r, int g, int b, int a);
+		Color(unsigned int c);
 
 		/// <summary>
 		/// 色情報（0～255）
