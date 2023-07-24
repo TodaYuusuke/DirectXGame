@@ -1,6 +1,8 @@
 #include "LWP.h"
+#include "../Engine/object/default/Camera.h"
 #include "../Engine/scene/SceneManager.h"
 #include "../Engine/utility/MyUtility.h"
+
 #include <dxgidebug.h>
 #pragma comment(lib, "dxguid.lib")
 
@@ -22,28 +24,38 @@ void Engine::Run() {
 		BeginFrame();
 
 		// 更新処理
-		sceneController_->Update();
+		sceneManager_->Update();
+		objectManager_->Update();
 		// 描画処理
-		sceneController_->Draw();
+		sceneManager_->Draw();
+		objectManager_->Draw();
 
 		EndFrame();
 	}
 	Finalize();
 }
 
+void Engine::SetMainCamera(LWP::Object::Camera* mainCamera) { 
+	primitiveManager_->SetwvpMatrix(mainCamera->GetwvpMatrixPtr());
+}
 
 void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
 	winApp_ = new WinApp();
 	directXCommon_ = new DirectXCommon();
-	primitiveController_ = new Primitive::Manager();
-	sceneController_ = new Scene::Manager();
+	objectManager_ = new Object::Manager();
+	primitiveManager_ = new Primitive::Manager();
+	sceneManager_ = new Scene::Manager();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
+	widthPtr = winApp_->GetClientWidthPtr();
+	heightPtr = winApp_->GetClientHeightPtr();
+
 	directXCommon_->Initialize(winApp_, width, height);
-	primitiveController_->Initialize(directXCommon_);
-	sceneController_->Initialize();
+	objectManager_->Initialize();
+	primitiveManager_->Initialize(directXCommon_);
+	sceneManager_->Initialize();
 }
 
 bool Engine::ProcessMessage() {
@@ -58,7 +70,7 @@ void Engine::BeginFrame() {
 void Engine::EndFrame() {
 	directXCommon_->PostDraw();
 	// 描画数リセット
-	primitiveController_->Reset();
+	primitiveManager_->Reset();
 }
 
 
@@ -77,15 +89,17 @@ void Engine::Finalize() {
 }
 
 
-
-
+const int* Engine::widthPtr = nullptr;
+const int* Engine::heightPtr = nullptr;
+const int* const Engine::kWindowWidth = Engine::widthPtr;
+const int* const Engine::kWindowHeight = Engine::heightPtr;
 
 // ウィンドウ
 Base::WinApp* Engine::winApp_;
 // DirectX
 Base::DirectXCommon* Engine::directXCommon_;
 // 描画システム
-Primitive::Manager* Engine::primitiveController_;
+Primitive::Manager* Engine::primitiveManager_;
 
 // シーンマネージャー
-Scene::Manager* Engine::sceneController_;
+Scene::Manager* Engine::sceneManager_;

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../math/Vector3.h"
-#include "../../utility/Color.h"
+#include "../math/Vector3.h"
+#include "../utility/Color.h"
 #include <wrl.h>
 #include <d3d12.h>
 

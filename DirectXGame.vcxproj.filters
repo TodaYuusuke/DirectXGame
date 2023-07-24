@@ -40,20 +40,29 @@
     <Filter Include="LWP\Engine\primitive">
       <UniqueIdentifier>{dafb0a97-4036-41df-84f0-67fb18f7c45f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LWP\Engine\primitive\3d">
-      <UniqueIdentifier>{87e10995-1e89-46d8-81ef-0691bd0d0494}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LWP\Engine\resource\shaders">
       <UniqueIdentifier>{83169c74-f9e5-4b10-ab8a-03a4effe0f73}</UniqueIdentifier>
     </Filter>
     <Filter Include="LWP\Engine\object">
       <UniqueIdentifier>{f193c7a7-1502-4968-a56e-647885787402}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LWP\Engine\object\user">
+      <UniqueIdentifier>{b9c55abe-0430-40df-9d4b-124cf4a89de0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\scene\user">
+      <UniqueIdentifier>{fece809b-ef9e-4479-9fa3-897bb7118f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\primitive\2d">
+      <UniqueIdentifier>{87e10995-1e89-46d8-81ef-0691bd0d0494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\primitive\3d">
+      <UniqueIdentifier>{5621a193-d1cb-4d0a-b584-5ac5526d4eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\object\default">
+      <UniqueIdentifier>{10631e60-1d68-46c8-b97a-787de04af5a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>LWP\Engine\base</Filter>
     </ClCompile>
@@ -75,29 +84,33 @@
     <ClCompile Include="Adapter\LWP.cpp">
       <Filter>LWP\Adapter</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\Title.cpp">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\scene\GameScene.cpp">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\utility\Color.cpp">
       <Filter>LWP\Engine\utility</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\GameObject\Camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\ObjectManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>LWP\Engine\object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>LWP\Engine\primitive</Filter>
     </ClCompile>
     <ClCompile Include="Engine\scene\SceneManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>LWP\Engine\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\user\GameScene.cpp">
+      <Filter>LWP\Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\user\TItle.cpp">
+      <Filter>LWP\Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\object\WorldTransform.cpp">
+      <Filter>LWP\Engine\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\default\Camera.cpp">
+      <Filter>LWP\Engine\object\default</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,34 +144,13 @@
     <ClInclude Include="Adapter\LWP.h">
       <Filter>LWP\Adapter</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\IScene.h">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\Title.h">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\GameScene.h">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\math\Math.h">
       <Filter>LWP\Engine\math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\utility\Color.h">
       <Filter>LWP\Engine\utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\IPrimitive.h">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\Primitive.h">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\GameObject\Camera.h">
-      <Filter>LWP\Engine\object</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\ObjectManager.h">
-      <Filter>LWP\Engine\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\IObject.h">
       <Filter>LWP\Engine\object</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\WorldTransform.h">
@@ -168,10 +160,43 @@
       <Filter>LWP\Engine\scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\2d\Triangle.h">
-      <Filter>LWP\Engine\primitive\3d</Filter>
+      <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\PrimitiveManager.h">
       <Filter>LWP\Engine\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\IObject.h">
+      <Filter>LWP\Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\IScene.h">
+      <Filter>LWP\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\TItle.h">
+      <Filter>LWP\Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\GameScene.h">
+      <Filter>LWP\Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\SceneList.h">
+      <Filter>LWP\Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\PrimitiveList.h">
+      <Filter>LWP\Engine\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\IPrimitive.h">
+      <Filter>LWP\Engine\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\3dList.h">
+      <Filter>LWP\Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\2dList.h">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\user\ObjectList.h">
+      <Filter>LWP\Engine\object\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\default\Camera.h">
+      <Filter>LWP\Engine\object\default</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

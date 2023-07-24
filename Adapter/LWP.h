@@ -12,10 +12,8 @@
 #include "../Engine/object/ObjectManager.h"
 #include "../Engine/object/WorldTransform.h"
 
-#include "../Engine/primitive/Primitive.h"
-#include "../Engine/primitive/2d/IPrimitive.h"
-
-//#include "../Engine/scene/SceneController.h"
+#include "../Engine/primitive/PrimitiveList.h"
+#include "../Engine/primitive/IPrimitive.h"
 
 
 // LightWeightParticle
@@ -33,6 +31,7 @@ namespace LWP {
 	namespace Object {
 		class Manager;
 		class WorldTransform;
+		class Camera;
 	}
 	namespace Primitive {
 		class Manager;
@@ -42,21 +41,50 @@ namespace LWP {
 		class Manager;
 	}
 
-	template<class T>
-	concept IsIPrimitive = std::is_base_of<Primitive::IPrimitive, T>::value;
+	template<class PrimitiveT>
+	concept IsIPrimitive = std::is_base_of<Primitive::IPrimitive, PrimitiveT>::value;
 
 	class Engine {
+	private:
+		static const int* widthPtr;
+		static const int* heightPtr;
+	public: // 現在の解像度
+		static const int* const kWindowWidth;
+		static const int* const kWindowHeight;
+
 	public:
 		/// <summary>
 		/// エンジン起動
+		/// ※ユーザ呼び出し禁止
 		/// </summary>
 		static void Run();
 
 		/// <summary>
+		/// 描画の計算に使うカメラのポインタをセットする
+		/// </summary>
+		/// <param name="mainCamera">使用するカメラのポインタ</param>
+		static void SetMainCamera(Object::Camera* mainCamera);
+
+
+		/// <summary>
+		/// オブジェクトのインスタンスを作成
+		/// </summary>
+		/// <typeparam name="TObject">オブジェクトの種類</typeparam>
+		/// <returns>オブジェクトのインスタンス</returns>
+		template <IsIObject TObject>
+		static TObject* CreateObjectInstance() { return objectManager_->CreateObjectInstance<TObject>(); }
+
+		/// <summary>
 		/// 三角形のインスタンスを作成
 		/// </summary>
+		 
+		/// <summary>
+		/// 形のインスタンスを作成
+		/// </summary>
+		/// <typeparam name="TPrimitive">形の種類</typeparam>
+		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
-		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveController_); }
+		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveManager_); }
 
 	private: // メンバ関数
 
@@ -95,10 +123,12 @@ namespace LWP {
 		static Base::WinApp* winApp_;
 		// DirectX
 		static Base::DirectXCommon* directXCommon_;
-		// 描画システム
-		static Primitive::Manager* primitiveController_;
+		// オブジェクト管理
+		static Object::Manager* objectManager_;
+		// 描画管理
+		static Primitive::Manager* primitiveManager_;
 
 		// シーンマネージャー
-		static Scene::Manager* sceneController_;
+		static Scene::Manager* sceneManager_;
 	};
 }

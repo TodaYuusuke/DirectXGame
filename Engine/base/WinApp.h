@@ -26,8 +26,10 @@ namespace LWP::Base {
 
 
 		// アクセサ
-		int32_t GetClientWidth() const { return clientWidth_; }
-		int32_t GetClientHeight() const { return clientHeight_; }
+		int GetClientWidth() { return clientWidth_; }
+		int GetClientHeight() { return clientHeight_; }
+		int* GetClientWidthPtr() { return &clientWidth_; }
+		int* GetClientHeightPtr() { return &clientHeight_; }
 		HWND GetHWND() const { return hwnd_; }
 
 	private: // メンバ変数

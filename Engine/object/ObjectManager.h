@@ -1,7 +1,9 @@
 #pragma once
 #include "IObject.h"
-
 #include <list>
+
+template<class ObjectT>
+concept IsIObject = std::is_base_of<LWP::Object::IObject, ObjectT>::value;
 
 namespace LWP::Object {
 	class Manager {
@@ -25,6 +27,17 @@ namespace LWP::Object {
 		/// </summary>
 		void Draw();
 
+		
+		/// <summary>
+		/// オブジェクトのインスタンスを登録する
+		/// </summary>
+		/// <param name="object">登録するオブジェクト</param>
+		template <IsIObject TObject>
+		inline TObject* CreateObjectInstance() {
+			TObject* newObject = new TObject();
+			objects.push_back(newObject);
+			return newObject;
+		}
 
 	private: // メンバ変数
 

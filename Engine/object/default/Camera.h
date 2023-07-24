@@ -9,10 +9,15 @@ namespace LWP::Object {
 		void Initialize() override;
 		// 更新
 		void Update() override;
+		// 描画
+		void Draw() override;
+
+		// ワールドビュープロジェクションのポインタを渡す関数
+		Math::Matrix4x4* GetwvpMatrixPtr() { return &worldViewProjectionMatrix; }
 
 	private: // メンバ変数
 
-		// PrimitiveControllerのCBufferに渡すワールドビュープロジェクション行列
+		// PrimitiveManagerのCBufferに渡すワールドビュープロジェクション行列
 		Math::Matrix4x4 worldViewProjectionMatrix;
 	};
 }

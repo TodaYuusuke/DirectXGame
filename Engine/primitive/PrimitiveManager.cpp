@@ -2,7 +2,7 @@
 #include <cassert>
 #include <format>
 #include "../utility/MyUtility.h"
-#include "2d/IPrimitive.h"
+#include "IPrimitive.h"
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;

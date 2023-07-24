@@ -1,5 +1,5 @@
 #pragma once
-#include "IPrimitive.h"
+#include "../IPrimitive.h"
 
 namespace LWP::Primitive {
 	/// <summary>

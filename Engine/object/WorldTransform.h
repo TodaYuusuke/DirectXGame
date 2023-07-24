@@ -5,26 +5,28 @@ namespace LWP::Object {
 	class WorldTransform {
 	public: // パブリックな変数
 		// ローカルスケール
-		Math::Vector3 scale = { 1.0f, 1.0f, 1.0f };
+		Math::Vector3 scale;
 		// X,Y,Z軸回りのローカル回転角
-		Math::Vector3 rotation = { 0.0f, 0.0f, 0.0f };
+		Math::Vector3 rotation;
 		// ローカル座標
-		Math::Vector3 translation = { 0.0f, 0.0f, 0.0f };
+		Math::Vector3 translation;
 
 	public: // パブリックなメンバ関数
-		WorldTransform() = default;
-		WorldTransform(Math::Vector3 s, Math::Vector3 r, Math::Vector3 t) { 
-			scale = s;
-			rotation = r;
-			translation = t;
-		}
+		WorldTransform();
+		WorldTransform(Math::Vector3 s, Math::Vector3 r, Math::Vector3 t);
+		WorldTransform(Math::Vector3 r, Math::Vector3 t);
+		WorldTransform(Math::Vector3 t);
 		~WorldTransform() = default;
 
-		// ワールド座標
-		Math::Vector3 GetWorldPosition() {
-			Math::Matrix4x4 matWorld = GetMatWorld();
-			return { matWorld.m[3][0],matWorld.m[3][1],matWorld.m[3][2] };
-		};
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// ワールド座標を返す
+		/// </summary>
+		Math::Vector3 GetWorldPosition();
 
 
 		// ** プロパティ変数 ** //
@@ -33,21 +35,13 @@ namespace LWP::Object {
 		const WorldTransform* parent_ = nullptr;
 	public: // アクセッサ
 		// 親関係を登録
-		void SetParent(const WorldTransform* parent) { parent_ = parent; }
+		void SetParent(const WorldTransform* parent);
 
 	private: // ワールド変換行列
 		//Math::Matrix4x4 matWorld_{};
 	public: // アクセッサ
 		// ワールド行列を返す
-		Math::Matrix4x4 GetMatWorld() const {
-			Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation); 
+		Math::Matrix4x4 GetMatWorld() const;
 
-			// 親があれば親のワールド行列を掛ける
-			if (parent_) {
-				result = result * parent_->GetMatWorld();
-			}
-
-			return result;
-		}
 	};
 }

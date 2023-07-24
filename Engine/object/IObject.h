@@ -2,10 +2,12 @@
 #include "WorldTransform.h"
 
 namespace LWP::Object {
-	class IObject : public WorldTransform {
+	class IObject {
 	public: // パブリックな変数
 		// アクティブ切り替え
 		bool isActive;
+		// ワールドトランスフォーム
+		WorldTransform transform;
 
 		// ** 純粋仮想関数 ** //
 
@@ -14,10 +16,6 @@ namespace LWP::Object {
 		// 更新
 		virtual void Update() = 0;
 		// 描画
-		virtual void Draw() final;
-	
-	private:
-		IObject() = delete;
-		~IObject() = delete;
+		virtual void Draw() = 0;
 	};
 }

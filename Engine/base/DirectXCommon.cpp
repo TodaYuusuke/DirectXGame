@@ -55,8 +55,8 @@ void DirectXCommon::PreDraw() {
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = (float)winApp_->GetClientWidth();
-	viewport.Height = (float)winApp_->GetClientHeight();
+	viewport.Width = static_cast<float>(winApp_->GetClientWidth());
+	viewport.Height = static_cast<float>(winApp_->GetClientHeight());
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
