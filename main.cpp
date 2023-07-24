@@ -1,4 +1,3 @@
-#pragma once
 #include "./Adapter/LWP.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
