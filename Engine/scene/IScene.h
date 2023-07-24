@@ -7,8 +7,12 @@ public:
 	// 共通の初期化
 	virtual void PreInitialize() final {
 		mainCamera = LWP::Engine::CreateObjectInstance<LWP::Object::Camera>();
-		LWP::Engine::SetMainCamera(mainCamera);
+		mainCamera->transform.translation = {0.0f,0.0f,-5.0f};
 	};
+	// 共通の更新
+	virtual void PostUpdate() {
+		LWP::Engine::SetMainCameraMatrix(mainCamera);
+	}
 
 	//*** 純粋仮想関数 ***//
 

@@ -25,6 +25,13 @@ Vector3 Vector3::operator*(const float& other) const {
 Vector3& Vector3::operator*=(const float& other) {
 	return *this = *this * other;
 }
+Vector3 Vector3::operator*(const Matrix4x4& other) const {
+	Vector3 result{};
+	result.x = x * other.m[0][0] + y * other.m[1][0] + z * other.m[2][0] + other.m[3][0];
+	result.y = x * other.m[0][1] + y * other.m[1][1] + z * other.m[2][1] + other.m[3][1];
+	result.z = x * other.m[0][2] + y * other.m[1][2] + z * other.m[2][2] + other.m[3][2];
+	return result;
+}
 
 
 /// 3次元ベクトルの長さを求める

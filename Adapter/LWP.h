@@ -53,10 +53,10 @@ namespace LWP {
 		static void Run();
 
 		/// <summary>
-		/// 描画の計算に使うカメラのポインタをセットする
+		/// 描画の計算に使うカメラのビュープロジェクションのポインタをセットする
 		/// </summary>
 		/// <param name="mainCamera">使用するカメラのポインタ</param>
-		static void SetMainCamera(Object::Camera* mainCamera);
+		static void SetMainCameraMatrix(Object::Camera* mainCamera);
 
 
 		/// <summary>

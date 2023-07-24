@@ -7,6 +7,8 @@
 /// 4x4行列
 /// </summary>
 namespace LWP::Math {
+	class Vector3;
+
 	class Matrix4x4 final {
 	public:
 		float m[4][4];
@@ -15,13 +17,16 @@ namespace LWP::Math {
 
 		// Matrix4x4 Add(+) Matrix4x4
 		Matrix4x4 operator+(const Matrix4x4& other) const;
+
 		// Matrix4x4 Subtract(-) Matrix4x4
 		Matrix4x4 operator-(const Matrix4x4& other) const;
+
+		// Matrix4x4 Multiply(*) Matrix4x4
+		Matrix4x4 operator*(const Matrix4x4& other) const;
 		// Matrix4x4 Multiply(*) float
 		Matrix4x4 operator*(const float& other) const;
 		friend Matrix4x4 operator*(float scalar, const Matrix4x4& vec) { return vec * scalar; }
-		// Matrix4x4 Multiply(*) Matrix4x4
-		Matrix4x4 operator*(const Matrix4x4& other) const;
+
 
 
 		// *** 任意の行列を返す関数 *** //

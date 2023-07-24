@@ -12,12 +12,12 @@ namespace LWP::Object {
 		// 描画
 		void Draw() override;
 
-		// ワールドビュープロジェクションのポインタを渡す関数
-		Math::Matrix4x4* GetwvpMatrixPtr() { return &worldViewProjectionMatrix; }
+		// ビュープロジェクションを渡す関数
+		Math::Matrix4x4 GetViewProjectionMatrix() { return viewProjectionMatrix; }
 
 	private: // メンバ変数
 
 		// PrimitiveManagerのCBufferに渡すワールドビュープロジェクション行列
-		Math::Matrix4x4 worldViewProjectionMatrix;
+		Math::Matrix4x4 viewProjectionMatrix;
 	};
 }

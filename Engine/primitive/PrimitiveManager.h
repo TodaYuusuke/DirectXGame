@@ -1,5 +1,6 @@
 #pragma once
 #include "../base/DirectXCommon.h"
+#include "../object/core/Camera.h"
 #include "../math/Math.h"
 
 #include <memory>
@@ -31,9 +32,9 @@ namespace LWP::Primitive {
 		/// </summary>
 		void Reset();
 		/// <summary>
-		/// 定数バッファのポインタをセットする
+		/// 描画に使うカメラのポインタをセットする
 		/// </summary>
-		void SetwvpMatrix(Math::Matrix4x4* wvpMatrix) { cBuffer_->wvpData_ = wvpMatrix; }
+		void SetViewProjection(Math::Matrix4x4 viewProjection) { *cBuffer_->vpData_ = viewProjection; }
 
 		/// <summary>
 		/// 汎用描画
@@ -60,8 +61,8 @@ namespace LWP::Primitive {
 			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateFill_;	// グラフィックパイプラインの状態（Fill）を定義
 		};
 		struct CBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;	// 定数バッファ
-			Math::Matrix4x4* wvpData_;	// 定数リソース
+			Microsoft::WRL::ComPtr<ID3D12Resource> vpResource_;	// 定数バッファ
+			Math::Matrix4x4* vpData_;	// 定数リソース
 		};
 
 		struct VectorPosColor {

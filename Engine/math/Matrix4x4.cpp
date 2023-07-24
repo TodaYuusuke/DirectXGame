@@ -14,6 +14,7 @@ Matrix4x4 Matrix4x4::operator+(const Matrix4x4& other) const {
 	}
 	return result;
 }
+
 // Matrix4x4 Subtract(-) Matrix4x4
 Matrix4x4 Matrix4x4::operator-(const Matrix4x4& other) const {
 	Matrix4x4 result{};
@@ -24,16 +25,7 @@ Matrix4x4 Matrix4x4::operator-(const Matrix4x4& other) const {
 	}
 	return result;
 }
-// Matrix4x4 Multiply(*) float
-Matrix4x4 Matrix4x4::operator*(const float& other) const {
-	Matrix4x4 result{};
-	for (int y = 0; y < 4; y++) {
-		for (int x = 0; x < 4; x++) {
-			result.m[y][x] = m[y][x] * other;
-		}
-	}
-	return result;
-}
+
 // Matrix4x4 Multiply(*) Matrix4x4
 Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const {
 	Matrix4x4 result{};
@@ -43,6 +35,16 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const {
 				(m[y][1] * other.m[1][x]) +
 				(m[y][2] * other.m[2][x]) +
 				(m[y][3] * other.m[3][x]);
+		}
+	}
+	return result;
+}
+// Matrix4x4 Multiply(*) float
+Matrix4x4 Matrix4x4::operator*(const float& other) const {
+	Matrix4x4 result{};
+	for (int y = 0; y < 4; y++) {
+		for (int x = 0; x < 4; x++) {
+			result.m[y][x] = m[y][x] * other;
 		}
 	}
 	return result;

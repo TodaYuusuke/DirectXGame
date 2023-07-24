@@ -1,4 +1,5 @@
 #pragma once
+#include "../object/WorldTransform.h"
 #include "../math/Vector3.h"
 #include "../utility/Color.h"
 #include <wrl.h>
@@ -25,6 +26,9 @@ namespace LWP::Primitive {
 		virtual void Draw(FillMode fillmode) = 0;
 		// 頂点数を返す関数
 		virtual int GetVertexCount() const = 0;
+
+		// トランスフォーム
+		LWP::Object::WorldTransform transform;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する

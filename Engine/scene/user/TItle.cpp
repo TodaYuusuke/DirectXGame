@@ -10,16 +10,21 @@ void Title::Initialize() {
 	for (int i = 0; i < 10; i++) {
 		tri[i] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
 
-		tri[i]->vertices[0] = { 0.0f,-0.8f + (i * 0.2f),0.0f };
-		tri[i]->vertices[1] = { 0.2f,-1.0f + (i * 0.2f),0.0f };
-		tri[i]->vertices[2] = { -0.2f,-1.0f + (i * 0.2f),0.0f };
-		
+		tri[i]->vertices[0] = { 0.0f,0.2f,0.0f };
+		tri[i]->vertices[1] = { 0.2f,0.0f,0.0f };
+		tri[i]->vertices[2] = { -0.2f,0.0f,0.0f };
+
+		tri[i]->transform.translation.y = -1.0f + (i * 0.2f);
+
 		tri[i]->defaultColor = new Color(RED);
 	}
 }
 // 更新
 void Title::Update() {
-
+	tri[1]->transform.translation.z -= 0.02f;
+	tri[2]->transform.translation.z += 0.02f;
+	tri[3]->transform.translation.x -= 0.02f;
+	tri[4]->transform.translation.x += 0.02f;
 }
 // 描画
 void Title::Draw() {

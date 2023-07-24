@@ -35,8 +35,8 @@ void Engine::Run() {
 	Finalize();
 }
 
-void Engine::SetMainCamera(LWP::Object::Camera* mainCamera) { 
-	primitiveManager_->SetwvpMatrix(mainCamera->GetwvpMatrixPtr());
+void Engine::SetMainCameraMatrix(Camera* camera) { 
+	primitiveManager_->SetViewProjection(camera->GetViewProjectionMatrix());
 }
 
 void Engine::Initialize(const char* title, int width, int height) {

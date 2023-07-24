@@ -25,7 +25,7 @@ void Manager::Reset() {
 void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 	// 最大数を超えていないかチェック
 	assert(vertexIndex < kMaxVertexCount);
-	vertex;
+
 	// 1ループで三角形を１つ描画
 	for (int i = 0; i < vertexCount - 2; i++) {
 		// primitiveVertexに座標を代入
@@ -55,7 +55,7 @@ void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// wvp用のCBufferの場所を設定
-		commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->wvpResource_->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource_->GetGPUVirtualAddress());
 		// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 		commandList->DrawInstanced(3, 1, vertexIndex, 0);
 
@@ -212,13 +212,13 @@ void Manager::CreateConstantBuffer() {
 	cBuffer_ = std::make_unique<CBuffer>();
 
 	// wvpのリソースを作る。サイズはMatrix4x4 1つ分
-	cBuffer_->wvpResource_ = CreateBufferResource(sizeof(Matrix4x4));
+	cBuffer_->vpResource_ = CreateBufferResource(sizeof(Matrix4x4));
 	// データを書き込む
-	cBuffer_->wvpData_ = nullptr;
+	cBuffer_->vpData_ = nullptr;
 	// 書き込むためのアドレスを取得
-	cBuffer_->wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&cBuffer_->wvpData_));
+	cBuffer_->vpResource_->Map(0, nullptr, reinterpret_cast<void**>(&cBuffer_->vpData_));
 	// 単位行列を書き込んでおく
-	*cBuffer_->wvpData_ = Matrix4x4::CreateIdentity4x4();
+	*cBuffer_->vpData_ = Matrix4x4::CreateIdentity4x4();
 }
 
 void Manager::CreateVertexTriangleBufferView() {
