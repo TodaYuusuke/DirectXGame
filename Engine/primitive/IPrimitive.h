@@ -7,7 +7,10 @@
 namespace LWP::Primitive {
 	// インスタンスをコントローラに格納させるため、コンストラクタでポインタを受け取る
 	class Manager;
-	enum FillMode : int;
+	enum FillMode : int {
+		WireFrame,	// ワイヤーフレーム
+		Fill,		// 埋め立て
+	};
 
 	struct Vertex {
 		Math::Vector3 position;	// 座標
@@ -22,6 +25,11 @@ namespace LWP::Primitive {
 		virtual void Draw(FillMode fillmode) = 0;
 		// 頂点数を返す関数
 		virtual int GetVertexCount() const = 0;
+
+		// 頂点共通のカラー
+		// ・nullptrの場合は頂点ごとに色を参照する
+		// ・そうでない場合は全ての頂点の色がこれになる
+		Utility::Color* defaultColor = nullptr;
 
 	protected:
 		Manager* primitiveManager;

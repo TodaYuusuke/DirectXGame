@@ -2,6 +2,7 @@
 
 using namespace LWP::Primitive;
 using namespace LWP::Math;
+using namespace LWP::Utility;
 
 // 初期化
 void Title::Initialize() {
@@ -13,9 +14,7 @@ void Title::Initialize() {
 		tri[i]->vertices[1] = { 0.2f,-1.0f + (i * 0.2f),0.0f };
 		tri[i]->vertices[2] = { -0.2f,-1.0f + (i * 0.2f),0.0f };
 		
-		tri[i]->vertices[0].color = { 255,255,255,255 };
-		tri[i]->vertices[1].color = { 255,255,255,255 };
-		tri[i]->vertices[2].color = { 255,255,255,255 };
+		tri[i]->defaultColor = new Color(RED);
 	}
 }
 // 更新

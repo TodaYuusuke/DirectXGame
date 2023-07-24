@@ -9,10 +9,7 @@
 
 
 namespace LWP::Primitive {
-	enum FillMode : int {
-		WireFrame,	// ワイヤーフレーム
-		Fill,		// 埋め立て
-	};
+	enum FillMode : int;
 
 	struct Vertex;
 
