@@ -4,10 +4,13 @@
 namespace LWP::Utility {
 	// *** 基本色 *** //
 	enum ColorPattern : unsigned int {
+		WHITE = 0xFFFFFFFF,
 		RED = 0xFF0000FF,
 		GREEN = 0x00FF00FF,
 		BLUE = 0x0000FFFF,
-		WHITE = 0xFFFFFFFF,
+		YELLOW = 0xFFFF00FF,
+		MAGENTA = 0xFF00FFFF,
+		CYAN = 0x00FFFFFF,
 		BLACK = 0x000000FF,
 	};
 

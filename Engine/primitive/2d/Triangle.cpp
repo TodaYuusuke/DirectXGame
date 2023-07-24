@@ -4,8 +4,8 @@
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 
-Triangle::Triangle(Manager* controller) {
-	primitiveManager = controller;
+Triangle::Triangle(Manager* manager) {
+	primitiveManager = manager;
 	transform.Initialize();
 }
 
@@ -19,6 +19,7 @@ void Triangle::Draw(FillMode fillmode) {
 	Vertex v[3]{};
 	for (int i = 0; i < GetVertexCount(); i++) {
 		 v[i].position = vertices[i].position * transform.GetMatWorld();
+		 v[i].color = vertices[i].color;
 	}
 	
 	primitiveManager->Draw(v, GetVertexCount(), fillmode);
