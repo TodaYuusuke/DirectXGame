@@ -10,7 +10,7 @@
 #include "../Engine/math/Math.h"
 
 #include "../Engine/object/ObjectManager.h"
-#include "../Engine/object/WorldTransform.h"
+#include "../Engine/object/ObjectList.h"
 
 #include "../Engine/primitive/PrimitiveList.h"
 #include "../Engine/primitive/IPrimitive.h"
@@ -45,13 +45,6 @@ namespace LWP {
 	concept IsIPrimitive = std::is_base_of<Primitive::IPrimitive, PrimitiveT>::value;
 
 	class Engine {
-	private:
-		static const int* widthPtr;
-		static const int* heightPtr;
-	public: // 現在の解像度
-		static const int* const kWindowWidth;
-		static const int* const kWindowHeight;
-
 	public:
 		/// <summary>
 		/// エンジン起動
@@ -75,16 +68,22 @@ namespace LWP {
 		static TObject* CreateObjectInstance() { return objectManager_->CreateObjectInstance<TObject>(); }
 
 		/// <summary>
-		/// 三角形のインスタンスを作成
-		/// </summary>
-		 
-		/// <summary>
 		/// 形のインスタンスを作成
 		/// </summary>
 		/// <typeparam name="TPrimitive">形の種類</typeparam>
 		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
 		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveManager_); }
+
+		
+	/// <summary>
+	/// 現在の解像度を返す
+	/// </summary>
+		static int GetWindowWidth() { return winApp_->GetClientWidth(); }
+		static int GetWindowHeight() { return winApp_->GetClientHeight(); }
+		static float GetWindowWidthf() { return static_cast<float>(winApp_->GetClientWidth()); }
+		static float GetWindowHeightf() { return static_cast<float>(winApp_->GetClientHeight()); }
+		static Math::Vector2 GetWindow() { return { static_cast<float>(winApp_->GetClientWidth()), static_cast<float>(winApp_->GetClientHeight()) }; }
 
 	private: // メンバ関数
 

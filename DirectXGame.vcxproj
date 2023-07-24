@@ -94,7 +94,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\math\Vector4.cpp" />
-    <ClCompile Include="Engine\object\default\Camera.cpp" />
+    <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\WorldTransform.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
@@ -122,10 +122,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\Vector2.h" />
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
-    <ClInclude Include="Engine\object\default\Camera.h" />
+    <ClInclude Include="Engine\object\core\Camera.h" />
+    <ClInclude Include="Engine\object\core\CoreList.h" />
     <ClInclude Include="Engine\object\IObject.h" />
     <ClInclude Include="Engine\object\ObjectManager.h" />
-    <ClInclude Include="Engine\object\user\ObjectList.h" />
+    <ClInclude Include="Engine\object\user\UserList.h" />
     <ClInclude Include="Engine\object\WorldTransform.h" />
     <ClInclude Include="Engine\primitive\2d\2dList.h" />
     <ClInclude Include="Engine\primitive\2d\Triangle.h" />

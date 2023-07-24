@@ -58,7 +58,7 @@
     <Filter Include="LWP\Engine\primitive\3d">
       <UniqueIdentifier>{5621a193-d1cb-4d0a-b584-5ac5526d4eab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LWP\Engine\object\default">
+    <Filter Include="LWP\Engine\object\core">
       <UniqueIdentifier>{10631e60-1d68-46c8-b97a-787de04af5a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -109,8 +109,8 @@
     <ClCompile Include="Engine\object\WorldTransform.cpp">
       <Filter>LWP\Engine\object</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\default\Camera.cpp">
-      <Filter>LWP\Engine\object\default</Filter>
+    <ClCompile Include="Engine\object\core\Camera.cpp">
+      <Filter>LWP\Engine\object\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,11 +192,14 @@
     <ClInclude Include="Engine\primitive\2d\2dList.h">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\user\ObjectList.h">
+    <ClInclude Include="Engine\object\user\UserList.h">
       <Filter>LWP\Engine\object\user</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\default\Camera.h">
-      <Filter>LWP\Engine\object\default</Filter>
+    <ClInclude Include="Engine\object\core\Camera.h">
+      <Filter>LWP\Engine\object\core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\CoreList.h">
+      <Filter>LWP\Engine\object\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,5 +17,7 @@ namespace LWP::Object {
 		virtual void Update() = 0;
 		// 描画
 		virtual void Draw() = 0;
+
+		virtual ~IObject() = default;
 	};
 }

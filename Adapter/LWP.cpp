@@ -1,5 +1,5 @@
 #include "LWP.h"
-#include "../Engine/object/default/Camera.h"
+#include "../Engine/object/core/Camera.h"
 #include "../Engine/scene/SceneManager.h"
 #include "../Engine/utility/MyUtility.h"
 
@@ -49,8 +49,6 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
-	widthPtr = winApp_->GetClientWidthPtr();
-	heightPtr = winApp_->GetClientHeightPtr();
 
 	directXCommon_->Initialize(winApp_, width, height);
 	objectManager_->Initialize();
@@ -89,15 +87,12 @@ void Engine::Finalize() {
 }
 
 
-const int* Engine::widthPtr = nullptr;
-const int* Engine::heightPtr = nullptr;
-const int* const Engine::kWindowWidth = Engine::widthPtr;
-const int* const Engine::kWindowHeight = Engine::heightPtr;
-
 // ウィンドウ
 Base::WinApp* Engine::winApp_;
 // DirectX
 Base::DirectXCommon* Engine::directXCommon_;
+// オブジェクト管理
+Object::Manager* Engine::objectManager_;
 // 描画システム
 Primitive::Manager* Engine::primitiveManager_;
 

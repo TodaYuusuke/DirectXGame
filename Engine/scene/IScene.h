@@ -1,6 +1,5 @@
 #pragma once
 #include "../../Adapter/LWP.h"
-#include "../object/user/ObjectList.h"
 
 class IScene {
 public:
