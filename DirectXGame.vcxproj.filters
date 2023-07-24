@@ -28,9 +28,6 @@
     <Filter Include="LWP\Engine\math">
       <UniqueIdentifier>{94c93275-c8b8-4c42-bd37-72e59e7e3959}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LWP\Engine\3d">
-      <UniqueIdentifier>{87e10995-1e89-46d8-81ef-0691bd0d0494}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LWP\Engine\resource">
       <UniqueIdentifier>{942cfc37-32f6-411e-bb5f-33d7739a3cbc}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,15 @@
     </Filter>
     <Filter Include="LWP\Engine\primitive">
       <UniqueIdentifier>{dafb0a97-4036-41df-84f0-67fb18f7c45f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\primitive\3d">
+      <UniqueIdentifier>{87e10995-1e89-46d8-81ef-0691bd0d0494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource\shaders">
+      <UniqueIdentifier>{83169c74-f9e5-4b10-ab8a-03a4effe0f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\object">
+      <UniqueIdentifier>{f193c7a7-1502-4968-a56e-647885787402}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +103,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Engine\resources\shaders\Shape.hlsli">
-      <Filter>リソース ファイル</Filter>
+      <Filter>LWP\Engine\resource\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -140,40 +146,40 @@
     <ClInclude Include="Engine\utility\Color.h">
       <Filter>LWP\Engine\utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\GameObject\Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\IObject.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\ObjectManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\WorldTransform.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\primitive\2d\IPrimitive.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Triangle.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>LWP\Engine\primitive\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\Primitive.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>LWP\Engine\primitive\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\PrimitiveManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\object\GameObject\Camera.h">
+      <Filter>LWP\Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\ObjectManager.h">
+      <Filter>LWP\Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\IObject.h">
+      <Filter>LWP\Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\WorldTransform.h">
+      <Filter>LWP\Engine\object</Filter>
     </ClInclude>
     <ClInclude Include="Engine\scene\SceneManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>LWP\Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Triangle.h">
+      <Filter>LWP\Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\PrimitiveManager.h">
+      <Filter>LWP\Engine\primitive</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>LWP\Engine\resource\shaders</Filter>
     </FxCompile>
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>LWP\Engine\resource\shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
