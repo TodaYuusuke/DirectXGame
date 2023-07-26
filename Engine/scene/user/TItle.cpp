@@ -32,7 +32,7 @@ void Title::Update() {
 		tri[i]->transform.rotation.y += 0.02f;
 	}
 
-	ImGui::Begin("Triangle");
+	ImGui::Begin("Triangle rotation");
 	for (int i = 7; i >= 0; i--) {
 		std::string str = "tri[" + std::to_string(i) + "]";
 		const char* result = str.c_str();
