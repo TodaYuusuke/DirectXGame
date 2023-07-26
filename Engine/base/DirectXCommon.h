@@ -56,9 +56,12 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocateor_;
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
 		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
 		std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_;
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 		UINT64 fenceVal_ = 0;
 		int32_t backBufferWidth_ = 0;
@@ -83,6 +86,15 @@ namespace LWP::Base {
 		/// スワップチェーンの生成
 		/// </summary>
 		void CreateSwapChain();
+
+		/// <summary>
+		/// ディスクリプタヒープを生成
+		/// </summary>
+		/// <param name="heapType"></param>
+		/// <param name="numDescriptors"></param>
+		/// <param name="shaderVisible"></param>
+		/// <returns></returns>
+		ID3D12DescriptorHeap* CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
 		/// <summary>
 		/// レンダーターゲット生成

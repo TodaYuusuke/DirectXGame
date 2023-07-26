@@ -31,6 +31,14 @@ void Title::Update() {
 	for (int i = 0; i < 8; i++) {
 		tri[i]->transform.rotation.y += 0.02f;
 	}
+
+	ImGui::Begin("Triangle");
+	for (int i = 7; i >= 0; i--) {
+		std::string str = "tri[" + std::to_string(i) + "]";
+		const char* result = str.c_str();
+		ImGui::DragFloat(result, &tri[i]->transform.rotation.y, 0.02f);
+	}
+	ImGui::End();
 }
 // 描画
 void Title::Draw() {

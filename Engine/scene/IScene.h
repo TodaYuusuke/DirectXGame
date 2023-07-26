@@ -3,7 +3,6 @@
 
 class IScene {
 public:
-
 	// 共通の初期化
 	virtual void PreInitialize() final {
 		mainCamera = LWP::Engine::CreateObjectInstance<LWP::Object::Camera>();

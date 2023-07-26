@@ -61,6 +61,12 @@
     <Filter Include="LWP\Engine\object\core">
       <UniqueIdentifier>{10631e60-1d68-46c8-b97a-787de04af5a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LWP\Engine\lib">
+      <UniqueIdentifier>{4d1beba8-b34c-4074-85bc-bda8a3748f04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\lib\imgui">
+      <UniqueIdentifier>{1ba28c10-1fcb-4139-95d4-a1934e4a09fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
@@ -111,6 +117,27 @@
     </ClCompile>
     <ClCompile Include="Engine\object\core\Camera.cpp">
       <Filter>LWP\Engine\object\core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui_demo.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui_draw.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui_impl_dx12.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui_impl_win32.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui_tables.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui_widgets.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\lib\imgui\imgui.cpp">
+      <Filter>LWP\Engine\lib\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +204,6 @@
     <ClInclude Include="Engine\scene\user\GameScene.h">
       <Filter>LWP\Engine\scene\user</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\user\SceneList.h">
-      <Filter>LWP\Engine\scene\user</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\primitive\PrimitiveList.h">
       <Filter>LWP\Engine\primitive</Filter>
     </ClInclude>
@@ -201,6 +225,30 @@
     <ClInclude Include="Engine\object\core\CoreList.h">
       <Filter>LWP\Engine\object\core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imgui_impl_dx12.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imgui_impl_win32.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imgui_internal.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imstb_rectpack.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imstb_textedit.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imstb_truetype.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imconfig.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\imgui\imgui.h">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
@@ -209,5 +257,10 @@
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
       <Filter>LWP\Engine\resource\shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Engine\lib\imgui\LICENSE.txt">
+      <Filter>LWP\Engine\lib\imgui</Filter>
+    </Text>
   </ItemGroup>
 </Project>

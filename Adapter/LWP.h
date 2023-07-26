@@ -76,9 +76,9 @@ namespace LWP {
 		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveManager_); }
 
 		
-	/// <summary>
-	/// 現在の解像度を返す
-	/// </summary>
+		/// <summary>
+		/// 現在の解像度を返す
+		/// </summary>
 		static int GetWindowWidth() { return winApp_->GetClientWidth(); }
 		static int GetWindowHeight() { return winApp_->GetClientHeight(); }
 		static float GetWindowWidthf() { return static_cast<float>(winApp_->GetClientWidth()); }
