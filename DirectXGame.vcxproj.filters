@@ -139,6 +139,9 @@
     <ClCompile Include="Engine\lib\imgui\imgui.cpp">
       <Filter>LWP\Engine\lib\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\ImGuiManager.cpp">
+      <Filter>LWP\Engine\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -248,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="Engine\lib\imgui\imgui.h">
       <Filter>LWP\Engine\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\ImGuiManager.h">
+      <Filter>LWP\Engine\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

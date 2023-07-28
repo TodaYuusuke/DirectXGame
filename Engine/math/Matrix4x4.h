@@ -77,6 +77,5 @@ namespace LWP::Math {
 
 		// 座標変換
 		static Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix);
-
 	};
 }

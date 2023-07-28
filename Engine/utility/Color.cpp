@@ -29,6 +29,13 @@ Color::Color(unsigned int c) {
 	}
 }
 
-Vector4 Color::GetVector4() {	
+Color::Color(Vector4 v) {
+	R = static_cast<unsigned char>(v.x * 255.0f);
+	G = static_cast<unsigned char>(v.y * 255.0f);
+	B = static_cast<unsigned char>(v.z * 255.0f);
+	A = static_cast<unsigned char>(v.w * 255.0f);
+}
+
+Vector4 Color::GetVector4() {
 	return { static_cast<float>(R) / 255.0f,static_cast<float>(G) / 255.0f,static_cast<float>(B) / 255.0f,static_cast<float>(A) / 255.0f };
 }

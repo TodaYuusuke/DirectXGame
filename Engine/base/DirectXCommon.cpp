@@ -27,20 +27,6 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 
 	// フェンス生成
 	CreateFence();
-
-
-	// ImGuiの初期化、詳細はさして重要ではないので省略
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(winApp->GetHWND());
-	ImGui_ImplDX12_Init(device_.Get(),
-		swapChainDesc_.BufferCount,
-		rtvDesc_.Format,
-		srvHeap_.Get(),
-		srvHeap_->GetCPUDescriptorHandleForHeapStart(),
-		srvHeap_->GetGPUDescriptorHandleForHeapStart()
-	);
 }
 
 void DirectXCommon::PreDraw() {
@@ -90,21 +76,11 @@ void DirectXCommon::PreDraw() {
 	scissorRect.bottom = winApp_->GetClientHeight();
 	// Scirssorを設定
 	commandList_->RSSetScissorRects(1, &scissorRect);
-
-
-	// ImGui
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
 }
 
 void DirectXCommon::PostDraw() {
 	HRESULT hr = S_FALSE;
 
-	// ImGui
-	ImGui::Render();
-	// 実際にCommandListにImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_.Get());
 
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();

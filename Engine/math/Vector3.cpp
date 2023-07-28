@@ -1,4 +1,5 @@
 #include "Vector3.h"
+#include "Matrix4x4.h"
 
 using namespace LWP::Math;
 
@@ -33,7 +34,6 @@ Vector3 Vector3::operator*(const Matrix4x4& other) const {
 	return result;
 }
 
-
 /// 3次元ベクトルの長さを求める
 float Vector3::Length() {
 	return sqrtf(x * x + y * y + z * z);
@@ -54,9 +54,7 @@ Vector3 Vector3::Normalize() {
 
 /// 3次元ベクトルの内積を求める
 float Vector3::Dot(const Vector3& v1, const Vector3& v2) {
-	float result;
-	result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-	return result;
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 /// クロス積を求める関数
 Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) {

@@ -6,6 +6,7 @@
 
 #include "../Engine/base/WinApp.h"
 #include "../Engine/base/DirectXCommon.h"
+#include "../Engine/base/ImGuiManager.h"
 
 #include "../Engine/math/Math.h"
 
@@ -21,6 +22,7 @@ namespace LWP {
 	namespace Base {
 		class WinApp;
 		class DirectXCommon;
+		class ImGuiManager;
 	}
 	namespace Math {
 		class Vector2;
@@ -122,6 +124,9 @@ namespace LWP {
 		static Base::WinApp* winApp_;
 		// DirectX
 		static Base::DirectXCommon* directXCommon_;
+		// IｍGuiManager
+		static Base::ImGuiManager* imGuiManager_;
+
 		// オブジェクト管理
 		static Object::Manager* objectManager_;
 		// 描画管理

@@ -1,4 +1,5 @@
 #include "Title.h"
+#include "GameScene.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Math;
@@ -28,7 +29,7 @@ void Title::Initialize() {
 }
 // 更新
 void Title::Update() {
-	for (int i = 0; i < 8; i++) {
+	for (int i = 1; i < 8; i++) {
 		tri[i]->transform.rotation.y += 0.02f;
 	}
 
@@ -38,6 +39,7 @@ void Title::Update() {
 		const char* result = str.c_str();
 		ImGui::DragFloat(result, &tri[i]->transform.rotation.y, 0.02f);
 	}
+	LWP::Base::ImGuiManager::ColorPicker4("color", *tri[0]->defaultColor);
 	ImGui::End();
 }
 // 描画

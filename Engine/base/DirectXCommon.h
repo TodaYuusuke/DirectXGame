@@ -45,6 +45,10 @@ namespace LWP::Base {
 		ID3D12Device* GetDevice() const { return device_.Get(); }
 		ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 		size_t GetBackBufferCount() const { return backBuffers_.size(); }
+		// ImGui用
+		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
+		DXGI_FORMAT GetFormat() { return rtvDesc_.Format; }
+		ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap_.Get(); }
 
 	private: // メンバ変数
 		// ウィンドウズアプリケーション管理

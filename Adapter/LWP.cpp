@@ -43,14 +43,15 @@ void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
 	winApp_ = new WinApp();
 	directXCommon_ = new DirectXCommon();
+	imGuiManager_ = new ImGuiManager();
 	objectManager_ = new Object::Manager();
 	primitiveManager_ = new Primitive::Manager();
 	sceneManager_ = new Scene::Manager();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
-
 	directXCommon_->Initialize(winApp_, width, height);
+	imGuiManager_->Initialize(winApp_, directXCommon_);
 	objectManager_->Initialize();
 	primitiveManager_->Initialize(directXCommon_);
 	sceneManager_->Initialize();
@@ -63,9 +64,12 @@ bool Engine::ProcessMessage() {
 
 void Engine::BeginFrame() {
 	directXCommon_->PreDraw();
+	imGuiManager_->Begin();
 }
 
 void Engine::EndFrame() {
+	imGuiManager_->End();
+	imGuiManager_->Draw();
 	directXCommon_->PostDraw();
 	// 描画数リセット
 	primitiveManager_->Reset();
@@ -91,6 +95,8 @@ void Engine::Finalize() {
 Base::WinApp* Engine::winApp_;
 // DirectX
 Base::DirectXCommon* Engine::directXCommon_;
+// IｍGuiManager
+Base::ImGuiManager* Engine::imGuiManager_;
 // オブジェクト管理
 Object::Manager* Engine::objectManager_;
 // 描画システム

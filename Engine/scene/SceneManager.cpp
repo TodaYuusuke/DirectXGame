@@ -17,6 +17,7 @@ void Manager::Update() {
 	
 	if (currentScene_->nextScene_ != nullptr) {
 		currentScene_ = currentScene_->nextScene_;
+		currentScene_->PreInitialize();
 		currentScene_->Initialize();
 	}
 }
