@@ -16,6 +16,8 @@
 #include "../Engine/primitive/PrimitiveList.h"
 #include "../Engine/primitive/IPrimitive.h"
 
+#include "../Engine/resources/ResourceManager.h"
+#include "../Engine/resources/texture/Texture.h"
 
 // LightWeightParticle
 namespace LWP {
@@ -38,6 +40,10 @@ namespace LWP {
 	namespace Primitive {
 		class Manager;
 		class Triangle;
+	}
+	namespace Resource {
+		class Manager;
+		class Texture;
 	}
 	namespace Scene {
 		class Manager;
@@ -76,7 +82,13 @@ namespace LWP {
 		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
 		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveManager_); }
-
+		
+		/// <summary>
+		/// テクスチャのインスタンスを作成
+		/// </summary>
+		/// <param name="filePath">読み込むファイルパス</param>
+		/// <returns>テクスチャのインスタンス</returns>
+		static Resource::Texture* CreateTextureInstance(const std::string& filePath) { return new Resource::Texture(directXCommon_, filePath); }
 		
 		/// <summary>
 		/// 現在の解像度を返す

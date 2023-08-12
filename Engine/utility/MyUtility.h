@@ -1,26 +1,23 @@
 #pragma once
 #include <string>
 
-class MyUtility
-{
-public: // メンバ関数
-
+namespace LWP::Utility {
 
 	/// <summary>
 	/// ログの表示
 	/// </summary>
-	static void Log(const std::string& message);
+	void Log(const std::string& message);
 
 
 	/// <summary>
 	/// string -> wstringへの変換
 	/// </summary>
-	static std::wstring ConvertString(const std::string& str);
+	std::wstring ConvertString(const std::string& str);
 
 	/// <summary>
 	/// wstring -> stringへの変換
 	/// </summary>
-	static std::string ConvertString(const std::wstring& str);
+	std::string ConvertString(const std::wstring& str);
 
 };
 

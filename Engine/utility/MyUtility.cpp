@@ -1,12 +1,12 @@
 #include "MyUtility.h"
 #include <dxgidebug.h>
 
-void MyUtility::Log(const std::string& message) {
+void LWP::Utility::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
 
 
-std::wstring MyUtility::ConvertString(const std::string& str) {
+std::wstring LWP::Utility::ConvertString(const std::string& str) {
 	if (str.empty()) {
 		return std::wstring();
 	}
@@ -22,7 +22,7 @@ std::wstring MyUtility::ConvertString(const std::string& str) {
 }
 
 
-std::string MyUtility::ConvertString(const std::wstring& str) {
+std::string LWP::Utility::ConvertString(const std::wstring& str) {
 	if (str.empty()) {
 		return std::string();
 	}

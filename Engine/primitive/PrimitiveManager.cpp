@@ -2,27 +2,33 @@
 #include <cassert>
 #include <format>
 #include "../utility/MyUtility.h"
+#include "../resources/texture/Texture.h"
 #include "IPrimitive.h"
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;
 using namespace LWP::Primitive;
+using namespace LWP::Resource;
 using namespace LWP::Math;
+using namespace LWP::Utility;
 
-void Manager::Initialize(DirectXCommon* DirectXCommon) {
-	directXCommon_ = DirectXCommon;
+void Manager::Initialize(DirectXCommon* directXCommon) {
+	directXCommon_ = directXCommon;
 
 	InitialzieDXC();
 	CreateGraphicsPipeLineState();
 	CreateConstantBuffer();
 	CreatePrimitiveVertex();
+
+	// デフォルトテクスチャを読み込み
+	defaultTexture_ = new Texture(directXCommon, "resources/white.png");
 }
 
 void Manager::Reset() {
 	vertexIndex = 0;
 }
 
-void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
+void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode, Texture* texture) {
 	// 最大数を超えていないかチェック
 	assert(vertexIndex < kMaxVertexCount);
 
@@ -30,10 +36,13 @@ void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 	for (int i = 0; i < vertexCount - 2; i++) {
 		// primitiveVertexに座標を代入
 		primitiveVertex_->vertexData_[vertexIndex].position_ = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex].texCoord_ = vertex[0].texCoord;
 		primitiveVertex_->vertexData_[vertexIndex].color_ = vertex[0].color.GetVector4();
 		primitiveVertex_->vertexData_[vertexIndex + 1].position_ = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex + 1].texCoord_ = vertex[i + 1].texCoord;
 		primitiveVertex_->vertexData_[vertexIndex + 1].color_ = vertex[i + 1].color.GetVector4();
 		primitiveVertex_->vertexData_[vertexIndex + 2].position_ = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
+		primitiveVertex_->vertexData_[vertexIndex + 2].texCoord_ = vertex[i + 2].texCoord;
 		primitiveVertex_->vertexData_[vertexIndex + 2].color_ = vertex[i + 2].color.GetVector4();
 
 		// コマンドを積む
@@ -56,6 +65,13 @@ void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode) {
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// wvp用のCBufferの場所を設定
 		commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource_->GetGPUVirtualAddress());
+		// SRVのDescriptorTabelの先頭を設定。1はrootParameter[1]である。
+		if (texture != nullptr) {
+			commandList->SetGraphicsRootDescriptorTable(1, texture->GetHandleGPU());
+		}
+		else {
+			//commandList->SetGraphicsRootDescriptorTable(1, defaultTexture_->GetHandleGPU());
+		}
 		// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 		commandList->DrawInstanced(3, 1, vertexIndex, 0);
 
@@ -92,20 +108,46 @@ void Manager::CreateRootSignature() {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	// RootParameter作成。複数設定できるように配列。今回は結果1つなので長さ1の配列
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	// RootParameter作成。複数設定できるように配列。今回は結果3つなので長さ3の配列
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
+
+	// DescriptorRangeを作成
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+	descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
+	descriptorRange[0].NumDescriptors = 1; // 数は1つ
+	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange; // Tabelの中身の配列を指定
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
+
 	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
-	
+
+	// Samplerの設定
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
+	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
+	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
+	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
+	staticSamplers[0].ShaderRegister = 0; // レジスタ番号0を使う
+	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	descriptionRootSignature.pStaticSamplers = staticSamplers;
+	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
+
 	// シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
-		MyUtility::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	// バイナリを元に生成
@@ -119,6 +161,7 @@ D3D12_INPUT_LAYOUT_DESC Manager::CreateInputLayout() {
 	// 頂点レイアウト
 	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
@@ -274,7 +317,7 @@ IDxcBlob* Manager::CompileShader(const std::wstring& filePath, const wchar_t* pr
 	/*-- 1.hlslファイルを読む --*/
 
 	// これからシェーダーをコンパイルする旨をログに出す
-	MyUtility::Log(MyUtility::ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
 	// hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	HRESULT hr = dxUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -316,7 +359,7 @@ IDxcBlob* Manager::CompileShader(const std::wstring& filePath, const wchar_t* pr
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		MyUtility::Log(shaderError->GetStringPointer());
+		Log(shaderError->GetStringPointer());
 		// 警告・エラーダメゼッタイ
 		assert(false);
 	}
@@ -329,7 +372,7 @@ IDxcBlob* Manager::CompileShader(const std::wstring& filePath, const wchar_t* pr
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	// 成功したログを出す
-	MyUtility::Log(MyUtility::ConvertString(std::format(L"CompileSucceeded, path:{}, profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"CompileSucceeded, path:{}, profile:{}\n", filePath, profile)));
 	// もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();

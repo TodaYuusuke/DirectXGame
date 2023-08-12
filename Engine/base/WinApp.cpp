@@ -3,6 +3,7 @@
 #include "../utility/MyUtility.h"
 
 using namespace LWP::Base;
+using namespace LWP::Utility;
 
 void WinApp::Initialize(const char* title, int width, int height) {
 
@@ -37,7 +38,7 @@ void WinApp::Initialize(const char* title, int width, int height) {
 	// ウィンドウの生成
 	hwnd_ = CreateWindow(
 		wc_.lpszClassName,				// 利用するクラス名
-		MyUtility::ConvertString(title_).c_str(),	// タイトルバーの文字（何でもいい）
+		ConvertString(title_).c_str(),	// タイトルバーの文字（何でもいい）
 		WS_OVERLAPPEDWINDOW,			// よく見るウィンドウスタイル
 		CW_USEDEFAULT,					// 表示X座標（Windowsに任せる）
 		CW_USEDEFAULT,					// 表示Y座標（WindowsOSに任せる）

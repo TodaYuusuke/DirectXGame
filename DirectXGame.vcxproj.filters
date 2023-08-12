@@ -61,11 +61,20 @@
     <Filter Include="LWP\Engine\object\core">
       <UniqueIdentifier>{10631e60-1d68-46c8-b97a-787de04af5a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LWP\Engine\lib">
+    <Filter Include="LWP\Externals">
       <UniqueIdentifier>{4d1beba8-b34c-4074-85bc-bda8a3748f04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LWP\Engine\lib\imgui">
+    <Filter Include="LWP\Externals\imgui">
       <UniqueIdentifier>{1ba28c10-1fcb-4139-95d4-a1934e4a09fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource\audio">
+      <UniqueIdentifier>{3b92a7a6-5882-4e79-8c80-5bf6fddbbcb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource\obj">
+      <UniqueIdentifier>{3fc37a76-7729-4b1f-8497-9a2cf5fe48b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource\texture">
+      <UniqueIdentifier>{7dd690f6-4b57-4e16-93e7-b0a135a5ff2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,34 +127,40 @@
     <ClCompile Include="Engine\object\core\Camera.cpp">
       <Filter>LWP\Engine\object\core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui_demo.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui_draw.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui_impl_dx12.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui_impl_win32.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui_tables.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui_widgets.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\lib\imgui\imgui.cpp">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\ImGuiManager.cpp">
       <Filter>LWP\Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_impl_dx12.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\ResourceManager.cpp">
+      <Filter>LWP\Engine\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\texture\Texture.cpp">
+      <Filter>LWP\Engine\resource\texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Engine\resources\shaders\Shape.hlsli">
+    <None Include="Engine\resources\shaders\Object3d.hlsli">
       <Filter>LWP\Engine\resource\shaders</Filter>
     </None>
   </ItemGroup>
@@ -228,32 +243,38 @@
     <ClInclude Include="Engine\object\core\CoreList.h">
       <Filter>LWP\Engine\object\core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imgui_impl_dx12.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imgui_impl_win32.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imgui_internal.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imstb_rectpack.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imstb_textedit.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imstb_truetype.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imconfig.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\imgui\imgui.h">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\ImGuiManager.h">
       <Filter>LWP\Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imconfig.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_impl_dx12.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_internal.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_textedit.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_truetype.h">
+      <Filter>LWP\Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\ResourceManager.h">
+      <Filter>LWP\Engine\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\texture\Texture.h">
+      <Filter>LWP\Engine\resource\texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -263,10 +284,5 @@
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
       <Filter>LWP\Engine\resource\shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Engine\lib\imgui\LICENSE.txt">
-      <Filter>LWP\Engine\lib\imgui</Filter>
-    </Text>
   </ItemGroup>
 </Project>

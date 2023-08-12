@@ -1,6 +1,8 @@
 #pragma once
 #include "../object/WorldTransform.h"
 #include "../math/Vector3.h"
+#include "../math/Vector2.h"
+#include "../resources/texture/Texture.h"
 #include "../utility/Color.h"
 #include <wrl.h>
 #include <d3d12.h>
@@ -15,6 +17,7 @@ namespace LWP::Primitive {
 
 	struct Vertex {
 		Math::Vector3 position;	// 座標
+		Math::Vector2 texCoord; // UV座標
 		Utility::Color color = { 255,255,255,255 };	// 色
 	};
 
@@ -23,7 +26,7 @@ namespace LWP::Primitive {
 		//*** 純粋仮想関数 ***//
 
 		// 描画
-		virtual void Draw(FillMode fillmode) = 0;
+		virtual void Draw(FillMode fillmode, Resource::Texture* texture = nullptr) = 0;
 		// 頂点数を返す関数
 		virtual int GetVertexCount() const = 0;
 

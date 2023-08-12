@@ -16,6 +16,9 @@ using namespace Scene;
 
 void Engine::Run() {
 
+	// COMの初期化
+	CoInitializeEx(0, COINIT_MULTITHREADED);
+
 	const char kWindowTitle[] = "CG2WindowClass";
 	Initialize(kWindowTitle, 1280, 720);
 
@@ -33,6 +36,9 @@ void Engine::Run() {
 		EndFrame();
 	}
 	Finalize();
+
+	// COMの終了処理
+	CoUninitialize();
 }
 
 void Engine::SetMainCameraMatrix(Camera* camera) { 

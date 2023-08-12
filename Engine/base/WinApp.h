@@ -1,9 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <cstdint>
-#include "../lib/imgui/imgui.h"
-#include "../lib/imgui/imgui_impl_dx12.h"
-#include "../lib/imgui/imgui_impl_win32.h"
+#include "../../Externals/imgui/imgui.h"
+#include "../../Externals/imgui/imgui_impl_dx12.h"
+#include "../../Externals/imgui/imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace LWP::Base {

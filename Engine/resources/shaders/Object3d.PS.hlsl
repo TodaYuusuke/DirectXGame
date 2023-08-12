@@ -1,3 +1,9 @@
-#include "Shape.hlsli"
+#include "Object3d.hlsli"
 
-float4 main(VertexShaderOutput input) : SV_TARGET{ return input.color; }
+float32_t4 main(VertexShaderOutput input) : SV_TARGET{
+    float32_t4 output;
+    float32_t4 textureColor = gTexture.Sample(gSampler, input.texcoord);
+    output = input.color * textureColor;
+    //output = input.color;
+    return output;
+}

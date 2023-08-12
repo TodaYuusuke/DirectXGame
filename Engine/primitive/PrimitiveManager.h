@@ -8,6 +8,9 @@
 #pragma comment(lib,"dxcompiler.lib")
 #include <vector>
 
+namespace LWP::Resource {
+	class Texture;
+}
 
 namespace LWP::Primitive {
 	enum FillMode : int;
@@ -25,7 +28,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(Base::DirectXCommon* DirectXCommon);
+		void Initialize(Base::DirectXCommon* directXCommon);
 
 		/// <summary>
 		/// 描画数リセット
@@ -39,7 +42,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 汎用描画
 		/// </summary>
-		void Draw(Vertex* vertex, int vertexCount, FillMode fillMode);
+		void Draw(Vertex* vertex, int vertexCount, FillMode fillMode, Resource::Texture* texture);
 
 
 	private: // メンバ変数
@@ -67,6 +70,7 @@ namespace LWP::Primitive {
 
 		struct VectorPosColor {
 			Math::Vector4 position_;	// 座標
+			Math::Vector2 texCoord_;	// UV座標
 			Math::Vector4 color_;	// 色
 		};
 		struct PrimitiveVertex {
@@ -81,6 +85,9 @@ namespace LWP::Primitive {
 		std::unique_ptr<CBuffer> cBuffer_;
 		// 形状の頂点データ
 		std::unique_ptr<PrimitiveVertex> primitiveVertex_;
+
+		// テクスチャを適応しないとき用のテクスチャ
+		Resource::Texture* defaultTexture_;
 
 		// 最大頂点数
 		static const int kMaxVertexCount = 256;

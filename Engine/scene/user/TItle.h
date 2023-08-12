@@ -22,4 +22,5 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Triangle* tri[8];
+	LWP::Resource::Texture* texture;
 };

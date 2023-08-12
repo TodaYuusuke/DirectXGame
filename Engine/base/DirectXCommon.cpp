@@ -6,6 +6,7 @@
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;
+using namespace LWP::Utility;
 
 void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
 
@@ -81,7 +82,6 @@ void DirectXCommon::PreDraw() {
 void DirectXCommon::PostDraw() {
 	HRESULT hr = S_FALSE;
 
-
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -138,6 +138,77 @@ void DirectXCommon::ClearRenderTarget() {
 	commandList_->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 }
 
+ID3D12Resource* DirectXCommon::CreateTextureResource(const DirectX::TexMetadata& metadata) {
+	HRESULT hr = S_FALSE;
+
+	// 1. metadataを基にResourceの設定
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = UINT(metadata.width);
+	resourceDesc.Height = UINT(metadata.height);
+	resourceDesc.MipLevels = UINT16(metadata.mipLevels);
+	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);
+	resourceDesc.Format = metadata.format;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
+
+	// 2. 利用するHeapの設定。非常に特殊な運用。
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
+	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
+	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
+
+	// 3. Resourceを生成する
+	ID3D12Resource* resource = nullptr;
+	hr = device_.Get()->CreateCommittedResource(
+		&heapProperties,					// Heapの設定
+		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
+		&resourceDesc,						// Resourceの設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,	// 初回のResourceState。Textureは基本読むだけ
+		nullptr,							// Clear最適地。使わないでnullptr
+		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
+	);
+	assert(SUCCEEDED(hr));
+	return resource;
+}
+
+void DirectXCommon::UploadTextureData(ID3D12Resource* texture, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandleGPU_, const DirectX::ScratchImage& mipImages) {
+	HRESULT hr = S_FALSE;
+
+	// Meta情報を取得
+	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+	// 全MipMapについて
+	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
+		// MipMapLevelを指定して各Imageを取得
+		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
+		// Textureに転送
+		hr = texture->WriteToSubresource(
+			UINT(mipLevel),
+			nullptr,
+			img->pixels,
+			UINT(img->rowPitch),
+			UINT(img->slicePitch)
+		);
+		assert(SUCCEEDED(hr));
+	}
+
+	// metaDataを元にSRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = metadata.format;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+
+	// SRVを作成するDescriptorHeapの場所を決める
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = srvHeap_.Get()->GetCPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = srvHeap_.Get()->GetGPUDescriptorHandleForHeapStart();
+	// 先頭はImGuiが使っているのでその次を使う
+	textureSrvHandleCPU.ptr += device_.Get()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleGPU.ptr += device_.Get()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	// SRVの生成
+	device_.Get()->CreateShaderResourceView(texture, &srvDesc, textureSrvHandleCPU);
+	*textureSrvHandleGPU_ = textureSrvHandleGPU;
+}
+
 void DirectXCommon::InitializeDXGIDevice() {
 	HRESULT hr = S_FALSE;
 
@@ -173,7 +244,7 @@ void DirectXCommon::InitializeDXGIDevice() {
 		// ソフトウェアアダプタでなければ採用！
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			// 採用したアダプタの情報をログに出力、wstringの方なので注意
-			MyUtility::Log(MyUtility::ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 			break;
 		}
 		useAdapter = nullptr;	// ソフトウェアアダプタの場合は見なかったことにする
@@ -196,13 +267,13 @@ void DirectXCommon::InitializeDXGIDevice() {
 		// 指定した機能レベルでデバイスが生成できたかを確認
 		if (SUCCEEDED(hr)) {
 			// 生成できたのでログ出力を行ってループを抜ける
-			MyUtility::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+			Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
 	// デバイスの生成がうまくいかなかったので起動できない
 	assert(device_ != nullptr);
-	MyUtility::Log("Complete create D3D12Device!!!\n");	// 初期化完了のログをだす
+	Log("Complete create D3D12Device!!!\n");	// 初期化完了のログをだす
 
 #ifdef _DEBUG
 

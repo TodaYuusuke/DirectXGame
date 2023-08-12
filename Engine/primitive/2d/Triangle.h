@@ -17,7 +17,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Draw(FillMode fillmode);
+		void Draw(FillMode fillmode, Resource::Texture* texture = nullptr);
 		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>

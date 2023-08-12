@@ -1,4 +1,3 @@
-
 #pragma once
 #include <string>
 #include <vector>
@@ -9,6 +8,7 @@
 
 #include <wrl.h>
 #include "WinApp.h"
+#include "../../Externals/DirectXTex/DirectXTex.h"
 
 namespace LWP::Base {
 	class DirectXCommon
@@ -40,6 +40,21 @@ namespace LWP::Base {
 		/// レンダーターゲットのクリア
 		/// </summary>
 		void ClearRenderTarget();
+
+
+		/// <summary>
+		/// テクスチャのリソースを作る
+		/// </summary>
+		/// <param name="metdata"></param>
+		ID3D12Resource* CreateTextureResource(const DirectX::TexMetadata& metdata);
+
+		/// <summary>
+		/// テクスチャを転送する
+		/// </summary>
+		/// <param name="texture"></param>
+		/// <param name="mipImages"></param>
+		void UploadTextureData(ID3D12Resource* texture, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandleGPU, const DirectX::ScratchImage& mipImages);
+
 
 		// アクセサ
 		ID3D12Device* GetDevice() const { return device_.Get(); }

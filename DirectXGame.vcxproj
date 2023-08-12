@@ -92,13 +92,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui_demo.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui_impl_dx12.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui_tables.cpp" />
-    <ClCompile Include="Engine\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\math\Vector4.cpp" />
@@ -107,16 +100,25 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\WorldTransform.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
+    <ClCompile Include="Engine\resources\ResourceManager.cpp" />
+    <ClCompile Include="Engine\resources\texture\Texture.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\scene\user\GameScene.cpp" />
     <ClCompile Include="Engine\scene\user\TItle.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
+    <ClCompile Include="Externals\imgui\imgui.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Engine\resources\shaders\Shape.hlsli">
+    <None Include="Engine\resources\shaders\Object3d.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
@@ -126,14 +128,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
-    <ClInclude Include="Engine\lib\imgui\imconfig.h" />
-    <ClInclude Include="Engine\lib\imgui\imgui.h" />
-    <ClInclude Include="Engine\lib\imgui\imgui_impl_dx12.h" />
-    <ClInclude Include="Engine\lib\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="Engine\lib\imgui\imgui_internal.h" />
-    <ClInclude Include="Engine\lib\imgui\imstb_rectpack.h" />
-    <ClInclude Include="Engine\lib\imgui\imstb_textedit.h" />
-    <ClInclude Include="Engine\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\math\Math.h" />
     <ClInclude Include="Engine\math\Matrix4x4.h" />
     <ClInclude Include="Engine\math\Vector2.h" />
@@ -151,12 +145,22 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\PrimitiveList.h" />
     <ClInclude Include="Engine\primitive\PrimitiveManager.h" />
+    <ClInclude Include="Engine\resources\ResourceManager.h" />
+    <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\scene\user\GameScene.h" />
     <ClInclude Include="Engine\scene\user\TItle.h" />
     <ClInclude Include="Engine\utility\Color.h" />
     <ClInclude Include="Engine\utility\MyUtility.h" />
+    <ClInclude Include="Externals\imgui\imconfig.h" />
+    <ClInclude Include="Externals\imgui\imgui.h" />
+    <ClInclude Include="Externals\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Externals\imgui\imgui_internal.h" />
+    <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="Externals\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
@@ -169,7 +173,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Engine\lib\imgui\LICENSE.txt" />
+    <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
