@@ -88,6 +88,7 @@ namespace LWP::Primitive {
 
 		// テクスチャを適応しないとき用のテクスチャ
 		Resource::Texture* defaultTexture_;
+		
 
 		// 最大頂点数
 		static const int kMaxVertexCount = 256;
@@ -113,6 +114,7 @@ namespace LWP::Primitive {
 		D3D12_RASTERIZER_DESC CreateRasterizerState();
 		IDxcBlob* CreateVertexShader();
 		IDxcBlob* CreatePixelShader();
+		D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState();
 
 #pragma endregion
 

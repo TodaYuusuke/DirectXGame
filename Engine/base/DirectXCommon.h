@@ -81,6 +81,8 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
 		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_;
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
+		Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_; // DepthStencilテクスチャ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV用のヒープでディスクリプタの数は1。DSVがShader内で触るものではないので、ShaderVisibleはfalse
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 		UINT64 fenceVal_ = 0;
 		int32_t backBufferWidth_ = 0;
@@ -107,15 +109,6 @@ namespace LWP::Base {
 		void CreateSwapChain();
 
 		/// <summary>
-		/// ディスクリプタヒープを生成
-		/// </summary>
-		/// <param name="heapType"></param>
-		/// <param name="numDescriptors"></param>
-		/// <param name="shaderVisible"></param>
-		/// <returns></returns>
-		ID3D12DescriptorHeap* CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
-
-		/// <summary>
 		/// レンダーターゲット生成
 		/// </summary>
 		void CreateFinalRenderTargets();
@@ -124,6 +117,22 @@ namespace LWP::Base {
 		/// フェンス生成
 		/// </summary>
 		void CreateFence();
+
+		/// <summary>
+		/// デプスステンシルを生成
+		/// </summary>
+		void CreateDepthStencilTextureResource(int32_t width, int32_t height);
+
+
+
+		/// <summary>
+		/// ディスクリプタヒープを生成
+		/// </summary>
+		/// <param name="heapType"></param>
+		/// <param name="numDescriptors"></param>
+		/// <param name="shaderVisible"></param>
+		/// <returns></returns>
+		ID3D12DescriptorHeap* CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
 		/// <summary>
 		///　デスクリプタヒープのデスクリプタハンドル増分サイズを返す関数

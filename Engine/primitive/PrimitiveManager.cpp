@@ -208,6 +208,13 @@ IDxcBlob* Manager::CreatePixelShader() {
 	assert(pixelShaderBlob != nullptr);
 	return pixelShaderBlob;
 }
+D3D12_DEPTH_STENCIL_DESC Manager::CreateDepthStencilState() {
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+	depthStencilDesc.DepthEnable = true; // Depthの機能を有効化する
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
+	return depthStencilDesc;
+}
 
 #pragma endregion
 
@@ -228,6 +235,8 @@ void Manager::CreateGraphicsPipeLineState() {
 	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState();	// RasterizerState
 	graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
 	graphicsPipelineStateDesc.PS = { pixelShader->GetBufferPointer(),pixelShader->GetBufferSize() };	// PixelShader
+	graphicsPipelineStateDesc.DepthStencilState = CreateDepthStencilState();
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	// 書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
 	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;

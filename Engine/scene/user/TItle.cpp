@@ -8,7 +8,7 @@ using namespace LWP::Utility;
 // 初期化
 void Title::Initialize() {
 	// 三角形の座標
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 2; i++) {
 		tri[i] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
 
 		tri[i]->vertices[0].position = { 0.0f,0.2f,0.0f };
@@ -19,28 +19,21 @@ void Title::Initialize() {
 		tri[i]->vertices[1].texCoord = { 1.0f,1.0f };
 		tri[i]->vertices[2].texCoord = { 0.0f,1.0f };
 
-		tri[i]->transform.translation.y = -0.8f + (i * 0.2f);
-		tri[i]->transform.rotation.y = 0.5f * i;
+		tri[i]->transform.rotation.y = 1.0f * i;
+	
+		tri[i]->defaultColor = new Color(WHITE);
 	}
-	tri[0]->defaultColor = new Color(WHITE);
-	tri[1]->defaultColor = new Color(RED);
-	tri[2]->defaultColor = new Color(BLUE);
-	tri[3]->defaultColor = new Color(GREEN);
-	tri[4]->defaultColor = new Color(YELLOW);
-	tri[5]->defaultColor = new Color(MAGENTA);
-	tri[6]->defaultColor = new Color(CYAN);
-	tri[0]->defaultColor = new Color(BLACK);
 
 	texture = LWP::Engine::CreateTextureInstance("resources/uvChecker.png");
 }
 // 更新
 void Title::Update() {
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 2; i++) {
 		tri[i]->transform.rotation.y += 0.02f;
 	}
 
 	ImGui::Begin("Triangles");
-	for (int i = 7; i >= 0; i--) {
+	for (int i = 1; i >= 0; i--) {
 		std::string str = "tri[" + std::to_string(i) + "]";
 		const char* label = str.c_str();
 		if (ImGui::CollapsingHeader(label))
@@ -48,7 +41,14 @@ void Title::Update() {
 			ImGui::DragFloat3("translation", &tri[i]->transform.translation.x, 0.02f);
 			ImGui::DragFloat3("rotation", &tri[i]->transform.rotation.x, 0.02f);
 			ImGui::DragFloat3("scale", &tri[i]->transform.scale.x, 0.02f);
-			LWP::Base::ImGuiManager::ColorPicker4("color", *tri[0]->defaultColor);
+			if (i == 0) {
+				LWP::Base::ImGuiManager::ColorPicker4("color1", tri[i]->vertices[0].color);
+				LWP::Base::ImGuiManager::ColorPicker4("color2", tri[i]->vertices[1].color);
+				LWP::Base::ImGuiManager::ColorPicker4("color3", tri[i]->vertices[2].color);
+			}
+			else {
+				LWP::Base::ImGuiManager::ColorPicker4("color", *tri[i]->defaultColor);
+			}
 		}
 	}
 	ImGui::End();
@@ -61,12 +61,7 @@ void Title::Update() {
 }
 // 描画
 void Title::Draw() {
-	for (int i = 0; i < 8; i++) {
-		if (i == 0) {
-			tri[i]->Draw(FillMode::Fill, texture);
-		}
-		else {
-			tri[i]->Draw(FillMode::Fill);
-		}
+	for (int i = 0; i < 2; i++) {
+		tri[i]->Draw(FillMode::Fill, texture);
 	}
 }
