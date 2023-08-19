@@ -15,11 +15,26 @@ namespace LWP::Primitive {
 		Fill,		// 埋め立て
 	};
 
-	struct Vertex {
-		Math::Vector3 position;	// 座標
+
+	struct Vertex2D {
+		Math::Vector2 position;	// 座標
 		Math::Vector2 texCoord; // UV座標
 		Utility::Color color = { 255,255,255,255 };	// 色
 	};
+	struct Vertex3D {
+		Math::Vector3 position;	// 座標
+		Math::Vector2 texCoord; // UV座標
+		Utility::Color color = { 255,255,255,255 };	// 色
+
+		// Vector2DをVector3Dに変換する
+		Vertex3D operator=(const Vertex2D& other) {
+			Vertex3D result{};
+			result.position = { other.position.x,other.position.y,0.0f };
+			result.texCoord = other.texCoord;
+			result.color = other.color;
+		}
+	};
+
 
 	class IPrimitive {
 	public:

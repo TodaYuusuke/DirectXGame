@@ -7,6 +7,17 @@ using namespace LWP::Utility;
 
 // 初期化
 void Title::Initialize() {
+	sprite = LWP::Engine::CreatePrimitiveInstance<Sprite>();
+	sprite->vertices[0].position = { 0.0f,0.0f,0.0f };
+	sprite->vertices[1].position = { 640.0f,0.0f,0.0f };
+	sprite->vertices[2].position = { 640.0f,360.0f,0.0f };
+	sprite->vertices[3].position = { 0.0f,360.0f,0.0f };
+
+	sprite->vertices[0].texCoord = { 0.0f,0.0f };
+	sprite->vertices[1].texCoord = { 1.0f,0.0f };
+	sprite->vertices[2].texCoord = { 1.0f,1.0f };
+	sprite->vertices[3].texCoord = { 0.0f,1.0f };
+
 	// 三角形の座標
 	for (int i = 0; i < 2; i++) {
 		tri[i] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
@@ -29,7 +40,7 @@ void Title::Initialize() {
 // 更新
 void Title::Update() {
 	for (int i = 0; i < 2; i++) {
-		tri[i]->transform.rotation.y += 0.02f;
+		//tri[i]->transform.rotation.y += 0.02f;
 	}
 
 	ImGui::Begin("Triangles");
@@ -38,17 +49,12 @@ void Title::Update() {
 		const char* label = str.c_str();
 		if (ImGui::CollapsingHeader(label))
 		{
-			ImGui::DragFloat3("translation", &tri[i]->transform.translation.x, 0.02f);
-			ImGui::DragFloat3("rotation", &tri[i]->transform.rotation.x, 0.02f);
-			ImGui::DragFloat3("scale", &tri[i]->transform.scale.x, 0.02f);
-			if (i == 0) {
-				LWP::Base::ImGuiManager::ColorPicker4("color1", tri[i]->vertices[0].color);
-				LWP::Base::ImGuiManager::ColorPicker4("color2", tri[i]->vertices[1].color);
-				LWP::Base::ImGuiManager::ColorPicker4("color3", tri[i]->vertices[2].color);
-			}
-			else {
-				LWP::Base::ImGuiManager::ColorPicker4("color", *tri[i]->defaultColor);
-			}
+			ImGui::DragFloat3((str + "translation").c_str(), &tri[i]->transform.translation.x, 0.02f);
+			ImGui::DragFloat3((str + "rotation").c_str(), &tri[i]->transform.rotation.x, 0.02f);
+			ImGui::DragFloat3((str + "scale").c_str(), &tri[i]->transform.scale.x, 0.02f);
+			LWP::Base::ImGuiManager::ColorPicker4((str + "color1").c_str(), tri[i]->vertices[0].color);
+			LWP::Base::ImGuiManager::ColorPicker4((str + "color2").c_str(), tri[i]->vertices[1].color);
+			LWP::Base::ImGuiManager::ColorPicker4((str + "color3").c_str(), tri[i]->vertices[2].color);
 		}
 	}
 	ImGui::End();
@@ -58,10 +64,18 @@ void Title::Update() {
 	ImGui::DragFloat3("translation", &mainCamera->transform.translation.x, 0.01f);
 	ImGui::DragFloat3("rotation", &mainCamera->transform.rotation.x, 0.01f);
 	ImGui::End();
+
+	// スプライト
+	ImGui::Begin("Sprite");
+	ImGui::DragFloat2("translation", &sprite->transform.translation.x, 1.0f);
+	ImGui::DragFloat3("rotation", &sprite->transform.rotation.x, 0.01f);
+	ImGui::DragFloat3("scale", &sprite->transform.scale.x, 0.01f);
+	ImGui::End();
 }
 // 描画
 void Title::Draw() {
 	for (int i = 0; i < 2; i++) {
 		tri[i]->Draw(FillMode::Fill, texture);
 	}
+	sprite->Draw(FillMode::Fill, texture);
 }

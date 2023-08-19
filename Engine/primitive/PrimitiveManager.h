@@ -15,7 +15,7 @@ namespace LWP::Resource {
 namespace LWP::Primitive {
 	enum FillMode : int;
 
-	struct Vertex;
+	struct Vertex3D;
 
 	class Manager {
 	public: // メンバ関数
@@ -37,12 +37,15 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画に使うカメラのポインタをセットする
 		/// </summary>
-		void SetViewProjection(Math::Matrix4x4 viewProjection) { *cBuffer_->vpData_ = viewProjection; }
+		void SetViewProjection2D(Math::Matrix4x4 viewProjection) { *cBuffer_->vpData2D_ = viewProjection; }
+		void SetViewProjection3D(Math::Matrix4x4 viewProjection) { *cBuffer_->vpData3D_ = viewProjection; }
 
 		/// <summary>
 		/// 汎用描画
 		/// </summary>
-		void Draw(Vertex* vertex, int vertexCount, FillMode fillMode, Resource::Texture* texture);
+		void Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Resource::Texture* texture, bool is2D);
+
+	private: // 描画用の関数
 
 
 	private: // メンバ変数
@@ -64,8 +67,10 @@ namespace LWP::Primitive {
 			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateFill_;	// グラフィックパイプラインの状態（Fill）を定義
 		};
 		struct CBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> vpResource_;	// 定数バッファ
-			Math::Matrix4x4* vpData_;	// 定数リソース
+			Microsoft::WRL::ComPtr<ID3D12Resource> vpResource2D_;	// 2D用の定数バッファ
+			Microsoft::WRL::ComPtr<ID3D12Resource> vpResource3D_;	// 3D用の定数バッファ
+			Math::Matrix4x4* vpData2D_;	// 2D用の定数リソース
+			Math::Matrix4x4* vpData3D_;	// 3D用の定数リソース
 		};
 
 		struct VectorPosColor {

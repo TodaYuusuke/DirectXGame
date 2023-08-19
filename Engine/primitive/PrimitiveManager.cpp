@@ -28,7 +28,7 @@ void Manager::Reset() {
 	vertexIndex = 0;
 }
 
-void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode, Texture* texture) {
+void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Texture* texture, bool is2D) {
 	// 最大数を超えていないかチェック
 	assert(vertexIndex < kMaxVertexCount);
 
@@ -64,7 +64,12 @@ void Manager::Draw(Vertex* vertex, int vertexCount, FillMode fillMode, Texture* 
 		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// wvp用のCBufferの場所を設定
-		commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource_->GetGPUVirtualAddress());
+		if (!is2D) {
+			commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource3D_->GetGPUVirtualAddress());
+		}
+		else {
+			commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource2D_->GetGPUVirtualAddress());
+		}
 		// SRVのDescriptorTabelの先頭を設定。1はrootParameter[1]である。
 		if (texture != nullptr) {
 			commandList->SetGraphicsRootDescriptorTable(1, texture->GetHandleGPU());
@@ -264,13 +269,17 @@ void Manager::CreateConstantBuffer() {
 	cBuffer_ = std::make_unique<CBuffer>();
 
 	// wvpのリソースを作る。サイズはMatrix4x4 1つ分
-	cBuffer_->vpResource_ = CreateBufferResource(sizeof(Matrix4x4));
+	cBuffer_->vpResource2D_ = CreateBufferResource(sizeof(Matrix4x4));
+	cBuffer_->vpResource3D_ = CreateBufferResource(sizeof(Matrix4x4));
 	// データを書き込む
-	cBuffer_->vpData_ = nullptr;
+	cBuffer_->vpData2D_ = nullptr;
+	cBuffer_->vpData3D_ = nullptr;
 	// 書き込むためのアドレスを取得
-	cBuffer_->vpResource_->Map(0, nullptr, reinterpret_cast<void**>(&cBuffer_->vpData_));
+	cBuffer_->vpResource2D_->Map(0, nullptr, reinterpret_cast<void**>(&cBuffer_->vpData2D_));
+	cBuffer_->vpResource3D_->Map(0, nullptr, reinterpret_cast<void**>(&cBuffer_->vpData3D_));
 	// 単位行列を書き込んでおく
-	*cBuffer_->vpData_ = Matrix4x4::CreateIdentity4x4();
+	*cBuffer_->vpData2D_ = Matrix4x4::CreateIdentity4x4();
+	*cBuffer_->vpData3D_ = Matrix4x4::CreateIdentity4x4();
 }
 
 void Manager::CreateVertexTriangleBufferView() {

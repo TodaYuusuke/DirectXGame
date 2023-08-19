@@ -3,16 +3,16 @@
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// 三角形
+	/// スプライト
 	/// </summary>
-	class Triangle final
+	class Sprite final
 		: public IPrimitive {
 	public:
 		// コンストラクタ
-		Triangle(Manager*);
+		Sprite(Manager*);
 
 		/// 頂点（※必ず右回りに座標を配置すること）
-		Vertex3D vertices[3]{};
+		Vertex3D vertices[4]{};
 
 		/// <summary>
 		/// 描画
@@ -21,6 +21,6 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>
-		int GetVertexCount() const { return 3; }
+		int GetVertexCount() const { return 4; }
 	};
 }

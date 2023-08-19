@@ -13,11 +13,14 @@ namespace LWP::Object {
 		void Draw() override;
 
 		// ビュープロジェクションを渡す関数
-		Math::Matrix4x4 GetViewProjectionMatrix() { return viewProjectionMatrix; }
+		Math::Matrix4x4 GetViewProjectionMatrix3D() { return viewProjectionMatrix3D; }
+		Math::Matrix4x4 GetViewProjectionMatrix2D() { return viewProjectionMatrix2D; }
 
 	private: // メンバ変数
 
-		// PrimitiveManagerのCBufferに渡すワールドビュープロジェクション行列
-		Math::Matrix4x4 viewProjectionMatrix;
+		// PrimitiveManagerのCBufferに渡す、3D用のワールドビュープロジェクション行列
+		Math::Matrix4x4 viewProjectionMatrix3D;
+		// 2D用のワールドビュープロジェクション行列
+		Math::Matrix4x4 viewProjectionMatrix2D;
 	};
 }

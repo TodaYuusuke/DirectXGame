@@ -157,6 +157,9 @@
     <ClCompile Include="Engine\resources\texture\Texture.cpp">
       <Filter>LWP\Engine\resource\texture</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -275,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="Engine\resources\texture\Texture.h">
       <Filter>LWP\Engine\resource\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Sprite.h">
+      <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -42,7 +42,8 @@ void Engine::Run() {
 }
 
 void Engine::SetMainCameraMatrix(Camera* camera) { 
-	primitiveManager_->SetViewProjection(camera->GetViewProjectionMatrix());
+	primitiveManager_->SetViewProjection2D(camera->GetViewProjectionMatrix2D());
+	primitiveManager_->SetViewProjection3D(camera->GetViewProjectionMatrix3D());
 }
 
 void Engine::Initialize(const char* title, int width, int height) {
