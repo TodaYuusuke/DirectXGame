@@ -3,16 +3,16 @@
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// スプライト
+	/// 平面
 	/// </summary>
-	class Sprite final
+	class Surface final
 		: public IPrimitive {
 	public:
 		// コンストラクタ
-		Sprite(Manager*);
+		Surface(Manager*);
 
 		/// 頂点（※必ず右回りに座標を配置すること）
-		Vertex2D vertices[4]{};
+		Vertex3D vertices[4]{};
 
 		/// <summary>
 		/// 描画

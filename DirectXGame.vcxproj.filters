@@ -160,6 +160,15 @@
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
+      <Filter>LWP\Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Surface.cpp">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Vector2.cpp">
+      <Filter>LWP\Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -280,6 +289,12 @@
       <Filter>LWP\Engine\resource\texture</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Sphere.h">
+      <Filter>LWP\Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Surface.h">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
   </ItemGroup>

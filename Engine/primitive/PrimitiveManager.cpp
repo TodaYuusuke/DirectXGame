@@ -80,7 +80,7 @@ void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Texture
 		// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 		commandList->DrawInstanced(3, 1, vertexIndex, 0);
 
-		vertexIndex += 3;
+		vertexIndex += vertexCount;
 	}
 }
 

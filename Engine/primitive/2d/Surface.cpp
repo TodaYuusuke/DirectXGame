@@ -1,16 +1,16 @@
-#include "Sprite.h"
+#include "Surface.h"
 #include "../../../Adapter/LWP.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 
-Sprite::Sprite(Manager* manager) {
+Surface::Surface(Manager* manager) {
 	primitiveManager = manager;
 	transform.Initialize();
 }
 
-void Sprite::Draw(FillMode fillmode, Texture* texture) {
+void Surface::Draw(FillMode fillmode, Texture* texture) {
 	if (defaultColor != nullptr) {
 		for (int i = 0; i < GetVertexCount(); i++) {
 			vertices[i].color = *defaultColor;
@@ -19,11 +19,10 @@ void Sprite::Draw(FillMode fillmode, Texture* texture) {
 
 	Vertex3D v[4]{};
 	for (int i = 0; i < GetVertexCount(); i++) {
-		Vector2 vec2 = vertices[i].position * transform.GetMatWorld();
-		v[i].position = { vec2.x,vec2.y,0.0f } * transform.GetMatWorld();
+		v[i].position = vertices[i].position * transform.GetMatWorld();
 		v[i].texCoord = vertices[i].texCoord;
 		v[i].color = vertices[i].color;
 	}
 
-	primitiveManager->Draw(v, GetVertexCount(), fillmode, texture, true);
+	primitiveManager->Draw(v, GetVertexCount(), fillmode, texture, false);
 }

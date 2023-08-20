@@ -7,33 +7,37 @@ using namespace LWP::Utility;
 
 // 初期化
 void Title::Initialize() {
-	sprite = LWP::Engine::CreatePrimitiveInstance<Sprite>();
-	sprite->vertices[0].position = { 0.0f,0.0f,0.0f };
-	sprite->vertices[1].position = { 640.0f,0.0f,0.0f };
-	sprite->vertices[2].position = { 640.0f,360.0f,0.0f };
-	sprite->vertices[3].position = { 0.0f,360.0f,0.0f };
-
-	sprite->vertices[0].texCoord = { 0.0f,0.0f };
-	sprite->vertices[1].texCoord = { 1.0f,0.0f };
-	sprite->vertices[2].texCoord = { 1.0f,1.0f };
-	sprite->vertices[3].texCoord = { 0.0f,1.0f };
-
-	// 三角形の座標
+	// 三角形
 	for (int i = 0; i < 2; i++) {
 		tri[i] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
 
-		tri[i]->vertices[0].position = { 0.0f,0.2f,0.0f };
-		tri[i]->vertices[1].position = { 0.2f,0.0f,0.0f };
-		tri[i]->vertices[2].position = { -0.2f,0.0f,0.0f };
+		tri[i]->vertices[0].position = { 0.0f,0.4f,0.0f };
+		tri[i]->vertices[1].position = { 0.4f,0.0f,0.0f };
+		tri[i]->vertices[2].position = { -0.4f,0.0f,0.0f };
 
 		tri[i]->vertices[0].texCoord = { 0.5f,0.0f };
 		tri[i]->vertices[1].texCoord = { 1.0f,1.0f };
 		tri[i]->vertices[2].texCoord = { 0.0f,1.0f };
 
 		tri[i]->transform.rotation.y = 1.0f * i;
-	
-		tri[i]->defaultColor = new Color(WHITE);
 	}
+
+	// スプライト
+	sprite = LWP::Engine::CreatePrimitiveInstance<Sprite>();
+	sprite->vertices[0].position = { 0.0f,0.0f };
+	sprite->vertices[1].position = { 320.0f,0.0f };
+	sprite->vertices[2].position = { 320.0f,180.0f };
+	sprite->vertices[3].position = { 0.0f,180.0f };
+
+	sprite->vertices[0].texCoord = { 0.0f,0.0f };
+	sprite->vertices[1].texCoord = { 1.0f,0.0f };
+	sprite->vertices[2].texCoord = { 1.0f,1.0f };
+	sprite->vertices[3].texCoord = { 0.0f,1.0f };
+
+	// 球
+	sphere = LWP::Engine::CreatePrimitiveInstance<Sphere>();
+	sphere->radius = 0.2f;
+	sphere->transform.translation.x = 0.7f;
 
 	texture = LWP::Engine::CreateTextureInstance("resources/uvChecker.png");
 }
@@ -71,6 +75,14 @@ void Title::Update() {
 	ImGui::DragFloat3("rotation", &sprite->transform.rotation.x, 0.01f);
 	ImGui::DragFloat3("scale", &sprite->transform.scale.x, 0.01f);
 	ImGui::End();
+
+	// 球
+	ImGui::Begin("Sphere");
+	ImGui::DragFloat3("translation", &sphere->transform.translation.x, 0.01f);
+	ImGui::DragFloat3("rotation", &sphere->transform.rotation.x, 0.01f);
+	ImGui::DragFloat3("scale", &sphere->transform.scale.x, 0.01f);
+	ImGui::DragFloat("radius", &sphere->radius, 0.01f);
+	ImGui::End();
 }
 // 描画
 void Title::Draw() {
@@ -78,4 +90,5 @@ void Title::Draw() {
 		tri[i]->Draw(FillMode::Fill, texture);
 	}
 	sprite->Draw(FillMode::Fill, texture);
+	sphere->Draw(FillMode::Fill, texture);
 }

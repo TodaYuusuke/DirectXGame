@@ -96,7 +96,7 @@ namespace LWP::Primitive {
 		
 
 		// 最大頂点数
-		static const int kMaxVertexCount = 256;
+		static const int kMaxVertexCount = 65535;
 		// 使用済みのインデックス
 		int vertexIndex = 0;
 

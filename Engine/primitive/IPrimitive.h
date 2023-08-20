@@ -32,6 +32,7 @@ namespace LWP::Primitive {
 			result.position = { other.position.x,other.position.y,0.0f };
 			result.texCoord = other.texCoord;
 			result.color = other.color;
+			return result;
 		}
 	};
 
