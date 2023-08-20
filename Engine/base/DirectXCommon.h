@@ -53,7 +53,7 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="texture"></param>
 		/// <param name="mipImages"></param>
-		void UploadTextureData(ID3D12Resource* texture, D3D12_GPU_DESCRIPTOR_HANDLE* textureSrvHandleGPU, const DirectX::ScratchImage& mipImages);
+		int UploadTextureData(ID3D12Resource* texture, D3D12_GPU_DESCRIPTOR_HANDLE* textureSRVHandleGPU, const DirectX::ScratchImage& mipImages);
 
 
 		// アクセサ
@@ -88,6 +88,13 @@ namespace LWP::Base {
 		int32_t backBufferWidth_ = 0;
 		int32_t backBufferHeight_ = 0;
 
+		// 読み込み済みテクスチャのindex
+		int textureIndex_ = 0;
+
+		// 定数
+		uint32_t kDescriptorSizeSRV;
+		uint32_t kDescriptorSizeRTV;
+		uint32_t kDescriptorSizeDSV;
 
 	private: // 非公開のメンバ関数
 		DirectXCommon(const DirectXCommon&) = delete;
@@ -143,5 +150,15 @@ namespace LWP::Base {
 		/// リソースバリアの実態を作る関数
 		/// </summary>
 		D3D12_RESOURCE_BARRIER MakeResourceBarrier(ID3D12Resource*, D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES);
+
+		/// <summary>
+		/// DescriptorHandleを取得する関数
+		/// </summary>
+		/// <param name="descriptorHeap"></param>
+		/// <param name="descriptorSize"></param>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 	};
 }

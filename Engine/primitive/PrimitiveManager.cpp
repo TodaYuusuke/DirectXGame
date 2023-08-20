@@ -75,7 +75,7 @@ void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Texture
 			commandList->SetGraphicsRootDescriptorTable(1, texture->GetHandleGPU());
 		}
 		else {
-			//commandList->SetGraphicsRootDescriptorTable(1, defaultTexture_->GetHandleGPU());
+			commandList->SetGraphicsRootDescriptorTable(1, defaultTexture_->GetHandleGPU());
 		}
 		// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 		commandList->DrawInstanced(3, 1, vertexIndex, 0);

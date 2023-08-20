@@ -21,6 +21,9 @@ void Title::Initialize() {
 
 		tri[i]->transform.rotation.y = 1.0f * i;
 	}
+	tri[0]->vertices[0].color = Color(RED);
+	tri[0]->vertices[1].color = Color(BLUE);
+	tri[0]->vertices[2].color = Color(GREEN);
 
 	// スプライト
 	sprite = LWP::Engine::CreatePrimitiveInstance<Sprite>();
@@ -39,7 +42,8 @@ void Title::Initialize() {
 	sphere->radius = 0.2f;
 	sphere->transform.translation.x = 0.7f;
 
-	texture = LWP::Engine::CreateTextureInstance("resources/uvChecker.png");
+	uvTexture = LWP::Engine::CreateTextureInstance("resources/uvChecker.png");
+	monsterBall = LWP::Engine::CreateTextureInstance("resources/monsterBall.png");
 }
 // 更新
 void Title::Update() {
@@ -82,13 +86,15 @@ void Title::Update() {
 	ImGui::DragFloat3("rotation", &sphere->transform.rotation.x, 0.01f);
 	ImGui::DragFloat3("scale", &sphere->transform.scale.x, 0.01f);
 	ImGui::DragFloat("radius", &sphere->radius, 0.01f);
+	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 }
 // 描画
 void Title::Draw() {
-	for (int i = 0; i < 2; i++) {
-		tri[i]->Draw(FillMode::Fill, texture);
-	}
-	sprite->Draw(FillMode::Fill, texture);
-	sphere->Draw(FillMode::Fill, texture);
+	tri[0]->Draw(FillMode::Fill);
+	tri[1]->Draw(FillMode::Fill, uvTexture);
+
+	sprite->Draw(FillMode::Fill, uvTexture);
+	if (useMonsterBall) { sphere->Draw(FillMode::Fill, monsterBall); }
+	else { sphere->Draw(FillMode::Fill, uvTexture); }
 }

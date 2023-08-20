@@ -10,7 +10,7 @@ using namespace std;
 Texture::Texture(DirectXCommon* direcX, const std::string& filePath) {
 	Load(filePath);
 	textureResource = direcX->CreateTextureResource(mipImages.GetMetadata());
-	direcX->UploadTextureData(textureResource, &textureSrvHandleGPU, mipImages);
+	index = direcX->UploadTextureData(textureResource, &textureSRVHandleGPU, mipImages);
 }
 
 
@@ -22,6 +22,6 @@ void Texture::Load(const string& filePath) {
 	assert(SUCCEEDED(hr));
 
 	// ミップマップの作成
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_BOX, 0, mipImages);
+	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
 	assert(SUCCEEDED(hr));
 }

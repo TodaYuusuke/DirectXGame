@@ -23,7 +23,8 @@ namespace LWP::Resource {
 		/// </summary>
 		void Load(const std::string& filePath);
 
-		D3D12_GPU_DESCRIPTOR_HANDLE GetHandleGPU() { return textureSrvHandleGPU; }
+		int GetIndex() { return index; }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetHandleGPU() { return textureSRVHandleGPU; }
 
 	private: // メンバ変数
 
@@ -31,7 +32,10 @@ namespace LWP::Resource {
 		DirectX::ScratchImage mipImages;
 		// テクスチャのリソース
 		ID3D12Resource* textureResource = nullptr;
-		// GPU上のアドレス
-		D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
+		// テクスチャのハンドル
+		D3D12_GPU_DESCRIPTOR_HANDLE textureSRVHandleGPU;
+
+		// テクスチャの読み込みindex
+		int index;
 	};
 }

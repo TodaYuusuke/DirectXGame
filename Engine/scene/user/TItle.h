@@ -24,5 +24,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Triangle* tri[2];
 	LWP::Primitive::Sprite* sprite;
 	LWP::Primitive::Sphere* sphere;
-	LWP::Resource::Texture* texture;
+
+	LWP::Resource::Texture* uvTexture;
+	LWP::Resource::Texture* monsterBall;
+
+	bool useMonsterBall = true;
 };
