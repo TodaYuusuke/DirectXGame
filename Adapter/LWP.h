@@ -17,6 +17,7 @@
 #include "../Engine/primitive/IPrimitive.h"
 
 #include "../Engine/resources/ResourceManager.h"
+#include "../Engine/resources/Material.h"
 #include "../Engine/resources/texture/Texture.h"
 
 // LightWeightParticle
@@ -43,6 +44,7 @@ namespace LWP {
 	}
 	namespace Resource {
 		class Manager;
+		class Material;
 		class Texture;
 	}
 	namespace Scene {

@@ -15,7 +15,7 @@ void Camera::Update() {
 
 	Matrix4x4 viewMatrix = Matrix4x4::CreateIdentity4x4();
 	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Engine::GetWindowWidthf(), LWP::Engine::GetWindowHeightf(), 0.0f, 100.0f);
-	viewProjectionMatrix2D = viewMatrix * projectionMatrix * cameraMatrix;
+	viewProjectionMatrix2D = viewMatrix * projectionMatrix;
 	
 	viewMatrix = cameraMatrix.Inverse();
 	projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(0.45f, LWP::Engine::GetWindowWidthf() / LWP::Engine::GetWindowHeightf(), 0.1f, 100.0f);

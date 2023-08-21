@@ -1,5 +1,7 @@
 #include "WorldTransform.h"
+#include "../primitive/PrimitiveManager.h"
 
+using namespace LWP::Primitive;
 using namespace LWP::Object;
 using namespace LWP::Math;
 
@@ -24,6 +26,12 @@ void WorldTransform::Initialize() {
 	scale = { 1.0f, 1.0f, 1.0f };
 	rotation = { 0.0f, 0.0f, 0.0f };
 	translation = { 0.0f, 0.0f, 0.0f };
+	matWorld_ = new Matrix4x4();
+}
+
+void WorldTransform::CreateResource(Primitive::Manager* manager) {
+	resource_ = manager->CreateBufferResource(sizeof(Matrix4x4));
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&matWorld_));
 }
 
 Vector3 WorldTransform::GetWorldPosition() {
@@ -33,15 +41,15 @@ Vector3 WorldTransform::GetWorldPosition() {
 
 // ** プロパティ変数 ** //
 
-void WorldTransform::SetParent(const WorldTransform* parent) { parent_ = parent; }
+void WorldTransform::SetParent(WorldTransform* parent) { parent_ = parent; }
 
-Matrix4x4 WorldTransform::GetMatWorld() const {
-	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+Matrix4x4 WorldTransform::GetMatWorld() {
+	*matWorld_ = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
-		result = result * parent_->GetMatWorld();
+		*matWorld_ = *matWorld_ * parent_->GetMatWorld();
 	}
 
-	return result;
+	return *matWorld_;
 }

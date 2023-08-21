@@ -3,6 +3,7 @@
 #include "../math/Vector3.h"
 #include "../math/Vector2.h"
 #include "../resources/texture/Texture.h"
+#include "../resources/Material.h"
 #include "../utility/Color.h"
 #include <wrl.h>
 #include <d3d12.h>
@@ -19,11 +20,13 @@ namespace LWP::Primitive {
 	struct Vertex2D {
 		Math::Vector2 position;	// 座標
 		Math::Vector2 texCoord; // UV座標
+		Math::Vector3 normal;	// 法線
 		Utility::Color color = { 255,255,255,255 };	// 色
 	};
 	struct Vertex3D {
 		Math::Vector3 position;	// 座標
 		Math::Vector2 texCoord; // UV座標
+		Math::Vector3 normal;	// 法線
 		Utility::Color color = { 255,255,255,255 };	// 色
 
 		// Vector2DをVector3Dに変換する
@@ -31,6 +34,7 @@ namespace LWP::Primitive {
 			Vertex3D result{};
 			result.position = { other.position.x,other.position.y,0.0f };
 			result.texCoord = other.texCoord;
+			result.normal = other.normal;
 			result.color = other.color;
 			return result;
 		}
@@ -47,12 +51,14 @@ namespace LWP::Primitive {
 		virtual int GetVertexCount() const = 0;
 
 		// トランスフォーム
-		LWP::Object::WorldTransform transform;
+		Object::WorldTransform transform;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する
 		// ・そうでない場合は全ての頂点の色がこれになる
 		Utility::Color* defaultColor = nullptr;
+		// マテリアル
+		Resource::Material* material;
 
 	protected:
 		Manager* primitiveManager;

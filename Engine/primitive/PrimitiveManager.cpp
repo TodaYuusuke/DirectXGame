@@ -2,12 +2,16 @@
 #include <cassert>
 #include <format>
 #include "../utility/MyUtility.h"
+#include "../object/WorldTransform.h"
+#include "../resources/Material.h"
 #include "../resources/texture/Texture.h"
 #include "IPrimitive.h"
+#include "../base/ImGuiManager.h"
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;
 using namespace LWP::Primitive;
+using namespace LWP::Object;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
@@ -18,6 +22,19 @@ void Manager::Initialize(DirectXCommon* directXCommon) {
 	InitialzieDXC();
 	CreateGraphicsPipeLineState();
 	CreateConstantBuffer();
+
+	lightBuffer_ = std::make_unique<LightBuffer>();
+	// リソースを作る。サイズはDirectionalLight 1つ分
+	lightBuffer_->lightResource_ = CreateBufferResource(sizeof(DirectionalLight));
+	// データを書き込む
+	lightBuffer_->light_ = new DirectionalLight();
+	// 書き込むためのアドレスを取得
+	lightBuffer_->lightResource_->Map(0, nullptr, reinterpret_cast<void**>(&lightBuffer_->light_));
+
+	lightBuffer_->light_->color_ = { 1.0f,1.0f,1.0f,1.0f };
+	lightBuffer_->light_->direction_ = { 0.0f,-1.0f,0.0f };
+	lightBuffer_->light_->intensity_ = 1.0f;
+	
 	CreatePrimitiveVertex();
 
 	// デフォルトテクスチャを読み込み
@@ -28,7 +45,7 @@ void Manager::Reset() {
 	vertexIndex = 0;
 }
 
-void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Texture* texture, bool is2D) {
+void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, WorldTransform* worldTransform, Material* material, Texture* texture, bool is2D) {
 	// 最大数を超えていないかチェック
 	assert(vertexIndex < kMaxVertexCount);
 
@@ -37,12 +54,15 @@ void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Texture
 		// primitiveVertexに座標を代入
 		primitiveVertex_->vertexData_[vertexIndex].position_ = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
 		primitiveVertex_->vertexData_[vertexIndex].texCoord_ = vertex[0].texCoord;
+		primitiveVertex_->vertexData_[vertexIndex].normal_ = vertex[0].normal;
 		primitiveVertex_->vertexData_[vertexIndex].color_ = vertex[0].color.GetVector4();
 		primitiveVertex_->vertexData_[vertexIndex + 1].position_ = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
 		primitiveVertex_->vertexData_[vertexIndex + 1].texCoord_ = vertex[i + 1].texCoord;
+		primitiveVertex_->vertexData_[vertexIndex + 1].normal_ = vertex[i + 1].normal;
 		primitiveVertex_->vertexData_[vertexIndex + 1].color_ = vertex[i + 1].color.GetVector4();
 		primitiveVertex_->vertexData_[vertexIndex + 2].position_ = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
 		primitiveVertex_->vertexData_[vertexIndex + 2].texCoord_ = vertex[i + 2].texCoord;
+		primitiveVertex_->vertexData_[vertexIndex + 2].normal_ = vertex[i + 2].normal;
 		primitiveVertex_->vertexData_[vertexIndex + 2].color_ = vertex[i + 2].color.GetVector4();
 
 		// コマンドを積む
@@ -63,27 +83,39 @@ void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Texture
 		commandList->IASetVertexBuffers(0, 1, &primitiveVertex_->vertexBufferView_);	// VBVを設定
 		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// マテリアルの用のCBufferの場所を設定
+		commandList->SetGraphicsRootConstantBufferView(0, material->GetGPUVirtualAddress());
 		// wvp用のCBufferの場所を設定
 		if (!is2D) {
-			commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource3D_->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(1, cBuffer_->vpResource3D_->GetGPUVirtualAddress());
 		}
 		else {
-			commandList->SetGraphicsRootConstantBufferView(0, cBuffer_->vpResource2D_->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(1, cBuffer_->vpResource2D_->GetGPUVirtualAddress());
 		}
-		// SRVのDescriptorTabelの先頭を設定。1はrootParameter[1]である。
+		// World用のCBufferの場所を設定
+		commandList->SetGraphicsRootConstantBufferView(2, worldTransform->GetGPUVirtualAddress());
+		// SRVのDescriptorTabelの先頭を設定。3はrootParameter[3]である。
 		if (texture != nullptr) {
-			commandList->SetGraphicsRootDescriptorTable(1, texture->GetHandleGPU());
+			commandList->SetGraphicsRootDescriptorTable(3, texture->GetHandleGPU());
 		}
 		else {
-			commandList->SetGraphicsRootDescriptorTable(1, defaultTexture_->GetHandleGPU());
+			commandList->SetGraphicsRootDescriptorTable(3, defaultTexture_->GetHandleGPU());
 		}
+		// 平行光源のCBufferの場所を設定
+		commandList->SetGraphicsRootConstantBufferView(4, lightBuffer_->lightResource_->GetGPUVirtualAddress());
 		// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
 		commandList->DrawInstanced(3, 1, vertexIndex, 0);
 
-		vertexIndex += vertexCount;
+		vertexIndex += 3;
 	}
 }
 
+void Manager::ImGui() {
+	ImGui::Begin("PrimitiveManager");
+	ImGui::DragFloat3("direction", &lightBuffer_->light_->direction_.x, 0.01f);
+	ImGui::DragFloat("intensity", &lightBuffer_->light_->intensity_, 0.01f);
+	ImGui::End();
+}
 
 void Manager::InitialzieDXC() {
 	HRESULT hr = S_FALSE;
@@ -114,10 +146,23 @@ void Manager::CreateRootSignature() {
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	// RootParameter作成。複数設定できるように配列。今回は結果3つなので長さ3の配列
-	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	D3D12_ROOT_PARAMETER rootParameters[5] = {};
+	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
+	// 定数バッファ（カメラのViewProjection）
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
+	rootParameters[1].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
+	// 定数バッファ（World）
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
+	rootParameters[2].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
+	// 平行光源
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
+	rootParameters[4].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
 
 	// DescriptorRangeを作成
 	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
@@ -125,11 +170,6 @@ void Manager::CreateRootSignature() {
 	descriptorRange[0].NumDescriptors = 1; // 数は1つ
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange; // Tabelの中身の配列を指定
-	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
 
 	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
@@ -146,6 +186,12 @@ void Manager::CreateRootSignature() {
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 	descriptionRootSignature.pStaticSamplers = staticSamplers;
 	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
+
+	// テクスチャ
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRange; // Tabelの中身の配列を指定
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
 
 	// シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob = nullptr;
@@ -167,6 +213,7 @@ D3D12_INPUT_LAYOUT_DESC Manager::CreateInputLayout() {
 	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
@@ -264,6 +311,7 @@ void Manager::CreateGraphicsPipeLineState() {
 
 #pragma endregion
 
+
 void Manager::CreateConstantBuffer() {
 	
 	cBuffer_ = std::make_unique<CBuffer>();
@@ -282,7 +330,7 @@ void Manager::CreateConstantBuffer() {
 	*cBuffer_->vpData3D_ = Matrix4x4::CreateIdentity4x4();
 }
 
-void Manager::CreateVertexTriangleBufferView() {
+void Manager::CreateVertexBufferView() {
 	// 頂点バッファビューを作成する
 	// リソースの先頭アドレスから使う
 	primitiveVertex_->vertexBufferView_.BufferLocation = primitiveVertex_->vertexResource_.Get()->GetGPUVirtualAddress();
@@ -297,7 +345,7 @@ void Manager::CreatePrimitiveVertex() {
 	primitiveVertex_ = std::make_unique<PrimitiveVertex>();
 
 	primitiveVertex_->vertexResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxVertexCount);
-	CreateVertexTriangleBufferView();
+	CreateVertexBufferView();
 	// 書き込むためのアドレスを取得
 	primitiveVertex_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&primitiveVertex_->vertexData_));
 }

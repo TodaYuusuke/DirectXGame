@@ -8,8 +8,13 @@
 #pragma comment(lib,"dxcompiler.lib")
 #include <vector>
 
+namespace LWP::Object {
+	class WorldTransform;
+}
 namespace LWP::Resource {
 	class Texture;
+	class Material;
+	struct MaterialStruct;
 }
 
 namespace LWP::Primitive {
@@ -41,12 +46,19 @@ namespace LWP::Primitive {
 		void SetViewProjection3D(Math::Matrix4x4 viewProjection) { *cBuffer_->vpData3D_ = viewProjection; }
 
 		/// <summary>
+		/// VertexResourceを作成
+		/// </summary>
+		ID3D12Resource* CreateBufferResource(size_t);
+
+		/// <summary>
 		/// 汎用描画
 		/// </summary>
-		void Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Resource::Texture* texture, bool is2D);
-
-	private: // 描画用の関数
-
+		void Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Object::WorldTransform* worldTransform, Resource::Material* material, Resource::Texture* texture, bool is2D);
+		
+		/// <summary>
+		/// ImGui用
+		/// </summary>
+		void ImGui();
 
 	private: // メンバ変数
 		// DirectXCommon管理
@@ -66,16 +78,30 @@ namespace LWP::Primitive {
 			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateWireFrame_;	// グラフィックパイプラインの状態（WireFrame）を定義
 			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateFill_;	// グラフィックパイプラインの状態（Fill）を定義
 		};
+
 		struct CBuffer {
 			Microsoft::WRL::ComPtr<ID3D12Resource> vpResource2D_;	// 2D用の定数バッファ
 			Microsoft::WRL::ComPtr<ID3D12Resource> vpResource3D_;	// 3D用の定数バッファ
-			Math::Matrix4x4* vpData2D_;	// 2D用の定数リソース
-			Math::Matrix4x4* vpData3D_;	// 3D用の定数リソース
+			Math::Matrix4x4* vpData2D_ = nullptr;	// 2D用の定数リソース
+			Math::Matrix4x4* vpData3D_ = nullptr;	// 3D用の定数リソース
+		};
+
+		// 平行光源
+		struct DirectionalLight {
+			Math::Vector4 color_;		// ライトの色
+			Math::Vector3 direction_;	// ライトの向き
+			float intensity_;	// 輝度
+		};
+		// 光源のバッファ
+		struct LightBuffer {
+			Microsoft::WRL::ComPtr<ID3D12Resource> lightResource_;	// 3D用の定数バッファ
+			DirectionalLight* light_ = nullptr;	// 2D用の定数リソース
 		};
 
 		struct VectorPosColor {
 			Math::Vector4 position_;	// 座標
 			Math::Vector2 texCoord_;	// UV座標
+			Math::Vector3 normal_;		// 法線
 			Math::Vector4 color_;	// 色
 		};
 		struct PrimitiveVertex {
@@ -88,6 +114,7 @@ namespace LWP::Primitive {
 		std::unique_ptr<DXC> dxc_;
 		std::unique_ptr<PipelineSet> pipelineSet_;
 		std::unique_ptr<CBuffer> cBuffer_;
+		std::unique_ptr<LightBuffer> lightBuffer_;
 		// 形状の頂点データ
 		std::unique_ptr<PrimitiveVertex> primitiveVertex_;
 
@@ -138,18 +165,12 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 頂点バッファビューを作成
 		/// </summary>
-		void CreateVertexTriangleBufferView();
+		void CreateVertexBufferView();
 
 		/// <summary>
 		/// 三角形の頂点バッファを作成
 		/// </summary>
 		void CreatePrimitiveVertex();
-
-
-		/// <summary>
-		/// VertexResourceを作成
-		/// </summary>
-		ID3D12Resource* CreateBufferResource(size_t);
 
 		/// <summary>
 		/// シェーダーのコンパイル関数

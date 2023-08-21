@@ -7,8 +7,12 @@ using namespace LWP::Math;
 
 Triangle::Triangle(Manager* manager) {
 	primitiveManager = manager;
+	material = new Material(manager);
+	material->data_->enableLighting = false;
 	transform.Initialize();
+	transform.CreateResource(manager);
 }
+
 
 void Triangle::Draw(FillMode fillmode, Texture* texture) {
 	if (defaultColor != nullptr) {
@@ -17,12 +21,6 @@ void Triangle::Draw(FillMode fillmode, Texture* texture) {
 		}
 	}
 
-	Vertex3D v[3]{};
-	for (int i = 0; i < GetVertexCount(); i++) {
-		 v[i].position = vertices[i].position * transform.GetMatWorld();
-		 v[i].texCoord = vertices[i].texCoord;
-		 v[i].color = vertices[i].color;
-	}
-	
-	primitiveManager->Draw(v, GetVertexCount(), fillmode, texture, false);
+	transform.GetMatWorld();	// WorldTransformを更新
+	primitiveManager->Draw(vertices, GetVertexCount(), fillmode, &transform, material, texture, false);
 }

@@ -29,6 +29,7 @@ void Engine::Run() {
 		// 更新処理
 		sceneManager_->Update();
 		objectManager_->Update();
+		primitiveManager_->ImGui();
 		// 描画処理
 		sceneManager_->Draw();
 		objectManager_->Draw();

@@ -9,7 +9,11 @@ using namespace LWP::Utility;
 
 Sphere::Sphere(Manager* manager) {
 	primitiveManager = manager;
+	material = new Material(manager);
+	material->data_->enableLighting = true;
 	transform.Initialize();
+	transform.CreateResource(manager);
+
 	for (uint32_t y = 0; y < kSubdivision; y++) {
 		for (uint32_t x = 0; x < kSubdivision; x++) {
 			surfaces[y][x] = LWP::Engine::CreatePrimitiveInstance<Surface>();
@@ -41,9 +45,13 @@ void Sphere::Draw(FillMode fillmode, Texture* texture) {
 			
 			// 平面の頂点にセット
 			surfaces[latIndex][lonIndex]->vertices[0].position = a;
+			surfaces[latIndex][lonIndex]->vertices[0].normal = a;
 			surfaces[latIndex][lonIndex]->vertices[1].position = b;
+			surfaces[latIndex][lonIndex]->vertices[1].normal = b;
 			surfaces[latIndex][lonIndex]->vertices[2].position = d;
+			surfaces[latIndex][lonIndex]->vertices[2].normal = d;
 			surfaces[latIndex][lonIndex]->vertices[3].position = c;
+			surfaces[latIndex][lonIndex]->vertices[3].normal = c;
 
 
 			// UV座標系も求める

@@ -36,6 +36,10 @@ void Title::Initialize() {
 	sprite->vertices[1].texCoord = { 1.0f,0.0f };
 	sprite->vertices[2].texCoord = { 1.0f,1.0f };
 	sprite->vertices[3].texCoord = { 0.0f,1.0f };
+	
+	for (int i = 0; i < 4; i++) {
+		sprite->vertices[i].normal = { 0.0f,0.0f,-1.0f };
+	}
 
 	// 球
 	sphere = LWP::Engine::CreatePrimitiveInstance<Sphere>();

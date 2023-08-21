@@ -7,8 +7,12 @@ using namespace LWP::Math;
 
 Sprite::Sprite(Manager* manager) {
 	primitiveManager = manager;
+	material = new Material(manager);
+	material->data_->enableLighting = false;
 	transform.Initialize();
+	transform.CreateResource(manager);
 }
+
 
 void Sprite::Draw(FillMode fillmode, Texture* texture) {
 	if (defaultColor != nullptr) {
@@ -19,11 +23,11 @@ void Sprite::Draw(FillMode fillmode, Texture* texture) {
 
 	Vertex3D v[4]{};
 	for (int i = 0; i < GetVertexCount(); i++) {
-		Vector2 vec2 = vertices[i].position * transform.GetMatWorld();
-		v[i].position = { vec2.x,vec2.y,0.0f } * transform.GetMatWorld();
+		v[i].position = { vertices[i].position.x,vertices[i].position.y,0.0f };
 		v[i].texCoord = vertices[i].texCoord;
 		v[i].color = vertices[i].color;
 	}
-
-	primitiveManager->Draw(v, GetVertexCount(), fillmode, texture, true);
+	
+	transform.GetMatWorld();	// WorldTransformを更新
+	primitiveManager->Draw(v, GetVertexCount(), fillmode, &transform, material, texture, true);
 }
