@@ -3,8 +3,8 @@
 #include <format>
 #include "../utility/MyUtility.h"
 #include "../object/WorldTransform.h"
-#include "../resources/Material.h"
-#include "../resources/texture/Texture.h"
+#include "../../resources/system/Material.h"
+#include "../../resources/system/Texture/Texture.h"
 #include "IPrimitive.h"
 #include "../base/ImGuiManager.h"
 
@@ -249,14 +249,14 @@ D3D12_RASTERIZER_DESC Manager::CreateRasterizerState() {
 IDxcBlob* Manager::CreateVertexShader() {
 	// シェーダーをコンパイルする
 	IDxcBlob* vertexShaderBlob{};
-	vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
+	vertexShaderBlob = CompileShader(L"./resources/system/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
 	assert(vertexShaderBlob != nullptr);
 	return vertexShaderBlob;
 }
 IDxcBlob* Manager::CreatePixelShader() {
 	// シェーダーをコンパイルする
 	IDxcBlob* pixelShaderBlob{};
-	pixelShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
+	pixelShaderBlob = CompileShader(L"./resources/system/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
 	assert(pixelShaderBlob != nullptr);
 	return pixelShaderBlob;
 }

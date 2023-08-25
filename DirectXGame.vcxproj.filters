@@ -151,12 +151,6 @@
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
       <Filter>LWP\Externals\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\ResourceManager.cpp">
-      <Filter>LWP\Engine\resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\resources\texture\Texture.cpp">
-      <Filter>LWP\Engine\resource\texture</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClCompile>
@@ -169,13 +163,19 @@
     <ClCompile Include="Engine\math\Vector2.cpp">
       <Filter>LWP\Engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\Material.cpp">
+    <ClCompile Include="resources\system\Material.cpp">
       <Filter>LWP\Engine\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\system\ResourceManager.cpp">
+      <Filter>LWP\Engine\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\system\texture\Texture.cpp">
+      <Filter>LWP\Engine\resource\texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Engine\resources\shaders\Object3d.hlsli">
+    <None Include="resources\system\shaders\Object3d.hlsli">
       <Filter>LWP\Engine\resource\shaders</Filter>
     </None>
   </ItemGroup>
@@ -285,12 +285,6 @@
     <ClInclude Include="Externals\imgui\imstb_truetype.h">
       <Filter>LWP\Externals\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\ResourceManager.h">
-      <Filter>LWP\Engine\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\resources\texture\Texture.h">
-      <Filter>LWP\Engine\resource\texture</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
@@ -300,15 +294,21 @@
     <ClInclude Include="Engine\primitive\2d\Surface.h">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\Material.h">
+    <ClInclude Include="resources\system\Material.h">
       <Filter>LWP\Engine\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\system\ResourceManager.h">
+      <Filter>LWP\Engine\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\system\texture\Texture.h">
+      <Filter>LWP\Engine\resource\texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
+    <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
       <Filter>LWP\Engine\resource\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
+    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
       <Filter>LWP\Engine\resource\shaders</Filter>
     </FxCompile>
   </ItemGroup>

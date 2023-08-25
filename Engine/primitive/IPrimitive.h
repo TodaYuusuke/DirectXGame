@@ -2,8 +2,8 @@
 #include "../object/WorldTransform.h"
 #include "../math/Vector3.h"
 #include "../math/Vector2.h"
-#include "../resources/texture/Texture.h"
-#include "../resources/Material.h"
+#include "../../resources/system/texture/Texture.h"
+#include "../../resources/system/Material.h"
 #include "../utility/Color.h"
 #include <wrl.h>
 #include <d3d12.h>

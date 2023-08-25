@@ -1,5 +1,5 @@
 #include "Material.h"
-#include "../primitive/PrimitiveManager.h"
+#include "../../Engine/primitive/PrimitiveManager.h"
 
 using namespace LWP::Resource;
 

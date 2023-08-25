@@ -16,9 +16,9 @@
 #include "../Engine/primitive/PrimitiveList.h"
 #include "../Engine/primitive/IPrimitive.h"
 
-#include "../Engine/resources/ResourceManager.h"
-#include "../Engine/resources/Material.h"
-#include "../Engine/resources/texture/Texture.h"
+#include "../resources/system/ResourceManager.h"
+#include "../resources/system/Material.h"
+#include "../resources/system/texture/Texture.h"
 
 // LightWeightParticle
 namespace LWP {
