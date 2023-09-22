@@ -8,7 +8,7 @@ using namespace LWP::Math;
 Surface::Surface(Manager* manager) {
 	primitiveManager = manager;
 	material = new Material(manager);
-	material->data_->enableLighting = true;
+	material->data_->enableLighting = false;
 	transform.Initialize();
 	transform.CreateResource(manager);
 }
@@ -21,6 +21,6 @@ void Surface::Draw(FillMode fillmode, Texture* texture) {
 		}
 	}
 
-	transform.GetMatWorld();	// WorldTransformを更新
-	primitiveManager->Draw(vertices, GetVertexCount(), fillmode, &transform, material, texture, false);
+	transform.MatWorld();	// WorldTransformを更新
+	primitiveManager->Draw(vertices, GetVertexCount(), nullptr, 0, fillmode, &transform, material, texture, isUI);
 }

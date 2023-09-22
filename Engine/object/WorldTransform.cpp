@@ -30,25 +30,30 @@ void WorldTransform::Initialize() {
 }
 
 void WorldTransform::CreateResource(Primitive::Manager* manager) {
+	// リソースがnullでなければ戻る
+	if (resource_ != nullptr) {
+		return;
+	}
+
 	resource_ = manager->CreateBufferResource(sizeof(Matrix4x4));
 	resource_->Map(0, nullptr, reinterpret_cast<void**>(&matWorld_));
 }
 
 Vector3 WorldTransform::GetWorldPosition() {
-	Math::Matrix4x4 matWorld = GetMatWorld();
+	Math::Matrix4x4 matWorld = MatWorld();
 	return { matWorld.m[3][0],matWorld.m[3][1],matWorld.m[3][2] };
 }
 
 // ** プロパティ変数 ** //
 
-void WorldTransform::SetParent(WorldTransform* parent) { parent_ = parent; }
+void WorldTransform::Parent(WorldTransform* parent) { parent_ = parent; }
 
-Matrix4x4 WorldTransform::GetMatWorld() {
+Matrix4x4 WorldTransform::MatWorld() {
 	*matWorld_ = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
-		*matWorld_ = *matWorld_ * parent_->GetMatWorld();
+		*matWorld_ = *matWorld_ * parent_->MatWorld();
 	}
 
 	return *matWorld_;

@@ -20,7 +20,7 @@ namespace LWP::Resource {
 namespace LWP::Primitive {
 	enum FillMode : int;
 
-	struct Vertex3D;
+	struct Vertex;
 
 	class Manager {
 	public: // メンバ関数
@@ -50,11 +50,42 @@ namespace LWP::Primitive {
 		/// </summary>
 		ID3D12Resource* CreateBufferResource(size_t);
 
+
+		/// <summary>
+		/// 汎用描画用の引数をまとめた構造体
+		/// </summary>
+		/// <param name="vertex"> ... 頂点データ</param>
+		/// <param name="vertexCount"> ... 頂点データ数</param>
+		/// <param name="index"> ... 描画する際の頂点の並び</param>
+		/// <param name="fillMode"> ... 描画の埋め立てモード</param>
+		/// <param name="worldTransform"> ... ワールドトランスフォーム</param>
+		/// <param name="material"> ... マテリアル</param>
+		/// <param name="texture"> ... テクスチャ</param>
+		/// <param name="isUI"> ... UIとして描画するか</param>
+		struct DrawArg {
+			Vertex* vertex;
+			int vertexCount;
+			uint32_t* index;
+			int indexCount;
+			FillMode fillMode;
+			Object::WorldTransform* worldTransform;
+			Resource::Material* material;
+			Resource::Texture* texture;
+			bool isUI;
+		};
 		/// <summary>
 		/// 汎用描画
 		/// </summary>
-		void Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, Object::WorldTransform* worldTransform, Resource::Material* material, Resource::Texture* texture, bool is2D);
-		
+		/// <param name="vertex">頂点データ</param>
+		/// <param name="vertexCount">頂点データ数</param>
+		/// <param name="index">描画する際の頂点の並び</param>
+		/// <param name="fillMode">描画の埋め立てモード</param>
+		/// <param name="worldTransform">ワールドトランスフォーム</param>
+		/// <param name="material">マテリアル</param>
+		/// <param name="texture">テクスチャ</param>
+		/// <param name="isUI">UIとして描画するか</param>
+		void Draw(Vertex* vertex, int vertexCount, uint32_t* index, int indexCount, FillMode fillMode, Object::WorldTransform* worldTransform, Resource::Material* material, Resource::Texture* texture, bool isUI);
+
 		/// <summary>
 		/// ImGui用
 		/// </summary>
@@ -108,6 +139,11 @@ namespace LWP::Primitive {
 			Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;	// GPU上の頂点データの格納場所
 			D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};			// BufferLocationは頂点データ格納場所のアドレス
 			VectorPosColor* vertexData_ = nullptr;	// 頂点リソース
+			int usedVertexCount_ = 0;	// 使用済みのインデックス
+			Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;	// 頂点データのインデックス格納場所
+			D3D12_INDEX_BUFFER_VIEW indexBufferView_{};			// BufferLocationはインデックス格納場所のアドレス
+			uint32_t* indexData_ = nullptr;	// インデックスリソース
+			int usedIndexCount_ = 0;	// 使用済みのインデックス
 		};
 
 		// 描画関連
@@ -123,9 +159,8 @@ namespace LWP::Primitive {
 		
 
 		// 最大頂点数
-		static const int kMaxVertexCount = 65535;
-		// 使用済みのインデックス
-		int vertexIndex = 0;
+		static const int kMaxVertexCount_ = 65535;
+		static const int kMaxIndexCount_ = 65535;
 
 	private: // 非公開のメンバ関数
 		Manager(const Manager&) = delete;

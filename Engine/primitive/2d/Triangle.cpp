@@ -21,6 +21,6 @@ void Triangle::Draw(FillMode fillmode, Texture* texture) {
 		}
 	}
 
-	transform.GetMatWorld();	// WorldTransformを更新
-	primitiveManager->Draw(vertices, GetVertexCount(), fillmode, &transform, material, texture, false);
+	transform.MatWorld();	// WorldTransformを更新
+	primitiveManager->Draw(vertices, GetVertexCount(), nullptr, 0, fillmode, &transform, material, texture, isUI);
 }

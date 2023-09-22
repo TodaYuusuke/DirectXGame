@@ -12,7 +12,9 @@ namespace LWP::Primitive {
 
 namespace LWP::Object {
 	class WorldTransform {
-	public: // パブリックな変数
+	public:
+		// ** 変数 ** //
+ 		
 		// ローカルスケール
 		Math::Vector3 scale;
 		// X,Y,Z軸回りのローカル回転角
@@ -20,7 +22,24 @@ namespace LWP::Object {
 		// ローカル座標
 		Math::Vector3 translation;
 
-	public: // パブリックなメンバ関数
+
+		// ** プロパティ変数 ** //
+
+	private: // 親となるワールド変換へのポインタ（読み取り専用）
+		WorldTransform* parent_ = nullptr;
+	public: // アクセッサ
+		void Parent(WorldTransform* parent);	// 親関係を登録
+		//WorldTransform* Parent();	// 親関係のポインタを受け取る（実装禁止）
+
+	private: // ワールド変換行列
+		Math::Matrix4x4* matWorld_ = nullptr;
+	public: // アクセッサ
+		//void MatWorld(Math::Matrix4x4);	// ワールド行列をセットする（実装禁止）
+		Math::Matrix4x4 MatWorld();	// ワールド行列を返す
+
+
+	public: // ** パブリックなメンバ関数 ** //
+		// コンストラクタ
 		WorldTransform();
 		WorldTransform(Math::Vector3 s, Math::Vector3 r, Math::Vector3 t);
 		WorldTransform(Math::Vector3 r, Math::Vector3 t);
@@ -47,22 +66,12 @@ namespace LWP::Object {
 		/// </summary>
 		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() { return resource_.Get()->GetGPUVirtualAddress(); }
 
-		// ** プロパティ変数 ** //
 
-	private: // 親となるワールド変換へのポインタ（読み取り専用）
-		WorldTransform* parent_ = nullptr;
-	public: // アクセッサ
-		// 親関係を登録
-		void SetParent(WorldTransform* parent);
+	private: // ** プライベートな変数 ** //
 
-	private: // ワールド変換行列
-		Math::Matrix4x4* matWorld_ = nullptr;
-	public: // アクセッサ
-		// ワールド行列を返す
-		Math::Matrix4x4 GetMatWorld();
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource_ = nullptr;	// リソース
 
 
-	private: // リソース
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
+	private: // ** プライベートな関数 ** //
 	};
 }

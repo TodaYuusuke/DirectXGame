@@ -1,5 +1,4 @@
 #include "Sphere.h"
-#include "../2d/Surface.h"
 #include "../../../Adapter/LWP.h"
 
 using namespace LWP::Primitive;
@@ -14,72 +13,82 @@ Sphere::Sphere(Manager* manager) {
 	transform.Initialize();
 	transform.CreateResource(manager);
 
-	for (uint32_t y = 0; y < kSubdivision; y++) {
-		for (uint32_t x = 0; x < kSubdivision; x++) {
-			surfaces[y][x] = LWP::Engine::CreatePrimitiveInstance<Surface>();
-		}
-	}
 	defaultColor = new Color(WHITE);
-
-	center = { 0.0f,0.0f,0.0f };
-	radius = 1.0f;
+	radius_ = 1.0f;
+	CalcVertices();	// 計算
 }
 
 void Sphere::Draw(FillMode fillmode, Texture* texture) {
+	transform.MatWorld();	// WorldTransformを更新
+	primitiveManager->Draw(vertices, GetVertexCount(), indexes, GetIndexCount(), fillmode, &transform, material, texture, false);
+}
+
+void Sphere::Subdivision(uint32_t value) {
+	subdivision_ = value;
+	CalcVertices();	// 再計算
+}
+void Sphere::Radius(float value) {
+	radius_ = value;
+	CalcVertices();	// 再計算
+}
+
+void Sphere::CalcVertices() {
+	// 頂点とインデックスをクリア
+	vertices = new Vertex[GetVertexCount()];
+	indexes = new uint32_t[GetIndexCount()];
+
+	int arrayIndex = 0;
+	
 	// 緯度の方向に分割 -π/2 ~ π/2
-	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
-		float lat = (float)(-M_PI / 2.0f + kLatEvery * latIndex); // 現在の緯度
+	for (uint32_t latIndex = 0; latIndex <= subdivision_; ++latIndex) {
+		float lat = (float)(-M_PI / 2.0f + GetLatEvery() * latIndex); // 現在の緯度
 		// 緯度の方向に分割 0 ~ 2π
-		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
-			float lon = lonIndex * kLonEvery; // 現在の経度
-			// world座標系でのa,b,c,dを求める
-			Vector3 a, b, c, d;
-			a = { cosf(lat) * cosf(lon) * radius, sinf(lat) * radius, cosf(lat) * sinf(lon) * radius };
-			a += center;
-			b = { cosf(lat + kLatEvery) * cosf(lon) * radius, sinf(lat + kLatEvery) * radius, cosf(lat + kLatEvery) * sinf(lon) * radius };
-			b += center;
-			c = { cosf(lat) * cosf(lon + kLonEvery) * radius, sinf(lat) * radius, cosf(lat) * sinf(lon + kLonEvery) * radius };
-			c += center;
-			d = { cosf(lat + kLatEvery) * cosf(lon + kLonEvery) * radius, sinf(lat + kLatEvery) * radius, cosf(lat + kLatEvery) * sinf(lon + kLonEvery) * radius };
-			d += center;
-			
-			// 平面の頂点にセット
-			surfaces[latIndex][lonIndex]->vertices[0].position = a;
-			surfaces[latIndex][lonIndex]->vertices[0].normal = a;
-			surfaces[latIndex][lonIndex]->vertices[1].position = b;
-			surfaces[latIndex][lonIndex]->vertices[1].normal = b;
-			surfaces[latIndex][lonIndex]->vertices[2].position = d;
-			surfaces[latIndex][lonIndex]->vertices[2].normal = d;
-			surfaces[latIndex][lonIndex]->vertices[3].position = c;
-			surfaces[latIndex][lonIndex]->vertices[3].normal = c;
+		for (uint32_t lonIndex = 0; lonIndex <= subdivision_; ++lonIndex) {
+			float lon = lonIndex * GetLonEvery(); // 現在の経度
+			// world座標系での点を求める
+			vertices[arrayIndex].position =
+			{ cosf(lat) * cosf(lon) * radius_, sinf(lat) * radius_, cosf(lat) * sinf(lon) * radius_ };
 
+			// UV座標系をセット
+			float u = float(lonIndex) / float(subdivision_);
+			float v = 1.0f - float(latIndex) / float(subdivision_);
+			vertices[arrayIndex].texCoord = { u,v };
 
-			// UV座標系も求める
-			float u = float(lonIndex) / float(kSubdivision);
-			float v = 1.0f - float(latIndex) / float(kSubdivision);
-			Vector2 uvA, uvB, uvC, uvD;
+			// 法線をセット
+			vertices[arrayIndex].normal = vertices[arrayIndex].position;
 
-			uvA = { u,v + (1.0f / kSubdivision) };
-			uvB = { u,v };
-			uvC = { u + (1.0f / kSubdivision),v + (1.0f / kSubdivision) };
-			uvD = { u + (1.0f / kSubdivision),v };
-
-			// 平面のUV座標をセット
-			surfaces[latIndex][lonIndex]->vertices[0].texCoord = uvA;
-			surfaces[latIndex][lonIndex]->vertices[1].texCoord = uvB;
-			surfaces[latIndex][lonIndex]->vertices[2].texCoord = uvD;
-			surfaces[latIndex][lonIndex]->vertices[3].texCoord = uvC;
 			// 色をセット
-			surfaces[latIndex][lonIndex]->defaultColor = defaultColor;
-			// ワールドトランスフォームをセット
-			surfaces[latIndex][lonIndex]->transform = transform;
+			vertices[arrayIndex].color = *defaultColor;
+
+			// 配列ずらし
+			arrayIndex++;
 		}
 	}
 
+	// インデックスをリセット
+	arrayIndex = 0;
+	// 一番下の頂点
+	for (uint32_t x = 0; x < subdivision_; x++) {
+		indexes[arrayIndex++] = x;
+		indexes[arrayIndex++] = x + subdivision_ + 1;
+		indexes[arrayIndex++] = x + subdivision_ + 2;
+	}
 
-	for (uint32_t y = 0; y < kSubdivision; y++) {
-		for (uint32_t x = 0; x < kSubdivision; x++) {
-			surfaces[y][x]->Draw(fillmode, texture);
+	for (uint32_t y = 1; y <= subdivision_ - 2; y++) {
+		for (uint32_t x = 0; x < subdivision_; x++) {
+			indexes[arrayIndex++] = (y * (subdivision_ + 1)) + x;
+			indexes[arrayIndex++] = ((y + 1) * (subdivision_ + 1)) + x;
+			indexes[arrayIndex++] = (y * (subdivision_ + 1)) + (x + 1);
+			indexes[arrayIndex++] = ((y + 1) * (subdivision_ + 1)) + x;
+			indexes[arrayIndex++] = ((y + 1) * (subdivision_ + 1)) + (x + 1);
+			indexes[arrayIndex++] = (y * (subdivision_ + 1)) + (x + 1);
 		}
+	}
+
+	// 一番上の頂点
+	for (uint32_t x = 0; x < subdivision_; x++) {
+		indexes[arrayIndex++] = subdivision_ * subdivision_ + x - 1;
+		indexes[arrayIndex++] = (subdivision_ * (subdivision_ + 1)) + x;
+		indexes[arrayIndex++] = subdivision_ * subdivision_ + x;
 	}
 }

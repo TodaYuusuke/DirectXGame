@@ -7,7 +7,6 @@ public:
 	Title() = default;
 	~Title() = default;
 
-
 	//*** 純粋仮想関数の実体宣言 ***//
 
 	// 初期化
@@ -22,7 +21,7 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Triangle* tri[2];
-	LWP::Primitive::Sprite* sprite;
+	LWP::Primitive::Surface* surface;
 	LWP::Primitive::Sphere* sphere;
 
 	LWP::Resource::Texture* uvTexture;

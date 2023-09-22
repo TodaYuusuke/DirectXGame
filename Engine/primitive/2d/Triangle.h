@@ -11,7 +11,7 @@ namespace LWP::Primitive {
 		Triangle(Manager*);
 
 		/// 頂点（※必ず右回りに座標を配置すること）
-		Vertex3D vertices[3]{};
+		Vertex vertices[3]{};
 
 		/// <summary>
 		/// 描画

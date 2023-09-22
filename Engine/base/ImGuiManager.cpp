@@ -51,8 +51,8 @@ void ImGuiManager::ColorPicker4(const char* label, Utility::Color& col, ImGuiCol
 	col = *new Color(v);
 }
 
-void ImGuiManager::ColorEdit3(const char* label, Utility::Color& col, ImGuiColorEditFlags flags) {
+void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags) {
 	Vector4 v{ col.GetVector4() };
-	ImGui::ColorEdit3(label, &v.x, flags);
+	ImGui::ColorEdit4(label, &v.x, flags);
 	col = *new Color(v);
 }

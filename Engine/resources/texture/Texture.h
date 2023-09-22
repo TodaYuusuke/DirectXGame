@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Externals/DirectXTex/DirectXTex.h"
+#include "../../../Engine/object/WorldTransform.h"
 #include <string>
 
 #include <d3d12.h>
@@ -11,7 +12,11 @@ namespace LWP::Base {
 
 namespace LWP::Resource {
 	class Texture final {
-	public: // メンバ関数
+	public:
+		// ** 共通の変数 ** //
+		
+		// ワールドトランスフォーム
+		//Object::WorldTransform transform;
 
 		// コンストラクタ
 		Texture(Base::DirectXCommon* direcX, const std::string& filePath);

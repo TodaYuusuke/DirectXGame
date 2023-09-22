@@ -42,76 +42,91 @@ void Manager::Initialize(DirectXCommon* directXCommon) {
 }
 
 void Manager::Reset() {
-	vertexIndex = 0;
+	primitiveVertex_->usedVertexCount_ = 0;
+	primitiveVertex_->usedIndexCount_ = 0;
 }
 
-void Manager::Draw(Vertex3D* vertex, int vertexCount, FillMode fillMode, WorldTransform* worldTransform, Material* material, Texture* texture, bool is2D) {
+void Manager::Draw(Vertex* vertex, int vertexCount, uint32_t* index, int indexCount, FillMode fillMode, WorldTransform* worldTransform, Material* material, Texture* texture, bool isUI) {
 	// 最大数を超えていないかチェック
-	assert(vertexIndex < kMaxVertexCount);
+	assert(primitiveVertex_->usedVertexCount_ < kMaxVertexCount_);
+	assert(primitiveVertex_->usedIndexCount_ < kMaxIndexCount_);
 
-	// 1ループで三角形を１つ描画
-	for (int i = 0; i < vertexCount - 2; i++) {
-		// primitiveVertexに座標を代入
-		primitiveVertex_->vertexData_[vertexIndex].position_ = { vertex[0].position.x,vertex[0].position.y,vertex[0].position.z,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex].texCoord_ = vertex[0].texCoord;
-		primitiveVertex_->vertexData_[vertexIndex].normal_ = vertex[0].normal;
-		primitiveVertex_->vertexData_[vertexIndex].color_ = vertex[0].color.GetVector4();
-		primitiveVertex_->vertexData_[vertexIndex + 1].position_ = { vertex[i + 1].position.x,vertex[i + 1].position.y,vertex[i + 1].position.z,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 1].texCoord_ = vertex[i + 1].texCoord;
-		primitiveVertex_->vertexData_[vertexIndex + 1].normal_ = vertex[i + 1].normal;
-		primitiveVertex_->vertexData_[vertexIndex + 1].color_ = vertex[i + 1].color.GetVector4();
-		primitiveVertex_->vertexData_[vertexIndex + 2].position_ = { vertex[i + 2].position.x,vertex[i + 2].position.y,vertex[i + 2].position.z,1.0f };
-		primitiveVertex_->vertexData_[vertexIndex + 2].texCoord_ = vertex[i + 2].texCoord;
-		primitiveVertex_->vertexData_[vertexIndex + 2].normal_ = vertex[i + 2].normal;
-		primitiveVertex_->vertexData_[vertexIndex + 2].color_ = vertex[i + 2].color.GetVector4();
-
-		// コマンドを積む
-		ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
-		// RootSignatureを設定。PSOに設定してるけど別途設定が必要
-		commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
-		// PSOを設定
-		switch (fillMode)
-		{
-			case FillMode::WireFrame:
-				commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateWireFrame_.Get());
-				break;
-			case FillMode::Fill:
-			default:
-				commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateFill_.Get());
-				break;
-		}
-		commandList->IASetVertexBuffers(0, 1, &primitiveVertex_->vertexBufferView_);	// VBVを設定
-		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
-		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		// マテリアルの用のCBufferの場所を設定
-		commandList->SetGraphicsRootConstantBufferView(0, material->GetGPUVirtualAddress());
-		// wvp用のCBufferの場所を設定
-		if (!is2D) {
-			commandList->SetGraphicsRootConstantBufferView(1, cBuffer_->vpResource3D_->GetGPUVirtualAddress());
-		}
-		else {
-			commandList->SetGraphicsRootConstantBufferView(1, cBuffer_->vpResource2D_->GetGPUVirtualAddress());
-		}
-		// World用のCBufferの場所を設定
-		commandList->SetGraphicsRootConstantBufferView(2, worldTransform->GetGPUVirtualAddress());
-		// SRVのDescriptorTabelの先頭を設定。3はrootParameter[3]である。
-		if (texture != nullptr) {
-			commandList->SetGraphicsRootDescriptorTable(3, texture->GetHandleGPU());
-		}
-		else {
-			commandList->SetGraphicsRootDescriptorTable(3, defaultTexture_->GetHandleGPU());
-		}
-		// 平行光源のCBufferの場所を設定
-		commandList->SetGraphicsRootConstantBufferView(4, lightBuffer_->lightResource_->GetGPUVirtualAddress());
-		// 描画！(DrawCall/ドローコール)。3頂点で1つのインスタンス、インスタンスについては今後
-		commandList->DrawInstanced(3, 1, vertexIndex, 0);
-
-		vertexIndex += 3;
+	// コマンドを積む
+	ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
+	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
+	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
+	// PSOを設定
+	switch (fillMode)
+	{
+		case FillMode::WireFrame:
+			commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateWireFrame_.Get());
+			break;
+		case FillMode::Fill:
+		default:
+			commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateFill_.Get());
+			break;
 	}
+	commandList->IASetVertexBuffers(0, 1, &primitiveVertex_->vertexBufferView_);	// VBVを設定
+	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// マテリアルの用のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(0, material->GetGPUVirtualAddress());
+	// wvp用のCBufferの場所を設定
+	if (!isUI) {
+		commandList->SetGraphicsRootConstantBufferView(1, cBuffer_->vpResource3D_->GetGPUVirtualAddress());
+	}
+	else {
+		commandList->SetGraphicsRootConstantBufferView(1, cBuffer_->vpResource2D_->GetGPUVirtualAddress());
+	}
+	// World用のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(2, worldTransform->GetGPUVirtualAddress());
+	// SRVのDescriptorTabelの先頭を設定。3はrootParameter[3]である。
+	if (texture != nullptr) {
+		commandList->SetGraphicsRootDescriptorTable(3, texture->GetHandleGPU());
+	}
+	else {
+		commandList->SetGraphicsRootDescriptorTable(3, defaultTexture_->GetHandleGPU());
+	}
+	// 平行光源のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(4, lightBuffer_->lightResource_->GetGPUVirtualAddress());
+
+	// 頂点データを登録
+	for (int i = 0; i < vertexCount; i++) {
+		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].position_ = { vertex[i].position.x,vertex[i].position.y,vertex[i].position.z,1.0f };
+		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].texCoord_ = vertex[i].texCoord;
+		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].normal_ = vertex[i].normal;
+		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].color_ = vertex[i].color.GetVector4();
+	}
+
+	// Indexがnullならば自動生成
+	if (index == nullptr) {
+		indexCount = (vertexCount - 2) * 3;	// インデックスの数を求める
+		// 1ループで三角形1つ分のインデックス生成
+		for (int i = 0; i < vertexCount - 2; i++) {
+			primitiveVertex_->indexData_[primitiveVertex_->usedIndexCount_ + (i * 3)] = 0;
+			primitiveVertex_->indexData_[primitiveVertex_->usedIndexCount_ + (i * 3) + 1] = i + 1;
+			primitiveVertex_->indexData_[primitiveVertex_->usedIndexCount_ + (i * 3) + 2] = i + 2;
+		}
+	}
+	// nullでないならば登録
+	else {
+		for (int i = 0; i < indexCount; i++) {
+			primitiveVertex_->indexData_[primitiveVertex_->usedIndexCount_ + i] = index[i];
+		}
+	}
+	commandList->IASetIndexBuffer(&primitiveVertex_->indexBufferView_);	// IBVを設定
+
+	// 描画！
+	commandList->DrawIndexedInstanced(indexCount, 1, primitiveVertex_->usedIndexCount_, primitiveVertex_->usedVertexCount_, 0);
+
+	// 使用した頂点とインデックスのカウント
+	primitiveVertex_->usedVertexCount_ += vertexCount;
+	primitiveVertex_->usedIndexCount_ += indexCount;
 }
 
 void Manager::ImGui() {
 	ImGui::Begin("PrimitiveManager");
+	ImGui::ColorEdit4("color", &lightBuffer_->light_->color_.x);
 	ImGui::DragFloat3("direction", &lightBuffer_->light_->direction_.x, 0.01f);
 	ImGui::DragFloat("intensity", &lightBuffer_->light_->intensity_, 0.01f);
 	ImGui::End();
@@ -145,7 +160,7 @@ void Manager::CreateRootSignature() {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	// RootParameter作成。複数設定できるように配列。今回は結果3つなので長さ3の配列
+	// RootParameter作成。複数設定できるように配列。今回は結果5つなので長さ5の配列
 	D3D12_ROOT_PARAMETER rootParameters[5] = {};
 	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
@@ -227,14 +242,14 @@ D3D12_BLEND_DESC Manager::CreateBlendState() {
 	// すべての色要素を書き込む
 	D3D12_BLEND_DESC blendDesc{};
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	// 透明度のブレンドを設定（機能していないので一時的にコメントアウト）
-	//blendDesc.RenderTarget[0].BlendEnable = true;
-	//blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	//blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	//blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	//blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	//blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-	//blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	// 透明度のブレンドを設定
+	blendDesc.RenderTarget[0].BlendEnable = true;
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	return blendDesc;
 }
 D3D12_RASTERIZER_DESC Manager::CreateRasterizerState() {
@@ -335,19 +350,30 @@ void Manager::CreateVertexBufferView() {
 	// リソースの先頭アドレスから使う
 	primitiveVertex_->vertexBufferView_.BufferLocation = primitiveVertex_->vertexResource_.Get()->GetGPUVirtualAddress();
 	// 使用するリソースのサイズ
-	primitiveVertex_->vertexBufferView_.SizeInBytes = sizeof(VectorPosColor) * kMaxVertexCount;
+	primitiveVertex_->vertexBufferView_.SizeInBytes = sizeof(VectorPosColor) * kMaxVertexCount_;
 	// 1頂点あたりのサイズ
 	primitiveVertex_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
+
+	// インデックスバッファビューを作成する
+	// リソースの先頭アドレスから使う
+	primitiveVertex_->indexBufferView_.BufferLocation = primitiveVertex_->indexResource_.Get()->GetGPUVirtualAddress();
+	// 使用するリソースのサイズ
+	primitiveVertex_->indexBufferView_.SizeInBytes = sizeof(uint32_t) * kMaxIndexCount_;
+	// インデックスはuint32_tとする
+	primitiveVertex_->indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 }
 
 void Manager::CreatePrimitiveVertex() {
 
 	primitiveVertex_ = std::make_unique<PrimitiveVertex>();
 
-	primitiveVertex_->vertexResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxVertexCount);
+	// 頂点データのリソースを作成
+	primitiveVertex_->vertexResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxVertexCount_);
+	primitiveVertex_->indexResource_ = CreateBufferResource(sizeof(uint32_t) * kMaxIndexCount_);
 	CreateVertexBufferView();
 	// 書き込むためのアドレスを取得
 	primitiveVertex_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&primitiveVertex_->vertexData_));
+	primitiveVertex_->indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&primitiveVertex_->indexData_));
 }
 
 

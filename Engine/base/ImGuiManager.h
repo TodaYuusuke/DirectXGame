@@ -63,6 +63,6 @@ namespace LWP::Base {
 		/// <param name="label"></param>
 		/// <param name="col"></param>
 		/// <param name="flags"></param>
-		static void ColorEdit3(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0);
+		static void ColorEdit4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0);
 	};
 }

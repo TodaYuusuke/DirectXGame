@@ -8,11 +8,18 @@ namespace LWP::Primitive {
 	class Surface final
 		: public IPrimitive {
 	public:
-		// コンストラクタ
-		Surface(Manager*);
+		// ** 変数 ** //
 
 		/// 頂点（※必ず右回りに座標を配置すること）
-		Vertex3D vertices[4]{};
+		Vertex vertices[4]{};
+
+
+		// ** 関数 ** //
+		
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Surface(Manager*);
 
 		/// <summary>
 		/// 描画
