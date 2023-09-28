@@ -1,5 +1,6 @@
 #pragma once
-#include "../math/Vector4.h"
+#include "../math/vector/Vector4.h"
+#include <string>
 
 namespace LWP::Utility {
 	// *** 基本色 *** //
@@ -35,5 +36,10 @@ namespace LWP::Utility {
 		/// </summary>
 		/// <returns>Vector4型の色情報</returns>
 		Math::Vector4 GetVector4();
+
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI(const std::string& label = "Color");
 	};
 }

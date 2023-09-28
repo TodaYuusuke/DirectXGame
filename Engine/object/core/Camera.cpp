@@ -25,3 +25,8 @@ void Camera::Update() {
 void Camera::Draw() {
 	// なし
 }
+
+void Camera::DebugGUI() {
+	transform.DebugGUI();
+	ImGui::Checkbox("isActive", &isActive);
+}

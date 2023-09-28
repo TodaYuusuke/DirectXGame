@@ -1,4 +1,5 @@
 #include "Matrix4x4.h"
+#include "../vector/Vector3.h"
 
 using namespace LWP::Math;
 

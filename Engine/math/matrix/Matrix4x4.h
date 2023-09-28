@@ -1,7 +1,6 @@
 #pragma once
 #include <cmath>
 #include <assert.h>
-#include "Vector3.h"
 
 /// <summary>
 /// 4x4行列
@@ -43,7 +42,7 @@ namespace LWP::Math {
 
 #pragma region アフィン行列
 
-	// 平行移動行列
+		// 平行移動行列
 		static Matrix4x4 CreateTranslateMatrix(const Vector3& translate);
 		// X軸回転行列
 		static Matrix4x4 CreateRotateXMatrix(const float& radian);
@@ -51,7 +50,7 @@ namespace LWP::Math {
 		static Matrix4x4 CreateRotateYMatrix(const float& radian);
 		// z軸回転行列
 		static Matrix4x4 CreateRotateZMatrix(const float& radian);
-		// 合成された回転行列を返す
+		// 合成された回転行列を返す vb、。
 		static Matrix4x4 CreateRotateXYZMatrix(const Vector3& rotate);
 		// 拡大縮小行列
 		static Matrix4x4 CreateScaleMatrix(const Vector3& scale);

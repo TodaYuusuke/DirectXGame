@@ -46,7 +46,18 @@ void Manager::Reset() {
 	primitiveVertex_->usedIndexCount_ = 0;
 }
 
-void Manager::Draw(Vertex* vertex, int vertexCount, uint32_t* index, int indexCount, FillMode fillMode, WorldTransform* worldTransform, Material* material, Texture* texture, bool isUI) {
+void Manager::Draw(
+	Vertex* vertex,
+	int vertexCount,
+	uint32_t* index,
+	int indexCount,
+	Utility::Color* commonColor,
+	Object::WorldTransform* worldTransform,
+	Resource::Material* material,
+	Resource::Texture* texture,
+	FillMode fillMode,
+	bool isUI
+) {
 	// 最大数を超えていないかチェック
 	assert(primitiveVertex_->usedVertexCount_ < kMaxVertexCount_);
 	assert(primitiveVertex_->usedIndexCount_ < kMaxIndexCount_);
@@ -95,7 +106,10 @@ void Manager::Draw(Vertex* vertex, int vertexCount, uint32_t* index, int indexCo
 		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].position_ = { vertex[i].position.x,vertex[i].position.y,vertex[i].position.z,1.0f };
 		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].texCoord_ = vertex[i].texCoord;
 		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].normal_ = vertex[i].normal;
-		primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].color_ = vertex[i].color.GetVector4();
+		if(commonColor != nullptr)
+			primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].color_ = commonColor->GetVector4();
+		else
+			primitiveVertex_->vertexData_[primitiveVertex_->usedVertexCount_ + i].color_ = vertex[i].color.GetVector4();
 	}
 
 	// Indexがnullならば自動生成
@@ -350,9 +364,9 @@ void Manager::CreateVertexBufferView() {
 	// リソースの先頭アドレスから使う
 	primitiveVertex_->vertexBufferView_.BufferLocation = primitiveVertex_->vertexResource_.Get()->GetGPUVirtualAddress();
 	// 使用するリソースのサイズ
-	primitiveVertex_->vertexBufferView_.SizeInBytes = sizeof(VectorPosColor) * kMaxVertexCount_;
+	primitiveVertex_->vertexBufferView_.SizeInBytes = sizeof(VertexStruct) * kMaxVertexCount_;
 	// 1頂点あたりのサイズ
-	primitiveVertex_->vertexBufferView_.StrideInBytes = sizeof(VectorPosColor);
+	primitiveVertex_->vertexBufferView_.StrideInBytes = sizeof(VertexStruct);
 
 	// インデックスバッファビューを作成する
 	// リソースの先頭アドレスから使う
@@ -368,7 +382,7 @@ void Manager::CreatePrimitiveVertex() {
 	primitiveVertex_ = std::make_unique<PrimitiveVertex>();
 
 	// 頂点データのリソースを作成
-	primitiveVertex_->vertexResource_ = CreateBufferResource(sizeof(VectorPosColor) * kMaxVertexCount_);
+	primitiveVertex_->vertexResource_ = CreateBufferResource(sizeof(VertexStruct) * kMaxVertexCount_);
 	primitiveVertex_->indexResource_ = CreateBufferResource(sizeof(uint32_t) * kMaxIndexCount_);
 	CreateVertexBufferView();
 	// 書き込むためのアドレスを取得

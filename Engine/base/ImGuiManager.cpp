@@ -1,5 +1,5 @@
 #include "ImGuiManager.h"
-#include "../math/Vector4.h"
+#include "../math/vector/Vector4.h"
 
 using namespace LWP::Base;
 using namespace LWP::Utility;
@@ -56,3 +56,10 @@ void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColor
 	ImGui::ColorEdit4(label, &v.x, flags);
 	col = *new Color(v);
 }
+
+//template <typename T>
+//void ImGuiManager::CheckBox(const char* label, T* v) {
+//	bool b = static_cast<bool>(v);
+//	ImGui::Checkbox(label, &b);
+//	*v = static_cast<T>(b);
+//}

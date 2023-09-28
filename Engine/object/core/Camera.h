@@ -12,6 +12,9 @@ namespace LWP::Object {
 		// 描画
 		void Draw() override;
 
+		// デバッグ用GUI
+		void DebugGUI() override;
+
 		// ビュープロジェクションを渡す関数
 		Math::Matrix4x4 GetViewProjectionMatrix3D() { return viewProjectionMatrix3D; }
 		Math::Matrix4x4 GetViewProjectionMatrix2D() { return viewProjectionMatrix2D; }

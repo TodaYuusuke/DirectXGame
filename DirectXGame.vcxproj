@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -92,16 +92,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
-    <ClCompile Include="Engine\math\Matrix4x4.cpp" />
-    <ClCompile Include="Engine\math\Vector2.cpp" />
-    <ClCompile Include="Engine\math\Vector3.cpp" />
-    <ClCompile Include="Engine\math\Vector4.cpp" />
+    <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp" />
+    <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp" />
+    <ClCompile Include="Engine\math\vector\Vector2.cpp" />
+    <ClCompile Include="Engine\math\vector\Vector3.cpp" />
+    <ClCompile Include="Engine\math\vector\Vector4.cpp" />
     <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\WorldTransform.cpp" />
-    <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
-    <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
+    <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
     <ClCompile Include="Engine\resources\Material.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
@@ -133,10 +133,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\math\Math.h" />
-    <ClInclude Include="Engine\math\Matrix4x4.h" />
-    <ClInclude Include="Engine\math\Vector2.h" />
-    <ClInclude Include="Engine\math\Vector3.h" />
-    <ClInclude Include="Engine\math\Vector4.h" />
+    <ClInclude Include="Engine\math\matrix\Matrix3x3.h" />
+    <ClInclude Include="Engine\math\matrix\Matrix4x4.h" />
+    <ClInclude Include="Engine\math\vector\Vector2.h" />
+    <ClInclude Include="Engine\math\vector\Vector3.h" />
+    <ClInclude Include="Engine\math\vector\Vector4.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
     <ClInclude Include="Engine\object\core\CoreList.h" />
     <ClInclude Include="Engine\object\IObject.h" />

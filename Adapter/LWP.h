@@ -83,8 +83,12 @@ namespace LWP {
 		/// <typeparam name="TPrimitive">形の種類</typeparam>
 		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
-		static TPrimitive* CreatePrimitiveInstance() { return new TPrimitive(primitiveManager_); }
-		
+		static TPrimitive* CreatePrimitiveInstance() {
+			TPrimitive* instance = new TPrimitive(primitiveManager_);
+			instance->InitializeVertices();
+			return instance;
+		}
+
 		/// <summary>
 		/// テクスチャのインスタンスを作成
 		/// </summary>

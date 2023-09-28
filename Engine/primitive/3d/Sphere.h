@@ -5,21 +5,11 @@
 #include <math.h>
 
 namespace LWP::Primitive {
-	class Surface;
-
 	/// <summary>
 	/// 球
 	/// </summary>
 	class Sphere final
 		: public IPrimitive {
-	public:
-		// ** 変数 ** //
-
-		Vertex* vertices;	// 描画する頂点
-
-
-		// ** プロパティ変数 ** //
-
 	private: // 分割数
 		uint32_t subdivision_ = 16;
 	public: // アクセッサ
@@ -27,10 +17,10 @@ namespace LWP::Primitive {
 		uint32_t Subdivision() { return subdivision_; }
 
 	private: // 半径
-		float radius_;
+		float radius_ = 1.0f;
 	public: // アクセッサ
-		void Radius(float value);			//
-		float Radius() { return radius_; }	//
+		void Radius(float value);
+		float Radius() { return radius_; }
 
 
 	public: // ** 関数 ** //
@@ -38,27 +28,22 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		Sphere(Manager*);
+		using IPrimitive::IPrimitive;
 
 		/// <summary>
-		/// 描画
+		/// 頂点を生成する関数
 		/// </summary>
-		void Draw(FillMode fillmode, Resource::Texture* texture = nullptr) override;
+		void InitializeVertices() override;
 
 		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>
-		int GetVertexCount() const { return (subdivision_ + 1) * (subdivision_ + 1); }
+		int GetVertexCount() const override;
 		/// <summary>
 		/// インデックスの数を返す関数
 		/// </summary>
-		int GetIndexCount() const { return subdivision_ * (subdivision_ - 1) * 2 * 3; }
+		int GetIndexCount() const override;
 		
-
-	private: // ** プライベートな変数 ** //
-
-		uint32_t* indexes;	// インデックス
-
 
 	private: // ** プライベートな関数 ** //
 
@@ -74,8 +59,8 @@ namespace LWP::Primitive {
 		float GetLatEvery() const { return (float)M_PI / (float)subdivision_; }
 
 		/// <summary>
-		/// 頂点を再計算する関数
+		/// ImGui
 		/// </summary>
-		void CalcVertices();
+		void DerivedDebugGUI(const std::string& label = "Derived") override;
 	};
 }

@@ -5,6 +5,7 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #include <wrl.h>
+#include <string>
 
 namespace LWP::Primitive {
 	class Manager;
@@ -66,6 +67,10 @@ namespace LWP::Object {
 		/// </summary>
 		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() { return resource_.Get()->GetGPUVirtualAddress(); }
 
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI(const std::string& label = "WorldTransform");
 
 	private: // ** プライベートな変数 ** //
 

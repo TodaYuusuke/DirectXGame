@@ -6,6 +6,9 @@
 #pragma comment(lib, "dxgi.lib")
 #include <wrl.h>
 
+#include "../math/matrix/Matrix4x4.h"
+#include "../Object/WorldTransform.h"
+
 namespace LWP::Primitive {
 	class Manager;
 }
@@ -16,20 +19,27 @@ namespace LWP::Primitive {
 namespace LWP::Resource {
 	// マテリアルの情報の構造体
 	struct MaterialStruct {
+		Math::Matrix4x4 uvMatrix;
 		int32_t enableLighting = true;
 	};
-
 
 	class Material final {
 	public:
 		// マテリアルデータ
 		MaterialStruct* data_;
+		// uvTransform
+		Object::WorldTransform uvTransform;
 
 		Material(Primitive::Manager* primitiveManager);
 		~Material() = default;
 
 		// GPUアドレスを取得
-		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() { return resource_.Get()->GetGPUVirtualAddress(); }
+		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress();
+
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI(const std::string& label = "Material");
 
 	private: // メンバ変数
 

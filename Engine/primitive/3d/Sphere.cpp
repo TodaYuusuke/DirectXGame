@@ -6,33 +6,16 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
-Sphere::Sphere(Manager* manager) {
-	primitiveManager = manager;
-	material = new Material(manager);
-	material->data_->enableLighting = true;
-	transform.Initialize();
-	transform.CreateResource(manager);
-
-	defaultColor = new Color(WHITE);
-	radius_ = 1.0f;
-	CalcVertices();	// 計算
-}
-
-void Sphere::Draw(FillMode fillmode, Texture* texture) {
-	transform.MatWorld();	// WorldTransformを更新
-	primitiveManager->Draw(vertices, GetVertexCount(), indexes, GetIndexCount(), fillmode, &transform, material, texture, false);
-}
-
 void Sphere::Subdivision(uint32_t value) {
 	subdivision_ = value;
-	CalcVertices();	// 再計算
+	InitializeVertices();	// 再計算
 }
 void Sphere::Radius(float value) {
 	radius_ = value;
-	CalcVertices();	// 再計算
+	InitializeVertices();	// 再計算
 }
 
-void Sphere::CalcVertices() {
+void Sphere::InitializeVertices() {
 	// 頂点とインデックスをクリア
 	vertices = new Vertex[GetVertexCount()];
 	indexes = new uint32_t[GetIndexCount()];
@@ -58,7 +41,7 @@ void Sphere::CalcVertices() {
 			vertices[arrayIndex].normal = vertices[arrayIndex].position;
 
 			// 色をセット
-			vertices[arrayIndex].color = *defaultColor;
+			vertices[arrayIndex].color = ColorPattern::WHITE;	// 初期カラー白を代入
 
 			// 配列ずらし
 			arrayIndex++;
@@ -91,4 +74,14 @@ void Sphere::CalcVertices() {
 		indexes[arrayIndex++] = (subdivision_ * (subdivision_ + 1)) + x;
 		indexes[arrayIndex++] = subdivision_ * subdivision_ + x;
 	}
+}
+
+int Sphere::GetVertexCount() const { return (subdivision_ + 1) * (subdivision_ + 1); }
+int Sphere::GetIndexCount() const { return subdivision_ * (subdivision_ - 1) * 2 * 3; }
+
+void Sphere::DerivedDebugGUI(const std::string& label) {
+	float r = Radius();
+	ImGui::DragFloat("radius", &r, 0.01f);
+	Radius(r);
+	label; // ラベルは使用しない
 }

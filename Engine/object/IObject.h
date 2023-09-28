@@ -18,6 +18,9 @@ namespace LWP::Object {
 		// 描画
 		virtual void Draw() = 0;
 
+		// デバッグ用GUI
+		virtual void DebugGUI() = 0;
+
 		virtual ~IObject() = default;
 	};
 }

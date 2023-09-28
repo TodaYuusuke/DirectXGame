@@ -1,5 +1,6 @@
 // マテリアル
 struct Material {
+    float32_t4x4 uvTransform;
     int32_t enableLighting;
 };
 ConstantBuffer<Material> gMaterial : register(b0);

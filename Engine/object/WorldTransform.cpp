@@ -44,6 +44,15 @@ Vector3 WorldTransform::GetWorldPosition() {
 	return { matWorld.m[3][0],matWorld.m[3][1],matWorld.m[3][2] };
 }
 
+void WorldTransform::DebugGUI(const std::string& label) {
+	if (ImGui::TreeNode(label.c_str())) {
+		ImGui::DragFloat3("Translation", &translation.x, 0.01f);
+		ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
+		ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+		ImGui::TreePop();
+	}
+}
+
 // ** プロパティ変数 ** //
 
 void WorldTransform::Parent(WorldTransform* parent) { parent_ = parent; }

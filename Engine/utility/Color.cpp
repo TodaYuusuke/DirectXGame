@@ -1,4 +1,5 @@
 #include "Color.h"
+#include "../base/ImGuiManager.h"
 
 using namespace LWP::Math;
 using namespace LWP::Utility;
@@ -38,4 +39,9 @@ Color::Color(Vector4 v) {
 
 Vector4 Color::GetVector4() {
 	return { static_cast<float>(R) / 255.0f,static_cast<float>(G) / 255.0f,static_cast<float>(B) / 255.0f,static_cast<float>(A) / 255.0f };
+}
+
+void Color::DebugGUI(const std::string& label) {
+	label;
+	//LWP::Base::ImGuiManager::ColorEdit4(label.c_str(), *this);
 }

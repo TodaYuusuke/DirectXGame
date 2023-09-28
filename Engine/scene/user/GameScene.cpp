@@ -16,5 +16,5 @@ void GameScene::Update() {
 }
 // 描画
 void GameScene::Draw() {
-	tri->Draw(WireFrame);
+	tri->Draw();
 }

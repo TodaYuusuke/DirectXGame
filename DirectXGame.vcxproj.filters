@@ -76,6 +76,12 @@
     <Filter Include="LWP\Externals\imgui">
       <UniqueIdentifier>{1ba28c10-1fcb-4139-95d4-a1934e4a09fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LWP\Engine\math\vector">
+      <UniqueIdentifier>{94a3682e-6eae-480f-93ce-f16c311ecf37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\math\matrix">
+      <UniqueIdentifier>{bd5d12d8-007e-462e-825b-f7a8b3d98008}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
@@ -83,15 +89,6 @@
     </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
       <Filter>LWP\Engine\base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Matrix4x4.cpp">
-      <Filter>LWP\Engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Vector3.cpp">
-      <Filter>LWP\Engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Vector4.cpp">
-      <Filter>LWP\Engine\math</Filter>
     </ClCompile>
     <ClCompile Include="Engine\utility\MyUtility.cpp">
       <Filter>LWP\Engine\utility</Filter>
@@ -116,9 +113,6 @@
     </ClCompile>
     <ClCompile Include="Engine\scene\user\Title.cpp">
       <Filter>LWP\Engine\scene\user</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
-      <Filter>LWP\Engine\primitive\2d</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\object\WorldTransform.cpp">
@@ -160,14 +154,26 @@
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
       <Filter>LWP\Engine\primitive\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Surface.cpp">
-      <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Vector2.cpp">
-      <Filter>LWP\Engine\math</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\resources\Material.cpp">
       <Filter>LWP\Engine\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\vector\Vector2.cpp">
+      <Filter>LWP\Engine\math\vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\vector\Vector3.cpp">
+      <Filter>LWP\Engine\math\vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\vector\Vector4.cpp">
+      <Filter>LWP\Engine\math\vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp">
+      <Filter>LWP\Engine\math\matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp">
+      <Filter>LWP\Engine\math\matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\IPrimitive.cpp">
+      <Filter>LWP\Engine\primitive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,15 +188,6 @@
     </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
       <Filter>LWP\Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Matrix4x4.h">
-      <Filter>LWP\Engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Vector2.h">
-      <Filter>LWP\Engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Vector4.h">
-      <Filter>LWP\Engine\math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\utility\MyUtility.h">
       <Filter>LWP\Engine\utility</Filter>
@@ -294,8 +291,20 @@
     <ClInclude Include="Engine\resources\Material.h">
       <Filter>LWP\Engine\resource</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\math\Vector3.h">
-      <Filter>LWP\Engine\math</Filter>
+    <ClInclude Include="Engine\math\vector\Vector2.h">
+      <Filter>LWP\Engine\math\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\vector\Vector3.h">
+      <Filter>LWP\Engine\math\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\vector\Vector4.h">
+      <Filter>LWP\Engine\math\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\matrix\Matrix3x3.h">
+      <Filter>LWP\Engine\math\matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\matrix\Matrix4x4.h">
+      <Filter>LWP\Engine\math\matrix</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,15 +8,14 @@ namespace LWP::Primitive {
 	class Triangle final
 		: public IPrimitive {
 	public:
-		Triangle(Manager*);
-
-		/// 頂点（※必ず右回りに座標を配置すること）
-		Vertex vertices[3]{};
-
+		// ** 関数 ** //
+		
 		/// <summary>
-		/// 描画
+		/// コンストラクタ
 		/// </summary>
-		void Draw(FillMode fillmode, Resource::Texture* texture = nullptr);
+		using IPrimitive::IPrimitive;
+		//Triangle(Manager* manager) : IPrimitive(manager) {};
+
 		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>
