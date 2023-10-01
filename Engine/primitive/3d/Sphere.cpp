@@ -8,17 +8,19 @@ using namespace LWP::Utility;
 
 void Sphere::Subdivision(uint32_t value) {
 	subdivision_ = value;
-	InitializeVertices();	// 再計算
+	CreateVertices();	// 再計算
 }
 void Sphere::Radius(float value) {
 	radius_ = value;
-	InitializeVertices();	// 再計算
+	CreateVertices();	// 再計算
 }
 
-void Sphere::InitializeVertices() {
+void Sphere::CreateVertices() {
 	// 頂点とインデックスをクリア
-	vertices = new Vertex[GetVertexCount()];
-	indexes = new uint32_t[GetIndexCount()];
+	vertices.clear();
+	vertices.resize(GetVertexCount());
+	indexes.clear();
+	indexes.resize(GetIndexCount());
 
 	int arrayIndex = 0;
 	

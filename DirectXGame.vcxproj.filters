@@ -175,6 +175,15 @@
     <ClCompile Include="Engine\primitive\IPrimitive.cpp">
       <Filter>LWP\Engine\primitive</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Model.cpp">
+      <Filter>LWP\Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Surface.cpp">
+      <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -305,6 +314,12 @@
     </ClInclude>
     <ClInclude Include="Engine\math\matrix\Matrix4x4.h">
       <Filter>LWP\Engine\math\matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Model.h">
+      <Filter>LWP\Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\ErrorReporter.h">
+      <Filter>LWP\Engine\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

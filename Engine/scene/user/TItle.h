@@ -23,6 +23,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Triangle* tri[2];
 	LWP::Primitive::Surface* surface;
 	LWP::Primitive::Sphere* sphere;
+	
+	LWP::Primitive::Model* planeModel;
+	LWP::Primitive::Model* axisModel;
 
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;

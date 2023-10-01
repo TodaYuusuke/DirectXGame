@@ -20,7 +20,7 @@ namespace LWP::Resource {
 	// マテリアルの情報の構造体
 	struct MaterialStruct {
 		Math::Matrix4x4 uvMatrix;
-		int32_t enableLighting = true;
+		int32_t enableLighting = false;
 	};
 
 	class Material final {

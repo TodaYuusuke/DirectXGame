@@ -33,7 +33,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 頂点を生成する関数
 		/// </summary>
-		void InitializeVertices() override;
+		void CreateVertices() override;
 
 		/// <summary>
 		/// 頂点数を返す関数

@@ -64,9 +64,9 @@ namespace LWP::Primitive {
 		/// <param name="texture"> ... テクスチャ</param>
 		/// <param name="isUI"> ... UIとして描画するか</param>
 		struct DrawArg {
-			Vertex* vertex;
+			std::vector<Vertex> vertex;
 			int vertexCount;
-			uint32_t* index;
+			std::vector<uint32_t> index;
 			int indexCount;
 			Utility::Color commonColor;
 			Object::WorldTransform* worldTransform;
@@ -89,9 +89,9 @@ namespace LWP::Primitive {
 		/// <param name="fillMode">描画の埋め立てモード</param>
 		/// <param name="isUI">UIとして描画するか</param>
 		void Draw(
-			Vertex* vertex,
+			std::vector<Vertex> vertex,
 			int vertexCount,
-			uint32_t* index,
+			std::vector<uint32_t> index,
 			int indexCount,
 			Utility::Color* commonColor,
 			Object::WorldTransform* worldTransform,

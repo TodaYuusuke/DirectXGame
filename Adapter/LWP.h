@@ -85,7 +85,18 @@ namespace LWP {
 		template <IsIPrimitive TPrimitive>
 		static TPrimitive* CreatePrimitiveInstance() {
 			TPrimitive* instance = new TPrimitive(primitiveManager_);
-			instance->InitializeVertices();
+			instance->CreateVertices();
+			return instance;
+		}
+
+		/// <summary>
+		/// 3Dモデルのインスタンスを作成
+		/// </summary>
+		/// <typeparam name="TPrimitive">形の種類</typeparam>
+		/// <returns>形のインスタンス</returns>
+		static Primitive::Model* CreateModelInstance(const std::string& filename) {
+			Primitive::Model* instance = new Primitive::Model(primitiveManager_);
+			instance->LoadFile(filename);
 			return instance;
 		}
 

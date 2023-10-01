@@ -100,6 +100,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\WorldTransform.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Model.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -148,6 +151,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\2d\Surface.h" />
     <ClInclude Include="Engine\primitive\2d\Triangle.h" />
     <ClInclude Include="Engine\primitive\3d\3dList.h" />
+    <ClInclude Include="Engine\primitive\3d\Model.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\PrimitiveList.h" />
@@ -160,6 +164,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\scene\user\GameScene.h" />
     <ClInclude Include="Engine\scene\user\Title.h" />
     <ClInclude Include="Engine\utility\Color.h" />
+    <ClInclude Include="Engine\utility\ErrorReporter.h" />
     <ClInclude Include="Engine\utility\MyUtility.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />

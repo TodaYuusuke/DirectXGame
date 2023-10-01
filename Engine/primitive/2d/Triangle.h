@@ -14,7 +14,11 @@ namespace LWP::Primitive {
 		/// コンストラクタ
 		/// </summary>
 		using IPrimitive::IPrimitive;
-		//Triangle(Manager* manager) : IPrimitive(manager) {};
+
+		/// <summary>
+		/// 頂点を生成する関数
+		/// </summary>
+		void CreateVertices() override;
 
 		/// <summary>
 		/// 頂点数を返す関数

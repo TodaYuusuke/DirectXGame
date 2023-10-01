@@ -13,19 +13,24 @@ IPrimitive::IPrimitive(Manager* manager) {
 	
 	// マテリアル作成
 	material = new Material(manager);
-	material->data_->enableLighting = false;
 
 	// トランスフォーム初期化
 	transform.Initialize();
 	transform.CreateResource(manager);
 }
 
-void IPrimitive::InitializeVertices() {
+void IPrimitive::CreateVertices() {
 	// 頂点のサイズ作成
-	vertices = new Vertex[GetVertexCount()];
+	vertices.clear();
+	vertices.resize(GetVertexCount());
+	indexes.clear();
+	indexes.resize(GetIndexCount());
 }
 
 void IPrimitive::Draw(Resource::Texture* texture) {
+	// アクティブでなければ描画しない
+	if (!isActive) { return; }
+
 	// テクスチャがnullじゃなければuvTransformを受け取る
 	if (texture != nullptr) {
 		material->data_->uvMatrix = texture->GetMatrix();
@@ -50,21 +55,29 @@ void IPrimitive::DebugGUI(const std::string& label) {
 		material->DebugGUI();
 
 		// 共通カラーがあるとき -> ColorEdit4を呼び出す
-		if (commonColor != nullptr) {
-			LWP::Base::ImGuiManager::ColorEdit4("commonColor", *commonColor);
-			if (ImGui::Button("Delete CommonColor")) {
-				delete commonColor;
-				commonColor = nullptr;
+		if (ImGui::TreeNode("CommonColor")) {
+			if (commonColor != nullptr) {
+				LWP::Base::ImGuiManager::ColorEdit4("color", *commonColor);
+				if (ImGui::Button("Delete CommonColor")) {
+					delete commonColor;
+					commonColor = nullptr;
+				}
 			}
-		}
-		// 共通カラーがないとき -> 共通カラーを作る
-		else if (ImGui::Button("Create CommonColor")){
-			commonColor = new Utility::Color(Utility::ColorPattern::WHITE);
+			// 共通カラーがないとき -> 共通カラーを作る
+			else if (ImGui::Button("Create CommonColor")) {
+				commonColor = new Utility::Color(Utility::ColorPattern::WHITE);
+			}
+			ImGui::TreePop();
 		}
 
-		ImGui::Checkbox("Fill", (bool*)&fillMode);
-		ImGui::Checkbox("isUI", &isUI);
-		DerivedDebugGUI();
+		// その他
+		if (ImGui::TreeNode("Other")) {
+			ImGui::Checkbox("Fill", (bool*)&fillMode);
+			ImGui::Checkbox("isUI", &isUI);
+			ImGui::Checkbox("isActive", &isActive);
+			DerivedDebugGUI();
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 }

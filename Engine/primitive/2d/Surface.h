@@ -16,6 +16,11 @@ namespace LWP::Primitive {
 		using IPrimitive::IPrimitive;
 
 		/// <summary>
+		/// 頂点を生成する関数
+		/// </summary>
+		void CreateVertices() override;
+
+		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>
 		int GetVertexCount() const { return 4; }

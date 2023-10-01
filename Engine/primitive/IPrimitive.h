@@ -28,8 +28,8 @@ namespace LWP::Primitive {
 	class IPrimitive {
 	public:
 		// ** 共通の変数 ** //
-		Vertex* vertices = nullptr;	// 描画する頂点
-		uint32_t* indexes = nullptr;	// インデックス
+		std::vector<Vertex> vertices;	// 描画する頂点
+		std::vector<uint32_t> indexes;	// インデックス
 
 		// ワールドトランスフォーム
 		Object::WorldTransform transform;
@@ -48,6 +48,8 @@ namespace LWP::Primitive {
 		FillMode fillMode = FillMode::Fill;
 		// UIとして描画するか
 		bool isUI = false;
+		// アクティブ切り替え
+		bool isActive = true;
 
 	protected:	// 描画用にマネージャーのポインタを保持する
 		Manager* primitiveManager;
@@ -66,7 +68,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
 		/// </summary>
-		virtual void InitializeVertices();
+		virtual void CreateVertices();
 
 		/// <summary>
 		/// 描画

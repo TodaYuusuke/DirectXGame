@@ -47,9 +47,9 @@ void Manager::Reset() {
 }
 
 void Manager::Draw(
-	Vertex* vertex,
+	std::vector<Vertex> vertex,
 	int vertexCount,
-	uint32_t* index,
+	std::vector<uint32_t> index,
 	int indexCount,
 	Utility::Color* commonColor,
 	Object::WorldTransform* worldTransform,
@@ -113,7 +113,7 @@ void Manager::Draw(
 	}
 
 	// Indexがnullならば自動生成
-	if (index == nullptr) {
+	if (index.empty()) {
 		indexCount = (vertexCount - 2) * 3;	// インデックスの数を求める
 		// 1ループで三角形1つ分のインデックス生成
 		for (int i = 0; i < vertexCount - 2; i++) {
