@@ -37,7 +37,7 @@ namespace LWP::Primitive {
 		// マテリアル
 		Resource::Material* material = nullptr;
 		// テクスチャ
-		//Resource::Texture* texture = nullptr;
+		Resource::Texture* texture = nullptr;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する
@@ -73,7 +73,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		virtual void Draw(Resource::Texture* texture = nullptr);
+		virtual void Draw();
 		/// <summary>
 		/// ImGui
 		/// </summary>

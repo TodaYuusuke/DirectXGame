@@ -1,5 +1,6 @@
 #include "Model.h"
 
+#include "../../../Adapter/LWP.h"
 #include "../../utility/ErrorReporter.h"
 
 #include <fstream>
@@ -112,11 +113,41 @@ void Model::LoadObj(const std::string& filename) {
 				}
 			}
 		}
+		// マテリアル読み込み
+		else if (identifier == "mtllib") {
+			std::string materialFilename;
+			s >> materialFilename;
+			// 必ずobjと同一階層にmtlは存在させる
+			LoadMtl(materialFilename);
+		}
 	}
 
 	// 最後にインデックスを反転させる（左手座標系に修正するため）
 	for (size_t i = 0; i < indexes.size(); i += 3) {
 		// 0番目と2番目の要素を入れ替える
 		std::swap(indexes[i], indexes[i + 2]);
+	}
+}
+
+void Model::LoadMtl(const std::string& filename) {
+	std::ifstream file(directoryPath_ + filename);
+	LoadAssert(file.is_open(), filename);
+	std::string line;	// ファイルから読み込んだ1行
+
+	// ファイルを一行ずつ読み込む
+	while (std::getline(file, line)) {
+		std::string identifier;
+		std::istringstream s(line);
+		s >> identifier;	// 先頭の識別子を読む
+
+		// identifierに応じた処理
+
+		// テクスチャ読み込み
+		if (identifier == "map_Kd") {
+			std::string textureFilename;
+			s >> textureFilename;
+			// テクスチャを読み込む
+			texture = LWP::Engine::CreateTextureInstance(directoryPath_ + textureFilename);
+		}
 	}
 }

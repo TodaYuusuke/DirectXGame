@@ -39,7 +39,7 @@ namespace LWP::Primitive {
 		int GetIndexCount() const override { return static_cast<int>(indexes.size()); };
 		
 	private: // ** プライベートな変数 ** //
-
+		// 固定の相対パス
 		const std::string directoryPath_ = "resources/obj/";
 
 	private: // ** プライベートな関数 ** //
@@ -51,5 +51,9 @@ namespace LWP::Primitive {
 
 		// 3Dモデルの形式別読み込み処理
 		void LoadObj(const std::string& filename);
+
+
+		// マテリアルの読み込み
+		void LoadMtl(const std::string& filename);
 	};
 }

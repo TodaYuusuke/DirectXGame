@@ -27,7 +27,7 @@ void IPrimitive::CreateVertices() {
 	indexes.resize(GetIndexCount());
 }
 
-void IPrimitive::Draw(Resource::Texture* texture) {
+void IPrimitive::Draw() {
 	// アクティブでなければ描画しない
 	if (!isActive) { return; }
 
