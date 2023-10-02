@@ -3,8 +3,6 @@
 #include "../Engine/scene/SceneManager.h"
 #include "../Engine/utility/MyUtility.h"
 
-#include <dxgidebug.h>
-#pragma comment(lib, "dxguid.lib")
 
 using namespace LWP;
 
@@ -49,19 +47,20 @@ void Engine::SetMainCameraMatrix(Camera* camera) {
 
 void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
-	winApp_ = new WinApp();
-	directXCommon_ = new DirectXCommon();
-	imGuiManager_ = new ImGuiManager();
-	objectManager_ = new Object::Manager();
-	primitiveManager_ = new Primitive::Manager();
-	sceneManager_ = new Scene::Manager();
+	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
+	winApp_ = std::make_unique<WinApp>();
+	directXCommon_ = std::make_unique<DirectXCommon>();
+	imGuiManager_ = std::make_unique<ImGuiManager>();
+	objectManager_ = std::make_unique<Object::Manager>();
+	primitiveManager_ = std::make_unique<Primitive::Manager>();
+	sceneManager_ = std::make_unique<Scene::Manager>();
 
 	// 初期化
 	winApp_->Initialize(title, width, height);
-	directXCommon_->Initialize(winApp_, width, height);
-	imGuiManager_->Initialize(winApp_, directXCommon_);
+	directXCommon_->Initialize(winApp_.get() , width, height);
+	imGuiManager_->Initialize(winApp_.get(), directXCommon_.get());
 	objectManager_->Initialize();
-	primitiveManager_->Initialize(directXCommon_);
+	primitiveManager_->Initialize(directXCommon_.get());
 	sceneManager_->Initialize();
 }
 
@@ -88,7 +87,7 @@ void Engine::Finalize() {
 
 	CloseWindow(winApp_->GetHWND());
 
-	//// リソースリークチェック
+	// リソースリークチェック
 	//IDXGIDebug1* debug;
 	//if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
 	//	debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
@@ -98,17 +97,20 @@ void Engine::Finalize() {
 	//}
 }
 
+// メモリリークチェッカー
+std::unique_ptr<Engine::D3DResourceLeakChecker> Engine::memoryLeakChecker_;
 
 // ウィンドウ
-Base::WinApp* Engine::winApp_;
+std::unique_ptr<Base::WinApp> Engine::winApp_;
 // DirectX
-Base::DirectXCommon* Engine::directXCommon_;
+std::unique_ptr<Base::DirectXCommon> Engine::directXCommon_;
 // IｍGuiManager
-Base::ImGuiManager* Engine::imGuiManager_;
+std::unique_ptr<Base::ImGuiManager> Engine::imGuiManager_;
+
 // オブジェクト管理
-Object::Manager* Engine::objectManager_;
-// 描画システム
-Primitive::Manager* Engine::primitiveManager_;
+std::unique_ptr<Object::Manager> Engine::objectManager_;
+// 描画管理
+std::unique_ptr<Primitive::Manager> Engine::primitiveManager_;
 
 // シーンマネージャー
-Scene::Manager* Engine::sceneManager_;
+std::unique_ptr<Scene::Manager> Engine::sceneManager_;

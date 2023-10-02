@@ -3,6 +3,8 @@
 //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー//
 #pragma once
 #include <functional>
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
 
 #include "../Engine/base/WinApp.h"
 #include "../Engine/base/DirectXCommon.h"
@@ -40,7 +42,6 @@ namespace LWP {
 	}
 	namespace Primitive {
 		class Manager;
-		class Triangle;
 	}
 	namespace Resource {
 		class Manager;
@@ -84,7 +85,7 @@ namespace LWP {
 		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
 		static TPrimitive* CreatePrimitiveInstance() {
-			TPrimitive* instance = new TPrimitive(primitiveManager_);
+			TPrimitive* instance = new TPrimitive(primitiveManager_.get());
 			instance->CreateVertices();
 			return instance;
 		}
@@ -95,7 +96,7 @@ namespace LWP {
 		/// <typeparam name="TPrimitive">形の種類</typeparam>
 		/// <returns>形のインスタンス</returns>
 		static Primitive::Model* CreateModelInstance(const std::string& filename) {
-			Primitive::Model* instance = new Primitive::Model(primitiveManager_);
+			Primitive::Model* instance = new Primitive::Model(primitiveManager_.get());
 			instance->LoadFile(filename);
 			return instance;
 		}
@@ -105,7 +106,7 @@ namespace LWP {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>テクスチャのインスタンス</returns>
-		static Resource::Texture* CreateTextureInstance(const std::string& filePath) { return new Resource::Texture(directXCommon_, filePath); }
+		static Resource::Texture* CreateTextureInstance(const std::string& filePath) { return new Resource::Texture(directXCommon_.get(), filePath); }
 		
 		/// <summary>
 		/// 現在の解像度を返す
@@ -149,19 +150,34 @@ namespace LWP {
 
 
 	private: // メンバ変数
+		// メモリリークチェック用構造体
+		struct D3DResourceLeakChecker {
+			~D3DResourceLeakChecker() {
+				// リソースリークチェック
+				//Microsoft::WRL::ComPtr<IDXGIDebug1> debug;
+				//if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+				//	debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+				//	debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+				//	debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+				//	debug->Release();
+				//}
+			}
+		};
+		static std::unique_ptr<D3DResourceLeakChecker> memoryLeakChecker_;
+
 		// ウィンドウ
-		static Base::WinApp* winApp_;
+		static std::unique_ptr<Base::WinApp> winApp_;
 		// DirectX
-		static Base::DirectXCommon* directXCommon_;
+		static std::unique_ptr<Base::DirectXCommon> directXCommon_;
 		// IｍGuiManager
-		static Base::ImGuiManager* imGuiManager_;
+		static std::unique_ptr<Base::ImGuiManager> imGuiManager_;
 
 		// オブジェクト管理
-		static Object::Manager* objectManager_;
+		static std::unique_ptr<Object::Manager> objectManager_;
 		// 描画管理
-		static Primitive::Manager* primitiveManager_;
+		static std::unique_ptr<Primitive::Manager> primitiveManager_;
 
 		// シーンマネージャー
-		static Scene::Manager* sceneManager_;
+		static std::unique_ptr<Scene::Manager> sceneManager_;
 	};
 }

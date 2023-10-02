@@ -12,7 +12,9 @@ namespace LWP::Base {
 	class ImGuiManager {
 	public:
 		ImGuiManager() = default;
-		~ImGuiManager() = default;
+		~ImGuiManager() {
+			dxCommon_;
+		};
 
 		/// <summary>
 		/// 初期化

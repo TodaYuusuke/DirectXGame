@@ -18,7 +18,9 @@ namespace LWP::Base {
 		// コンストラクタ
 		DirectXCommon() = default;
 		// デストラクタ
-		~DirectXCommon() = default;
+		~DirectXCommon() {
+			textureIndex_;
+		};
 
 
 		/// <summary>

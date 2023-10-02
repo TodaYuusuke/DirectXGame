@@ -14,7 +14,9 @@ namespace LWP::Base {
 		// コンストラクタ
 		WinApp() = default;
 		// デストラクタ
-		~WinApp() = default;
+		~WinApp() {
+			wc_;
+		};
 
 
 		/// <summary>
