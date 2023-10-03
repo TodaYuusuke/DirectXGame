@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <map>
 
 using namespace LWP::Primitive;
 using namespace LWP::Math;
@@ -20,18 +21,8 @@ void Model::LoadFile(const std::string& filename) {
 }
 
 void Model::LoadObj(const std::string& filename) {
-	// 頂点とインデックスの登録に必要な一時変数たち
-	struct VertexPattern{
-		int p;
-		int t;
-		int n;
-
-		// 比較演算子のオーバーロード
-		bool operator==(const VertexPattern& other) const {
-			return (p == other.p) && (t == other.t) && (n == other.n);
-		}
-	};
-	std::vector<VertexPattern> addedVertex; // 追加済み頂点のデータベース
+	// インデックス登録用の3次元配列
+	std::map<int, std::map<int, std::map<int, int>>> key;
 
 	std::vector<Vector3> positions;	// 位置
 	std::vector<Vector2> texcoords;	// 法線
@@ -81,24 +72,19 @@ void Model::LoadObj(const std::string& filename) {
 				for (int32_t i = 0; i < 3; ++i) {
 					std::getline(v, elements[i], '/');
 				}
-				VertexPattern vPattern = { std::stoi(elements[0]),std::stoi(elements[1]), std::stoi(elements[2]) };	// 頂点のパターンに変換
-
 				// 次の処理に移る前に、これが新しいパターンの頂点かチェック
-				auto it = std::find_if(addedVertex.begin(), addedVertex.end(), [&vPattern](const VertexPattern& existingPattern) {
-					return existingPattern == vPattern;
-				});
-
+				int value = key[std::stoi(elements[0])][std::stoi(elements[1])][std::stoi(elements[2])];
 				// 既存のパターンだった場合 -> 既存の頂点のインデックスを求めてからインデックスに追加
-				if (it != addedVertex.end()) {
-					indexes.push_back(static_cast<uint32_t>(std::distance(addedVertex.begin(), it))); // パターンが見つかった場合のインデックス
+				if (value > 0 && value < vertices.size()) {
+					indexes.push_back(static_cast<uint32_t>(value - 1)); // パターンが見つかった場合のインデックス
 				}
 				// 新しいパターンの場合 -> 新しく頂点を追加し、インデックスに追加
 				else {
 					// 新しい頂点を生成
 					Vertex newVertex;
-					newVertex.position = positions[vPattern.p - 1];
-					newVertex.texCoord = texcoords[vPattern.t - 1];
-					newVertex.normal = normals[vPattern.n - 1];
+					newVertex.position = positions[std::stoi(elements[0]) - 1];
+					newVertex.texCoord = texcoords[std::stoi(elements[1]) - 1];
+					newVertex.normal = normals[std::stoi(elements[2]) - 1];
 					// 左手座標系なので座標を変換
 					newVertex.position.x *= -1.0f;
 					newVertex.texCoord.y = 1.0f - newVertex.texCoord.y;
@@ -109,7 +95,7 @@ void Model::LoadObj(const std::string& filename) {
 					indexes.push_back(static_cast<uint32_t>(vertices.size() - 1));
 
 					// 既存のパターンであることを指すために追加
-					addedVertex.push_back(vPattern);
+					key[std::stoi(elements[0])][std::stoi(elements[1])][std::stoi(elements[2])] = static_cast<int>(vertices.size());
 				}
 			}
 		}

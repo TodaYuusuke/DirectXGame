@@ -14,9 +14,6 @@ namespace LWP::Resource {
 	class Texture final {
 	public:
 		// ** 共通の変数 ** //
-		
-		// テクスチャのトランスフォーム
-		Object::WorldTransform uvTransform;
 
 		// コンストラクタ
 		Texture(Base::DirectXCommon* direcX, const std::string& filePath);
@@ -28,8 +25,6 @@ namespace LWP::Resource {
 		/// </summary>
 		void Load(const std::string& filePath);
 
-		// テクスチャの変換行列を受け取る
-		Math::Matrix4x4 GetMatrix() { return uvTransform.MatWorld(); };
 		int GetIndex() { return index; }
 		D3D12_GPU_DESCRIPTOR_HANDLE GetHandleGPU() { return textureSRVHandleGPU; }
 

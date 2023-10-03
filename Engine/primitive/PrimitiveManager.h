@@ -173,8 +173,8 @@ namespace LWP::Primitive {
 		
 
 		// 最大頂点数
-		static const int kMaxVertexCount_ = 65535;
-		static const int kMaxIndexCount_ = 65535;
+		static const int kMaxVertexCount_ = 655350;
+		static const int kMaxIndexCount_ = 655350;
 
 	private: // 非公開のメンバ関数
 		Manager(const Manager&) = delete;

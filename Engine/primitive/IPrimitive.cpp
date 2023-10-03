@@ -32,9 +32,9 @@ void IPrimitive::Draw() {
 	if (!isActive) { return; }
 
 	// テクスチャがnullじゃなければuvTransformを受け取る
-	if (texture != nullptr) {
-		material->data_->uvMatrix = texture->GetMatrix();
-	}
+	//if (texture != nullptr) {
+	//	material->data_->uvMatrix = texture->GetMatrix();
+	//}
 
 	transform.MatWorld();	// WorldTransformを更新
 	primitiveManager->Draw(vertices, GetVertexCount(), indexes, GetIndexCount(), commonColor, &transform, material, texture, fillMode, isUI);
