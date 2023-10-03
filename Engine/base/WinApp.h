@@ -14,9 +14,7 @@ namespace LWP::Base {
 		// コンストラクタ
 		WinApp() = default;
 		// デストラクタ
-		~WinApp() {
-			wc_;
-		};
+		~WinApp() = default;
 
 
 		/// <summary>
@@ -34,6 +32,7 @@ namespace LWP::Base {
 		// アクセサ
 		int GetClientWidth() { return clientWidth_; }
 		int GetClientHeight() { return clientHeight_; }
+		WNDCLASS GetWNDCLASS() const { return wc_; }
 		HWND GetHWND() const { return hwnd_; }
 
 	private: // メンバ変数

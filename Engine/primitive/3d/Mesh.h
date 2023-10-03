@@ -8,7 +8,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 3Dモデル
 	/// </summary>
-	class Model final
+	class Mesh final
 		: public IPrimitive {
 
 	public: // ** 関数 ** //

@@ -17,6 +17,8 @@ namespace LWP::Resource {
 
 		// コンストラクタ
 		Texture(Base::DirectXCommon* direcX, const std::string& filePath);
+		// コピーコンストラクタ
+		Texture(const Texture&) = default;
 		// デストラクタ
 		~Texture() = default;
 

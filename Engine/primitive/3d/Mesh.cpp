@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "Mesh.h"
 
 #include "../../../Adapter/LWP.h"
 #include "../../utility/ErrorReporter.h"
@@ -11,7 +11,7 @@ using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
-void Model::LoadFile(const std::string& filename) {
+void Mesh::LoadFile(const std::string& filename) {
 	// 頂点とインデックスは先にclearしておく
 	vertices.clear();
 	indexes.clear();
@@ -20,7 +20,7 @@ void Model::LoadFile(const std::string& filename) {
 	LoadObj(filename);
 }
 
-void Model::LoadObj(const std::string& filename) {
+void Mesh::LoadObj(const std::string& filename) {
 	// インデックス登録用の3次元配列
 	std::map<int, std::map<int, std::map<int, int>>> key;
 
@@ -115,7 +115,7 @@ void Model::LoadObj(const std::string& filename) {
 	}
 }
 
-void Model::LoadMtl(const std::string& filename) {
+void Mesh::LoadMtl(const std::string& filename) {
 	std::ifstream file(directoryPath_ + filename);
 	LoadAssert(file.is_open(), filename);
 	std::string line;	// ファイルから読み込んだ1行

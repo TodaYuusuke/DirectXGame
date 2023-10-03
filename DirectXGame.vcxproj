@@ -92,6 +92,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
+    <ClCompile Include="Engine\input\InputManager.cpp" />
+    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
@@ -102,7 +104,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\WorldTransform.cpp" />
     <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
-    <ClCompile Include="Engine\primitive\3d\Model.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Mesh.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -135,6 +137,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
+    <ClInclude Include="Engine\input\InputManager.h" />
+    <ClInclude Include="Engine\input\keyboard\Keyboard.h" />
     <ClInclude Include="Engine\math\Math.h" />
     <ClInclude Include="Engine\math\matrix\Matrix3x3.h" />
     <ClInclude Include="Engine\math\matrix\Matrix4x4.h" />
@@ -151,7 +155,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\2d\Surface.h" />
     <ClInclude Include="Engine\primitive\2d\Triangle.h" />
     <ClInclude Include="Engine\primitive\3d\3dList.h" />
-    <ClInclude Include="Engine\primitive\3d\Model.h" />
+    <ClInclude Include="Engine\primitive\3d\Mesh.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\PrimitiveList.h" />

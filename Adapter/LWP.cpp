@@ -51,6 +51,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	winApp_ = std::make_unique<WinApp>();
 	directXCommon_ = std::make_unique<DirectXCommon>();
 	imGuiManager_ = std::make_unique<ImGuiManager>();
+	inputManager_ = std::make_unique<Input::Manager>();
 	objectManager_ = std::make_unique<Object::Manager>();
 	primitiveManager_ = std::make_unique<Primitive::Manager>();
 	sceneManager_ = std::make_unique<Scene::Manager>();
@@ -59,6 +60,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	winApp_->Initialize(title, width, height);
 	directXCommon_->Initialize(winApp_.get() , width, height);
 	imGuiManager_->Initialize(winApp_.get(), directXCommon_.get());
+	inputManager_->Initialize(winApp_.get());
 	objectManager_->Initialize();
 	primitiveManager_->Initialize(directXCommon_.get());
 	sceneManager_->Initialize();
@@ -70,6 +72,7 @@ bool Engine::ProcessMessage() {
 
 
 void Engine::BeginFrame() {
+	inputManager_->Update();
 	directXCommon_->PreDraw();
 	imGuiManager_->Begin();
 }
@@ -106,6 +109,9 @@ std::unique_ptr<Base::WinApp> Engine::winApp_;
 std::unique_ptr<Base::DirectXCommon> Engine::directXCommon_;
 // IｍGuiManager
 std::unique_ptr<Base::ImGuiManager> Engine::imGuiManager_;
+
+// InputManager
+std::unique_ptr<Input::Manager> Engine::inputManager_;
 
 // オブジェクト管理
 std::unique_ptr<Object::Manager> Engine::objectManager_;

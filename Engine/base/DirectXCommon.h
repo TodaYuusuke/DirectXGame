@@ -11,6 +11,9 @@
 #include "../../Externals/DirectXTex/DirectXTex.h"
 
 namespace LWP::Base {
+	/// <summary>
+	/// DirectX管理クラス
+	/// </summary>
 	class DirectXCommon
 	{
 	public: // メンバ関数
@@ -18,9 +21,7 @@ namespace LWP::Base {
 		// コンストラクタ
 		DirectXCommon() = default;
 		// デストラクタ
-		~DirectXCommon() {
-			textureIndex_;
-		};
+		~DirectXCommon() = default;
 
 
 		/// <summary>

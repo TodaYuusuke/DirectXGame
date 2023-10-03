@@ -61,9 +61,6 @@
     <Filter Include="LWP\Engine\resource\audio">
       <UniqueIdentifier>{3b92a7a6-5882-4e79-8c80-5bf6fddbbcb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LWP\Engine\resource\obj">
-      <UniqueIdentifier>{3fc37a76-7729-4b1f-8497-9a2cf5fe48b0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LWP\Engine\resource\texture">
       <UniqueIdentifier>{7dd690f6-4b57-4e16-93e7-b0a135a5ff2b}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,18 @@
     </Filter>
     <Filter Include="LWP\Engine\math\matrix">
       <UniqueIdentifier>{bd5d12d8-007e-462e-825b-f7a8b3d98008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource\model">
+      <UniqueIdentifier>{3fc37a76-7729-4b1f-8497-9a2cf5fe48b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\input">
+      <UniqueIdentifier>{a3515b39-13b8-42d3-bea1-516228986b1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\input\keyboard">
+      <UniqueIdentifier>{26d85ae3-eed3-4357-840d-e5fc1b48b563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\input\controller">
+      <UniqueIdentifier>{ae7ea1ae-32a2-4d59-8ad6-5d1ff410ce4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,7 +184,7 @@
     <ClCompile Include="Engine\primitive\IPrimitive.cpp">
       <Filter>LWP\Engine\primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Model.cpp">
+    <ClCompile Include="Engine\primitive\3d\Mesh.cpp">
       <Filter>LWP\Engine\primitive\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
@@ -183,6 +192,12 @@
     </ClCompile>
     <ClCompile Include="Engine\primitive\2d\Surface.cpp">
       <Filter>LWP\Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\InputManager.cpp">
+      <Filter>LWP\Engine\input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
+      <Filter>LWP\Engine\input\keyboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -315,11 +330,17 @@
     <ClInclude Include="Engine\math\matrix\Matrix4x4.h">
       <Filter>LWP\Engine\math\matrix</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Model.h">
+    <ClInclude Include="Engine\primitive\3d\Mesh.h">
       <Filter>LWP\Engine\primitive\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\utility\ErrorReporter.h">
       <Filter>LWP\Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\InputManager.h">
+      <Filter>LWP\Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\keyboard\Keyboard.h">
+      <Filter>LWP\Engine\input\keyboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

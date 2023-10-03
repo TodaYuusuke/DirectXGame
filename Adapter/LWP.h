@@ -10,6 +10,8 @@
 #include "../Engine/base/DirectXCommon.h"
 #include "../Engine/base/ImGuiManager.h"
 
+#include "../Engine/input/InputManager.h"
+
 #include "../Engine/math/Math.h"
 
 #include "../Engine/object/ObjectManager.h"
@@ -78,6 +80,7 @@ namespace LWP {
 		template <IsIObject TObject>
 		static TObject* CreateObjectInstance() { return objectManager_->CreateObjectInstance<TObject>(); }
 
+
 		/// <summary>
 		/// 形のインスタンスを作成
 		/// </summary>
@@ -95,8 +98,8 @@ namespace LWP {
 		/// </summary>
 		/// <typeparam name="TPrimitive">形の種類</typeparam>
 		/// <returns>形のインスタンス</returns>
-		static Primitive::Model* CreateModelInstance(const std::string& filename) {
-			Primitive::Model* instance = new Primitive::Model(primitiveManager_.get());
+		static Primitive::Mesh* CreateModelInstance(const std::string& filename) {
+			Primitive::Mesh* instance = new Primitive::Mesh(primitiveManager_.get());
 			instance->LoadFile(filename);
 			return instance;
 		}
@@ -171,6 +174,9 @@ namespace LWP {
 		static std::unique_ptr<Base::DirectXCommon> directXCommon_;
 		// IｍGuiManager
 		static std::unique_ptr<Base::ImGuiManager> imGuiManager_;
+
+		// InputManager
+		static std::unique_ptr<Input::Manager> inputManager_;
 
 		// オブジェクト管理
 		static std::unique_ptr<Object::Manager> objectManager_;

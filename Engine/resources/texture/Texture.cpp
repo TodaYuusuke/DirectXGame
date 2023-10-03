@@ -7,10 +7,10 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace std;
 
-Texture::Texture(DirectXCommon* direcX, const std::string& filePath) {
+Texture::Texture(DirectXCommon* directX, const std::string& filePath) {
 	Load(filePath);
-	textureResource = direcX->CreateTextureResource(mipImages.GetMetadata());
-	index = direcX->UploadTextureData(textureResource, &textureSRVHandleGPU, mipImages);
+	textureResource = directX->CreateTextureResource(mipImages.GetMetadata());
+	index = directX->UploadTextureData(textureResource, &textureSRVHandleGPU, mipImages);
 }
 
 

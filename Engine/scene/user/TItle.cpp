@@ -37,7 +37,7 @@ void Title::Initialize() {
 
 	// モデル読み込み
 	planeModel = LWP::Engine::CreateModelInstance("plane.obj");
-	axisModel = LWP::Engine::CreateModelInstance("bunny.obj");
+	axisModel = LWP::Engine::CreateModelInstance("plane.obj");
 }
 // 更新
 void Title::Update() {
@@ -51,6 +51,13 @@ void Title::Update() {
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 
+	if (useMonsterBall) {
+		sphere->texture = monsterBall;
+	}
+	else {
+		sphere->texture = uvTexture;
+	}
+
 	// カメラ操作
 	ImGui::Begin("Camera");
 	mainCamera->DebugGUI();
@@ -61,15 +68,7 @@ void Title::Draw() {
 	tri[0]->Draw();
 	tri[1]->Draw();
 	surface->Draw();
-
-	if (useMonsterBall) { 
-		sphere->texture = monsterBall;
-		sphere->Draw();
-	}
-	else { 
-		sphere->texture = uvTexture;
-		sphere->Draw();
-	}
+	sphere->Draw();
 
 	planeModel->Draw();
 	axisModel->Draw();
