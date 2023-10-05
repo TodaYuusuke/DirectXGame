@@ -37,7 +37,7 @@ Color::Color(Vector4 v) {
 	A = static_cast<unsigned char>(v.w * 255.0f);
 }
 
-Vector4 Color::GetVector4() {
+Vector4 Color::GetVector4() const {
 	return { static_cast<float>(R) / 255.0f,static_cast<float>(G) / 255.0f,static_cast<float>(B) / 255.0f,static_cast<float>(A) / 255.0f };
 }
 

@@ -8,6 +8,7 @@
 
 namespace LWP::Base {
 	class DirectXCommon;
+	class CommandManager;
 }
 
 namespace LWP::Resource {
@@ -16,30 +17,31 @@ namespace LWP::Resource {
 		// ** 共通の変数 ** //
 
 		// コンストラクタ
-		Texture(Base::DirectXCommon* direcX, const std::string& filePath);
-		// コピーコンストラクタ
-		Texture(const Texture&) = default;
+		Texture(Base::CommandManager* manager, const std::string& filePath);
 		// デストラクタ
 		~Texture() = default;
 
+
+	private: // ** プロパティ変数 ** //
+		// CommandManager上でのインデックス
+		int index_;
+	public: // アクセッサ
+		// CommandManager上でのインデックスを読みとる
+		int GetIndex() const { return index_; }
+		// 別のMaterialと同期する
+		void SetIndex(int value) { index_ = value; }
+
+
+	private: // ** メンバ変数 ** //
+
+		// ミップマップ付きテクスチャ
+		DirectX::ScratchImage mipImages;
+
+
+	private: // ** プライベートな関数 ** //
 		/// <summary>
 		/// テクスチャを読み込む
 		/// </summary>
 		void Load(const std::string& filePath);
-
-		int GetIndex() { return index; }
-		D3D12_GPU_DESCRIPTOR_HANDLE GetHandleGPU() { return textureSRVHandleGPU; }
-
-	private: // メンバ変数
-
-		// ミップマップ付きテクスチャ
-		DirectX::ScratchImage mipImages;
-		// テクスチャのリソース
-		ID3D12Resource* textureResource = nullptr;
-		// テクスチャのハンドル
-		D3D12_GPU_DESCRIPTOR_HANDLE textureSRVHandleGPU;
-
-		// テクスチャの読み込みindex
-		int index;
 	};
 }

@@ -1,5 +1,5 @@
 #include "WorldTransform.h"
-#include "../primitive/PrimitiveManager.h"
+#include "../base/ImGuiManager.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Object;
@@ -26,22 +26,20 @@ void WorldTransform::Initialize() {
 	scale = { 1.0f, 1.0f, 1.0f };
 	rotation = { 0.0f, 0.0f, 0.0f };
 	translation = { 0.0f, 0.0f, 0.0f };
-	matWorld_ = new Matrix4x4();
 }
 
-void WorldTransform::CreateResource(Primitive::Manager* manager) {
-	// リソースがnullでなければ戻る
-	if (resource_ != nullptr) {
-		return;
+Matrix4x4 WorldTransform::GetWorldMatrix() const {
+	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+
+	// 親があれば親のワールド行列を掛ける
+	if (parent_) {
+		result = result * parent_->GetWorldMatrix();
 	}
-
-	resource_ = manager->CreateBufferResource(sizeof(Matrix4x4));
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&matWorld_));
+	return result;
 }
-
-Vector3 WorldTransform::GetWorldPosition() {
-	Math::Matrix4x4 matWorld = MatWorld();
-	return { matWorld.m[3][0],matWorld.m[3][1],matWorld.m[3][2] };
+Vector3 WorldTransform::GetWorldPosition() const {
+	Math::Matrix4x4 worldMatrix = GetWorldMatrix();
+	return { worldMatrix.m[3][0],worldMatrix.m[3][1],worldMatrix.m[3][2] };
 }
 
 void WorldTransform::DebugGUI(const std::string& label) {
@@ -56,14 +54,3 @@ void WorldTransform::DebugGUI(const std::string& label) {
 // ** プロパティ変数 ** //
 
 void WorldTransform::Parent(WorldTransform* parent) { parent_ = parent; }
-
-Matrix4x4 WorldTransform::MatWorld() {
-	*matWorld_ = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
-
-	// 親があれば親のワールド行列を掛ける
-	if (parent_) {
-		*matWorld_ = *matWorld_ * parent_->MatWorld();
-	}
-
-	return *matWorld_;
-}

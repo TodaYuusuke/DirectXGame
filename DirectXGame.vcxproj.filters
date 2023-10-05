@@ -91,6 +91,12 @@
     <Filter Include="LWP\Engine\input\controller">
       <UniqueIdentifier>{ae7ea1ae-32a2-4d59-8ad6-5d1ff410ce4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LWP\Adapter\component">
+      <UniqueIdentifier>{61aba39c-e7c0-476d-8ffa-a95619cbfd26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWP\Engine\resource\material">
+      <UniqueIdentifier>{67a65b62-126d-4370-a07f-22e8027f7fdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
@@ -110,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="Engine\object\ObjectManager.cpp">
       <Filter>LWP\Engine\object</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\PrimitiveManager.cpp">
-      <Filter>LWP\Engine\primitive</Filter>
     </ClCompile>
     <ClCompile Include="Engine\scene\SceneManager.cpp">
       <Filter>LWP\Engine\scene</Filter>
@@ -163,9 +166,6 @@
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
       <Filter>LWP\Engine\primitive\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\Material.cpp">
-      <Filter>LWP\Engine\resource</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\math\vector\Vector2.cpp">
       <Filter>LWP\Engine\math\vector</Filter>
     </ClCompile>
@@ -198,6 +198,30 @@
     </ClCompile>
     <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
       <Filter>LWP\Engine\input\keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\System.cpp">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Input.cpp">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Primitive.cpp">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Object.cpp">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Resource.cpp">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Information.cpp">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\CommandManager.cpp">
+      <Filter>LWP\Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\material\Material.cpp">
+      <Filter>LWP\Engine\resource\material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,9 +260,6 @@
     </ClInclude>
     <ClInclude Include="Engine\primitive\2d\Triangle.h">
       <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\PrimitiveManager.h">
-      <Filter>LWP\Engine\primitive</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\IObject.h">
       <Filter>LWP\Engine\object</Filter>
@@ -312,9 +333,6 @@
     <ClInclude Include="Engine\primitive\2d\Surface.h">
       <Filter>LWP\Engine\primitive\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\Material.h">
-      <Filter>LWP\Engine\resource</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\math\vector\Vector2.h">
       <Filter>LWP\Engine\math\vector</Filter>
     </ClInclude>
@@ -341,6 +359,33 @@
     </ClInclude>
     <ClInclude Include="Engine\input\keyboard\Keyboard.h">
       <Filter>LWP\Engine\input\keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\Adapter.h">
+      <Filter>LWP\Adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Input.h">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\System.h">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Primitive.h">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Object.h">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Resource.h">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Information.h">
+      <Filter>LWP\Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\CommandManager.h">
+      <Filter>LWP\Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\material\Material.h">
+      <Filter>LWP\Engine\resource\material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

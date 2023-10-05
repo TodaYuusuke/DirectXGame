@@ -1,33 +1,38 @@
 #pragma once
 #include "IPrimitive.h"
-#include "PrimitiveManager.h"
+#include "../base/CommandManager.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 
-IPrimitive::IPrimitive(Manager* manager) {
-	// マネージャーのポインタを受け取る
-	primitiveManager = manager;
-	
-	// マテリアル作成
-	material = new Material(manager);
-
+IPrimitive::IPrimitive(Base::CommandManager* manager)
+	: material(manager) 
+{
 	// トランスフォーム初期化
 	transform.Initialize();
-	transform.CreateResource(manager);
 }
 
 void IPrimitive::CreateVertices() {
 	// 頂点のサイズ作成
 	vertices.clear();
 	vertices.resize(GetVertexCount());
+}
+void IPrimitive::CreateIndexes() {
+	// 頂点のサイズ作成
 	indexes.clear();
 	indexes.resize(GetIndexCount());
+
+	// 1ループで三角形1つ分のインデックス生成
+	for (int i = 0; i < GetVertexCount() - 2; i++) {
+		indexes[i * 3] = 0;
+		indexes[i * 3 + 1] = i + 1;
+		indexes[i * 3 + 2] = i + 2;
+	}
 }
 
-void IPrimitive::Draw() {
+void IPrimitive::Draw(Base::CommandManager* manager) {
 	// アクティブでなければ描画しない
 	if (!isActive) { return; }
 
@@ -37,7 +42,7 @@ void IPrimitive::Draw() {
 	//}
 
 	transform.MatWorld();	// WorldTransformを更新
-	primitiveManager->Draw(vertices, GetVertexCount(), indexes, GetIndexCount(), commonColor, &transform, material, texture, fillMode, isUI);
+	manager->Draw(this);
 }
 
 void IPrimitive::DebugGUI(const std::string& label) {
@@ -89,8 +94,8 @@ void IPrimitive::DerivedDebugGUI(const std::string& label) {
 
 
 int IPrimitive::GetVertexCount() const {
-	return 1;
+	return 3;
 }
 int IPrimitive::GetIndexCount() const {
-	return 0;
+	return (GetVertexCount() - 2) * 3;	// インデックスの数を求める
 }

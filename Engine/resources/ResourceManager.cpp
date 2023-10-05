@@ -3,18 +3,16 @@
 using namespace LWP::Resource;
 
 void Manager::Initialize() {
-
+	textureMap_.clear();
 }
 
-void Manager::Update() {
-
+const Texture* Manager::LoadTexture(Base::CommandManager* manager, const std::string& filepath) {
+	// 読み込み済みかをチェック
+	if (!textureMap_.count(filepath)) {
+		// 新しいテクスチャをロード
+		textureMap_[filepath] = new Texture(manager, filepath);
+	}
+	return textureMap_[filepath];
 }
-
-//Texture Manager::LoadTexture(const std::string& filepath) {
-//	// 読み込み済みかをチェック
-//	if (textureMap_[filepath] != nullptr) {
-//		return *textureMap_[filepath];
-//	}
-//}
 //Audio Manager::LoadAudio(const std::string& filepath);
 //Model Manager::LoadModel(const std::string& filepath);

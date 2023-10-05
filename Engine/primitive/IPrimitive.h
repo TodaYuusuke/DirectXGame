@@ -3,20 +3,18 @@
 #include "../math/vector/Vector3.h"
 #include "../math/vector/Vector2.h"
 #include "../resources/texture/Texture.h"
-#include "../resources/Material.h"
+#include "../resources/material/Material.h"
 #include "../utility/Color.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include <stdexcept>
 
-namespace LWP::Primitive {
-	// インスタンスをコントローラに格納させるため、コンストラクタでポインタを受け取る
-	class Manager;
-	enum FillMode : int {
-		WireFrame,	// ワイヤーフレーム
-		Fill,		// 埋め立て
-	};
+// 前方宣言
+namespace LWP::Base {
+	class CommandManager;
+}
 
+namespace LWP::Primitive {
 	struct Vertex {
 		Math::Vector3 position;	// 座標
 		Math::Vector2 texCoord; // UV座標
@@ -35,7 +33,7 @@ namespace LWP::Primitive {
 		Object::WorldTransform transform;
 
 		// マテリアル
-		Resource::Material* material = nullptr;
+		Resource::Material material;
 		// テクスチャ
 		Resource::Texture* texture = nullptr;
 
@@ -43,16 +41,11 @@ namespace LWP::Primitive {
 		// ・nullptrの場合は頂点ごとに色を参照する
 		// ・そうでない場合は全ての頂点の色がこれになる
 		Utility::Color* commonColor = nullptr;
-
-		// 面を埋め立てるか
-		FillMode fillMode = FillMode::Fill;
+		
 		// UIとして描画するか
 		bool isUI = false;
 		// アクティブ切り替え
 		bool isActive = true;
-
-	protected:	// 描画用にマネージャーのポインタを保持する
-		Manager* primitiveManager;
 		
 	private: // ** プライベートな変数 ** //
 		// ImGui用の変数
@@ -63,17 +56,21 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// コンストラクタ（ユーザ呼び出し禁止）
 		/// </summary>
-		IPrimitive(Manager*);
+		IPrimitive(Base::CommandManager* manager);
 		
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
 		/// </summary>
 		virtual void CreateVertices();
+		/// <summary>
+		/// インデックスを生成する関数（ユーザ呼び出し禁止）
+		/// </summary>
+		virtual void CreateIndexes();
 
 		/// <summary>
 		/// 描画
 		/// </summary>
-		virtual void Draw();
+		virtual void Draw(Base::CommandManager* manager);
 		/// <summary>
 		/// ImGui
 		/// </summary>
@@ -96,3 +93,10 @@ namespace LWP::Primitive {
 		virtual void DerivedDebugGUI(const std::string& label = "Derived");
 	};
 }
+
+
+/// <summary>
+/// IPrimitiveを継承したクラスのみを選択できるテンプレート
+/// </summary>
+template<class PrimitiveT>
+concept IsIPrimitive = std::is_base_of<LWP::Primitive::IPrimitive, PrimitiveT>::value;

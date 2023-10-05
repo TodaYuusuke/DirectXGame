@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Adapter/LWP.h"
+#include "../../Adapter/Adapter.h"
 
 class IScene {
 public:
@@ -7,6 +7,7 @@ public:
 	virtual void PreInitialize() final {
 		mainCamera = LWP::Engine::CreateObjectInstance<LWP::Object::Camera>();
 		mainCamera->transform.translation = {0.0f,0.0f,-5.0f};
+
 	};
 	// 共通の更新
 	virtual void PostUpdate() {

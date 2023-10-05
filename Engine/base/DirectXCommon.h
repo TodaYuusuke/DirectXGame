@@ -44,19 +44,13 @@ namespace LWP::Base {
 		/// </summary>
 		void ClearRenderTarget();
 
-
 		/// <summary>
-		/// テクスチャのリソースを作る
+		/// DescriptorHandleを取得する関数
 		/// </summary>
-		/// <param name="metdata"></param>
-		ID3D12Resource* CreateTextureResource(const DirectX::TexMetadata& metdata);
-
-		/// <summary>
-		/// テクスチャを転送する
-		/// </summary>
-		/// <param name="texture"></param>
-		/// <param name="mipImages"></param>
-		int UploadTextureData(ID3D12Resource* texture, D3D12_GPU_DESCRIPTOR_HANDLE* textureSRVHandleGPU, const DirectX::ScratchImage& mipImages);
+		/// <param name="index"></param>
+		/// <returns></returns>
+		D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUHandle(uint32_t index);
+		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle(uint32_t index);
 
 
 		// アクセサ
@@ -91,13 +85,11 @@ namespace LWP::Base {
 		int32_t backBufferWidth_ = 0;
 		int32_t backBufferHeight_ = 0;
 
-		// 読み込み済みテクスチャのindex
-		int textureIndex_ = 0;
-
-		// 定数
+		// ディスクリプタサイズの定数
 		uint32_t kDescriptorSizeSRV;
 		uint32_t kDescriptorSizeRTV;
 		uint32_t kDescriptorSizeDSV;
+
 
 	private: // 非公開のメンバ関数
 		DirectXCommon(const DirectXCommon&) = delete;
@@ -132,8 +124,6 @@ namespace LWP::Base {
 		/// デプスステンシルを生成
 		/// </summary>
 		void CreateDepthStencilTextureResource(int32_t width, int32_t height);
-
-
 
 		/// <summary>
 		/// ディスクリプタヒープを生成

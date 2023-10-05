@@ -19,3 +19,16 @@ void Manager::Update() {
 	// デバイスの情報更新
 	keyboard_.Update();
 }
+
+bool Manager::GetKeyStateNone(uint8_t keyID) {
+	return keyboard_.None(keyID);
+}
+bool Manager::GetKeyStateTrigger(uint8_t keyID) {
+	return keyboard_.Trigger(keyID);
+}
+bool Manager::GetKeyStatePress(uint8_t keyID) {
+	return keyboard_.Press(keyID);
+}
+bool Manager::GetKeyStateRelease(uint8_t keyID) {
+	return keyboard_.Release(keyID);
+}

@@ -88,7 +88,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Adapter\component\Information.cpp" />
+    <ClCompile Include="Adapter\component\Input.cpp" />
+    <ClCompile Include="Adapter\component\Object.cpp" />
+    <ClCompile Include="Adapter\component\Primitive.cpp" />
+    <ClCompile Include="Adapter\component\Resource.cpp" />
+    <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
+    <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
@@ -107,8 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\3d\Mesh.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
-    <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
-    <ClCompile Include="Engine\resources\Material.cpp" />
+    <ClCompile Include="Engine\resources\material\Material.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
@@ -133,7 +139,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Adapter\Adapter.h" />
+    <ClInclude Include="Adapter\component\Information.h" />
+    <ClInclude Include="Adapter\component\Input.h" />
+    <ClInclude Include="Adapter\component\Object.h" />
+    <ClInclude Include="Adapter\component\Primitive.h" />
+    <ClInclude Include="Adapter\component\Resource.h" />
+    <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\LWP.h" />
+    <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
@@ -159,8 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\PrimitiveList.h" />
-    <ClInclude Include="Engine\primitive\PrimitiveManager.h" />
-    <ClInclude Include="Engine\resources\Material.h" />
+    <ClInclude Include="Engine\resources\material\Material.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />

@@ -11,6 +11,8 @@ void Title::Initialize() {
 	uvTexture = LWP::Engine::CreateTextureInstance("resources/uvChecker.png");
 	monsterBall = LWP::Engine::CreateTextureInstance("resources/monsterBall.png");
 
+	LWP::Input::Keyboard::GetTrigger(DIK_0);
+
 	// 三角形
 	for (int i = 0; i < 2; i++) {
 		tri[i] = LWP::Engine::CreatePrimitiveInstance<Triangle>();

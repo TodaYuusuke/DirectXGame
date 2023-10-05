@@ -1,15 +1,5 @@
 #pragma once
 #include "../math/Math.h"
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
-#include <wrl.h>
-#include <string>
-
-namespace LWP::Primitive {
-	class Manager;
-}
 
 namespace LWP::Object {
 	class WorldTransform {
@@ -24,20 +14,23 @@ namespace LWP::Object {
 		Math::Vector3 translation;
 
 
-		// ** プロパティ変数 ** //
-
-	private: // 親となるワールド変換へのポインタ（読み取り専用）
+	private: // ** プロパティ変数 ** //
+		// 親となるワールド変換へのポインタ（読み取り専用）
 		WorldTransform* parent_ = nullptr;
 	public: // アクセッサ
-		void Parent(WorldTransform* parent);	// 親関係を登録
-		//WorldTransform* Parent();	// 親関係のポインタを受け取る（実装禁止）
+		// 親関係を登録
+		void Parent(WorldTransform* parent);
+		// 親のポインタを受け取る（実装禁止）
+		//WorldTransform* Parent();
 
-	private: // ワールド変換行列
-		Math::Matrix4x4* matWorld_ = nullptr;
+	private:
+		// CommandManager上でのインデックス
+		int index;
 	public: // アクセッサ
-		//void MatWorld(Math::Matrix4x4);	// ワールド行列をセットする（実装禁止）
-		Math::Matrix4x4 MatWorld();	// ワールド行列を返す
-
+		// CommandManager上でのインデックスを読みとる
+		int GetIndex() const { return index; }
+		// 別のMaterialと同期する
+		void SetIndex(int value) { index = value; }
 
 	public: // ** パブリックなメンバ関数 ** //
 		// コンストラクタ
@@ -53,30 +46,18 @@ namespace LWP::Object {
 		void Initialize();
 
 		/// <summary>
-		/// リソースを作成する
+		/// ワールド行列を返す
 		/// </summary>
-		void CreateResource(Primitive::Manager* manager);
-
+		Math::Matrix4x4 GetWorldMatrix() const;
 		/// <summary>
 		/// ワールド座標を返す
 		/// </summary>
-		Math::Vector3 GetWorldPosition();
-		
-		/// <summary>
-		// GPUアドレスを取得
-		/// </summary>
-		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() { return resource_.Get()->GetGPUVirtualAddress(); }
+		Math::Vector3 GetWorldPosition() const;
+
 
 		/// <summary>
 		/// ImGui
 		/// </summary>
 		void DebugGUI(const std::string& label = "WorldTransform");
-
-	private: // ** プライベートな変数 ** //
-
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_ = nullptr;	// リソース
-
-
-	private: // ** プライベートな関数 ** //
 	};
 }

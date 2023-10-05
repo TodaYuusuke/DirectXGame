@@ -1,158 +1,61 @@
 //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー//
-//　　　　　　　　自作エンジン試作第２号くん　　　　　　　　//
+//　　　　　　　　自作エンジン試作第３号くん　　　　　　　　//
 //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー//
 #pragma once
-#include <functional>
-#include <dxgidebug.h>
-#pragma comment(lib, "dxguid.lib")
+#include <memory>
 
 #include "../Engine/base/WinApp.h"
 #include "../Engine/base/DirectXCommon.h"
+#include "../Engine/base/CommandManager.h"
 #include "../Engine/base/ImGuiManager.h"
 
 #include "../Engine/input/InputManager.h"
 
-#include "../Engine/math/Math.h"
-
 #include "../Engine/object/ObjectManager.h"
-#include "../Engine/object/ObjectList.h"
-
-#include "../Engine/primitive/PrimitiveList.h"
-#include "../Engine/primitive/IPrimitive.h"
-
+#include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
-#include "../Engine/resources/Material.h"
-#include "../Engine/resources/texture/Texture.h"
 
-// LightWeightParticle
-namespace LWP {
-	namespace Base {
-		class WinApp;
-		class DirectXCommon;
-		class ImGuiManager;
-	}
-	namespace Math {
-		class Vector2;
-		class Vector3;
-		class Vector4;
-		class Matrix4x4;
-	}
-	namespace Object {
-		class Manager;
-		class WorldTransform;
-		class Camera;
-	}
-	namespace Primitive {
-		class Manager;
-	}
-	namespace Resource {
-		class Manager;
-		class Material;
-		class Texture;
-	}
-	namespace Scene {
-		class Manager;
-	}
-
-	template<class PrimitiveT>
-	concept IsIPrimitive = std::is_base_of<Primitive::IPrimitive, PrimitiveT>::value;
-
+/// <summary>
+/// システム関連（※ユーザ呼び出し禁止）
+/// </summary>
+namespace LWP::System {
 	class Engine {
-	public:
+	public: // ** メンバ関数 ** //
 		/// <summary>
-		/// エンジン起動
-		/// ※ユーザ呼び出し禁止
+		/// エンジン起動（※ユーザ呼び出し禁止）
 		/// </summary>
-		static void Run();
+		void Run();
 
-		/// <summary>
-		/// 描画の計算に使うカメラのビュープロジェクションのポインタをセットする
-		/// </summary>
-		/// <param name="mainCamera">使用するカメラのポインタ</param>
-		static void SetMainCameraMatrix(Object::Camera* mainCamera);
-
-
-		/// <summary>
-		/// オブジェクトのインスタンスを作成
-		/// </summary>
-		/// <typeparam name="TObject">オブジェクトの種類</typeparam>
-		/// <returns>オブジェクトのインスタンス</returns>
-		template <IsIObject TObject>
-		static TObject* CreateObjectInstance() { return objectManager_->CreateObjectInstance<TObject>(); }
-
-
-		/// <summary>
-		/// 形のインスタンスを作成
-		/// </summary>
-		/// <typeparam name="TPrimitive">形の種類</typeparam>
-		/// <returns>形のインスタンス</returns>
-		template <IsIPrimitive TPrimitive>
-		static TPrimitive* CreatePrimitiveInstance() {
-			TPrimitive* instance = new TPrimitive(primitiveManager_.get());
-			instance->CreateVertices();
-			return instance;
-		}
-
-		/// <summary>
-		/// 3Dモデルのインスタンスを作成
-		/// </summary>
-		/// <typeparam name="TPrimitive">形の種類</typeparam>
-		/// <returns>形のインスタンス</returns>
-		static Primitive::Mesh* CreateModelInstance(const std::string& filename) {
-			Primitive::Mesh* instance = new Primitive::Mesh(primitiveManager_.get());
-			instance->LoadFile(filename);
-			return instance;
-		}
-
-		/// <summary>
-		/// テクスチャのインスタンスを作成
-		/// </summary>
-		/// <param name="filePath">読み込むファイルパス</param>
-		/// <returns>テクスチャのインスタンス</returns>
-		static Resource::Texture* CreateTextureInstance(const std::string& filePath) { return new Resource::Texture(directXCommon_.get(), filePath); }
-		
-		/// <summary>
-		/// 現在の解像度を返す
-		/// </summary>
-		static int GetWindowWidth() { return winApp_->GetClientWidth(); }
-		static int GetWindowHeight() { return winApp_->GetClientHeight(); }
-		static float GetWindowWidthf() { return static_cast<float>(winApp_->GetClientWidth()); }
-		static float GetWindowHeightf() { return static_cast<float>(winApp_->GetClientHeight()); }
-		static Math::Vector2 GetWindow() { return { static_cast<float>(winApp_->GetClientWidth()), static_cast<float>(winApp_->GetClientHeight()) }; }
-
-	private: // メンバ関数
-
+	private: // ** プライベートなメンバ関数達 ** //
 		/// <summary>
 		/// ライブラリの初期化
 		/// </summary>
 		/// <param name="title">ウィンドウタイトル</param>
 		/// <param name="width">ウィンドウの横幅</param>
 		/// <param name="height">ウィンドウの縦幅</param>
-		static void Initialize(const char* title, int width, int height);
+		void Initialize(const char* title, int width, int height);
 		/// <summary>
 		/// ウィンドウからのイベントをチェックする関数
 		/// </summary>
 		/// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
-		static bool ProcessMessage();
-
+		bool ProcessMessage();
 
 		/// <summary>
 		/// フレーム開始
 		/// </summary>
-		static void BeginFrame();
+		void BeginFrame();
 		/// <summary>
 		/// フレーム終了
 		/// </summary>
-		static void EndFrame();
-
+		void EndFrame();
 
 		/// <summary>
 		/// ライブラリの終了
 		/// </summary>
-		static void Finalize();
+		void Finalize();
+		
 
-
-	private: // メンバ変数
+	public: // ** パブリックなメンバ変数たち ** //
 		// メモリリークチェック用構造体
 		struct D3DResourceLeakChecker {
 			~D3DResourceLeakChecker() {
@@ -166,24 +69,28 @@ namespace LWP {
 				//}
 			}
 		};
-		static std::unique_ptr<D3DResourceLeakChecker> memoryLeakChecker_;
+		std::unique_ptr<D3DResourceLeakChecker> memoryLeakChecker_;
 
 		// ウィンドウ
-		static std::unique_ptr<Base::WinApp> winApp_;
+		std::unique_ptr<Base::WinApp> winApp_;
 		// DirectX
-		static std::unique_ptr<Base::DirectXCommon> directXCommon_;
+		std::unique_ptr<Base::DirectXCommon> directXCommon_;
+		// 描画管理
+		std::unique_ptr<Base::CommandManager> commandManager_;
 		// IｍGuiManager
-		static std::unique_ptr<Base::ImGuiManager> imGuiManager_;
+		std::unique_ptr<Base::ImGuiManager> imGuiManager_;
 
 		// InputManager
-		static std::unique_ptr<Input::Manager> inputManager_;
+		std::unique_ptr<Input::Manager> inputManager_;
 
 		// オブジェクト管理
-		static std::unique_ptr<Object::Manager> objectManager_;
+		std::unique_ptr<Object::Manager> objectManager_;
 		// 描画管理
-		static std::unique_ptr<Primitive::Manager> primitiveManager_;
+		std::unique_ptr<Primitive::Manager> primitiveManager_;
+		// リソース管理
+		std::unique_ptr<Resource::Manager> resourceManager_;
 
 		// シーンマネージャー
-		static std::unique_ptr<Scene::Manager> sceneManager_;
+		std::unique_ptr<Scene::Manager> sceneManager_;
 	};
 }

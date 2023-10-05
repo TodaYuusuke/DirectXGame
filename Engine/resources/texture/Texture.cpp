@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "../../base/DirectXCommon.h"
+#include "../../base/CommandManager.h"
 #include "../../utility/MyUtility.h"
 
 using namespace LWP::Base;
@@ -7,10 +8,9 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace std;
 
-Texture::Texture(DirectXCommon* directX, const std::string& filePath) {
+Texture::Texture(Base::CommandManager* manager, const std::string& filePath) {
 	Load(filePath);
-	textureResource = directX->CreateTextureResource(mipImages.GetMetadata());
-	index = directX->UploadTextureData(textureResource, &textureSRVHandleGPU, mipImages);
+	index_ = manager->CreateTextureResource(mipImages);
 }
 
 

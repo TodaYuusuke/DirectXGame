@@ -13,14 +13,15 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 	winApp_ = winApp;
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
-	textureIndex_ = 0;
 
 	// DXGIデバイス初期化
 	InitializeDXGIDevice();
 
+	// 定数を計算
 	kDescriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	kDescriptorSizeRTV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	kDescriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+
 
 	// コマンド関連初期化
 	InitializeCommand();
@@ -149,77 +150,12 @@ void DirectXCommon::ClearRenderTarget() {
 	commandList_->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 }
 
-ID3D12Resource* DirectXCommon::CreateTextureResource(const DirectX::TexMetadata& metadata) {
-	HRESULT hr = S_FALSE;
-
-	// 1. metadataを基にResourceの設定
-	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = UINT(metadata.width);
-	resourceDesc.Height = UINT(metadata.height);
-	resourceDesc.MipLevels = UINT16(metadata.mipLevels);
-	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);
-	resourceDesc.Format = metadata.format;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
-
-	// 2. 利用するHeapの設定。非常に特殊な運用。
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
-	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
-
-	// 3. Resourceを生成する
-	ID3D12Resource* resource = nullptr;
-	hr = device_.Get()->CreateCommittedResource(
-		&heapProperties,					// Heapの設定
-		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
-		&resourceDesc,						// Resourceの設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,	// 初回のResourceState。Textureは基本読むだけ
-		nullptr,							// Clear最適地。使わないでnullptr
-		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
-	);
-	assert(SUCCEEDED(hr));
-	return resource;
+D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetSRVCPUHandle(uint32_t index) {
+	return GetCPUDescriptorHandle(srvHeap_.Get(), kDescriptorSizeSRV, index);
 }
-
-int DirectXCommon::UploadTextureData(ID3D12Resource* texture, D3D12_GPU_DESCRIPTOR_HANDLE* textureSRVHandleGPU, const DirectX::ScratchImage& mipImages) {
-	HRESULT hr = S_FALSE;
-
-	// Meta情報を取得
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	// 全MipMapについて
-	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-		// MipMapLevelを指定して各Imageを取得
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		// Textureに転送
-		hr = texture->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,
-			img->pixels,
-			UINT(img->rowPitch),
-			UINT(img->slicePitch)
-		);
-		assert(SUCCEEDED(hr));
-	}
-
-	// metaDataを元にSRVの設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = metadata.format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
-
-	// indexを+1
-	textureIndex_++;
-
-	// SRVを作成するDescriptorHeapの場所を決める
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = GetCPUDescriptorHandle(srvHeap_.Get(), kDescriptorSizeSRV, textureIndex_);
-	*textureSRVHandleGPU = GetGPUDescriptorHandle(srvHeap_.Get(), kDescriptorSizeSRV, textureIndex_);
-	// SRVの生成
-	device_.Get()->CreateShaderResourceView(texture, &srvDesc, textureSRVHandleCPU);
-	return textureIndex_;
+D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetSRVGPUHandle(uint32_t index) {
+	return GetGPUDescriptorHandle(srvHeap_.Get(), kDescriptorSizeSRV, index);
 }
-
 
 
 void DirectXCommon::InitializeDXGIDevice() {
@@ -494,6 +430,7 @@ D3D12_RESOURCE_BARRIER DirectXCommon::MakeResourceBarrier(ID3D12Resource* pResou
 	return barrier;
 }
 
+
 D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	handleCPU.ptr += (descriptorSize * index);
@@ -504,4 +441,3 @@ D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetGPUDescriptorHandle(ID3D12Descript
 	handleGPU.ptr += (descriptorSize * index);
 	return handleGPU;
 }
-

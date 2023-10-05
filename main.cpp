@@ -1,7 +1,7 @@
-#include "./Adapter/LWP.h"
+#include "./Adapter/Adapter.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	LWP::Engine::Run();
+	LWP::System::Run();
 	return 0;
 }

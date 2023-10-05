@@ -35,7 +35,7 @@ namespace LWP::Utility {
 		/// Vector4型の色情報を受け取る（0.0f～1.0f）
 		/// </summary>
 		/// <returns>Vector4型の色情報</returns>
-		Math::Vector4 GetVector4();
+		Math::Vector4 GetVector4() const;
 
 		/// <summary>
 		/// ImGui

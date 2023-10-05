@@ -2,8 +2,6 @@
 #include "IObject.h"
 #include <list>
 
-template<class ObjectT>
-concept IsIObject = std::is_base_of<LWP::Object::IObject, ObjectT>::value;
 
 namespace LWP::Object {
 	class Manager {

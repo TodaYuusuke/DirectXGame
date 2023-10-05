@@ -16,22 +16,19 @@ namespace LWP::Resource {
 
 		// 初期化
 		void Initialize();
-		// 更新
-		void Update();
 
 		// 読み込み
-		//Texture LoadTexture(const std::string& filepath);
+		const Texture* LoadTexture(Base::CommandManager* manager, const std::string& filepath);
 		//Audio LoadAudio(const std::string& filepath);
 		//Model LoadModel(const std::string& filepath);
 
 	private: // 各種リソース
 
-		
 		// テクスチャの配列
-		//std::map<std::string, Texture*> textureMap_;
+		std::map<std::string, Texture*> textureMap_;
 		// オーディオの配列
-		//std::map<std::string, Audio*> audioMap_;
+		//std::map<std::string, Audio> audioMap_;
 		// 3Dモデルの配列
-		//std::map<std::string, Model*> modelMap_;
+		//std::map<std::string, Model> modelMap_;
 	};
 }

@@ -16,8 +16,8 @@ namespace LWP::Object {
 		void DebugGUI() override;
 
 		// ビュープロジェクションを渡す関数
-		Math::Matrix4x4 GetViewProjectionMatrix3D() { return viewProjectionMatrix3D; }
-		Math::Matrix4x4 GetViewProjectionMatrix2D() { return viewProjectionMatrix2D; }
+		Math::Matrix4x4 GetViewProjectionMatrix3D() const;
+		Math::Matrix4x4 GetViewProjectionMatrix2D() const;
 
 	private: // メンバ変数
 

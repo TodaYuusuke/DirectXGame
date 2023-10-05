@@ -24,3 +24,9 @@ namespace LWP::Object {
 		virtual ~IObject() = default;
 	};
 }
+
+/// <summary>
+/// IObjectを継承したクラスのみを選択できるテンプレート
+/// </summary>
+template<class ObjectT>
+concept IsIObject = std::is_base_of<LWP::Object::IObject, ObjectT>::value;
