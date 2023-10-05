@@ -4,7 +4,7 @@ using namespace LWP::System;
 using namespace LWP;
 
 Resource::Texture* Resource::LoadTexture(const std::string& filePath) {
-	engine_.
+	engine_->resouse
 	return new Resource::Texture(engine_->directXCommon_.get(), filePath);
 }
 
