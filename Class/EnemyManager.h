@@ -9,17 +9,18 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	EnemyManager();
+	EnemyManager() = default;
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~EnemyManager();
+	~EnemyManager() = default;
 
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	/// <param name="playerPos">追従するプレイヤーのトランスフォーム</param>
+	void Initialize(LWP::Object::WorldTransform* playerPos);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -30,6 +31,16 @@ public:
 	void Draw();
 
 
+	// ** 外部から操作するための関数 ** //
+	
+
+	/// <summary>
+	/// 敵を追加する関数
+	/// </summary>
+	/// <param name="addAmount">追加する数</param>
+	void AddEnemy(int addAmount);
+
+
 private: // ** メンバ変数 ** //
 
 	// マップサイズ
@@ -38,4 +49,6 @@ private: // ** メンバ変数 ** //
 	// エネミーの可変長配列
 	std::vector<Enemy> enemys_;
 
+	// プレイヤーのトランスフォームポインタ
+	LWP::Object::WorldTransform* playerPos_;
 };
