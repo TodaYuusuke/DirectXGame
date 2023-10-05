@@ -32,5 +32,10 @@ public:
 
 private: // ** メンバ変数 ** //
 
+	// マップサイズ
+	const double kMapSize_ = 2.0f;
+
+	// エネミーの可変長配列
 	std::vector<Enemy> enemys_;
+
 };
