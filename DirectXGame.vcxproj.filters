@@ -91,6 +91,9 @@
     <Filter Include="LWP\Engine\input\controller">
       <UniqueIdentifier>{ae7ea1ae-32a2-4d59-8ad6-5d1ff410ce4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Class">
+      <UniqueIdentifier>{dd84c4e3-86f1-4c01-b60e-30addaf6a6bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
@@ -198,6 +201,12 @@
     </ClCompile>
     <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
       <Filter>LWP\Engine\input\keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\EnemyManager.cpp">
+      <Filter>Class</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Enemy.cpp">
+      <Filter>Class</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +350,12 @@
     </ClInclude>
     <ClInclude Include="Engine\input\keyboard\Keyboard.h">
       <Filter>LWP\Engine\input\keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\EnemyManager.h">
+      <Filter>Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Enemy.h">
+      <Filter>Class</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
