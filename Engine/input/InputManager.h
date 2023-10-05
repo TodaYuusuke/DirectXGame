@@ -21,13 +21,13 @@ namespace LWP::Input {
 		// キーボード関連
 
 		// キーが押されていない場合 -> true
-		bool None(uint8_t keyID);
+		bool GetKeyStateNone(uint8_t keyID);
 		// キーが押された瞬間の場合 -> true
-		bool Trigger(uint8_t keyID);
+		bool GetKeyStateTrigger(uint8_t keyID);
 		// キーが押されている場合 -> true
-		bool Press(uint8_t keyID);
+		bool GetKeyStatePress(uint8_t keyID);
 		// キーが離された瞬間の場合 -> true
-		bool Release(uint8_t keyID);
+		bool GetKeyStateRelease(uint8_t keyID);
 
 	private: // ** メンバ変数 ** //
 

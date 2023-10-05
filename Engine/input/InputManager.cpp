@@ -19,3 +19,20 @@ void Manager::Update() {
 	// デバイスの情報更新
 	keyboard_.Update();
 }
+
+// キーが押されていない場合 -> true
+bool Manager::GetKeyStateNone(uint8_t keyID) {
+	return keyboard_.None(keyID);
+}
+// キーが押された瞬間の場合 -> true
+bool Manager::GetKeyStateTrigger(uint8_t keyID) {
+	return keyboard_.Trigger(keyID);
+}
+// キーが押されている場合 -> true
+bool Manager::GetKeyStatePress(uint8_t keyID) {
+	return keyboard_.Press(keyID);
+}
+// キーが離された瞬間の場合 -> true
+bool Manager::GetKeyStateRelease(uint8_t keyID) {
+	return keyboard_.Release(keyID);
+}

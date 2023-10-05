@@ -110,7 +110,26 @@ namespace LWP {
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>テクスチャのインスタンス</returns>
 		static Resource::Texture* CreateTextureInstance(const std::string& filePath) { return new Resource::Texture(directXCommon_.get(), filePath); }
-		
+
+
+		// キーが押されていない場合 -> true
+		static bool GetKeyStateNone(uint8_t keyID) {
+			return inputManager_->GetKeyStateNone(keyID);
+		}
+		// キーが押された瞬間の場合 -> true
+		static bool GetKeyStateTrigger(uint8_t keyID) {
+			return inputManager_->GetKeyStateTrigger(keyID);
+		}
+		// キーが押されている場合 -> true
+		static bool GetKeyStatePress(uint8_t keyID) {
+			return inputManager_->GetKeyStatePress(keyID);
+		}
+		// キーが離された瞬間の場合 -> true
+		static bool GetKeyStateRelease(uint8_t keyID) {
+			return inputManager_->GetKeyStateRelease(keyID);
+		}
+
+
 		/// <summary>
 		/// 現在の解像度を返す
 		/// </summary>
