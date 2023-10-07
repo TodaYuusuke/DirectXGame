@@ -16,16 +16,26 @@ void Enemy::Initialize(LWP::Object::WorldTransform* targetPos){
 	// モデル
 	model_ = LWP::Engine::CreateModelInstance("testEnemy.obj");
 	model_->transform.rotation.x = 0.5f;
+	// モデル(テストターゲット)
+	testTargetModel_ = LWP::Engine::CreateModelInstance("testEnemy.obj");
+	testTargetModel_->transform.rotation.x = 0.5f;
+	// モデル(テストフィールド)
+	testFieldModel_ = LWP::Engine::CreateModelInstance("testField.obj");
+	testFieldModel_->transform.rotation.x = -1.571f;
+	testFieldModel_->transform.scale = { fieldRadius,fieldRadius,fieldRadius };
+	testFieldModel_->transform.translation = fieldCenterPos;
 
 	// 敵の座標
 	worldTransform_ = new LWP::Object::WorldTransform;
-	worldTransform_->translation = { 20.0f,12.0f,60.0f };
+	worldTransform_->translation = { 8.0f,8.0f,50.0f };
+	worldTransform_->rotation = { 1.0f,0.0f,0.0f };
 	// 敵の半径
-	rad_ = { 5.0f,5.0f,5.0f };
+	radius_ = { 5.0f,5.0f,5.0f };
 	// 移動量
 	velocity_ = {};
 	// 護衛対象の座標(ポインタで取得)
 	worldTransformTarget_ = targetPos;
+	worldTransformTarget_->translation = { 0.0f,0.0f,50.0f };
 
 	// 敵の体力
 	hp_ = 100;
@@ -50,6 +60,14 @@ void Enemy::Update(){
 	worldTransform_->DebugGUI();
 	ImGui::End();
 
+	ImGui::Begin("Target");
+	worldTransformTarget_->DebugGUI();
+	ImGui::End();
+
+	ImGui::Begin("TestField");
+	testFieldModel_->DebugGUI();
+	ImGui::End();
+
 	// アクティブ時の処理
 	if (isActive_) {
 
@@ -57,6 +75,8 @@ void Enemy::Update(){
 		if (!isFloat_) {
 
 			// 移動処理
+			// 座標系のyとzが逆になる可能性あり(現在はz軸が高さになっている)
+			// 現時点だとサイドビューのため、そのまま値を代入しているので必要に応じ変更すること
 
 			// 壁反射時に移動量を計算する
 			if (!isReflection_) {
@@ -72,7 +92,8 @@ void Enemy::Update(){
 				subtractPos.y /= len;
 
 				// 1フレームあたりの速度に調整する
-				velocity_ = subtractPos * 0.01f;
+				// Speedなどの変数が必要になったら追加すること
+				velocity_ = subtractPos * 0.1f;
 
 				// 反射フラグをtrueに
 				isReflection_ = true;
@@ -83,9 +104,17 @@ void Enemy::Update(){
 			worldTransform_->translation.x += velocity_.x;
 			worldTransform_->translation.y += velocity_.y;
 
+
 			// 外周に触れていたら反射フラグをfalseに
-			if (0) {
+			// 右側 : ( 外周の中心 + フィールド半径 - 敵の半径 ) <= 敵の座標 であれば外周に触れるはずなので反転させる
+			// 多分ミスってるので修正予定
+			if ((fieldCenterPos.x - fieldRadius + radius_.x) >= worldTransform_->translation.x ||
+				(fieldCenterPos.y - fieldRadius + radius_.y) >= worldTransform_->translation.y ||
+				(fieldCenterPos.x + fieldRadius - radius_.x) <= worldTransform_->translation.x ||
+				(fieldCenterPos.y + fieldRadius - radius_.y) <= worldTransform_->translation.y) {
+				
 				isReflection_ = false;
+			
 			}
 
 		}
@@ -102,11 +131,12 @@ void Enemy::Update(){
 
 			// 重力の値だけ落ちる
 
+
 			// 地面より下に落ちたら、座標を地面の上に戻した上でフラグを解除する
-			if (worldTransform_->translation.z <= 0.0f) {
+			if (worldTransform_->translation.z >= 0.0f) {
 
 				// 座標を修正
-				worldTransform_->translation.z = 0.0f;
+				worldTransform_->translation.z = 60.0f;
 
 				// 浮遊フラグをfalseに
 				isFloat_ = false;
@@ -116,13 +146,20 @@ void Enemy::Update(){
 
 	}
 
-	model_->transform.translation = worldTransform_->translation;
+	// 敵の座標系などをモデルに反映させる
+	model_->transform.scale = worldTransform_->scale;				// 拡大縮小
+	model_->transform.rotation = worldTransform_->rotation;			// 回転
+	model_->transform.translation = worldTransform_->translation;	// 平行移動
+
+	testTargetModel_->transform.translation = worldTransformTarget_->translation;	// 平行移動
 
 }
 
 /// 描画
 void Enemy::Draw(){
 
+	testFieldModel_->Draw();
+	testTargetModel_->Draw();
 	model_->Draw();
 
 }
