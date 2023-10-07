@@ -46,7 +46,9 @@ void Enemy::Initialize(LWP::Object::WorldTransform* targetPos){
 /// 更新
 void Enemy::Update(){
 
+	ImGui::Begin("Enemy");
 	worldTransform_->DebugGUI();
+	ImGui::End();
 
 	// アクティブ時の処理
 	if (isActive_) {
