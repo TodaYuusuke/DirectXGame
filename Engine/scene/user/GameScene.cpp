@@ -4,7 +4,7 @@ using namespace LWP::Primitive;
 
 // 初期化
 void GameScene::Initialize() {
-	tri = LWP::Engine::CreatePrimitiveInstance<Triangle>();
+	tri = LWP::Primitive::CreateInstance<Triangle>();
 
 	tri->vertices[0] = { 0.0f,0.2f,0.0f };
 	tri->vertices[1] = { 0.2f,0.0f,0.0f };
@@ -16,5 +16,5 @@ void GameScene::Update() {
 }
 // 描画
 void GameScene::Draw() {
-	tri->Draw();
+
 }

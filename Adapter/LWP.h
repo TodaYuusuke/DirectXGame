@@ -14,12 +14,13 @@
 #include "../Engine/object/ObjectManager.h"
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
+#include "../Engine/scene/SceneManager.h"
 
 /// <summary>
 /// システム関連（※ユーザ呼び出し禁止）
 /// </summary>
 namespace LWP::System {
-	class Engine {
+	class Engine final {
 	public: // ** メンバ関数 ** //
 		/// <summary>
 		/// エンジン起動（※ユーザ呼び出し禁止）

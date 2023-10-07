@@ -31,9 +31,13 @@ namespace LWP::Primitive {
 		using IPrimitive::IPrimitive;
 
 		/// <summary>
-		/// 頂点を生成する関数
+		/// 頂点を生成する関数（ユーザ呼び出し禁止）
 		/// </summary>
 		void CreateVertices() override;
+		/// <summary>
+		/// インデックスを生成する関数（ユーザ呼び出し禁止）
+		/// </summary>
+		void CreateIndexes() override;
 
 		/// <summary>
 		/// 頂点数を返す関数

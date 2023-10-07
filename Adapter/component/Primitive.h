@@ -15,12 +15,8 @@ namespace LWP {
 		/// <typeparam name="TPrimitive">形の種類</typeparam>
 		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
-		static TPrimitive* CreateInstance();
-
-		/// <summary>
-		/// 描画時に使用するカメラをセットする関数
-		/// </summary>
-		/// <param name="camera">カメラのポインタ</param>
-		static void SetMainCameraMatrix(Object::Camera* camera);
+		TPrimitive* CreateInstance() {
+			return System::engine->primitiveManager_->CreateInstance<TPrimitive>(System::engine->commandManager_.get());
+		}
 	};
 };

@@ -1,7 +1,5 @@
 #include "LWP.h"
-#include "../Engine/object/core/Camera.h"
 #include "../Engine/scene/SceneManager.h"
-#include "../Engine/utility/MyUtility.h"
 
 using namespace LWP::System;
 
@@ -27,9 +25,13 @@ void Engine::Run() {
 		sceneManager_->Update();
 		objectManager_->Update();
 		commandManager_->ImGui();
+		// カメラのビュープロジェクションをcommandManagerに
+		commandManager_->SetCameraViewProjection(sceneManager_->GetMainCamera());
+
 		// 描画処理
 		sceneManager_->Draw();
 		objectManager_->Draw();
+		primitiveManager_->Draw(commandManager_.get());
 
 		EndFrame();
 	}
@@ -42,25 +44,38 @@ void Engine::Run() {
 void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
 	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
+	// Base
 	winApp_ = std::make_unique<WinApp>();
 	directXCommon_ = std::make_unique<DirectXCommon>();
 	commandManager_ = std::make_unique<CommandManager>();
 	imGuiManager_ = std::make_unique<ImGuiManager>();
+	// Input
 	inputManager_ = std::make_unique<Input::Manager>();
+	// Object
 	objectManager_ = std::make_unique<Object::Manager>();
+	// Primitive
 	primitiveManager_ = std::make_unique<Primitive::Manager>();
+	// Resource
 	resourceManager_ = std::make_unique<Resource::Manager>();
+	// Scene
 	sceneManager_ = std::make_unique<Scene::Manager>();
 
 	// 初期化
+	
+	// Base
 	winApp_->Initialize(title, width, height);
 	directXCommon_->Initialize(winApp_.get() , width, height);
 	commandManager_->Initialize(directXCommon_.get());
 	imGuiManager_->Initialize(winApp_.get(), directXCommon_.get());
+	// Input
 	inputManager_->Initialize(winApp_.get());
+	// Object
 	objectManager_->Initialize();
-	primitiveManager_->Initialize(directXCommon_.get());
+	// Primitive
+	primitiveManager_->Initialize();
+	// Resource
 	resourceManager_->Initialize();
+	// Scene
 	sceneManager_->Initialize();
 }
 

@@ -2,8 +2,10 @@
 #include <cassert>
 #include <format>
 #include "../utility/MyUtility.h"
-#include "../object/WorldTransform.h"
 #include "../base/ImGuiManager.h"
+#include "../object/core/Camera.h"
+
+#include "../../Adapter/Adapter.h"
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;
@@ -21,9 +23,10 @@ void CommandManager::Initialize(DirectXCommon* directXCommon) {
 	CreateGraphicsPipeLineState();
 	// 頂点のリソースを作成
 	CreateVertexResource();
-	// カメラ用のリソースを作成
-	CreateCameraResource();
+	// 行列のリソースを作成
+	CreateMatrixResource();
 
+	// 平行光源のリソース作成
 	lightBuffer_ = std::make_unique<LightBuffer>();
 	// リソースを作る。サイズはDirectionalLight 1つ分
 	lightBuffer_->lightResource_ = CreateBufferResource(sizeof(DirectionalLight));
@@ -38,28 +41,26 @@ void CommandManager::Initialize(DirectXCommon* directXCommon) {
 	
 
 	// デフォルトテクスチャを読み込み
-	defaultTexture_ = new Texture(this, "resources/white.png");
+	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
 }
 
 void CommandManager::Reset() {
 	vertexResourceBuffer_->usedVertexCount_ = 0;
 	vertexResourceBuffer_->usedIndexCount_ = 0;
+	usedMatrixCount_ = 0;
+}
+
+void CommandManager::SetCameraViewProjection(const Object::Camera* camera) {
+	*cameraResource_[0]->data_ = camera->GetViewProjectionMatrix3D();
+	*cameraResource_[1]->data_ = camera->GetViewProjectionMatrix2D();
 }
 
 int CommandManager::CreateMaterialResource() {
 	materialResource_.push_back(std::make_unique<MaterialResourceBuffer>());
-	int index = materialResource_.size() - 1;
+	int index = static_cast<int>(materialResource_.size() - 1);
 	materialResource_[index]->resource_ = CreateBufferResource(sizeof(MaterialStruct));
 	materialResource_[index]->resource_->Map(0, nullptr, reinterpret_cast<void**>(&materialResource_[index]->data_));
 	materialResource_[index]->view_ = materialResource_[index]->resource_->GetGPUVirtualAddress();
-	return index;
-}
-int CommandManager::CreateMatrixResource() {
-	matrixResource_.push_back(std::make_unique<MatrixResourceBuffer>());
-	int index = matrixResource_.size() - 1;
-	matrixResource_[index]->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4));
-	matrixResource_[index]->resource_->Map(0, nullptr, reinterpret_cast<void**>(&matrixResource_[index]->data_));
-	matrixResource_[index]->view_ = matrixResource_[index]->resource_->GetGPUVirtualAddress();
 	return index;
 }
 int CommandManager::CreateTextureResource(const DirectX::ScratchImage& image) {
@@ -83,21 +84,12 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// PSOを設定
-	switch (fillMode)
-	{
-		case FillMode::WireFrame:
-			commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateWireFrame_.Get());
-			break;
-		case FillMode::Fill:
-		default:
-			commandList->SetPipelineState(pipelineSet_->graphicsPipelineStateFill_.Get());
-			break;
-	}
+	commandList->SetPipelineState(pipelineSet_->graphicsPipelineState_[static_cast<int>(primitive->material.fillMode)].Get());
 
 	// 頂点データを登録
 	for (int i = 0; i < primitive->GetVertexCount(); i++) {
 		vertexResourceBuffer_->vertexData_[vertexResourceBuffer_->usedVertexCount_ + i] = primitive->vertices[i];
-		if(primitive->commonColor != nullptr)
+		if(primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
 			vertexResourceBuffer_->vertexData_[vertexResourceBuffer_->usedVertexCount_ + i].color_ = primitive->commonColor->GetVector4();
 	}
 	commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
@@ -115,8 +107,8 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	commandList->SetGraphicsRootConstantBufferView(1, cameraResource_[primitive->isUI]->view_);
 
 	// WorldTransformの場所を設定
-	*matrixResource_[primitive->transform.GetIndex()]->data_ = primitive->transform.GetWorldMatrix();
-	commandList->SetGraphicsRootConstantBufferView(2, materialResource_[primitive->material.GetIndex()]->view_);
+	*matrixResource_[usedMatrixCount_]->data_ = primitive->transform.GetWorldMatrix();
+	commandList->SetGraphicsRootConstantBufferView(2, matrixResource_[usedMatrixCount_]->view_);
 
 	// テクスチャの場所を指定。
 	if (primitive->texture != nullptr) {
@@ -136,6 +128,7 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	// 使用した頂点とインデックスのカウント
 	vertexResourceBuffer_->usedVertexCount_ += primitive->GetVertexCount();
 	vertexResourceBuffer_->usedIndexCount_ += primitive->GetIndexCount();
+	usedMatrixCount_++;
 }
 
 void CommandManager::ImGui() {
@@ -327,11 +320,11 @@ void CommandManager::CreateGraphicsPipeLineState() {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// 実際に生成
-	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineStateFill_));
+	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[1]));
 	assert(SUCCEEDED(hr));
 	// ワイヤーフレームモードも生成
 	graphicsPipelineStateDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineStateWireFrame_));
+	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[0]));
 	assert(SUCCEEDED(hr));
 
 	vertexShader->Release();
@@ -364,8 +357,15 @@ void CommandManager::CreateVertexResource() {
 	vertexResourceBuffer_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexResourceBuffer_->vertexData_));
 	vertexResourceBuffer_->indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexResourceBuffer_->indexData_));
 }
-void CommandManager::CreateCameraResource() {
-	// 2Dと3D両方作っておく
+void CommandManager::CreateMatrixResource() {
+	for(int i = 0; i < kMaxTransformCount_; i++) {
+		matrixResource_[i] = std::make_unique<MatrixResourceBuffer>();
+		matrixResource_[i]->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4));
+		matrixResource_[i]->resource_->Map(0, nullptr, reinterpret_cast<void**>(&matrixResource_[i]->data_));
+		matrixResource_[i]->view_ = matrixResource_[i]->resource_->GetGPUVirtualAddress();
+	}
+
+	// 2Dと3Dのカメラビュープロジェクション行列を作る
 	for (int i = 0; i < 2; i++) {
 		cameraResource_[i] = std::make_unique<MatrixResourceBuffer>();
 		cameraResource_[i]->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4));

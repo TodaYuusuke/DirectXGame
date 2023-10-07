@@ -1,5 +1,6 @@
 #pragma once
 #include "../math/Math.h"
+#include <string>
 
 namespace LWP::Object {
 	class WorldTransform {
@@ -22,15 +23,7 @@ namespace LWP::Object {
 		void Parent(WorldTransform* parent);
 		// 親のポインタを受け取る（実装禁止）
 		//WorldTransform* Parent();
-
-	private:
-		// CommandManager上でのインデックス
-		int index;
-	public: // アクセッサ
-		// CommandManager上でのインデックスを読みとる
-		int GetIndex() const { return index; }
-		// 別のMaterialと同期する
-		void SetIndex(int value) { index = value; }
+		
 
 	public: // ** パブリックなメンバ関数 ** //
 		// コンストラクタ

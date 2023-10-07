@@ -41,7 +41,6 @@ void IPrimitive::Draw(Base::CommandManager* manager) {
 	//	material->data_->uvMatrix = texture->GetMatrix();
 	//}
 
-	transform.MatWorld();	// WorldTransformを更新
 	manager->Draw(this);
 }
 
@@ -57,7 +56,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 			ImGui::TreePop();
 		}
 		transform.DebugGUI();
-		material->DebugGUI();
+		material.DebugGUI();
 
 		// 共通カラーがあるとき -> ColorEdit4を呼び出す
 		if (ImGui::TreeNode("CommonColor")) {
@@ -77,7 +76,6 @@ void IPrimitive::DebugGUI(const std::string& label) {
 
 		// その他
 		if (ImGui::TreeNode("Other")) {
-			ImGui::Checkbox("Fill", (bool*)&fillMode);
 			ImGui::Checkbox("isUI", &isUI);
 			ImGui::Checkbox("isActive", &isActive);
 			DerivedDebugGUI();

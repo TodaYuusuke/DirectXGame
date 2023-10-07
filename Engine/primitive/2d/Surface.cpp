@@ -6,8 +6,6 @@ void Surface::CreateVertices() {
 	// 頂点の作成
 	vertices.clear();
 	vertices.resize(GetVertexCount());
-	indexes.clear();
-	indexes.resize(GetIndexCount());
 	
 	// 座標
 	vertices[0].position = { -0.35f, 0.35f,0.00f };	// 左上

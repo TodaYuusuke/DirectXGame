@@ -8,14 +8,14 @@ using namespace LWP::Utility;
 // 初期化
 void Title::Initialize() {
 	// テクスチャ読み込み
-	uvTexture = LWP::Engine::CreateTextureInstance("resources/uvChecker.png");
-	monsterBall = LWP::Engine::CreateTextureInstance("resources/monsterBall.png");
+	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
+	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
 
-	LWP::Input::Keyboard::GetTrigger(DIK_0);
+	LWP::Input::GetTrigger(DIK_0);
 
 	// 三角形
 	for (int i = 0; i < 2; i++) {
-		tri[i] = LWP::Engine::CreatePrimitiveInstance<Triangle>();
+		tri[i] = LWP::Primitive::CreateInstance<Triangle>();
 		tri[i]->isActive = false;
 	}
 	tri[0]->vertices[0].color = Color(RED);
@@ -25,21 +25,21 @@ void Title::Initialize() {
 	tri[1]->texture = uvTexture;
 
 	// 平面
-	surface = LWP::Engine::CreatePrimitiveInstance<Surface>();
+	surface = LWP::Primitive::CreateInstance<Surface>();
 	surface->transform.translation.x = -0.7f;
 	surface->isActive = false;
 	surface->texture = uvTexture;
 
 	// 球
-	sphere = LWP::Engine::CreatePrimitiveInstance<Sphere>();
+	sphere = LWP::Primitive::CreateInstance<Sphere>();
 	sphere->Radius(0.2f);
 	sphere->transform.translation.x = 0.7f;
 	sphere->isActive = false;
 	surface->texture = uvTexture;
 
 	// モデル読み込み
-	planeModel = LWP::Engine::CreateModelInstance("plane.obj");
-	axisModel = LWP::Engine::CreateModelInstance("plane.obj");
+	//planeModel = LWP::Resource::LoadModel("plane.obj");
+	//axisModel = LWP::Resource::LoadModel("plane.obj");
 }
 // 更新
 void Title::Update() {
@@ -48,8 +48,8 @@ void Title::Update() {
 	tri[1]->DebugGUI("Tri1");
 	surface->DebugGUI("Surface");
 	sphere->DebugGUI("Sphere");
-	planeModel->DebugGUI("plane");
-	axisModel->DebugGUI("axis");
+	//planeModel->DebugGUI("plane");
+	//axisModel->DebugGUI("axis");
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 
@@ -67,11 +67,11 @@ void Title::Update() {
 }
 // 描画
 void Title::Draw() {
-	tri[0]->Draw();
-	tri[1]->Draw();
-	surface->Draw();
-	sphere->Draw();
+	//tri[0]->Draw();
+	//tri[1]->Draw();
+	//surface->Draw();
+	//sphere->Draw();
 
-	planeModel->Draw();
-	axisModel->Draw();
+	//planeModel->Draw();
+	//axisModel->Draw();
 } 

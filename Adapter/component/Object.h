@@ -15,6 +15,8 @@ namespace LWP {
 		/// <typeparam name="TObject">オブジェクトの種類</typeparam>
 		/// <returns>オブジェクトのインスタンス</returns>
 		template <IsIObject TObject>
-		static TObject* CreateInstance();
+		TObject* CreateInstance() {
+			return System::engine->objectManager_->CreateInstance<TObject>();
+		}
 	};
 };

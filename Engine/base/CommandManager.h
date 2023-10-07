@@ -4,20 +4,21 @@
 #pragma region 描画用リソースの型を宣言してるクラス
 
 #include "../primitive/IPrimitive.h"	// 頂点
-#include "../resources/material/Material.h"		// マテリアル
-#include "../object/WorldTransform.h"	// 定数
-#include "../resources/texture/Texture.h"	// テクスチャ
+//#include "../resources/material/Material.h"		// マテリアル
+//#include "../object/WorldTransform.h"	// 定数
+//#include "../resources/texture/Texture.h"	// テクスチャ
 
 #pragma endregion
-
-
-#include "../object/core/Camera.h"
-#include "../utility/Color.h"
 
 #include <memory>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
 #include <vector>
+
+// 前方宣言
+namespace LWP::Object {
+	class Camera;
+}
 
 namespace LWP::Base {
 	/// <summary>
@@ -43,19 +44,12 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画に使うカメラのポインタをセットする
 		/// </summary>
-		void SetCameraViewProjection(Object::Camera camera) {
-			*cameraResource_[0]->data_ = camera.GetViewProjectionMatrix2D();
-			*cameraResource_[1]->data_ = camera.GetViewProjectionMatrix3D();
-		}
+		void SetCameraViewProjection(const Object::Camera* camera);
 
 		/// <summary>
 		/// マテリアルのリソースを作成
 		/// </summary>
 		int CreateMaterialResource();
-		/// <summary>
-		/// 行列のリソースを作成
-		/// </summary>
-		int CreateMatrixResource();
 		/// <summary>
 		/// テクスチャのリソースを作成
 		/// </summary>
@@ -76,7 +70,19 @@ namespace LWP::Base {
 		// DirectXCommon管理
 		Base::DirectXCommon* directXCommon_ = nullptr;
 
-		// 構造体宣言
+
+		// 最大頂点数
+		static const int kMaxVertexCount_ = 655350;
+		static const int kMaxIndexCount_ = 655350;
+		// トランスフォームの許容数
+		static const int kMaxTransformCount_ = 256;
+		int usedMatrixCount_ = 0;
+		// 最大テクスチャ数（増やす場合はDirectXCommonのコードも修正）
+		static const int kMaxTextureCount_ = 128;
+		int usedTextureCount_ = 0;
+
+
+		// ** 構造体宣言 ** //
 
 		//*** DirectXシェーダコンパイラ ***//
 		// HLSLコードをバイナリ形式のGPUシェーダーに変換する
@@ -88,8 +94,9 @@ namespace LWP::Base {
 		std::unique_ptr<DXC> dxc_;
 		struct PipelineSet {
 			Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;			// リソースとシェーダーのバインディングを定義
-			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateWireFrame_;	// グラフィックパイプラインの状態（WireFrame）を定義
-			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineStateFill_;	// グラフィックパイプラインの状態（Fill）を定義
+			// 数種類のパイプライン
+			// 1つめ ... 埋め立てモード（0 -> ワイヤーフレーム、1 -> 埋め立て））
+			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_[2];	// グラフィックパイプラインの状態を定義
 		};
 		std::unique_ptr<PipelineSet> pipelineSet_;
 
@@ -153,7 +160,7 @@ namespace LWP::Base {
 				return *this;
 			}
 		};
-		std::vector<std::unique_ptr<MatrixResourceBuffer>> matrixResource_;
+		std::unique_ptr<MatrixResourceBuffer> matrixResource_[kMaxTransformCount_];
 		// カメラのビュープロジェクション用
 		// 0 = 2D
 		// 1 = 3D
@@ -164,7 +171,6 @@ namespace LWP::Base {
 			Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 			D3D12_GPU_DESCRIPTOR_HANDLE view_;
 		};
-		int usedTextureCount_ = 0;
 		std::vector<std::unique_ptr<TextureResourceBuffer>> textureResource_;
 		// テクスチャを適応しないとき用のデフォルトのテクスチャ
 		Resource::Texture* defaultTexture_;
@@ -181,13 +187,6 @@ namespace LWP::Base {
 			DirectionalLight* light_ = nullptr;	// 2D用の定数リソース
 		};
 		std::unique_ptr<LightBuffer> lightBuffer_;
-
-
-		// 最大頂点数
-		static const int kMaxVertexCount_ = 655350;
-		static const int kMaxIndexCount_ = 655350;
-		// 最大テクスチャ数（増やす場合はDirectXCommonのコードも修正）
-		static const int kMaxTextureCount_ = 128;
 
 
 	private: // ** 非公開メンバ関数 ** //
@@ -225,9 +224,9 @@ namespace LWP::Base {
 		/// </summary>
 		void CreateVertexResource();
 		/// <summary>
-		/// カメラのビュープロジェクション行列のリソースを作成
+		/// 行列のリソースを作成
 		/// </summary>
-		void CreateCameraResource();
+		void CreateMatrixResource();
 
 		/// <summary>
 		/// 任意のサイズのResourceを作成

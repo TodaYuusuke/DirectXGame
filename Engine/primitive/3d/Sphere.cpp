@@ -9,18 +9,18 @@ using namespace LWP::Utility;
 void Sphere::Subdivision(uint32_t value) {
 	subdivision_ = value;
 	CreateVertices();	// 再計算
+	CreateIndexes();
 }
 void Sphere::Radius(float value) {
 	radius_ = value;
 	CreateVertices();	// 再計算
+	CreateIndexes();
 }
 
 void Sphere::CreateVertices() {
-	// 頂点とインデックスをクリア
+	// 頂点をクリア
 	vertices.clear();
 	vertices.resize(GetVertexCount());
-	indexes.clear();
-	indexes.resize(GetIndexCount());
 
 	int arrayIndex = 0;
 	
@@ -49,9 +49,14 @@ void Sphere::CreateVertices() {
 			arrayIndex++;
 		}
 	}
+}
 
-	// インデックスをリセット
-	arrayIndex = 0;
+void Sphere::CreateIndexes() {
+	// インデックスをクリア
+	indexes.clear();
+	indexes.resize(GetIndexCount());
+
+	int arrayIndex = 0;
 	// 一番下の頂点
 	for (uint32_t x = 0; x < subdivision_; x++) {
 		indexes[arrayIndex++] = x;
@@ -78,12 +83,19 @@ void Sphere::CreateVertices() {
 	}
 }
 
+
+
 int Sphere::GetVertexCount() const { return (subdivision_ + 1) * (subdivision_ + 1); }
 int Sphere::GetIndexCount() const { return subdivision_ * (subdivision_ - 1) * 2 * 3; }
 
 void Sphere::DerivedDebugGUI(const std::string& label) {
+	int s = static_cast<int>(Subdivision());
 	float r = Radius();
+	ImGui::SliderInt("subdivision", &s, 4, 32);
 	ImGui::DragFloat("radius", &r, 0.01f);
-	Radius(r);
+	if (s != static_cast<int>(Subdivision()) || r != Radius()) {
+		subdivision_ = static_cast<uint32_t>(s);
+		Radius(r);	// 再計算用に関数呼び出し
+	}
 	label; // ラベルは使用しない
 }

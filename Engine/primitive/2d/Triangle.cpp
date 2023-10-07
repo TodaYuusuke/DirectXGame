@@ -6,9 +6,7 @@ void Triangle::CreateVertices() {
 	// 頂点の作成
 	vertices.clear();
 	vertices.resize(GetVertexCount());
-	indexes.clear();
-	indexes.resize(GetIndexCount());
-	
+
 	// 座標
 	vertices[0].position = {  0.00f, 0.50f,0.00f };	// 上
 	vertices[1].position = {  0.43f,-0.25f,0.00f };	// 右下

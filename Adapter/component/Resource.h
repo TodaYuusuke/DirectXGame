@@ -14,7 +14,7 @@ namespace LWP {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>テクスチャのインスタンス</returns>
-		static Texture* LoadTexture(const std::string& filePath);
+		Texture* LoadTexture(const std::string& filePath);
 
 		/// <summary>
 		/// オーディオファイルの読み込み
@@ -28,6 +28,6 @@ namespace LWP {
 		/// </summary>
 		/// <typeparam name="TPrimitive">形の種類</typeparam>
 		/// <returns>形のインスタンス</returns>
-		static LWP::Primitive::Mesh* LoadModel(const std::string& filename);
+		LWP::Primitive::Mesh* LoadModel(const std::string& filename);
 	};
 };

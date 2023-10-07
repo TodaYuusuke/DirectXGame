@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-#include "../../../Adapter/LWP.h"
+#include "../../../Adapter/Adapter.h"
 #include "../../utility/ErrorReporter.h"
 
 #include <fstream>
@@ -133,7 +133,7 @@ void Mesh::LoadMtl(const std::string& filename) {
 			std::string textureFilename;
 			s >> textureFilename;
 			// テクスチャを読み込む
-			texture = LWP::Engine::CreateTextureInstance(directoryPath_ + textureFilename);
+			texture = LWP::Resource::LoadTexture(directoryPath_ + textureFilename);
 		}
 	}
 }

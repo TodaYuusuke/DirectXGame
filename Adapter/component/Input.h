@@ -16,19 +16,19 @@ namespace LWP {
 			/// <summary>
 			/// keyID が None のとき true を返す
 			/// </summary>
-			static void GetNone(uint8_t keyID);
+			void GetNone(uint8_t keyID);
 			/// <summary>
 			/// keyID が Trigger のとき true を返す
 			/// </summary>
-			static void GetTrigger(uint8_t keyID);
+			void GetTrigger(uint8_t keyID);
 			/// <summary>
 			/// keyID が Press のとき true を返す
 			/// </summary>
-			static void GetPress(uint8_t keyID);
+			void GetPress(uint8_t keyID);
 			/// <summary>
 			/// keyID が Release のとき true を返す
 			/// </summary>
-			static void GetRelease(uint8_t keyID);
+			void GetRelease(uint8_t keyID);
 		//};
 
 		/// <summary>

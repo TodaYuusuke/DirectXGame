@@ -1,5 +1,6 @@
 #pragma once
-#include "IObject.h"
+#include "core/CoreList.h"
+#include "user/UserList.h"
 #include <list>
 
 
@@ -16,10 +17,12 @@ namespace LWP::Object {
 		/// 初期化
 		/// </summary>
 		void Initialize();
+
 		/// <summary>
 		/// 更新
 		/// </summary>
 		void Update();
+
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -27,19 +30,19 @@ namespace LWP::Object {
 
 		
 		/// <summary>
-		/// オブジェクトのインスタンスを登録する
+		/// インスタンスを登録する
 		/// </summary>
 		/// <param name="object">登録するオブジェクト</param>
 		template <IsIObject TObject>
-		inline TObject* CreateObjectInstance() {
+		inline TObject* CreateInstance() {
 			TObject* newObject = new TObject();
-			objects.push_back(newObject);
+			objects_.push_back(newObject);
 			return newObject;
 		}
 
 	private: // メンバ変数
 
 		// オブジェクトのリスト
-		std::list<IObject*> objects;
+		std::list<IObject*> objects_;
 	};
 }

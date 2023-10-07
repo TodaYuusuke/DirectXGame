@@ -3,6 +3,7 @@
 
 using namespace LWP::Object;
 using namespace LWP::Math;
+using namespace LWP::Info;
 
 // 初期化
 void Camera::Initialize() {

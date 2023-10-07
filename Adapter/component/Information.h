@@ -12,11 +12,11 @@ namespace LWP {
 		/// <summary>
 		/// 現在の解像度を返す
 		/// </summary>
-		static int GetWindowWidth();
-		static int GetWindowHeight();
-		static float GetWindowWidthF();
-		static float GetWindowHeightF();
-		static Math::Vector2 GetWindow();
+		int GetWindowWidth();
+		int GetWindowHeight();
+		float GetWindowWidthF();
+		float GetWindowHeightF();
+		Math::Vector2 GetWindow();
 	};
 	namespace Info = Information;
 };

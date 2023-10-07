@@ -1,7 +1,6 @@
 #pragma once
 #include "keyboard/Keyboard.h"
 
-
 namespace LWP::Input {
 	/// <summary>
 	/// 入力デバイス管理クラス

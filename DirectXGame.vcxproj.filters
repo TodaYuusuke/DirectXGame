@@ -223,6 +223,9 @@
     <ClCompile Include="Engine\resources\material\Material.cpp">
       <Filter>LWP\Engine\resource\material</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\PrimitiveManager.cpp">
+      <Filter>LWP\Engine\primitive</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -272,9 +275,6 @@
     </ClInclude>
     <ClInclude Include="Engine\scene\user\GameScene.h">
       <Filter>LWP\Engine\scene\user</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\PrimitiveList.h">
-      <Filter>LWP\Engine\primitive</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\IPrimitive.h">
       <Filter>LWP\Engine\primitive</Filter>
@@ -386,6 +386,9 @@
     </ClInclude>
     <ClInclude Include="Engine\resources\material\Material.h">
       <Filter>LWP\Engine\resource\material</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\PrimitiveManager.h">
+      <Filter>LWP\Engine\primitive</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

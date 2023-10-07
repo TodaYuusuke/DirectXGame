@@ -6,11 +6,11 @@ void Manager::Initialize() {
 	textureMap_.clear();
 }
 
-const Texture* Manager::LoadTexture(Base::CommandManager* manager, const std::string& filepath) {
+Texture* Manager::LoadTexture(Base::CommandManager* manager, const std::string& filepath) {
 	// 読み込み済みかをチェック
 	if (!textureMap_.count(filepath)) {
 		// 新しいテクスチャをロード
-		textureMap_[filepath] = new Texture(manager, filepath);
+		textureMap_[filepath] = new Texture(manager, textureDirectoryPath + filepath);
 	}
 	return textureMap_[filepath];
 }

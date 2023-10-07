@@ -1,15 +1,27 @@
-#include "Resource.h"
+#include "Information.h"
 
 using namespace LWP::System;
 using namespace LWP;
 
-Resource::Texture* Resource::LoadTexture(const std::string& filePath) {
-	return new Resource::Texture(engine_->directXCommon_.get(), filePath);
+int Information::GetWindowWidth() {
+	return engine->winApp_->GetClientWidth();
 }
 
+int Information::GetWindowHeight() {
+	return engine->winApp_->GetClientHeight();
+}
 
-Primitive::Mesh* Resource::LoadModel(const std::string& filePath) {
-	Primitive::Mesh* instance = new Primitive::Mesh(engine_->primitiveManager_.get());
-	instance->LoadFile(filePath);
-	return instance;
+float Information::GetWindowWidthF() {
+	return static_cast<float>(engine->winApp_->GetClientWidth());
+}
+
+float Information::GetWindowHeightF(){
+	return static_cast<float>(engine->winApp_->GetClientHeight());
+}
+
+Math::Vector2 Information::GetWindow() {
+	return {
+		static_cast<float>(engine->winApp_->GetClientWidth()),
+		static_cast<float>(engine->winApp_->GetClientHeight())
+	};
 }

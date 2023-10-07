@@ -1,7 +1,6 @@
 #include "WorldTransform.h"
 #include "../base/ImGuiManager.h"
 
-using namespace LWP::Primitive;
 using namespace LWP::Object;
 using namespace LWP::Math;
 

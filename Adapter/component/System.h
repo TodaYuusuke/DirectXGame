@@ -12,11 +12,11 @@ namespace LWP {
 		/// <summary>
 		/// エンジンのインスタンス
 		/// </summary>
-		static std::unique_ptr<Engine> engine_;
+		extern std::unique_ptr<Engine> engine;
 
 		/// <summary>
 		/// エンジン起動（※ユーザ呼び出し禁止）
 		/// </summary>
-		static void Run();
+		void Run();
 	};
 };

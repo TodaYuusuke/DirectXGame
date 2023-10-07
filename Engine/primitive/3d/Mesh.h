@@ -22,6 +22,10 @@ namespace LWP::Primitive {
 		/// 頂点を生成する関数
 		/// </summary>
 		void CreateVertices() override { /* 3Dモデルでは削除する */ };
+		/// <summary>
+		/// インデックスを生成する関数
+		/// </summary>
+		void CreateIndexes() override { /* 3Dモデルでは削除する */ };
 		
 		/// <summary>
 		/// モデルデータを読み込む
@@ -37,10 +41,10 @@ namespace LWP::Primitive {
 		/// インデックスの数を返す関数
 		/// </summary>
 		int GetIndexCount() const override { return static_cast<int>(indexes.size()); };
-		
-	private: // ** プライベートな変数 ** //
-		// 固定の相対パス
+
+	public: // ** ファイルパス ** //
 		const std::string directoryPath_ = "resources/obj/";
+
 
 	private: // ** プライベートな関数 ** //
 
