@@ -37,7 +37,7 @@ void Title::Initialize() {
 
 	// モデル読み込み
 	planeModel = LWP::Engine::CreateModelInstance("plane.obj");
-	axisModel = LWP::Engine::CreateModelInstance("plane.obj");
+	axisModel = LWP::Engine::CreateModelInstance("axis.obj");
 }
 // 更新
 void Title::Update() {

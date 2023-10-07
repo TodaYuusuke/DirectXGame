@@ -1,5 +1,6 @@
 #pragma once
 #include "../IScene.h"
+#include "../../../Class/Enemy.h"
 
 class GameScene final
 	: public IScene {
@@ -19,4 +20,9 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Triangle* tri;
+
+	LWP::Object::WorldTransform* target_=nullptr;
+	// 
+	Enemy* enemy = nullptr;
+	
 };
