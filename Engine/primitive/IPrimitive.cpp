@@ -36,11 +36,6 @@ void IPrimitive::Draw(Base::CommandManager* manager) {
 	// アクティブでなければ描画しない
 	if (!isActive) { return; }
 
-	// テクスチャがnullじゃなければuvTransformを受け取る
-	//if (texture != nullptr) {
-	//	material->data_->uvMatrix = texture->GetMatrix();
-	//}
-
 	manager->Draw(this);
 }
 

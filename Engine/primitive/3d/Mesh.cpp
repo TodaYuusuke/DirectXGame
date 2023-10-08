@@ -133,7 +133,7 @@ void Mesh::LoadMtl(const std::string& filename) {
 			std::string textureFilename;
 			s >> textureFilename;
 			// テクスチャを読み込む
-			texture = LWP::Resource::LoadTexture(directoryPath_ + textureFilename);
+			texture = LWP::Resource::LoadTextureLongPath(directoryPath_ + textureFilename);
 		}
 	}
 }

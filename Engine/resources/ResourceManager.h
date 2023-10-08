@@ -26,6 +26,7 @@ namespace LWP::Resource {
 		/// <param name="filepath">"resources/texture/" より後のファイルパス</param>
 		/// <returns></returns>
 		Texture* LoadTexture(Base::CommandManager* manager, const std::string& filepath);
+		Texture* LoadTextureLongPath(Base::CommandManager* manager, const std::string& filepath);
 		//Audio LoadAudio(const std::string& filepath);
 		//Model LoadModel(const std::string& filepath);
 

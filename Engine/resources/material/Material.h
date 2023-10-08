@@ -11,7 +11,7 @@ namespace LWP::Base {
 /// マテリアル
 /// </summary>
 namespace LWP::Resource {
-	enum class FillMode : int {
+	enum class FillMode : bool {
 		WireFrame,	// ワイヤーフレーム
 		Fill,		// 埋め立て
 	};

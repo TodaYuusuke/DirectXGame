@@ -38,8 +38,8 @@ void Title::Initialize() {
 	surface->texture = uvTexture;
 
 	// モデル読み込み
-	//planeModel = LWP::Resource::LoadModel("plane.obj");
-	//axisModel = LWP::Resource::LoadModel("plane.obj");
+	planeModel = LWP::Resource::LoadModel("plane.obj");
+	axisModel = LWP::Resource::LoadModel("axis.obj");
 }
 // 更新
 void Title::Update() {
@@ -48,8 +48,8 @@ void Title::Update() {
 	tri[1]->DebugGUI("Tri1");
 	surface->DebugGUI("Surface");
 	sphere->DebugGUI("Sphere");
-	//planeModel->DebugGUI("plane");
-	//axisModel->DebugGUI("axis");
+	planeModel->DebugGUI("plane");
+	axisModel->DebugGUI("axis");
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 

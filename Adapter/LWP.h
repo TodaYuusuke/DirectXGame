@@ -16,6 +16,8 @@
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
 
+#include <dxgidebug.h>
+
 /// <summary>
 /// システム関連（※ユーザ呼び出し禁止）
 /// </summary>
@@ -66,7 +68,6 @@ namespace LWP::System {
 				//	debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
 				//	debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
 				//	debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-				//	debug->Release();
 				//}
 			}
 		};
