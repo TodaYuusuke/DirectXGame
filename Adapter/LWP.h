@@ -22,6 +22,7 @@
 namespace LWP::System {
 	class Engine final {
 	public: // ** メンバ関数 ** //
+
 		/// <summary>
 		/// エンジン起動（※ユーザ呼び出し禁止）
 		/// </summary>

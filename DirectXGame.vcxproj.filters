@@ -96,6 +96,8 @@
     </Filter>
     <Filter Include="LWP\Engine\resource\material">
       <UniqueIdentifier>{67a65b62-126d-4370-a07f-22e8027f7fdb}</UniqueIdentifier>
+    <Filter Include="Class">
+      <UniqueIdentifier>{dd84c4e3-86f1-4c01-b60e-30addaf6a6bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +227,11 @@
     </ClCompile>
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp">
       <Filter>LWP\Engine\primitive</Filter>
+    <ClCompile Include="Class\EnemyManager.cpp">
+      <Filter>Class</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Enemy.cpp">
+      <Filter>Class</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +396,11 @@
     </ClInclude>
     <ClInclude Include="Engine\primitive\PrimitiveManager.h">
       <Filter>LWP\Engine\primitive</Filter>
+    <ClInclude Include="Class\EnemyManager.h">
+      <Filter>Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Enemy.h">
+      <Filter>Class</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
