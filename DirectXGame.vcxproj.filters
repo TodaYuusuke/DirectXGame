@@ -136,6 +136,12 @@
     <ClCompile Include="Engine\utility\MyUtility.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
+    <ClCompile Include="Class\MapChip.cpp">
+      <Filter>Class</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\MapManager.cpp">
+      <Filter>Class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -294,6 +300,12 @@
     <ClInclude Include="Engine\utility\ErrorReporter.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
+    <ClInclude Include="Class\MapManager.h">
+      <Filter>Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\MapChip.h">
+      <Filter>Class</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -379,6 +391,9 @@
     </Filter>
     <Filter Include="Engine\utilitiy">
       <UniqueIdentifier>{248bf45a-0c7d-4a30-9391-5cdb28b3cbcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class">
+      <UniqueIdentifier>{1f9df0e8-8c72-45df-9278-04bdfb3bd6b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

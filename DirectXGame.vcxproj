@@ -95,6 +95,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Adapter\component\Resource.cpp" />
     <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
+    <ClCompile Include="Class\MapChip.cpp" />
+    <ClCompile Include="Class\MapManager.cpp" />
     <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
@@ -148,6 +150,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Adapter\component\Resource.h" />
     <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\LWP.h" />
+    <ClInclude Include="Class\MapChip.h" />
+    <ClInclude Include="Class\MapManager.h" />
     <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
