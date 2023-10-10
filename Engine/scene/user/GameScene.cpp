@@ -10,12 +10,10 @@ void GameScene::Initialize() {
 	tri->vertices[1] = { 0.2f,0.0f,0.0f };
 	tri->vertices[2] = { -0.2f,0.0f,0.0f };
 
-	mapCSV = ("resources/csv/mapData.csv");
 	mapChip_ = new MapChip();
 	mapPosition_ = { 0.0f,0.0f,0.0f };
 	mapChip_->Initialize(mapPosition_);
 
-	mapChip_->LoadMap(mapCSV);
 	
 }
 // 更新

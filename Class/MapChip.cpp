@@ -9,6 +9,11 @@
 
 void MapChip::Initialize(LWP::Math::Vector3 position)
 {
+	if (!isActive_) { return; }
+
+	isActive_ = false;
+
+	lineCount_ = 0;
 
 	worldTransform_.translation = position;
 	
@@ -17,11 +22,22 @@ void MapChip::Initialize(LWP::Math::Vector3 position)
 	// マップチップのスケールを設定
 	testMapModel_->transform.scale = { 0.2f, 0.2f, 0.2f };
 
+	mapCSV = ("resources/csv/mapData.csv");
+	LoadMap(mapCSV);
+
 }
 
-void MapChip::Update() {}
+void MapChip::Update()
+{ 
+	if (!isActive_) { return; }
+		UpdataMapData();
 
-void MapChip::Draw() { testMapModel_->isActive = true; }
+}
+
+void MapChip::Draw() { 
+	if (!isActive_) { return; }
+	testMapModel_->isActive = true;
+}
 
 void MapChip::LoadMap(const char* fileName) {
 	mapFile_.open(fileName);
@@ -31,6 +47,7 @@ void MapChip::LoadMap(const char* fileName) {
 
 	// ファイルを閉じる
 	mapFile_.close();
+
 }
 
 void MapChip::UpdataMapData()
@@ -60,8 +77,8 @@ LWP::Math::Vector3 MapChip::CreateMapVector(int indexX, int indexY)
 {
 	LWP::Math::Vector3 result{};
 
-	result.x = map_->GetMapBoxSize() * float(indexX);
-	result.y = map_->GetMapBoxSize() * float(-indexY);
+	result.x = mapManager_->GetMapBoxSize() * float(indexX);
+	result.y = mapManager_->GetMapBoxSize() * float(-indexY);
 	result.z = 0.0f;
 
 	return result;
@@ -69,6 +86,7 @@ LWP::Math::Vector3 MapChip::CreateMapVector(int indexX, int indexY)
 
 void MapChip::CreateMap(LWP::Math::Vector3 position)
 {
+
 	// 新しいマップチップを生成
 	MapChip* newMapChip = new MapChip();
 

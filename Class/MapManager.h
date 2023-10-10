@@ -51,6 +51,6 @@ private: // ** メンバ変数 ** //
 
 	// マップの分割数
 	static const int kSubdivision_ = 32;
-	//// マップの配列
-	//MapChip maps_[kSubdivision_][kSubdivision_];
+	// マップの配列
+	MapChip maps_[kSubdivision_][kSubdivision_];
 };

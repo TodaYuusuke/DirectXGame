@@ -50,12 +50,14 @@ public:
 
 	std::vector<std::string> split(std::string& input, char delimiter);
 
+	bool isActive() { return isActive_; };
+
 private: // ** メンバ変数 ** //
 
 	// マップチップのモデル
 	LWP::Primitive::Mesh* testMapModel_;
 
-	MapManager* map_;
+	MapManager* mapManager_ = nullptr;
 
 	// ワールド変換データ
 	LWP::Object::WorldTransform worldTransform_;
@@ -67,7 +69,7 @@ private: // ** メンバ変数 ** //
 	std::string line_;
 
 	// 読み込んでるマップの現在行
-	int lineCount_ = 0;
+	int lineCount_;
 
 	// マップの座標を入れる変数
 	LWP::Math::Vector3 position_{};
@@ -81,4 +83,8 @@ private: // ** メンバ変数 ** //
 	//マップデータを格納するベクトル
 	std::vector<MapChip*> mapVector_;
 
+	bool isActive_;
+
+	//マップCSV
+	const char* mapCSV;
 };
