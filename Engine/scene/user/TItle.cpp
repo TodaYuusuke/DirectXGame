@@ -54,7 +54,7 @@ void Title::Update() {
 	ImGui::End();
 
 	// SPACEキーを押すとテクスチャ切り替え
-	if (LWP::Engine::GetKeyStateTrigger(DIK_SPACE)) {
+	if (LWP::Input::GetTrigger(DIK_SPACE)) {
 		if (!useMonsterBall) {
 			sphere->texture = monsterBall;
 			useMonsterBall = true;
@@ -66,7 +66,7 @@ void Title::Update() {
 	}
 
 	// ENTERキーを押すとシーン切り替え
-	if (LWP::Engine::GetKeyStateTrigger(DIK_RETURN)) {
+	if (LWP::Input::GetTrigger(DIK_RETURN)) {
 		nextScene_ = new GameScene();
 	}
 

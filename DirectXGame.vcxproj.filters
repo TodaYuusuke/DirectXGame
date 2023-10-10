@@ -1,414 +1,384 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="LWP">
-      <UniqueIdentifier>{59e63d58-22ee-4793-bb7f-f98111db9cbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine">
-      <UniqueIdentifier>{a12865bf-59ac-4d55-959f-38f62fc595b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\base">
-      <UniqueIdentifier>{64c4f52d-473c-4cd6-b4a6-c98adcc7405a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\math">
-      <UniqueIdentifier>{94c93275-c8b8-4c42-bd37-72e59e7e3959}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\resource">
-      <UniqueIdentifier>{942cfc37-32f6-411e-bb5f-33d7739a3cbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\utility">
-      <UniqueIdentifier>{96561714-0229-4621-ac64-ce68a404661d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\scene">
-      <UniqueIdentifier>{42ca6928-c188-4a05-9b5d-3e3c076d2948}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\primitive">
-      <UniqueIdentifier>{dafb0a97-4036-41df-84f0-67fb18f7c45f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\resource\shaders">
-      <UniqueIdentifier>{83169c74-f9e5-4b10-ab8a-03a4effe0f73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\object">
-      <UniqueIdentifier>{f193c7a7-1502-4968-a56e-647885787402}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\object\user">
-      <UniqueIdentifier>{b9c55abe-0430-40df-9d4b-124cf4a89de0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\scene\user">
-      <UniqueIdentifier>{fece809b-ef9e-4479-9fa3-897bb7118f61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\primitive\2d">
-      <UniqueIdentifier>{87e10995-1e89-46d8-81ef-0691bd0d0494}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\primitive\3d">
-      <UniqueIdentifier>{5621a193-d1cb-4d0a-b584-5ac5526d4eab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\object\core">
-      <UniqueIdentifier>{10631e60-1d68-46c8-b97a-787de04af5a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\resource\audio">
-      <UniqueIdentifier>{3b92a7a6-5882-4e79-8c80-5bf6fddbbcb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\resource\texture">
-      <UniqueIdentifier>{7dd690f6-4b57-4e16-93e7-b0a135a5ff2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Adapter">
-      <UniqueIdentifier>{42cec828-d06f-4e81-8fb7-5bc0a248197f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Externals">
-      <UniqueIdentifier>{4d1beba8-b34c-4074-85bc-bda8a3748f04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Externals\imgui">
-      <UniqueIdentifier>{1ba28c10-1fcb-4139-95d4-a1934e4a09fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\math\vector">
-      <UniqueIdentifier>{94a3682e-6eae-480f-93ce-f16c311ecf37}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\math\matrix">
-      <UniqueIdentifier>{bd5d12d8-007e-462e-825b-f7a8b3d98008}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\resource\model">
-      <UniqueIdentifier>{3fc37a76-7729-4b1f-8497-9a2cf5fe48b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\input">
-      <UniqueIdentifier>{a3515b39-13b8-42d3-bea1-516228986b1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\input\keyboard">
-      <UniqueIdentifier>{26d85ae3-eed3-4357-840d-e5fc1b48b563}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\input\controller">
-      <UniqueIdentifier>{ae7ea1ae-32a2-4d59-8ad6-5d1ff410ce4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Adapter\component">
-      <UniqueIdentifier>{61aba39c-e7c0-476d-8ffa-a95619cbfd26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LWP\Engine\resource\material">
-      <UniqueIdentifier>{67a65b62-126d-4370-a07f-22e8027f7fdb}</UniqueIdentifier>
-    <Filter Include="Class">
-      <UniqueIdentifier>{dd84c4e3-86f1-4c01-b60e-30addaf6a6bb}</UniqueIdentifier>
-    </Filter>
+    <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\base\DirectXCommon.cpp">
-      <Filter>LWP\Engine\base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\WinApp.cpp">
-      <Filter>LWP\Engine\base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\utility\MyUtility.cpp">
-      <Filter>LWP\Engine\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Adapter\LWP.cpp">
-      <Filter>LWP\Adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\utility\Color.cpp">
-      <Filter>LWP\Engine\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\ObjectManager.cpp">
-      <Filter>LWP\Engine\object</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\scene\SceneManager.cpp">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\scene\user\GameScene.cpp">
-      <Filter>LWP\Engine\scene\user</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\scene\user\Title.cpp">
-      <Filter>LWP\Engine\scene\user</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\object\WorldTransform.cpp">
-      <Filter>LWP\Engine\object</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\core\Camera.cpp">
-      <Filter>LWP\Engine\object\core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\ImGuiManager.cpp">
-      <Filter>LWP\Engine\base</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_impl_dx12.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\resources\ResourceManager.cpp">
-      <Filter>LWP\Engine\resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\resources\texture\Texture.cpp">
-      <Filter>LWP\Engine\resource\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\vector\Vector2.cpp">
-      <Filter>LWP\Engine\math\vector</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\vector\Vector3.cpp">
-      <Filter>LWP\Engine\math\vector</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\vector\Vector4.cpp">
-      <Filter>LWP\Engine\math\vector</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp">
-      <Filter>LWP\Engine\math\matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp">
-      <Filter>LWP\Engine\math\matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\IPrimitive.cpp">
-      <Filter>LWP\Engine\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Mesh.cpp">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
-      <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Surface.cpp">
-      <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\input\InputManager.cpp">
-      <Filter>LWP\Engine\input</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
-      <Filter>LWP\Engine\input\keyboard</Filter>
-    </ClCompile>
-    <ClCompile Include="Adapter\component\System.cpp">
-      <Filter>LWP\Adapter\component</Filter>
+    <ClCompile Include="Adapter\LWP.cpp">
+      <Filter>Adaptor</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Input.cpp">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClCompile>
-    <ClCompile Include="Adapter\component\Primitive.cpp">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClCompile>
-    <ClCompile Include="Adapter\component\Object.cpp">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClCompile>
-    <ClCompile Include="Adapter\component\Resource.cpp">
-      <Filter>LWP\Adapter\component</Filter>
+      <Filter>Adaptor\component</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Information.cpp">
-      <Filter>LWP\Adapter\component</Filter>
+      <Filter>Adaptor\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Primitive.cpp">
+      <Filter>Adaptor\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Resource.cpp">
+      <Filter>Adaptor\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Object.cpp">
+      <Filter>Adaptor\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\System.cpp">
+      <Filter>Adaptor\component</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui.cpp">
+      <Filter>Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
+      <Filter>Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
+      <Filter>Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_impl_dx12.cpp">
+      <Filter>Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
+      <Filter>Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
+      <Filter>Externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
+      <Filter>Externals\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\CommandManager.cpp">
-      <Filter>LWP\Engine\base</Filter>
+      <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\material\Material.cpp">
-      <Filter>LWP\Engine\resource\material</Filter>
+    <ClCompile Include="Engine\base\DirectXCommon.cpp">
+      <Filter>Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\WinApp.cpp">
+      <Filter>Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\ImGuiManager.cpp">
+      <Filter>Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\InputManager.cpp">
+      <Filter>Engine\input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
+      <Filter>Engine\input\keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\vector\Vector2.cpp">
+      <Filter>Engine\math\vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\vector\Vector3.cpp">
+      <Filter>Engine\math\vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\vector\Vector4.cpp">
+      <Filter>Engine\math\vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp">
+      <Filter>Engine\math\matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp">
+      <Filter>Engine\math\matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\ObjectManager.cpp">
+      <Filter>Engine\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\WorldTransform.cpp">
+      <Filter>Engine\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\Camera.cpp">
+      <Filter>Engine\object\core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp">
-      <Filter>LWP\Engine\primitive</Filter>
-    <ClCompile Include="Class\EnemyManager.cpp">
-      <Filter>Class</Filter>
+      <Filter>Engine\primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Enemy.cpp">
-      <Filter>Class</Filter>
+    <ClCompile Include="Engine\primitive\IPrimitive.cpp">
+      <Filter>Engine\primitive</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Mesh.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Surface.cpp">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\ResourceManager.cpp">
+      <Filter>Engine\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\material\Material.cpp">
+      <Filter>Engine\resources\material</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\texture\Texture.cpp">
+      <Filter>Engine\resources\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\SceneManager.cpp">
+      <Filter>Engine\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\user\Title.cpp">
+      <Filter>Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\user\GameScene.cpp">
+      <Filter>Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\Color.cpp">
+      <Filter>Engine\utilitiy</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\MyUtility.cpp">
+      <Filter>Engine\utilitiy</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Adapter\Adapter.h">
+      <Filter>Adaptor</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\LWP.h">
+      <Filter>Adaptor</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Input.h">
+      <Filter>Adaptor\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Information.h">
+      <Filter>Adaptor\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Primitive.h">
+      <Filter>Adaptor\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Resource.h">
+      <Filter>Adaptor\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Object.h">
+      <Filter>Adaptor\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\System.h">
+      <Filter>Adaptor\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_impl_dx12.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_internal.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\CommandManager.h">
+      <Filter>Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DirectXCommon.h">
+      <Filter>Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\WinApp.h">
+      <Filter>Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\ImGuiManager.h">
+      <Filter>Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\InputManager.h">
+      <Filter>Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\keyboard\Keyboard.h">
+      <Filter>Engine\input\keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Math.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\vector\Vector2.h">
+      <Filter>Engine\math\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\vector\Vector3.h">
+      <Filter>Engine\math\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\vector\Vector4.h">
+      <Filter>Engine\math\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\matrix\Matrix3x3.h">
+      <Filter>Engine\math\matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\matrix\Matrix4x4.h">
+      <Filter>Engine\math\matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\IObject.h">
+      <Filter>Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\ObjectManager.h">
+      <Filter>Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\WorldTransform.h">
+      <Filter>Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\CoreList.h">
+      <Filter>Engine\object\core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\Camera.h">
+      <Filter>Engine\object\core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\user\UserList.h">
+      <Filter>Engine\object\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\PrimitiveManager.h">
+      <Filter>Engine\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\IPrimitive.h">
+      <Filter>Engine\primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\3dList.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Mesh.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Sphere.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\2dList.h">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Triangle.h">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Surface.h">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\ResourceManager.h">
+      <Filter>Engine\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\material\Material.h">
+      <Filter>Engine\resources\material</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\texture\Texture.h">
+      <Filter>Engine\resources\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imconfig.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_textedit.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_truetype.h">
+      <Filter>Externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\SceneManager.h">
+      <Filter>Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\IScene.h">
+      <Filter>Engine\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\Title.h">
+      <Filter>Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\GameScene.h">
+      <Filter>Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\Color.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\MyUtility.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\ErrorReporter.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Engine\resources\shaders\Object3d.hlsli">
-      <Filter>LWP\Engine\resource\shaders</Filter>
+      <Filter>Engine\resources\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\base\DirectXCommon.h">
-      <Filter>LWP\Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\WinApp.h">
-      <Filter>LWP\Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\MyUtility.h">
-      <Filter>LWP\Engine\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\LWP.h">
-      <Filter>LWP\Adapter</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Math.h">
-      <Filter>LWP\Engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\Color.h">
-      <Filter>LWP\Engine\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\ObjectManager.h">
-      <Filter>LWP\Engine\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\WorldTransform.h">
-      <Filter>LWP\Engine\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\SceneManager.h">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Triangle.h">
-      <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\IObject.h">
-      <Filter>LWP\Engine\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\IScene.h">
-      <Filter>LWP\Engine\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\user\Title.h">
-      <Filter>LWP\Engine\scene\user</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\user\GameScene.h">
-      <Filter>LWP\Engine\scene\user</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\IPrimitive.h">
-      <Filter>LWP\Engine\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\3dList.h">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\2dList.h">
-      <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\user\UserList.h">
-      <Filter>LWP\Engine\object\user</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\core\Camera.h">
-      <Filter>LWP\Engine\object\core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\core\CoreList.h">
-      <Filter>LWP\Engine\object\core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\ImGuiManager.h">
-      <Filter>LWP\Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imconfig.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_impl_dx12.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_internal.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_textedit.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_truetype.h">
-      <Filter>LWP\Externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\resources\ResourceManager.h">
-      <Filter>LWP\Engine\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\resources\texture\Texture.h">
-      <Filter>LWP\Engine\resource\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Sphere.h">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Surface.h">
-      <Filter>LWP\Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\vector\Vector2.h">
-      <Filter>LWP\Engine\math\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\vector\Vector3.h">
-      <Filter>LWP\Engine\math\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\vector\Vector4.h">
-      <Filter>LWP\Engine\math\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\matrix\Matrix3x3.h">
-      <Filter>LWP\Engine\math\matrix</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\matrix\Matrix4x4.h">
-      <Filter>LWP\Engine\math\matrix</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Mesh.h">
-      <Filter>LWP\Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\ErrorReporter.h">
-      <Filter>LWP\Engine\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\input\InputManager.h">
-      <Filter>LWP\Engine\input</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\input\keyboard\Keyboard.h">
-      <Filter>LWP\Engine\input\keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\Adapter.h">
-      <Filter>LWP\Adapter</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\Input.h">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\System.h">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\Primitive.h">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\Object.h">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\Resource.h">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\Information.h">
-      <Filter>LWP\Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\CommandManager.h">
-      <Filter>LWP\Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\resources\material\Material.h">
-      <Filter>LWP\Engine\resource\material</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\PrimitiveManager.h">
-      <Filter>LWP\Engine\primitive</Filter>
-    <ClInclude Include="Class\EnemyManager.h">
-      <Filter>Class</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy.h">
-      <Filter>Class</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
-      <Filter>LWP\Engine\resource\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
-      <Filter>LWP\Engine\resource\shaders</Filter>
-    </FxCompile>
+    <Filter Include="Adaptor">
+      <UniqueIdentifier>{6f9bea3b-c4e6-4c49-9886-547942559018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Adaptor\component">
+      <UniqueIdentifier>{46ee6907-d890-4f7c-a9bd-cfcd8da7e998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{22234a31-7c5a-46d8-be5d-dec0ded496f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals">
+      <UniqueIdentifier>{9f831be6-8ef5-4946-b6f6-3f5ad5a174fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\imgui">
+      <UniqueIdentifier>{b3784c2d-ca3a-4b94-8cb1-3b6cda3cd414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base">
+      <UniqueIdentifier>{475d57e9-a61e-461d-ae3a-eb5c492610e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\input">
+      <UniqueIdentifier>{81360c44-81cf-410e-a5b3-c59d962c335b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\input\keyboard">
+      <UniqueIdentifier>{35d0d073-9aa8-4c6c-b10f-f29e5babfe94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\input\controller">
+      <UniqueIdentifier>{3201848e-b2d1-4034-a202-302f6523e5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\math">
+      <UniqueIdentifier>{6d0b393f-4b97-4b76-9173-266a7c34318c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\math\vector">
+      <UniqueIdentifier>{555d00fb-9db9-4bc8-878c-47a0ea9ae714}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\math\matrix">
+      <UniqueIdentifier>{2b19e2be-c339-4687-9511-10a76e9579d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object">
+      <UniqueIdentifier>{6fd0e238-d168-4d0f-864a-458693e0a15a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object\core">
+      <UniqueIdentifier>{14b23d91-589d-429f-b0d8-70fc17a034e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object\user">
+      <UniqueIdentifier>{66b7ab0e-c424-446a-bfe6-ab374be49187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\primitive">
+      <UniqueIdentifier>{b19cce8c-d886-4e1a-bf91-3b61d3281892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\primitive\3d">
+      <UniqueIdentifier>{dae23e25-4f32-469f-9849-f8f229fe86d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\primitive\2d">
+      <UniqueIdentifier>{7ae55cb9-7c63-4cf3-8098-9a03f6cff897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources">
+      <UniqueIdentifier>{63f38f0f-3aff-4930-9679-1b1002a98808}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\material">
+      <UniqueIdentifier>{8b5a09f0-eefe-4e9d-a55b-76b2f47c7b9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\shaders">
+      <UniqueIdentifier>{e6cf0b3d-2f65-47d4-ab8a-8bb4f969be95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\texture">
+      <UniqueIdentifier>{143ff35b-fe99-42b5-bf01-8b207a3c4f7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\audio">
+      <UniqueIdentifier>{b526e211-0e2c-4079-83c6-bce9d67a08fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\scene">
+      <UniqueIdentifier>{093777cc-1db7-443d-b68b-e527690c6c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\scene\user">
+      <UniqueIdentifier>{960e4147-4156-4275-832b-89f6c6c61824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\utilitiy">
+      <UniqueIdentifier>{248bf45a-0c7d-4a30-9391-5cdb28b3cbcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
