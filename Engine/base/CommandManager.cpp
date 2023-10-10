@@ -40,7 +40,7 @@ void CommandManager::Initialize(DirectXCommon* directXCommon) {
 	lightBuffer_->light_->intensity_ = 1.0f;
 
 	// デフォルトテクスチャを読み込み
-	LWP::Resource::LoadTexture("dummy.png");	
+	LWP::Resource::LoadTexture("dummy.png");
 	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
 }
 

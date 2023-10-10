@@ -1,4 +1,5 @@
 #include "ResourceManager.h"
+#include "../../Adapter/Adapter.h"
 
 using namespace LWP::Resource;
 

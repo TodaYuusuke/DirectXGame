@@ -15,6 +15,7 @@ void Manager::Update() {
 	if (currentScene_->nextScene_ != nullptr) {
 		//delete currentScene_;
 		currentScene_ = currentScene_->nextScene_;
+		LWP::System::engine->InitializeForScene();
 		currentScene_->PreInitialize();
 		currentScene_->Initialize();
 	}

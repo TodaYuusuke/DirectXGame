@@ -1,5 +1,4 @@
 #include "LWP.h"
-#include "../Engine/scene/SceneManager.h"
 
 using namespace LWP::System;
 
@@ -39,6 +38,15 @@ void Engine::Run() {
 
 	// COMの終了処理
 	CoUninitialize();
+}
+
+void Engine::InitializeForScene() {
+	// Object
+	objectManager_->Initialize();
+	// Primitive
+	primitiveManager_->Initialize();
+	// Resource
+	//resourceManager_->Initialize();
 }
 
 void Engine::Initialize(const char* title, int width, int height) {

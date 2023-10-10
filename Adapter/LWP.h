@@ -30,6 +30,11 @@ namespace LWP::System {
 		/// </summary>
 		void Run();
 
+		/// <summary>
+		/// シーン切り替え時の初期化
+		/// </summary>
+		void InitializeForScene();
+
 	private: // ** プライベートなメンバ関数達 ** //
 		/// <summary>
 		/// ライブラリの初期化
