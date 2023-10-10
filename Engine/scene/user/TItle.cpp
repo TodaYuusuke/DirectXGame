@@ -27,14 +27,14 @@ void Title::Initialize() {
 	// 平面
 	surface = LWP::Primitive::CreateInstance<Surface>();
 	surface->transform.translation.x = -0.7f;
-	surface->isActive = false;
+	surface->isActive = true;
 	surface->texture = uvTexture;
 
 	// 球
 	sphere = LWP::Primitive::CreateInstance<Sphere>();
 	sphere->Radius(0.2f);
 	sphere->transform.translation.x = 0.7f;
-	sphere->isActive = false;
+	sphere->isActive = true;
 	surface->texture = uvTexture;
 
 	// モデル読み込み
@@ -53,12 +53,23 @@ void Title::Update() {
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 
-	if (useMonsterBall) {
-		sphere->texture = monsterBall;
+	// SPACEキーを押すとテクスチャ切り替え
+	if (LWP::Engine::GetKeyStateTrigger(DIK_SPACE)) {
+		if (!useMonsterBall) {
+			sphere->texture = monsterBall;
+			useMonsterBall = true;
+		}
+		else {
+			sphere->texture = uvTexture;
+			useMonsterBall = false;
+		}
 	}
-	else {
-		sphere->texture = uvTexture;
+
+	// ENTERキーを押すとシーン切り替え
+	if (LWP::Engine::GetKeyStateTrigger(DIK_RETURN)) {
+		nextScene_ = new GameScene();
 	}
+
 
 	// カメラ操作
 	ImGui::Begin("Camera");

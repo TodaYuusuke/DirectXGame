@@ -96,6 +96,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
     <ClCompile Include="Engine\base\CommandManager.cpp" />
+    <ClCompile Include="Class\Enemy.cpp" />
+    <ClCompile Include="Class\EnemyManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
@@ -149,6 +151,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\LWP.h" />
     <ClInclude Include="Engine\base\CommandManager.h" />
+    <ClInclude Include="Class\Enemy.h" />
+    <ClInclude Include="Class\EnemyManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
