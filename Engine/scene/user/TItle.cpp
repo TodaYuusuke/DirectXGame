@@ -11,12 +11,10 @@ void Title::Initialize() {
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
 
-	LWP::Input::GetTrigger(DIK_0);
-
 	// 三角形
 	for (int i = 0; i < 2; i++) {
 		tri[i] = LWP::Primitive::CreateInstance<Triangle>();
-		tri[i]->isActive = false;
+		tri[i]->isActive = true;
 	}
 	tri[0]->vertices[0].color = Color(RED);
 	tri[0]->vertices[1].color = Color(BLUE);
@@ -27,19 +25,21 @@ void Title::Initialize() {
 	// 平面
 	surface = LWP::Primitive::CreateInstance<Surface>();
 	surface->transform.translation.x = -0.7f;
-	surface->isActive = true;
+	surface->isActive = false;
 	surface->texture = uvTexture;
 
 	// 球
 	sphere = LWP::Primitive::CreateInstance<Sphere>();
 	sphere->Radius(0.2f);
 	sphere->transform.translation.x = 0.7f;
-	sphere->isActive = true;
+	sphere->isActive = false;
 	surface->texture = uvTexture;
 
 	// モデル読み込み
-	planeModel = LWP::Resource::LoadModel("plane.obj");
+	cubeModel = LWP::Resource::LoadModel("cube.obj");
+	cubeModel->transform.scale = { 0.5f,0.5f, 0.5f };
 	axisModel = LWP::Resource::LoadModel("axis.obj");
+	axisModel->isActive = false;
 }
 // 更新
 void Title::Update() {
@@ -48,9 +48,8 @@ void Title::Update() {
 	tri[1]->DebugGUI("Tri1");
 	surface->DebugGUI("Surface");
 	sphere->DebugGUI("Sphere");
-	planeModel->DebugGUI("plane");
+	cubeModel->DebugGUI("cube");
 	axisModel->DebugGUI("axis");
-	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 
 	// SPACEキーを押すとテクスチャ切り替え
@@ -70,7 +69,6 @@ void Title::Update() {
 		nextScene_ = new GameScene();
 	}
 
-
 	// カメラ操作
 	ImGui::Begin("Camera");
 	mainCamera->DebugGUI();
@@ -78,11 +76,4 @@ void Title::Update() {
 }
 // 描画
 void Title::Draw() {
-	//tri[0]->Draw();
-	//tri[1]->Draw();
-	//surface->Draw();
-	//sphere->Draw();
-
-	//planeModel->Draw();
-	//axisModel->Draw();
 } 

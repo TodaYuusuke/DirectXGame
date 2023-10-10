@@ -3,7 +3,7 @@
 using namespace LWP::Resource;
 
 void Manager::Initialize() {
-	textureMap_.clear();
+	//textureMap_.clear();
 }
 
 Texture* Manager::LoadTexture(Base::CommandManager* manager, const std::string& filepath) {

@@ -24,7 +24,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Surface* surface;
 	LWP::Primitive::Sphere* sphere;
 	
-	LWP::Primitive::Mesh* planeModel;
+	LWP::Primitive::Mesh* cubeModel;
 	LWP::Primitive::Mesh* axisModel;
 
 	LWP::Resource::Texture* uvTexture;
