@@ -32,7 +32,7 @@ public:
 	/// </summary>
 	/// <param name="centerPosition">衝撃派の中心地点</param>
 	/// <returns>衝撃波が発生したときはtrueを返す。ただし範囲外を選択した座標だったときはfalseを返し衝撃波は起こさない</returns>
-	bool ShockWave(LWP::Math::Vector2 centerPosition);
+	bool AddShockWave(LWP::Math::Vector3 centerPosition);
 
 	/// <summary>
 	/// マップチップ１つのscaleを求める関数
@@ -45,7 +45,19 @@ private: // ** メンバ変数 ** //
 	const float kMapRadius_ = 1.0f;
 
 	// マップの分割数
+#if _DEBUG //debug時
 	static const int kSubdivision_ = 16;
+#else      //release時
+	static const int kSubdivision_ = 64;
+#endif
+
+
 	// マップの配列
 	MapChip maps_[kSubdivision_][kSubdivision_];
+
+	// 衝撃波s最大数
+	static const int kMaxShockWaveCount_ = 3;
+	// マップに存在する衝撃波の配列
+	ShockWave shockWaves[kMaxShockWaveCount_];
+	uint8_t shockWaveIndex = 0;
 };

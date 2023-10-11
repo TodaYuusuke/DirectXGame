@@ -26,6 +26,14 @@ Vector3 Vector3::operator*(const float& other) const {
 Vector3& Vector3::operator*=(const float& other) {
 	return *this = *this * other;
 }
+// Vector3 Division(/) float
+Vector3 Vector3::operator/(const float& other) const {
+	return { x / other, y / other, z / other };
+}
+Vector3& Vector3::operator/=(const float& other) {
+	return *this = *this / other;
+}
+
 Vector3 Vector3::operator*(const Matrix4x4& other) const {
 	Vector3 result{};
 	result.x = x * other.m[0][0] + y * other.m[1][0] + z * other.m[2][0] + other.m[3][0];

@@ -42,9 +42,10 @@ namespace LWP::Primitive {
 		/// </summary>
 		int GetIndexCount() const override { return static_cast<int>(indexes.size()); };
 
-	public: // ** ファイルパス ** //
+	private: // ** ファイルパス ** //
 		const std::string directoryPath_ = "resources/obj/";
-
+		// objがフォルダに入っている際の追加のディレクトリパス
+		std::string path_ = "";
 
 	private: // ** プライベートな関数 ** //
 

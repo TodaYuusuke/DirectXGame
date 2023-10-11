@@ -16,6 +16,8 @@ void Mesh::LoadFile(const std::string& filename) {
 	vertices.clear();
 	indexes.clear();
 
+	// 親ディレクトリを取得しておく
+	path_ = ConvertToParentDirectory(filename);
 	// 現在はobjのみ読み込み可
 	LoadObj(filename);
 }
@@ -116,7 +118,7 @@ void Mesh::LoadObj(const std::string& filename) {
 }
 
 void Mesh::LoadMtl(const std::string& filename) {
-	std::ifstream file(directoryPath_ + filename);
+	std::ifstream file(directoryPath_ + path_ + filename);
 	LoadAssert(file.is_open(), filename);
 	std::string line;	// ファイルから読み込んだ1行
 
@@ -133,7 +135,7 @@ void Mesh::LoadMtl(const std::string& filename) {
 			std::string textureFilename;
 			s >> textureFilename;
 			// テクスチャを読み込む
-			texture = LWP::Resource::LoadTextureLongPath(directoryPath_ + textureFilename);
+			texture = LWP::Resource::LoadTextureLongPath(directoryPath_ + path_ + textureFilename);
 		}
 	}
 }

@@ -5,16 +5,16 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 
 WorldTransform::WorldTransform() { Initialize(); }
-WorldTransform::WorldTransform(Math::Vector3 s, Math::Vector3 r, Math::Vector3 t) {
+WorldTransform::WorldTransform(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s) {
 	Initialize();
+	translation = t;
+	rotation = r;
 	scale = s;
-	rotation = r;
-	translation = t;
 }
-WorldTransform::WorldTransform(Math::Vector3 r, Math::Vector3 t) {
+WorldTransform::WorldTransform(Math::Vector3 t, Math::Vector3 r) {
 	Initialize();
-	rotation = r;
 	translation = t;
+	rotation = r;
 }
 WorldTransform::WorldTransform(Math::Vector3 t) {
 	Initialize();
@@ -22,9 +22,9 @@ WorldTransform::WorldTransform(Math::Vector3 t) {
 }
 
 void WorldTransform::Initialize() {
-	scale = { 1.0f, 1.0f, 1.0f };
-	rotation = { 0.0f, 0.0f, 0.0f };
 	translation = { 0.0f, 0.0f, 0.0f };
+	rotation = { 0.0f, 0.0f, 0.0f };
+	scale = { 1.0f, 1.0f, 1.0f };
 }
 
 Matrix4x4 WorldTransform::GetWorldMatrix() const {
@@ -53,3 +53,23 @@ void WorldTransform::DebugGUI(const std::string& label) {
 // ** プロパティ変数 ** //
 
 void WorldTransform::Parent(WorldTransform* parent) { parent_ = parent; }
+
+WorldTransform WorldTransform::operator+(const WorldTransform& other) const {
+	return {
+		translation + other.translation,
+		rotation + other.rotation,
+		scale + other.scale
+	};
+};
+
+WorldTransform& WorldTransform::operator+=(const WorldTransform& other) {
+	return *this = *this + other;
+}
+
+WorldTransform WorldTransform::operator/(const float& other) const {
+	return {
+		translation / other,
+		rotation / other,
+		scale / other
+	};
+}

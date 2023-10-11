@@ -10,6 +10,7 @@ void Manager::Initialize(WinApp* winApp) {
 		winApp->GetWNDCLASS().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)directInput.GetAddressOf(), nullptr);
 	assert(SUCCEEDED(result));
+	result;
 
 	// キーボードデバイスの生成
 	keyboard_.Initialize(winApp, directInput.Get());

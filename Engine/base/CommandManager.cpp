@@ -124,7 +124,7 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 
 	// 描画！
 	commandList->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
-
+	
 	// 使用した頂点とインデックスのカウント
 	vertexResourceBuffer_->usedVertexCount_ += primitive->GetVertexCount();
 	vertexResourceBuffer_->usedIndexCount_ += primitive->GetIndexCount();
@@ -252,11 +252,11 @@ D3D12_BLEND_DESC CommandManager::CreateBlendState() {
 	// 透明度のブレンドを設定
 	blendDesc.RenderTarget[0].BlendEnable = true;
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	return blendDesc;
 }
 D3D12_RASTERIZER_DESC CommandManager::CreateRasterizerState() {

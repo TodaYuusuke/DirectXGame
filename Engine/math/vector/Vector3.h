@@ -26,6 +26,10 @@ namespace LWP::Math {
 		Vector3 operator*(const float& other) const;
 		Vector3& operator*=(const float& other);
 		friend Vector3 operator*(float scalar, const Vector3& vec) { return vec * scalar; }
+		// Vector3 Division(/) float
+		Vector3 operator/(const float& other) const;
+		Vector3& operator/=(const float& other);
+		friend Vector3 operator/(float scalar, const Vector3& vec) { return vec / scalar; }
 		// Vector3 Multiply(*) Matrix4x4
 		Vector3 operator*(const Matrix4x4& other) const;
 		//friend Vector3 operator*(Matrix4x4 scalar, const Vector3& vec) { return vec * scalar; }

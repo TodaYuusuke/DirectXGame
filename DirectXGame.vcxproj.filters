@@ -11,25 +11,25 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Adapter\LWP.cpp">
-      <Filter>Adaptor</Filter>
+      <Filter>Adapter</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Input.cpp">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Information.cpp">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Primitive.cpp">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Resource.cpp">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Object.cpp">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\System.cpp">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui.cpp">
       <Filter>Externals\imgui</Filter>
@@ -136,37 +136,43 @@
     <ClCompile Include="Engine\utility\MyUtility.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Class\MapChip.cpp">
-      <Filter>Class</Filter>
+    <ClCompile Include="Class\Map\MapManager.cpp">
+      <Filter>Class\Map</Filter>
     </ClCompile>
-    <ClCompile Include="Class\MapManager.cpp">
-      <Filter>Class</Filter>
+    <ClCompile Include="Class\Hammer\Hammer.cpp">
+      <Filter>Class\Hammer</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Map\ShockWave.cpp">
+      <Filter>Class\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Map\MapChip.cpp">
+      <Filter>Class\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
-      <Filter>Adaptor</Filter>
+      <Filter>Adapter</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\LWP.h">
-      <Filter>Adaptor</Filter>
+      <Filter>Adapter</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Input.h">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Information.h">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Primitive.h">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Resource.h">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Object.h">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\System.h">
-      <Filter>Adaptor\component</Filter>
+      <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Externals\imgui\imgui.h">
       <Filter>Externals\imgui</Filter>
@@ -300,11 +306,17 @@
     <ClInclude Include="Engine\utility\ErrorReporter.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Class\MapManager.h">
-      <Filter>Class</Filter>
+    <ClInclude Include="Class\Map\MapManager.h">
+      <Filter>Class\Map</Filter>
     </ClInclude>
-    <ClInclude Include="Class\MapChip.h">
-      <Filter>Class</Filter>
+    <ClInclude Include="Class\Hammer\Hammer.h">
+      <Filter>Class\Hammer</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Map\ShockWave.h">
+      <Filter>Class\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Map\MapChip.h">
+      <Filter>Class\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -314,12 +326,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Adaptor">
-      <UniqueIdentifier>{6f9bea3b-c4e6-4c49-9886-547942559018}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Adaptor\component">
-      <UniqueIdentifier>{46ee6907-d890-4f7c-a9bd-cfcd8da7e998}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{22234a31-7c5a-46d8-be5d-dec0ded496f5}</UniqueIdentifier>
     </Filter>
@@ -394,6 +400,18 @@
     </Filter>
     <Filter Include="Class">
       <UniqueIdentifier>{1f9df0e8-8c72-45df-9278-04bdfb3bd6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Map">
+      <UniqueIdentifier>{e1de4176-31ee-497c-834d-55629804adf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Hammer">
+      <UniqueIdentifier>{f2d1745d-494e-44ae-83ba-19e26540f9b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Adapter">
+      <UniqueIdentifier>{6f9bea3b-c4e6-4c49-9886-547942559018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Adapter\component">
+      <UniqueIdentifier>{46ee6907-d890-4f7c-a9bd-cfcd8da7e998}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

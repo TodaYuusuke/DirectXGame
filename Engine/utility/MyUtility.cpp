@@ -1,5 +1,6 @@
 #include "MyUtility.h"
 #include <dxgidebug.h>
+#include <algorithm>
 
 void LWP::Utility::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
@@ -35,4 +36,18 @@ std::string LWP::Utility::ConvertString(const std::wstring& str) {
 	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
 
 	return result;
+}
+
+std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) {
+	// ファイルパスを逆順にして、最初に見つかった'/'の位置を取得
+	size_t dotPos = filePath.rfind('/');
+
+	// '/'が見つかった場合、その位置までの部分文字列を取得
+	if (dotPos != std::string::npos) {
+		return filePath.substr(0, dotPos + 1);
+	}
+	else {
+		// '.'が見つからない場合はそのまま返す
+		return "";
+	}
 }

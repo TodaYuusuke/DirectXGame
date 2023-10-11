@@ -1,6 +1,7 @@
 #pragma once
 #include "../IScene.h" 
-#include "../../../Class/MapManager.h"
+#include "../../../Class/Map/MapManager.h"
+#include "../../../Class/Hammer/Hammer.h"
 
 class GameScene final
 	: public IScene {
@@ -21,4 +22,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// マップ管理クラス
 	MapManager mapManager_;
+	// ハンマー（プレイヤー）
+	Hammer hammer_;
 };

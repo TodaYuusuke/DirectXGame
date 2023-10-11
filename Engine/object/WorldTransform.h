@@ -6,13 +6,13 @@ namespace LWP::Object {
 	class WorldTransform {
 	public:
 		// ** 変数 ** //
- 		
-		// ローカルスケール
-		Math::Vector3 scale;
-		// X,Y,Z軸回りのローカル回転角
-		Math::Vector3 rotation;
+
 		// ローカル座標
 		Math::Vector3 translation;
+		// X,Y,Z軸回りのローカル回転角
+		Math::Vector3 rotation;
+		// ローカルスケール
+		Math::Vector3 scale;
 
 
 	private: // ** プロパティ変数 ** //
@@ -28,8 +28,8 @@ namespace LWP::Object {
 	public: // ** パブリックなメンバ関数 ** //
 		// コンストラクタ
 		WorldTransform();
-		WorldTransform(Math::Vector3 s, Math::Vector3 r, Math::Vector3 t);
-		WorldTransform(Math::Vector3 r, Math::Vector3 t);
+		WorldTransform(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s);
+		WorldTransform(Math::Vector3 t, Math::Vector3 r);
 		WorldTransform(Math::Vector3 t);
 		~WorldTransform() = default;
 
@@ -52,5 +52,12 @@ namespace LWP::Object {
 		/// ImGui
 		/// </summary>
 		void DebugGUI(const std::string& label = "WorldTransform");
+
+	public: // ** オペレーターオーバーロード ** //
+
+		// イージングの簡略化のため実装
+		WorldTransform operator+(const WorldTransform& other) const;
+		WorldTransform& operator+=(const WorldTransform& other);
+		WorldTransform operator/(const float &other) const;
 	};
 }

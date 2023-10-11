@@ -3,10 +3,14 @@
 using namespace LWP::Math;
 
 void MapChip::Initialize() {
-	model = LWP::Resource::LoadModel("cube.obj");
+	model = LWP::Resource::LoadModel("cube/cube.obj");
 }
 void MapChip::Update() {
-	
+	// パワーは徐々に減衰する
+	wavePower = wavePower * 0.977f;
+
+	// 自身が持つパワーの大きさに応じてscaleを大きくする
+	model->transform.scale.y = defaultScale + (wavePower * 0.1f);
 }
 
 bool MapChip::IsInCircle(Circle circle) {

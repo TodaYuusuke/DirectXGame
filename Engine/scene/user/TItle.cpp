@@ -36,7 +36,7 @@ void Title::Initialize() {
 	surface->texture = uvTexture;
 
 	// モデル読み込み
-	cubeModel = LWP::Resource::LoadModel("cube.obj");
+	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
 	cubeModel->transform.scale = { 0.5f,0.5f, 0.5f };
 	axisModel = LWP::Resource::LoadModel("axis.obj");
 	axisModel->isActive = false;

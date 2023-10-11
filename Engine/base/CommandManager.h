@@ -75,7 +75,11 @@ namespace LWP::Base {
 		static const int kMaxVertexCount_ = 655350;
 		static const int kMaxIndexCount_ = 655350;
 		// トランスフォームの許容数
-		static const int kMaxTransformCount_ = 2560;
+#if _DEBUG //debug時
+		static const int kMaxTransformCount_ = 1280;
+#else      //release時
+		static const int kMaxTransformCount_ = 12800;
+#endif
 		int usedMatrixCount_ = 0;
 		// 最大テクスチャ数（増やす場合はDirectXCommonのコードも修正）
 		static const int kMaxTextureCount_ = 128;
