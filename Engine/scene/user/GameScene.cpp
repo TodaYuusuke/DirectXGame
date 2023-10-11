@@ -4,24 +4,20 @@ using namespace LWP::Primitive;
 
 // 初期化
 void GameScene::Initialize() {
-	tri = LWP::Primitive::CreateInstance<Triangle>();
+	// カメラを上から見下ろす形に
+	mainCamera->transform.translation = { 0.0f,3.83f,0.0f };
+	mainCamera->transform.rotation = { 1.57f,0.0f,0.0f };
 
-	tri->vertices[0] = { 0.0f,0.2f,0.0f };
-	tri->vertices[1] = { 0.2f,0.0f,0.0f };
-	tri->vertices[2] = { -0.2f,0.0f,0.0f };
-
-	mapChip_ = new MapChip();
-	mapPosition_ = { 0.0f,0.0f,0.0f };
-	mapChip_->Initialize(mapPosition_);
-
-	
+	mapManager_.Initialize();
 }
 // 更新
 void GameScene::Update() {
-	mapChip_->UpdataMapData();
-	
+	mapManager_.Update();
+
+	ImGui::Begin("Camera");
+	mainCamera->DebugGUI();
+	ImGui::End();
 }
 // 描画
 void GameScene::Draw() {
-	mapChip_->Draw();
 }

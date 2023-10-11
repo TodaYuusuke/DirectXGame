@@ -1,6 +1,6 @@
 #pragma once
 #include "../IScene.h" 
-#include "../../../Class/MapChip.h"
+#include "../../../Class/MapManager.h"
 
 class GameScene final
 	: public IScene {
@@ -19,10 +19,6 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Triangle* tri;
-
-	//マップチップ
-	MapChip* mapChip_;
-	//マップ位置
-	LWP::Math::Vector3 mapPosition_;
+	// マップ管理クラス
+	MapManager mapManager_;
 };
