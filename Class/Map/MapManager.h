@@ -1,5 +1,6 @@
 #pragma once
 #include "MapChip.h"
+#include "../Mob/IMob.h"
 
 class MapManager final {
 public:
@@ -38,6 +39,11 @@ public:
 	/// マップチップ１つのscaleを求める関数
 	/// </summary>
 	float GetMapChipScale() { return 2.0f / kSubdivision_; }
+
+	/// <summary>
+	/// モブに対しての当たり判定をチェックする関数
+	/// </summary>
+	void CheckCollision(IMob* mob);
 
 private: // ** メンバ変数 ** //
 

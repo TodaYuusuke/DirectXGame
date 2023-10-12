@@ -92,17 +92,32 @@ bool Engine::ProcessMessage() {
 }
 
 void Engine::BeginFrame() {
+#if _DEBUG //debug時
+	// タイマー計測開始
+	debugTimer_.Start();
+#endif
+
 	inputManager_->Update();
 	directXCommon_->PreDraw();
 	imGuiManager_->Begin();
 }
 
 void Engine::EndFrame() {
+#if _DEBUG //debug時
+	// FPS系の情報描画
+	debugTimer_.DebugGUI();
+#endif
+
 	imGuiManager_->End();
 	imGuiManager_->Draw();
 	directXCommon_->PostDraw();
 	// 描画数リセット
 	commandManager_->Reset();
+
+#if _DEBUG //debug時
+	// 計測終了
+	debugTimer_.End();
+#endif
 }
 
 void Engine::Finalize() {

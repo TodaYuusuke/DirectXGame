@@ -7,10 +7,10 @@ void MapChip::Initialize() {
 }
 void MapChip::Update() {
 	// パワーは徐々に減衰する
-	wavePower = wavePower * 0.977f;
+	wavePower = wavePower * 0.9f;
 
 	// 自身が持つパワーの大きさに応じてscaleを大きくする
-	model->transform.scale.y = defaultScale + (wavePower * 0.1f);
+	model->transform.scale.y = wavePower * 0.1f;
 }
 
 bool MapChip::IsInCircle(Circle circle) {

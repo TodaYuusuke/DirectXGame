@@ -9,7 +9,7 @@ void ShockWave::Initialize(Vector2 pos) {
 	circle.center = pos;
 	circle.radius = 0.0f;
 	// 半径の広がる速度
-	speed = 0.003f;
+	speed = 0.009f;
 }
 void ShockWave::Update() {
 	if (!isActive) { return; }

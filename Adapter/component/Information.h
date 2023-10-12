@@ -17,6 +17,11 @@ namespace LWP {
 		float GetWindowWidthF();
 		float GetWindowHeightF();
 		Math::Vector2 GetWindow();
+
+		/// <summary>
+		/// デバッグ情報を表示する
+		/// </summary>
+		void ShowDebugGUI();
 	};
 	namespace Info = Information;
 };

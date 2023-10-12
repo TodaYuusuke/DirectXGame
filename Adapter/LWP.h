@@ -15,6 +15,7 @@
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
+#include "../Engine/info/DebugTimer.h"
 
 #include <dxgidebug.h>
 
@@ -100,5 +101,8 @@ namespace LWP::System {
 
 		// シーンマネージャー
 		std::unique_ptr<Scene::Manager> sceneManager_;
+
+		// デバッグ用タイマークラス
+		LWP::Information::DebugTimer debugTimer_;
 	};
 }

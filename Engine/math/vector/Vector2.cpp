@@ -32,3 +32,16 @@ Vector2 Vector2::operator*(const Matrix4x4& other) const {
 	result.y = x * other.m[0][1] + y * other.m[1][1] + other.m[2][1] + other.m[3][1];
 	return result;
 }
+
+float Vector2::Length() {
+	return sqrtf(x * x + y * y);
+}
+Vector2 Vector2::Normalize() {
+	Vector2 norm = { x,y };
+	float length = Length();
+	if (length != 0.0f) {
+		norm.x /= length;
+		norm.y /= length;
+	}
+	return norm;
+}

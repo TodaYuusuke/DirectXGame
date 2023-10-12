@@ -148,6 +148,21 @@
     <ClCompile Include="Class\Map\MapChip.cpp">
       <Filter>Class\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\info\DebugTimer.cpp">
+      <Filter>Engine\info</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Mob\IMob.cpp">
+      <Filter>Class\Mob</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Mob\MobManager.cpp">
+      <Filter>Class\Mob</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Mob\Derived\DefenseObject.cpp">
+      <Filter>Class\Mob\Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Mob\Derived\Enemy.cpp">
+      <Filter>Class\Mob\Derived</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -318,6 +333,21 @@
     <ClInclude Include="Class\Map\MapChip.h">
       <Filter>Class\Map</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\info\DebugTimer.h">
+      <Filter>Engine\info</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Mob\IMob.h">
+      <Filter>Class\Mob</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Mob\MobManager.h">
+      <Filter>Class\Mob</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Mob\Derived\DefenseObject.h">
+      <Filter>Class\Mob\Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Mob\Derived\Enemy.h">
+      <Filter>Class\Mob\Derived</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -412,6 +442,15 @@
     </Filter>
     <Filter Include="Adapter\component">
       <UniqueIdentifier>{46ee6907-d890-4f7c-a9bd-cfcd8da7e998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\info">
+      <UniqueIdentifier>{1d859269-30c1-4a67-825c-4bbef6db24b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Mob">
+      <UniqueIdentifier>{743a3501-c0a8-46af-a8ff-80dc57708e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Mob\Derived">
+      <UniqueIdentifier>{b78425e2-876a-4fc2-8102-2c1ba751a431}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

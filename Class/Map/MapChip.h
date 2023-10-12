@@ -12,8 +12,6 @@ public:
 
 	// モデル
 	LWP::Primitive::Mesh* model = nullptr;
-	// デフォルトのY軸スケール
-	float defaultScale;
 
 	// マップが場外か判定
 	bool isOut = true;
@@ -21,7 +19,7 @@ public:
 	// 自身の持つ波のパワー
 	float wavePower = 0.0f;
 	// 波のベクトル
-	LWP::Math::Vector2 waveVec = { 0.0f, 0.0f };
+	LWP::Math::Vector3 waveVec = { 0.0f, 0.0f, 0.0f };
 
 	// 衝撃波に対してヒット済みかどうかを保持する変数
 	bool isHit[3];

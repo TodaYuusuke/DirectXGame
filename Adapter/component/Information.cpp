@@ -25,3 +25,7 @@ Math::Vector2 Information::GetWindow() {
 		static_cast<float>(engine->winApp_->GetClientHeight())
 	};
 }
+
+void Information::ShowDebugGUI() {
+
+}
