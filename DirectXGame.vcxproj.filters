@@ -55,9 +55,6 @@
     <ClCompile Include="Engine\base\CommandManager.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DirectXCommon.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
@@ -163,6 +160,15 @@
     <ClCompile Include="Class\Mob\Derived\Enemy.cpp">
       <Filter>Class\Mob\Derived</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\DirectXCommon.cpp">
+      <Filter>Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\IDescriptorHeap.cpp">
+      <Filter>Engine\base\directX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\RTV.cpp">
+      <Filter>Engine\base\directX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -202,9 +208,6 @@
       <Filter>Externals\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\CommandManager.h">
-      <Filter>Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
@@ -348,6 +351,15 @@
     <ClInclude Include="Class\Mob\Derived\Enemy.h">
       <Filter>Class\Mob\Derived</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\DirectXCommon.h">
+      <Filter>Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\IDescriptorHeap.h">
+      <Filter>Engine\base\directX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\RTV.h">
+      <Filter>Engine\base\directX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -451,6 +463,9 @@
     </Filter>
     <Filter Include="Class\Mob\Derived">
       <UniqueIdentifier>{b78425e2-876a-4fc2-8102-2c1ba751a431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX">
+      <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
