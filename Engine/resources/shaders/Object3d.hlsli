@@ -16,9 +16,13 @@ struct WorldMatrix {
 };
 ConstantBuffer<WorldMatrix> gWorldMatrix : register(b1);
 
-// テクスチャの
+// テクスチャ
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
+
+// シャドウマップのテクスチャサンプラー
+Texture2D<float> gShadowMap : register(t1);
+SamplerState gShadowMapSampler : register(s1);
 
 // 平行光源
 struct DirectionalLight {
@@ -27,6 +31,7 @@ struct DirectionalLight {
     float intensity;        // !< 輝度
 };
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+
 
 struct VertexShaderOutput {
     float32_t4 position : SV_POSITION;
