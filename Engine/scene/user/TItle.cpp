@@ -24,8 +24,12 @@ void Title::Initialize() {
 
 	// 平面
 	surface = LWP::Primitive::CreateInstance<Surface>();
-	surface->transform.translation.x = -0.7f;
-	surface->isActive = false;
+	surface->vertices[0].position = { 0.0f,0.0f };
+	surface->vertices[1].position = { 320.0f,0.0f };
+	surface->vertices[2].position = { 320.0f,180.0f };
+	surface->vertices[3].position = { 0.0f,180.0f };
+	surface->isUI = true;
+	surface->isActive = true;
 	surface->texture = uvTexture;
 
 	// 球
