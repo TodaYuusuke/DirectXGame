@@ -38,7 +38,7 @@ void Title::Initialize() {
 	surface[2]->transform.translation = { 490.0f,550.0f };
 
 	//ハンマー
-	hammerModel->transform.translation = { 0.0f,0.0f };
+	hammerModel->transform.translation.y = 1.0f;
 	hammerModel->transform.scale = { 0.1f, 0.1f, 0.1f };
 	// 半透明に
 	hammerModel->commonColor = new Color(0xFFFFFF64);

@@ -46,7 +46,7 @@ private: // ** ハンマー ** //
 	int attackCoolTimer = -1;
 
 	// モデル
-	LWP::Primitive::Mesh* hammerModel = nullptr;
+	LWP::Primitive::Mesh* hammerModel;
 
 private: // ** アニメーション関連 ** //
 
