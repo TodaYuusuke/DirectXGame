@@ -1,5 +1,5 @@
 #include "GameScene.h"
-#include "Title.h"
+#include "GameClear.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Utility;
@@ -38,6 +38,12 @@ void GameScene::Update() {
 	if (LWP::Input::GetTrigger(DIK_R)) {
 		nextScene_ = new GameScene();
 	}
+
+	// ENTERキーを押すとシーン切り替え(ゲームクリア)
+	if (LWP::Input::GetTrigger(DIK_RETURN)) {
+		nextScene_ = new GameClear();
+	}
+
 }
 // 描画
 void GameScene::Draw() {}

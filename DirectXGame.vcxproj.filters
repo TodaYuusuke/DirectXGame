@@ -163,6 +163,9 @@
     <ClCompile Include="Class\Mob\Derived\Enemy.cpp">
       <Filter>Class\Mob\Derived</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\scene\user\GameClear.cpp">
+      <Filter>Engine\scene\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -347,6 +350,9 @@
     </ClInclude>
     <ClInclude Include="Class\Mob\Derived\Enemy.h">
       <Filter>Class\Mob\Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\GameClear.h">
+      <Filter>Engine\scene\user</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -130,6 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
+    <ClCompile Include="Engine\scene\user\GameClear.cpp" />
     <ClCompile Include="Engine\scene\user\GameScene.cpp" />
     <ClCompile Include="Engine\scene\user\Title.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
@@ -199,6 +200,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\scene\user\GameClear.h" />
     <ClInclude Include="Engine\scene\user\GameScene.h" />
     <ClInclude Include="Engine\scene\user\Title.h" />
     <ClInclude Include="Engine\utility\Color.h" />
