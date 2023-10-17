@@ -7,6 +7,12 @@
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\ShadowMap.PS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\ShadowMap.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -163,11 +169,20 @@
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\IDescriptorHeap.cpp">
+    <ClCompile Include="Engine\base\directX\GPUDevice.cpp">
       <Filter>Engine\base\directX</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\RTV.cpp">
-      <Filter>Engine\base\directX</Filter>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -354,11 +369,20 @@
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\IDescriptorHeap.h">
+    <ClInclude Include="Engine\base\directX\GPUDevice.h">
       <Filter>Engine\base\directX</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\RTV.h">
-      <Filter>Engine\base\directX</Filter>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +490,9 @@
     </Filter>
     <Filter Include="Engine\base\directX">
       <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\descriptorHeap">
+      <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

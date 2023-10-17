@@ -107,8 +107,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\Mob\MobManager.cpp" />
     <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
-    <ClCompile Include="Engine\base\directX\IDescriptorHeap.cpp" />
-    <ClCompile Include="Engine\base\directX\RTV.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp" />
+    <ClCompile Include="Engine\base\directX\GPUDevice.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\info\DebugTimer.cpp" />
@@ -171,8 +174,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\Mob\MobManager.h" />
     <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
-    <ClInclude Include="Engine\base\directX\IDescriptorHeap.h" />
-    <ClInclude Include="Engine\base\directX\RTV.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h" />
+    <ClInclude Include="Engine\base\directX\GPUDevice.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\info\DebugTimer.h" />
@@ -228,6 +234,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\ShadowMap.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\ShadowMap.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
