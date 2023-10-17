@@ -39,12 +39,7 @@ namespace LWP::Base {
 		void PostDraw();
 
 		/// <summary>
-		/// レンダーターゲットのクリア
-		/// </summary>
-		void ClearRenderTarget();
-
-		/// <summary>
-		/// DescriptorHandleを取得する関数
+		/// SRVのDescriptorHandleを取得する関数
 		/// </summary>
 		/// <param name="index"></param>
 		/// <returns></returns>

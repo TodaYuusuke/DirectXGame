@@ -184,6 +184,9 @@
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\Command.cpp">
+      <Filter>Engine\base\directX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -383,6 +386,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\Command.h">
+      <Filter>Engine\base\directX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -107,6 +107,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\Mob\MobManager.cpp" />
     <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\base\directX\Command.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp" />
@@ -174,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\Mob\MobManager.h" />
     <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
+    <ClInclude Include="Engine\base\directX\Command.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h" />

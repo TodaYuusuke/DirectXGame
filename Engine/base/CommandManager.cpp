@@ -40,7 +40,6 @@ void CommandManager::Initialize(DirectXCommon* directXCommon) {
 	lightBuffer_->light_->intensity_ = 1.0f;
 
 	// デフォルトテクスチャを読み込み
-	LWP::Resource::LoadTexture("dummy.png");
 	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
 }
 
@@ -459,9 +458,9 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
-	// SRVを作成するDescriptorHeapの場所を決める
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = directXCommon_->GetSRVCPUHandle(usedTextureCount_);
-	textureResource_[usedTextureCount_]->view_ = directXCommon_->GetSRVGPUHandle(usedTextureCount_);
+	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = directXCommon_->GetSRVCPUHandle(usedTextureCount_ + 1);
+	textureResource_[usedTextureCount_]->view_ = directXCommon_->GetSRVGPUHandle(usedTextureCount_ + 1);
 	// SRVの生成
 	directXCommon_->GetDevice()->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);
 }
