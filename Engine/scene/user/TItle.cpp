@@ -18,28 +18,30 @@ void Title::Initialize() {
 		surface[i]->texture = uvTexture;
 	}
 
-	surface[0]->vertices[0].position = {0.0f,0.0f};
-	surface[0]->vertices[1].position = {1000.0f,0.0f};
-	surface[0]->vertices[2].position = {1000.0f,250.0f};
-	surface[0]->vertices[3].position = {0.0f,250.0f};
+	surface[0]->vertices[0].position = {0.0f,0.0f,0.0f};
+	surface[0]->vertices[1].position = {1000.0f,0.0f,0.0f};
+	surface[0]->vertices[2].position = {1000.0f,250.0f,0.0f};
+	surface[0]->vertices[3].position = {0.0f,250.0f,0.0f };
 
-	surface[1]->vertices[0].position = { 0.0f,0.0f };
-	surface[1]->vertices[1].position = { 300.0f,0.0f };
-	surface[1]->vertices[2].position = { 300.0f,100.0f };
-	surface[1]->vertices[3].position = { 0.0f,100.0f };
+	surface[1]->vertices[0].position = { 0.0f,0.0f ,0.0f };
+	surface[1]->vertices[1].position = { 300.0f,0.0f ,0.0f };
+	surface[1]->vertices[2].position = { 300.0f,100.0f ,0.0f };
+	surface[1]->vertices[3].position = { 0.0f,100.0f ,0.0f };
 	
-	surface[2]->vertices[0].position = { 0.0f,0.0f };
-	surface[2]->vertices[1].position = { 300.0f,0.0f };
-	surface[2]->vertices[2].position = { 300.0f,100.0f };
-	surface[2]->vertices[3].position = { 0.0f,100.0f };
+	surface[2]->vertices[0].position = { 0.0f,0.0f ,0.0f };
+	surface[2]->vertices[1].position = { 300.0f,0.0f ,0.0f };
+	surface[2]->vertices[2].position = { 300.0f,100.0f ,0.0f };
+	surface[2]->vertices[3].position = { 0.0f,100.0f ,0.0f };
 
-	surface[0]->transform.translation = { 140.0f,20.0f };
-	surface[1]->transform.translation = { 490.0f,350.0f };
-	surface[2]->transform.translation = { 490.0f,550.0f };
+	surface[0]->transform.translation = { 140.0f,20.0f,0.0f };
+	surface[1]->transform.translation = { 490.0f,350.0f,100.0f };
+	surface[2]->transform.translation = { 490.0f,550.0f,100.0f };
 
 	//ハンマー
+	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
+	hammerModel->transform.translation.x = 3.0f;
 	hammerModel->transform.translation.y = 1.0f;
-	hammerModel->transform.scale = { 0.1f, 0.1f, 0.1f };
+	hammerModel->transform.scale = { 0.3f, 0.3f, 0.3f };
 	// 半透明に
 	hammerModel->commonColor = new Color(0xFFFFFF64);
 
@@ -56,6 +58,7 @@ void Title::Update() {
 	surface[0]->DebugGUI("Surface");
 	surface[1]->DebugGUI("Surface");
 	surface[2]->DebugGUI("Surface");
+	hammerModel->DebugGUI("hammerModel");
 	ImGui::End();
 
 

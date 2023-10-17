@@ -44,9 +44,9 @@ private: // ** ハンマー ** //
 	// 攻撃クールタイム
 	const int kAttackCoolTime = 60;
 	int attackCoolTimer = -1;
-
 	// モデル
-	LWP::Primitive::Mesh* hammerModel;
+	LWP::Primitive::Mesh* hammerModel = nullptr;
+
 
 private: // ** アニメーション関連 ** //
 
@@ -58,9 +58,10 @@ private: // ** アニメーション関連 ** //
 		struct SwingDown {
 			// 掛かる時間
 			int time = 2;
+
 			// 移動量
 			LWP::Object::WorldTransform transform{
-				{ 0.0f, -0.99f, 0.0f },
+				{ 0.0f,0.0f, 2.0f },
 				{ 0.0f,0.0f,0.0f },
 				{ 0.0f,0.0f,0.0f }
 			};
@@ -71,7 +72,7 @@ private: // ** アニメーション関連 ** //
 			int time = 8;
 			// 移動量
 			LWP::Object::WorldTransform transform{
-				{ 0.0f, 0.99f, 0.0f },
+				{ 0.0f, 0.0f,-2.0f },
 				{ 0.0f,0.0f,0.0f },
 				{ 0.0f,0.0f,0.0f }
 			};
