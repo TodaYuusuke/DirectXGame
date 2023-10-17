@@ -34,20 +34,17 @@ void Title::Initialize() {
 	surface[2]->vertices[3].position = { 0.0f,100.0f ,0.0f };
 
 	surface[0]->transform.translation = { 140.0f,20.0f,0.0f };
-	surface[1]->transform.translation = { 490.0f,350.0f,100.0f };
-	surface[2]->transform.translation = { 490.0f,550.0f,100.0f };
+	surface[1]->transform.translation = { 200.0f,450.0f,100.0f };
+	surface[2]->transform.translation = { 700.0f,450.0f,100.0f };
 
 	//ハンマー
 	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
-	hammerModel->transform.translation.x = 3.0f;
-	hammerModel->transform.translation.y = 1.0f;
-	hammerModel->transform.scale = { 0.3f, 0.3f, 0.3f };
-	// 半透明に
-	hammerModel->commonColor = new Color(0xFFFFFF64);
-
-	// モデル読み込み
 	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
+	hammerModel->transform.translation = {-0.7f,-0.8f,2.0f};
+	hammerModel->transform.scale = { 0.3f, 0.3f, 0.3f };
+
 	hammerModel->isActive = true;
+	// モデル読み込み
 
 }
 // 更新
@@ -72,8 +69,13 @@ void Title::Update() {
 		Attack();
 	}
 
-	if (LWP::Input::GetTrigger(DIK_A)) {
-
+	if (LWP::Input::GetTrigger(DIK_W)) {
+		hammerModel->transform.translation = { -0.7f,-0.8f,2.0f };
+		selectPoint = true;
+	}
+	else if (LWP::Input::GetTrigger(DIK_S)) {
+		hammerModel->transform.translation = { 1.7f,-0.8f,2.0f };
+		selectPoint = false;
 	}
 
 	// カメラ操作
@@ -101,12 +103,13 @@ void Title::Attack() {
 void Title::AttackAnimation::Progress(LWP::Object::WorldTransform* transform) {
 	timer--;
 	if (timer < 0) { return; }
-
-	// 振り下ろしアニメーション
+	
+		// 振り下ろしアニメーション
 	if (timer >= swingUp.time) {
 		*transform += swingDown.transform / static_cast<float>(swingDown.time);
 	}
 	else {
 		*transform += swingUp.transform / static_cast<float>(swingUp.time);
 	}
+	
 }

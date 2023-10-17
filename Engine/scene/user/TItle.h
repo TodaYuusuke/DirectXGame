@@ -47,6 +47,7 @@ private: // ** ハンマー ** //
 	// モデル
 	LWP::Primitive::Mesh* hammerModel = nullptr;
 
+	bool selectPoint = true;
 
 private: // ** アニメーション関連 ** //
 
@@ -61,7 +62,7 @@ private: // ** アニメーション関連 ** //
 
 			// 移動量
 			LWP::Object::WorldTransform transform{
-				{ 0.0f,0.0f, 2.0f },
+				{ -0.1f,0.0f, 2.0f },
 				{ 0.0f,0.0f,0.0f },
 				{ 0.0f,0.0f,0.0f }
 			};
@@ -72,7 +73,7 @@ private: // ** アニメーション関連 ** //
 			int time = 8;
 			// 移動量
 			LWP::Object::WorldTransform transform{
-				{ 0.0f, 0.0f,-2.0f },
+				{ 0.1f, 0.0f,-2.0f },
 				{ 0.0f,0.0f,0.0f },
 				{ 0.0f,0.0f,0.0f }
 			};
