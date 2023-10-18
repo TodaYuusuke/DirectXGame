@@ -1,11 +1,11 @@
 #include "CommandManager.h"
 #include <cassert>
 #include <format>
-#include "../utility/MyUtility.h"
-#include "../base/ImGuiManager.h"
-#include "../object/core/Camera.h"
+#include "../Engine/utility/MyUtility.h"
+#include "../Engine/base/ImGuiManager.h"
+#include "../Engine/object/core/Camera.h"
 
-#include "../../Adapter/Adapter.h"
+#include <Adapter.h>
 
 using namespace Microsoft::WRL;
 using namespace LWP::Base;
@@ -15,12 +15,30 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
-void CommandManager::Initialize(DirectXCommon* directXCommon) {
-	directXCommon_ = directXCommon;
+void CommandManager::Initialize(ID3D12Device* device) {
+	HRESULT hr = S_FALSE;
+	device_ = device;
 
+	// コマンドキューを生成する
+	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+	hr = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue_));
+	// コマンドキューの生成がうまくいかなかったので起動できない
+	assert(SUCCEEDED(hr));
+
+	// コマンドクラスを生成する
+	commands_ = std::make_unique<Command>();
+	commands_->Initialize(device_);
+
+	// 初期値0でFenceを作る
+	fenceVal_ = 0;
+	hr = device_->CreateFence(fenceVal_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
+	assert(SUCCEEDED(hr));
+
+	// シェーダーコンパイラ生成
 	InitializeDXC();
 	// グラフィックスパイプラインを作成
 	CreateGraphicsPipeLineState();
+
 	// 頂点のリソースを作成
 	CreateVertexResource();
 	// 行列のリソースを作成
@@ -38,12 +56,63 @@ void CommandManager::Initialize(DirectXCommon* directXCommon) {
 	lightBuffer_->light_->color_ = { 1.0f,1.0f,1.0f,1.0f };
 	lightBuffer_->light_->direction_ = { 0.0f,-1.0f,0.0f };
 	lightBuffer_->light_->intensity_ = 1.0f;
+}
 
-	// デフォルトテクスチャを読み込み
+void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
+	rtv_ = rtv;
+	dsv_ = dsv;
+	srv_ = srv;
+
+	// SRVを登録してからでないとテクスチャが読み込めないので、
+	// ここでデフォルトテクスチャを読み込む
 	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
 }
 
+void CommandManager::PreDraw(UINT backBufferIndex, ID3D12Resource* backBuffer) {
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+		backBuffer,
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
+
+	commands_->PreDraw(barrier, backBufferIndex, rtv_, dsv_, srv_);
+}
+
+void CommandManager::PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapChain) {
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+		backBuffer,
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PRESENT
+	);
+
+	commands_->PostDraw(barrier);
+
+	
+	// - コマンドリストをすべてCloseした後 - //
+
+	// GPUにコマンドリストの実行を行わせる
+	ID3D12CommandList* commandLists[] = { commands_->GetList() };
+	commandQueue_->ExecuteCommandLists(1, commandLists);
+
+	// GPUとOSに画面の交換を行うよう通知する
+	swapChain->Present(1, 0);
+
+	// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+	commandQueue_->Signal(fence_.Get(), ++fenceVal_);
+	if (fence_->GetCompletedValue() != fenceVal_) {
+		HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		assert(event != nullptr);
+		fence_->SetEventOnCompletion(fenceVal_, event);
+		WaitForSingleObject(event, INFINITE);
+		CloseHandle(event);
+	}
+}
+
 void CommandManager::Reset() {
+	commands_->Reset();
+
 	vertexResourceBuffer_->usedVertexCount_ = 0;
 	vertexResourceBuffer_->usedIndexCount_ = 0;
 	usedMatrixCount_ = 0;
@@ -75,7 +144,7 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	assert(vertexResourceBuffer_->usedIndexCount_ < kMaxIndexCount_);
 
 	// コマンドを積む
-	ID3D12GraphicsCommandList* commandList = directXCommon_->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = commands_->GetList();
 
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
 	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
@@ -223,7 +292,7 @@ void CommandManager::CreateRootSignature() {
 		assert(false);
 	}
 	// バイナリを元に生成
-	hr = directXCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->rootSignature_));
+	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->rootSignature_));
 	assert(SUCCEEDED(hr));
 
 	signatureBlob->Release();
@@ -319,11 +388,11 @@ void CommandManager::CreateGraphicsPipeLineState() {
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// 実際に生成
-	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[1]));
+	hr = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[1]));
 	assert(SUCCEEDED(hr));
 	// ワイヤーフレームモードも生成
 	graphicsPipelineStateDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-	hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[0]));
+	hr = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[0]));
 	assert(SUCCEEDED(hr));
 
 	vertexShader->Release();
@@ -394,7 +463,7 @@ ID3D12Resource* CommandManager::CreateBufferResource(size_t size) {
 	// バッファの場合はこれにする決まり
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 実際に頂点リソースを作る
-	hr = directXCommon_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource));
+	hr = device_->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
 
 	return resource;
@@ -420,7 +489,7 @@ ID3D12Resource* CommandManager::CreateBufferResource(const DirectX::TexMetadata&
 
 	// 3. Resourceを生成する
 	ID3D12Resource* resource = nullptr;
-	hr = directXCommon_->GetDevice()->CreateCommittedResource(
+	hr = device_->CreateCommittedResource(
 		&heapProperties,					// Heapの設定
 		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
 		&resourceDesc,						// Resourceの設定
@@ -459,10 +528,10 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = directXCommon_->GetSRVCPUHandle(usedTextureCount_ + 1);
-	textureResource_[usedTextureCount_]->view_ = directXCommon_->GetSRVGPUHandle(usedTextureCount_ + 1);
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(usedTextureCount_ + 1);
+	textureResource_[usedTextureCount_]->view_ = srv_->GetGPUHandle(usedTextureCount_ + 1);
 	// SRVの生成
-	directXCommon_->GetDevice()->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);
+	device_->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);
 }
 
 IDxcBlob* CommandManager::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
@@ -531,4 +600,22 @@ IDxcBlob* CommandManager::CompileShader(const std::wstring& filePath, const wcha
 	shaderResult->Release();
 	// 実行用のバイナリを返却
 	return shaderBlob;
+}
+
+D3D12_RESOURCE_BARRIER CommandManager::MakeResourceBarrier(ID3D12Resource* pResource, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) {
+
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	// 今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	// Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	// バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = pResource;
+	// 遷移前（現在）のResourceState
+	barrier.Transition.StateBefore = stateBefore;
+	// 遷移前（現在）のResourceState
+	barrier.Transition.StateAfter = stateAfter;
+
+	return barrier;
 }

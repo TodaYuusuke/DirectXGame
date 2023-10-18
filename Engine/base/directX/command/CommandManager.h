@@ -1,19 +1,13 @@
 #pragma once
-#include "DirectXCommon.h"
+// 描画用リソースの型を宣言してるヘッダーをinclude
+#include "ResourceStruct.h"
 
-#pragma region 描画用リソースの型を宣言してるクラス
+#include "Command.h"
 
-#include "../primitive/IPrimitive.h"	// 頂点
-//#include "../resources/material/Material.h"		// マテリアル
-//#include "../object/WorldTransform.h"	// 定数
-//#include "../resources/texture/Texture.h"	// テクスチャ
-
-#pragma endregion
-
+#include <vector>
 #include <memory>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
-#include <vector>
 
 // 前方宣言
 namespace LWP::Object {
@@ -35,16 +29,46 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(Base::DirectXCommon* directXCommon);
+		void Initialize(ID3D12Device* device);
+
+		/// <summary>
+		/// ディスクリプタヒープのポインタをセットする関数
+		/// </summary>
+		void SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv);
+
+		/// <summary>
+		/// 描画前処理
+		/// </summary>
+		void PreDraw(UINT backBufferIndex, ID3D12Resource* backBuffer);
+
+		/// <summary>
+		/// 描画語処理
+		/// </summary>
+		void PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapChain);
 
 		/// <summary>
 		/// 描画数リセット
 		/// </summary>
 		void Reset();
+
 		/// <summary>
-		/// 描画に使うカメラのポインタをセットする
+		/// ImGui用
 		/// </summary>
-		void SetCameraViewProjection(const Object::Camera* camera);
+		void ImGui();
+
+
+	public: // ** getter ** //
+		// CommandQueueを受け取る関数
+		ID3D12CommandQueue* GetQueue() const { return commandQueue_.Get(); }
+		// メインレンダリング用のコマンドを受け取る関数
+		ID3D12GraphicsCommandList* GetMainRenderCommandList() const { return commands_->GetList(); }
+
+	public: // ** 外部からリソースの登録用関数 ** //
+
+		/// <summary>
+		/// 汎用描画
+		/// </summary>
+		void Draw(Primitive::IPrimitive* primitive);
 
 		/// <summary>
 		/// マテリアルのリソースを作成
@@ -55,21 +79,28 @@ namespace LWP::Base {
 		/// </summary>
 		int CreateTextureResource(const DirectX::ScratchImage& image);
 
-
 		/// <summary>
-		/// 汎用描画
+		/// 描画に使うカメラのポインタをセットする
 		/// </summary>
-		void Draw(Primitive::IPrimitive* primitive);
+		void SetCameraViewProjection(const Object::Camera* camera);
 
-		/// <summary>
-		/// ImGui用
-		/// </summary>
-		void ImGui();
 
 	private: // メンバ変数
-		// DirectXCommon管理
-		Base::DirectXCommon* directXCommon_ = nullptr;
+		// デバイスのポインタだけ貰う
+		ID3D12Device* device_ = nullptr;
+		// 各ディスクリプタヒープのポインタも保持
+		RTV* rtv_ = nullptr;
+		DSV* dsv_ = nullptr;
+		SRV* srv_ = nullptr;
 
+		// コマンドキュー
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
+		// コマンドクラスの配列（現在は１つ）
+		std::unique_ptr<Command> commands_;
+
+		// GPU同期用のフェンス
+		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
+		UINT64 fenceVal_ = 0;
 
 		// 最大頂点数
 		static const int kMaxVertexCount_ = 655350;
@@ -106,64 +137,12 @@ namespace LWP::Base {
 
 
 		// 頂点データ
-		struct VertexStruct {
-			Math::Vector4 position_;	// 座標
-			Math::Vector2 texCoord_;	// UV座標
-			Math::Vector3 normal_;		// 法線
-			Math::Vector4 color_;	// 色
-
-			// IPrimitiveのVertexを代入する演算子をオーバーロード
-			VertexStruct& operator=(const Primitive::Vertex& value) {
-				position_ = { value.position.x,value.position.y,value.position.z,1.0f };
-				texCoord_ = value.texCoord;
-				normal_ = value.normal;
-				color_ = value.color.GetVector4();
-				return *this;
-			}
-		};
-		struct VertexResourceBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;	// GPU上の頂点データの格納場所
-			D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};			// BufferLocationは頂点データ格納場所のアドレス
-			VertexStruct* vertexData_ = nullptr;	// 頂点リソース
-			int usedVertexCount_ = 0;	// 使用済みのインデックスをカウント
-			Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;	// 頂点データのインデックス格納場所
-			D3D12_INDEX_BUFFER_VIEW indexBufferView_{};			// BufferLocationはインデックス格納場所のアドレス
-			uint32_t* indexData_ = nullptr;	// インデックスリソース
-			int usedIndexCount_ = 0;	// 使用済みのインデックスをカウント
-		};
 		std::unique_ptr<VertexResourceBuffer> vertexResourceBuffer_;
 
 		// マテリアルデータ
-		struct MaterialStruct {
-			Math::Matrix4x4 uvMatrix;
-			int32_t enableLighting;
-
-			// Materialクラスのデータを代入する演算子をオーバーロード
-			MaterialStruct& operator=(const Resource::Material& value) {
-				uvMatrix = value.uvTransform.GetWorldMatrix();
-				enableLighting = static_cast<int32_t>(value.enableLighting);
-				return *this;
-			}
-		};
-		struct MaterialResourceBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-			D3D12_GPU_VIRTUAL_ADDRESS view_;
-			MaterialStruct* data_;
-		};
 		std::vector<std::unique_ptr<MaterialResourceBuffer>> materialResource_;
 
 		// 行列データ
-		struct MatrixResourceBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-			D3D12_GPU_VIRTUAL_ADDRESS view_;
-			Math::Matrix4x4* data_;
-
-			// WorldTransformの行列を代入する演算子をオーバーロード
-			MatrixResourceBuffer& operator=(const Object::WorldTransform& value) {
-				*data_ = value.GetWorldMatrix();
-				return *this;
-			}
-		};
 		std::unique_ptr<MatrixResourceBuffer> matrixResource_[kMaxTransformCount_];
 		// カメラのビュープロジェクション用
 		// 0 = 2D
@@ -171,25 +150,11 @@ namespace LWP::Base {
 		std::unique_ptr<MatrixResourceBuffer> cameraResource_[2];
 
 		// テクスチャデータ
-		struct TextureResourceBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-			D3D12_GPU_DESCRIPTOR_HANDLE view_;
-		};
 		std::vector<std::unique_ptr<TextureResourceBuffer>> textureResource_;
 		// テクスチャを適応しないとき用のデフォルトのテクスチャ
 		Resource::Texture* defaultTexture_;
 
 		// 平行光源
-		struct DirectionalLight {
-			Math::Vector4 color_;		// ライトの色
-			Math::Vector3 direction_;	// ライトの向き
-			float intensity_;	// 輝度
-		};
-		// 光源のバッファ
-		struct LightBuffer {
-			Microsoft::WRL::ComPtr<ID3D12Resource> lightResource_;	// 3D用の定数バッファ
-			DirectionalLight* light_ = nullptr;	// 2D用の定数リソース
-		};
 		std::unique_ptr<LightBuffer> lightBuffer_;
 
 
@@ -249,5 +214,10 @@ namespace LWP::Base {
 		/// シェーダーのコンパイル関数
 		/// </summary>
 		IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
+
+		/// <summary>
+		/// リソースバリアの実態を作る関数
+		/// </summary>
+		D3D12_RESOURCE_BARRIER MakeResourceBarrier(ID3D12Resource*, D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES);
 	};
 }

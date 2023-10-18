@@ -3,6 +3,7 @@
 #include "directX/descriptorHeap/RTV.h"
 #include "directX/descriptorHeap/SRV.h"
 #include "directX/descriptorHeap/DSV.h"
+#include "directX/command/CommandManager.h"
 
 #include <memory>
 #include <string>
@@ -38,25 +39,17 @@ namespace LWP::Base {
 		/// </summary>
 		void PostDraw();
 
-		/// <summary>
-		/// SRVのDescriptorHandleを取得する関数
-		/// </summary>
-		/// <param name="index"></param>
-		/// <returns></returns>
-		D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUHandle(uint32_t index) { return srv_->GetCPUHandle(index); }
-		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle(uint32_t index) { return srv_->GetGPUHandle(index); }
-
-
 		// アクセサ
 		ID3D12Device* GetDevice() const { return device_; }
-		ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
+		CommandManager* GetCommandManager() const { return commandManager_.get(); }
 		size_t GetBackBufferCount() const { return backBuffers_.size(); }
 		// ImGui用
 		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
 		DXGI_FORMAT GetFormat() { return rtv_->GetDesc().Format; }
 		ID3D12DescriptorHeap* GetSRVHeap() { return srv_->GetHeap(); }
 
-	private: // メンバ変数
+
+	private: // ** メンバ変数 ** //
 		// ウィンドウズアプリケーション管理
 		WinApp* winApp_ = nullptr;
 
@@ -72,15 +65,13 @@ namespace LWP::Base {
 		// DSV
 		std::unique_ptr<DSV> dsv_;
 
+		// コマンド管理
+		std::unique_ptr<CommandManager> commandManager_;
+
 		// Direct3D関連
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
-		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocateor_;
-		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
 		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
 		std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
-		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
-		UINT64 fenceVal_ = 0;
 		int32_t backBufferWidth_ = 0;
 		int32_t backBufferHeight_ = 0;
 
@@ -88,11 +79,6 @@ namespace LWP::Base {
 	private: // 非公開のメンバ関数
 		DirectXCommon(const DirectXCommon&) = delete;
 		const DirectXCommon& operator=(const DirectXCommon&) = delete;
-
-		/// <summary>
-		/// コマンド関連初期化
-		/// </summary>
-		void InitializeCommand();
 
 		/// <summary>
 		/// スワップチェーンの生成
@@ -103,18 +89,5 @@ namespace LWP::Base {
 		/// レンダーターゲット生成
 		/// </summary>
 		void CreateFinalRenderTargets();
-
-		/// <summary>
-		/// フェンス生成
-		/// </summary>
-		void CreateFence();
-
-
-		ID3D12DescriptorHeap* CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
-
-		/// <summary>
-		/// リソースバリアの実態を作る関数
-		/// </summary>
-		D3D12_RESOURCE_BARRIER MakeResourceBarrier(ID3D12Resource*, D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES);
 	};
 }

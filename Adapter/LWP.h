@@ -6,7 +6,6 @@
 
 #include "../Engine/base/WinApp.h"
 #include "../Engine/base/DirectXCommon.h"
-#include "../Engine/base/CommandManager.h"
 #include "../Engine/base/ImGuiManager.h"
 
 #include "../Engine/input/InputManager.h"
@@ -84,8 +83,6 @@ namespace LWP::System {
 		std::unique_ptr<Base::WinApp> winApp_;
 		// DirectX
 		std::unique_ptr<Base::DirectXCommon> directXCommon_;
-		// 描画管理
-		std::unique_ptr<Base::CommandManager> commandManager_;
 		// IｍGuiManager
 		std::unique_ptr<Base::ImGuiManager> imGuiManager_;
 

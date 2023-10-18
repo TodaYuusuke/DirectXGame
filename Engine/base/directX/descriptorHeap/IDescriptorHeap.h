@@ -22,10 +22,10 @@ namespace LWP::Base {
 	protected: // ** メンバ変数 ** //
 		// Heap
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heap_;
-		// ディスクリプタのサイズ定数
+		// ディスクリプタ1つ分のサイズ定数
 		uint32_t kDescriptorSize_;
 
-		// ディスクリプタのサイズ
+		// ディスクリプタヒープのサイズ
 		uint32_t size_;
 
 
