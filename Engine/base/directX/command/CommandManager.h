@@ -2,7 +2,8 @@
 // 描画用リソースの型を宣言してるヘッダーをinclude
 #include "ResourceStruct.h"
 
-#include "Command.h"
+#include "PSO.h"
+#include "MainCommand.h"
 
 #include <vector>
 #include <memory>
@@ -61,7 +62,7 @@ namespace LWP::Base {
 		// CommandQueueを受け取る関数
 		ID3D12CommandQueue* GetQueue() const { return commandQueue_.Get(); }
 		// メインレンダリング用のコマンドを受け取る関数
-		ID3D12GraphicsCommandList* GetMainRenderCommandList() const { return commands_->GetList(); }
+		ID3D12GraphicsCommandList* GetMainRenderCommandList() const { return mainCommands_->GetList(); }
 
 	public: // ** 外部からリソースの登録用関数 ** //
 
@@ -80,13 +81,13 @@ namespace LWP::Base {
 		int CreateTextureResource(const DirectX::ScratchImage& image);
 
 		/// <summary>
-		/// 描画に使うカメラのポインタをセットする
+		/// 描画に使うカメラのビュープロジェクション行列をセットする
 		/// </summary>
 		void SetCameraViewProjection(const Object::Camera* camera);
 
 
 	private: // メンバ変数
-		// デバイスのポインタだけ貰う
+		// デバイスのポインタを保持
 		ID3D12Device* device_ = nullptr;
 		// 各ディスクリプタヒープのポインタも保持
 		RTV* rtv_ = nullptr;
@@ -95,8 +96,9 @@ namespace LWP::Base {
 
 		// コマンドキュー
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
-		// コマンドクラスの配列（現在は１つ）
-		std::unique_ptr<Command> commands_;
+		// 用途別コマンドリストたち（現在は１つ）
+		std::unique_ptr<MainCommand> mainCommands_;	// 最終レンダリング用
+		//std::unique_ptr<Command> shadowMapCommands_;	// シャドウマップ用
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
@@ -119,19 +121,12 @@ namespace LWP::Base {
 
 		// ** 構造体宣言 ** //
 
-		//*** DirectXシェーダコンパイラ ***//
-		// HLSLコードをバイナリ形式のGPUシェーダーに変換する
-		struct DXC {
-			Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_;				// dxcの汎用オブジェクト
-			Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_;			// dxcのコンパイラオブジェクト
-			Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_;	// hlslファイル内でコンパイルするファイルの処理を行うハンドラ
-		};
-		std::unique_ptr<DXC> dxc_;
 		struct PipelineSet {
+			std::unique_ptr<DXC> dxc_;
 			Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;			// リソースとシェーダーのバインディングを定義
 			// 数種類のパイプライン
 			// 1つめ ... 埋め立てモード（0 -> ワイヤーフレーム、1 -> 埋め立て））
-			Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_[2];	// グラフィックパイプラインの状態を定義
+			std::unique_ptr<PSO> pso_[2];	// グラフィックパイプラインの状態を定義
 		};
 		std::unique_ptr<PipelineSet> pipelineSet_;
 
@@ -162,22 +157,20 @@ namespace LWP::Base {
 		CommandManager(const CommandManager&) = delete;
 		const CommandManager& operator=(const CommandManager&) = delete;
 
-		/// <summary>
-		/// DXC初期化
-		/// </summary>
-		void InitializeDXC();
 
 #pragma region PipelineSet
 
 #pragma region PSO生成関連
 
+
+		/// <summary>
+		/// DXC初期化
+		/// </summary>
+		void InitializeDXC();
+		/// <summary>
+		/// RootSignature生成
+		/// </summary>
 		void CreateRootSignature();
-		D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
-		D3D12_BLEND_DESC CreateBlendState();
-		D3D12_RASTERIZER_DESC CreateRasterizerState();
-		IDxcBlob* CreateVertexShader();
-		IDxcBlob* CreatePixelShader();
-		D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState();
 
 #pragma endregion
 
@@ -209,11 +202,6 @@ namespace LWP::Base {
 		/// テクスチャをアップロード
 		/// </summary>
 		void UploadTextureData(const DirectX::ScratchImage& mipImages);
-
-		/// <summary>
-		/// シェーダーのコンパイル関数
-		/// </summary>
-		IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
 
 		/// <summary>
 		/// リソースバリアの実態を作る関数

@@ -6,11 +6,11 @@ using namespace Microsoft::WRL;
 void DSV::Initialize(ID3D12Device* device, int32_t width, int32_t height) {
 	HRESULT hr = S_FALSE;
 	device_ = device;
-	size_ = 1;
+	size_ = 2;
 	// サイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	// DRV用のヒープでディスクリプタの数は2。SRVはShader内で触るものなので、ShaderVisibleはtrue
+	// DSV用のヒープでディスクリプタの数は2。DSVはShader内で触らないものなので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, size_, false);
 
 
@@ -41,7 +41,7 @@ void DSV::Initialize(ID3D12Device* device, int32_t width, int32_t height) {
 		&resourceDesc, // Resourceの設定
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, // 深度値を書き込む状態にしておく
 		&depthClearValue, // Clear最適値
-		IID_PPV_ARGS(&depthStencilResource_) // 作成するResourceポインタへのポインタ
+		IID_PPV_ARGS(&depthStencilResource_) // 作成するリソースへのポインタ
 	);
 	assert(SUCCEEDED(hr));
 

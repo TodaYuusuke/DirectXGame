@@ -9,32 +9,32 @@ namespace LWP::Base {
 	/// <summary>
 	/// RenderTargetView
 	/// </summary>
-	class Command {
+	class ICommand {
 	public:
 		// ** メンバ関数 ** //
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(ID3D12Device* device);
+		virtual void Initialize(ID3D12Device* device) = 0;
 
 		/// <summary>
 		/// 描画前処理
 		/// </summary>
-		void PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv);
+		virtual void PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv) = 0;
 
 		/// <summary>
 		/// 描画語処理
 		/// </summary>
-		void PostDraw(D3D12_RESOURCE_BARRIER barrier);
+		virtual void PostDraw(D3D12_RESOURCE_BARRIER barrier) = 0;
 
 		/// <summary>
 		/// リセット用関数
 		/// </summary>
-		void Reset();
+		virtual void Reset() = 0;
 
 
-	private: // ** メンバ変数 ** //
+	protected: // ** メンバ変数 ** //
 		// アロケーター
 		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator_;
 		// リスト

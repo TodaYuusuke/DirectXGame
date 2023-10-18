@@ -181,10 +181,16 @@
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\Command.cpp">
+    <ClCompile Include="Engine\base\directX\command\MainCommand.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\ShadowMap.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\PSO.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
   </ItemGroup>
@@ -384,13 +390,22 @@
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\Command.h">
+    <ClInclude Include="Engine\base\directX\command\MainCommand.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\CommandManager.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\ResourceStruct.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\ICommand.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\ShadowMap.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\PSO.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
   </ItemGroup>

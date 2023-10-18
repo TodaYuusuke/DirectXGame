@@ -26,16 +26,19 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 
 	// コマンドクラスを生成する
-	commands_ = std::make_unique<Command>();
-	commands_->Initialize(device_);
+	mainCommands_ = std::make_unique<MainCommand>();
+	mainCommands_->Initialize(device_);
 
 	// 初期値0でFenceを作る
 	fenceVal_ = 0;
 	hr = device_->CreateFence(fenceVal_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
 	assert(SUCCEEDED(hr));
 
+	pipelineSet_ = std::make_unique<PipelineSet>();
 	// シェーダーコンパイラ生成
 	InitializeDXC();
+	// RootSignature生成
+	CreateRootSignature();
 	// グラフィックスパイプラインを作成
 	CreateGraphicsPipeLineState();
 
@@ -76,7 +79,7 @@ void CommandManager::PreDraw(UINT backBufferIndex, ID3D12Resource* backBuffer) {
 		D3D12_RESOURCE_STATE_RENDER_TARGET
 	);
 
-	commands_->PreDraw(barrier, backBufferIndex, rtv_, dsv_, srv_);
+	mainCommands_->PreDraw(barrier, backBufferIndex, rtv_, dsv_, srv_);
 }
 
 void CommandManager::PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapChain) {
@@ -87,13 +90,13 @@ void CommandManager::PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapC
 		D3D12_RESOURCE_STATE_PRESENT
 	);
 
-	commands_->PostDraw(barrier);
+	mainCommands_->PostDraw(barrier);
 
 	
 	// - コマンドリストをすべてCloseした後 - //
 
 	// GPUにコマンドリストの実行を行わせる
-	ID3D12CommandList* commandLists[] = { commands_->GetList() };
+	ID3D12CommandList* commandLists[] = { mainCommands_->GetList() };
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 
 	// GPUとOSに画面の交換を行うよう通知する
@@ -111,7 +114,7 @@ void CommandManager::PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapC
 }
 
 void CommandManager::Reset() {
-	commands_->Reset();
+	mainCommands_->Reset();
 
 	vertexResourceBuffer_->usedVertexCount_ = 0;
 	vertexResourceBuffer_->usedIndexCount_ = 0;
@@ -144,7 +147,7 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	assert(vertexResourceBuffer_->usedIndexCount_ < kMaxIndexCount_);
 
 	// コマンドを積む
-	ID3D12GraphicsCommandList* commandList = commands_->GetList();
+	ID3D12GraphicsCommandList* commandList = mainCommands_->GetList();
 
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
 	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
@@ -152,7 +155,7 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// PSOを設定
-	commandList->SetPipelineState(pipelineSet_->graphicsPipelineState_[static_cast<int>(primitive->material.fillMode)].Get());
+	commandList->SetPipelineState(pipelineSet_->pso_[static_cast<int>(primitive->material.fillMode)]->state_.Get());
 
 	// 頂点データを登録
 	for (int i = 0; i < primitive->GetVertexCount(); i++) {
@@ -207,26 +210,28 @@ void CommandManager::ImGui() {
 	ImGui::End();
 }
 
-void CommandManager::InitializeDXC() {
-	HRESULT hr = S_FALSE;
 
-	dxc_ = std::make_unique<DXC>();
-
-	// DxcUtilsを初期化
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxc_->dxcUtils_));
-	assert(SUCCEEDED(hr));
-	// DxcCompilerを初期化
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxc_->dxcCompiler_));
-	assert(SUCCEEDED(hr));
-
-	// 現時点でincludeはしないが、includeに対応するための設定を行っておく
-	hr = dxc_->dxcUtils_->CreateDefaultIncludeHandler(&dxc_->includeHandler_);
-	assert(SUCCEEDED(hr));
-}
 
 #pragma region PipelineSet
 
 #pragma region PSO生成関連
+
+void CommandManager::InitializeDXC() {
+	HRESULT hr = S_FALSE;
+
+	pipelineSet_->dxc_ = std::make_unique<DXC>();
+
+	// DxcUtilsを初期化
+	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&pipelineSet_->dxc_->dxcUtils_));
+	assert(SUCCEEDED(hr));
+	// DxcCompilerを初期化
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&pipelineSet_->dxc_->dxcCompiler_));
+	assert(SUCCEEDED(hr));
+
+	// 現時点でincludeはしないが、includeに対応するための設定を行っておく
+	hr = pipelineSet_->dxc_->dxcUtils_->CreateDefaultIncludeHandler(&pipelineSet_->dxc_->includeHandler_);
+	assert(SUCCEEDED(hr));
+}
 
 void CommandManager::CreateRootSignature() {
 	HRESULT hr = S_FALSE;
@@ -298,105 +303,14 @@ void CommandManager::CreateRootSignature() {
 	signatureBlob->Release();
 	//errorBlob->Release();
 }
-D3D12_INPUT_LAYOUT_DESC CommandManager::CreateInputLayout() {
-	// 頂点レイアウト
-	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
-
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-	return inputLayoutDesc;
-}
-D3D12_BLEND_DESC CommandManager::CreateBlendState() {
-	// すべての色要素を書き込む
-	D3D12_BLEND_DESC blendDesc{};
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	// 透明度のブレンドを設定
-	blendDesc.RenderTarget[0].BlendEnable = true;
-	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-	return blendDesc;
-}
-D3D12_RASTERIZER_DESC CommandManager::CreateRasterizerState() {
-	D3D12_RASTERIZER_DESC rasterizerDesc{};
-	// 裏面（時計回り）を表示しない
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
-	// 埋め立てで設定
-	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	
-	return rasterizerDesc;
-}
-IDxcBlob* CommandManager::CreateVertexShader() {
-	// シェーダーをコンパイルする
-	IDxcBlob* vertexShaderBlob{};
-	vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
-	assert(vertexShaderBlob != nullptr);
-	return vertexShaderBlob;
-}
-IDxcBlob* CommandManager::CreatePixelShader() {
-	// シェーダーをコンパイルする
-	IDxcBlob* pixelShaderBlob{};
-	pixelShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc_->dxcUtils_.Get(), dxc_->dxcCompiler_.Get(), dxc_->includeHandler_.Get());
-	assert(pixelShaderBlob != nullptr);
-	return pixelShaderBlob;
-}
-D3D12_DEPTH_STENCIL_DESC CommandManager::CreateDepthStencilState() {
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	depthStencilDesc.DepthEnable = true; // Depthの機能を有効化する
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
-	return depthStencilDesc;
-}
 
 #pragma endregion
 
 void CommandManager::CreateGraphicsPipeLineState() {
-	HRESULT hr = S_FALSE;
-
-	pipelineSet_ = std::make_unique<PipelineSet>();
-
-	CreateRootSignature();
-
-	IDxcBlob* vertexShader = CreateVertexShader();
-	IDxcBlob* pixelShader = CreatePixelShader();
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = pipelineSet_->rootSignature_.Get();	// RootSignature
-	graphicsPipelineStateDesc.InputLayout = CreateInputLayout();		// InputLayout
-	graphicsPipelineStateDesc.BlendState = CreateBlendState();			// BlendState
-	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState();	// RasterizerState
-	graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
-	graphicsPipelineStateDesc.PS = { pixelShader->GetBufferPointer(),pixelShader->GetBufferSize() };	// PixelShader
-	graphicsPipelineStateDesc.DepthStencilState = CreateDepthStencilState();
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	// 書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	// 利用するトポロジ（形状）のタイプ。三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	// どのように画面に色を打ち込むかの設定（気にしなくて良い）	
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	// 実際に生成
-	hr = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[1]));
-	assert(SUCCEEDED(hr));
-	// ワイヤーフレームモードも生成
-	graphicsPipelineStateDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-	hr = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineSet_->graphicsPipelineState_[0]));
-	assert(SUCCEEDED(hr));
-
-	vertexShader->Release();
-	pixelShader->Release();
+	for (int r = 0; r < 2; r++) {
+		pipelineSet_->pso_[r] = std::make_unique<PSO>();
+		pipelineSet_->pso_[r]->Initialize(device_, pipelineSet_->rootSignature_.Get(), pipelineSet_->dxc_.get(), r);
+	}
 }
 
 #pragma endregion
@@ -531,76 +445,10 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(usedTextureCount_ + 1);
 	textureResource_[usedTextureCount_]->view_ = srv_->GetGPUHandle(usedTextureCount_ + 1);
 	// SRVの生成
-	device_->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);
+	device_->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);	
 }
 
-IDxcBlob* CommandManager::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 
-	/*-- 1.hlslファイルを読む --*/
-
-	// これからシェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
-	// hlslファイルを読む
-	IDxcBlobEncoding* shaderSource = nullptr;
-	HRESULT hr = dxUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
-	// 読まなかったら止める
-	assert(SUCCEEDED(hr));
-	// 読み込んだファイルの内容を設定する
-	DxcBuffer shaderSourceBuffer;
-	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
-	shaderSourceBuffer.Size = shaderSource->GetBufferSize();
-	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
-
-
-	/*-- 2.Compileする --*/
-
-	LPCWSTR arguments[] = {
-		filePath.c_str(),			// コンパイル対象のhlslファイル名
-		L"-E",L"main",				// エントリーポイントの指定、基本的にmain以外にはしない
-		L"-T",profile,				// ShaderProfileの設定
-		L"-Zi",L"-Qembed_debug",	// デバッグ用の情報を埋め込む
-		L"-Od",						// 最適化を外しておく
-		L"-Zpr",					// メモリレイアウトは行優先
-	};
-	// 実際にShaderをコンパイルする
-	IDxcResult* shaderResult = nullptr;
-	hr = dxcCompiler->Compile(
-		&shaderSourceBuffer,		// 読み込んだファイル
-		arguments,					// コンパイルオプション
-		_countof(arguments),		// コンパイルオプションの数
-		includeHandler,				// includeが含まれた諸々
-		IID_PPV_ARGS(&shaderResult)	// コンパイル結果
-	);
-	// コンパイルエラーではなくdxcが起動できないなど致命的な状況
-	assert(SUCCEEDED(hr));
-
-
-	/*-- 3.警告・エラーがでていないか確認する --*/
-
-	// 警告・エラーが出てたらログに出して止める
-	IDxcBlobUtf8* shaderError = nullptr;
-	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
-	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Log(shaderError->GetStringPointer());
-		// 警告・エラーダメゼッタイ
-		assert(false);
-	}
-
-
-	/*-- 4.Compile結果を受け取って返す --*/
-
-	// コンパイル結果から実行用のバイナリ部分を取得
-	IDxcBlob* shaderBlob = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
-	assert(SUCCEEDED(hr));
-	// 成功したログを出す
-	Log(ConvertString(std::format(L"CompileSucceeded, path:{}, profile:{}\n", filePath, profile)));
-	// もう使わないリソースを解放
-	shaderSource->Release();
-	shaderResult->Release();
-	// 実行用のバイナリを返却
-	return shaderBlob;
-}
 
 D3D12_RESOURCE_BARRIER CommandManager::MakeResourceBarrier(ID3D12Resource* pResource, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) {
 

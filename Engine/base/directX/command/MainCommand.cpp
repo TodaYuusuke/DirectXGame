@@ -1,4 +1,4 @@
-#include "Command.h"
+#include "MainCommand.h"
 #include "../descriptorHeap/RTV.h"
 #include "../descriptorHeap/DSV.h"
 #include "../descriptorHeap/SRV.h"
@@ -8,7 +8,7 @@
 using namespace LWP::Base;
 
 
-void Command::Initialize(ID3D12Device* device) {
+void MainCommand::Initialize(ID3D12Device* device) {
 	HRESULT hr = S_FALSE;
 
 	// コマンドアロケーターを生成する
@@ -22,7 +22,7 @@ void Command::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-void Command::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv) {
+void MainCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv) {
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);
 
@@ -64,7 +64,7 @@ void Command::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV*
 	list_->RSSetScissorRects(1, &scissorRect);
 }
 
-void Command::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
+void MainCommand::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
 	HRESULT hr = S_FALSE;
 
 	// リソースバリアをセット
@@ -75,7 +75,7 @@ void Command::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
 	assert(SUCCEEDED(hr));
 }
 
-void Command::Reset() {
+void MainCommand::Reset() {
 	HRESULT hr = S_FALSE;
 
 	// 次のフレーム用のコマンドリストを準備
