@@ -163,8 +163,11 @@
     <ClCompile Include="Class\Mob\Derived\Enemy.cpp">
       <Filter>Class\Mob\Derived</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\user\GameClear.cpp">
+    <ClCompile Include="Engine\scene\user\GameResult.cpp">
       <Filter>Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Ease\Easing.cpp">
+      <Filter>Class\Ease</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -351,8 +354,11 @@
     <ClInclude Include="Class\Mob\Derived\Enemy.h">
       <Filter>Class\Mob\Derived</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\user\GameClear.h">
+    <ClInclude Include="Engine\scene\user\GameResult.h">
       <Filter>Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Ease\Easing.h">
+      <Filter>Class\Ease</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +463,9 @@
     </Filter>
     <Filter Include="Class\Mob\Derived">
       <UniqueIdentifier>{b78425e2-876a-4fc2-8102-2c1ba751a431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Ease">
+      <UniqueIdentifier>{7e11bda2-6456-4497-a71e-dda4a6d1ce6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -97,6 +97,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Adapter\component\Resource.cpp" />
     <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
+    <ClCompile Include="Class\Ease\Easing.cpp" />
     <ClCompile Include="Class\Hammer\Hammer.cpp" />
     <ClCompile Include="Class\Map\MapChip.cpp" />
     <ClCompile Include="Class\Map\MapManager.cpp" />
@@ -130,7 +131,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
-    <ClCompile Include="Engine\scene\user\GameClear.cpp" />
+    <ClCompile Include="Engine\scene\user\GameResult.cpp" />
     <ClCompile Include="Engine\scene\user\GameScene.cpp" />
     <ClCompile Include="Engine\scene\user\Title.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
@@ -160,6 +161,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Adapter\component\Resource.h" />
     <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\LWP.h" />
+    <ClInclude Include="Class\Ease\Easing.h" />
     <ClInclude Include="Class\Hammer\Hammer.h" />
     <ClInclude Include="Class\Map\MapChip.h" />
     <ClInclude Include="Class\Map\MapManager.h" />
@@ -200,7 +202,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
-    <ClInclude Include="Engine\scene\user\GameClear.h" />
+    <ClInclude Include="Engine\scene\user\GameResult.h" />
     <ClInclude Include="Engine\scene\user\GameScene.h" />
     <ClInclude Include="Engine\scene\user\Title.h" />
     <ClInclude Include="Engine\utility\Color.h" />
