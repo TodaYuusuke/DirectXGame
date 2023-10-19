@@ -35,12 +35,17 @@ protected: // ** プライベートな関数 ** //
 	/// <summary>
 	/// Y軸を最高速度を受け取る
 	/// </summary>
-	virtual float GetMaxSpeed() { return 0.002f; };
+	virtual float GetMaxSpeed() { return 0.002f; }
 
 	/// <summary>
 	/// 反発係数を受け取る
 	/// </summary>
-	virtual float GetBounceFactor() { return 0.4f; };
+	virtual float GetBounceFactor() { return 0.4f; }
+
+	/// <summary>
+	/// ダメージの係数を受け取る
+	/// </summary>
+	virtual float GetDamageMultiply() { return 2.5f; }
 
 protected: // ** メンバ定数 ** //
 
