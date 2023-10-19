@@ -187,7 +187,7 @@
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\ShadowMap.cpp">
+    <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\PSO.cpp">
@@ -402,7 +402,7 @@
     <ClInclude Include="Engine\base\directX\command\ICommand.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\ShadowMap.h">
+    <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\PSO.h">

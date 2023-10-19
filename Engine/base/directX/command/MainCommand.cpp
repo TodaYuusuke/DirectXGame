@@ -22,23 +22,23 @@ void MainCommand::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-void MainCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv) {
+void MainCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex) {
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv->GetCPUHandle(backBufferIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(backBufferIndex);
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetCPUHandle(0);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(0);
 	// 描画先のRTVとDSVを設定する
 	list_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
-	rtv->ClearRenderTarget(backBufferIndex, list_.Get());
+	rtv_->ClearRenderTarget(backBufferIndex, list_.Get());
 	// 指定した深度で画面全体をクリアする
-	dsv->ClearDepth(list_.Get());
+	dsv_->ClearDepth(0, list_.Get());
 
 	// 描画用のSRVのDescriptorHeapを設定
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srv->GetHeap() };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
 	list_->SetDescriptorHeaps(1, descriptorHeaps);
 
 	// ビューポート

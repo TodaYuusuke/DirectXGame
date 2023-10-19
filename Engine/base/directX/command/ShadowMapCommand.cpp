@@ -1,4 +1,4 @@
-#include "ShadowMap.h"
+#include "ShadowMapCommand.h"
 #include "../descriptorHeap/RTV.h"
 #include "../descriptorHeap/DSV.h"
 #include "../descriptorHeap/SRV.h"
@@ -8,7 +8,7 @@
 using namespace LWP::Base;
 
 
-void ShadowMap::Initialize(ID3D12Device* device) {
+void ShadowMapCommand::Initialize(ID3D12Device* device) {
 	HRESULT hr = S_FALSE;
 
 	// コマンドアロケーターを生成する
@@ -22,24 +22,23 @@ void ShadowMap::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-void ShadowMap::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv) {
+void ShadowMapCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex) {
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);
 
 	// シャドウマップ用なのでrtvは不要
-	rtv;
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetCPUHandle(0);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(0);
 	// 描画先のDSVを設定する
 	list_->OMSetRenderTargets(1, nullptr, false, &dsvHandle);
 
 	// rtvもないので画面クリアもなし
 	backBufferIndex;
-	// 指定した深度で画面全体をクリアする
-	dsv->ClearDepth(list_.Get());
+	// 指定した深度で画面全体をクリアする（1はシャドウマップ用DSV）
+	dsv_->ClearDepth(1, list_.Get());
 
 	// 描画用のSRVのDescriptorHeapを設定
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srv->GetHeap() };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
 	list_->SetDescriptorHeaps(1, descriptorHeaps);
 
 	// ビューポート
@@ -65,7 +64,7 @@ void ShadowMap::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RT
 	list_->RSSetScissorRects(1, &scissorRect);
 }
 
-void ShadowMap::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
+void ShadowMapCommand::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
 	HRESULT hr = S_FALSE;
 
 	// リソースバリアをセット
@@ -76,7 +75,7 @@ void ShadowMap::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
 	assert(SUCCEEDED(hr));
 }
 
-void ShadowMap::Reset() {
+void ShadowMapCommand::Reset() {
 	HRESULT hr = S_FALSE;
 
 	// 次のフレーム用のコマンドリストを準備

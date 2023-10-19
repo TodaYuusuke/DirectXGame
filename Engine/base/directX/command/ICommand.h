@@ -10,29 +10,13 @@ namespace LWP::Base {
 	/// RenderTargetView
 	/// </summary>
 	class ICommand {
-	public:
-		// ** メンバ関数 ** //
+	public: // ** パブリックなメンバ関数 ** //
 
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		virtual void Initialize(ID3D12Device* device) = 0;
-
-		/// <summary>
-		/// 描画前処理
-		/// </summary>
-		virtual void PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex, RTV* rtv, DSV* dsv, SRV* srv) = 0;
-
-		/// <summary>
-		/// 描画語処理
-		/// </summary>
-		virtual void PostDraw(D3D12_RESOURCE_BARRIER barrier) = 0;
-
-		/// <summary>
-		/// リセット用関数
-		/// </summary>
-		virtual void Reset() = 0;
-
+		void SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
+			rtv_ = rtv;
+			dsv_ = dsv;
+			srv_ = srv;
+		}
 
 	protected: // ** メンバ変数 ** //
 		// アロケーター
@@ -40,6 +24,10 @@ namespace LWP::Base {
 		// リスト
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> list_;
 
+		// ディスクリプタヒープのポインタ
+		RTV* rtv_ = nullptr;
+		DSV* dsv_ = nullptr;
+		SRV* srv_ = nullptr;
 
 	public: // ** getter ** //
 		// CommandListを受け取る関数

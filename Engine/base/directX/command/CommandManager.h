@@ -4,6 +4,7 @@
 
 #include "PSO.h"
 #include "MainCommand.h"
+#include "ShadowMapCommand.h"
 
 #include <vector>
 #include <memory>

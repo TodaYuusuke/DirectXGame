@@ -66,6 +66,9 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	dsv_ = dsv;
 	srv_ = srv;
 
+	// コマンドにも登録しておく
+	mainCommands_->SetDescriptorHeap(rtv, dsv, srv);
+
 	// SRVを登録してからでないとテクスチャが読み込めないので、
 	// ここでデフォルトテクスチャを読み込む
 	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
@@ -79,7 +82,7 @@ void CommandManager::PreDraw(UINT backBufferIndex, ID3D12Resource* backBuffer) {
 		D3D12_RESOURCE_STATE_RENDER_TARGET
 	);
 
-	mainCommands_->PreDraw(barrier, backBufferIndex, rtv_, dsv_, srv_);
+	mainCommands_->PreDraw(barrier, backBufferIndex);
 }
 
 void CommandManager::PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapChain) {

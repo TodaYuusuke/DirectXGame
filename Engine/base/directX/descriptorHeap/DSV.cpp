@@ -53,7 +53,7 @@ void DSV::Initialize(ID3D12Device* device, int32_t width, int32_t height) {
 	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc, heap_.Get()->GetCPUDescriptorHandleForHeapStart());
 }
 
-void DSV::ClearDepth(ID3D12GraphicsCommandList* commandList) {
+void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {
 	// 指定した深度で画面全体をクリアする
-	commandList->ClearDepthStencilView(GetCPUHandle(0), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	commandList->ClearDepthStencilView(GetCPUHandle(index), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }

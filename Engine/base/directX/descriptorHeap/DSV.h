@@ -19,7 +19,8 @@ namespace LWP::Base {
 		/// <summary>
 		/// 深度をクリアする関数
 		/// </summary>
-		void ClearDepth(ID3D12GraphicsCommandList* commandList);
+		void ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList);
+
 
 	private: // ** メンバ変数 ** //
 		// DepthStencilテクスチャ
