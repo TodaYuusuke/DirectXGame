@@ -1,6 +1,5 @@
 #pragma once
 #include "../IScene.h"
-#include <time.h>
 
 class Title final
 	: public IScene {
@@ -22,7 +21,7 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Triangle* tri[2];
-	LWP::Primitive::Surface* surface;
+	LWP::Primitive::Surface* TitleSurface;
 	LWP::Primitive::Sphere* sphere;
 	
 	LWP::Primitive::Mesh* BoxModel;
@@ -49,6 +48,9 @@ private: //**プライベートな関数**//
 	// ボタンプッシュ
 	void ButtonPush();
 
+	// sceneTransition
+	void SceneTransition();
+
 	//　イージング
 	void Easing();
 
@@ -60,7 +62,7 @@ private: // ** ハンマー ** //
 	// モデル
 	LWP::Primitive::Mesh* hammerModel = nullptr;
 
-	bool selectPoint = true;
+	bool selectPoint = false;
 
 private: // ** アニメーション関連 ** //
 
@@ -134,12 +136,6 @@ private: // ** アニメーション関連 ** //
 		void Progress(LWP::Object::WorldTransform* transform);
 	}buttonAni;
 
-private: //****** タイム ***********//
-
-	bool sceneChangeTiemFlag = false;
-
-	int sceneChangeTime = 13;
-
 private: //******* シェイク関連 ***********//
 	int shakePosition = 0;
 	
@@ -150,6 +146,27 @@ private: //******* ボタン ***************//
 	LWP::Primitive::Mesh* buttonModel[2];
 
 private: //********* イージング関連 ***********//
+	// イージング用ワールドトランスフォーム
+	LWP::Object::WorldTransform hammerWorldTransform_[2];
+
 	bool isEasing = false;
+
+	// イージング用タイム
+	float easingTime[2] = { 0.0f };
+
+private: //***********　シーン遷移用　***********//
+
+	bool sceneChangeTiemFlag = false;
+
+	int sceneChangeTime = 65;
+
+	LWP::Primitive::Surface* transitionSurfase_[2] = { nullptr };
+
+	// シーン遷移のフラグ(シーン遷移時にtrue)
+	bool isTransition_ = false;
+	bool isTransitionSceneEnd_ = false;
+
+	// タイトルかリトライの選択ボタン
+	bool isGoTitle = false;
 
 };

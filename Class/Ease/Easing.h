@@ -10,6 +10,12 @@ public:// ** メンバ関数 ** //
 		LWP::Object::WorldTransform e,
 		float t
 	);
+
+	static LWP::Object::WorldTransform EaseOutQuint(
+		LWP::Object::WorldTransform s,
+		LWP::Object::WorldTransform e,
+		float t
+	);
 	
 private:
 

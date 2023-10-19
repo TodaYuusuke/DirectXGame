@@ -1,5 +1,7 @@
 #include "Title.h"
 #include "GameScene.h"
+#include "../Class/Ease/Easing.h"
+#include <time.h>
 
 using namespace LWP::Primitive;
 using namespace LWP::Math;
@@ -11,17 +13,37 @@ void Title::Initialize() {
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 
 	// title
-	surface = LWP::Primitive::CreateInstance<Surface>();
-	surface->isActive = true;
-	surface->isUI = true;
-	surface->texture = uvTexture;
+	TitleSurface = LWP::Primitive::CreateInstance<Surface>();
+	TitleSurface->isActive = true;
+	TitleSurface->isUI = true;
+	TitleSurface->texture = uvTexture;
+	
+	TitleSurface->vertices[0].position = {0.0f,0.0f,0.0f};
+	TitleSurface->vertices[1].position = {1000.0f,0.0f,0.0f};
+	TitleSurface->vertices[2].position = {1000.0f,250.0f,0.0f};
+	TitleSurface->vertices[3].position = {0.0f,250.0f,0.0f };
 
-	surface->vertices[0].position = {0.0f,0.0f,0.0f};
-	surface->vertices[1].position = {1000.0f,0.0f,0.0f};
-	surface->vertices[2].position = {1000.0f,250.0f,0.0f};
-	surface->vertices[3].position = {0.0f,250.0f,0.0f };
+	TitleSurface->transform.translation = { 140.0f ,20.0f ,0.0f };
 
-	surface->transform.translation = { 140.0f ,20.0f ,0.0f };
+	// シーン遷移用
+	// トランジションフラグをtrueに
+	isTransition_ = false;
+	isTransitionSceneEnd_ = false;
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		transitionSurfase_[i] = LWP::Primitive::CreateInstance<Surface>();
+		transitionSurfase_[i]->vertices[0].position = { 0.0f,0.0f };
+		transitionSurfase_[i]->vertices[1].position = { 1280.0f,0.0f };
+		transitionSurfase_[i]->vertices[2].position = { 1280.0f,720.0f };
+		transitionSurfase_[i]->vertices[3].position = { 0.0f,720.0f };
+		transitionSurfase_[i]->isUI = true;
+		transitionSurfase_[i]->isActive = true;
+	}
+
+	transitionSurfase_[0]->transform.translation = { -1280.0f,0.0f,0.0f };
+	transitionSurfase_[1]->transform.translation = { 1280.0f,0.0f,0.0f };
+
 
 	// ボタン
 	for (int i = 0; i < 2; i++) {
@@ -34,14 +56,19 @@ void Title::Initialize() {
 	buttonModel[0]->transform.translation = { -1.3f,-0.8f,2.0f };
 	buttonModel[1]->transform.translation = { 1.2f,-0.8f,2.0f };
 
+	// イージング用ワールドトランスフォーム
+	hammerWorldTransform_[0].translation = { -1.1f,-0.3f,0.65f };
+	hammerWorldTransform_[1].translation = { 1.2f,-0.3f,0.65f };
+	hammerWorldTransform_[0].rotation = { 0.6f,-0.1f,0.0f };
+	hammerWorldTransform_[0].scale = { 0.3f, 0.3f, 0.3f };
+
 	//ハンマー
 	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
 	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
-	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
-	hammerModel->transform.rotation = { 0.6f,-0.1f,0.0f };
-	hammerModel->transform.scale = { 0.3f, 0.3f, 0.3f };
-
 	hammerModel->isActive = true;
+	hammerModel->transform.translation = hammerWorldTransform_[0].translation;
+	hammerModel->transform.rotation = hammerWorldTransform_[0].rotation;
+	hammerModel->transform.scale = hammerWorldTransform_[0].scale;
 
 }
 
@@ -50,12 +77,20 @@ void Title::Update() {
 	UpdateTimer();
 	Shake();
 	SceneChange();
+	SceneTransition();
+	Easing();
 
 	ImGui::Begin("Primitive");
-	surface->DebugGUI("Surface");
-	buttonModel[0]->DebugGUI("button");
-	buttonModel[1]->DebugGUI("button");
+	TitleSurface->DebugGUI("TitleSurface");
+	buttonModel[0]->DebugGUI("button[0]");
+	buttonModel[1]->DebugGUI("button[1]");
+	transitionSurfase_[0]->DebugGUI("transitionSurface[0]");
+	transitionSurfase_[1]->DebugGUI("transitionSurface[1]");
 	hammerModel->DebugGUI("hammerModel");
+	ImGui::End();
+
+	ImGui::Begin("transition");
+	ImGui::Checkbox("isTransitionSceneEnd_",& isTransitionSceneEnd_);
 	ImGui::End();
 
 	// カメラ操作
@@ -68,23 +103,26 @@ void Title::Update() {
 		nextScene_ = new GameScene();
 	}
 
+	// Rキーを押すとシーン再読み込み
+	if (LWP::Input::GetTrigger(DIK_R)) {
+		nextScene_ = new GameScene();
+	}
+
 	// SPACEで攻撃
 	if (LWP::Input::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
 	}
 
 	if (LWP::Input::GetTrigger(DIK_A)) {
-		hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
 		selectPoint = true;
 	}
 	else if (LWP::Input::GetTrigger(DIK_D)) {
-		hammerModel->transform.translation = { 1.2f,-0.3f,0.65f };
 		selectPoint = false;
 	}
 
 	//次のシーンへ移動
 	if (selectPoint && LWP::Input::GetTrigger(DIK_SPACE)) {
-		sceneChangeTiemFlag = true;
+		sceneChangeTiemFlag = true;		
 		ButtonPush();
 		shakeMaxPosition = 20;
 	}
@@ -120,14 +158,18 @@ void Title::SceneChange() {
 
 		sceneChangeTime--;
 
-		if (sceneChangeTime < 0) {
-			nextScene_ = new GameScene();
+		if (sceneChangeTime < 60) {
+			isTransitionSceneEnd_ = true;
 
-			sceneChangeTime = 13;
+			if (sceneChangeTime < 0) {
+				//次のシーンへ
+				nextScene_ = new GameScene();
 
-			sceneChangeTiemFlag = false;
+				sceneChangeTiemFlag = false;
+				sceneChangeTime = 65;
 
-			return;
+				return;
+			}
 		}
 	}
 
@@ -142,8 +184,7 @@ void Title::Shake() {
 
 	shakePosition = rand() % shakeMaxPosition - shakeMaxPosition / 2;
 
-	surface->transform.translation = { 140.0f + shakePosition ,20.0f + shakePosition,0.0f + shakePosition };
-
+	TitleSurface->transform.translation = { 140.0f + shakePosition ,20.0f + shakePosition,0.0f + shakePosition };
 
 }
 
@@ -190,6 +231,68 @@ void Title::Buttonanimation::Progress(LWP::Object::WorldTransform* transform) {
 
 }
 
-void Title::Easing() {
-	
+void Title::SceneTransition() {
+	// 別のシーンへの遷移実行時
+	if (isTransitionSceneEnd_) {
+
+		// 矩形が画面外に出るまで移動させる
+		if (transitionSurfase_[1]->transform.translation.x >= 640.0f) {
+			transitionSurfase_[0]->transform.translation.x += 15.0f;
+			transitionSurfase_[1]->transform.translation.x -= 15.0f;
+		}
+
+	}// 別のシーンからの遷移実行時
+	else if (isTransition_) {
+
+		// 矩形が画面外に出るまで移動させる
+		if (transitionSurfase_[1]->transform.translation.x < 1280.0f) {
+			transitionSurfase_[0]->transform.translation.x -= 15.0f;
+			transitionSurfase_[1]->transform.translation.x += 15.0f;
+		}
+		else {
+			isTransition_ = false;
+		}
+
+	}else {
+
+		//// フラグに応じてシーンに遷移
+		//if (isGoTitle) {
+		//	nextScene_ = new Title();
+		//}
+		//else {
+		//	nextScene_ = new GameScene();
+		//}
+	}
 };
+
+void Title::Easing() {
+
+	if (selectPoint ) {
+		if (easingTime[0] < 1.0f) {
+
+			easingTime[0] += (1.0f / 128.0f);
+			if (easingTime[0] > 1.0f) { easingTime[0] = 1.0f; }
+
+			hammerModel->transform = Easing::EaseOutQuint(
+				hammerWorldTransform_[1],
+				hammerWorldTransform_[0],
+				easingTime[0]
+			);
+		}
+	}
+	else {
+		{
+			if (easingTime[0] < 1.0f) {
+
+				easingTime[0] += (1.0f / 128.0f);
+				if (easingTime[0] > 1.0f) { easingTime[0] = 1.0f; }
+
+				hammerModel->transform = Easing::EaseOutQuint(
+					hammerWorldTransform_[0],
+					hammerWorldTransform_[1],
+					easingTime[0]
+				);
+			}
+		}
+	}
+}

@@ -31,3 +31,17 @@ LWP::Object::WorldTransform Easing::EaseOutBounce(
 	result.translation.y = (1.0f - EasedT) * s.translation.y + EasedT * e.translation.y;
 	return result;
 }
+
+LWP::Object::WorldTransform Easing::EaseOutQuint(
+	LWP::Object::WorldTransform s,
+	LWP::Object::WorldTransform e,
+	float t
+) {
+	LWP::Object::WorldTransform result;
+	float EasedT = t - 1.0f;
+	EasedT = 1.0f + EasedT * EasedT * EasedT * EasedT * EasedT;
+
+	result.translation.x = (1.0f - EasedT) * s.translation.x + EasedT * e.translation.x;
+	result.translation.y = (1.0f - EasedT) * s.translation.y + EasedT * e.translation.y;
+	return result;
+}
