@@ -56,19 +56,31 @@ void Title::Initialize() {
 	buttonModel[0]->transform.translation = { -1.3f,-0.8f,2.0f };
 	buttonModel[1]->transform.translation = { 1.2f,-0.8f,2.0f };
 
-	// イージング用ワールドトランスフォーム
-	hammerWorldTransform_[0].translation = { -1.1f,-0.3f,0.65f };
-	hammerWorldTransform_[1].translation = { 1.2f,-0.3f,0.65f };
-	hammerWorldTransform_[0].rotation = { 0.6f,-0.1f,0.0f };
-	hammerWorldTransform_[0].scale = { 0.3f, 0.3f, 0.3f };
-
-	//ハンマー
+	// ハンマー
 	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
 	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
 	hammerModel->isActive = true;
-	hammerModel->transform.translation = hammerWorldTransform_[0].translation;
-	hammerModel->transform.rotation = hammerWorldTransform_[0].rotation;
-	hammerModel->transform.scale = hammerWorldTransform_[0].scale;
+	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
+	hammerModel->transform.translation = { 1.2f,-0.3f,0.65f };
+
+	hammerModel->transform.rotation = { 0.6f,-0.1f,0.0f };
+	hammerModel->transform.scale = { 0.3f, 0.3f, 0.3f };
+
+
+	//
+	particleModel = LWP::Primitive::CreateInstance<Mesh>();
+	particleModel = LWP::Resource::LoadModel("hammer/hammer.obj");
+	particleModel->transform.translation;
+
+	particleModel->transform.rotation = { 0.6f,-0.1f,0.0f };
+	particleModel->transform.scale = { 0.3f, 0.3f, 0.3f };
+	// パーティクル
+	//作成
+	for (const auto& newParticle : particles) {
+		
+		particleModel->transform.translation = newParticle.position;
+	}
+
 
 }
 
@@ -78,25 +90,7 @@ void Title::Update() {
 	Shake();
 	SceneChange();
 	SceneTransition();
-	Easing();
-
-	ImGui::Begin("Primitive");
-	TitleSurface->DebugGUI("TitleSurface");
-	buttonModel[0]->DebugGUI("button[0]");
-	buttonModel[1]->DebugGUI("button[1]");
-	transitionSurfase_[0]->DebugGUI("transitionSurface[0]");
-	transitionSurfase_[1]->DebugGUI("transitionSurface[1]");
-	hammerModel->DebugGUI("hammerModel");
-	ImGui::End();
-
-	ImGui::Begin("transition");
-	ImGui::Checkbox("isTransitionSceneEnd_",& isTransitionSceneEnd_);
-	ImGui::End();
-
-	// カメラ操作
-	ImGui::Begin("Camera");
-	mainCamera->DebugGUI();
-	ImGui::End();
+	moveHammer();
 
 	// ENTERキーを押すとシーン切り替え
 	if (LWP::Input::GetTrigger(DIK_RETURN)) {
@@ -111,28 +105,55 @@ void Title::Update() {
 	// SPACEで攻撃
 	if (LWP::Input::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
+		GenerateParticle(hammerModel->transform.translation);
 	}
 
+	// パーティクルの更新
+	UpdateParticles();
+
 	if (LWP::Input::GetTrigger(DIK_A)) {
-		selectPoint = true;
+			selectPoint = true;
+		
 	}
 	else if (LWP::Input::GetTrigger(DIK_D)) {
-		selectPoint = false;
+			selectPoint = false;
+		
 	}
 
 	//次のシーンへ移動
 	if (selectPoint && LWP::Input::GetTrigger(DIK_SPACE)) {
-		sceneChangeTiemFlag = true;		
+		sceneChangeTiemFlag = false;		
 		ButtonPush();
 		shakeMaxPosition = 20;
 	}
 
 	//windowを閉じる
 	if (selectPoint == 0 && LWP::Input::GetTrigger(DIK_SPACE)) {
-		sceneChangeTiemFlag = true;
+		sceneChangeTiemFlag = false;
 		ButtonPush();
 		shakeMaxPosition = 20;
 	}
+
+
+	//*******************ImGui*******************//
+	ImGui::Begin("Primitive");
+	TitleSurface->DebugGUI("TitleSurface");
+	buttonModel[0]->DebugGUI("button[0]");
+	buttonModel[1]->DebugGUI("button[1]");
+	transitionSurfase_[0]->DebugGUI("transitionSurface[0]");
+	transitionSurfase_[1]->DebugGUI("transitionSurface[1]");
+	hammerModel->DebugGUI("hammerModel");
+	ImGui::End();
+
+	ImGui::Begin("hammerPos");
+	ImGui::Checkbox("isTransitionSceneEnd_", &isTransitionSceneEnd_);
+	ImGui::End();
+
+	// カメラ操作
+	ImGui::Begin("Camera");
+	mainCamera->DebugGUI();
+	ImGui::End();
+	//********************************************//
 
 }
 // 描画
@@ -265,34 +286,44 @@ void Title::SceneTransition() {
 	}
 };
 
-void Title::Easing() {
+void Title::moveHammer() {
+	if (selectPoint) {
+		if(hammerModel->transform.translation.x >= -1.1f)
+		hammerModel->transform.translation.x -= moveSpeed;
 
-	if (selectPoint ) {
-		if (easingTime[0] < 1.0f) {
-
-			easingTime[0] += (1.0f / 128.0f);
-			if (easingTime[0] > 1.0f) { easingTime[0] = 1.0f; }
-
-			hammerModel->transform = Easing::EaseOutQuint(
-				hammerWorldTransform_[1],
-				hammerWorldTransform_[0],
-				easingTime[0]
-			);
-		}
 	}
 	else {
-		{
-			if (easingTime[0] < 1.0f) {
+		if(hammerModel->transform.translation.x <= 1.2f)
+		hammerModel->transform.translation.x += moveSpeed;
 
-				easingTime[0] += (1.0f / 128.0f);
-				if (easingTime[0] > 1.0f) { easingTime[0] = 1.0f; }
-
-				hammerModel->transform = Easing::EaseOutQuint(
-					hammerWorldTransform_[0],
-					hammerWorldTransform_[1],
-					easingTime[0]
-				);
-			}
-		}
 	}
 }
+
+void Title::GenerateParticle(LWP::Math::Vector3& hitPosition) {
+
+	particleModel->isActive = true;
+	for (int i = 0; i < 5; i++) {
+		particle.position = hitPosition;
+		particle.velocity = Vector3(static_cast<float>(rand() % 5 - 2), static_cast<float>(rand() % 5 + 5), 0); // ランダムな速度
+		particle.gravity = 0.05f; // 重力の影響
+		particle.life = 1.0f; // パーティクルの寿命
+		particles.push_back(particle);
+	}
+}
+
+void Title::UpdateParticles() {
+	for (auto& newparticle : particles) {
+		particle.position.x += newparticle.velocity.x;
+		particle.position.y += newparticle.velocity.y;
+		particle.velocity.y -= newparticle.gravity;
+		particle.life -= 0.01f;
+	}
+
+	// パーティクルが寿命を終えたら削除する
+	particles.erase(std::remove_if(particles.begin(), particles.end(),
+		[](const Particle& p) { return p.life <= 0.0f; }), particles.end());
+	if (particles.empty()) {
+		particleModel->isActive = false;
+	}
+}
+

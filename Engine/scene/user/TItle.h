@@ -22,7 +22,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Triangle* tri[2];
 	LWP::Primitive::Surface* TitleSurface;
-	LWP::Primitive::Sphere* sphere;
+	LWP::Primitive::Mesh* particleModel;
 	
 	LWP::Primitive::Mesh* BoxModel;
 	LWP::Primitive::Mesh* axisModel;
@@ -51,8 +51,17 @@ private: //**プライベートな関数**//
 	// sceneTransition
 	void SceneTransition();
 
-	//　イージング
-	void Easing();
+	////　イージング
+	//void Easing();
+
+	//hammerの動き
+	void moveHammer();
+
+	// パーティクル
+	//　作成
+	void GenerateParticle(LWP::Math::Vector3& hitPosition);
+	// 更新
+	void UpdateParticles();
 
 private: // ** ハンマー ** //
 
@@ -63,6 +72,8 @@ private: // ** ハンマー ** //
 	LWP::Primitive::Mesh* hammerModel = nullptr;
 
 	bool selectPoint = false;
+
+	float moveSpeed = 0.3f;
 
 private: // ** アニメーション関連 ** //
 
@@ -149,10 +160,12 @@ private: //********* イージング関連 ***********//
 	// イージング用ワールドトランスフォーム
 	LWP::Object::WorldTransform hammerWorldTransform_[2];
 
-	bool isEasing = false;
+	bool isEasing1 = false;
+	bool isEasing2 = false;
 
 	// イージング用タイム
 	float easingTime[2] = { 0.0f };
+
 
 private: //***********　シーン遷移用　***********//
 
@@ -168,5 +181,17 @@ private: //***********　シーン遷移用　***********//
 
 	// タイトルかリトライの選択ボタン
 	bool isGoTitle = false;
+
+private:
+	// パーティクルの構造体
+	struct Particle {
+		LWP::Math::Vector3 position;
+		LWP::Math::Vector3 velocity;
+		float gravity;
+		float life;
+	}particle;
+
+	std::vector<Particle> particles;
+
 
 };
