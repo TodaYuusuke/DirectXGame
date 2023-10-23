@@ -84,9 +84,6 @@ void Title::Update() {
 	if (Input::Controller::GetTrigger(DIXBOX_B)) {
 		audio->Stop();
 	}
-	if (Input::Controller::GetTrigger(DIXBOX_X)) {
-		audio->Pause();
-	}
 
 	// ENTERキーを押すとシーン切り替え
 	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
