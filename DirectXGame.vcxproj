@@ -106,6 +106,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\Mob\Derived\Enemy.cpp" />
     <ClCompile Include="Class\Mob\IMob.cpp" />
     <ClCompile Include="Class\Mob\MobManager.cpp" />
+    <ClCompile Include="Class\Skydome\Skydome.cpp" />
+    <ClCompile Include="Class\Tambourine\Tambourine.cpp" />
     <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
@@ -170,6 +172,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\Mob\Derived\Enemy.h" />
     <ClInclude Include="Class\Mob\IMob.h" />
     <ClInclude Include="Class\Mob\MobManager.h" />
+    <ClInclude Include="Class\Skydome\Skydome.h" />
+    <ClInclude Include="Class\Tambourine\Tambourine.h" />
     <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
