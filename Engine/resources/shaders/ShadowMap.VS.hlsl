@@ -1,7 +1,7 @@
-#include "Object3d.hlsli"
+#include "ShadowMap.hlsli"
 
-float4 main(VertexShaderInput input) {
-    float32_t4 position;
-    position = mul(mul(input.position, gWorldMatrix.World));
+VertexShaderOutput main(VertexShaderInput input) {
+    VertexShaderOutput output;
+    output.position = mul(mul(input.position, gWorldMatrix.World), gDirectionalLight.viewProjection);
     return output;
 }

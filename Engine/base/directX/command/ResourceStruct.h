@@ -82,6 +82,7 @@ namespace LWP::Base {
 #pragma region 平行光源
 	// 平行光源の構造体
 	struct DirectionalLight {
+		Math::Matrix4x4 viewProjection_;	// 平行射影行列
 		Math::Vector4 color_;		// ライトの色
 		Math::Vector3 direction_;	// ライトの向き
 		float intensity_;	// 輝度

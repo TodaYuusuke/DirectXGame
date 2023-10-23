@@ -22,18 +22,25 @@ void MainCommand::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-void MainCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex) {
+void MainCommand::PreDraw(ID3D12RootSignature* rootSignature) {
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+		rtv_->GetBackBuffer(),
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
+
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(backBufferIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(rtv_->GetBackBufferIndex());
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(0);
 	// 描画先のRTVとDSVを設定する
 	list_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
-	rtv_->ClearRenderTarget(backBufferIndex, list_.Get());
+	rtv_->ClearRenderTarget(list_.Get());
 	// 指定した深度で画面全体をクリアする
 	dsv_->ClearDepth(0, list_.Get());
 
@@ -62,10 +69,22 @@ void MainCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex) 
 	scissorRect.bottom = LWP::Info::GetWindowHeight();
 	// Scirssorを設定
 	list_->RSSetScissorRects(1, &scissorRect);
+
+	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
+	list_->SetGraphicsRootSignature(rootSignature);
+	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
+	list_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void MainCommand::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
+void MainCommand::PostDraw() {
 	HRESULT hr = S_FALSE;
+
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+		rtv_->GetBackBuffer(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PRESENT
+	);
 
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);

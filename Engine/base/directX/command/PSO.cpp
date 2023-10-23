@@ -5,19 +5,23 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, int r) {
+void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps) {
 	HRESULT hr = S_FALSE;
 
-	IDxcBlob* vertexShader = CreateVertexShader(dxc);
-	IDxcBlob* pixelShader = CreatePixelShader(dxc);
+	Microsoft::WRL::ComPtr<IDxcBlob> vertexShader = CreateVertexShader(dxc, vs);
+	Microsoft::WRL::ComPtr<IDxcBlob> pixelShader = CreatePixelShader(dxc, ps);
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = root;	// RootSignature
 	graphicsPipelineStateDesc.InputLayout = CreateInputLayout();		// InputLayout
 	graphicsPipelineStateDesc.BlendState = CreateBlendState();			// BlendState
 	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState(r);	// RasterizerState
-	graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
-	graphicsPipelineStateDesc.PS = { pixelShader->GetBufferPointer(),pixelShader->GetBufferSize() };	// PixelShader
+	if (vs != 0) {
+		graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
+	}
+	if (ps != 0) {
+		graphicsPipelineStateDesc.PS = { pixelShader->GetBufferPointer(),pixelShader->GetBufferSize() };	// PixelShader
+	}
 	graphicsPipelineStateDesc.DepthStencilState = CreateDepthStencilState();
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	// 書き込むRTVの情報
@@ -31,9 +35,10 @@ void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, 
 	// 実際に生成
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&state_));
 	assert(SUCCEEDED(hr));
+}
 
-	vertexShader->Release();
-	pixelShader->Release();
+void PSO::InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc) {
+	Initialize(device, root, dxc, 1, 2, 0);
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {
@@ -65,7 +70,7 @@ D3D12_BLEND_DESC PSO::CreateBlendState() {
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	return blendDesc;
 }
-D3D12_RASTERIZER_DESC PSO::CreateRasterizerState(int r) {
+D3D12_RASTERIZER_DESC PSO::CreateRasterizerState(UINT r) {
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面（時計回り）を表示しない
 	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
@@ -84,17 +89,36 @@ D3D12_RASTERIZER_DESC PSO::CreateRasterizerState(int r) {
 
 	return rasterizerDesc;
 }
-IDxcBlob* PSO::CreateVertexShader(DXC* dxc) {
+IDxcBlob* PSO::CreateVertexShader(DXC* dxc, UINT vs) {
 	// シェーダーをコンパイルする
-	IDxcBlob* vertexShaderBlob{};
-	vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+	IDxcBlob* vertexShaderBlob = nullptr;
+	switch (vs)
+	{
+		case 0:
+		default:
+			return nullptr;
+		case 1:
+			vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+			break;
+		case 2:
+			vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/ShadowMap.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+			break;
+	}
 	assert(vertexShaderBlob != nullptr);
 	return vertexShaderBlob;
 }
-IDxcBlob* PSO::CreatePixelShader(DXC* dxc) {
+IDxcBlob* PSO::CreatePixelShader(DXC* dxc, UINT ps) {
 	// シェーダーをコンパイルする
-	IDxcBlob* pixelShaderBlob{};
-	pixelShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+	IDxcBlob* pixelShaderBlob = nullptr;
+	switch (ps)
+	{
+		case 0:
+		default:
+			return nullptr;
+		case 1:
+			pixelShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+			break;
+	}
 	assert(pixelShaderBlob != nullptr);
 	return pixelShaderBlob;
 }

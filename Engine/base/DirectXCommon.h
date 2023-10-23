@@ -42,9 +42,8 @@ namespace LWP::Base {
 		// アクセサ
 		ID3D12Device* GetDevice() const { return device_; }
 		CommandManager* GetCommandManager() const { return commandManager_.get(); }
-		size_t GetBackBufferCount() const { return backBuffers_.size(); }
 		// ImGui用
-		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
+		UINT GetBufferCount() { return rtv_->GetSwapChainDesc().BufferCount; }
 		DXGI_FORMAT GetFormat() { return rtv_->GetDesc().Format; }
 		ID3D12DescriptorHeap* GetSRVHeap() { return srv_->GetHeap(); }
 
@@ -69,9 +68,6 @@ namespace LWP::Base {
 		std::unique_ptr<CommandManager> commandManager_;
 
 		// Direct3D関連
-		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
-		std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
 		int32_t backBufferWidth_ = 0;
 		int32_t backBufferHeight_ = 0;
 
@@ -79,15 +75,5 @@ namespace LWP::Base {
 	private: // 非公開のメンバ関数
 		DirectXCommon(const DirectXCommon&) = delete;
 		const DirectXCommon& operator=(const DirectXCommon&) = delete;
-
-		/// <summary>
-		/// スワップチェーンの生成
-		/// </summary>
-		void CreateSwapChain();
-
-		/// <summary>
-		/// レンダーターゲット生成
-		/// </summary>
-		void CreateFinalRenderTargets();
 	};
 }

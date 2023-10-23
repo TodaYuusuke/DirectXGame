@@ -28,16 +28,23 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, int r);
+		/// <param name="r">0 ... Wire、1 ... Fill</param>
+		/// <param name="vs">0 ... nullptr、1 ... Object3d、2 ... ShadowMap</param>
+		/// <param name="ps">0 ... nullptr、1 ... Object3d</param>
+		void Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps);
 
+		/// <summary>
+		/// シャドウマップ専用のPSO初期化用
+		/// </summary>
+		void InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc);
 
 	private: // ** プライベートな関数 ** //
 
 		D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
 		D3D12_BLEND_DESC CreateBlendState();
-		D3D12_RASTERIZER_DESC CreateRasterizerState(int r);
-		IDxcBlob* CreateVertexShader(DXC* dxc);
-		IDxcBlob* CreatePixelShader(DXC* dxc);
+		D3D12_RASTERIZER_DESC CreateRasterizerState(UINT r);
+		IDxcBlob* CreateVertexShader(DXC* dxc, UINT vs);
+		IDxcBlob* CreatePixelShader(DXC* dxc, UINT ps);
 		D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState();
 
 		/// <summary>

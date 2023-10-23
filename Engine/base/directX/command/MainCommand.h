@@ -17,12 +17,12 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画前処理
 		/// </summary>
-		void PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex);
+		void PreDraw(ID3D12RootSignature* rootSignature);
 
 		/// <summary>
 		/// 描画語処理
 		/// </summary>
-		void PostDraw(D3D12_RESOURCE_BARRIER barrier);
+		void PostDraw();
 
 		/// <summary>
 		/// リセット用関数

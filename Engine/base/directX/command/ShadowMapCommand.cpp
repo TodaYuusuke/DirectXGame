@@ -22,30 +22,31 @@ void ShadowMapCommand::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-void ShadowMapCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIndex) {
+void ShadowMapCommand::PreDraw(ID3D12RootSignature* rootSignature) {
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+		dsv_->GetShadowMapResource(),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE
+	);
+
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);
 
-	// シャドウマップ用なのでrtvは不要
-	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(0);
+	// シャドウマップ用のDSVハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(1);
 	// 描画先のDSVを設定する
-	list_->OMSetRenderTargets(1, nullptr, false, &dsvHandle);
+	list_->OMSetRenderTargets(0, nullptr, false, &dsvHandle);
 
-	// rtvもないので画面クリアもなし
-	backBufferIndex;
 	// 指定した深度で画面全体をクリアする（1はシャドウマップ用DSV）
 	dsv_->ClearDepth(1, list_.Get());
 
-	// 描画用のSRVのDescriptorHeapを設定
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
-	list_->SetDescriptorHeaps(1, descriptorHeaps);
 
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
-	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = static_cast<float>(LWP::Info::GetWindowWidth());
-	viewport.Height = static_cast<float>(LWP::Info::GetWindowHeight());
+	// シャドウマップ用のテクスチャと同じサイズにする
+	viewport.Width = 1024.0f;
+	viewport.Height = 1024.0f;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -57,15 +58,27 @@ void ShadowMapCommand::PreDraw(D3D12_RESOURCE_BARRIER barrier, UINT backBufferIn
 	D3D12_RECT scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = LWP::Info::GetWindowWidth();
+	scissorRect.right = 1024;
 	scissorRect.top = 0;
-	scissorRect.bottom = LWP::Info::GetWindowHeight();
+	scissorRect.bottom = 1024;
 	// Scirssorを設定
 	list_->RSSetScissorRects(1, &scissorRect);
+
+	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
+	list_->SetGraphicsRootSignature(rootSignature);
+	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
+	list_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void ShadowMapCommand::PostDraw(D3D12_RESOURCE_BARRIER barrier) {
+void ShadowMapCommand::PostDraw() {
 	HRESULT hr = S_FALSE;
+
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+		dsv_->GetShadowMapResource(),
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		D3D12_RESOURCE_STATE_GENERIC_READ
+	);
 
 	// リソースバリアをセット
 	list_->ResourceBarrier(1, &barrier);

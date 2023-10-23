@@ -26,8 +26,11 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 
 	// コマンドクラスを生成する
+	shadowMapCommands_ = std::make_unique<ShadowMapCommand>();
+	shadowMapCommands_->Initialize(device_);
 	mainCommands_ = std::make_unique<MainCommand>();
 	mainCommands_->Initialize(device_);
+
 
 	// 初期値0でFenceを作る
 	fenceVal_ = 0;
@@ -39,6 +42,7 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	InitializeDXC();
 	// RootSignature生成
 	CreateRootSignature();
+	CreateShadowRS();
 	// グラフィックスパイプラインを作成
 	CreateGraphicsPipeLineState();
 
@@ -67,6 +71,7 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	srv_ = srv;
 
 	// コマンドにも登録しておく
+	shadowMapCommands_->SetDescriptorHeap(rtv, dsv, srv);
 	mainCommands_->SetDescriptorHeap(rtv, dsv, srv);
 
 	// SRVを登録してからでないとテクスチャが読み込めないので、
@@ -74,50 +79,67 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
 }
 
-void CommandManager::PreDraw(UINT backBufferIndex, ID3D12Resource* backBuffer) {
-	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
-		backBuffer,
-		D3D12_RESOURCE_STATE_PRESENT,
-		D3D12_RESOURCE_STATE_RENDER_TARGET
-	);
+void CommandManager::PreDraw() {
+	ID3D12GraphicsCommandList* commandList = nullptr;
+	
+	// --- シャドウマップのコマンドの初期設定 --- //
 
-	mainCommands_->PreDraw(barrier, backBufferIndex);
+	shadowMapCommands_->PreDraw(pipelineSet_->shadowRS_.Get());
+	commandList = shadowMapCommands_->GetList();
+
+	// PSOを登録
+	commandList->SetPipelineState(pipelineSet_->shadowPSO_->state_.Get());
+	// 頂点とインデックスの位置を登録
+	commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
+	commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
+	// 平行光源のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(1, lightBuffer_->lightResource_->GetGPUVirtualAddress());
+
+	// --- メインのコマンドの初期設定 --- //
+
+	mainCommands_->PreDraw(pipelineSet_->rootSignature_.Get());
+	commandList = mainCommands_->GetList();
+
+	// 頂点とインデックスの位置を登録
+	commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
+	commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
+	// 平行光源のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(4, lightBuffer_->lightResource_->GetGPUVirtualAddress());
+	// シャドウマップの場所を設定
+	commandList->SetGraphicsRootDescriptorTable(5, dsv_->GetShadowView());
 }
 
-void CommandManager::PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapChain) {
-	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
-		backBuffer,
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PRESENT
-	);
-
-	mainCommands_->PostDraw(barrier);
+void CommandManager::PostDraw() {
+	shadowMapCommands_->PostDraw();
+	mainCommands_->PostDraw();
 
 	
 	// - コマンドリストをすべてCloseした後 - //
 
-	// GPUにコマンドリストの実行を行わせる
-	ID3D12CommandList* commandLists[] = { mainCommands_->GetList() };
-	commandQueue_->ExecuteCommandLists(1, commandLists);
+	// コマンドリストを配列化
+	ID3D12CommandList* commandLists[] = { shadowMapCommands_->GetList(), mainCommands_->GetList() };
+	for (int i = 0; i < 2; i++) {
+		// GPUにコマンドリストの実行を行わせる
+		commandQueue_->ExecuteCommandLists(1, &commandLists[i]);
+
+		// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+		commandQueue_->Signal(fence_.Get(), ++fenceVal_);
+		if (fence_->GetCompletedValue() != fenceVal_) {
+			HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
+			assert(event != nullptr);
+			fence_->SetEventOnCompletion(fenceVal_, event);
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
+	}
 
 	// GPUとOSに画面の交換を行うよう通知する
-	swapChain->Present(1, 0);
-
-	// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-	commandQueue_->Signal(fence_.Get(), ++fenceVal_);
-	if (fence_->GetCompletedValue() != fenceVal_) {
-		HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
-		assert(event != nullptr);
-		fence_->SetEventOnCompletion(fenceVal_, event);
-		WaitForSingleObject(event, INFINITE);
-		CloseHandle(event);
-	}
+	rtv_->GetSwapChain()->Present(1, 0);
 }
 
 void CommandManager::Reset() {
 	mainCommands_->Reset();
+	shadowMapCommands_->Reset();
 
 	vertexResourceBuffer_->usedVertexCount_ = 0;
 	vertexResourceBuffer_->usedIndexCount_ = 0;
@@ -152,11 +174,6 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	// コマンドを積む
 	ID3D12GraphicsCommandList* commandList = mainCommands_->GetList();
 
-	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
-	commandList->SetGraphicsRootSignature(pipelineSet_->rootSignature_.Get());
-	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	// PSOを設定
 	commandList->SetPipelineState(pipelineSet_->pso_[static_cast<int>(primitive->material.fillMode)]->state_.Get());
 
@@ -166,24 +183,18 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 		if(primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
 			vertexResourceBuffer_->vertexData_[vertexResourceBuffer_->usedVertexCount_ + i].color_ = primitive->commonColor->GetVector4();
 	}
-	commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
 	// Indexを登録
 	for (int i = 0; i < primitive->GetIndexCount(); i++) {
 		vertexResourceBuffer_->indexData_[vertexResourceBuffer_->usedIndexCount_ + i] = primitive->indexes[i];
 	}
-	commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
-
 	// マテリアルの場所を設定
 	*materialResource_[primitive->material.GetIndex()]->data_ = primitive->material;
 	commandList->SetGraphicsRootConstantBufferView(0, materialResource_[primitive->material.GetIndex()]->view_);
-
 	// カメラのビュープロジェクション行列の場所を設定
 	commandList->SetGraphicsRootConstantBufferView(1, cameraResource_[primitive->isUI]->view_);
-
 	// WorldTransformの場所を設定
 	*matrixResource_[usedMatrixCount_]->data_ = primitive->transform.GetWorldMatrix();
 	commandList->SetGraphicsRootConstantBufferView(2, matrixResource_[usedMatrixCount_]->view_);
-
 	// テクスチャの場所を指定。
 	if (primitive->texture != nullptr) {
 		commandList->SetGraphicsRootDescriptorTable(3, textureResource_[primitive->texture->GetIndex()]->view_);
@@ -192,13 +203,18 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 		commandList->SetGraphicsRootDescriptorTable(3, textureResource_[defaultTexture_->GetIndex()]->view_);
 	}
 
-	// 平行光源のCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(4, lightBuffer_->lightResource_->GetGPUVirtualAddress());
-
-
 	// 描画！
 	commandList->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
-	
+
+
+	// シャドウマップにも描画！
+	if (primitive->material.enableLighting) {
+		// WorldTransformの場所を設定
+		shadowMapCommands_->GetList()->SetGraphicsRootConstantBufferView(0, matrixResource_[usedMatrixCount_]->view_);
+		// 描画！
+		//shadowMapCommands_->GetList()->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
+	}
+
 	// 使用した頂点とインデックスのカウント
 	vertexResourceBuffer_->usedVertexCount_ += primitive->GetVertexCount();
 	vertexResourceBuffer_->usedIndexCount_ += primitive->GetIndexCount();
@@ -211,13 +227,12 @@ void CommandManager::ImGui() {
 	ImGui::DragFloat3("direction", &lightBuffer_->light_->direction_.x, 0.01f);
 	ImGui::DragFloat("intensity", &lightBuffer_->light_->intensity_, 0.01f);
 	ImGui::End();
+
+	Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightBuffer_->light_->direction_).Inverse();
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(512.0f, 512.0f, 512.0f, 512.0f, 0.0f, 100.0f);
+	lightBuffer_->light_->viewProjection_ = viewMatrix* projectionMatrix;
 }
 
-
-
-#pragma region PipelineSet
-
-#pragma region PSO生成関連
 
 void CommandManager::InitializeDXC() {
 	HRESULT hr = S_FALSE;
@@ -242,9 +257,22 @@ void CommandManager::CreateRootSignature() {
 	// RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
 	// RootParameter作成。複数設定できるように配列。今回は結果5つなので長さ5の配列
-	D3D12_ROOT_PARAMETER rootParameters[5] = {};
+	D3D12_ROOT_PARAMETER rootParameters[6] = {};
+	// テクスチャ用サンプラー
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[2] = {};
+	
+
+	// RootSignatureにrootParametersを登録
+	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
+	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
+	
+	// RootSignatureにサンプラーを登録
+	descriptionRootSignature.pStaticSamplers = staticSamplers;
+	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
+
+
+
 	// マテリアル
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
@@ -257,23 +285,17 @@ void CommandManager::CreateRootSignature() {
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
 	rootParameters[2].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
-	// 平行光源
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
-	rootParameters[4].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
 
-	// DescriptorRangeを作成
+#pragma region テクスチャ実装
+
+	// テクスチャ用のDescriptorRangeを作成
 	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 	descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
 	descriptorRange[0].NumDescriptors = 1; // 数は1つ
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
-	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
-
 	// Samplerの設定
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
 	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
 	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -282,14 +304,47 @@ void CommandManager::CreateRootSignature() {
 	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
 	staticSamplers[0].ShaderRegister = 0; // レジスタ番号0を使う
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	descriptionRootSignature.pStaticSamplers = staticSamplers;
-	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
 	// テクスチャ
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRange; // Tabelの中身の配列を指定
 	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
+
+#pragma endregion
+
+	// 平行光源
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
+	rootParameters[4].Descriptor.ShaderRegister = 2;						// レジスタ番号1とバインド
+	
+#pragma region シャドウマップ実装
+
+	// シャドウマップ用のDescriptorRangeを作成
+	D3D12_DESCRIPTOR_RANGE descriptorRangeShadow[1] = {};
+	descriptorRangeShadow[0].BaseShaderRegister = 1; // 0から始まる
+	descriptorRangeShadow[0].NumDescriptors = 1; // 数は1つ
+	descriptorRangeShadow[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+	descriptorRangeShadow[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+
+	// Samplerの設定
+	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
+	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
+	staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
+	staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
+	staticSamplers[1].ShaderRegister = 1; // レジスタ番号1を使う
+	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+
+	// シャドウマップ
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeShadow; // Tabelの中身の配列を指定
+	rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeShadow); // Tableで利用する数
+
+#pragma endregion
+
 
 	// シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob = nullptr;
@@ -307,16 +362,57 @@ void CommandManager::CreateRootSignature() {
 	//errorBlob->Release();
 }
 
-#pragma endregion
+void CommandManager::CreateShadowRS() {
+	HRESULT hr = S_FALSE;
+
+	// RootSignature作成
+	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
+	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	// RootParameter作成。複数設定できるように配列。今回は結果2つなので長さ2の配列
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+
+	// RootSignatureにrootParametersを登録
+	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
+	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
+
+	// 定数バッファ（World）
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
+	rootParameters[0].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
+
+	// 平行光源
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// PixelとVertexで使う
+	rootParameters[1].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
+
+
+	// シリアライズしてバイナリにする
+	ID3DBlob* signatureBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+	if (FAILED(hr)) {
+		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		assert(false);
+	}
+	// バイナリを元に生成
+	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->shadowRS_));
+	assert(SUCCEEDED(hr));
+
+	signatureBlob->Release();
+	//errorBlob->Release();
+}
 
 void CommandManager::CreateGraphicsPipeLineState() {
 	for (int r = 0; r < 2; r++) {
 		pipelineSet_->pso_[r] = std::make_unique<PSO>();
-		pipelineSet_->pso_[r]->Initialize(device_, pipelineSet_->rootSignature_.Get(), pipelineSet_->dxc_.get(), r);
+		pipelineSet_->pso_[r]->Initialize(device_, pipelineSet_->rootSignature_.Get(), pipelineSet_->dxc_.get(), r, 1, 1);
 	}
+
+	// シャドウマップ用のPSO
+	pipelineSet_->shadowPSO_ = std::make_unique<PSO>();
+	pipelineSet_->shadowPSO_->InitializeForShadow(device_, pipelineSet_->shadowRS_.Get(), pipelineSet_->dxc_.get());
 }
 
-#pragma endregion
 
 void CommandManager::CreateVertexResource() {
 	// 実体を宣言
@@ -445,28 +541,8 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(usedTextureCount_ + 1);
-	textureResource_[usedTextureCount_]->view_ = srv_->GetGPUHandle(usedTextureCount_ + 1);
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(usedTextureCount_ + 2);
+	textureResource_[usedTextureCount_]->view_ = srv_->GetGPUHandle(usedTextureCount_ + 2);
 	// SRVの生成
 	device_->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);	
-}
-
-
-
-D3D12_RESOURCE_BARRIER CommandManager::MakeResourceBarrier(ID3D12Resource* pResource, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) {
-
-	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier{};
-	// 今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	// Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = pResource;
-	// 遷移前（現在）のResourceState
-	barrier.Transition.StateBefore = stateBefore;
-	// 遷移前（現在）のResourceState
-	barrier.Transition.StateAfter = stateAfter;
-
-	return barrier;
 }

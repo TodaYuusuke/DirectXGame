@@ -2,6 +2,9 @@
 #include <dxgidebug.h>
 #include <algorithm>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 void LWP::Utility::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
@@ -50,4 +53,12 @@ std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) 
 		// '.'が見つからない場合はそのまま返す
 		return "";
 	}
+}
+
+int LWP::Utility::RadianToDegree(float radian) {
+	return static_cast<int>(radian * (180.0f / M_PI));
+}
+
+float LWP::Utility::DegreeToRadian(int degree) {
+	return static_cast<float>(degree * (M_PI / 180.0f));
 }

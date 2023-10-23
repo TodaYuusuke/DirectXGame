@@ -95,9 +95,9 @@ void Engine::BeginFrame() {
 	debugTimer_.Start();
 #endif
 
-	inputManager_->Update();
 	directXCommon_->PreDraw();
 	imGuiManager_->Begin();
+	inputManager_->Update();
 }
 
 void Engine::EndFrame() {

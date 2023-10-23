@@ -7,6 +7,15 @@ using namespace LWP::Utility;
 
 // 初期化
 void Title::Initialize() {
+	// 地面を作る
+	ground = LWP::Primitive::CreateInstance<Surface>();
+	ground->transform.translation.y = -1.0f;
+	ground->transform.rotation.x = 1.57f;
+	ground->transform.scale = { 10.0f,10.0f, 10.0f };
+	ground->commonColor = new Color(0xD87F00FF);
+	ground->material.enableLighting = true;
+
+	
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
@@ -32,18 +41,21 @@ void Title::Initialize() {
 	sphere = LWP::Primitive::CreateInstance<Sphere>();
 	sphere->Radius(0.2f);
 	sphere->transform.translation.x = 0.7f;
-	sphere->isActive = false;
+	sphere->material.enableLighting = true;
+	sphere->isActive = true;
 	surface->texture = uvTexture;
 
 	// モデル読み込み
 	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
 	cubeModel->transform.scale = { 0.5f,0.5f, 0.5f };
+	cubeModel->material.enableLighting = true;
 	axisModel = LWP::Resource::LoadModel("axis.obj");
 	axisModel->isActive = false;
 }
 // 更新
 void Title::Update() {
 	ImGui::Begin("Primitive");
+	ground->DebugGUI("Ground");
 	tri[0]->DebugGUI("Tri0");
 	tri[1]->DebugGUI("Tri1");
 	surface->DebugGUI("Surface");

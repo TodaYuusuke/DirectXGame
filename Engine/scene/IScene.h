@@ -6,7 +6,7 @@ public:
 	// 共通の初期化
 	void PreInitialize() {
 		mainCamera = LWP::Object::CreateInstance<LWP::Object::Camera>();
-		mainCamera->transform.translation = { 0.0f,0.0f,-5.0f };
+		mainCamera->transform.translation = { 0.0f,0.0f,-10.0f };
 	};
 
 	//*** 純粋仮想関数 ***//

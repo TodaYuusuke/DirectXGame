@@ -41,12 +41,12 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画前処理
 		/// </summary>
-		void PreDraw(UINT backBufferIndex, ID3D12Resource* backBuffer);
+		void PreDraw();
 
 		/// <summary>
 		/// 描画語処理
 		/// </summary>
-		void PostDraw(ID3D12Resource* backBuffer, IDXGISwapChain4* swapChain);
+		void PostDraw();
 
 		/// <summary>
 		/// 描画数リセット
@@ -99,7 +99,7 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
 		// 用途別コマンドリストたち（現在は１つ）
 		std::unique_ptr<MainCommand> mainCommands_;	// 最終レンダリング用
-		//std::unique_ptr<Command> shadowMapCommands_;	// シャドウマップ用
+		std::unique_ptr<ShadowMapCommand> shadowMapCommands_;	// シャドウマップ用
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
@@ -128,6 +128,9 @@ namespace LWP::Base {
 			// 数種類のパイプライン
 			// 1つめ ... 埋め立てモード（0 -> ワイヤーフレーム、1 -> 埋め立て））
 			std::unique_ptr<PSO> pso_[2];	// グラフィックパイプラインの状態を定義
+			// シャドウマップ専用のRootSignatureとPSO
+			Microsoft::WRL::ComPtr<ID3D12RootSignature> shadowRS_;
+			std::unique_ptr<PSO> shadowPSO_;
 		};
 		std::unique_ptr<PipelineSet> pipelineSet_;
 
@@ -172,15 +175,15 @@ namespace LWP::Base {
 		/// RootSignature生成
 		/// </summary>
 		void CreateRootSignature();
-
-#pragma endregion
-
+		/// <summary>
+		/// シャドウマップ用のRootSignature生成
+		/// </summary>
+		void CreateShadowRS();
 		/// <summary>
 		/// グラフィックスパイプラインを作成
 		/// </summary>
 		void CreateGraphicsPipeLineState();
 
-#pragma endregion
 
 		/// <summary>
 		/// 頂点リソースを作成
@@ -204,9 +207,5 @@ namespace LWP::Base {
 		/// </summary>
 		void UploadTextureData(const DirectX::ScratchImage& mipImages);
 
-		/// <summary>
-		/// リソースバリアの実態を作る関数
-		/// </summary>
-		D3D12_RESOURCE_BARRIER MakeResourceBarrier(ID3D12Resource*, D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES);
 	};
 }

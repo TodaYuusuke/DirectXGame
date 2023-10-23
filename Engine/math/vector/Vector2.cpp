@@ -45,3 +45,9 @@ Vector2 Vector2::Normalize() {
 	}
 	return norm;
 }
+Vector2 Vector2::Rotate(float radian) {
+	Vector2 result;
+	result.x = x * cosf(radian) - y * sinf(radian);
+	result.y = y * cosf(radian) + x * sinf(radian);
+	return result;
+}

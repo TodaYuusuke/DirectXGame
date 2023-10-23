@@ -66,5 +66,17 @@ namespace LWP::Utility {
         // 乱数を生成して返す
         return distribution(generator);
     }
+
+
+    /// <summary>
+    /// radian から degreeへ
+    /// </summary>
+    int RadianToDegree(float radian);
+
+    /// <summary>
+    /// degree から radian へ
+    /// </summary>
+    float DegreeToRadian(int degree);
+    
 };
 

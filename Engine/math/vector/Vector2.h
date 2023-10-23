@@ -43,5 +43,12 @@ namespace LWP::Math {
 		/// <param name="v">... ベクトル</param>
 		/// <returns>正規化されたベクトル</returns>
 		Vector2 Normalize();
+		
+
+		/// <summary>
+		/// 指定された角度分回転させる関数
+		/// </summary>
+		/// <returns></returns>
+		Vector2 Rotate(float radian);
 	};
 }

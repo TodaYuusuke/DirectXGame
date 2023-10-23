@@ -7,9 +7,6 @@
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resources\shaders\ShadowMap.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Engine\resources\shaders\ShadowMap.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
@@ -192,6 +189,12 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\PSO.cpp">
       <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\ICommand.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\controller\Controller.cpp">
+      <Filter>Engine\input\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -408,10 +411,16 @@
     <ClInclude Include="Engine\base\directX\command\PSO.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\input\controller\Controller.h">
+      <Filter>Engine\input\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Engine\resources\shaders\Object3d.hlsli">
+      <Filter>Engine\resources\shaders</Filter>
+    </None>
+    <None Include="Engine\resources\shaders\ShadowMap.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
   </ItemGroup>

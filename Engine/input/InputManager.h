@@ -1,5 +1,11 @@
 #pragma once
 #include "keyboard/Keyboard.h"
+#include "controller/Controller.h"
+
+// 前方宣言
+namespace LWP::Base {
+	class WinApp;
+}
 
 namespace LWP::Input {
 	/// <summary>
@@ -17,6 +23,7 @@ namespace LWP::Input {
 		/// </summary>
 		void Update();
 
+
 		// キーボード関連
 
 		// キーが押されていない場合 -> true
@@ -28,13 +35,20 @@ namespace LWP::Input {
 		// キーが離された瞬間の場合 -> true
 		bool GetKeyStateRelease(uint8_t keyID);
 
+
 	private: // ** メンバ変数 ** //
+		// ウィンドウ管理クラスのポインタ
+		Base::WinApp* winApp_ = nullptr;
 
 		// DirectInputオブジェクトの生成
-		Microsoft::WRL::ComPtr<IDirectInput8> directInput;
+		Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
 		
 		// キーボードオブジェクト
 		Keyboard keyboard_;
 
+		// コントローラーオブジェクト
+		Controller controller_;
+		// コントローラー読み込み済みフラグ
+		bool isLoaded_ = false;
 	};
 }
