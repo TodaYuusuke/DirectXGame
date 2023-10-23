@@ -16,7 +16,7 @@ void Enemy::Initialize(){
 	// モデル
 	model_ = LWP::Resource::LoadModel("enemy/enemy.obj");
 	model_->transform.scale = { 0.1f ,0.1f, 0.1f };
-	model_->commonColor = new Color(ColorPattern::RED);
+	//model_->commonColor = new Color(ColorPattern::RED);
 }
 
 void Enemy::Moving() {

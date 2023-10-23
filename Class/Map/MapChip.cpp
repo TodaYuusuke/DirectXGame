@@ -3,7 +3,7 @@
 using namespace LWP::Math;
 
 void MapChip::Initialize() {
-	model = LWP::Resource::LoadModel("cube/cube.obj");
+	model = LWP::Resource::LoadModel("groundCube/groundCube.obj");
 }
 void MapChip::Update() {
 	// パワーは徐々に減衰する
