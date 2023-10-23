@@ -1,6 +1,7 @@
 #include "Title.h"
 #include "GameScene.h"
 
+using namespace LWP;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
@@ -14,7 +15,6 @@ void Title::Initialize() {
 	ground->transform.scale = { 10.0f,10.0f, 10.0f };
 	ground->commonColor = new Color(0xD87F00FF);
 	ground->material.enableLighting = true;
-
 	
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
@@ -65,7 +65,7 @@ void Title::Update() {
 	ImGui::End();
 
 	// SPACEキーを押すとテクスチャ切り替え
-	if (LWP::Input::GetTrigger(DIK_SPACE)) {
+	if (Input::Keyboard::GetTrigger(DIK_SPACE)) {
 		if (!useMonsterBall) {
 			sphere->texture = monsterBall;
 			useMonsterBall = true;
@@ -77,7 +77,7 @@ void Title::Update() {
 	}
 
 	// ENTERキーを押すとシーン切り替え
-	if (LWP::Input::GetTrigger(DIK_RETURN)) {
+	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
 		nextScene_ = new GameScene();
 	}
 

@@ -64,7 +64,7 @@
     <ClCompile Include="Engine\input\InputManager.cpp">
       <Filter>Engine\input</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
+    <ClCompile Include="Engine\input\keyboard\DIKeyboard.cpp">
       <Filter>Engine\input\keyboard</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\vector\Vector2.cpp">
@@ -193,7 +193,7 @@
     <ClCompile Include="Engine\base\directX\command\ICommand.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\input\controller\Controller.cpp">
+    <ClCompile Include="Engine\input\controller\DIController.cpp">
       <Filter>Engine\input\controller</Filter>
     </ClCompile>
   </ItemGroup>
@@ -243,7 +243,7 @@
     <ClInclude Include="Engine\input\InputManager.h">
       <Filter>Engine\input</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\input\keyboard\Keyboard.h">
+    <ClInclude Include="Engine\input\keyboard\DIKeyboard.h">
       <Filter>Engine\input\keyboard</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Math.h">
@@ -411,7 +411,7 @@
     <ClInclude Include="Engine\base\directX\command\PSO.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\input\controller\Controller.h">
+    <ClInclude Include="Engine\input\controller\DIController.h">
       <Filter>Engine\input\controller</Filter>
     </ClInclude>
   </ItemGroup>

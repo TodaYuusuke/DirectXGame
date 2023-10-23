@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "Title.h"
 
+using namespace LWP;
 using namespace LWP::Primitive;
 using namespace LWP::Utility;
 
@@ -30,12 +31,12 @@ void GameScene::Update() {
 	ImGui::End();
 
 	// Cキーを押すと敵召喚
-	if (LWP::Input::GetTrigger(DIK_C)) {
+	if (Input::Keyboard::GetTrigger(DIK_C)) {
 		mobManager_.AddEnemy(1);
 	}
 
 	// Rキーを押すとシーン再読み込み
-	if (LWP::Input::GetTrigger(DIK_R)) {
+	if (Input::Keyboard::GetTrigger(DIK_R)) {
 		nextScene_ = new GameScene();
 	}
 }

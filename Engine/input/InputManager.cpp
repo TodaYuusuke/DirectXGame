@@ -63,15 +63,28 @@ void Manager::Update() {
 	}
 }
 
-bool Manager::GetKeyStateNone(uint8_t keyID) {
+bool Manager::GetKeyboardStateNone(uint8_t keyID) {
 	return keyboard_.None(keyID);
 }
-bool Manager::GetKeyStateTrigger(uint8_t keyID) {
+bool Manager::GetKeyboardStateTrigger(uint8_t keyID) {
 	return keyboard_.Trigger(keyID);
 }
-bool Manager::GetKeyStatePress(uint8_t keyID) {
+bool Manager::GetKeyboardStatePress(uint8_t keyID) {
 	return keyboard_.Press(keyID);
 }
-bool Manager::GetKeyStateRelease(uint8_t keyID) {
+bool Manager::GetKeyboardStateRelease(uint8_t keyID) {
 	return keyboard_.Release(keyID);
+}
+
+bool Manager::GetControllerStateNone(uint8_t keyID) {
+	return controller_.None(keyID);
+}
+bool Manager::GetControllerStateTrigger(uint8_t keyID) {
+	return controller_.Trigger(keyID);
+}
+bool Manager::GetControllerStatePress(uint8_t keyID) {
+	return controller_.Press(keyID);
+}
+bool Manager::GetControllerStateRelease(uint8_t keyID) {
+	return controller_.Release(keyID);
 }

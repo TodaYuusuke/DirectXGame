@@ -1,6 +1,6 @@
 #pragma once
-#include "keyboard/Keyboard.h"
-#include "controller/Controller.h"
+#include "keyboard/DIKeyboard.h"
+#include "controller/DIController.h"
 
 // 前方宣言
 namespace LWP::Base {
@@ -27,13 +27,25 @@ namespace LWP::Input {
 		// キーボード関連
 
 		// キーが押されていない場合 -> true
-		bool GetKeyStateNone(uint8_t keyID);
+		bool GetKeyboardStateNone(uint8_t keyID);
 		// キーが押された瞬間の場合 -> true
-		bool GetKeyStateTrigger(uint8_t keyID);
+		bool GetKeyboardStateTrigger(uint8_t keyID);
 		// キーが押されている場合 -> true
-		bool GetKeyStatePress(uint8_t keyID);
+		bool GetKeyboardStatePress(uint8_t keyID);
 		// キーが離された瞬間の場合 -> true
-		bool GetKeyStateRelease(uint8_t keyID);
+		bool GetKeyboardStateRelease(uint8_t keyID);
+
+
+		// コントローラー関連
+
+		// キーが押されていない場合 -> true
+		bool GetControllerStateNone(uint8_t keyID);
+		// キーが押された瞬間の場合 -> true
+		bool GetControllerStateTrigger(uint8_t keyID);
+		// キーが押されている場合 -> true
+		bool GetControllerStatePress(uint8_t keyID);
+		// キーが離された瞬間の場合 -> true
+		bool GetControllerStateRelease(uint8_t keyID);
 
 
 	private: // ** メンバ変数 ** //
@@ -44,10 +56,10 @@ namespace LWP::Input {
 		Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
 		
 		// キーボードオブジェクト
-		Keyboard keyboard_;
+		DIKeyboard keyboard_;
 
 		// コントローラーオブジェクト
-		Controller controller_;
+		DIController controller_;
 		// コントローラー読み込み済みフラグ
 		bool isLoaded_ = false;
 	};

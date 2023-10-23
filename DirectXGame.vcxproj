@@ -119,9 +119,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\info\DebugTimer.cpp" />
-    <ClCompile Include="Engine\input\controller\Controller.cpp" />
+    <ClCompile Include="Engine\input\controller\DIController.cpp" />
     <ClCompile Include="Engine\input\InputManager.cpp" />
-    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp" />
+    <ClCompile Include="Engine\input\keyboard\DIKeyboard.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
@@ -196,9 +196,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\info\DebugTimer.h" />
-    <ClInclude Include="Engine\input\controller\Controller.h" />
+    <ClInclude Include="Engine\input\controller\DIController.h" />
     <ClInclude Include="Engine\input\InputManager.h" />
-    <ClInclude Include="Engine\input\keyboard\Keyboard.h" />
+    <ClInclude Include="Engine\input\keyboard\DIKeyboard.h" />
     <ClInclude Include="Engine\math\Math.h" />
     <ClInclude Include="Engine\math\matrix\Matrix3x3.h" />
     <ClInclude Include="Engine\math\matrix\Matrix4x4.h" />

@@ -45,7 +45,7 @@ namespace LWP::Input {
 	/// <summary>
 	/// コントローラークラス
 	/// </summary>
-	class Controller final {
+	class DIController final {
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
