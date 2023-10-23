@@ -33,5 +33,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;
 
+	// SEデータ
+	LWP::Resource::Audio* audio;
+
 	bool useMonsterBall = true;
 };

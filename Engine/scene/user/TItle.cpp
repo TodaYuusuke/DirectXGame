@@ -20,6 +20,8 @@ void Title::Initialize() {
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
 
+	audio = LWP::Resource::LoadAudio("Alarm01.wav");
+
 	// 三角形
 	for (int i = 0; i < 2; i++) {
 		tri[i] = LWP::Primitive::CreateInstance<Triangle>();
@@ -74,6 +76,10 @@ void Title::Update() {
 			sphere->texture = uvTexture;
 			useMonsterBall = false;
 		}
+	}
+
+	if (Input::Controller::GetTrigger(DIXBOX_A)) {
+		audio->Play();
 	}
 
 	// ENTERキーを押すとシーン切り替え

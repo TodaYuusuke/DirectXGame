@@ -196,6 +196,9 @@
     <ClCompile Include="Engine\input\controller\DIController.cpp">
       <Filter>Engine\input\controller</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\resources\audio\Audio.cpp">
+      <Filter>Engine\resources\audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -413,6 +416,9 @@
     </ClInclude>
     <ClInclude Include="Engine\input\controller\DIController.h">
       <Filter>Engine\input\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\audio\Audio.h">
+      <Filter>Engine\resources\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

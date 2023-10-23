@@ -16,20 +16,20 @@
 #pragma region KeyID
 
 // 各ボタンID
-#define DIXBOX_A		DIJOFS_BUTTON(0);	// Aボタン
-#define DIXBOX_B		DIJOFS_BUTTON(1);	// Bボタン
-#define DIXBOX_X		DIJOFS_BUTTON(2);	// Xボタン
-#define DIXBOX_Y		DIJOFS_BUTTON(3);	// Yボタン
-#define DIXBOX_LB		DIJOFS_BUTTON(4);	// Lボタン
-#define DIXBOX_RB		DIJOFS_BUTTON(5);	// Rボタン
-#define DIXBOX_VIEW		DIJOFS_BUTTON(6);	// ビューボタン（中心左の小さいボタン）
-#define DIXBOX_MENU		DIJOFS_BUTTON(7);	// メニューボタン（中心右の小さいボタン）
-#define DIXBOX_LSTICK	DIJOFS_BUTTON(8);	// 左スティック押し込み
-#define DIXBOX_RSTICK	DIJOFS_BUTTON(9);	// 右スティック押し込み
-#define DIXBOX_XBOX		DIJOFS_BUTTON(10);	// XBoxボタン
-#define DIXBOX_SHARE	DIJOFS_BUTTON(11);	// シェアボタン（中心下の小さいボタン）
-#define DIXBOX_LT							// LTボタン（未実装）
-#define DIXBOX_RT							// RTボタン（未実装）
+#define DIXBOX_A		0	// Aボタン
+#define DIXBOX_B		1	// Bボタン
+#define DIXBOX_X		2	// Xボタン
+#define DIXBOX_Y		3	// Yボタン
+#define DIXBOX_LB		4	// Lボタン
+#define DIXBOX_RB		5	// Rボタン
+#define DIXBOX_VIEW		6	// ビューボタン（中心左の小さいボタン）
+#define DIXBOX_MENU		7	// メニューボタン（中心右の小さいボタン）
+#define DIXBOX_LSTICK	8	// 左スティック押し込み
+#define DIXBOX_RSTICK	9	// 右スティック押し込み
+#define DIXBOX_XBOX		10	// XBoxボタン
+#define DIXBOX_SHARE	11	// シェアボタン（中心下の小さいボタン）
+#define DIXBOX_LT			// LTボタン（未実装）
+#define DIXBOX_RT			// RTボタン（未実装）
 
 // スティックの最大値
 #define DIXBOX_STICK_MAXVALUE 65535L
