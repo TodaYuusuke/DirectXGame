@@ -13,7 +13,8 @@ void GameScene::Initialize() {
 	//mainCamera->transform.translation = { 0.0f,3.5f,-3.0f };
 	//mainCamera->transform.rotation = { 0.85f,0.0f,0.0f };
 	
-
+	tambourine_.Initialize();
+	skydome_.Initialze();
 	mapManager_.Initialize();
 	hammer_.Initialize(&mapManager_);
 	mobManager_.Initialize();

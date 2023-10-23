@@ -3,6 +3,8 @@
 #include "../../../Class/Map/MapManager.h"
 #include "../../../Class/Hammer/Hammer.h"
 #include "../../../Class/Mob/MobManager.h"
+#include "../Class/Skydome/Skydome.h"
+#include "../Class/Tambourine/Tambourine.h"
 
 class GameScene final
 	: public IScene {
@@ -25,6 +27,10 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	MapManager mapManager_;
 	// ハンマー（プレイヤー）
 	Hammer hammer_;
+	// スカイドーム
+	Skydome skydome_;
+	// タンバリン
+	Tambourine tambourine_;
 
 	// モブ管理クラス
 	MobManager mobManager_;

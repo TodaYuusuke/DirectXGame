@@ -169,6 +169,12 @@
     <ClCompile Include="Class\Ease\Easing.cpp">
       <Filter>Class\Ease</Filter>
     </ClCompile>
+    <ClCompile Include="Class\Skydome\Skydome.cpp">
+      <Filter>Class\Skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Tambourine\Tambourine.cpp">
+      <Filter>Class\Tambourine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -360,6 +366,12 @@
     <ClInclude Include="Class\Ease\Easing.h">
       <Filter>Class\Ease</Filter>
     </ClInclude>
+    <ClInclude Include="Class\Skydome\Skydome.h">
+      <Filter>Class\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Tambourine\Tambourine.h">
+      <Filter>Class\Tambourine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -466,6 +478,12 @@
     </Filter>
     <Filter Include="Class\Ease">
       <UniqueIdentifier>{7e11bda2-6456-4497-a71e-dda4a6d1ce6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Skydome">
+      <UniqueIdentifier>{804ed76a-be55-4774-9abc-32a32240d01a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Tambourine">
+      <UniqueIdentifier>{be3db6a3-24de-43ef-945c-2ba7dae4db5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
