@@ -31,7 +31,7 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 一時停止
 		/// </summary>
-		//void Pause();
+		void Pause();
 
 
 		/// <summary>

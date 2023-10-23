@@ -39,8 +39,12 @@ void Audio::Play() {
 	hr = pSourceVoice->Start();
 }
 void Audio::Stop() {
+	pSourceVoice->Start();
+}
+void Audio::Pause() {
 	pSourceVoice->Stop();
 }
+
 
 void Audio::LoadWAV(const std::string& filePath) {
 	// ファイルを読み込む
