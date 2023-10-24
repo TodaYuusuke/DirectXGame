@@ -7,6 +7,9 @@
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\ShadowMap.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -52,12 +55,6 @@
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
       <Filter>Externals\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\CommandManager.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\DirectXCommon.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
@@ -67,7 +64,7 @@
     <ClCompile Include="Engine\input\InputManager.cpp">
       <Filter>Engine\input</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp">
+    <ClCompile Include="Engine\input\keyboard\DIKeyboard.cpp">
       <Filter>Engine\input\keyboard</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\vector\Vector2.cpp">
@@ -163,6 +160,45 @@
     <ClCompile Include="Class\Mob\Derived\Enemy.cpp">
       <Filter>Class\Mob\Derived</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\DirectXCommon.cpp">
+      <Filter>Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\GPUDevice.cpp">
+      <Filter>Engine\base\directX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\MainCommand.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\PSO.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\ICommand.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\controller\DIController.cpp">
+      <Filter>Engine\input\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\audio\Audio.cpp">
+      <Filter>Engine\resources\audio</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\scene\user\GameResult.cpp">
       <Filter>Engine\scene\user</Filter>
     </ClCompile>
@@ -213,12 +249,6 @@
     <ClInclude Include="Externals\imgui\imgui_internal.h">
       <Filter>Externals\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\CommandManager.h">
-      <Filter>Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\DirectXCommon.h">
-      <Filter>Engine\base</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
@@ -228,7 +258,7 @@
     <ClInclude Include="Engine\input\InputManager.h">
       <Filter>Engine\input</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\input\keyboard\Keyboard.h">
+    <ClInclude Include="Engine\input\keyboard\DIKeyboard.h">
       <Filter>Engine\input\keyboard</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Math.h">
@@ -360,6 +390,48 @@
     <ClInclude Include="Class\Mob\Derived\Enemy.h">
       <Filter>Class\Mob\Derived</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\DirectXCommon.h">
+      <Filter>Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\GPUDevice.h">
+      <Filter>Engine\base\directX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\MainCommand.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\CommandManager.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\ResourceStruct.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\ICommand.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\PSO.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\controller\DIController.h">
+      <Filter>Engine\input\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\audio\Audio.h">
+      <Filter>Engine\resources\audio</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\scene\user\GameResult.h">
       <Filter>Engine\scene\user</Filter>
     </ClInclude>
@@ -376,6 +448,9 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Engine\resources\shaders\Object3d.hlsli">
+      <Filter>Engine\resources\shaders</Filter>
+    </None>
+    <None Include="Engine\resources\shaders\ShadowMap.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
   </ItemGroup>
@@ -475,6 +550,15 @@
     </Filter>
     <Filter Include="Class\Mob\Derived">
       <UniqueIdentifier>{b78425e2-876a-4fc2-8102-2c1ba751a431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX">
+      <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\descriptorHeap">
+      <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\command">
+      <UniqueIdentifier>{60100a09-802c-4da4-904f-ccf44e31b290}</UniqueIdentifier>
     </Filter>
     <Filter Include="Class\Ease">
       <UniqueIdentifier>{7e11bda2-6456-4497-a71e-dda4a6d1ce6c}</UniqueIdentifier>

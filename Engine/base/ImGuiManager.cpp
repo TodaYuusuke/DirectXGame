@@ -40,10 +40,9 @@ void ImGuiManager::End() {
 
 void ImGuiManager::Draw() {
 	// 実際にCommandListにImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandManager()->GetMainRenderCommandList();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }
-
-
 
 void ImGuiManager::ColorPicker4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags, const float* ref_col) {
 	Vector4 v{ col.GetVector4() };

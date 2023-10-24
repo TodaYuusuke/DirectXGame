@@ -23,14 +23,14 @@ void Engine::Run() {
 		// 更新処理
 		sceneManager_->Update();
 		objectManager_->Update();
-		commandManager_->ImGui();
+		//commandManager_->ImGui();
 		// カメラのビュープロジェクションをcommandManagerに
-		commandManager_->SetCameraViewProjection(sceneManager_->GetMainCamera());
+		directXCommon_->GetCommandManager()->SetCameraViewProjection(sceneManager_->GetMainCamera());
 
 		// 描画処理
 		sceneManager_->Draw();
 		objectManager_->Draw();
-		primitiveManager_->Draw(commandManager_.get());
+		primitiveManager_->Draw(directXCommon_->GetCommandManager());
 
 		EndFrame();
 	}
@@ -55,7 +55,6 @@ void Engine::Initialize(const char* title, int width, int height) {
 	// Base
 	winApp_ = std::make_unique<WinApp>();
 	directXCommon_ = std::make_unique<DirectXCommon>();
-	commandManager_ = std::make_unique<CommandManager>();
 	imGuiManager_ = std::make_unique<ImGuiManager>();
 	// Input
 	inputManager_ = std::make_unique<Input::Manager>();
@@ -73,7 +72,6 @@ void Engine::Initialize(const char* title, int width, int height) {
 	// Base
 	winApp_->Initialize(title, width, height);
 	directXCommon_->Initialize(winApp_.get() , width, height);
-	commandManager_->Initialize(directXCommon_.get());
 	imGuiManager_->Initialize(winApp_.get(), directXCommon_.get());
 	// Input
 	inputManager_->Initialize(winApp_.get());
@@ -97,9 +95,9 @@ void Engine::BeginFrame() {
 	debugTimer_.Start();
 #endif
 
-	inputManager_->Update();
 	directXCommon_->PreDraw();
 	imGuiManager_->Begin();
+	inputManager_->Update();
 }
 
 void Engine::EndFrame() {
@@ -111,8 +109,6 @@ void Engine::EndFrame() {
 	imGuiManager_->End();
 	imGuiManager_->Draw();
 	directXCommon_->PostDraw();
-	// 描画数リセット
-	commandManager_->Reset();
 
 #if _DEBUG //debug時
 	// 計測終了

@@ -110,11 +110,22 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\Tambourine\Tambourine.cpp" />
     <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\base\directX\command\ICommand.cpp" />
+    <ClCompile Include="Engine\base\directX\command\MainCommand.cpp" />
+    <ClCompile Include="Engine\base\directX\command\CommandManager.cpp" />
+    <ClCompile Include="Engine\base\directX\command\PSO.cpp" />
+    <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp" />
+    <ClCompile Include="Engine\base\directX\GPUDevice.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\info\DebugTimer.cpp" />
+    <ClCompile Include="Engine\input\controller\DIController.cpp" />
     <ClCompile Include="Engine\input\InputManager.cpp" />
-    <ClCompile Include="Engine\input\keyboard\Keyboard.cpp" />
+    <ClCompile Include="Engine\input\keyboard\DIKeyboard.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
@@ -129,6 +140,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
+    <ClCompile Include="Engine\resources\audio\Audio.cpp" />
     <ClCompile Include="Engine\resources\material\Material.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
@@ -150,6 +162,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Engine\resources\shaders\Object3d.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Engine\resources\shaders\ShadowMap.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
@@ -176,11 +192,23 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\Tambourine\Tambourine.h" />
     <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
+    <ClInclude Include="Engine\base\directX\command\MainCommand.h" />
+    <ClInclude Include="Engine\base\directX\command\CommandManager.h" />
+    <ClInclude Include="Engine\base\directX\command\ICommand.h" />
+    <ClInclude Include="Engine\base\directX\command\PSO.h" />
+    <ClInclude Include="Engine\base\directX\command\ResourceStruct.h" />
+    <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h" />
+    <ClInclude Include="Engine\base\directX\GPUDevice.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\info\DebugTimer.h" />
+    <ClInclude Include="Engine\input\controller\DIController.h" />
     <ClInclude Include="Engine\input\InputManager.h" />
-    <ClInclude Include="Engine\input\keyboard\Keyboard.h" />
+    <ClInclude Include="Engine\input\keyboard\DIKeyboard.h" />
     <ClInclude Include="Engine\math\Math.h" />
     <ClInclude Include="Engine\math\matrix\Matrix3x3.h" />
     <ClInclude Include="Engine\math\matrix\Matrix4x4.h" />
@@ -201,6 +229,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\PrimitiveManager.h" />
+    <ClInclude Include="Engine\resources\audio\Audio.h" />
     <ClInclude Include="Engine\resources\material\Material.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />
     <ClInclude Include="Engine\resources\texture\Texture.h" />
@@ -232,6 +261,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\shaders\ShadowMap.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

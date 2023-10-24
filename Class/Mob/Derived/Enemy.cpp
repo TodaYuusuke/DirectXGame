@@ -20,20 +20,14 @@ void Enemy::Initialize(){
 }
 
 void Enemy::Moving() {
-	// 浮遊中ならば戻る
-	//if (isFlying_) { return; }
+	// 空中の場合は移動しない
+	if (isFlying_) { return; }
 
 	// ターゲットの方向の速度を計算
 	Vector3 vector = target_->translation - model_->transform.translation;
 	vector = vector.Normalize();
 
-	// 空中の場合は倍率を下げる
-	if (isFlying_) {
-		vector *= kAccele * 0.3f;
-	}
-	else {
-		vector *= kAccele;
-	}
+	vector *= kAccele;
 
 	// Y軸の速度は捨てる
 	vector.y = 0.0f;
