@@ -47,6 +47,14 @@ namespace LWP::Input {
 		// キーが離された瞬間の場合 -> true
 		bool GetControllerStateRelease(uint8_t keyID);
 
+		// Lスティックの入力を受け取る関数
+		Math::Vector2 GetControllerLStick();
+		// Rスティックの入力を受け取る関数
+		Math::Vector2 GetControllerRStick();
+
+		// 十字キーの入力検知
+		Math::Vector2 GetControllerCrossKey();
+
 
 	private: // ** メンバ変数 ** //
 		// ウィンドウ管理クラスのポインタ

@@ -95,6 +95,7 @@ void CommandManager::PreDraw() {
 	// 平行光源のCBufferの場所を設定
 	commandList->SetGraphicsRootConstantBufferView(1, lightBuffer_->lightResource_->GetGPUVirtualAddress());
 
+
 	// --- メインのコマンドの初期設定 --- //
 
 	mainCommands_->PreDraw(pipelineSet_->rootSignature_.Get());

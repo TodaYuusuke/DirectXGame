@@ -35,3 +35,12 @@ bool Input::Controller::GetPress(uint8_t keyID) {
 bool Input::Controller::GetRelease(uint8_t keyID) {
 	return engine->inputManager_->GetControllerStateRelease(keyID);
 }
+Math::Vector2 Input::Controller::GetLStick() {
+	return engine->inputManager_->GetControllerLStick();
+}
+Math::Vector2 Input::Controller::GetRStick() {
+	return engine->inputManager_->GetControllerRStick();
+}
+Math::Vector2 Input::Controller::GetCrossKey() {
+	return engine->inputManager_->GetControllerCrossKey();
+}

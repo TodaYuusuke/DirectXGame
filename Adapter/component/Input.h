@@ -51,6 +51,30 @@ namespace LWP {
 			/// keyID が Release のとき true を返す
 			/// </summary>
 			bool GetRelease(uint8_t keyID);
+
+
+			/// <summary>
+			/// Lスティックの入力を受け取る関数
+			/// <para>| 　-Y　 |</para>
+			/// <para>| -X　+X |</para>
+			/// <para>| 　+Y　 |</para>
+			/// </summary>
+			Math::Vector2 GetLStick();
+			/// <summary>
+			/// Rスティックの入力を受け取る関数
+			/// <para>| 　-Y　 |</para>
+			/// <para>| -X　+X |</para>
+			/// <para>| 　+Y　 |</para>
+			/// </summary>
+			Math::Vector2 GetRStick();
+
+			/// <summary>
+			/// 十字キーの入力検知
+			/// <para>| 　-Y　 |</para>
+			/// <para>| -X　+X |</para>
+			/// <para>| 　+Y　 |</para>
+			/// </summary>
+			Math::Vector2 GetCrossKey();
 		};
 		namespace Pad = Controller;
 	};

@@ -6,6 +6,7 @@
 
 using namespace LWP::Base;
 using namespace LWP::Input;
+using namespace LWP::Math;
 
 void Manager::Initialize(WinApp* winApp) {
 	winApp_ = winApp;
@@ -87,4 +88,15 @@ bool Manager::GetControllerStatePress(uint8_t keyID) {
 }
 bool Manager::GetControllerStateRelease(uint8_t keyID) {
 	return controller_.Release(keyID);
+}
+
+Vector2 Manager::GetControllerLStick() {
+	return controller_.GetLStick();
+}
+Vector2 Manager::GetControllerRStick() {
+	return controller_.GetRStick();
+}
+
+Vector2 Manager::GetControllerCrossKey() {
+	return controller_.GetCrossKey();
 }

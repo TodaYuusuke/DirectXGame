@@ -65,27 +65,27 @@ namespace LWP::Input {
 		bool Press(uint8_t keyID);
 		// キーが離された瞬間の場合 -> true
 		bool Release(uint8_t keyID);
-
+			
 		/// <summary>
 		/// Lスティックの入力を受け取る関数
-		///   -Y　
-		/// -X  +X
-		///   +Y
+		/// <para>  -Y  </para>
+		/// <para>-X  +X</para>
+		/// <para>  +Y  </para>
 		/// </summary>
 		Math::Vector2 GetLStick();
 		/// <summary>
 		/// Rスティックの入力を受け取る関数
-		///   -Y　
-		/// -X  +X
-		///   +Y
+		/// <para>|　-Y  </para>
+		/// <para>|-X  +X</para>
+		/// <para>|  +Y  </para>
 		/// </summary>
 		Math::Vector2 GetRStick();
 
 		/// <summary>
 		/// 十字キーの入力検知
-		///   -Y　
-		/// -X  +X
-		///   +Y
+		/// <para>  -Y  </para>
+		/// <para>-X  +X</para>
+		/// <para>  +Y  </para>
 		/// </summary>
 		Math::Vector2 GetCrossKey();
 
