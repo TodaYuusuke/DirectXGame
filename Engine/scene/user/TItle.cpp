@@ -112,12 +112,12 @@ void Title::Update() {
 	}
 
 	// Rキーを押すとシーン再読み込み
-	if (LWP::Input::GetTrigger(DIK_R)) {
+	if (Input::Keyboard::GetTrigger(DIK_R)) {
 		nextScene_ = new GameScene();
 	}
 
 	// SPACEで攻撃
-	if (LWP::Input::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
+	if (Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
 		GenerateParticle(hammerModel->transform.translation);
 	}
@@ -125,24 +125,24 @@ void Title::Update() {
 	// パーティクルの更新
 	UpdateParticles();
 
-	if (LWP::Input::GetTrigger(DIK_A)) {
+	if (Input::Keyboard::GetTrigger(DIK_A)) {
 			selectPoint = true;
 		
 	}
-	else if (LWP::Input::GetTrigger(DIK_D)) {
+	else if (Input::Keyboard::GetTrigger(DIK_D)) {
 			selectPoint = false;
 		
 	}
 
 	//次のシーンへ移動
-	if (selectPoint && LWP::Input::GetTrigger(DIK_SPACE)) {
+	if (selectPoint && Input::Keyboard::GetTrigger(DIK_SPACE)) {
 		sceneChangeTiemFlag = false;		
 		ButtonPush();
 		shakeMaxPosition = 20;
 	}
 
 	//windowを閉じる
-	if (selectPoint == 0 && LWP::Input::GetTrigger(DIK_SPACE)) {
+	if (selectPoint == 0 && Input::Keyboard::GetTrigger(DIK_SPACE)) {
 		sceneChangeTiemFlag = false;
 		ButtonPush();
 		shakeMaxPosition = 20;

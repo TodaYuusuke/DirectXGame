@@ -3,6 +3,7 @@
 #include "TItle.h"
 #include "../Class/Ease/Easing.h"
 
+using namespace LWP;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
@@ -165,13 +166,13 @@ void GameResult::Update() {
 		}
 		else {
 			// ENTERキーを押すとシーン切り替え
-			if (LWP::Input::GetTrigger(DIK_RETURN)) {
+			if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
 				isTransitionSceneEnd_ = true;
 			}
 		}
 
 		// Rキーを押すとシーン切り替え
-		if (LWP::Input::GetTrigger(DIK_R)) {
+		if (Input::Keyboard::GetTrigger(DIK_R)) {
 			nextScene_ = new GameResult;
 		}
 
