@@ -16,7 +16,7 @@ namespace LWP {
 		/// <returns>形のインスタンス</returns>
 		template <IsIPrimitive TPrimitive>
 		TPrimitive* CreateInstance() {
-			return System::engine->primitiveManager_->CreateInstance<TPrimitive>(System::engine->commandManager_.get());
+			return System::engine->primitiveManager_->CreateInstance<TPrimitive>(System::engine->directXCommon_->GetCommandManager());
 		}
 	};
 };

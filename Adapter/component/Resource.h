@@ -23,11 +23,17 @@ namespace LWP {
 		Texture* LoadTextureLongPath(const std::string& filePath);
 
 		/// <summary>
-		/// オーディオファイルの読み込み
+		/// オーディオファイルの読み込み（resources/audio/を短縮ver）
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>オーディオのインスタンス</returns>
-		//static Audio* LoadAudio(const std::string& filePath);
+		Audio* LoadAudio(const std::string& filePath);
+		/// <summary>
+		/// オーディオファイルの読み込み（exeからのパスで指定）
+		/// </summary>
+		/// <param name="filePath">読み込むファイルパス</param>
+		/// <returns>オーディオのインスタンス</returns>
+		Audio* LoadAudioLongPath(const std::string& filePath);
 
 		/// <summary>
 		/// 3Dモデルの読み込み

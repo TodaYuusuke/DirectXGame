@@ -1,5 +1,6 @@
 #include "Hammer.h"
 
+using namespace LWP::Input;
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Utility;
@@ -47,16 +48,16 @@ void Hammer::UpdateTimer() {
 void Hammer::keyBoard() {
 	LWP::Math::Vector2 move{ 0.0f,0.0f };
 	// WASDでレティクル移動
-	if (LWP::Input::GetPress(DIK_W)) {
+	if (Keyboard::GetPress(DIK_W)) {
 		move.y += 1.0f;
 	}
-	if (LWP::Input::GetPress(DIK_A)) {
+	if (Keyboard::GetPress(DIK_A)) {
 		move.x -= 1.0f;
 	}
-	if (LWP::Input::GetPress(DIK_S)) {
+	if (Keyboard::GetPress(DIK_S)) {
 		move.y -= 1.0f;
 	}
-	if (LWP::Input::GetPress(DIK_D)) {
+	if (Keyboard::GetPress(DIK_D)) {
 		move.x += 1.0f;
 	}
 
@@ -66,7 +67,7 @@ void Hammer::keyBoard() {
 	reticle_->transform.translation.z += move.y;
 
 	// SPACEで攻撃
-	if (LWP::Input::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
+	if (Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
 	}
 }

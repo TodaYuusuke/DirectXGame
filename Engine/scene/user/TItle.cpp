@@ -3,12 +3,21 @@
 #include "../Class/Ease/Easing.h"
 #include <time.h>
 
+using namespace LWP;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
 // 初期化
 void Title::Initialize() {
+	// 地面を作る
+	ground = LWP::Primitive::CreateInstance<Surface>();
+	ground->transform.translation.y = -1.0f;
+	ground->transform.rotation.x = 1.57f;
+	ground->transform.scale = { 10.0f,10.0f, 10.0f };
+	ground->commonColor = new Color(0xD87F00FF);
+	ground->material.enableLighting = true;
+	
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 
@@ -80,8 +89,6 @@ void Title::Initialize() {
 		
 		particleModel->transform.translation = newParticle.position;
 	}
-
-
 }
 
 // 更新
@@ -92,8 +99,15 @@ void Title::Update() {
 	SceneTransition();
 	moveHammer();
 
+	if (Input::Controller::GetTrigger(DIXBOX_A)) {
+		audio->Play();
+	}
+	if (Input::Controller::GetTrigger(DIXBOX_B)) {
+		audio->Stop();
+	}
+
 	// ENTERキーを押すとシーン切り替え
-	if (LWP::Input::GetTrigger(DIK_RETURN)) {
+	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
 		nextScene_ = new GameScene();
 	}
 

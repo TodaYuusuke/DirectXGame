@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include "../../base/DirectXCommon.h"
-#include "../../base/CommandManager.h"
+#include "../../base/directX/command/CommandManager.h"
 #include "../../utility/MyUtility.h"
 
 using namespace LWP::Base;

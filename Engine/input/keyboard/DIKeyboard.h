@@ -24,7 +24,7 @@ namespace LWP::Input {
 	/// <summary>
 	/// キーボードクラス
 	/// </summary>
-	class Keyboard final {
+	class DIKeyboard final {
 	public: // ** メンバ関数 ** //
 
 		/// <summary>

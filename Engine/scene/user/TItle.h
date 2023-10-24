@@ -20,6 +20,9 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
+	// 地面
+	LWP::Primitive::Surface* ground;
+
 	LWP::Primitive::Triangle* tri[2];
 	LWP::Primitive::Surface* TitleSurface;
 	LWP::Primitive::Mesh* particleModel;
@@ -29,6 +32,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;
+
+	// SEデータ
+	LWP::Resource::Audio* audio;
 
 	bool useMonsterBall = true;
 

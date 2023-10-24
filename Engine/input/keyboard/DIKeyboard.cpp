@@ -1,9 +1,9 @@
-#include "Keyboard.h"
+#include "DIKeyboard.h"
 #include "../../base/WinApp.h"
 
 using namespace LWP::Input;
 
-void Keyboard::Initialize(Base::WinApp* winApp, IDirectInput8* directInput) {
+void DIKeyboard::Initialize(Base::WinApp* winApp, IDirectInput8* directInput) {
 	// キーボードデバイスの生成
 	HRESULT result = directInput->CreateDevice(GUID_SysKeyboard, keyboard_.GetAddressOf(), NULL);
 	assert(SUCCEEDED(result));
@@ -21,7 +21,7 @@ void Keyboard::Initialize(Base::WinApp* winApp, IDirectInput8* directInput) {
 	);
 }
 
-void Keyboard::Update() {
+void DIKeyboard::Update() {
 	// キーボード情報の取得開始
 	keyboard_->Acquire();
 
@@ -34,15 +34,15 @@ void Keyboard::Update() {
 }
 
 
-bool Keyboard::None(uint8_t keyID) {
+bool DIKeyboard::None(uint8_t keyID) {
 	return !keys_[keyID];
 }
-bool Keyboard::Trigger(uint8_t keyID) {
+bool DIKeyboard::Trigger(uint8_t keyID) {
 	return !preKeys_[keyID] && keys_[keyID];
 }
-bool Keyboard::Press(uint8_t keyID) {
+bool DIKeyboard::Press(uint8_t keyID) {
 	return keys_[keyID];
 }
-bool Keyboard::Release(uint8_t keyID) {
+bool DIKeyboard::Release(uint8_t keyID) {
 	return preKeys_[keyID] && !keys_[keyID];
 }

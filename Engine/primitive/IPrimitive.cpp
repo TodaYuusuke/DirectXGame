@@ -1,6 +1,6 @@
 #pragma once
 #include "IPrimitive.h"
-#include "../base/CommandManager.h"
+#include "../base/directX/command/CommandManager.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Primitive;

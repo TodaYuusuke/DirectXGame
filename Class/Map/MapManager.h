@@ -61,7 +61,7 @@ private: // ** メンバ変数 ** //
 	// マップの配列
 	MapChip maps_[kSubdivision_][kSubdivision_];
 
-	// 衝撃波s最大数
+	// 衝撃波最大数
 	static const int kMaxShockWaveCount_ = 3;
 	// マップに存在する衝撃波の配列
 	ShockWave shockWaves[kMaxShockWaveCount_];

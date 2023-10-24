@@ -27,6 +27,10 @@ public:
 	/// <param name="addAmount">追加する数</param>
 	void AddEnemy(int addAmount);
 
+	/// <summary>
+	/// 防衛対象が死亡したかをチェックする関数
+	/// </summary>
+	bool GetTargetDead() { return !target_.isActive_; }
 
 private: // ** メンバ変数 ** //
 	
