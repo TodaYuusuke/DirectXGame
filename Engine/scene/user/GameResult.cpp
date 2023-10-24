@@ -7,6 +7,7 @@ using namespace LWP;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
+using namespace LWP::Input;
 
 // 初期化
 void GameResult::Initialize() {
@@ -87,7 +88,6 @@ void GameResult::Initialize() {
 	result_->transform.translation = resultWorldTransform_[0].translation;
 
 	#pragma endregion
-
 }
 
 // 更新
@@ -166,13 +166,13 @@ void GameResult::Update() {
 		}
 		else {
 			// ENTERキーを押すとシーン切り替え
-			if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
+			if (Keyboard::GetTrigger(DIK_RETURN)) {
 				isTransitionSceneEnd_ = true;
 			}
 		}
 
 		// Rキーを押すとシーン切り替え
-		if (Input::Keyboard::GetTrigger(DIK_R)) {
+		if (Keyboard::GetTrigger(DIK_R)) {
 			nextScene_ = new GameResult;
 		}
 

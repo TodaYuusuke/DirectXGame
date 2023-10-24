@@ -39,6 +39,10 @@ namespace LWP::Resource {
 		/// </summary>
 		void SetLoopCount(UINT value) { loopCount_ = value; }
 
+		/// <summary>
+		/// 音量を設定する
+		/// </summary>
+		void SetVolume(float value) { pSourceVoice->SetVolume(value); }
 
 	private: // ** メンバ変数 ** //
 		// XAudio2のポインタ
