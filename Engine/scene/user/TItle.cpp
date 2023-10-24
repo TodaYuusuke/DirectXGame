@@ -14,21 +14,63 @@ void Title::Initialize() {
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 
+	skydome_.Initialze();
+
 	// title
 	for (int i = 0; i < 5; i++) {
 		tambourineModel[i] = LWP::Primitive::CreateInstance<Mesh>();
 		tambourineModel[i] = LWP::Resource::LoadModel("tan/tan.obj");
-		tambourineModel[i]->isActive;
-		tambourineModel[i]->transform.scale = { 1.2f,1.2f,1.2f };
-		tambourineModel[i]->transform.rotation = { -1.7f,-0.4f,1.2f };
+		tambourineModel[i]->isActive = true;
+		tambourineModel[i]->transform.rotation = { -1.5f,0.0f,0.0f };
 
 	}
 
-	tambourineModel[0]->transform.translation = { -2.0f,1.45f,0.65f };
-	tambourineModel[1]->transform.translation = { -2.0f,1.45f,0.65f };
-	tambourineModel[2]->transform.translation = { -2.0f,1.45f,0.65f };
-	tambourineModel[3]->transform.translation = { -2.0f,1.45f,0.65f };
-	tambourineModel[4]->transform.translation = { -2.0f,1.45f,0.65f };
+	tambourineModel[0]->transform.translation = { -2.8f,1.45f,1.0f };
+	tambourineModel[1]->transform.translation = { -1.3f,1.45f,0.65f };
+	tambourineModel[2]->transform.translation = { 0.0f,1.45f,0.65f };
+	tambourineModel[3]->transform.translation = { 1.3f,1.45f,0.65f };
+	tambourineModel[4]->transform.translation = { 2.8f,1.45f,1.0f };
+
+	tambourineModel[0]->transform.rotation = { -1.5f,-0.5f,0.0f };
+	tambourineModel[1]->transform.rotation = { -1.5f,-0.3f,0.0f };
+	tambourineModel[2]->transform.rotation = { -1.5f,0.0f,0.0f };
+	tambourineModel[3]->transform.rotation = { -1.5f,0.3f,0.0f };
+	tambourineModel[4]->transform.rotation = { -1.5f,0.5f,0.0f };
+
+	tambourineModel[0]->transform.scale = { 1.5f,1.5f,1.5f };
+	tambourineModel[1]->transform.scale = { 1.2f,1.2f,1.2f };
+	tambourineModel[2]->transform.scale = { 1.5f,1.5f,1.5f };
+	tambourineModel[3]->transform.scale = { 1.2f,1.2f,1.2f };
+	tambourineModel[4]->transform.scale = { 1.5f,1.5f,1.5f };
+
+	//titleText
+	textDO = LWP::Primitive::CreateInstance<Surface>();
+	textDO->texture = LWP::Resource::LoadTexture("UI/do.png");
+	for (int i = 0; i < 2; i++) {
+		textN[i] = LWP::Primitive::CreateInstance<Surface>();
+		textN[i]->texture = LWP::Resource::LoadTexture("UI/n.png");
+	}
+
+	textBA = LWP::Primitive::CreateInstance<Surface>();
+	textBA->texture = LWP::Resource::LoadTexture("UI/ba.png");
+	textRI = LWP::Primitive::CreateInstance<Surface>();
+	textRI->texture = LWP::Resource::LoadTexture("UI/ri.png");
+
+	textDO->transform.translation = { -2.6f,1.45f,0.65f };
+	textN[0]->transform.translation = { -1.3f,1.45f,0.65f };
+	textBA->transform.translation = { 0.0f,1.45f,0.65f };
+	textRI->transform.translation = { 1.3f,1.45f,0.65f };
+	textN[1]->transform.translation = { 2.6f,1.45f,0.65f };
+
+	textDO->transform.rotation = { 0.0f,-0.5f,0.0f };
+	textN[0]->transform.rotation = { 0.0f, -0.3f, 0.0f };
+	textBA->transform.rotation = { 0.0f,0.0f,0.0f };
+	textRI->transform.rotation = { 0.0f,0.3f,0.0f };
+	textN[1]->transform.rotation  = { 0.0f, 0.5f, 0.0f };
+
+	textDO->transform.scale = { 1.3f,1.3f,1.0f };
+	textBA->transform.scale = { 1.3f,1.3f,1.0f };
+	textN[1]->transform.scale = { 1.3f,1.3f,1.0f };
 
 	/*TitleSurface = LWP::Primitive::CreateInstance<Surface>();
 	TitleSurface->isActive = true;
@@ -74,14 +116,29 @@ void Title::Initialize() {
 	// ボタン
 	for (int i = 0; i < 2; i++) {
 		buttonModel[i] = LWP::Primitive::CreateInstance<Mesh>();
-		buttonModel[i] = LWP::Resource::LoadModel("cube/cube.obj");
-		buttonModel[i]->transform.scale = {1.7f,0.8f,0.3f};
-		buttonModel[i]->transform.rotation = { 0.7f,0.0f,0.0f };
+		buttonModel[i] = LWP::Resource::LoadModel("switch/switch.obj");
+		buttonModel[i]->transform.scale = {0.4f,0.4f,0.4f};
 		buttonModel[i]->isActive = true;
-	}
-	buttonModel[0]->transform.translation = { -2.0f,-1.7f,2.0f };
-	buttonModel[1]->transform.translation = { 2.0f,-1.7f,2.0f };
+		/*buttonModel[i]->material.enableLighting = true;*/
 
+		buttonFoundationModel[i] = LWP::Primitive::CreateInstance<Mesh>();
+		buttonFoundationModel[i] = LWP::Resource::LoadModel("switch/switchFoundation.obj");
+		buttonFoundationModel[i]->transform.scale = { 0.7f,0.7f,0.7f };
+		
+		buttonFoundationModel[i]->isActive = true;
+		buttonFoundationModel[i]->material.enableLighting = true;
+	}
+	buttonModel[0]->transform.translation = { -1.8f,-1.3f,1.2f };
+	buttonModel[1]->transform.translation = { 1.7f,-1.3f,1.2f };
+
+	buttonModel[0]->transform.rotation = { -1.0f,-0.4f,0.0f };
+	buttonModel[1]->transform.rotation = { 1.0f,-2.6f,0.0f };
+
+	buttonFoundationModel[0]->transform.translation = { -2.0f,-1.7f,2.0f };
+	buttonFoundationModel[1]->transform.translation = { 2.0f,-1.7f,2.0f };
+
+	buttonFoundationModel[0]->transform.rotation = { 0.8f,2.8f,0.0f };
+	buttonFoundationModel[1]->transform.rotation = { 0.8f,3.8f,0.0f };
 	//
 	particleModel = LWP::Primitive::CreateInstance<Mesh>();
 	particleModel = LWP::Resource::LoadModel("hammer/hammer.obj");
@@ -104,6 +161,7 @@ void Title::Update() {
 	SceneChange();
 	SceneTransition();
 	moveHammer();
+	TitleUI();
 
 	if (Input::Controller::GetTrigger(DIXBOX_A)) {
 		audio->Play();
@@ -125,18 +183,14 @@ void Title::Update() {
 	// SPACEで攻撃
 	if (Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
-		GenerateParticle(hammerModel->transform.translation);
 	}
 
-	// パーティクルの更新
-	UpdateParticles();
-
 	if (Input::Keyboard::GetTrigger(DIK_A)) {
-			selectPoint = true;
+		selectPoint = true;
 		
 	}
 	else if (Input::Keyboard::GetTrigger(DIK_D)) {
-			selectPoint = false;
+		selectPoint = false;
 		
 	}
 
@@ -154,7 +208,6 @@ void Title::Update() {
 		shakeMaxPosition = 20;
 	}
 
-
 	//*******************ImGui*******************//
 	ImGui::Begin("Primitive");
 	TitleSurface->DebugGUI("TitleSurface");
@@ -168,6 +221,9 @@ void Title::Update() {
 	tambourineModel[2]->DebugGUI("tambourine[2]");
 	tambourineModel[3]->DebugGUI("tambourine[3]");
 	tambourineModel[4]->DebugGUI("tambourine[4]");
+	textBA->DebugGUI("textBA");
+	buttonFoundationModel[0]->DebugGUI("buttonFoundation[0]");
+	buttonFoundationModel[1]->DebugGUI("buttonFoundation[1]");
 
 	ImGui::End();
 
@@ -192,9 +248,11 @@ void Title::UpdateTimer() {
 
 	if (selectPoint) {
 		buttonAni.Progress(&buttonModel[0]->transform);
+		buttonAni.Progress(&buttonFoundationModel[0]->transform);
 	}
 	else if (selectPoint == 0) {
 		buttonAni.Progress(&buttonModel[1]->transform);
+		buttonAni.Progress(&buttonFoundationModel[1]->transform);
 
 	}
 }
@@ -229,14 +287,15 @@ void Title::Shake() {
 		shakeMaxPosition = 1;
 	}
 
-	shakePosition = rand() % shakeMaxPosition - shakeMaxPosition / 2;
+	float randValue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX); // generate random value between 0 and 1
+	float scaledRandValue = randValue * shakeMaxPosition - (shakeMaxPosition / 2); // scale the random value
 
 	for (int i = 0; i < 5; i++) {
-		tambourineModel[i]->transform.translation = 
-		{ 
-			tambourineModel[i]->transform.translation.x + shakePosition ,
-			tambourineModel[i]->transform.translation.y + shakePosition,
-			tambourineModel[i]->transform.translation.z + shakePosition 
+		tambourineModel[i]->transform.translation =
+		{
+			tambourineModel[i]->transform.translation.x + scaledRandValue,
+			tambourineModel[i]->transform.translation.y + scaledRandValue,
+			tambourineModel[i]->transform.translation.z + scaledRandValue
 		};
 	}
 }
@@ -333,7 +392,7 @@ void Title::moveHammer() {
 
 void Title::GenerateParticle(LWP::Math::Vector3& hitPosition) {
 
-	particleModel->isActive = true;
+	particleModel->isActive = false;
 	for (int i = 0; i < 5; i++) {
 		particle.position = hitPosition;
 		particle.velocity = Vector3(static_cast<float>(rand() % 5 - 2), static_cast<float>(rand() % 5 + 5), 0); // ランダムな速度
@@ -359,3 +418,12 @@ void Title::UpdateParticles() {
 	}
 }
 
+void Title::TitleUI() {
+	tambourineModel[0]->transform.translation = textDO->transform.translation;
+	tambourineModel[1]->transform.translation = textN[0]->transform.translation;
+	tambourineModel[2]->transform.translation = textBA->transform.translation;
+	tambourineModel[3]->transform.translation = textRI->transform.translation;
+	tambourineModel[4]->transform.translation = textN[1]->transform.translation;
+
+
+}

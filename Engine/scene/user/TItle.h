@@ -1,5 +1,6 @@
 #pragma once
 #include "../IScene.h"
+#include "../Class/Skydome/Skydome.h"
 
 class Title final
 	: public IScene {
@@ -38,6 +39,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	bool useMonsterBall = true;
 
+	// スカイドーム
+	Skydome skydome_;
+
 private: //**プライベートな関数**//
 	// 攻撃
 	void Attack();
@@ -68,6 +72,9 @@ private: //**プライベートな関数**//
 	void GenerateParticle(LWP::Math::Vector3& hitPosition);
 	// 更新
 	void UpdateParticles();
+
+	// TitleUI 
+	void TitleUI();
 
 private: // ** ハンマー ** //
 
@@ -162,6 +169,8 @@ private: //******* ボタン ***************//
 	
 	LWP::Primitive::Mesh* buttonModel[2];
 
+	LWP::Primitive::Mesh* buttonFoundationModel[2];
+
 private: //********* イージング関連 ***********//
 	// イージング用ワールドトランスフォーム
 	LWP::Object::WorldTransform hammerWorldTransform_[2];
@@ -200,7 +209,13 @@ private:// ****************** パーティクル ****************** //
 	std::vector<Particle> particles;
 
 
-private: // ** タイトルのタンバリン ** //
+private: // ** タイトルの関連 ** //
 	LWP::Primitive::Mesh* tambourineModel[5];
+
+	//ドンバリンUI
+	LWP::Primitive::Surface* textDO;
+	LWP::Primitive::Surface* textN[2];
+	LWP::Primitive::Surface* textBA;
+	LWP::Primitive::Surface* textRI;
 
 };
