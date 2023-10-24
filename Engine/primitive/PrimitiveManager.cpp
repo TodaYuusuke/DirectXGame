@@ -14,9 +14,4 @@ void Manager::Draw(Base::CommandManager* manager) {
 	for (IPrimitive* p : primitives_) {
 		p->Draw(manager);
 	}
-
-	// メインの描画
-	for (IPrimitive* p : primitives_) {
-		p->Draw(manager);
-	}
 }
