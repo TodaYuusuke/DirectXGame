@@ -42,7 +42,7 @@ void GameScene::Update() {
 	}
 
 	// ENTERキーを押すとシーン切り替え(ゲームリザルト)
-	if (LWP::Input::GetTrigger(DIK_RETURN)) {
+	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
 		nextScene_ = new GameResult();
 	}
 
