@@ -15,7 +15,7 @@ public: // ** メンバ関数 ** //
 	void Update();
 
 
-private: // ** メンバ関数 ** //
+private: // ** メンバ変数 ** //
 
 	// 移動速度
 	const float kReticleSpeed = 0.02f;
@@ -24,6 +24,8 @@ private: // ** メンバ関数 ** //
 	const int kAttackCoolTime = 60;
 	int attackCoolTimer = -1;
 
+	// サウンド
+	LWP::Resource::Audio* impactSE_;
 
 	// モデル
 	LWP::Primitive::Mesh* model_ = nullptr;
@@ -41,7 +43,7 @@ private: // ** プライベートな関数 ** //
 	// キーボード操作
 	void keyBoard();
 	// コントローラー操作
-	//void Controller();
+	void Controller();
 	
 	// 攻撃
 	void Attack();
