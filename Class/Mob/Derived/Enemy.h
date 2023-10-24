@@ -24,7 +24,7 @@ public:
 private: // ** メンバ定数 ** //
 
 	// 加速度
-	const float kAccele = 0.0002f;
+	const float kAccele = 0.00002f;
 
 private: // ** メンバ変数 ** //
 

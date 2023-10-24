@@ -66,6 +66,9 @@ public:
 	// サイズの基準値
 	float Size = 0.5f;
 
+	// サウンド
+	LWP::Resource::Audio* fallSE_;
+
 	// ** パラメータ ** //
 
 	// 速度

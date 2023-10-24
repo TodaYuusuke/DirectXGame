@@ -19,17 +19,106 @@ void GameScene::Initialize() {
 	mapManager_.Initialize();
 	hammer_.Initialize(&mapManager_);
 	mobManager_.Initialize();
+
+	// サウンド
+	gameBGM_ = LWP::Resource::LoadAudio("battle01.wav");
+	gameBGM_->SetLoopCount(255);
+	gameBGM_->Play();
+	bgmVol_ = 0.0f;
+	gameBGM_->SetVolume(bgmVol_);
+
+	// 数値テクスチャ
+	numberTex_[0] = LWP::Resource::LoadTexture("UI/0.png");
+	numberTex_[1] = LWP::Resource::LoadTexture("UI/1.png");
+	numberTex_[2] = LWP::Resource::LoadTexture("UI/2.png");
+	numberTex_[3] = LWP::Resource::LoadTexture("UI/3.png");
+	numberTex_[4] = LWP::Resource::LoadTexture("UI/4.png");
+	numberTex_[5] = LWP::Resource::LoadTexture("UI/5.png");
+	numberTex_[6] = LWP::Resource::LoadTexture("UI/6.png");
+	numberTex_[7] = LWP::Resource::LoadTexture("UI/7.png");
+	numberTex_[8] = LWP::Resource::LoadTexture("UI/8.png");
+	numberTex_[9] = LWP::Resource::LoadTexture("UI/9.png");
+
+	// スコアUI
+	for (int32_t i = 0; i < 8; i++) {
+		scoreUI_[i] = LWP::Primitive::CreateInstance<Surface>();
+		scoreUI_[i]->texture = numberTex_[0];
+		scoreUI_[i]->vertices[0].position = { 0.0f,0.0f,0.0f };
+		scoreUI_[i]->vertices[1].position = { 48.0f,0.0f,0.0f };
+		scoreUI_[i]->vertices[2].position = { 48.0f,48.0f,0.0f };
+		scoreUI_[i]->vertices[3].position = { 0.0f,48.0f,0.0f };
+		scoreUI_[i]->isUI = true;
+		scoreUI_[i]->isActive = true;
+		scoreUI_[i]->transform.translation = { i * 24.0f,20.0f,0.0f };
+	}
+
+	time_ = 10800;
+	nextSceneWaitTime_ = 300;
+
+	// タイムUI
+	for (int32_t i = 0; i < 3; i++) {
+		timeUI_[i] = LWP::Primitive::CreateInstance<Surface>();
+		timeUI_[i]->texture = numberTex_[0];
+		timeUI_[i]->vertices[0].position = { 0.0f,0.0f,0.0f };
+		timeUI_[i]->vertices[1].position = { 64.0f,0.0f,0.0f };
+		timeUI_[i]->vertices[2].position = { 64.0f,64.0f,0.0f };
+		timeUI_[i]->vertices[3].position = { 0.0f,64.0f,0.0f };
+		timeUI_[i]->isUI = true;
+		timeUI_[i]->isActive = true;
+		timeUI_[i]->transform.translation = { (i * 36.0f) + 1120.0f,20.0f,0.0f };
+	}
+	timeUI_[0]->transform.translation.x -= 20.0f;
+
 }
 // 更新
 void GameScene::Update() {
+
 	mapManager_.Update();
-	hammer_.Update();
-	mobManager_.Update(&mapManager_);
 
 	ImGui::Begin("GameScene");
 	ImGui::Text("Camera");
 	mainCamera->DebugGUI();
 	ImGui::End();
+
+	// 時間がなくなったら or ターゲットが死亡したら終了
+	if (time_ <= 0 || mobManager_.GetTargetDead()) {
+
+		if (bgmVol_ >= 0.0f) {
+			bgmVol_ -= 0.005f;
+			if (bgmVol_ <= 0.0f) { gameBGM_->Stop(); }
+			if (bgmVol_ < 0.0f) { bgmVol_ = 0.0f; }
+			gameBGM_->SetVolume(bgmVol_);
+		}
+
+		// ゲーム終了してから演出用の時間を設ける
+		if (nextSceneWaitTime_ >= 0) {
+			nextSceneWaitTime_--;
+		}
+		else {
+
+			// 護衛対象が生存していればクリア判定をtrueに
+			if (!mobManager_.GetTargetDead()) { isClear_ = true; }
+			nextScene_ = new GameResult();
+
+		}
+
+	}
+	else {
+		if (bgmVol_ < 0.7f) {
+			bgmVol_ += 0.005f;
+			gameBGM_->SetVolume(bgmVol_);
+		}
+
+		time_--;
+		hammer_.Update();
+		mobManager_.Update(&mapManager_);
+
+	}
+
+	// タイマーとスコアのUIへの変換を行う
+	timeUI_[0]->texture = numberTex_[(time_ / 60) / 60];
+	timeUI_[1]->texture = numberTex_[((time_ / 60) % 60)/10];
+	timeUI_[2]->texture = numberTex_[((time_ / 60) % 60) % 10];
 
 	// Cキーを押すと敵召喚
 	if (Input::Keyboard::GetTrigger(DIK_C)) {

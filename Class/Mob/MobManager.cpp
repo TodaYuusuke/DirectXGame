@@ -28,8 +28,8 @@ void MobManager::Update(MapManager* mapManager) {
 
 void MobManager::AddEnemy(int addAmount) {
 	for (int i = 0; i < addAmount; i++) {
-		Vector3 summonPos = Vector3{ 0.9f,0.0f,0.0f } * Matrix4x4::CreateRotateYMatrix(float(GenerateRandamNum<int>(0, 614) / 100.0f));
-		
+		Vector3 summonPos = Vector3{ 0.9f,0.0f,0.0f } *Matrix4x4::CreateRotateYMatrix(float(GenerateRandamNum<int>(0, 614) / 100.0f));
+
 		enemies_.push_back(Enemy());
 		enemies_.back().Initialize();
 		enemies_.back().model_->transform.translation = { summonPos };

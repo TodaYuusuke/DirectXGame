@@ -29,7 +29,7 @@ void IMob::Update() {
 	Vector2 center = { model_->transform.translation.x,model_->transform.translation.z };
 	// 点と円の距離を計算
 	float distance = std::sqrt(center.x * center.x + center.y * center.y);
-	
+
 	// もし地面を貫通したなら修正して反発する（ただし場外のときはそのまま落下する）
 	if (distance < 1.0f) {
 		if (model_->transform.translation.y < 0.0f) {
@@ -37,6 +37,12 @@ void IMob::Update() {
 			// 現在の速度に応じてダメージを与える
 			int damage = static_cast<int>(velocity_.y * 100.0f * GetDamageMultiply());
 			hp_ += damage;
+
+			// 落下時にSEを再生
+			fallSE_->Play();
+			// 速度に応じてVolを変更
+			fallSE_->SetVolume(10.0f * velocity_.y);
+			
 			// 体力がなくなったなら死亡
 			if (hp_ < 0) {
 				model_->isActive = false;
