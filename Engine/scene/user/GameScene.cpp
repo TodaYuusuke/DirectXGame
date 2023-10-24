@@ -131,8 +131,8 @@ void GameScene::Update() {
 		nextScene_ = new GameScene();
 	}
 
-	// カメラの移動
 
+	// カメラの移動
 	if (Input::Controller::GetLStick().x || Input::Controller::GetLStick().y) {
 		LStickVelocity = Input::Controller::GetLStick();
 
