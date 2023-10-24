@@ -131,7 +131,7 @@ private: // ** アニメーション関連 ** //
 			LWP::Object::WorldTransform transform{
 				{ 0.0f, 0.0f, 0.0f },
 				{ 0.0f,0.0f,0.0f },
-				{ 0.0f,0.0f,-0.3f }
+				{ -0.2f,0.0f,-1.3f }
 			};
 		}swingDown;
 		// 戻す
@@ -142,7 +142,7 @@ private: // ** アニメーション関連 ** //
 			LWP::Object::WorldTransform transform{
 				{ 0.0f, 0.0f, 0.0f },
 				{ 0.0f,0.0f,0.0f },
-				{ 0.0f,0.0f,0.3f }
+				{ 0.2f,0.0f,1.3f }
 			};
 		}swingUp;
 

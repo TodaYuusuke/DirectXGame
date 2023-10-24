@@ -19,10 +19,10 @@ void Title::Initialize() {
 	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
 	hammerModel->isActive = true;
 	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
-	hammerModel->transform.translation = { 1.2f,-0.3f,0.65f };
+	hammerModel->transform.translation = { 2.2f,-0.9f,-0.6f };
 
-	hammerModel->transform.rotation = { 0.6f,-0.1f,0.0f };
-	hammerModel->transform.scale = { 0.7f, 0.7f, 0.7f };
+	hammerModel->transform.rotation = { -2.0f,-0.5f,0.0f };
+	hammerModel->transform.scale = { 1.2f, 1.2f, 1.2f };
 
 	// title
 	TitleSurface = LWP::Primitive::CreateInstance<Surface>();
@@ -56,7 +56,6 @@ void Title::Initialize() {
 	transitionSurfase_[0]->transform.translation = { -1280.0f,0.0f,0.0f };
 	transitionSurfase_[1]->transform.translation = { 1280.0f,0.0f,0.0f };
 
-
 	// ボタン
 	for (int i = 0; i < 2; i++) {
 		buttonModel[i] = LWP::Primitive::CreateInstance<Mesh>();
@@ -65,8 +64,8 @@ void Title::Initialize() {
 		buttonModel[i]->transform.rotation = { 0.7f,0.0f,0.0f };
 		buttonModel[i]->isActive = true;
 	}
-	buttonModel[0]->transform.translation = { -1.3f,-1.7f,2.0f };
-	buttonModel[1]->transform.translation = { 1.2f,-1.7f,2.0f };
+	buttonModel[0]->transform.translation = { -2.0f,-1.7f,2.0f };
+	buttonModel[1]->transform.translation = { 2.0f,-1.7f,2.0f };
 
 	//
 	particleModel = LWP::Primitive::CreateInstance<Mesh>();
@@ -294,12 +293,12 @@ void Title::SceneTransition() {
 
 void Title::moveHammer() {
 	if (selectPoint) {
-		if(hammerModel->transform.translation.x >= -1.1f)
+		if(hammerModel->transform.translation.x >= -1.0f)
 		hammerModel->transform.translation.x -= moveSpeed;
 
 	}
 	else {
-		if(hammerModel->transform.translation.x <= 1.2f)
+		if(hammerModel->transform.translation.x <= 2.2f)
 		hammerModel->transform.translation.x += moveSpeed;
 
 	}
