@@ -15,5 +15,5 @@ void DefenseObject::Initialize(){
 	// モデル
 	model_ = LWP::Resource::LoadModel("defense/defense.obj");
 	model_->transform.scale = { 0.1f ,0.1f, 0.1f };
-	model_->commonColor = new Color(ColorPattern::BLUE);
+	//model_->commonColor = new Color(ColorPattern::BLUE);
 }
