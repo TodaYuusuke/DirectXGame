@@ -26,6 +26,7 @@ void GameScene::Update() {
 	hammer_.Update();
 	mobManager_.Update(&mapManager_);
 
+
 	ImGui::Begin("GameScene");
 	ImGui::Text("Camera");
 	mainCamera->DebugGUI();
@@ -40,6 +41,19 @@ void GameScene::Update() {
 	if (Input::Keyboard::GetTrigger(DIK_R)) {
 		nextScene_ = new GameScene();
 	}
+
+	// カメラの移動
+
+	if (Input::Controller::GetLStick().x || Input::Controller::GetLStick().y) {
+		LStickVelocity = Input::Controller::GetLStick();
+
+		sensitivity = 0.002f;
+
+		mainCamera->transform.rotation.z += LStickVelocity.x * sensitivity;
+		mainCamera->transform.rotation.x += LStickVelocity.y * sensitivity;
+
+	}
+	
 
 	// ENTERキーを押すとシーン切り替え(ゲームリザルト)
 	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {

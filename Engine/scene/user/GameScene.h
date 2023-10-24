@@ -34,4 +34,13 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// モブ管理クラス
 	MobManager mobManager_;
+
+private://***** カメラ移動  *****//
+
+	float sensitivity = 0.0f;
+
+	LWP::Math::Vector2 LStickVelocity;
+
+	LWP::Math::Vector3 interTarget_ = {};
+
 };

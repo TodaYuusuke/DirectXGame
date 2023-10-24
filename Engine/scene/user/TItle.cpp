@@ -181,11 +181,14 @@ void Title::Update() {
 	}
 
 	// SPACEで攻撃
-	if (Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
+	if (Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0 || 
+		Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0)
+	{
 		Attack();
 	}
 
-	if (Input::Keyboard::GetTrigger(DIK_A)) {
+	if (Input::Keyboard::GetTrigger(DIK_A)||
+		Input::Controller::GetTrigger(DIXBOX_A)) {
 		selectPoint = true;
 		
 	}
