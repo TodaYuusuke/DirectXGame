@@ -10,16 +10,19 @@ using namespace LWP::Utility;
 
 // 初期化
 void Title::Initialize() {
-	// 地面を作る
-	ground = LWP::Primitive::CreateInstance<Surface>();
-	ground->transform.translation.y = -1.0f;
-	ground->transform.rotation.x = 1.57f;
-	ground->transform.scale = { 10.0f,10.0f, 10.0f };
-	ground->commonColor = new Color(0xD87F00FF);
-	ground->material.enableLighting = true;
-	
+		
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
+
+	// ハンマー
+	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
+	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
+	hammerModel->isActive = true;
+	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
+	hammerModel->transform.translation = { 1.2f,-0.3f,0.65f };
+
+	hammerModel->transform.rotation = { 0.6f,-0.1f,0.0f };
+	hammerModel->transform.scale = { 0.7f, 0.7f, 0.7f };
 
 	// title
 	TitleSurface = LWP::Primitive::CreateInstance<Surface>();
@@ -32,7 +35,7 @@ void Title::Initialize() {
 	TitleSurface->vertices[2].position = {1000.0f,250.0f,0.0f};
 	TitleSurface->vertices[3].position = {0.0f,250.0f,0.0f };
 
-	TitleSurface->transform.translation = { 140.0f ,20.0f ,0.0f };
+	TitleSurface->transform.translation = { 140.0f ,20.0f ,1.0f };
 
 	// シーン遷移用
 	// トランジションフラグをtrueに
@@ -58,23 +61,12 @@ void Title::Initialize() {
 	for (int i = 0; i < 2; i++) {
 		buttonModel[i] = LWP::Primitive::CreateInstance<Mesh>();
 		buttonModel[i] = LWP::Resource::LoadModel("cube/cube.obj");
-		buttonModel[i]->transform.scale = {1.0f,0.5f,0.2f};
+		buttonModel[i]->transform.scale = {1.7f,0.8f,0.3f};
 		buttonModel[i]->transform.rotation = { 0.7f,0.0f,0.0f };
 		buttonModel[i]->isActive = true;
 	}
-	buttonModel[0]->transform.translation = { -1.3f,-0.8f,2.0f };
-	buttonModel[1]->transform.translation = { 1.2f,-0.8f,2.0f };
-
-	// ハンマー
-	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
-	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
-	hammerModel->isActive = true;
-	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
-	hammerModel->transform.translation = { 1.2f,-0.3f,0.65f };
-
-	hammerModel->transform.rotation = { 0.6f,-0.1f,0.0f };
-	hammerModel->transform.scale = { 0.7f, 0.7f, 0.7f };
-
+	buttonModel[0]->transform.translation = { -1.3f,-1.7f,2.0f };
+	buttonModel[1]->transform.translation = { 1.2f,-1.7f,2.0f };
 
 	//
 	particleModel = LWP::Primitive::CreateInstance<Mesh>();
