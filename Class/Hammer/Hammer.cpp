@@ -13,6 +13,10 @@ void Hammer::Initialize(MapManager* map) {
 	reticle_->transform.scale = { 0.3f, 0.3f, 0.3f };
 	reticle_->texture = LoadTexture("reticle.png");
 
+	// サウンドの初期化
+	impactSE_ = LWP::Resource::LoadAudio("impact02.wav");
+	impactSE_->SetLoopCount(0);
+
 	// モデルの初期化
 	model_ = LoadModel("hammer/hammer.obj");
 	model_->transform.translation.y = 1.0f;
@@ -34,6 +38,7 @@ void Hammer::Update() {
 
 	// レティクル移動
 	keyBoard();
+	//Controller();
 
 	// ハンマーとレティクルの座標は常に同期する
 	model_->transform.translation.x = reticle_->transform.translation.x;
@@ -72,6 +77,22 @@ void Hammer::keyBoard() {
 	}
 }
 
+void Hammer::Controller() {
+	LWP::Math::Vector2 move{ 0.0f,0.0f };
+	// スティックでレティクル移動
+
+
+	// レティクルの移動処理
+	move *= kReticleSpeed;
+	reticle_->transform.translation.x += move.x;
+	reticle_->transform.translation.z += move.y;
+
+	// Aボタンで攻撃
+	if (Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
+		Attack();
+	}
+}
+
 void Hammer::Attack() {
 	// アニメーション開始
 	attackAni.timer = attackAni.GetFullTIme();
@@ -80,6 +101,10 @@ void Hammer::Attack() {
 	attackCoolTimer = 30;
 	// 攻撃を発生させる
 	mapPtr_->AddShockWave(reticle_->transform.translation);
+
+	// SEを流す
+	impactSE_->Play();
+	impactSE_->SetVolume(0.5f);
 
 }
 
