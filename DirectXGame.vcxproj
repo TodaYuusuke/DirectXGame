@@ -97,6 +97,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Adapter\component\Resource.cpp" />
     <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
+    <ClCompile Include="Class\Ease\Easing.cpp" />
     <ClCompile Include="Class\Hammer\Hammer.cpp" />
     <ClCompile Include="Class\Map\MapChip.cpp" />
     <ClCompile Include="Class\Map\MapManager.cpp" />
@@ -105,6 +106,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\Mob\Derived\Enemy.cpp" />
     <ClCompile Include="Class\Mob\IMob.cpp" />
     <ClCompile Include="Class\Mob\MobManager.cpp" />
+    <ClCompile Include="Class\Skydome\Skydome.cpp" />
+    <ClCompile Include="Class\Tambourine\Tambourine.cpp" />
+    <ClCompile Include="Engine\base\CommandManager.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\command\ICommand.cpp" />
     <ClCompile Include="Engine\base\directX\command\MainCommand.cpp" />
@@ -141,6 +145,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
+    <ClCompile Include="Engine\scene\user\GameResult.cpp" />
     <ClCompile Include="Engine\scene\user\GameScene.cpp" />
     <ClCompile Include="Engine\scene\user\Title.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
@@ -174,6 +179,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Adapter\component\Resource.h" />
     <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\LWP.h" />
+    <ClInclude Include="Class\Ease\Easing.h" />
     <ClInclude Include="Class\Hammer\Hammer.h" />
     <ClInclude Include="Class\Map\MapChip.h" />
     <ClInclude Include="Class\Map\MapManager.h" />
@@ -182,6 +188,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\Mob\Derived\Enemy.h" />
     <ClInclude Include="Class\Mob\IMob.h" />
     <ClInclude Include="Class\Mob\MobManager.h" />
+    <ClInclude Include="Class\Skydome\Skydome.h" />
+    <ClInclude Include="Class\Tambourine\Tambourine.h" />
+    <ClInclude Include="Engine\base\CommandManager.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\directX\command\MainCommand.h" />
     <ClInclude Include="Engine\base\directX\command\CommandManager.h" />
@@ -226,6 +235,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\scene\user\GameResult.h" />
     <ClInclude Include="Engine\scene\user\GameScene.h" />
     <ClInclude Include="Engine\scene\user\Title.h" />
     <ClInclude Include="Engine\utility\Color.h" />
