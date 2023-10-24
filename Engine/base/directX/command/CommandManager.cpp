@@ -26,8 +26,8 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 
 	// コマンドクラスを生成する
-	shadowMapCommands_ = std::make_unique<ShadowMapCommand>();
-	shadowMapCommands_->Initialize(device_);
+	//shadowMapCommands_ = std::make_unique<ShadowMapCommand>();
+	//shadowMapCommands_->Initialize(device_);
 	mainCommands_ = std::make_unique<MainCommand>();
 	mainCommands_->Initialize(device_);
 
@@ -42,7 +42,7 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	InitializeDXC();
 	// RootSignature生成
 	CreateRootSignature();
-	CreateShadowRS();
+	//CreateShadowRS();
 	// グラフィックスパイプラインを作成
 	CreateGraphicsPipeLineState();
 
@@ -71,7 +71,7 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	srv_ = srv;
 
 	// コマンドにも登録しておく
-	shadowMapCommands_->SetDescriptorHeap(rtv, dsv, srv);
+	//shadowMapCommands_->SetDescriptorHeap(rtv, dsv, srv);
 	mainCommands_->SetDescriptorHeap(rtv, dsv, srv);
 
 	// SRVを登録してからでないとテクスチャが読み込めないので、
@@ -84,16 +84,16 @@ void CommandManager::PreDraw() {
 	
 	// --- シャドウマップのコマンドの初期設定 --- //
 
-	shadowMapCommands_->PreDraw(pipelineSet_->shadowRS_.Get());
-	commandList = shadowMapCommands_->GetList();
+	//shadowMapCommands_->PreDraw(pipelineSet_->shadowRS_.Get());
+	//commandList = shadowMapCommands_->GetList();
 
-	// PSOを登録
-	commandList->SetPipelineState(pipelineSet_->shadowPSO_->state_.Get());
-	// 頂点とインデックスの位置を登録
-	commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
-	commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
-	// 平行光源のCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(1, lightBuffer_->lightResource_->GetGPUVirtualAddress());
+	//// PSOを登録
+	//commandList->SetPipelineState(pipelineSet_->shadowPSO_->state_.Get());
+	//// 頂点とインデックスの位置を登録
+	//commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
+	//commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
+	//// 平行光源のCBufferの場所を設定
+	//commandList->SetGraphicsRootConstantBufferView(1, lightBuffer_->lightResource_->GetGPUVirtualAddress());
 
 
 	// --- メインのコマンドの初期設定 --- //
@@ -111,28 +111,42 @@ void CommandManager::PreDraw() {
 }
 
 void CommandManager::PostDraw() {
-	shadowMapCommands_->PostDraw();
+	//shadowMapCommands_->PostDraw();
 	mainCommands_->PostDraw();
 
 	
 	// - コマンドリストをすべてCloseした後 - //
 
 	// コマンドリストを配列化
-	ID3D12CommandList* commandLists[] = { shadowMapCommands_->GetList(), mainCommands_->GetList() };
-	for (int i = 0; i < 2; i++) {
-		// GPUにコマンドリストの実行を行わせる
-		commandQueue_->ExecuteCommandLists(1, &commandLists[i]);
+	//ID3D12CommandList* commandLists[] = { shadowMapCommands_->GetList(), mainCommands_->GetList() };
+	//for (int i = 0; i < 2; i++) {
+	//	// GPUにコマンドリストの実行を行わせる
+	//	commandQueue_->ExecuteCommandLists(1, &commandLists[i]);
 
-		// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-		commandQueue_->Signal(fence_.Get(), ++fenceVal_);
-		if (fence_->GetCompletedValue() != fenceVal_) {
-			HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
-			assert(event != nullptr);
-			fence_->SetEventOnCompletion(fenceVal_, event);
-			WaitForSingleObject(event, INFINITE);
-			CloseHandle(event);
-		}
+	//	// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+	//	commandQueue_->Signal(fence_.Get(), ++fenceVal_);
+	//	if (fence_->GetCompletedValue() != fenceVal_) {
+	//		HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
+	//		assert(event != nullptr);
+	//		fence_->SetEventOnCompletion(fenceVal_, event);
+	//		WaitForSingleObject(event, INFINITE);
+	//		CloseHandle(event);
+	//	}
+	//}
+	ID3D12CommandList* commandLists[] = { mainCommands_->GetList() };
+	// GPUにコマンドリストの実行を行わせる
+	commandQueue_->ExecuteCommandLists(1, commandLists);
+
+	// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+	commandQueue_->Signal(fence_.Get(), ++fenceVal_);
+	if (fence_->GetCompletedValue() != fenceVal_) {
+		HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		assert(event != nullptr);
+		fence_->SetEventOnCompletion(fenceVal_, event);
+		WaitForSingleObject(event, INFINITE);
+		CloseHandle(event);
 	}
+	
 
 	// GPUとOSに画面の交換を行うよう通知する
 	rtv_->GetSwapChain()->Present(1, 0);
@@ -140,7 +154,7 @@ void CommandManager::PostDraw() {
 
 void CommandManager::Reset() {
 	mainCommands_->Reset();
-	shadowMapCommands_->Reset();
+	//shadowMapCommands_->Reset();
 
 	vertexResourceBuffer_->usedVertexCount_ = 0;
 	vertexResourceBuffer_->usedIndexCount_ = 0;
@@ -211,7 +225,7 @@ void CommandManager::Draw(Primitive::IPrimitive* primitive) {
 	// シャドウマップにも描画！
 	if (primitive->material.enableLighting) {
 		// WorldTransformの場所を設定
-		shadowMapCommands_->GetList()->SetGraphicsRootConstantBufferView(0, matrixResource_[usedMatrixCount_]->view_);
+		//shadowMapCommands_->GetList()->SetGraphicsRootConstantBufferView(0, matrixResource_[usedMatrixCount_]->view_);
 		// 描画！
 		//shadowMapCommands_->GetList()->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
 	}
@@ -410,8 +424,8 @@ void CommandManager::CreateGraphicsPipeLineState() {
 	}
 
 	// シャドウマップ用のPSO
-	pipelineSet_->shadowPSO_ = std::make_unique<PSO>();
-	pipelineSet_->shadowPSO_->InitializeForShadow(device_, pipelineSet_->shadowRS_.Get(), pipelineSet_->dxc_.get());
+	//pipelineSet_->shadowPSO_ = std::make_unique<PSO>();
+	//pipelineSet_->shadowPSO_->InitializeForShadow(device_, pipelineSet_->shadowRS_.Get(), pipelineSet_->dxc_.get());
 }
 
 
