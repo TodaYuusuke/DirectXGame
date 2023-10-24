@@ -73,7 +73,7 @@ void Title::Initialize() {
 	hammerModel->transform.translation = { 1.2f,-0.3f,0.65f };
 
 	hammerModel->transform.rotation = { 0.6f,-0.1f,0.0f };
-	hammerModel->transform.scale = { 0.3f, 0.3f, 0.3f };
+	hammerModel->transform.scale = { 0.7f, 0.7f, 0.7f };
 
 
 	//
