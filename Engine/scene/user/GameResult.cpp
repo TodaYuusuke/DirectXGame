@@ -3,6 +3,7 @@
 #include "TItle.h"
 #include "../Class/Ease/Easing.h"
 
+using namespace LWP;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
