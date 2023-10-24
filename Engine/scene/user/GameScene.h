@@ -31,9 +31,27 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	Skydome skydome_;
 	// タンバリン
 	Tambourine tambourine_;
-
 	// モブ管理クラス
 	MobManager mobManager_;
+
+	// サウンド
+	LWP::Resource::Audio* gameBGM_ = nullptr;
+	float bgmVol_ = 0.0f;
+
+	// 数値テクスチャ
+	LWP::Resource::Texture* numberTex_[10] = { nullptr };
+	// スコア
+	int32_t score_;
+	LWP::Primitive::Surface* scoreUI_[8] = { nullptr };
+	// タイム
+	int32_t time_;
+	int32_t calcTime_;
+	LWP::Primitive::Surface* timeUI_[3] = { nullptr };
+	int32_t nextSceneWaitTime_;
+
+	// クリア判定フラグ
+	bool isClear_;
+
 
 private://***** カメラ移動  *****//
 

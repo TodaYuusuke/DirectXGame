@@ -16,4 +16,11 @@ void DefenseObject::Initialize(){
 	model_ = LWP::Resource::LoadModel("defense/defense.obj");
 	model_->transform.scale = { 0.1f ,0.1f, 0.1f };
 	//model_->commonColor = new Color(ColorPattern::BLUE);
+
+	// サウンド
+	fallSE_ = LWP::Resource::LoadAudio("efall01.wav");
+	fallSE_->SetLoopCount(0);
+
+	// HPを1000
+	hp_ = 1000;
 }

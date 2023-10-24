@@ -17,6 +17,11 @@ void Enemy::Initialize(){
 	model_ = LWP::Resource::LoadModel("enemy/enemy.obj");
 	model_->transform.scale = { 0.1f ,0.1f, 0.1f };
 	//model_->commonColor = new Color(ColorPattern::RED);
+
+	// サウンド
+	fallSE_ = LWP::Resource::LoadAudio("efall01.wav");
+	fallSE_->SetLoopCount(0);
+
 }
 
 void Enemy::Moving() {
