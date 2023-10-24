@@ -14,18 +14,23 @@ void Title::Initialize() {
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
 
-	// ハンマー
-	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
-	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
-	hammerModel->isActive = true;
-	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
-	hammerModel->transform.translation = { 2.2f,-0.9f,-0.6f };
-
-	hammerModel->transform.rotation = { -2.0f,-0.5f,0.0f };
-	hammerModel->transform.scale = { 1.2f, 1.2f, 1.2f };
-
 	// title
-	TitleSurface = LWP::Primitive::CreateInstance<Surface>();
+	for (int i = 0; i < 5; i++) {
+		tambourineModel[i] = LWP::Primitive::CreateInstance<Mesh>();
+		tambourineModel[i] = LWP::Resource::LoadModel("tan/tan.obj");
+		tambourineModel[i]->isActive;
+		tambourineModel[i]->transform.scale = { 1.2f,1.2f,1.2f };
+		tambourineModel[i]->transform.rotation = { -1.7f,-0.4f,1.2f };
+
+	}
+
+	tambourineModel[0]->transform.translation = { -2.0f,1.45f,0.65f };
+	tambourineModel[1]->transform.translation = { -2.0f,1.45f,0.65f };
+	tambourineModel[2]->transform.translation = { -2.0f,1.45f,0.65f };
+	tambourineModel[3]->transform.translation = { -2.0f,1.45f,0.65f };
+	tambourineModel[4]->transform.translation = { -2.0f,1.45f,0.65f };
+
+	/*TitleSurface = LWP::Primitive::CreateInstance<Surface>();
 	TitleSurface->isActive = true;
 	TitleSurface->isUI = true;
 	TitleSurface->texture = uvTexture;
@@ -35,7 +40,17 @@ void Title::Initialize() {
 	TitleSurface->vertices[2].position = {1000.0f,250.0f,0.0f};
 	TitleSurface->vertices[3].position = {0.0f,250.0f,0.0f };
 
-	TitleSurface->transform.translation = { 140.0f ,20.0f ,1.0f };
+	TitleSurface->transform.translation = { 140.0f ,20.0f ,1.0f };*/
+
+	// ハンマー
+	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
+	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
+	hammerModel->isActive = true;
+	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
+	hammerModel->transform.translation = { 2.2f,-0.9f,-0.6f };
+
+	hammerModel->transform.rotation = { -2.0f,-0.5f,0.0f };
+	hammerModel->transform.scale = { 1.2f, 1.2f, 1.2f };
 
 	// シーン遷移用
 	// トランジションフラグをtrueに
@@ -148,6 +163,12 @@ void Title::Update() {
 	transitionSurfase_[0]->DebugGUI("transitionSurface[0]");
 	transitionSurfase_[1]->DebugGUI("transitionSurface[1]");
 	hammerModel->DebugGUI("hammerModel");
+	tambourineModel[0]->DebugGUI("tambourine[0]");
+	tambourineModel[1]->DebugGUI("tambourine[1]");
+	tambourineModel[2]->DebugGUI("tambourine[2]");
+	tambourineModel[3]->DebugGUI("tambourine[3]");
+	tambourineModel[4]->DebugGUI("tambourine[4]");
+
 	ImGui::End();
 
 	ImGui::Begin("hammerPos");
@@ -210,8 +231,14 @@ void Title::Shake() {
 
 	shakePosition = rand() % shakeMaxPosition - shakeMaxPosition / 2;
 
-	TitleSurface->transform.translation = { 140.0f + shakePosition ,20.0f + shakePosition,0.0f + shakePosition };
-
+	for (int i = 0; i < 5; i++) {
+		tambourineModel[i]->transform.translation = 
+		{ 
+			tambourineModel[i]->transform.translation.x + shakePosition ,
+			tambourineModel[i]->transform.translation.y + shakePosition,
+			tambourineModel[i]->transform.translation.z + shakePosition 
+		};
+	}
 }
 
 void Title::Attack() {

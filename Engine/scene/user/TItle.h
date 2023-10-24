@@ -94,8 +94,8 @@ private: // ** アニメーション関連 ** //
 
 			// 移動量
 			LWP::Object::WorldTransform transform{
-				{ 0.0f,-0.4f, 1.4f },
-				{ 0.0f,0.0f,0.0f },
+				{ 0.0f,-0.4f, 0.0f },
+				{ 1.2f,0.0f,0.0f },
 				{ 0.0f,0.0f,0.0f }
 			};
 		}swingDown;
@@ -105,8 +105,8 @@ private: // ** アニメーション関連 ** //
 			int time = 8;
 			// 移動量
 			LWP::Object::WorldTransform transform{
-				{ 0.0f, 0.4f,-1.4f },
-				{ 0.0f,0.0f,0.0f },
+				{ 0.0f, 0.4f,0.0f },
+				{ -1.2f,0.0f,0.0f },
 				{ 0.0f,0.0f,0.0f }
 			};
 		}swingUp;
@@ -131,7 +131,7 @@ private: // ** アニメーション関連 ** //
 			LWP::Object::WorldTransform transform{
 				{ 0.0f, 0.0f, 0.0f },
 				{ 0.0f,0.0f,0.0f },
-				{ -0.2f,0.0f,-1.3f }
+				{ -0.2f,0.0f,-0.3f }
 			};
 		}swingDown;
 		// 戻す
@@ -142,7 +142,7 @@ private: // ** アニメーション関連 ** //
 			LWP::Object::WorldTransform transform{
 				{ 0.0f, 0.0f, 0.0f },
 				{ 0.0f,0.0f,0.0f },
-				{ 0.2f,0.0f,1.3f }
+				{ 0.2f,0.0f,0.3f }
 			};
 		}swingUp;
 
@@ -188,7 +188,7 @@ private: //***********　シーン遷移用　***********//
 	// タイトルかリトライの選択ボタン
 	bool isGoTitle = false;
 
-private:
+private:// ****************** パーティクル ****************** //
 	// パーティクルの構造体
 	struct Particle {
 		LWP::Math::Vector3 position;
@@ -199,5 +199,8 @@ private:
 
 	std::vector<Particle> particles;
 
+
+private: // ** タイトルのタンバリン ** //
+	LWP::Primitive::Mesh* tambourineModel[5];
 
 };
