@@ -57,7 +57,7 @@ void GameScene::Initialize() {
 		scoreUI_[i]->transform.translation = { i * 24.0f,20.0f,0.0f };
 	}
 
-	time_ = 10800;
+	time_ = 3600;
 	nextSceneWaitTime_ = 300;
 
 	// タイムUI
@@ -121,10 +121,10 @@ void GameScene::Update() {
 		}
 
 		// 敵の出現
-		if ((time_ % 600) == 0) {
+		if ((time_ % 350) == 0) {
 			// 基本3体
 			mobManager_.AddEnemy(3);
-			if (time_ <= 5400) {
+			if (time_ <= 3000) {
 				// 後半で5体に
 				mobManager_.AddEnemy(2);
 			}
