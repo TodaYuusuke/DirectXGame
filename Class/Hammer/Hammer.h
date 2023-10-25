@@ -1,6 +1,7 @@
 #pragma once
 #include <Adapter.h>
 #include "../Map/MapManager.h"
+#include "../Class/Tambourine/Tambourine.h"
 
 class Hammer final {
 public: // ** メンバ関数 ** //
@@ -27,9 +28,12 @@ private: // ** メンバ変数 ** //
 
 	// サウンド
 	LWP::Resource::Audio* impactSE_;
+	LWP::Resource::Audio* bellSE_;
 
 	// モデル
 	LWP::Primitive::Mesh* model_ = nullptr;
+	// タンバリン
+	Tambourine tambourine_;
 	// 打撃地点のレティクル
 	LWP::Primitive::Surface* reticle_ = nullptr;
 

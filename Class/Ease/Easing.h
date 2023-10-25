@@ -17,6 +17,12 @@ public:// ** メンバ関数 ** //
 		float t
 	);
 	
+	static int32_t EaseinQuad(
+		int32_t s,
+		int32_t e,
+		float t
+	);
+
 private:
 
 	

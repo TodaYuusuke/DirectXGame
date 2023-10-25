@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "GameResult.h"
+#include "../Class/Ease/Easing.h"
 
 using namespace LWP;
 using namespace LWP::Primitive;
@@ -14,7 +15,6 @@ void GameScene::Initialize() {
 	//mainCamera->transform.translation = { 0.0f,3.5f,-3.0f };
 	//mainCamera->transform.rotation = { 0.85f,0.0f,0.0f };
 	
-	tambourine_.Initialize();
 	skydome_.Initialze();
 	mapManager_.Initialize();
 	hammer_.Initialize(&mapManager_);
@@ -40,6 +40,11 @@ void GameScene::Initialize() {
 	numberTex_[9] = LWP::Resource::LoadTexture("UI/9.png");
 
 	// スコアUI
+	score_ = 0;
+	scoreEaseT = 0.0f;
+	calcScore_[0], calcScore_[1] = 0;
+	viewScore_ = 0;
+
 	for (int32_t i = 0; i < 8; i++) {
 		scoreUI_[i] = LWP::Primitive::CreateInstance<Surface>();
 		scoreUI_[i]->texture = numberTex_[0];
@@ -105,7 +110,7 @@ void GameScene::Update() {
 
 	}
 	else {
-		if (bgmVol_ < 0.7f) {
+		if (bgmVol_ < 0.5f) {
 			bgmVol_ += 0.005f;
 			gameBGM_->SetVolume(bgmVol_);
 		}
@@ -113,8 +118,27 @@ void GameScene::Update() {
 		time_--;
 		hammer_.Update();
 		mobManager_.Update(&mapManager_);
+		score_ = mobManager_.score_;
+
+		// 終点の値と現在スコア値が違う場合
+		if (calcScore_[1] != score_) {
+			// 始点の値に現在表示されている値を代入
+			calcScore_[0] = viewScore_;
+			// 終点の値を代入する
+			calcScore_[1] = score_;
+			// イージングの位置をリセット
+			scoreEaseT = 0.0f;
+		}
 
 	}
+	
+	// スコアの表示をイージングする
+	if (scoreEaseT < 1.0f) {
+		scoreEaseT += 0.025f;
+		if (scoreEaseT > 1.0f) { scoreEaseT = 1.0f; }
+	}
+	viewScore_ = Easing::EaseinQuad(calcScore_[0], calcScore_[1], scoreEaseT);
+	
 
 	Reset();
 
@@ -122,6 +146,22 @@ void GameScene::Update() {
 	timeUI_[0]->texture = numberTex_[(time_ / 60) / 60];
 	timeUI_[1]->texture = numberTex_[((time_ / 60) % 60)/10];
 	timeUI_[2]->texture = numberTex_[((time_ / 60) % 60) % 10];
+	// スコア
+	scoreUI_[0]->texture = numberTex_[(viewScore_ / 10000000)];
+	viewScore_ = viewScore_ % 10000000;
+	scoreUI_[1]->texture = numberTex_[(viewScore_ / 1000000)];
+	viewScore_ = viewScore_ % 1000000;
+	scoreUI_[2]->texture = numberTex_[(viewScore_ / 100000)];
+	viewScore_ = viewScore_ % 100000;
+	scoreUI_[3]->texture = numberTex_[(viewScore_ / 10000)];
+	viewScore_ = viewScore_ % 10000;
+	scoreUI_[4]->texture = numberTex_[(viewScore_ / 1000)];
+	viewScore_ = viewScore_ % 1000;
+	scoreUI_[5]->texture = numberTex_[(viewScore_ / 100)];
+	viewScore_ = viewScore_ % 100;
+	scoreUI_[6]->texture = numberTex_[(viewScore_ / 10)];
+	viewScore_ = viewScore_ % 10;
+	scoreUI_[7]->texture = numberTex_[(viewScore_)];
 
 	// Cキーを押すと敵召喚
 	if (Input::Keyboard::GetTrigger(DIK_C)) {
