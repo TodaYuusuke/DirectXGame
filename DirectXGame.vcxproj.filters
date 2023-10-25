@@ -211,9 +211,6 @@
     <ClCompile Include="Class\Tambourine\Tambourine.cpp">
       <Filter>Class\Tambourine</Filter>
     </ClCompile>
-    <ClCompile Include="FollowCamera.cpp">
-      <Filter>Class\FollowCamera</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -447,9 +444,6 @@
     <ClInclude Include="Class\Tambourine\Tambourine.h">
       <Filter>Class\Tambourine</Filter>
     </ClInclude>
-    <ClInclude Include="FollowCamera.h">
-      <Filter>Class\FollowCamera</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -574,9 +568,6 @@
     </Filter>
     <Filter Include="Class\Tambourine">
       <UniqueIdentifier>{be3db6a3-24de-43ef-945c-2ba7dae4db5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\FollowCamera">
-      <UniqueIdentifier>{3db3b399-3e4a-431f-86ec-ea892147f3fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

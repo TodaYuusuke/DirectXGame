@@ -55,11 +55,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 private://***** カメラ移動  *****//
 
-	float sensitivity = 0.0f;
-
 	LWP::Math::Vector2 LStickVelocity;
 
-	LWP::Math::Vector3 interTarget_ = {};
+	void Reset();
 
-
+	LWP::Math::Vector3 Lerp(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, float t);
 };

@@ -76,6 +76,8 @@ private: //**プライベートな関数**//
 	// TitleUI 
 	void TitleUI();
 
+	void Controller();
+
 private: // ** ハンマー ** //
 
 	// 攻撃クールタイム

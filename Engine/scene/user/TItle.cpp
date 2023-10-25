@@ -88,10 +88,9 @@ void Title::Initialize() {
 	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
 	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
 	hammerModel->isActive = true;
-	hammerModel->transform.translation = { -1.1f,-0.3f,0.65f };
-	hammerModel->transform.translation = { 2.2f,-0.9f,-0.6f };
+	hammerModel->transform.translation = { 0.7f,-0.9f,-2.7f };
 
-	hammerModel->transform.rotation = { -2.0f,-0.5f,0.0f };
+	hammerModel->transform.rotation = { -2.0f,0.6f,0.0f };
 	hammerModel->transform.scale = { 1.2f, 1.2f, 1.2f };
 
 	// シーン遷移用
@@ -129,29 +128,29 @@ void Title::Initialize() {
 		buttonFoundationModel[i]->material.enableLighting = true;
 	}
 	buttonModel[0]->transform.translation = { -1.8f,-1.3f,1.2f };
-	buttonModel[1]->transform.translation = { 1.7f,-1.3f,1.2f };
+	buttonModel[1]->transform.translation = { 1.77f,-1.3f,1.2f };
 
 	buttonModel[0]->transform.rotation = { -1.0f,-0.4f,0.0f };
-	buttonModel[1]->transform.rotation = { 1.0f,-2.6f,0.0f };
+	buttonModel[1]->transform.rotation = { 1.0f,3.5f,0.0f };
 
 	buttonFoundationModel[0]->transform.translation = { -2.0f,-1.7f,2.0f };
 	buttonFoundationModel[1]->transform.translation = { 2.0f,-1.7f,2.0f };
 
 	buttonFoundationModel[0]->transform.rotation = { 0.8f,2.8f,0.0f };
-	buttonFoundationModel[1]->transform.rotation = { 0.8f,3.8f,0.0f };
+	buttonFoundationModel[1]->transform.rotation = { 0.8f,3.6f,0.0f };
 	//
-	particleModel = LWP::Primitive::CreateInstance<Mesh>();
-	particleModel = LWP::Resource::LoadModel("hammer/hammer.obj");
-	particleModel->transform.translation;
+	//particleModel = LWP::Primitive::CreateInstance<Mesh>();
+	//particleModel = LWP::Resource::LoadModel("hammer/hammer.obj");
+	//particleModel->transform.translation;
 
-	particleModel->transform.rotation = { 0.6f,-0.1f,0.0f };
-	particleModel->transform.scale = { 0.3f, 0.3f, 0.3f };
+	//particleModel->transform.rotation = { 0.6f,-0.1f,0.0f };
+	//particleModel->transform.scale = { 0.3f, 0.3f, 0.3f };
 	// パーティクル
-	//作成
-	for (const auto& newParticle : particles) {
-		
-		particleModel->transform.translation = newParticle.position;
-	}
+	////作成
+	//for (const auto& newParticle : particles) {
+	//	
+	//	particleModel->transform.translation = newParticle.position;
+	//}
 }
 
 // 更新
@@ -162,13 +161,7 @@ void Title::Update() {
 	SceneTransition();
 	moveHammer();
 	TitleUI();
-
-	if (Input::Controller::GetTrigger(DIXBOX_A)) {
-		audio->Play();
-	}
-	if (Input::Controller::GetTrigger(DIXBOX_B)) {
-		audio->Stop();
-	}
+	Controller();
 
 	// ENTERキーを押すとシーン切り替え
 	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
@@ -180,15 +173,7 @@ void Title::Update() {
 		nextScene_ = new GameScene();
 	}
 
-	// SPACEで攻撃
-	if (Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0 || 
-		Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0)
-	{
-		Attack();
-	}
-
-	if (Input::Keyboard::GetTrigger(DIK_A)||
-		Input::Controller::GetTrigger(DIXBOX_A)) {
+	if (Input::Keyboard::GetTrigger(DIK_A)) {
 		selectPoint = true;
 		
 	}
@@ -198,17 +183,19 @@ void Title::Update() {
 	}
 
 	//次のシーンへ移動
-	if (selectPoint && Input::Keyboard::GetTrigger(DIK_SPACE)) {
-		sceneChangeTiemFlag = false;		
+	if (selectPoint && Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
+		sceneChangeTiemFlag = true;		
 		ButtonPush();
 		shakeMaxPosition = 20;
+		Attack();
 	}
 
 	//windowを閉じる
-	if (selectPoint == 0 && Input::Keyboard::GetTrigger(DIK_SPACE)) {
+	if (selectPoint == 0 && Input::Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		sceneChangeTiemFlag = false;
 		ButtonPush();
 		shakeMaxPosition = 20;
+		Attack();
 	}
 
 	//*******************ImGui*******************//
@@ -290,8 +277,8 @@ void Title::Shake() {
 		shakeMaxPosition = 1;
 	}
 
-	float randValue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX); // generate random value between 0 and 1
-	float scaledRandValue = randValue * shakeMaxPosition - (shakeMaxPosition / 2); // scale the random value
+	float randValue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	float scaledRandValue = randValue * shakeMaxPosition - (shakeMaxPosition / 2);
 
 	for (int i = 0; i < 5; i++) {
 		tambourineModel[i]->transform.translation =
@@ -382,14 +369,23 @@ void Title::SceneTransition() {
 
 void Title::moveHammer() {
 	if (selectPoint) {
-		if(hammerModel->transform.translation.x >= -1.0f)
-		hammerModel->transform.translation.x -= moveSpeed;
+		if (hammerModel->transform.translation.x >= -0.7f) {
+			hammerModel->transform.translation.x -= moveSpeed;
+		}
+
+		if (hammerModel->transform.rotation.y >= -0.5f) {
+			hammerModel->transform.rotation.y -= moveSpeed;
+		}
 
 	}
 	else {
-		if(hammerModel->transform.translation.x <= 2.2f)
-		hammerModel->transform.translation.x += moveSpeed;
-
+		if (hammerModel->transform.translation.x <= 0.4f) {
+			hammerModel->transform.translation.x += moveSpeed;
+		}
+		if (hammerModel->transform.rotation.y <= 0.7f) {
+			hammerModel->transform.rotation.y += moveSpeed;
+		}
+		
 	}
 }
 
@@ -429,4 +425,31 @@ void Title::TitleUI() {
 	tambourineModel[4]->transform.translation = textN[1]->transform.translation;
 
 
+}
+
+void Title::Controller(){
+	if (Input::Controller::GetLStick().x >= 1.0f) {
+		selectPoint = false;
+
+	}
+	else if (Input::Controller::GetLStick().x <= -1.0f) {
+		selectPoint = true;
+
+	}
+
+	//次のシーンへ移動
+	if (selectPoint && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
+		sceneChangeTiemFlag = true;
+		ButtonPush();
+		shakeMaxPosition = 20;
+		Attack();
+	}
+
+	//windowを閉じる
+	if (selectPoint == 0 && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
+		sceneChangeTiemFlag = false;
+		ButtonPush();
+		shakeMaxPosition = 20;
+		Attack();
+	}
 }
