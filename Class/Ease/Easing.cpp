@@ -45,3 +45,11 @@ LWP::Object::WorldTransform Easing::EaseOutQuint(
 	result.translation.y = (1.0f - EasedT) * s.translation.y + EasedT * e.translation.y;
 	return result;
 }
+
+int32_t Easing::EaseinQuad(int32_t s,int32_t e,float t) {
+	float result = 0;
+	float EasedT = t * t;
+
+	result = (1.0f - EasedT) * s + EasedT * e;
+	return (int32_t)result;
+}

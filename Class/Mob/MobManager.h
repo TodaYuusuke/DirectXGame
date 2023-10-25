@@ -31,6 +31,11 @@ public:
 	/// 防衛対象が死亡したかをチェックする関数
 	/// </summary>
 	bool GetTargetDead() { return !target_.isActive_; }
+	
+public : // ** メンバ変数 ** //
+
+	// スコア
+	int32_t score_;
 
 private: // ** メンバ変数 ** //
 	
@@ -38,4 +43,5 @@ private: // ** メンバ変数 ** //
 	DefenseObject target_;
 	// エネミーの可変長配列
 	std::list<Enemy> enemies_;
+
 };

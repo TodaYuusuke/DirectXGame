@@ -6,6 +6,7 @@ using namespace LWP::Utility;
 void MobManager::Initialize() {
 	target_.Initialize();
 	enemies_.clear();
+	score_ = 0;
 }
 
 void MobManager::Update(MapManager* mapManager) {
@@ -23,7 +24,9 @@ void MobManager::Update(MapManager* mapManager) {
 	ImGui::End();
 
 	// isActiveがfalseになったオブジェクトを削除する
-	enemies_.remove_if([](const Enemy& obj) { return !obj.isActive_; });
+	enemies_.remove_if([&](const Enemy& obj) { 
+		if (!obj.isActive_) { score_ += 1248; }
+		return !obj.isActive_; });
 }
 
 void MobManager::AddEnemy(int addAmount) {

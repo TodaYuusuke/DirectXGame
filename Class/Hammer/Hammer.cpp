@@ -16,6 +16,8 @@ void Hammer::Initialize(MapManager* map) {
 	// サウンドの初期化
 	impactSE_ = LWP::Resource::LoadAudio("impact02.wav");
 	impactSE_->SetLoopCount(0);
+	bellSE_ = LWP::Resource::LoadAudio("impact03.wav");
+	bellSE_->SetLoopCount(0);
 
 	// モデルの初期化
 	model_ = LoadModel("hammer/hammer.obj");
@@ -23,6 +25,9 @@ void Hammer::Initialize(MapManager* map) {
 	model_->transform.scale = { 0.1f, 0.1f, 0.1f };
 	// 半透明に
 	model_->commonColor = new Color(0xFFFFFF64);
+
+	// タンバリンの初期化
+	tambourine_.Initialize();
 
 	// マップのポインタ受け取り
 	mapPtr_ = map;
@@ -35,6 +40,9 @@ void Hammer::Update() {
 	model_->DebugGUI("Hammer");
 	reticle_->DebugGUI("reticle");
 	ImGui::End();
+
+	// タンバリンの更新
+	tambourine_.Update();
 
 	// レティクル移動
 	keyBoard();
@@ -74,6 +82,8 @@ void Hammer::keyBoard() {
 	// SPACEで攻撃
 	if (Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
+		// タンバリンのベルをシェイクさせる
+		tambourine_.ShakeBell();
 	}
 }
 
@@ -104,7 +114,9 @@ void Hammer::Attack() {
 
 	// SEを流す
 	impactSE_->Play();
-	impactSE_->SetVolume(0.5f);
+	impactSE_->SetVolume(0.6f);
+	bellSE_->Play();
+	bellSE_->SetVolume(0.6f);
 
 }
 
