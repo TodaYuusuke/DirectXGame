@@ -104,7 +104,8 @@ void GameScene::Update() {
 
 			// 護衛対象が生存していればクリア判定をtrueに
 			if (!mobManager_.GetTargetDead()) { isClear_ = true; }
-			nextScene_ = new GameResult();
+			nextScene_ = new GameResult(score_, time_);
+			gameBGM_->Stop();
 
 		}
 
@@ -174,11 +175,14 @@ void GameScene::Update() {
 	// Rキーを押すとシーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {
 		nextScene_ = new GameScene();
-	}	
+		gameBGM_->Stop();
+	}
 
 	// ENTERキーを押すとシーン切り替え(ゲームリザルト)
 	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
-		nextScene_ = new GameResult();
+
+		nextScene_ = new GameResult(score_,time_);
+		gameBGM_->Stop();
 	}
 
 }
