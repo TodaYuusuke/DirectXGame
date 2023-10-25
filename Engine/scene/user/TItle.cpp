@@ -37,20 +37,23 @@ void Title::Initialize() {
 	surface = LWP::Primitive::CreateInstance<Surface>();
 	surface->transform.translation.x = -0.7f;
 	surface->texture = uvTexture;
+	surface->isActive = false;
 
 	// 球
 	sphere = LWP::Primitive::CreateInstance<Sphere>();
 	sphere->Radius(0.2f);
 	sphere->transform.translation.x = 0.7f;
 	sphere->material.enableLighting = true;
-	surface->texture = uvTexture;
+	sphere->texture = uvTexture;
 
 	// モデル読み込み
 	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
 	cubeModel->transform.scale = { 0.5f,0.5f, 0.5f };
 	cubeModel->material.enableLighting = true;
+	cubeModel->isActive = false;
 	axisModel = LWP::Resource::LoadModel("axis.obj");
 	axisModel->material.enableLighting = true;
+	axisModel->isActive = false;
 }
 
 // 更新

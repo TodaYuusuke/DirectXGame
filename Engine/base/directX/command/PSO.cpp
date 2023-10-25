@@ -42,6 +42,7 @@ void PSO::InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, D
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {
+	/* 頂点はバッファーで送信するので、InputLayoutは不要
 	// 頂点レイアウト
 	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -53,8 +54,9 @@ D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	*/
 
-	return inputLayoutDesc;
+	return D3D12_INPUT_LAYOUT_DESC();
 }
 D3D12_BLEND_DESC PSO::CreateBlendState() {
 	// すべての色要素を書き込む

@@ -5,6 +5,22 @@
 //#include "../Engine/resources/texture/Texture.h"	// テクスチャ
 
 namespace LWP::Base {
+	// インデックス情報の構造体
+	struct IndexInfoStruct {
+		uint32_t vertex;        // 実質頂点インデックスの役割
+		uint32_t cameraVP;      // カメラのビュープロジェクション行列
+		uint32_t worldMatrix;   // ワールドトランスフォーム
+		uint32_t material;      // マテリアル
+		uint32_t tex2d;         // テクスチャ
+	};
+	// インデックスバッファー
+	struct IndexResourceBuffer {
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
+		D3D12_GPU_DESCRIPTOR_HANDLE view_;
+		IndexInfoStruct* data_;
+		UINT usedCount_ = 0;
+	};
+
 #pragma region 頂点データ
 	// 頂点データの構造体
 	struct VertexStruct {
@@ -22,16 +38,12 @@ namespace LWP::Base {
 			return *this;
 		}
 	};
-	// 頂点データとインデックスデータのバッファー
+	// 頂点データのバッファー
 	struct VertexResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;	// GPU上の頂点データの格納場所
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};			// BufferLocationは頂点データ格納場所のアドレス
-		VertexStruct* vertexData_ = nullptr;	// 頂点リソース
-		int usedVertexCount_ = 0;	// 使用済みのインデックスをカウント
-		Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;	// 頂点データのインデックス格納場所
-		D3D12_INDEX_BUFFER_VIEW indexBufferView_{};			// BufferLocationはインデックス格納場所のアドレス
-		uint32_t* indexData_ = nullptr;	// インデックスリソース
-		int usedIndexCount_ = 0;	// 使用済みのインデックスをカウント
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// GPU上の頂点データの格納場所
+		D3D12_GPU_DESCRIPTOR_HANDLE view_{};			// BufferLocationは頂点データ格納場所のアドレス
+		VertexStruct* data_ = nullptr;	// 頂点リソース
+		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
 	};
 #pragma endregion
 
@@ -51,8 +63,9 @@ namespace LWP::Base {
 	// マテリアルバッファー
 	struct MaterialResourceBuffer {
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_VIRTUAL_ADDRESS view_;
+		D3D12_GPU_DESCRIPTOR_HANDLE view_;
 		MaterialStruct* data_;
+		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
 	};
 #pragma endregion
 
@@ -60,8 +73,9 @@ namespace LWP::Base {
 	// 行列データのバッファー
 	struct MatrixResourceBuffer {
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_VIRTUAL_ADDRESS view_;
+		D3D12_GPU_DESCRIPTOR_HANDLE view_;
 		Math::Matrix4x4* data_;
+		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
 
 		// WorldTransformの行列を代入する演算子をオーバーロード
 		MatrixResourceBuffer& operator=(const Object::WorldTransform& value) {
@@ -74,8 +88,9 @@ namespace LWP::Base {
 #pragma region テクスチャ
 	// テクスチャのバッファー
 	struct TextureResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;
+		std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> resource_;
+		D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビューは先頭のテクスチャのみ
+		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
 	};
 #pragma endregion
 
@@ -88,9 +103,10 @@ namespace LWP::Base {
 		float intensity_;	// 輝度
 	};
 	// 平行光源のバッファ
-	struct LightBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> lightResource_;	// 3D用の定数バッファ
-		DirectionalLight* light_ = nullptr;	// 2D用の定数リソース
+	struct LightResourceBuffer {
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// 3D用の定数バッファ
+		D3D12_GPU_VIRTUAL_ADDRESS view_;
+		DirectionalLight* data_ = nullptr;	// 2D用の定数リソース
 	};
 #pragma endregion
 }

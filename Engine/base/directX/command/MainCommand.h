@@ -10,23 +10,20 @@ namespace LWP::Base {
 		// ** メンバ関数 ** //
 
 		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Initialize(ID3D12Device* device);
-
-		/// <summary>
 		/// 描画前処理
 		/// </summary>
-		void PreDraw(ID3D12RootSignature* rootSignature);
+		void PreDraw(ID3D12GraphicsCommandList* list) override;
 
 		/// <summary>
 		/// 描画語処理
 		/// </summary>
-		void PostDraw();
+		void PostDraw(ID3D12GraphicsCommandList* list) override;
+
+	private: // ** プライベートな関数 ** //
 
 		/// <summary>
-		/// リセット用関数
+		/// PSOを作成
 		/// </summary>
-		void Reset();
+		void CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) override;
 	};
 }

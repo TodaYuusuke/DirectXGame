@@ -44,6 +44,10 @@ void DirectXCommon::PreDraw() {
 	commandManager_->PreDraw();
 }
 
+void DirectXCommon::DrawCall() {
+	commandManager_->DrawCall();
+}
+
 void DirectXCommon::PostDraw() {
 	// これから書き込むバックバッファのインデックスを取得
 	commandManager_->PostDraw();

@@ -23,7 +23,7 @@ void Engine::Run() {
 		// 更新処理
 		sceneManager_->Update();
 		objectManager_->Update();
-		//commandManager_->ImGui();
+		directXCommon_->GetCommandManager()->ImGui();
 		// カメラのビュープロジェクションをcommandManagerに
 		directXCommon_->GetCommandManager()->SetCameraViewProjection(sceneManager_->GetMainCamera());
 
@@ -106,6 +106,7 @@ void Engine::EndFrame() {
 	debugTimer_.DebugGUI();
 #endif
 
+	directXCommon_->DrawCall();
 	imGuiManager_->End();
 	imGuiManager_->Draw();
 	directXCommon_->PostDraw();

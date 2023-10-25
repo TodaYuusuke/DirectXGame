@@ -1,13 +1,9 @@
 #include "Material.h"
-#include "../../base/directX/command/CommandManager.h"
 #include "../../base/ImGuiManager.h"
 
 using namespace LWP::Resource;
 
-Material::Material(Base::CommandManager* manager) {
-	// リソースを作成
-	index_ = manager->CreateMaterialResource();
-
+Material::Material() {
 	// ワールドトランスフォームを初期化
 	uvTransform.Initialize();
 }

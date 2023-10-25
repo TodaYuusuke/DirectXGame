@@ -10,7 +10,7 @@ void Manager::Initialize() {
 }
 
 void Manager::Draw(Base::CommandManager* manager) {
-	// シャドウマップの描画
+	// 描画
 	for (IPrimitive* p : primitives_) {
 		p->Draw(manager);
 	}

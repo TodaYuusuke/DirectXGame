@@ -1,13 +1,8 @@
 #pragma once
-// 描画用リソースの型を宣言してるヘッダーをinclude
-#include "ResourceStruct.h"
-
-#include "PSO.h"
 #include "MainCommand.h"
 #include "ShadowMapCommand.h"
 
 #include <vector>
-#include <memory>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -44,6 +39,11 @@ namespace LWP::Base {
 		void PreDraw();
 
 		/// <summary>
+		/// DrawCall
+		/// </summary>
+		void DrawCall();
+
+		/// <summary>
 		/// 描画語処理
 		/// </summary>
 		void PostDraw();
@@ -63,19 +63,15 @@ namespace LWP::Base {
 		// CommandQueueを受け取る関数
 		ID3D12CommandQueue* GetQueue() const { return commandQueue_.Get(); }
 		// メインレンダリング用のコマンドを受け取る関数
-		ID3D12GraphicsCommandList* GetMainRenderCommandList() const { return mainCommands_->GetList(); }
+		ID3D12GraphicsCommandList* GetMainRenderCommandList() const { return commandList_.Get(); }
 
 	public: // ** 外部からリソースの登録用関数 ** //
 
 		/// <summary>
-		/// 汎用描画
+		/// 描画データ登録関数
 		/// </summary>
-		void Draw(Primitive::IPrimitive* primitive);
+		void SetDrawData(Primitive::IPrimitive* primitive);
 
-		/// <summary>
-		/// マテリアルのリソースを作成
-		/// </summary>
-		int CreateMaterialResource();
 		/// <summary>
 		/// テクスチャのリソースを作成
 		/// </summary>
@@ -97,64 +93,69 @@ namespace LWP::Base {
 
 		// コマンドキュー
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
-		// 用途別コマンドリストたち（現在は１つ）
-		std::unique_ptr<MainCommand> mainCommands_;	// 最終レンダリング用
-		std::unique_ptr<ShadowMapCommand> shadowMapCommands_;	// シャドウマップ用
+		// アロケーター
+		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
+		// リスト
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
+
+		// 用途別コマンドリスト用クラス（現在は１つ）
+		std::vector<ICommand*> cmds_;
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 		UINT64 fenceVal_ = 0;
 
-		// 最大頂点数
-		static const int kMaxVertexCount_ = 655350;
-		static const int kMaxIndexCount_ = 655350;
-		// トランスフォームの許容数
-#if _DEBUG //debug時
-		static const int kMaxTransformCount_ = 1280;
-#else      //release時
-		static const int kMaxTransformCount_ = 12800;
-#endif
-		int usedMatrixCount_ = 0;
-		// 最大テクスチャ数（増やす場合はDirectXCommonのコードも修正）
-		static const int kMaxTextureCount_ = 128;
-		int usedTextureCount_ = 0;
-
 
 		// ** 構造体宣言 ** //
 
-		struct PipelineSet {
-			std::unique_ptr<DXC> dxc_;
-			Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;			// リソースとシェーダーのバインディングを定義
-			// 数種類のパイプライン
-			// 1つめ ... 埋め立てモード（0 -> ワイヤーフレーム、1 -> 埋め立て））
-			std::unique_ptr<PSO> pso_[2];	// グラフィックパイプラインの状態を定義
-			// シャドウマップ専用のRootSignatureとPSO
-			Microsoft::WRL::ComPtr<ID3D12RootSignature> shadowRS_;
-			std::unique_ptr<PSO> shadowPSO_;
-		};
-		std::unique_ptr<PipelineSet> pipelineSet_;
+		/// <summary>
+		/// DirectXCompiler
+		/// </summary>
+		std::unique_ptr<DXC> dxc_;
+		
+		/// <summary>
+		// ディスクリプタテーブル番号
+		// <para>0 ... バッファーのインデックス</para>
+		// <para>1 ... 平行光源</para>
+		// <para>2 ... 頂点データ</para>
+		// <para>3 ... カメラのviewProjection</para>
+		// <para>4 ... WorldTransform</para>
+		// <para>5 ... マテリアル</para>
+		// <para>6 ... シャドウマップ</para>
+		// <para>7 ... テクスチャ</para>
+		/// </summary>
+		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 
+
+		// 平行光源
+		std::unique_ptr<LightResourceBuffer> lightResourceBuffer_;
+		//const UINT kMaxLight= 1;
 
 		// 頂点データ
 		std::unique_ptr<VertexResourceBuffer> vertexResourceBuffer_;
-
-		// マテリアルデータ
-		std::vector<std::unique_ptr<MaterialResourceBuffer>> materialResource_;
-
-		// 行列データ
-		std::unique_ptr<MatrixResourceBuffer> matrixResource_[kMaxTransformCount_];
+		const UINT kMaxVertex = 655350;
 		// カメラのビュープロジェクション用
 		// 0 = 2D
 		// 1 = 3D
-		std::unique_ptr<MatrixResourceBuffer> cameraResource_[2];
+		std::unique_ptr<MatrixResourceBuffer> cameraResourceBuffer_;
+		const UINT kMaxCameraVP = 1 * 2;
+		// WorldTransformデータ
+		std::unique_ptr<MatrixResourceBuffer> matrixResourceBuffer_;
+#if _DEBUG //debug時
+		const UINT kMaxMatrix = 1280;
+#else      //release時
+		const UINT kMaxMatrix = 12800;
+#endif
 
+
+		// マテリアルデータ
+		std::unique_ptr<MaterialResourceBuffer> materialResourceBuffer_;
+		const UINT kMaxMaterial = 1280;
 		// テクスチャデータ
-		std::vector<std::unique_ptr<TextureResourceBuffer>> textureResource_;
+		std::unique_ptr<TextureResourceBuffer> textureResourceBuffer_;
+		const UINT kMaxTexture = 128;
 		// テクスチャを適応しないとき用のデフォルトのテクスチャ
 		Resource::Texture* defaultTexture_;
-
-		// 平行光源
-		std::unique_ptr<LightBuffer> lightBuffer_;
 
 
 	private: // ** 非公開メンバ関数 ** //
@@ -179,23 +180,14 @@ namespace LWP::Base {
 		/// シャドウマップ用のRootSignature生成
 		/// </summary>
 		void CreateShadowRS();
-		/// <summary>
-		/// グラフィックスパイプラインを作成
-		/// </summary>
-		void CreateGraphicsPipeLineState();
-
 
 		/// <summary>
-		/// 頂点リソースを作成
+		/// ストラクチャーバッファ用のリソースを作成
 		/// </summary>
-		void CreateVertexResource();
-		/// <summary>
-		/// 行列のリソースを作成
-		/// </summary>
-		void CreateMatrixResource();
+		void CreateStructuredBufferResources();
 
 		/// <summary>
-		/// 任意のサイズのResourceを作成
+		/// 任意のサイズのResourceを作成する関数
 		/// </summary>
 		ID3D12Resource* CreateBufferResource(size_t size);
 		/// <summary>

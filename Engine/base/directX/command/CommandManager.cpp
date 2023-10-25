@@ -22,47 +22,24 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	// コマンドキューを生成する
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	hr = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue_));
-	// コマンドキューの生成がうまくいかなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	// コマンドクラスを生成する
-	//shadowMapCommands_ = std::make_unique<ShadowMapCommand>();
-	//shadowMapCommands_->Initialize(device_);
-	mainCommands_ = std::make_unique<MainCommand>();
-	mainCommands_->Initialize(device_);
-
+	assert(SUCCEEDED(hr));	// コマンドキューの生成がうまくいかなかったので起動できない
+	// コマンドアロケーターを生成する
+	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
+	assert(SUCCEEDED(hr));	// コマンドアロケーターの生成がうまくいかなかったので起動できない
+	// コマンドリストを生成する
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr, IID_PPV_ARGS(&commandList_));
+	assert(SUCCEEDED(hr));	// コマンドリストの生成がうまくいかなかったので起動できない
 
 	// 初期値0でFenceを作る
 	fenceVal_ = 0;
 	hr = device_->CreateFence(fenceVal_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
 	assert(SUCCEEDED(hr));
 
-	pipelineSet_ = std::make_unique<PipelineSet>();
 	// シェーダーコンパイラ生成
 	InitializeDXC();
 	// RootSignature生成
 	CreateRootSignature();
 	//CreateShadowRS();
-	// グラフィックスパイプラインを作成
-	CreateGraphicsPipeLineState();
-
-	// 頂点のリソースを作成
-	CreateVertexResource();
-	// 行列のリソースを作成
-	CreateMatrixResource();
-
-	// 平行光源のリソース作成
-	lightBuffer_ = std::make_unique<LightBuffer>();
-	// リソースを作る。サイズはDirectionalLight 1つ分
-	lightBuffer_->lightResource_ = CreateBufferResource(sizeof(DirectionalLight));
-	// データを書き込む
-	lightBuffer_->light_ = new DirectionalLight();
-	// 書き込むためのアドレスを取得
-	lightBuffer_->lightResource_->Map(0, nullptr, reinterpret_cast<void**>(&lightBuffer_->light_));
-
-	lightBuffer_->light_->color_ = { 1.0f,1.0f,1.0f,1.0f };
-	lightBuffer_->light_->direction_ = { 0.0f,-1.0f,0.0f };
-	lightBuffer_->light_->intensity_ = 1.0f;
 }
 
 void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
@@ -70,9 +47,16 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	dsv_ = dsv;
 	srv_ = srv;
 
-	// コマンドにも登録しておく
-	//shadowMapCommands_->SetDescriptorHeap(rtv, dsv, srv);
-	mainCommands_->SetDescriptorHeap(rtv, dsv, srv);
+	// コマンド用クラス実態宣言
+	//cmds_.push_back(new ShadowMapCommand());
+	cmds_.push_back(new MainCommand());
+	for (int i = 0; i < cmds_.size(); i++) {
+		cmds_[i]->SetDescriptorHeap(rtv_, dsv_, srv_);
+		cmds_[i]->Initialize(device_, dxc_.get(), rootSignature_.Get(), CreateBufferResource(sizeof(IndexInfoStruct) * cmds_[i]->kMaxIndex));
+	}
+
+	// グラフィックリソースを作成
+	CreateStructuredBufferResources();
 
 	// SRVを登録してからでないとテクスチャが読み込めないので、
 	// ここでデフォルトテクスチャを読み込む
@@ -80,41 +64,67 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 }
 
 void CommandManager::PreDraw() {
-	ID3D12GraphicsCommandList* commandList = nullptr;
-	
-	// --- シャドウマップのコマンドの初期設定 --- //
 
-	//shadowMapCommands_->PreDraw(pipelineSet_->shadowRS_.Get());
-	//commandList = shadowMapCommands_->GetList();
+}
 
-	//// PSOを登録
-	//commandList->SetPipelineState(pipelineSet_->shadowPSO_->state_.Get());
-	//// 頂点とインデックスの位置を登録
-	//commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
-	//commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
-	//// 平行光源のCBufferの場所を設定
-	//commandList->SetGraphicsRootConstantBufferView(1, lightBuffer_->lightResource_->GetGPUVirtualAddress());
+void CommandManager::DrawCall() {
+	HRESULT hr;
 
+	// レンダリング回数ループする
+	for (int i = 0; i < cmds_.size(); i++) {
+		ID3D12GraphicsCommandList* commandList = commandList_.Get();
 
-	// --- メインのコマンドの初期設定 --- //
+		// 描画前処理
+		cmds_[i]->PreDraw(commandList);
 
-	mainCommands_->PreDraw(pipelineSet_->rootSignature_.Get());
-	commandList = mainCommands_->GetList();
+		// ポインタで受け取る
 
-	// 頂点とインデックスの位置を登録
-	commandList->IASetVertexBuffers(0, 1, &vertexResourceBuffer_->vertexBufferView_);	// VBVを設定
-	commandList->IASetIndexBuffer(&vertexResourceBuffer_->indexBufferView_);	// IBVを設定
-	// 平行光源のCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(4, lightBuffer_->lightResource_->GetGPUVirtualAddress());
-	// シャドウマップの場所を設定
-	commandList->SetGraphicsRootDescriptorTable(5, dsv_->GetShadowView());
+		// RootSignatureを設定。PSOに設定してるけど別途設定が必要
+		commandList->SetGraphicsRootSignature(rootSignature_.Get());
+		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
+		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// PSOを設定
+		commandList->SetPipelineState(cmds_[i]->GetPSOState());
+
+		// ディスクリプタテーブルを登録
+		// 0 ... バッファーのインデックス
+		// 1 ... 平行光源
+		// 2 ... 頂点データ
+		// 3 ... カメラのviewProjection
+		// 4 ... WorldTransform
+		// 5 ... マテリアル
+		// 6 ... シャドウマップ
+		// 7 ... テクスチャ
+		commandList->SetGraphicsRootDescriptorTable(0, cmds_[i]->indexResourceBuffer_->view_);
+		commandList->SetGraphicsRootConstantBufferView(1, lightResourceBuffer_->view_);
+		commandList->SetGraphicsRootDescriptorTable(2, vertexResourceBuffer_->view_);
+		commandList->SetGraphicsRootDescriptorTable(3, cameraResourceBuffer_->view_);
+		commandList->SetGraphicsRootDescriptorTable(4, matrixResourceBuffer_->view_);
+		commandList->SetGraphicsRootDescriptorTable(5, materialResourceBuffer_->view_);
+		commandList->SetGraphicsRootDescriptorTable(6, dsv_->GetShadowView());
+		commandList->SetGraphicsRootDescriptorTable(7, textureResourceBuffer_->view_);
+		// 全三角形を１つのDrawCallで描画
+		commandList->DrawInstanced(3, cmds_[i]->indexResourceBuffer_->usedCount_ / 3, 0, 0);
+
+		// 描画後処理（MainRenderingの時のみPostDrawは後回し）
+		if (i == cmds_.size() - 1) { break; }
+
+		cmds_[i]->PostDraw(commandList);
+
+		// 次のコマンドリストを準備
+		hr = commandAllocator_->Reset();
+		assert(SUCCEEDED(hr));
+		hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
+		assert(SUCCEEDED(hr));
+	}
 }
 
 void CommandManager::PostDraw() {
-	//shadowMapCommands_->PostDraw();
-	mainCommands_->PostDraw();
+	MainCommand* cmd = { new MainCommand() };
+	cmd->SetDescriptorHeap(rtv_, dsv_, srv_);
+	// 描画後処理
+	cmd->PostDraw(commandList_.Get());
 
-	
 	// - コマンドリストをすべてCloseした後 - //
 
 	// コマンドリストを配列化
@@ -133,7 +143,7 @@ void CommandManager::PostDraw() {
 	//		CloseHandle(event);
 	//	}
 	//}
-	ID3D12CommandList* commandLists[] = { mainCommands_->GetList() };
+	ID3D12CommandList* commandLists[] = { commandList_.Get() };
 	// GPUにコマンドリストの実行を行わせる
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 
@@ -153,116 +163,113 @@ void CommandManager::PostDraw() {
 }
 
 void CommandManager::Reset() {
-	mainCommands_->Reset();
+	//commandList_->Reset();
 	//shadowMapCommands_->Reset();
+	HRESULT hr;
+	// 次のフレーム用のコマンドリストを準備
+	hr = commandAllocator_->Reset();
+	assert(SUCCEEDED(hr));
+	hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
+	assert(SUCCEEDED(hr));
 
-	vertexResourceBuffer_->usedVertexCount_ = 0;
-	vertexResourceBuffer_->usedIndexCount_ = 0;
-	usedMatrixCount_ = 0;
+	for (int i = 0; i < cmds_.size(); i++) {
+		cmds_[i]->indexResourceBuffer_->usedCount_ = 0;
+	}
+	vertexResourceBuffer_->usedCount_ = 0;
+	matrixResourceBuffer_->usedCount_ = 0;
+	materialResourceBuffer_->usedCount_ = 0;
 }
 
 void CommandManager::SetCameraViewProjection(const Object::Camera* camera) {
-	*cameraResource_[0]->data_ = camera->GetViewProjectionMatrix3D();
-	*cameraResource_[1]->data_ = camera->GetViewProjectionMatrix2D();
-}
-
-int CommandManager::CreateMaterialResource() {
-	materialResource_.push_back(std::make_unique<MaterialResourceBuffer>());
-	int index = static_cast<int>(materialResource_.size() - 1);
-	materialResource_[index]->resource_ = CreateBufferResource(sizeof(MaterialStruct));
-	materialResource_[index]->resource_->Map(0, nullptr, reinterpret_cast<void**>(&materialResource_[index]->data_));
-	materialResource_[index]->view_ = materialResource_[index]->resource_->GetGPUVirtualAddress();
-	return index;
+	cameraResourceBuffer_->data_[0] = camera->GetViewProjectionMatrix3D();
+	cameraResourceBuffer_->data_[1] = camera->GetViewProjectionMatrix2D();
 }
 int CommandManager::CreateTextureResource(const DirectX::ScratchImage& image) {
-	textureResource_.push_back(std::make_unique<TextureResourceBuffer>());
-	textureResource_[usedTextureCount_]->resource_ = CreateBufferResource(image.GetMetadata());
+	textureResourceBuffer_->resource_.push_back(CreateBufferResource(image.GetMetadata()));
 	UploadTextureData(image);
-	return usedTextureCount_++;
+	return textureResourceBuffer_->usedCount_++;
 }
 
-void CommandManager::Draw(Primitive::IPrimitive* primitive) {
+void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 	// 最大数を超えていないかチェック
-	assert(vertexResourceBuffer_->usedVertexCount_ < kMaxVertexCount_);
-	assert(vertexResourceBuffer_->usedIndexCount_ < kMaxIndexCount_);
+	assert(cmds_[0]->indexResourceBuffer_->usedCount_ < cmds_[0]->kMaxIndex);
+	assert(vertexResourceBuffer_->usedCount_ < kMaxVertex);
+	assert(matrixResourceBuffer_->usedCount_ < kMaxMatrix);
+	assert(materialResourceBuffer_->usedCount_ < kMaxMaterial);
 
-	// コマンドを積む
-	ID3D12GraphicsCommandList* commandList = mainCommands_->GetList();
-
-	// PSOを設定
-	commandList->SetPipelineState(pipelineSet_->pso_[static_cast<int>(primitive->material.fillMode)]->state_.Get());
-
+	uint32_t startIndexNum = vertexResourceBuffer_->usedCount_;
+	
 	// 頂点データを登録
 	for (int i = 0; i < primitive->GetVertexCount(); i++) {
-		vertexResourceBuffer_->vertexData_[vertexResourceBuffer_->usedVertexCount_ + i] = primitive->vertices[i];
+		vertexResourceBuffer_->data_[vertexResourceBuffer_->usedCount_++] = primitive->vertices[i];
 		if(primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
-			vertexResourceBuffer_->vertexData_[vertexResourceBuffer_->usedVertexCount_ + i].color_ = primitive->commonColor->GetVector4();
+			vertexResourceBuffer_->data_[vertexResourceBuffer_->usedCount_ - 1].color_ = primitive->commonColor->GetVector4();
 	}
-	// Indexを登録
-	for (int i = 0; i < primitive->GetIndexCount(); i++) {
-		vertexResourceBuffer_->indexData_[vertexResourceBuffer_->usedIndexCount_ + i] = primitive->indexes[i];
-	}
-	// マテリアルの場所を設定
-	*materialResource_[primitive->material.GetIndex()]->data_ = primitive->material;
-	commandList->SetGraphicsRootConstantBufferView(0, materialResource_[primitive->material.GetIndex()]->view_);
-	// カメラのビュープロジェクション行列の場所を設定
-	commandList->SetGraphicsRootConstantBufferView(1, cameraResource_[primitive->isUI]->view_);
-	// WorldTransformの場所を設定
-	*matrixResource_[usedMatrixCount_]->data_ = primitive->transform.GetWorldMatrix();
-	commandList->SetGraphicsRootConstantBufferView(2, matrixResource_[usedMatrixCount_]->view_);
-	// テクスチャの場所を指定。
+	// 使用するカメラのビュープロジェクション行列をセット
+	uint32_t cameraVP = primitive->isUI;
+	// ワールドトランスフォームをデータに登録
+	uint32_t worldMatrix = matrixResourceBuffer_->usedCount_;
+	matrixResourceBuffer_->data_[matrixResourceBuffer_->usedCount_++] = primitive->transform.GetWorldMatrix();
+	// マテリアルをデータに登録
+	uint32_t material = materialResourceBuffer_->usedCount_;
+	materialResourceBuffer_->data_[materialResourceBuffer_->usedCount_++] = primitive->material;
+	// テクスチャのインデックスを貰う
+	uint32_t tex2d = defaultTexture_->GetIndex();
 	if (primitive->texture != nullptr) {
-		commandList->SetGraphicsRootDescriptorTable(3, textureResource_[primitive->texture->GetIndex()]->view_);
-	}
-	else {
-		commandList->SetGraphicsRootDescriptorTable(3, textureResource_[defaultTexture_->GetIndex()]->view_);
+		tex2d = primitive->texture->GetIndex();
 	}
 
-	// 描画！
-	commandList->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
 
+	// Indexの分だけIndexInfoを求める
+	for (int i = 0; i < primitive->GetIndexCount(); i++) {
+		cmds_[0]->indexResourceBuffer_->data_[cmds_[0]->indexResourceBuffer_->usedCount_++] = IndexInfoStruct{
+			startIndexNum + primitive->indexes[i],
+			cameraVP,
+			worldMatrix,
+			material,
+			tex2d
+		};
+	}
 
 	// シャドウマップにも描画！
-	if (primitive->material.enableLighting) {
+	//if (primitive->material.enableLighting) {
 		// WorldTransformの場所を設定
 		//shadowMapCommands_->GetList()->SetGraphicsRootConstantBufferView(0, matrixResource_[usedMatrixCount_]->view_);
 		// 描画！
 		//shadowMapCommands_->GetList()->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
-	}
-
-	// 使用した頂点とインデックスのカウント
-	vertexResourceBuffer_->usedVertexCount_ += primitive->GetVertexCount();
-	vertexResourceBuffer_->usedIndexCount_ += primitive->GetIndexCount();
-	usedMatrixCount_++;
+	//}
 }
 
 void CommandManager::ImGui() {
 	ImGui::Begin("PrimitiveCommandManager");
-	ImGui::ColorEdit4("color", &lightBuffer_->light_->color_.x);
-	ImGui::DragFloat3("direction", &lightBuffer_->light_->direction_.x, 0.01f);
-	ImGui::DragFloat("intensity", &lightBuffer_->light_->intensity_, 0.01f);
+	ImGui::ColorEdit4("color", &lightResourceBuffer_->data_->color_.x);
+	ImGui::DragFloat3("direction", &lightResourceBuffer_->data_->direction_.x, 0.01f);
+	ImGui::DragFloat("intensity", &lightResourceBuffer_->data_->intensity_, 0.01f);
 	ImGui::End();
 
-	Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightBuffer_->light_->direction_).Inverse();
+	// 方向を正規化
+	lightResourceBuffer_->data_->direction_ = lightResourceBuffer_->data_->direction_.Normalize();
+
+	Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->data_->direction_).Inverse();
 	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(512.0f, 512.0f, 512.0f, 512.0f, 0.0f, 100.0f);
-	lightBuffer_->light_->viewProjection_ = viewMatrix* projectionMatrix;
+	lightResourceBuffer_->data_->viewProjection_ = viewMatrix* projectionMatrix;
 }
 
 
 void CommandManager::InitializeDXC() {
 	HRESULT hr = S_FALSE;
 
-	pipelineSet_->dxc_ = std::make_unique<DXC>();
+	dxc_ = std::make_unique<DXC>();
 
 	// DxcUtilsを初期化
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&pipelineSet_->dxc_->dxcUtils_));
+	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxc_->dxcUtils_));
 	assert(SUCCEEDED(hr));
 	// DxcCompilerを初期化
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&pipelineSet_->dxc_->dxcCompiler_));
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxc_->dxcCompiler_));
 	assert(SUCCEEDED(hr));
 
 	// 現時点でincludeはしないが、includeに対応するための設定を行っておく
-	hr = pipelineSet_->dxc_->dxcUtils_->CreateDefaultIncludeHandler(&pipelineSet_->dxc_->includeHandler_);
+	hr = dxc_->dxcUtils_->CreateDefaultIncludeHandler(&dxc_->includeHandler_);
 	assert(SUCCEEDED(hr));
 }
 
@@ -271,12 +278,17 @@ void CommandManager::CreateRootSignature() {
 
 	// RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	// RootParameter作成。複数設定できるように配列。今回は結果5つなので長さ5の配列
-	D3D12_ROOT_PARAMETER rootParameters[6] = {};
+	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
+	// RootParameter作成。複数設定できるように配列。今回は結果8つ
+	D3D12_ROOT_PARAMETER rootParameters[8] = {};
 	// テクスチャ用サンプラー
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[2] = {};
-	
+	// 配列用のRangeDesc
+	D3D12_DESCRIPTOR_RANGE descRange[1] = {};	// DescriptorRangeを作成
+	descRange[0].BaseShaderRegister = 0; // 0から始まる
+	descRange[0].NumDescriptors = 1; // 数は1つ
+	descRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+	descRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 	// RootSignatureにrootParametersを登録
 	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
@@ -287,29 +299,60 @@ void CommandManager::CreateRootSignature() {
 	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
 
+	// ** 両方で使うデータ ** //
+
+	// ストラクチャーバッファーのインデックス
+	D3D12_DESCRIPTOR_RANGE indexDesc[1] = { descRange[0] };	// DescriptorRangeを作成
+	indexDesc[0].BaseShaderRegister = 0; // レジスタ番号は0
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	rootParameters[0].DescriptorTable.pDescriptorRanges = indexDesc; // Tabelの中身の配列を指定
+	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(indexDesc); // Tableで利用する数
+
+	// 平行光源
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
+	rootParameters[1].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
+
+
+	// ** VertexShaderで使うデータ ** //
+
+	// 頂点データ
+	D3D12_DESCRIPTOR_RANGE vertexDesc[1] = { descRange[0] };	// DescriptorRangeを作成
+	vertexDesc[0].BaseShaderRegister = 1; // レジスタ番号は1
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[2].DescriptorTable.pDescriptorRanges = vertexDesc; // Tabelの中身の配列を指定
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(vertexDesc); // Tableで利用する数
+
+	// カメラのViewProjection
+	D3D12_DESCRIPTOR_RANGE cameraDesc[1] = { descRange[0] };	// DescriptorRangeを作成
+	cameraDesc[0].BaseShaderRegister = 2; // レジスタ番号は2
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[3].DescriptorTable.pDescriptorRanges = cameraDesc; // Tabelの中身の配列を指定
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(cameraDesc); // Tableで利用する数
+
+	// WorldTransform
+	D3D12_DESCRIPTOR_RANGE wtfDesc[1] = { descRange[0] };	// DescriptorRangeを作成
+	wtfDesc[0].BaseShaderRegister = 3; // レジスタ番号は3
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[4].DescriptorTable.pDescriptorRanges = wtfDesc; // Tabelの中身の配列を指定
+	rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(wtfDesc); // Tableで利用する数
+
+
+	// ** PixelShaderで使うデータ ** //
 
 	// マテリアル
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelShaderで使う
-	rootParameters[0].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
-	// 定数バッファ（カメラのViewProjection）
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
-	rootParameters[1].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
-	// 定数バッファ（World）
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	// VertexShaderで使う
-	rootParameters[2].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
+	D3D12_DESCRIPTOR_RANGE materialDesc[1] = { descRange[0] };	// DescriptorRangeを作成
+	materialDesc[0].BaseShaderRegister = 1; // レジスタ番号は1
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[5].DescriptorTable.pDescriptorRanges = materialDesc; // Tabelの中身の配列を指定
+	rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(materialDesc); // Tableで利用する数
 
-#pragma region テクスチャ実装
-
-	// テクスチャ用のDescriptorRangeを作成
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
-	descriptorRange[0].NumDescriptors = 1; // 数は1つ
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
+#pragma region シャドウマップ実装
 	// Samplerの設定
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
 	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
@@ -317,31 +360,19 @@ void CommandManager::CreateRootSignature() {
 	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
 	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
-	staticSamplers[0].ShaderRegister = 0; // レジスタ番号0を使う
+	staticSamplers[0].ShaderRegister = 0; // レジスタ番号は0
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 
-	// テクスチャ
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRange; // Tabelの中身の配列を指定
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
-
+	// シャドウマップ
+	D3D12_DESCRIPTOR_RANGE shadowRange[1] = { descRange[0] };	// DescriptorRangeを作成
+	shadowRange[0].BaseShaderRegister = 2; // レジスタ番号は2
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	rootParameters[6].DescriptorTable.pDescriptorRanges = shadowRange; // Tabelの中身の配列を指定
+	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(shadowRange); // Tableで利用する数
 #pragma endregion
 
-	// 平行光源
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
-	rootParameters[4].Descriptor.ShaderRegister = 2;						// レジスタ番号1とバインド
-	
-#pragma region シャドウマップ実装
-
-	// シャドウマップ用のDescriptorRangeを作成
-	D3D12_DESCRIPTOR_RANGE descriptorRangeShadow[1] = {};
-	descriptorRangeShadow[0].BaseShaderRegister = 1; // 0から始まる
-	descriptorRangeShadow[0].NumDescriptors = 1; // 数は1つ
-	descriptorRangeShadow[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-	descriptorRangeShadow[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
+#pragma region テクスチャ実装
 	// Samplerの設定
 	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
 	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
@@ -349,15 +380,17 @@ void CommandManager::CreateRootSignature() {
 	staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
 	staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
-	staticSamplers[1].ShaderRegister = 1; // レジスタ番号1を使う
+	staticSamplers[1].ShaderRegister = 1; // レジスタ番号は1
 	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 
-	// シャドウマップ
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
-	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeShadow; // Tabelの中身の配列を指定
-	rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeShadow); // Tableで利用する数
-
+	// テクスチャ
+	D3D12_DESCRIPTOR_RANGE textureDesc[1] = { descRange[0] };	// DescriptorRangeを作成
+	textureDesc[0].BaseShaderRegister = 3; // レジスタ番号は3
+	textureDesc[0].NumDescriptors = kMaxTexture;	// 最大数を定義
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	rootParameters[7].DescriptorTable.pDescriptorRanges = textureDesc; // Tabelの中身の配列を指定
+	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(textureDesc); // Tableで利用する数
 #pragma endregion
 
 
@@ -370,13 +403,13 @@ void CommandManager::CreateRootSignature() {
 		assert(false);
 	}
 	// バイナリを元に生成
-	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet_->rootSignature_));
+	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(hr));
 
 	signatureBlob->Release();
 	//errorBlob->Release();
 }
-
+/*
 void CommandManager::CreateShadowRS() {
 	HRESULT hr = S_FALSE;
 
@@ -416,58 +449,72 @@ void CommandManager::CreateShadowRS() {
 	signatureBlob->Release();
 	//errorBlob->Release();
 }
+*/
 
-void CommandManager::CreateGraphicsPipeLineState() {
-	for (int r = 0; r < 2; r++) {
-		pipelineSet_->pso_[r] = std::make_unique<PSO>();
-		pipelineSet_->pso_[r]->Initialize(device_, pipelineSet_->rootSignature_.Get(), pipelineSet_->dxc_.get(), r, 1, 1);
-	}
+void CommandManager::CreateStructuredBufferResources() {
+	// 共通のSRV用Desc
+	D3D12_SHADER_RESOURCE_VIEW_DESC commonDesc{};
+	commonDesc.Format = DXGI_FORMAT_UNKNOWN;
+	commonDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	commonDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	commonDesc.Buffer.FirstElement = 0;
+	commonDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-	// シャドウマップ用のPSO
-	//pipelineSet_->shadowPSO_ = std::make_unique<PSO>();
-	//pipelineSet_->shadowPSO_->InitializeForShadow(device_, pipelineSet_->shadowRS_.Get(), pipelineSet_->dxc_.get());
-}
+	// 平行光源
+	lightResourceBuffer_ = std::make_unique<LightResourceBuffer>();
+	lightResourceBuffer_->resource_ = CreateBufferResource(sizeof(DirectionalLight));
+	lightResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&lightResourceBuffer_->data_));
+	lightResourceBuffer_->view_ = lightResourceBuffer_->resource_->GetGPUVirtualAddress();
+	// 平行光源だけ今は生成を変える
+	lightResourceBuffer_->data_->color_ = { 1.0f,1.0f,1.0f,1.0f };
+	lightResourceBuffer_->data_->direction_ = { 0.0f,-1.0f,0.0f };
+	lightResourceBuffer_->data_->intensity_ = 1.0f;
 
 
-void CommandManager::CreateVertexResource() {
-	// 実体を宣言
+	// 頂点データ
 	vertexResourceBuffer_ = std::make_unique<VertexResourceBuffer>();
+	vertexResourceBuffer_->resource_ = CreateBufferResource(sizeof(VertexStruct) * kMaxVertex);
+	vertexResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexResourceBuffer_->data_));
+	D3D12_SHADER_RESOURCE_VIEW_DESC vertexDesc = { commonDesc };
+	vertexDesc.Buffer.NumElements = kMaxVertex;
+	vertexDesc.Buffer.StructureByteStride = sizeof(VertexStruct);
+	vertexResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
+	device_->CreateShaderResourceView(vertexResourceBuffer_->resource_.Get(), &vertexDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
+	srv_->AddUsedCount();	// SRV使用数を+1
+	// カメラのビュープロジェクション用
+	cameraResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
+	cameraResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * kMaxCameraVP);
+	cameraResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraResourceBuffer_->data_));
+	D3D12_SHADER_RESOURCE_VIEW_DESC cameraDesc = { commonDesc };
+	cameraDesc.Buffer.NumElements = kMaxCameraVP;
+	cameraDesc.Buffer.StructureByteStride = sizeof(Math::Matrix4x4);
+	cameraResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
+	device_->CreateShaderResourceView(cameraResourceBuffer_->resource_.Get(), &cameraDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
+	srv_->AddUsedCount();	// SRV使用数を+1
+	// WorldTransformデータ
+	matrixResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
+	matrixResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * kMaxMatrix);
+	matrixResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&matrixResourceBuffer_->data_));
+	D3D12_SHADER_RESOURCE_VIEW_DESC matrixDesc = { commonDesc };
+	matrixDesc.Buffer.NumElements = kMaxMatrix;
+	matrixDesc.Buffer.StructureByteStride = sizeof(Math::Matrix4x4);
+	matrixResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
+	device_->CreateShaderResourceView(matrixResourceBuffer_->resource_.Get(), &matrixDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
+	srv_->AddUsedCount();	// SRV使用数を+1
 
-	// 頂点とインデックスのリソースを作成
-	vertexResourceBuffer_->vertexResource_ = CreateBufferResource(sizeof(VertexStruct) * kMaxVertexCount_);
-	vertexResourceBuffer_->indexResource_ = CreateBufferResource(sizeof(uint32_t) * kMaxIndexCount_);
-
-	// 頂点とインデックスのバッファビューを作成する
-	// リソースの先頭アドレスから使う
-	vertexResourceBuffer_->vertexBufferView_.BufferLocation = vertexResourceBuffer_->vertexResource_.Get()->GetGPUVirtualAddress();
-	vertexResourceBuffer_->indexBufferView_.BufferLocation = vertexResourceBuffer_->indexResource_.Get()->GetGPUVirtualAddress();
-	// 使用するリソースのサイズ
-	vertexResourceBuffer_->vertexBufferView_.SizeInBytes = sizeof(VertexStruct) * kMaxVertexCount_;
-	vertexResourceBuffer_->indexBufferView_.SizeInBytes = sizeof(uint32_t) * kMaxIndexCount_;
-	// 1頂点あたりのサイズ
-	vertexResourceBuffer_->vertexBufferView_.StrideInBytes = sizeof(VertexStruct);
-	// インデックスはuint32_tとする
-	vertexResourceBuffer_->indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
-	// 書き込むためのアドレスを取得
-	vertexResourceBuffer_->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexResourceBuffer_->vertexData_));
-	vertexResourceBuffer_->indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexResourceBuffer_->indexData_));
-}
-void CommandManager::CreateMatrixResource() {
-	for(int i = 0; i < kMaxTransformCount_; i++) {
-		matrixResource_[i] = std::make_unique<MatrixResourceBuffer>();
-		matrixResource_[i]->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4));
-		matrixResource_[i]->resource_->Map(0, nullptr, reinterpret_cast<void**>(&matrixResource_[i]->data_));
-		matrixResource_[i]->view_ = matrixResource_[i]->resource_->GetGPUVirtualAddress();
-	}
-
-	// 2Dと3Dのカメラビュープロジェクション行列を作る
-	for (int i = 0; i < 2; i++) {
-		cameraResource_[i] = std::make_unique<MatrixResourceBuffer>();
-		cameraResource_[i]->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4));
-		cameraResource_[i]->resource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraResource_[i]->data_));
-		cameraResource_[i]->view_ = cameraResource_[i]->resource_->GetGPUVirtualAddress();
-	}
+	// マテリアルデータ
+	materialResourceBuffer_ = std::make_unique<MaterialResourceBuffer>();
+	materialResourceBuffer_->resource_ = CreateBufferResource(sizeof(MaterialStruct) * kMaxMaterial);
+	materialResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&materialResourceBuffer_->data_));
+	D3D12_SHADER_RESOURCE_VIEW_DESC materialDesc = { commonDesc };
+	materialDesc.Buffer.NumElements = kMaxMaterial;
+	materialDesc.Buffer.StructureByteStride = sizeof(MaterialStruct);
+	materialResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
+	device_->CreateShaderResourceView(materialResourceBuffer_->resource_.Get(), &materialDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
+	srv_->AddUsedCount();	// SRV使用数を+1
+	// テクスチャデータ
+	textureResourceBuffer_ = std::make_unique<TextureResourceBuffer>();
+	//textureResource_->resource_ = CreateBufferResource(sizeof(IndexInfoStrict) * kMaxTexture);
 }
 
 ID3D12Resource* CommandManager::CreateBufferResource(size_t size) {
@@ -496,6 +543,7 @@ ID3D12Resource* CommandManager::CreateBufferResource(size_t size) {
 
 	return resource;
 }
+
 ID3D12Resource* CommandManager::CreateBufferResource(const DirectX::TexMetadata& metadata) {
 	HRESULT hr = S_FALSE;
 
@@ -538,7 +586,7 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 		// MipMapLevelを指定して各Imageを取得
 		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
 		// Textureに転送
-		hr = textureResource_[usedTextureCount_]->resource_->WriteToSubresource(
+		hr = textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_]->WriteToSubresource(
 			UINT(mipLevel),
 			nullptr,
 			img->pixels,
@@ -555,9 +603,12 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
-	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(usedTextureCount_ + 2);
-	textureResource_[usedTextureCount_]->view_ = srv_->GetGPUHandle(usedTextureCount_ + 2);
+	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount() + 1);
+	// 初めてのテクスチャ生成ならviewを保存
+	if (textureResourceBuffer_->usedCount_ == 0) {
+		textureResourceBuffer_->view_ = srv_->GetGPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount() + 1);
+	}
 	// SRVの生成
-	device_->CreateShaderResourceView(textureResource_[usedTextureCount_]->resource_.Get(), &srvDesc, textureSRVHandleCPU);	
+	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);
 }

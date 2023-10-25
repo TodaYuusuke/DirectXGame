@@ -184,9 +184,6 @@
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\command\PSO.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
@@ -210,6 +207,9 @@
     </ClCompile>
     <ClCompile Include="Class\Tambourine\Tambourine.cpp">
       <Filter>Class\Tambourine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
+      <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -420,9 +420,6 @@
     <ClInclude Include="Engine\base\directX\command\ICommand.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\command\PSO.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
@@ -444,13 +441,13 @@
     <ClInclude Include="Class\Tambourine\Tambourine.h">
       <Filter>Class\Tambourine</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Engine\resources\shaders\Object3d.hlsli">
-      <Filter>Engine\resources\shaders</Filter>
-    </None>
-    <None Include="Engine\resources\shaders\ShadowMap.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
   </ItemGroup>

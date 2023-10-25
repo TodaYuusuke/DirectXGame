@@ -35,6 +35,11 @@ namespace LWP::Base {
 		void PreDraw();
 
 		/// <summary>
+		/// DrawCall
+		/// </summary>
+		void DrawCall();
+
+		/// <summary>
 		/// 描画語処理
 		/// </summary>
 		void PostDraw();

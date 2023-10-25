@@ -7,9 +7,9 @@ using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 
-IPrimitive::IPrimitive(Base::CommandManager* manager)
-	: material(manager) 
-{
+IPrimitive::IPrimitive(Base::CommandManager* manager) {
+	// 引数で要求はするが使用しない
+	manager;
 	// トランスフォーム初期化
 	transform.Initialize();
 }
@@ -36,7 +36,7 @@ void IPrimitive::Draw(Base::CommandManager* manager) {
 	// アクティブでなければ描画しない
 	if (!isActive) { return; }
 
-	manager->Draw(this);
+	manager->SetDrawData(this);
 }
 
 void IPrimitive::DebugGUI(const std::string& label) {

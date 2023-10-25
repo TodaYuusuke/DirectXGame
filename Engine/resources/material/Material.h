@@ -2,11 +2,6 @@
 #include "../../math/matrix/Matrix4x4.h"
 #include "../../Object/WorldTransform.h"
 
-// 前方宣言
-namespace LWP::Base {
-	class CommandManager;
-}
-
 /// <summary>
 /// マテリアル
 /// </summary>
@@ -28,8 +23,7 @@ namespace LWP::Resource {
 		FillMode fillMode = FillMode::Fill;
 
 		// コンストラクタ
-		Material() = delete;
-		Material(Base::CommandManager* manager);
+		Material();
 		// デストラクタ
 		~Material() = default;
 		
