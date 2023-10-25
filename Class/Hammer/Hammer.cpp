@@ -22,7 +22,7 @@ void Hammer::Initialize(MapManager* map) {
 	// モデルの初期化
 	model_ = LoadModel("hammer/hammer.obj");
 	model_->transform.translation.y = 1.0f;
-	model_->transform.scale = { 0.1f, 0.1f, 0.1f };
+	model_->transform.scale = { 0.15f, 0.15f, 0.15f };
 	// 半透明に
 	model_->commonColor = new Color(0xFFFFFF64);
 

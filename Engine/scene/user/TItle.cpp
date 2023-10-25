@@ -16,6 +16,14 @@ void Title::Initialize() {
 
 	skydome_.Initialze();
 
+	///////ルール
+	rule = LWP::Primitive::CreateInstance<Surface>();
+	rule->texture = LWP::Resource::LoadTexture("rule.png");
+	rule->isActive = false;
+	rule->transform.translation = { 0.0f,0.0f,0.0f };
+	rule->transform.rotation = { 0.0f,0.0f,0.0f };
+	rule->transform.scale = { 10.0f,6.0f,1.0f };
+
 	// title
 	for (int i = 0; i < 5; i++) {
 		tambourineModel[i] = LWP::Primitive::CreateInstance<Mesh>();
@@ -72,12 +80,6 @@ void Title::Initialize() {
 	textBA->transform.scale = { 1.3f,1.3f,1.0f };
 	textN[1]->transform.scale = { 1.3f,1.3f,1.0f };
 
-	rule = LWP::Primitive::CreateInstance<Surface>();
-	rule->texture = LWP::Resource::LoadTexture("rule.png");
-	rule->isActive = false;
-	rule->isUI = true;
-	rule->transform.translation = { 0.0f,0.0f,0.0f };
-
 	// ハンマー
 	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
 	hammerModel = LWP::Resource::LoadModel("hammer/hammer.obj");
@@ -86,6 +88,7 @@ void Title::Initialize() {
 
 	hammerModel->transform.rotation = { -2.0f,0.6f,0.0f };
 	hammerModel->transform.scale = { 1.2f, 1.2f, 1.2f };
+
 
 	// シーン遷移用
 	// トランジションフラグをtrueに
@@ -145,6 +148,20 @@ void Title::Initialize() {
 	//	
 	//	particleModel->transform.translation = newParticle.position;
 	//}
+	//下のUI
+	startUI = LWP::Primitive::CreateInstance<Surface>();
+	startUI->texture = LWP::Resource::LoadTexture("UI/start.png");
+	startUI->isActive = true;
+	startUI->transform.translation = { -1.6f,-2.0f,0.0f };
+	startUI->transform.rotation = { 0.0f,0.0f,0.0f };
+	startUI->transform.scale = { 1.6f,1.0f,0.0f };
+
+	ruleUI = LWP::Primitive::CreateInstance<Surface>();
+	ruleUI->texture = LWP::Resource::LoadTexture("UI/rule.png");
+	ruleUI->isActive = true;
+	ruleUI->transform.translation = { 1.6f,-2.0f,0.0f };
+	ruleUI->transform.rotation = { 0.0f,0.0f,0.0f };
+	ruleUI->transform.scale = { 1.6f,1.0f,0.0f };
 }
 
 // 更新
@@ -203,6 +220,9 @@ void Title::Update() {
 	textBA->DebugGUI("textBA");
 	buttonFoundationModel[0]->DebugGUI("buttonFoundation[0]");
 	buttonFoundationModel[1]->DebugGUI("buttonFoundation[1]");
+	rule->DebugGUI("rule");
+	startUI->DebugGUI("startUI");
+	ruleUI->DebugGUI("ruleUI");
 
 	ImGui::End();
 
@@ -417,37 +437,44 @@ void Title::TitleUI() {
 }
 
 void Title::Controller(){
-	if (Input::Controller::GetLStick().x >= 1.0f) {
-		selectPoint = false;
+	if (rule->isActive == false) {
+		hammerModel->isActive = true;
+		ruleUI->isActive = true;
+		startUI->isActive = true;
 
+		if (Input::Controller::GetLStick().x >= 1.0f) {
+			selectPoint = false;
+
+		}
+		else if (Input::Controller::GetLStick().x <= -1.0f) {
+			selectPoint = true;
+
+		}
+
+		//次のシーンへ移動
+		if (selectPoint && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
+			sceneChangeTiemFlag = true;
+			ButtonPush();
+			shakeMaxPosition = 20;
+			Attack();
+		}
+
+		//windowを閉じる
+		if (selectPoint == 0 && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
+			rule->isActive = true;
+			ButtonPush();
+			shakeMaxPosition = 20;
+			Attack();
+		}
 	}
-	else if (Input::Controller::GetLStick().x <= -1.0f) {
-		selectPoint = true;
-
-	}
-
-	//次のシーンへ移動
-	if (selectPoint && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
-		sceneChangeTiemFlag = true;
-		ButtonPush();
-		shakeMaxPosition = 20;
-		Attack();
-	}
-
-	//windowを閉じる
-	if (selectPoint == 0 && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
-		rule->isActive = true;
-		ButtonPush();
-		shakeMaxPosition = 20;
-		Attack();
+	else {
+		hammerModel->isActive = false;
+		ruleUI->isActive = false;
+		startUI->isActive = false;
 	}
 
 	if (Input::Controller::GetTrigger(DIXBOX_B)) {
-		rule->isActive = true;
-	}
-	else {
 		rule->isActive = false;
-
 	}
 
 }

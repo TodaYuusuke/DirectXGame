@@ -36,6 +36,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Surface* rule;
 
+	LWP::Primitive::Surface* startUI;
+	LWP::Primitive::Surface* ruleUI;
+
 	// SEデータ
 	LWP::Resource::Audio* audio;
 
