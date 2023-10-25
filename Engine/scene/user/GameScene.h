@@ -51,4 +51,21 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// クリア判定フラグ
 	bool isClear_;
 
+
+private://***** カメラ移動  *****//
+
+	LWP::Math::Vector2 RStickVelocity;
+
+	void Reset();
+
+	LWP::Math::Vector3 Lerp(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, float t);
+
+
+private://*** チュートリアル ***//
+
+	bool Tutorial;
+	bool ControrllTutorial;
+	bool ShockWaveTutorial;
+	bool EnemyKillTutorial;
+
 };

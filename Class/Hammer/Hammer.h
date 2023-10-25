@@ -15,6 +15,7 @@ public: // ** メンバ関数 ** //
 	/// </summary>
 	void Update();
 
+	const LWP::Object::WorldTransform GetTransform() { return model_->transform.translation; }
 
 private: // ** メンバ変数 ** //
 
@@ -38,6 +39,9 @@ private: // ** メンバ変数 ** //
 
 	// マップのポインタ
 	MapManager* mapPtr_ = nullptr;
+
+	//　コントローラーのLStickのvelocity
+	LWP::Math::Vector2 LStickVelocity;
 
 private: // ** プライベートな関数 ** //
 

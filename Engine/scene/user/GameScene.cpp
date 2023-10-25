@@ -80,11 +80,12 @@ void GameScene::Update() {
 
 	mapManager_.Update();
 
+
 	ImGui::Begin("GameScene");
 	ImGui::Text("Camera");
 	mainCamera->DebugGUI();
 	ImGui::End();
-
+	
 	// 時間がなくなったら or ターゲットが死亡したら終了
 	if (time_ <= 0 || mobManager_.GetTargetDead()) {
 
@@ -115,7 +116,10 @@ void GameScene::Update() {
 			gameBGM_->SetVolume(bgmVol_);
 		}
 
-		time_--;
+		if (Tutorial == 0) {
+			time_--;
+		}
+
 		hammer_.Update();
 		mobManager_.Update(&mapManager_);
 		score_ = mobManager_.score_;
@@ -139,6 +143,9 @@ void GameScene::Update() {
 	}
 	viewScore_ = Easing::EaseinQuad(calcScore_[0], calcScore_[1], scoreEaseT);
 	
+
+	Reset();
+
 	// タイマーとスコアのUIへの変換を行う
 	timeUI_[0]->texture = numberTex_[(time_ / 60) / 60];
 	timeUI_[1]->texture = numberTex_[((time_ / 60) % 60)/10];
@@ -181,3 +188,46 @@ void GameScene::Update() {
 }
 // 描画
 void GameScene::Draw() {}
+
+LWP::Math::Vector3 GameScene::Lerp(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, float t) {
+	// tが0の場合はstart、tが1の場合はendを返す
+	if (t <= 0.0f) {
+		return start;
+	}
+	if (t >= 1.0f) {
+		return end;
+	}
+	// それ以外の場合は線形補間を行う
+	return start + t * (end - start);
+};
+
+void GameScene::Reset() {
+	LWP::Math::Vector3 offset = { 1.5f, 0.0f, 2.5f };
+
+	LWP::Math::Matrix4x4 cameraRotateMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(mainCamera->transform.rotation);
+
+	offset = LWP::Math::Matrix4x4::TransformCoord(offset, cameraRotateMatrix);
+
+	LWP::Math::Vector3 destinationangle = { 0.0f,0.0f,0.0f };
+
+	// カメラの移動
+	if (Input::Controller::GetRStick().x || Input::Controller::GetRStick().y) {
+		RStickVelocity = Input::Controller::GetRStick();
+
+		mainCamera->transform.translation.x = -RStickVelocity.x * offset.x; 
+		mainCamera->transform.translation.z = -RStickVelocity.y * offset.y; 
+
+		destinationangle.z += RStickVelocity.x * 0.4f; 
+		destinationangle.x += RStickVelocity.y * 0.4f + 1.57f;
+	}
+	else { // カメラの位置をリセット
+		mainCamera->transform.translation.x = 0.0f;
+		mainCamera->transform.translation.z = 0.0f;
+
+		destinationangle.x = 1.57f; // x軸回転の初期値
+		destinationangle.z = 0.0f; // y軸回転の初期値
+	}
+
+	// 最短角度補間
+	mainCamera->transform.rotation = Lerp(mainCamera->transform.rotation, destinationangle, 0.1f); // 0.4fは補間係数
+}
