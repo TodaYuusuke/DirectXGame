@@ -38,6 +38,7 @@ void GameScene::Initialize() {
 	numberTex_[7] = LWP::Resource::LoadTexture("UI/7.png");
 	numberTex_[8] = LWP::Resource::LoadTexture("UI/8.png");
 	numberTex_[9] = LWP::Resource::LoadTexture("UI/9.png");
+	numberTex_[10] = LWP::Resource::LoadTexture("UI/colon.png");
 
 	// スコアUI
 	score_ = 0;
@@ -73,6 +74,16 @@ void GameScene::Initialize() {
 		timeUI_[i]->transform.translation = { (i * 36.0f) + 1120.0f,20.0f,0.0f };
 	}
 	timeUI_[0]->transform.translation.x -= 20.0f;
+
+	colonUI_ = LWP::Primitive::CreateInstance<Surface>();
+	colonUI_->texture = numberTex_[10];
+	colonUI_->vertices[0].position = { 0.0f,0.0f,0.0f };
+	colonUI_->vertices[1].position = { 48.0f,0.0f,0.0f };
+	colonUI_->vertices[2].position = { 48.0f,48.0f,0.0f };
+	colonUI_->vertices[3].position = { 0.0f,48.0f,0.0f };
+	colonUI_->isUI = true;
+	colonUI_->isActive = true;
+	colonUI_->transform.translation = { 1135.0f,30.0f,0.0f };
 
 }
 // 更新
