@@ -23,25 +23,25 @@ void Manager::Initialize(WinApp* winApp) {
 }
 
 void Manager::Update() {
-	// 新たなデバイスが接続されていないか検出しカウント
-	UINT count = 0;
-	directInput_->EnumDevices(
-		DI8DEVTYPE_GAMEPAD,
-		[](LPCDIDEVICEINSTANCEW ipddi, LPVOID pvRef) -> BOOL {
-			ipddi;
-			UINT* ptr = (UINT*)pvRef;
-			*ptr = *ptr + 1;
-			return DIENUM_CONTINUE;
-		},
-		&count,
-		DIEDFL_ATTACHEDONLY
-	);
+	//// 新たなデバイスが接続されていないか検出しカウント
+	//UINT count = 0;
+	//directInput_->EnumDevices(
+	//	DI8DEVTYPE_GAMEPAD,
+	//	[](LPCDIDEVICEINSTANCEW ipddi, LPVOID pvRef) -> BOOL {
+	//		ipddi;
+	//		UINT* ptr = (UINT*)pvRef;
+	//		*ptr = *ptr + 1;
+	//		return DIENUM_CONTINUE;
+	//	},
+	//	&count,
+	//	DIEDFL_ATTACHEDONLY
+	//);
 
-	// もしカウントが1以上 かつ コントローラーが未登録なら初期化
-	if (count > 0 && !isLoaded_) {
-		controller_.Initialize(winApp_, directInput_.Get());
-		isLoaded_ = true;
-	}
+	//// もしカウントが1以上 かつ コントローラーが未登録なら初期化
+	//if (count > 0 && !isLoaded_) {
+	//	controller_.Initialize(winApp_, directInput_.Get());
+	//	isLoaded_ = true;
+	//}
 
 
 	// デバイスの情報更新
