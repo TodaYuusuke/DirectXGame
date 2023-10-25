@@ -135,19 +135,6 @@ void Title::Initialize() {
 
 	buttonFoundationModel[0]->transform.rotation = { 0.8f,2.8f,0.0f };
 	buttonFoundationModel[1]->transform.rotation = { 0.8f,3.6f,0.0f };
-	//
-	//particleModel = LWP::Primitive::CreateInstance<Mesh>();
-	//particleModel = LWP::Resource::LoadModel("hammer/hammer.obj");
-	//particleModel->transform.translation;
-
-	//particleModel->transform.rotation = { 0.6f,-0.1f,0.0f };
-	//particleModel->transform.scale = { 0.3f, 0.3f, 0.3f };
-	// パーティクル
-	////作成
-	//for (const auto& newParticle : particles) {
-	//	
-	//	particleModel->transform.translation = newParticle.position;
-	//}
 	//下のUI
 	startUI = LWP::Primitive::CreateInstance<Surface>();
 	startUI->texture = LWP::Resource::LoadTexture("UI/start.png");
