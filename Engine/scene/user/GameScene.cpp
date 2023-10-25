@@ -120,6 +120,16 @@ void GameScene::Update() {
 			time_--;
 		}
 
+		// 敵の出現
+		if ((time_ % 600) == 0) {
+			// 基本3体
+			mobManager_.AddEnemy(3);
+			if (time_ <= 5400) {
+				// 後半で5体に
+				mobManager_.AddEnemy(2);
+			}
+		}
+
 		hammer_.Update();
 		mobManager_.Update(&mapManager_);
 		score_ = mobManager_.score_;
