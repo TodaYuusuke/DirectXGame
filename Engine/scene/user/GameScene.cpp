@@ -85,7 +85,7 @@ void GameScene::Update() {
 	ImGui::Text("Camera");
 	mainCamera->DebugGUI();
 	ImGui::End();
-
+	
 	// 時間がなくなったら or ターゲットが死亡したら終了
 	if (time_ <= 0 || mobManager_.GetTargetDead()) {
 
@@ -115,7 +115,10 @@ void GameScene::Update() {
 			gameBGM_->SetVolume(bgmVol_);
 		}
 
-		time_--;
+		if (Tutorial == 0) {
+			time_--;
+		}
+
 		hammer_.Update();
 		mobManager_.Update(&mapManager_);
 		score_ = mobManager_.score_;
@@ -195,7 +198,7 @@ LWP::Math::Vector3 GameScene::Lerp(const LWP::Math::Vector3& start, const LWP::M
 };
 
 void GameScene::Reset() {
-	LWP::Math::Vector3 offset = { 1.0f, 0.0f, 1.0f };
+	LWP::Math::Vector3 offset = { 1.5f, 0.0f, 2.5f };
 
 	LWP::Math::Matrix4x4 cameraRotateMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(mainCamera->transform.rotation);
 
@@ -204,15 +207,14 @@ void GameScene::Reset() {
 	LWP::Math::Vector3 destinationangle = { 0.0f,0.0f,0.0f };
 
 	// カメラの移動
-	if (Input::Controller::GetLStick().x || Input::Controller::GetLStick().y) {
-		LStickVelocity = Input::Controller::GetLStick();
+	if (Input::Controller::GetRStick().x || Input::Controller::GetRStick().y) {
+		RStickVelocity = Input::Controller::GetRStick();
 
-		mainCamera->transform.translation.x = -LStickVelocity.x * offset.x;
-		mainCamera->transform.translation.z = -LStickVelocity.y * offset.y;
+		mainCamera->transform.translation.x = -RStickVelocity.x * offset.x; 
+		mainCamera->transform.translation.z = -RStickVelocity.y * offset.y; 
 
-		destinationangle.z += LStickVelocity.x * 0.2f; // 0.2fは傾ける角度
-		destinationangle.x += LStickVelocity.y * 0.2f + 1.57f;;
-
+		destinationangle.z += RStickVelocity.x * 0.4f; 
+		destinationangle.x += RStickVelocity.y * 0.4f + 1.57f;
 	}
 	else { // カメラの位置をリセット
 		mainCamera->transform.translation.x = 0.0f;
@@ -223,5 +225,5 @@ void GameScene::Reset() {
 	}
 
 	// 最短角度補間
-	mainCamera->transform.rotation = Lerp(mainCamera->transform.rotation, destinationangle, 1.0f); // 0.4fは補間係数
+	mainCamera->transform.rotation = Lerp(mainCamera->transform.rotation, destinationangle, 0.1f); // 0.4fは補間係数
 }

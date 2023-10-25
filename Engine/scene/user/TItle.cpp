@@ -72,17 +72,11 @@ void Title::Initialize() {
 	textBA->transform.scale = { 1.3f,1.3f,1.0f };
 	textN[1]->transform.scale = { 1.3f,1.3f,1.0f };
 
-	/*TitleSurface = LWP::Primitive::CreateInstance<Surface>();
-	TitleSurface->isActive = true;
-	TitleSurface->isUI = true;
-	TitleSurface->texture = uvTexture;
-	
-	TitleSurface->vertices[0].position = {0.0f,0.0f,0.0f};
-	TitleSurface->vertices[1].position = {1000.0f,0.0f,0.0f};
-	TitleSurface->vertices[2].position = {1000.0f,250.0f,0.0f};
-	TitleSurface->vertices[3].position = {0.0f,250.0f,0.0f };
-
-	TitleSurface->transform.translation = { 140.0f ,20.0f ,1.0f };*/
+	rule = LWP::Primitive::CreateInstance<Surface>();
+	rule->texture = LWP::Resource::LoadTexture("rule.png");
+	rule->isActive = false;
+	rule->isUI = true;
+	rule->transform.translation = { 0.0f,0.0f,0.0f };
 
 	// ハンマー
 	hammerModel = LWP::Primitive::CreateInstance<Mesh>();
@@ -165,11 +159,6 @@ void Title::Update() {
 
 	// ENTERキーを押すとシーン切り替え
 	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
-		nextScene_ = new GameScene();
-	}
-
-	// Rキーを押すとシーン再読み込み
-	if (Input::Keyboard::GetTrigger(DIK_R)) {
 		nextScene_ = new GameScene();
 	}
 
@@ -447,9 +436,18 @@ void Title::Controller(){
 
 	//windowを閉じる
 	if (selectPoint == 0 && Input::Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
-		sceneChangeTiemFlag = false;
+		rule->isActive = true;
 		ButtonPush();
 		shakeMaxPosition = 20;
 		Attack();
 	}
+
+	if (Input::Controller::GetTrigger(DIXBOX_B)) {
+		rule->isActive = true;
+	}
+	else {
+		rule->isActive = false;
+
+	}
+
 }

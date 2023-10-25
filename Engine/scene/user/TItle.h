@@ -34,6 +34,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;
 
+	LWP::Primitive::Surface* rule;
+
 	// SEデータ
 	LWP::Resource::Audio* audio;
 
