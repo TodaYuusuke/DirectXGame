@@ -6,6 +6,9 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 
 void Hammer::Initialize(MapManager* map) {
+	// タンバリンの初期化
+	tambourine_.Initialize();
+
 	// レティクル初期化
 	reticle_ = CreateInstance<Surface>();
 	reticle_->transform.translation.y = 0.01f;
@@ -26,8 +29,6 @@ void Hammer::Initialize(MapManager* map) {
 	// 半透明に
 	model_->commonColor = new Color(0xFFFFFF64);
 
-	// タンバリンの初期化
-	tambourine_.Initialize();
 
 	// マップのポインタ受け取り
 	mapPtr_ = map;
@@ -98,6 +99,20 @@ void Hammer::Controller() {
 		reticle_->transform.translation.x += LStickVelocity.x * move.x;
 		reticle_->transform.translation.z -= LStickVelocity.y * move.y;
 
+	}
+
+	//移動処理
+	centerX = 0.0f;
+	centerY = 0.0f;
+	radius = 1.0f;
+
+	deltaX = reticle_->transform.translation.x - centerX;
+	deltaY = reticle_->transform.translation.z - centerY;
+	if (deltaX * deltaX + deltaY * deltaY > radius * radius) {
+		// 円の境界を超えた場合は移動しないようにする
+		float angle = atan2(deltaY, deltaX);
+		reticle_->transform.translation.x = centerX + cos(angle) * radius;
+		reticle_->transform.translation.z = centerY + sin(angle) * radius;
 	}
 
 		// Aボタンで攻撃

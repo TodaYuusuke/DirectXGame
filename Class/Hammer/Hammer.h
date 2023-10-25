@@ -43,6 +43,13 @@ private: // ** メンバ変数 ** //
 	//　コントローラーのLStickのvelocity
 	LWP::Math::Vector2 LStickVelocity;
 
+	float centerX;
+	float centerY;
+	float radius;
+
+	float deltaX;
+	float deltaY;
+
 private: // ** プライベートな関数 ** //
 
 	// タイマー系更新処理
