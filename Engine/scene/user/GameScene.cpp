@@ -155,7 +155,7 @@ LWP::Math::Vector3 GameScene::Lerp(const LWP::Math::Vector3& start, const LWP::M
 };
 
 void GameScene::Reset() {
-	LWP::Math::Vector3 offset = { 0.1f, 0.0f, 0.1f };
+	LWP::Math::Vector3 offset = { 1.0f, 0.0f, 1.0f };
 
 	LWP::Math::Matrix4x4 cameraRotateMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(mainCamera->transform.rotation);
 
@@ -170,8 +170,8 @@ void GameScene::Reset() {
 		mainCamera->transform.translation.x = -LStickVelocity.x * offset.x;
 		mainCamera->transform.translation.z = -LStickVelocity.y * offset.y;
 
-		destinationangle.z += LStickVelocity.x * 0.1f; // 0.2fは傾ける角度
-		destinationangle.x += LStickVelocity.y * 0.1f + 1.57f;;
+		destinationangle.z += LStickVelocity.x * 0.2f; // 0.2fは傾ける角度
+		destinationangle.x += LStickVelocity.y * 0.2f + 1.57f;;
 
 	}
 	else { // カメラの位置をリセット
@@ -183,5 +183,5 @@ void GameScene::Reset() {
 	}
 
 	// 最短角度補間
-	mainCamera->transform.rotation = Lerp(mainCamera->transform.rotation, destinationangle, 0.1f); // 0.4fは補間係数
+	mainCamera->transform.rotation = Lerp(mainCamera->transform.rotation, destinationangle, 1.0f); // 0.4fは補間係数
 }
