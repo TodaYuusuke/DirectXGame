@@ -82,7 +82,7 @@ void Hammer::keyBoard() {
 	// SPACEで攻撃
 	if (Keyboard::GetTrigger(DIK_SPACE) && attackCoolTimer < 0) {
 		Attack();
-		// タンバリンのベルをシェイクさせる
+		// タンバリンをシェイクさせる
 		tambourine_.ShakeBell();
 	}
 }
@@ -103,6 +103,8 @@ void Hammer::Controller() {
 		// Aボタンで攻撃
 	if (Controller::GetTrigger(DIXBOX_A) && attackCoolTimer < 0) {
 		Attack();
+		// タンバリンをシェイクさせる
+		tambourine_.ShakeBell();
 	}
 	
 }
