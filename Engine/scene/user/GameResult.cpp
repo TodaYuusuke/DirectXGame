@@ -297,11 +297,11 @@ void GameResult::Update() {
 				isGoTitle = true;
 			}
 
-			if (Input::Controller::GetLStick().x <= 1.0f) {
+			if (Input::Controller::GetLStick().x <= -0.9f) {
 				isGoTitle = false;
 
 			}
-			else if (Input::Controller::GetLStick().x >= -1.0f) {
+			else if (Input::Controller::GetLStick().x >= 0.9f) {
 				isGoTitle = true;
 
 			}
