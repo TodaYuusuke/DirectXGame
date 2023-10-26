@@ -31,10 +31,10 @@ void GameResult::Initialize() {
 	timeUITex_ = LWP::Resource::LoadTexture("UI/time.png");
 
 	// イージング用ワールドトランスフォーム
-	retriWorldTransform_[0].translation = { 200.0f,-200.0f,0.0f };
-	retriWorldTransform_[1].translation = { 200.0f,480.0f,0.0f };
-	titleWorldTransform_[0].translation = { 780.0f,-200.0f,0.0f };
-	titleWorldTransform_[1].translation = { 780.0f,480.0f,0.0f };
+	retriWorldTransform_[0].translation = { 780.0f,-200.0f,0.0f };
+	retriWorldTransform_[1].translation = { 780.0f,480.0f,0.0f };
+	titleWorldTransform_[0].translation = { 200.0f,-200.0f,0.0f };
+	titleWorldTransform_[1].translation = { 200.0f,480.0f,0.0f };
 	fullSize.scale = { 1.2f, 1.2f, 1.0f };
 	miniSize.scale = { 0.4f, 0.4f, 1.0f };
 
@@ -221,6 +221,9 @@ void GameResult::Update() {
 			if (Keyboard::GetTrigger(DIK_RETURN)) {
 				t[0] = 1.0f;
 			}
+			if (Input::Controller::GetTrigger(DIXBOX_A)) {
+				t[0] = 1.0f;
+			}
 
 			t[0] += (1.0f / 196.0f);
 			if (t[0] > 1.0f) { t[0] = 1.0f; }
@@ -252,6 +255,9 @@ void GameResult::Update() {
 			if (Keyboard::GetTrigger(DIK_RETURN)) {
 				t[1] = 1.0f;
 			}
+			if (Input::Controller::GetTrigger(DIXBOX_A)) {
+				t[1] = 1.0f;
+			}
 
 			t[1] += (1.0f / 128);
 			if (t[1] > 1.0f) { t[1] = 1.0f; }
@@ -272,6 +278,9 @@ void GameResult::Update() {
 			if (Keyboard::GetTrigger(DIK_RETURN)) {
 				t[2] = 1.0f;
 			}
+			if (Input::Controller::GetTrigger(DIXBOX_A)) {
+				t[2] = 1.0f;
+			}
 
 			t[2] += (1.0f / 128.0f);
 			if (t[2] > 1.0f) { t[2] = 1.0f; }
@@ -286,6 +295,15 @@ void GameResult::Update() {
 			}
 			if (Keyboard::GetTrigger(DIK_D)) {
 				isGoTitle = true;
+			}
+
+			if (Input::Controller::GetLStick().x <= 1.0f) {
+				isGoTitle = false;
+
+			}
+			else if (Input::Controller::GetLStick().x >= -1.0f) {
+				isGoTitle = true;
+
 			}
 
 			// ボタンのイージング
@@ -305,7 +323,7 @@ void GameResult::Update() {
 			}
 
 			// 選択中のボタンを拡縮
-			if (isGoTitle) {
+			if (!isGoTitle) {
 				titleButton_->transform.scale = Easing::ScaleEaseOutQuint(miniSize, fullSize, selectT).scale;
 				retriButton_->transform.scale = { 1.0f,1.0f,1.0f };
 			}
@@ -318,6 +336,11 @@ void GameResult::Update() {
 			if (Keyboard::GetTrigger(DIK_RETURN)) {
 				isTransitionSceneEnd_ = true;
 			}
+
+			if (Input::Controller::GetTrigger(DIXBOX_A)) {
+				isTransitionSceneEnd_ = true;
+			}
+
 		}
 
 		//// カメラ操作
