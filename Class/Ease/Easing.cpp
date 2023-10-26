@@ -46,6 +46,20 @@ LWP::Object::WorldTransform Easing::EaseOutQuint(
 	return result;
 }
 
+LWP::Object::WorldTransform Easing::ScaleEaseOutQuint(
+	LWP::Object::WorldTransform s,
+	LWP::Object::WorldTransform e,
+	float t
+) {
+	LWP::Object::WorldTransform result;
+	float EasedT = t - 1.0f;
+	EasedT = 1.0f + EasedT * EasedT * EasedT * EasedT * EasedT;
+
+	result.scale.x = (1.0f - EasedT) * s.scale.x + EasedT * e.scale.x;
+	result.scale.y = (1.0f - EasedT) * s.scale.y + EasedT * e.scale.y;
+	return result;
+}
+
 int32_t Easing::EaseinQuad(int32_t s,int32_t e,float t) {
 	float result = 0;
 	float EasedT = t * t;

@@ -36,7 +36,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	float bgmVol_ = 0.0f;
 
 	// 数値テクスチャ
-	LWP::Resource::Texture* numberTex_[10] = { nullptr };
+	LWP::Resource::Texture* numberTex_[11] = { nullptr };
 	// スコア
 	int32_t score_;
 	float scoreEaseT;
@@ -46,6 +46,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// タイム
 	int32_t time_;
 	LWP::Primitive::Surface* timeUI_[3] = { nullptr };
+	LWP::Primitive::Surface* colonUI_ = nullptr;
 	int32_t nextSceneWaitTime_;
 
 	// クリア判定フラグ

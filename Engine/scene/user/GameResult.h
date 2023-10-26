@@ -24,6 +24,10 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::Texture* backgroundTex_ = nullptr;
 	LWP::Resource::Texture* transitionTex_ = nullptr;
 	LWP::Resource::Texture* buttonTex_ = nullptr;
+	LWP::Resource::Texture* retriButtonTex_ = nullptr;
+	LWP::Resource::Texture* titleButtonTex_ = nullptr;
+	LWP::Resource::Texture* scoreUITex_ = nullptr;
+	LWP::Resource::Texture* timeUITex_ = nullptr;
 
 	// モデル
 
@@ -45,19 +49,26 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	float t[3] = { 0.0f };
 
 	// 数値テクスチャ
-	LWP::Resource::Texture* numberTex_[10] = { nullptr };
+	LWP::Resource::Texture* numberTex_[11] = { nullptr };
 	// スコア
 	int32_t score_;
 	int32_t viewScore_;
+	LWP::Primitive::Surface* scoreSpriteUI_ = nullptr;
 	LWP::Primitive::Surface* scoreUI_[8] = { nullptr };
 	// タイム
 	int32_t time_;
 	int32_t viewTime;
+	LWP::Primitive::Surface* timeSpriteUI_ = nullptr;
 	LWP::Primitive::Surface* timeUI_[3] = { nullptr };
+	LWP::Primitive::Surface* colonUI_ = nullptr;
 	int32_t nextSceneWaitTime_;
 
 	// タイトルかリトライの選択ボタン
 	bool isGoTitle = false;
+	float selectT = 0.0f;
+	bool isSelectUp = false;
+	LWP::Object::WorldTransform fullSize;
+	LWP::Object::WorldTransform miniSize;
 
 	// シーン遷移のフラグ(シーン遷移時にtrue)
 	bool isTransition_ = false;
