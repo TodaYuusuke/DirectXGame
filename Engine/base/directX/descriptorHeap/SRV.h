@@ -23,12 +23,12 @@ namespace LWP::Base {
 		/// <summary>
 		/// 現在の使用数を取得
 		/// </summary>
-		UINT GetUsedCount() { return usedCount_; }
+		uint32_t GetUsedCount() { return usedCount_; }
 
 
 	private: // ** メンバ変数 ** //
 
 		// 0番目はImGuiが使っているので初期値1
-		UINT usedCount_ = 1;
+		uint32_t usedCount_ = 1;
 	};
 }

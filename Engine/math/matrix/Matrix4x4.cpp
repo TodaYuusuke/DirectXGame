@@ -263,6 +263,36 @@ Matrix4x4 Matrix4x4::CreateViewportMatrix(const float& left, const float& top, c
 	return result;
 }
 
+Matrix4x4 Matrix4x4::CreateLookAtMatrix(const Vector3& eye, const Vector3& at, const Vector3& up) {
+	Vector3 forward = (at - eye).Normalize();
+	Vector3 right = Vector3::Cross(up, forward).Normalize();
+	Vector3 newUp = Vector3::Cross(forward, right).Normalize();
+
+	Matrix4x4 result;
+
+	result.m[0][0] = right.x;
+	result.m[0][1] = newUp.x;
+	result.m[0][2] = -forward.x;
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = right.y;
+	result.m[1][1] = newUp.y;
+	result.m[1][2] = -forward.y;
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = right.z;
+	result.m[2][1] = newUp.z;
+	result.m[2][2] = -forward.z;
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = Vector3::Dot(-1 * right, eye);
+	result.m[3][1] = Vector3::Dot(-1 * newUp, eye);
+	result.m[3][2] = Vector3::Dot(forward, eye);
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
+
 // 単位行列作成
 Matrix4x4 Matrix4x4::CreateIdentity4x4() {
 	Matrix4x4 result{};

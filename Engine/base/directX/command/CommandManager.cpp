@@ -48,8 +48,8 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	srv_ = srv;
 
 	// コマンド用クラス実態宣言
-	//cmds_.push_back(new ShadowMapCommand());
 	cmds_.push_back(new MainCommand());
+	cmds_.push_back(new ShadowMapCommand());
 	for (int i = 0; i < cmds_.size(); i++) {
 		cmds_[i]->SetDescriptorHeap(rtv_, dsv_, srv_);
 		cmds_[i]->Initialize(device_, dxc_.get(), rootSignature_.Get(), CreateBufferResource(sizeof(IndexInfoStruct) * cmds_[i]->kMaxIndex));
@@ -71,13 +71,12 @@ void CommandManager::DrawCall() {
 	HRESULT hr;
 
 	// レンダリング回数ループする
-	for (int i = 0; i < cmds_.size(); i++) {
+	for (size_t i = cmds_.size() - 1; i >= 0; i--) {
+		// ポインタで受け取る
 		ID3D12GraphicsCommandList* commandList = commandList_.Get();
 
 		// 描画前処理
 		cmds_[i]->PreDraw(commandList);
-
-		// ポインタで受け取る
 
 		// RootSignatureを設定。PSOに設定してるけど別途設定が必要
 		commandList->SetGraphicsRootSignature(rootSignature_.Get());
@@ -107,9 +106,24 @@ void CommandManager::DrawCall() {
 		commandList->DrawInstanced(3, cmds_[i]->indexResourceBuffer_->usedCount_ / 3, 0, 0);
 
 		// 描画後処理（MainRenderingの時のみPostDrawは後回し）
-		if (i == cmds_.size() - 1) { break; }
+		if (i == 0) { break; }
 
 		cmds_[i]->PostDraw(commandList);
+
+
+		ID3D12CommandList* commandLists[] = { commandList_.Get() };
+		// GPUにコマンドリストの実行を行わせる
+		commandQueue_->ExecuteCommandLists(1, commandLists);
+
+		// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+		commandQueue_->Signal(fence_.Get(), ++fenceVal_);
+		if (fence_->GetCompletedValue() != fenceVal_) {
+			HANDLE event = CreateEvent(NULL, FALSE, FALSE, NULL);
+			assert(event != nullptr);
+			fence_->SetEventOnCompletion(fenceVal_, event);
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
 
 		// 次のコマンドリストを準備
 		hr = commandAllocator_->Reset();
@@ -120,10 +134,8 @@ void CommandManager::DrawCall() {
 }
 
 void CommandManager::PostDraw() {
-	MainCommand* cmd = { new MainCommand() };
-	cmd->SetDescriptorHeap(rtv_, dsv_, srv_);
 	// 描画後処理
-	cmd->PostDraw(commandList_.Get());
+	cmds_[0]->PostDraw(commandList_.Get());
 
 	// - コマンドリストをすべてCloseした後 - //
 
@@ -163,8 +175,6 @@ void CommandManager::PostDraw() {
 }
 
 void CommandManager::Reset() {
-	//commandList_->Reset();
-	//shadowMapCommands_->Reset();
 	HRESULT hr;
 	// 次のフレーム用のコマンドリストを準備
 	hr = commandAllocator_->Reset();
@@ -229,15 +239,20 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 			material,
 			tex2d
 		};
+
+
+		// シャドウマップにも描画！
+		if (primitive->material.enableLighting) {
+			cmds_[1]->indexResourceBuffer_->data_[cmds_[1]->indexResourceBuffer_->usedCount_++] = IndexInfoStruct{
+			startIndexNum + primitive->indexes[i],
+			cameraVP,
+			worldMatrix,
+			material,
+			tex2d
+			};
+		}
 	}
 
-	// シャドウマップにも描画！
-	//if (primitive->material.enableLighting) {
-		// WorldTransformの場所を設定
-		//shadowMapCommands_->GetList()->SetGraphicsRootConstantBufferView(0, matrixResource_[usedMatrixCount_]->view_);
-		// 描画！
-		//shadowMapCommands_->GetList()->DrawIndexedInstanced(primitive->GetIndexCount(), 1, vertexResourceBuffer_->usedIndexCount_, vertexResourceBuffer_->usedVertexCount_, 0);
-	//}
 }
 
 void CommandManager::ImGui() {
@@ -250,9 +265,67 @@ void CommandManager::ImGui() {
 	// 方向を正規化
 	lightResourceBuffer_->data_->direction_ = lightResourceBuffer_->data_->direction_.Normalize();
 
-	Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->data_->direction_).Inverse();
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(512.0f, 512.0f, 512.0f, 512.0f, 0.0f, 100.0f);
-	lightResourceBuffer_->data_->viewProjection_ = viewMatrix* projectionMatrix;
+	// ビュープロジェクション行列を生成
+	// ライトの向きの逆ベクトルを計算
+	Math::Vector3 lightDirection = -1 * lightResourceBuffer_->data_->direction_;
+
+	// ライトの位置（これは平行光源なので向きを逆にしたベクトル）
+	Math::Vector3 lightPosition = -1 * lightDirection;
+
+	// ライトの上向きベクトル（仮にy軸を上向きとする）
+	Math::Vector3 up = Math::Vector3(0.0f, 1.0f, 0.0f);
+
+	// ライトの向きを注視点にするビュー行列
+	Math::Matrix4x4 viewMatrix = Math::Matrix4x4::CreateLookAtMatrix(
+		lightPosition,                   // 視点（ライトの位置）
+		lightPosition + lightDirection,  // 注視点（ライトの位置 + ライトの向き）
+		up                               // 上向きベクトル
+	);
+
+	/*
+	// 向きベクトルを正規化
+	Vector3 forward = lightResourceBuffer_->data_->direction_;
+
+	// 右ベクトルを計算
+	Vector3 right = Vector3::Cross(Math::Vector3(0.0f, 1.0f, 0.0f), forward).Normalize();
+
+	// 上ベクトルを計算
+	Vector3 newUp = Vector3::Cross(forward, right).Normalize();
+
+	Matrix4x4 viewMatrix;
+
+	// 行列の3x3部分に回転行列をセット
+	result.m[0][0] = right.x;
+	result.m[0][1] = newUp.x;
+	result.m[0][2] = -forward.x;
+
+	result.m[1][0] = right.y;
+	result.m[1][1] = newUp.y;
+	result.m[1][2] = -forward.y;
+
+	result.m[2][0] = right.z;
+	result.m[2][1] = newUp.z;
+	result.m[2][2] = -forward.z;
+
+	// 4x4行列の最後の列には適切な値をセット
+	result.m[0][3] = 0.0f;
+	result.m[1][3] = 0.0f;
+	result.m[2][3] = 0.0f;
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+	*/
+
+	//Matrix4x4 viewMatrix = Matrix4x4::CreateLookAtMatrix({ 0.0f,0.0f,0.0f }, lightResourceBuffer_->data_->direction_, { 0.0f,1.0f,0.0f });
+	//Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->data_->direction_).Inverse();
+	//WorldTransform transform{ {0.0f,0.0f,0.0f},{1.57f,0.0f,0.0f},{1.0f,1.0f,1.0f} };
+	//Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
+	//Matrix4x4 viewMatrix = Matrix4x4::CreateIdentity4x4();
+	//Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(0.45f, 1280 / 720, 0.1f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f, 1024.0f, 0.0f, 100.0f);
+	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(-512.0f, -512.0f, 512.0f, 512.0f, 0.0f, 100.0f);
+	lightResourceBuffer_->data_->viewProjection_ = viewMatrix* projectionMatrix * Matrix4x4::CreateViewportMatrix(0, 0, 1024.0f, 1024.0f, 0.0f, 1.0f);
 }
 
 
@@ -604,10 +677,10 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount() + 1);
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount());
 	// 初めてのテクスチャ生成ならviewを保存
 	if (textureResourceBuffer_->usedCount_ == 0) {
-		textureResourceBuffer_->view_ = srv_->GetGPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount() + 1);
+		textureResourceBuffer_->view_ = srv_->GetGPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount());
 	}
 	// SRVの生成
 	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);

@@ -26,6 +26,9 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	// 指定した深度で画面全体をクリアする（1はシャドウマップ用DSV）
 	dsv_->ClearDepth(1, list);
 
+	// 描画用のSRVのDescriptorHeapを設定
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
+	list->SetDescriptorHeaps(1, descriptorHeaps);
 
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};

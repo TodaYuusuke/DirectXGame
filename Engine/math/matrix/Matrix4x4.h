@@ -61,13 +61,16 @@ namespace LWP::Math {
 #pragma endregion
 
 #pragma region レンダリングパイプライン
-
+		
 		// 透視射影行列
 		static Matrix4x4 CreatePerspectiveFovMatrix(const float& fovY, const float& aspectRatio, const float& nearClip, const float& farClip);
 		// 正射影行列
 		static Matrix4x4 CreateOrthographicMatrix(const float& left, const float& top, const float& right, const float& bottom, const float& nearClip, const float& farClip);
 		// ビューポート変換行列
 		static Matrix4x4 CreateViewportMatrix(const float& left, const float& top, const float& width, const float& height, const float& minDepth, const float& maxDepth);
+
+		// ライトのビュー行列
+		static Matrix4x4 CreateLookAtMatrix(const Vector3& eye, const Vector3& at, const Vector3& up);
 
 #pragma endregion
 

@@ -19,7 +19,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET{
         float sm = gShadowMap.Sample(gShadowMapSampler, input.posSM.xy);
         float sma = (input.posSM.z - 0.005f < sm) ? 1.0f : 0.5f;
         
-        output.rgb = input.color.rgb * gTexture[t].Sample(gSampler, transformUV.xy).rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+        output.rgb = input.color.rgb * gTexture[t].Sample(gSampler, transformUV.xy).rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity * sma;
         output.w = input.color.a * gTexture[t].Sample(gSampler, transformUV.xy).a;   // 透明度を保持
     }
     else { // Lightingの計算を行わない

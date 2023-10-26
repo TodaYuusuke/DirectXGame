@@ -123,8 +123,9 @@ void DSV::CreateShadowMap(SRV* srv) {
 
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv->GetCPUHandle(1);
-	shadowView_ = srv->GetGPUHandle(1);
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv->GetCPUHandle(srv->GetUsedCount());
+	shadowView_ = srv->GetGPUHandle(srv->GetUsedCount());
+	srv->AddUsedCount();
 	// SRVの生成
 	device_->CreateShaderResourceView(shadowMapResource_.Get(), &srvDesc, textureSRVHandleCPU);
 }

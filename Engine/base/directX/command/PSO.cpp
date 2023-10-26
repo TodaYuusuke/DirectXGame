@@ -5,7 +5,7 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps) {
+void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps, DepthFormat df) {
 	HRESULT hr = S_FALSE;
 
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShader = CreateVertexShader(dxc, vs);
@@ -23,7 +23,16 @@ void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, 
 		graphicsPipelineStateDesc.PS = { pixelShader->GetBufferPointer(),pixelShader->GetBufferSize() };	// PixelShader
 	}
 	graphicsPipelineStateDesc.DepthStencilState = CreateDepthStencilState();
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	switch (df)
+	{
+		default:
+		case LWP::Base::DepthFormat::D24_UNORM_S8_UINT:
+			graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			break;
+		case LWP::Base::DepthFormat::D32_FLOAT:
+			graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+			break;
+	}
 	// 書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
 	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -38,7 +47,7 @@ void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, 
 }
 
 void PSO::InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc) {
-	Initialize(device, root, dxc, 1, 2, 0);
+	Initialize(device, root, dxc, 1, 2, 0, DepthFormat::D32_FLOAT);
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {

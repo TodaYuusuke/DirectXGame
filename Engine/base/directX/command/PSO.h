@@ -14,6 +14,17 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_;	// hlslファイル内でコンパイルするファイルの処理を行うハンドラ
 	};
 
+	
+	// パイプラインの詳細設定
+	//enum class FillMode : UINT {
+	//	Wire = 0,
+	//	Fill = 1
+	//};
+	enum class DepthFormat : UINT {
+		D24_UNORM_S8_UINT = 0,	// 汎用
+		D32_FLOAT = 1	// シャドウマップ用
+	};
+
 
 	/// <summary>
 	/// グラフィックスパイプライン
@@ -31,7 +42,7 @@ namespace LWP::Base {
 		/// <param name="r">0 ... Wire、1 ... Fill</param>
 		/// <param name="vs">0 ... nullptr、1 ... Object3d、2 ... ShadowMap</param>
 		/// <param name="ps">0 ... nullptr、1 ... Object3d</param>
-		void Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps);
+		void Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps, DepthFormat df);
 
 		/// <summary>
 		/// シャドウマップ専用のPSO初期化用
