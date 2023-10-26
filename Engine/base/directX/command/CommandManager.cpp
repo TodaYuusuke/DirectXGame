@@ -282,50 +282,17 @@ void CommandManager::ImGui() {
 		up                               // 上向きベクトル
 	);
 
-	/*
-	// 向きベクトルを正規化
-	Vector3 forward = lightResourceBuffer_->data_->direction_;
-
-	// 右ベクトルを計算
-	Vector3 right = Vector3::Cross(Math::Vector3(0.0f, 1.0f, 0.0f), forward).Normalize();
-
-	// 上ベクトルを計算
-	Vector3 newUp = Vector3::Cross(forward, right).Normalize();
-
-	Matrix4x4 viewMatrix;
-
-	// 行列の3x3部分に回転行列をセット
-	result.m[0][0] = right.x;
-	result.m[0][1] = newUp.x;
-	result.m[0][2] = -forward.x;
-
-	result.m[1][0] = right.y;
-	result.m[1][1] = newUp.y;
-	result.m[1][2] = -forward.y;
-
-	result.m[2][0] = right.z;
-	result.m[2][1] = newUp.z;
-	result.m[2][2] = -forward.z;
-
-	// 4x4行列の最後の列には適切な値をセット
-	result.m[0][3] = 0.0f;
-	result.m[1][3] = 0.0f;
-	result.m[2][3] = 0.0f;
-	result.m[3][0] = 0.0f;
-	result.m[3][1] = 0.0f;
-	result.m[3][2] = 0.0f;
-	result.m[3][3] = 1.0f;
-	*/
-
 	//Matrix4x4 viewMatrix = Matrix4x4::CreateLookAtMatrix({ 0.0f,0.0f,0.0f }, lightResourceBuffer_->data_->direction_, { 0.0f,1.0f,0.0f });
 	//Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->data_->direction_).Inverse();
 	//WorldTransform transform{ {0.0f,0.0f,0.0f},{1.57f,0.0f,0.0f},{1.0f,1.0f,1.0f} };
 	//Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
 	//Matrix4x4 viewMatrix = Matrix4x4::CreateIdentity4x4();
 	//Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(0.45f, 1280 / 720, 0.1f, 100.0f);
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f, 1024.0f, 0.0f, 100.0f);
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(-512.0f, -512.0f, 512.0f, 512.0f, 0.0f, 100.0f);
-	lightResourceBuffer_->data_->viewProjection_ = viewMatrix* projectionMatrix * Matrix4x4::CreateViewportMatrix(0, 0, 1024.0f, 1024.0f, 0.0f, 1.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f * 3.0f, 1024.0f * 3.0f, 0.0f, 100.0f);
+	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(1024.0f * -1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 0.0f, 100.0f);
+	//Matrix4x4 viewprotMatrix = Matrix4x4::CreateViewportMatrix(1024.0f * -1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 0.0f, 1.0f);
+	Matrix4x4 viewprotMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f, 1024.0, 0.0f, 1.0f);
+	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewprotMatrix;
 }
 
 

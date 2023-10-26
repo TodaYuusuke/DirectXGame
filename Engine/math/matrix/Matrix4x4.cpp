@@ -238,12 +238,16 @@ Matrix4x4 Matrix4x4::CreateOrthographicMatrix(const float& left, const float& to
 
 	result.m[0][0] = 2.0f / (right - left);
 	result.m[1][1] = 2.0f / (top - bottom);
-	result.m[2][2] = 2.0f / (farClip - nearClip);
+	result.m[2][2] = 1.0f / (farClip - nearClip);
 
 	result.m[3][0] = (left + right) / (left - right);
 	result.m[3][1] = (top + bottom) / (bottom - top);
 	result.m[3][2] = nearClip / (nearClip - farClip);
 	result.m[3][3] = 1;
+	//result.m[3][0] = - ((right + left) / (right - left));
+	//result.m[3][1] = (top + bottom) / (top - bottom);
+	//result.m[3][2] =  - ((farClip + nearClip) / (farClip - nearClip));
+	//result.m[3][3] = 1;
 
 	return result;
 }
