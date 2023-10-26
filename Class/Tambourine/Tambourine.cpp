@@ -36,10 +36,10 @@ void Tambourine::Initialize() {
 }
 void Tambourine::Update() {
 
-	ImGui::Begin("tambourine");
+	/*ImGui::Begin("tambourine");
 	tamModel_->DebugGUI();
 	bellModel_->DebugGUI();
-	ImGui::End();
+	ImGui::End();*/
 
 	// 乱数を再設定
 	srand((unsigned int)time(nullptr));

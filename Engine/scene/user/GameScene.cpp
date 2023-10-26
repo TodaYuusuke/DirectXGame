@@ -92,10 +92,10 @@ void GameScene::Update() {
 	mapManager_.Update();
 
 
-	ImGui::Begin("GameScene");
+	/*ImGui::Begin("GameScene");
 	ImGui::Text("Camera");
 	mainCamera->DebugGUI();
-	ImGui::End();
+	ImGui::End();*/
 	
 	// 時間がなくなったら or ターゲットが死亡したら終了
 	if (time_ <= 0 || mobManager_.GetTargetDead()) {
@@ -188,23 +188,23 @@ void GameScene::Update() {
 	viewScore_ = viewScore_ % 10;
 	scoreUI_[7]->texture = numberTex_[(viewScore_)];
 
-	// Cキーを押すと敵召喚
-	if (Input::Keyboard::GetTrigger(DIK_C)) {
-		mobManager_.AddEnemy(1);
-	}
+	//// Cキーを押すと敵召喚
+	//if (Input::Keyboard::GetTrigger(DIK_C)) {
+	//	mobManager_.AddEnemy(1);
+	//}
 
-	// Rキーを押すとシーン再読み込み
-	if (Input::Keyboard::GetTrigger(DIK_R)) {
-		nextScene_ = new GameScene();
-		gameBGM_->Stop();
-	}
+	//// Rキーを押すとシーン再読み込み
+	//if (Input::Keyboard::GetTrigger(DIK_R)) {
+	//	nextScene_ = new GameScene();
+	//	gameBGM_->Stop();
+	//}
 
-	// ENTERキーを押すとシーン切り替え(ゲームリザルト)
-	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
+	//// ENTERキーを押すとシーン切り替え(ゲームリザルト)
+	//if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
 
-		nextScene_ = new GameResult(score_,time_);
-		gameBGM_->Stop();
-	}
+	//	nextScene_ = new GameResult(score_,time_);
+	//	gameBGM_->Stop();
+	//}
 
 }
 // 描画

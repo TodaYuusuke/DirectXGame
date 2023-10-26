@@ -161,10 +161,10 @@ void Title::Update() {
 	TitleUI();
 	Controller();
 
-	// ENTERキーを押すとシーン切り替え
-	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
-		nextScene_ = new GameScene();
-	}
+	//// ENTERキーを押すとシーン切り替え
+	//if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
+	//	nextScene_ = new GameScene();
+	//}
 
 	if (Input::Keyboard::GetTrigger(DIK_A)) {
 		selectPoint = true;
@@ -191,37 +191,37 @@ void Title::Update() {
 		Attack();
 	}
 
-	//*******************ImGui*******************//
-	ImGui::Begin("Primitive");
-	TitleSurface->DebugGUI("TitleSurface");
-	buttonModel[0]->DebugGUI("button[0]");
-	buttonModel[1]->DebugGUI("button[1]");
-	transitionSurfase_[0]->DebugGUI("transitionSurface[0]");
-	transitionSurfase_[1]->DebugGUI("transitionSurface[1]");
-	hammerModel->DebugGUI("hammerModel");
-	tambourineModel[0]->DebugGUI("tambourine[0]");
-	tambourineModel[1]->DebugGUI("tambourine[1]");
-	tambourineModel[2]->DebugGUI("tambourine[2]");
-	tambourineModel[3]->DebugGUI("tambourine[3]");
-	tambourineModel[4]->DebugGUI("tambourine[4]");
-	textBA->DebugGUI("textBA");
-	buttonFoundationModel[0]->DebugGUI("buttonFoundation[0]");
-	buttonFoundationModel[1]->DebugGUI("buttonFoundation[1]");
-	rule->DebugGUI("rule");
-	startUI->DebugGUI("startUI");
-	ruleUI->DebugGUI("ruleUI");
+	////*******************ImGui*******************//
+	//ImGui::Begin("Primitive");
+	//TitleSurface->DebugGUI("TitleSurface");
+	//buttonModel[0]->DebugGUI("button[0]");
+	//buttonModel[1]->DebugGUI("button[1]");
+	//transitionSurfase_[0]->DebugGUI("transitionSurface[0]");
+	//transitionSurfase_[1]->DebugGUI("transitionSurface[1]");
+	//hammerModel->DebugGUI("hammerModel");
+	//tambourineModel[0]->DebugGUI("tambourine[0]");
+	//tambourineModel[1]->DebugGUI("tambourine[1]");
+	//tambourineModel[2]->DebugGUI("tambourine[2]");
+	//tambourineModel[3]->DebugGUI("tambourine[3]");
+	//tambourineModel[4]->DebugGUI("tambourine[4]");
+	//textBA->DebugGUI("textBA");
+	//buttonFoundationModel[0]->DebugGUI("buttonFoundation[0]");
+	//buttonFoundationModel[1]->DebugGUI("buttonFoundation[1]");
+	//rule->DebugGUI("rule");
+	//startUI->DebugGUI("startUI");
+	//ruleUI->DebugGUI("ruleUI");
 
-	ImGui::End();
+	//ImGui::End();
 
-	ImGui::Begin("hammerPos");
-	ImGui::Checkbox("isTransitionSceneEnd_", &isTransitionSceneEnd_);
-	ImGui::End();
+	//ImGui::Begin("hammerPos");
+	//ImGui::Checkbox("isTransitionSceneEnd_", &isTransitionSceneEnd_);
+	//ImGui::End();
 
-	// カメラ操作
-	ImGui::Begin("Camera");
-	mainCamera->DebugGUI();
-	ImGui::End();
-	//********************************************//
+	//// カメラ操作
+	//ImGui::Begin("Camera");
+	//mainCamera->DebugGUI();
+	//ImGui::End();
+	////********************************************//
 
 }
 // 描画

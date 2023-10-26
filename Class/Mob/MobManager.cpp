@@ -13,15 +13,15 @@ void MobManager::Update(MapManager* mapManager) {
 	target_.Update();
 	mapManager->CheckCollision(&target_);
 
-	int i = 0;
-	ImGui::Begin("Mobs");
+	/*int i = 0;*/
+	/*ImGui::Begin("Mobs");*/
 	for (auto it = enemies_.begin(); it != enemies_.end(); ++it) {
 		Enemy* ptr = &(*it);  // イテレータを通じて要素へのポインタを取得
 		ptr->Update();
 		mapManager->CheckCollision(ptr);
-		ImGui::Text((std::to_string(i) + " hp ... %d").c_str(), ptr->hp_);
+		/*ImGui::Text((std::to_string(i) + " hp ... %d").c_str(), ptr->hp_);*/
 	}
-	ImGui::End();
+	//ImGui::End();
 
 	// isActiveがfalseになったオブジェクトを削除する
 	enemies_.remove_if([&](const Enemy& obj) { 

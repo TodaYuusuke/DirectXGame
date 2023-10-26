@@ -320,10 +320,10 @@ void GameResult::Update() {
 			}
 		}
 
-		// カメラ操作
-		ImGui::Begin("Camera");
-		mainCamera->DebugGUI();
-		ImGui::End();
+		//// カメラ操作
+		//ImGui::Begin("Camera");
+		//mainCamera->DebugGUI();
+		//ImGui::End();
 
 	}
 
