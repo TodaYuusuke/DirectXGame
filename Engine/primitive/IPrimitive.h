@@ -26,6 +26,11 @@ namespace LWP::Primitive {
 	class IPrimitive {
 	public:
 		// ** 共通の変数 ** //
+
+		// 識別用の形状名
+		std::string name = "primitive";
+
+		
 		std::vector<Vertex> vertices;	// 描画する頂点
 		std::vector<uint32_t> indexes;	// インデックス
 
@@ -47,9 +52,11 @@ namespace LWP::Primitive {
 		// アクティブ切り替え
 		bool isActive = true;
 		
+
 	private: // ** プライベートな変数 ** //
 		// ImGui用の変数
 		int vertexNum_ = 0;
+
 
 	public: // ** 共通関数 ** //
 		

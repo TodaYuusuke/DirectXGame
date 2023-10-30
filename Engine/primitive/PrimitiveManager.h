@@ -5,6 +5,8 @@
 
 #include "IPrimitive.h"
 
+#include <map>
+
 namespace LWP::Primitive {
 	class Manager {
 	public: // メンバ関数
@@ -39,13 +41,27 @@ namespace LWP::Primitive {
 			TPrimitive* newPrimitive = new TPrimitive(manager);
 			newPrimitive->CreateVertices();
 			newPrimitive->CreateIndexes();
+
+			// typeid を使用して型情報を取得
+			const std::type_info& typeInfo = typeid(newPrimitive);
+			// type_info オブジェクトからクラス名を取得
+			std::string className = typeInfo.name();
+
+
+			// カウントのマップから数を測定し、デフォルトの名前を登録
+			newPrimitive->name = className + std::to_string(primitiveCountMap_[className]++);
+
+			// リストに登録
 			primitives_.push_back(newPrimitive);
 			return newPrimitive;
 		}
 
 	private: // メンバ変数
 
-		// オブジェクトのリスト
+		// 形状のリスト
 		std::list<IPrimitive*> primitives_;
+
+		// 形状のインスタンスカウント
+		std::map<std::string, uint16_t> primitiveCountMap_;
 	};
 }

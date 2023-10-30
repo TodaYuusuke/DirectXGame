@@ -259,10 +259,21 @@ void CommandManager::ImGui() {
 	ImGui::Begin("PrimitiveCommandManager");
 	ImGui::ColorEdit4("color", &lightResourceBuffer_->data_->color_.x);
 	ImGui::DragFloat3("direction", &lightResourceBuffer_->data_->direction_.x, 0.01f);
+	ImGui::DragFloat3("translation", &lightResourceBuffer_->translation_.x, 0.01f);
+	ImGui::DragFloat3("rotation", &lightResourceBuffer_->rotation_.x, 0.01f);
 	ImGui::DragFloat("intensity", &lightResourceBuffer_->data_->intensity_, 0.01f);
 	ImGui::End();
 
-	// 方向を正規化
+	// 回転行列を取得
+	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(lightResourceBuffer_->translation_);
+	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->rotation_);
+
+	// 正規化された方向ベクトルを取得
+	//lightResourceBuffer_->data_->direction_ = (Vector3{ 0.0f,0.0f,1.0f } * rotateMatrix).Normalize();
+
+
+
+	// 回転の向きから正規化された向きを取得
 	lightResourceBuffer_->data_->direction_ = lightResourceBuffer_->data_->direction_.Normalize();
 
 	// ビュープロジェクション行列を生成
@@ -278,13 +289,14 @@ void CommandManager::ImGui() {
 	// ライトの向きを注視点にするビュー行列
 	Math::Matrix4x4 viewMatrix = Math::Matrix4x4::CreateLookAtMatrix(
 		lightPosition,                   // 視点（ライトの位置）
-		{0,0,0},  // 注視点（ライトの位置 + ライトの向き）
+		{0.0f,0.0f,0.0f},  // 注視点（ライトの位置 + ライトの向き）
 		up                               // 上向きベクトル
 	);
 
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f * 10.0f, 1024.0f * 10.0f, -200.0f, 1.0f);
-	Matrix4x4 viewprotMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f, 1024.0, 0.0f, 1.0f);
-	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewprotMatrix;
+	//Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f * 10.0f, 1024.0f * 10.0f, -5000.0f, 5000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * 5.0f, 1024.0f * 5.0f, 0.0f, 1.0f);
+	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewportMatrix;
 }
 
 
@@ -386,14 +398,18 @@ void CommandManager::CreateRootSignature() {
 
 #pragma region シャドウマップ実装
 	// Samplerの設定
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
+	//staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
+	staticSamplers[0].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; // バイアスをかけて線形補間
 	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
 	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
+	//staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
+	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数を設定
 	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
 	staticSamplers[0].ShaderRegister = 0; // レジスタ番号は0
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	//staticSamplers[0].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // ボーダーカラーを設定
+
 
 	// シャドウマップ
 	D3D12_DESCRIPTOR_RANGE shadowRange[1] = { descRange[0] };	// DescriptorRangeを作成
@@ -501,6 +517,7 @@ void CommandManager::CreateStructuredBufferResources() {
 	lightResourceBuffer_->data_->color_ = { 1.0f,1.0f,1.0f,1.0f };
 	lightResourceBuffer_->data_->direction_ = { 0.0f,-1.0f,0.0f };
 	lightResourceBuffer_->data_->intensity_ = 1.0f;
+	lightResourceBuffer_->rotation_ = { 1.57f,0.0f,0.0f };
 
 
 	// 頂点データ

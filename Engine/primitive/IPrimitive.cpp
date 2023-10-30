@@ -40,7 +40,8 @@ void IPrimitive::Draw(Base::CommandManager* manager) {
 }
 
 void IPrimitive::DebugGUI(const std::string& label) {
-	if (ImGui::TreeNode(label.c_str())) {
+	label;
+	if (ImGui::TreeNode(name.c_str())) {
 		// 頂点
 		if (ImGui::TreeNode("Vertex")) {
 			ImGui::SliderInt("vertexNumber", &vertexNum_, 0, GetVertexCount() - 1);
@@ -71,8 +72,9 @@ void IPrimitive::DebugGUI(const std::string& label) {
 
 		// その他
 		if (ImGui::TreeNode("Other")) {
-			ImGui::Checkbox("isUI", &isUI);
-			ImGui::Checkbox("isActive", &isActive);
+			//ImGui::InputText("Name", &name);		// 固有名詞変更
+			ImGui::Checkbox("isUI", &isUI);			// 2D描画
+			ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
 			DerivedDebugGUI();
 			ImGui::TreePop();
 		}

@@ -107,6 +107,8 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// 3D用の定数バッファ
 		D3D12_GPU_VIRTUAL_ADDRESS view_;
 		DirectionalLight* data_ = nullptr;	// 2D用の定数リソース
+		Math::Vector3 translation_;	// 光源の位置
+		Math::Vector3 rotation_;	// 光源の回転向き
 	};
 #pragma endregion
 }

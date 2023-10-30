@@ -48,12 +48,13 @@ void Title::Initialize() {
 
 	// モデル読み込み
 	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
-	cubeModel->transform.scale = { 0.5f,0.5f, 0.5f };
+	cubeModel->transform.translation.y = -3.0f;
+	cubeModel->transform.scale = { 5.0f,5.0f, 0.05f };
 	cubeModel->material.enableLighting = true;
 	cubeModel->isActive = true;
 	axisModel = LWP::Resource::LoadModel("enemy/enemy.obj");
 	axisModel->material.enableLighting = true;
-	axisModel->isActive = true;
+	axisModel->isActive = false;
 }
 
 // 更新

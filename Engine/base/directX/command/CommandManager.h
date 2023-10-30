@@ -150,7 +150,7 @@ namespace LWP::Base {
 
 		// マテリアルデータ
 		std::unique_ptr<MaterialResourceBuffer> materialResourceBuffer_;
-		const UINT kMaxMaterial = 1280;
+		const UINT kMaxMaterial = 12800;
 		// テクスチャデータ
 		std::unique_ptr<TextureResourceBuffer> textureResourceBuffer_;
 		const UINT kMaxTexture = 128;

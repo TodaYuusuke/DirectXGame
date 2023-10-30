@@ -515,12 +515,6 @@
     <Filter Include="Engine\resources\audio">
       <UniqueIdentifier>{b526e211-0e2c-4079-83c6-bce9d67a08fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\scene">
-      <UniqueIdentifier>{093777cc-1db7-443d-b68b-e527690c6c7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\scene\user">
-      <UniqueIdentifier>{960e4147-4156-4275-832b-89f6c6c61824}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\utilitiy">
       <UniqueIdentifier>{248bf45a-0c7d-4a30-9391-5cdb28b3cbcd}</UniqueIdentifier>
     </Filter>
@@ -565,6 +559,12 @@
     </Filter>
     <Filter Include="Class\Tambourine">
       <UniqueIdentifier>{be3db6a3-24de-43ef-945c-2ba7dae4db5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\scene">
+      <UniqueIdentifier>{093777cc-1db7-443d-b68b-e527690c6c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\scene\user">
+      <UniqueIdentifier>{960e4147-4156-4275-832b-89f6c6c61824}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
