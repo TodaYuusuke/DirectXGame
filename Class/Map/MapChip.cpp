@@ -4,6 +4,7 @@ using namespace LWP::Math;
 
 void MapChip::Initialize() {
 	model = LWP::Resource::LoadModel("groundCube/groundCube.obj");
+	model->material.enableLighting = true;
 }
 void MapChip::Update() {
 	// パワーは徐々に減衰する
@@ -11,6 +12,10 @@ void MapChip::Update() {
 
 	// 自身が持つパワーの大きさに応じてscaleを大きくする
 	model->transform.scale.y = wavePower * 0.1f;
+	// スケールが0にならないようにする
+	if (model->transform.scale.y < 0.01f) {
+		model->transform.scale.y = 0.01f;
+	}
 }
 
 bool MapChip::IsInCircle(Circle circle) {

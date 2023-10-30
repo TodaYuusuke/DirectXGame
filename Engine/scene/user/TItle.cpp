@@ -50,10 +50,10 @@ void Title::Initialize() {
 	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
 	cubeModel->transform.scale = { 0.5f,0.5f, 0.5f };
 	cubeModel->material.enableLighting = true;
-	cubeModel->isActive = false;
-	axisModel = LWP::Resource::LoadModel("axis.obj");
+	cubeModel->isActive = true;
+	axisModel = LWP::Resource::LoadModel("enemy/enemy.obj");
 	axisModel->material.enableLighting = true;
-	axisModel->isActive = false;
+	axisModel->isActive = true;
 }
 
 // 更新

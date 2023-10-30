@@ -61,8 +61,6 @@ protected: // ** メンバ変数 ** //
 public:
 	// モデル
 	LWP::Primitive::Mesh* model_ = nullptr;
-	// 着地点を示す影
-	LWP::Primitive::Surface* shadow_ = nullptr;
 	// サイズの基準値
 	float Size = 0.5f;
 

@@ -9,7 +9,7 @@ void MapManager::Initialize() {
 			maps_[y][x].Initialize();
 			// マップの座標をセット
 			float scale = GetMapChipScale();
-			maps_[y][x].model->transform.translation = { ((x * 1.0f) + 0.5f) * scale, 0.0f,((y * 1.0f) + 0.5f) * scale, };
+			maps_[y][x].model->transform.translation = { ((x * 1.0f) + 0.5f) * scale, -0.1f,((y * 1.0f) + 0.5f) * scale, };
 			maps_[y][x].model->transform.scale = { scale ,0.0f ,scale };
 
 			// 中心が{0, 0}になるように座標をずらす

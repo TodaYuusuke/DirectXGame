@@ -278,19 +278,11 @@ void CommandManager::ImGui() {
 	// ライトの向きを注視点にするビュー行列
 	Math::Matrix4x4 viewMatrix = Math::Matrix4x4::CreateLookAtMatrix(
 		lightPosition,                   // 視点（ライトの位置）
-		lightPosition + lightDirection,  // 注視点（ライトの位置 + ライトの向き）
+		{0,0,0},  // 注視点（ライトの位置 + ライトの向き）
 		up                               // 上向きベクトル
 	);
 
-	//Matrix4x4 viewMatrix = Matrix4x4::CreateLookAtMatrix({ 0.0f,0.0f,0.0f }, lightResourceBuffer_->data_->direction_, { 0.0f,1.0f,0.0f });
-	//Matrix4x4 viewMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->data_->direction_).Inverse();
-	//WorldTransform transform{ {0.0f,0.0f,0.0f},{1.57f,0.0f,0.0f},{1.0f,1.0f,1.0f} };
-	//Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
-	//Matrix4x4 viewMatrix = Matrix4x4::CreateIdentity4x4();
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(0.45f, 1280 / 720, 0.1f, 100.0f);
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f * 3.0f, 1024.0f * 3.0f, 0.0f, 100.0f);
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(1024.0f * -1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 0.0f, 100.0f);
-	//Matrix4x4 viewprotMatrix = Matrix4x4::CreateViewportMatrix(1024.0f * -1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 1024.0f * 1.5f, 0.0f, 1.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f * 10.0f, 1024.0f * 10.0f, -200.0f, 1.0f);
 	Matrix4x4 viewprotMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f, 1024.0, 0.0f, 1.0f);
 	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewprotMatrix;
 }

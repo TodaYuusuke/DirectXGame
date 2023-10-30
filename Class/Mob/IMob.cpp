@@ -40,7 +40,6 @@ void IMob::Update() {
 			// 体力がなくなったなら死亡
 			if (hp_ < 0) {
 				model_->isActive = false;
-				shadow_->isActive = false;
 				isActive_ = false;
 			}
 
@@ -56,19 +55,12 @@ void IMob::Update() {
 	else {
 		// 自然に外に出た場合も落下するように
 		isFlying_ = true;
-		// 影は非表示
-		shadow_->isActive = false;
 		// ある程度落ちたら殺す
 		if (model_->transform.translation.y < -5.0f) {
 			model_->isActive = false;
 			isActive_ = false;
 		}
 	}
-
-
-	// 影とモデルの座標は常に同期する
-	shadow_->transform.translation.x = model_->transform.translation.x;
-	shadow_->transform.translation.z = model_->transform.translation.z;
 }
 
 void IMob::Moving() {
