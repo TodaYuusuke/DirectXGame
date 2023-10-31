@@ -52,7 +52,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>Adapter</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Adapter, Engine</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -75,7 +75,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>Adapter</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Adapter, Engine</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,6 +149,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\user\Title.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
+    <ClCompile Include="Engine\utility\Observer.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\imgui\imgui_draw.cpp" />
@@ -235,6 +236,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\Color.h" />
     <ClInclude Include="Engine\utility\ErrorReporter.h" />
     <ClInclude Include="Engine\utility\MyUtility.h" />
+    <ClInclude Include="Engine\utility\Observer.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx12.h" />

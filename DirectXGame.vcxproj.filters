@@ -211,6 +211,9 @@
     <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\utility\Observer.cpp">
+      <Filter>Engine\utilitiy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -443,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
       <Filter>Engine\base\directX\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\Observer.h">
+      <Filter>Engine\utilitiy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
