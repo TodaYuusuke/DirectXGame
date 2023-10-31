@@ -5,6 +5,9 @@
 #include "../Engine/base/ImGuiManager.h"
 #include "../Engine/object/core/Camera.h"
 
+#include <Config.h>
+namespace Para = LWP::Config::Rendering;
+
 #include <Adapter.h>
 
 using namespace Microsoft::WRL;
@@ -256,19 +259,21 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 }
 
 void CommandManager::ImGui() {
+#if _DEBUG //debug時のみ
 	ImGui::Begin("PrimitiveCommandManager");
 	ImGui::ColorEdit4("color", &lightResourceBuffer_->data_->color_.x);
 	ImGui::DragFloat3("direction", &lightResourceBuffer_->data_->direction_.x, 0.01f);
-	ImGui::DragFloat3("translation", &lightResourceBuffer_->translation_.x, 0.01f);
-	ImGui::DragFloat3("rotation", &lightResourceBuffer_->rotation_.x, 0.01f);
+	//ImGui::DragFloat3("translation", &lightResourceBuffer_->translation_.x, 0.01f);
+	//ImGui::DragFloat3("rotation", &lightResourceBuffer_->rotation_.x, 0.01f);
 	ImGui::DragFloat("intensity", &lightResourceBuffer_->data_->intensity_, 0.01f);
 	ImGui::End();
+#endif
 
 	// 回転行列を取得
 	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(lightResourceBuffer_->translation_);
 	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->rotation_);
 
-	// 正規化された方向ベクトルを取得
+	//// 正規化された方向ベクトルを取得
 	//lightResourceBuffer_->data_->direction_ = (Vector3{ 0.0f,0.0f,1.0f } * rotateMatrix).Normalize();
 
 
@@ -293,9 +298,9 @@ void CommandManager::ImGui() {
 		up                               // 上向きベクトル
 	);
 
-	//Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 1024.0f * 10.0f, 1024.0f * 10.0f, -5000.0f, 5000.0f);
-	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * 5.0f, 1024.0f * 5.0f, 0.0f, 1.0f);
+	//Matrix4x4 viewMatrix = rotateMatrix.Inverse();
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * Para::kShadowMapResolutionScale, 10240.0f * Para::kShadowMapResolutionScale, -5000.0f, 5000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * Para::kShadowMapResolutionScale, 1024.0f * Para::kShadowMapResolutionScale, 0.0f, 1.0f);
 	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewportMatrix;
 }
 

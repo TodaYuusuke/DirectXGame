@@ -450,6 +450,9 @@
     <ClInclude Include="Engine\utility\Observer.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
+    <ClInclude Include="Adapter\Config.h">
+      <Filter>Adapter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

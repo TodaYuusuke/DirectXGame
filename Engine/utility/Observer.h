@@ -11,7 +11,7 @@ namespace LWP::Utility {
 		// 変数
 		T t;
 		// 関数ポインタ
-		auto* funcPtr;
+		//auto* funcPtr;
 
 
 		// ** オペレーターオーバーロード ** //
