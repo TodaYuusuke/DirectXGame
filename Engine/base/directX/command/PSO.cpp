@@ -109,10 +109,10 @@ IDxcBlob* PSO::CreateVertexShader(DXC* dxc, UINT vs) {
 		default:
 			return nullptr;
 		case 1:
-			vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+			vertexShaderBlob = CompileShader(L"resources/system/shaders/Object3d.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
 			break;
 		case 2:
-			vertexShaderBlob = CompileShader(L"./Engine/resources/shaders/ShadowMap.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+			vertexShaderBlob = CompileShader(L"resources/system/shaders/ShadowMap.VS.hlsl", L"vs_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
 			break;
 	}
 	assert(vertexShaderBlob != nullptr);
@@ -127,7 +127,7 @@ IDxcBlob* PSO::CreatePixelShader(DXC* dxc, UINT ps) {
 		default:
 			return nullptr;
 		case 1:
-			pixelShaderBlob = CompileShader(L"./Engine/resources/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
+			pixelShaderBlob = CompileShader(L"resources/system/shaders/Object3d.PS.hlsl", L"ps_6_0", dxc->dxcUtils_.Get(), dxc->dxcCompiler_.Get(), dxc->includeHandler_.Get());
 			break;
 	}
 	assert(pixelShaderBlob != nullptr);

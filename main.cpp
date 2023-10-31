@@ -1,4 +1,4 @@
-#include "Adapter/Adapter.h"
+#include <Adapter.h>
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {

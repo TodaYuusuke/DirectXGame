@@ -63,7 +63,7 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 
 	// SRVを登録してからでないとテクスチャが読み込めないので、
 	// ここでデフォルトテクスチャを読み込む
-	defaultTexture_ = LWP::Resource::LoadTexture("white.png");
+	defaultTexture_ = LWP::Resource::LoadTextureLongPath("resources/system/texture/white.png");
 }
 
 void CommandManager::PreDraw() {

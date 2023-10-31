@@ -1,17 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Engine\resources\shaders\Object3d.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Engine\resources\shaders\Object3d.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Engine\resources\shaders\ShadowMap.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Adapter\LWP.cpp">
       <Filter>Adapter</Filter>
@@ -456,7 +445,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Engine\resources\shaders\Object3d.hlsli">
+    <None Include="resources\system\shaders\Object3d.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
   </ItemGroup>
@@ -575,5 +564,16 @@
     <Filter Include="Engine\scene\user">
       <UniqueIdentifier>{960e4147-4156-4275-832b-89f6c6c61824}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

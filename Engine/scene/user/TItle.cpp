@@ -12,7 +12,7 @@ using namespace LWP::Utility;
 // 初期化
 void Title::Initialize() {
 	// テクスチャ読み込み
-	uvTexture = LWP::Resource::LoadTexture("uvChecker.png");
+	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
 	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
 
 	// 地面
