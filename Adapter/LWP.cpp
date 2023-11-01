@@ -9,12 +9,12 @@ using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Scene;
 
-void Engine::Run() {
+void Engine::Run(IScene* firstScene) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	const char kWindowTitle[] = "CG2WindowClass";
-	Initialize(kWindowTitle, 1280, 720);
+	Initialize(kWindowTitle, 1280, 720, firstScene);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (ProcessMessage()) {
@@ -49,7 +49,7 @@ void Engine::InitializeForScene() {
 	//resourceManager_->Initialize();
 }
 
-void Engine::Initialize(const char* title, int width, int height) {
+void Engine::Initialize(const char* title, int width, int height, IScene* firstScene) {
 	// インスタンスを受け取る
 	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
 	// Base
@@ -82,7 +82,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	// Resource
 	resourceManager_->Initialize();
 	// Scene
-	sceneManager_->Initialize();
+	sceneManager_->Initialize(firstScene);
 }
 
 bool Engine::ProcessMessage() {

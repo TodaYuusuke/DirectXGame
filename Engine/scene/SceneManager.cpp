@@ -5,11 +5,12 @@
 using namespace LWP::Scene;
 
 // 初期化
-void Manager::Initialize() {
-	currentScene_ = new Title();
+void Manager::Initialize(IScene* firstScene) {
+	currentScene_ = firstScene;
 	currentScene_->PreInitialize();
 	currentScene_->Initialize();
 }
+
 // 更新
 void Manager::Update() {
 	if (currentScene_->nextScene_ != nullptr) {

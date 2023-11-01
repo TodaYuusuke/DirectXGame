@@ -110,9 +110,6 @@
     <ClCompile Include="Engine\scene\SceneManager.cpp">
       <Filter>Engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\user\Title.cpp">
-      <Filter>Engine\scene\user</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\scene\user\GameScene.cpp">
       <Filter>Engine\scene\user</Filter>
     </ClCompile>
@@ -202,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="Engine\utility\Observer.cpp">
       <Filter>Engine\utilitiy</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\user\Title.cpp">
+      <Filter>Engine\scene\user</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,9 +340,6 @@
     <ClInclude Include="Engine\scene\IScene.h">
       <Filter>Engine\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\user\Title.h">
-      <Filter>Engine\scene\user</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\scene\user\GameScene.h">
       <Filter>Engine\scene\user</Filter>
     </ClInclude>
@@ -441,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="Adapter\Config.h">
       <Filter>Adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\Title.h">
+      <Filter>Engine\scene\user</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

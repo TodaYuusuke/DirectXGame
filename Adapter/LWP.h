@@ -28,7 +28,7 @@ namespace LWP::System {
 		/// <summary>
 		/// エンジン起動（※ユーザ呼び出し禁止）
 		/// </summary>
-		void Run();
+		void Run(IScene* firstScene);
 
 		/// <summary>
 		/// シーン切り替え時の初期化
@@ -42,7 +42,7 @@ namespace LWP::System {
 		/// <param name="title">ウィンドウタイトル</param>
 		/// <param name="width">ウィンドウの横幅</param>
 		/// <param name="height">ウィンドウの縦幅</param>
-		void Initialize(const char* title, int width, int height);
+		void Initialize(const char* title, int width, int height, IScene* firstScene);
 		/// <summary>
 		/// ウィンドウからのイベントをチェックする関数
 		/// </summary>

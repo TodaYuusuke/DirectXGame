@@ -15,8 +15,8 @@ namespace LWP {
 		extern std::unique_ptr<Engine> engine;
 
 		/// <summary>
-		/// エンジン起動（※ユーザ呼び出し禁止）
+		/// エンジン起動（※二重呼び出し禁止）
 		/// </summary>
-		void Run();
+		void Run(IScene* firstScene);
 	};
 };

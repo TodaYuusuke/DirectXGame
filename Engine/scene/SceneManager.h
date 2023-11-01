@@ -8,16 +8,16 @@ namespace LWP::Object {
 // ISceneは前方宣言する
 class IScene;
 
-/// <summary>
-/// シーン管理クラス
-/// </summary>
 namespace LWP::Scene {
-
+	/// <summary>
+	/// シーン管理クラス
+	/// </summary>
 	class Manager final {
 	public: // メンバ関数
 
-		// 初期化
-		void Initialize();
+		// 初期シーンを指定して初期化
+		void Initialize(IScene* firstScene);
+
 		// 更新
 		void Update();
 		// 描画

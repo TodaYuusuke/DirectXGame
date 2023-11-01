@@ -2,11 +2,11 @@
 
 using namespace LWP;
 
-void System::Run() {
+void System::Run(IScene* firstScene) {
 	// エンジン生成
 	engine = std::make_unique<Engine>();
 	// エンジン起動
-	engine->Run();
+	engine->Run(firstScene);
 }
 
 
