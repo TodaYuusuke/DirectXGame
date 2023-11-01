@@ -12,6 +12,7 @@ void MobManager::Update(MapManager* mapManager) {
 	target_.Update();
 	mapManager->CheckCollision(&target_);
 
+#if _DEBUG
 	int i = 0;
 	ImGui::Begin("Mobs");
 	for (auto it = enemies_.begin(); it != enemies_.end(); ++it) {
@@ -21,6 +22,7 @@ void MobManager::Update(MapManager* mapManager) {
 		ImGui::Text((std::to_string(i) + " hp ... %d").c_str(), ptr->hp_);
 	}
 	ImGui::End();
+#endif
 
 	// isActiveがfalseになったオブジェクトを削除する
 	enemies_.remove_if([](const Enemy& obj) { return !obj.isActive_; });

@@ -1,5 +1,5 @@
-#include "Title.h"
-#include "GameScene.h"
+#include "SampleTitle.h"
+#include "SampleGameScene.h"
 #include "../Class/Ease/Easing.h"
 #include <time.h>
 
@@ -10,7 +10,7 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 
 // 初期化
-void Title::Initialize() {
+void SampleTitle::Initialize() {
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
 	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
@@ -58,16 +58,13 @@ void Title::Initialize() {
 }
 
 // 更新
-void Title::Update() {
-	ImGui::Begin("Primitive");
-	ground->DebugGUI("Ground");
-	tri[0]->DebugGUI("Tri0");
-	tri[1]->DebugGUI("Tri1");
-	surface->DebugGUI("Surface");
-	sphere->DebugGUI("Sphere");
-	cubeModel->DebugGUI("cube");
-	axisModel->DebugGUI("axis");
+void SampleTitle::Update() {
+#if _DEBUG
+	// カメラ操作
+	ImGui::Begin("Camera");
+	mainCamera->DebugGUI();
 	ImGui::End();
+#endif
 
 	// SPACEキーを押すとテクスチャ切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
@@ -83,13 +80,6 @@ void Title::Update() {
 
 	// ENTERキーを押すとシーン切り替え
 	if (Keyboard::GetTrigger(DIK_RETURN)) {
-		nextScene_ = new GameScene();
+		nextScene_ = new SampleGameScene();
 	}
-
-	// カメラ操作
-	ImGui::Begin("Camera");
-	mainCamera->DebugGUI();
-	ImGui::End();
 }
-// 描画
-void Title::Draw() {}

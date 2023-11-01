@@ -6,7 +6,7 @@
 #include "../Class/Skydome/Skydome.h"
 #include "../Class/Tambourine/Tambourine.h"
 
-class GameScene final
+class SampleGameScene final
 	: public IScene {
 public:
 
@@ -16,8 +16,6 @@ public:
 	void Initialize();
 	// 更新
 	void Update();
-	// 描画
-	void Draw();
 
 	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
 

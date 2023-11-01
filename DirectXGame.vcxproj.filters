@@ -110,9 +110,6 @@
     <ClCompile Include="Engine\scene\SceneManager.cpp">
       <Filter>Engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\user\GameScene.cpp">
-      <Filter>Engine\scene\user</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\utility\Color.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
@@ -182,9 +179,6 @@
     <ClCompile Include="Engine\resources\audio\Audio.cpp">
       <Filter>Engine\resources\audio</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\user\GameResult.cpp">
-      <Filter>Engine\scene\user</Filter>
-    </ClCompile>
     <ClCompile Include="Class\Ease\Easing.cpp">
       <Filter>Class\Ease</Filter>
     </ClCompile>
@@ -200,8 +194,14 @@
     <ClCompile Include="Engine\utility\Observer.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\user\Title.cpp">
+    <ClCompile Include="Engine\scene\user\SampleGameScene.cpp">
       <Filter>Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\user\SampleTitle.cpp">
+      <Filter>Engine\scene\user</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_stdlib.cpp">
+      <Filter>Externals\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,9 +340,6 @@
     <ClInclude Include="Engine\scene\IScene.h">
       <Filter>Engine\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\user\GameScene.h">
-      <Filter>Engine\scene\user</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\utility\Color.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
@@ -418,9 +415,6 @@
     <ClInclude Include="Engine\resources\audio\Audio.h">
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\user\GameResult.h">
-      <Filter>Engine\scene\user</Filter>
-    </ClInclude>
     <ClInclude Include="Class\Ease\Easing.h">
       <Filter>Class\Ease</Filter>
     </ClInclude>
@@ -439,8 +433,14 @@
     <ClInclude Include="Adapter\Config.h">
       <Filter>Adapter</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\user\Title.h">
+    <ClInclude Include="Engine\scene\user\SampleTitle.h">
       <Filter>Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\user\SampleGameScene.h">
+      <Filter>Engine\scene\user</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_stdlib.h">
+      <Filter>Externals\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

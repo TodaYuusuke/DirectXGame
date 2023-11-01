@@ -14,9 +14,3 @@ void Manager::Update() {
 		o->Update();
 	}
 }
-
-void Manager::Draw() {
-	for (IObject* o : objects_) {
-		o->Draw();
-	}
-}

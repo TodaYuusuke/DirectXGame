@@ -17,11 +17,8 @@ namespace LWP::Scene {
 
 		// 初期シーンを指定して初期化
 		void Initialize(IScene* firstScene);
-
 		// 更新
 		void Update();
-		// 描画
-		void Draw();
 
 		/// <summary>
 		/// CommandManagerにビュープロジェクション行列を登録するため、カメラのポインタを返す関数

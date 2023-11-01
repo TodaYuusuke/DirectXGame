@@ -9,8 +9,6 @@ namespace LWP::Object {
 		void Initialize() override;
 		// 更新
 		void Update() override;
-		// 描画
-		void Draw() override;
 
 		// デバッグ用GUI
 		void DebugGUI() override;

@@ -1,6 +1,5 @@
 #include "SceneManager.h"
 #include "IScene.h"
-#include "user/Title.h"
 
 using namespace LWP::Scene;
 
@@ -25,10 +24,6 @@ void Manager::Update() {
 	}
 
 	currentScene_->Update();
-}
-// 描画
-void Manager::Draw() {
-	currentScene_->Draw();
 }
 
 const LWP::Object::Camera* Manager::GetMainCamera() {

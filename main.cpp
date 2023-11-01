@@ -1,8 +1,8 @@
 #include <Adapter.h>
-#include "Engine/scene/user/TItle.h"
+#include "Engine/scene/user/SampleTitle.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	LWP::System::Run(new Title);
+	LWP::System::Run(new SampleTitle);
 	return 0;
 }

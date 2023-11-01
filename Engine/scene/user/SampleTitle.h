@@ -1,20 +1,18 @@
 #pragma once
 #include "../IScene.h"
 
-class Title final
+class SampleTitle final
 	: public IScene {
 public:
-	Title() = default;
-	~Title() = default;
+	SampleTitle() = default;
+	~SampleTitle() = default;
 
 	//*** 純粋仮想関数の実体宣言 ***//
 
 	// 初期化
-	void Initialize();
+	void Initialize() override;
 	// 更新
-	void Update();
-	// 描画
-	void Draw();
+	void Update() override;
 
 	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
 

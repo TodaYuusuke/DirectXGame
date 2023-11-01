@@ -23,13 +23,12 @@ void Engine::Run(IScene* firstScene) {
 		// 更新処理
 		sceneManager_->Update();
 		objectManager_->Update();
+		primitiveManager_->Update();
 		directXCommon_->GetCommandManager()->ImGui();
 		// カメラのビュープロジェクションをcommandManagerに
 		directXCommon_->GetCommandManager()->SetCameraViewProjection(sceneManager_->GetMainCamera());
 
 		// 描画処理
-		sceneManager_->Draw();
-		objectManager_->Draw();
 		primitiveManager_->Draw(directXCommon_->GetCommandManager());
 
 		EndFrame();

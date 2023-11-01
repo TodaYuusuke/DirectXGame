@@ -13,10 +13,6 @@ void Camera::Initialize() {
 void Camera::Update() {
 	
 }
-// 描画
-void Camera::Draw() {
-	// なし
-}
 
 void Camera::DebugGUI() {
 	transform.DebugGUI();

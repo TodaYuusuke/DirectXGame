@@ -23,11 +23,6 @@ namespace LWP::Object {
 		/// </summary>
 		void Update();
 
-		/// <summary>
-		/// 描画
-		/// </summary>
-		void Draw();
-
 		
 		/// <summary>
 		/// インスタンスを登録する

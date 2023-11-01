@@ -57,7 +57,6 @@ namespace LWP::Primitive {
 		// ImGui用の変数
 		int vertexNum_ = 0;
 
-
 	public: // ** 共通関数 ** //
 		
 		/// <summary>

@@ -27,11 +27,6 @@ void Hammer::Initialize(MapManager* map) {
 void Hammer::Update() {
 	UpdateTimer();
 
-	ImGui::Begin("Hammer");
-	model_->DebugGUI("Hammer");
-	reticle_->DebugGUI("reticle");
-	ImGui::End();
-
 	// レティクル移動
 	keyBoard();
 

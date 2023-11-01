@@ -40,44 +40,46 @@ void IPrimitive::Draw(Base::CommandManager* manager) {
 }
 
 void IPrimitive::DebugGUI(const std::string& label) {
-	label;
-	if (ImGui::TreeNode(name.c_str())) {
-		// 頂点
-		if (ImGui::TreeNode("Vertex")) {
-			ImGui::SliderInt("vertexNumber", &vertexNum_, 0, GetVertexCount() - 1);
-			ImGui::DragFloat3("position", &vertices[vertexNum_].position.x, 0.01f);
-			ImGui::DragFloat2("texCoord", &vertices[vertexNum_].texCoord.x, 0.01f);
-			ImGui::DragFloat3("normal", &vertices[vertexNum_].normal.x, 0.01f);
-			LWP::Base::ImGuiManager::ColorEdit4("color", vertices[vertexNum_].color);
-			ImGui::TreePop();
-		}
-		transform.DebugGUI();
-		material.DebugGUI();
+	label;	// 形状に固有名詞が付与されたのでラベルは使用しない（長いこと不要と判断したら消す）
+	// 頂点
+	if (ImGui::TreeNode("Vertex")) {
+		ImGui::SliderInt("vertexNumber", &vertexNum_, 0, GetVertexCount() - 1);
+		ImGui::DragFloat3("position", &vertices[vertexNum_].position.x, 0.01f);
+		ImGui::DragFloat2("texCoord", &vertices[vertexNum_].texCoord.x, 0.01f);
+		ImGui::DragFloat3("normal", &vertices[vertexNum_].normal.x, 0.01f);
+		LWP::Base::ImGuiManager::ColorEdit4("color", vertices[vertexNum_].color);
+		ImGui::TreePop();
+	}
+	transform.DebugGUI();
+	material.DebugGUI();
 
-		// 共通カラーがあるとき -> ColorEdit4を呼び出す
-		if (ImGui::TreeNode("CommonColor")) {
-			if (commonColor != nullptr) {
-				LWP::Base::ImGuiManager::ColorEdit4("color", *commonColor);
-				if (ImGui::Button("Delete CommonColor")) {
-					delete commonColor;
-					commonColor = nullptr;
-				}
+	// 共通カラーがあるとき -> ColorEdit4を呼び出す
+	if (ImGui::TreeNode("CommonColor")) {
+		if (commonColor != nullptr) {
+			LWP::Base::ImGuiManager::ColorEdit4("color", *commonColor);
+			if (ImGui::Button("Delete CommonColor")) {
+				delete commonColor;
+				commonColor = nullptr;
 			}
-			// 共通カラーがないとき -> 共通カラーを作る
-			else if (ImGui::Button("Create CommonColor")) {
-				commonColor = new Utility::Color(Utility::ColorPattern::WHITE);
-			}
-			ImGui::TreePop();
 		}
+		// 共通カラーがないとき -> 共通カラーを作る
+		else if (ImGui::Button("Create CommonColor")) {
+			commonColor = new Utility::Color(Utility::ColorPattern::WHITE);
+		}
+		ImGui::TreePop();
+	}
 
-		// その他
-		if (ImGui::TreeNode("Other")) {
-			//ImGui::InputText("Name", &name);		// 固有名詞変更
-			ImGui::Checkbox("isUI", &isUI);			// 2D描画
-			ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
-			DerivedDebugGUI();
-			ImGui::TreePop();
+	// その他
+	// 名前が変更されたとき、ツリーノードを開きっぱなしにするための処理
+	if (ImGui::TreeNode("Other")) {
+		// 固有名詞変更
+		if (ImGui::InputText("Name", &name)) {
+			// 名前無しは禁止
+			if (name.empty()) { name = "noName"; }
 		}
+		ImGui::Checkbox("isUI", &isUI);			// 2D描画
+		ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
+		DerivedDebugGUI();
 		ImGui::TreePop();
 	}
 }
