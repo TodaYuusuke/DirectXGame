@@ -74,8 +74,8 @@ void DSV::CreateShadowMap(SRV* srv) {
 
 	// DSVResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの幅
-	resourceDesc.Height = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの高さ
+	resourceDesc.Width = 1024 * static_cast<int>(Para::kShadowMapResolutionScale()); // Textureの幅
+	resourceDesc.Height = 1024 * static_cast<int>(Para::kShadowMapResolutionScale()); // Textureの高さ
 	resourceDesc.MipLevels = 1; // mipmapの数
 	resourceDesc.DepthOrArraySize = 1; // 奥行き or 配列Textureの配列数
 	resourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // DepthStencilとして利用可能なフォーマット

@@ -299,8 +299,8 @@ void CommandManager::ImGui() {
 	);
 
 	//Matrix4x4 viewMatrix = rotateMatrix.Inverse();
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * Para::kShadowMapResolutionScale, 10240.0f * Para::kShadowMapResolutionScale, -5000.0f, 5000.0f);
-	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * Para::kShadowMapResolutionScale, 1024.0f * Para::kShadowMapResolutionScale, 0.0f, 1.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * Para::kShadowMapResolutionScale(), 10240.0f * Para::kShadowMapResolutionScale(), -5000.0f, 5000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * Para::kShadowMapResolutionScale(), 1024.0f * Para::kShadowMapResolutionScale(), 0.0f, 1.0f);
 	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewportMatrix;
 }
 
