@@ -26,7 +26,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Sphere* sphere;
 	
 	LWP::Primitive::Mesh* cubeModel;
-	LWP::Primitive::Mesh* axisModel;
+	LWP::Primitive::Mesh* stressTestModel;	// 描画負荷検証用モデル
 
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;

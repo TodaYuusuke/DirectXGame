@@ -18,7 +18,7 @@ namespace LWP::Base {
 
 		// インデックス情報の構造体
 		std::unique_ptr<IndexResourceBuffer> indexResourceBuffer_;
-		const UINT kMaxIndex = 655350;
+		const UINT kMaxIndex = 655350 * 3;
 
 	public: // ** メンバ関数 ** //
 

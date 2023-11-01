@@ -52,9 +52,9 @@ void SampleTitle::Initialize() {
 	cubeModel->transform.scale = { 5.0f,5.0f, 0.05f };
 	cubeModel->material.enableLighting = true;
 	cubeModel->isActive = true;
-	axisModel = LWP::Resource::LoadModel("enemy/enemy.obj");
-	axisModel->material.enableLighting = true;
-	axisModel->isActive = false;
+	//stressTestModel = LWP::Resource::LoadModel("RGM-96XJesta_13_td.obj");
+	//stressTestModel->material.enableLighting = true;
+	//stressTestModel->isActive = true;
 }
 
 // 更新
