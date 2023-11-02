@@ -263,44 +263,43 @@ void CommandManager::ImGui() {
 	ImGui::Begin("PrimitiveCommandManager");
 	ImGui::ColorEdit4("color", &lightResourceBuffer_->data_->color_.x);
 	ImGui::DragFloat3("direction", &lightResourceBuffer_->data_->direction_.x, 0.01f);
-	//ImGui::DragFloat3("translation", &lightResourceBuffer_->translation_.x, 0.01f);
-	//ImGui::DragFloat3("rotation", &lightResourceBuffer_->rotation_.x, 0.01f);
+	ImGui::DragFloat3("rotation", &lightResourceBuffer_->rotation_.x, 0.01f);
 	ImGui::DragFloat("intensity", &lightResourceBuffer_->data_->intensity_, 0.01f);
 	ImGui::End();
 #endif
 
 	// 回転行列を取得
-	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(lightResourceBuffer_->translation_);
-	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->rotation_);
+	Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(lightResourceBuffer_->rotation_);
+	// 正規化された方向ベクトルを取得
+	lightResourceBuffer_->data_->direction_ = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
+	// ライトの向きの逆ベクトルがtranslation
+	Vector3 v = -1 * lightResourceBuffer_->data_->direction_;
+	Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
+	// Viewを計算
+	Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
 
-	//// 正規化された方向ベクトルを取得
-	//lightResourceBuffer_->data_->direction_ = (Vector3{ 0.0f,0.0f,1.0f } * rotateMatrix).Normalize();
+	//// 回転の向きから正規化された向きを取得
+	//lightResourceBuffer_->data_->direction_ = lightResourceBuffer_->data_->direction_.Normalize();
 
+	//// ビュープロジェクション行列を生成
+	//// ライトの向きの逆ベクトルを計算
+	//Math::Vector3 lightDirection = -1 * lightResourceBuffer_->data_->direction_;
 
+	//// ライトの位置（これは平行光源なので向きを逆にしたベクトル）
+	//Math::Vector3 lightPosition = -1 * lightDirection;
 
-	// 回転の向きから正規化された向きを取得
-	lightResourceBuffer_->data_->direction_ = lightResourceBuffer_->data_->direction_.Normalize();
+	//// ライトの上向きベクトル（仮にy軸を上向きとする）
+	//Math::Vector3 up = Math::Vector3(0.0f, 1.0f, 0.0f);
 
-	// ビュープロジェクション行列を生成
-	// ライトの向きの逆ベクトルを計算
-	Math::Vector3 lightDirection = -1 * lightResourceBuffer_->data_->direction_;
+	//// ライトの向きを注視点にするビュー行列
+	//Math::Matrix4x4 viewMatrix = Math::Matrix4x4::CreateLookAtMatrix(
+	//	lightPosition,                   // 視点（ライトの位置）
+	//	{0.0f,0.0f,0.0f},  // 注視点（ライトの位置 + ライトの向き）
+	//	up                               // 上向きベクトル
+	//);
 
-	// ライトの位置（これは平行光源なので向きを逆にしたベクトル）
-	Math::Vector3 lightPosition = -1 * lightDirection;
-
-	// ライトの上向きベクトル（仮にy軸を上向きとする）
-	Math::Vector3 up = Math::Vector3(0.0f, 1.0f, 0.0f);
-
-	// ライトの向きを注視点にするビュー行列
-	Math::Matrix4x4 viewMatrix = Math::Matrix4x4::CreateLookAtMatrix(
-		lightPosition,                   // 視点（ライトの位置）
-		{0.0f,0.0f,0.0f},  // 注視点（ライトの位置 + ライトの向き）
-		up                               // 上向きベクトル
-	);
-
-	//Matrix4x4 viewMatrix = rotateMatrix.Inverse();
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * Para::kShadowMapResolutionScale(), 10240.0f * Para::kShadowMapResolutionScale(), -5000.0f, 5000.0f);
-	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * Para::kShadowMapResolutionScale(), 1024.0f * Para::kShadowMapResolutionScale(), 0.0f, 1.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * Para::kShadowMapResolutionScale, 10240.0f * Para::kShadowMapResolutionScale, -5000.0f, 5000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * Para::kShadowMapResolutionScale, 1024.0f * Para::kShadowMapResolutionScale, 0.0f, 1.0f);
 	lightResourceBuffer_->data_->viewProjection_ = viewMatrix * projectionMatrix * viewportMatrix;
 }
 
@@ -522,7 +521,7 @@ void CommandManager::CreateStructuredBufferResources() {
 	lightResourceBuffer_->data_->color_ = { 1.0f,1.0f,1.0f,1.0f };
 	lightResourceBuffer_->data_->direction_ = { 0.0f,-1.0f,0.0f };
 	lightResourceBuffer_->data_->intensity_ = 1.0f;
-	lightResourceBuffer_->rotation_ = { 1.57f,0.0f,0.0f };
+	//lightResourceBuffer_->rotation_ = { 1.57f,0.0f,0.0f };
 
 
 	// 頂点データ

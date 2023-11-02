@@ -45,10 +45,10 @@
       <Filter>Externals\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
-      <Filter>Engine\base</Filter>
+      <Filter>Engine\info\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\ImGuiManager.cpp">
-      <Filter>Engine\base</Filter>
+      <Filter>Engine\info\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\input\InputManager.cpp">
       <Filter>Engine\input</Filter>
@@ -144,34 +144,34 @@
       <Filter>Class\Mob\Derived</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
-      <Filter>Engine\base</Filter>
+      <Filter>Engine\info\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\GPUDevice.cpp">
-      <Filter>Engine\base\directX</Filter>
+      <Filter>Engine\info\base\directX</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\MainCommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\PSO.cpp">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\ICommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\input\controller\DIController.cpp">
       <Filter>Engine\input\controller</Filter>
@@ -189,7 +189,7 @@
       <Filter>Class\Tambourine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\utility\Observer.cpp">
       <Filter>Engine\utilitiy</Filter>
@@ -242,10 +242,10 @@
       <Filter>Externals\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
-      <Filter>Engine\base</Filter>
+      <Filter>Engine\info\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\ImGuiManager.h">
-      <Filter>Engine\base</Filter>
+      <Filter>Engine\info\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\input\InputManager.h">
       <Filter>Engine\input</Filter>
@@ -377,37 +377,37 @@
       <Filter>Class\Mob\Derived</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXCommon.h">
-      <Filter>Engine\base</Filter>
+      <Filter>Engine\info\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\GPUDevice.h">
-      <Filter>Engine\base\directX</Filter>
+      <Filter>Engine\info\base\directX</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
+      <Filter>Engine\info\base\directX\descriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\MainCommand.h">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\CommandManager.h">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\ResourceStruct.h">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\ICommand.h">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\PSO.h">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\input\controller\DIController.h">
       <Filter>Engine\input\controller</Filter>
@@ -425,7 +425,7 @@
       <Filter>Class\Tambourine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
-      <Filter>Engine\base\directX\command</Filter>
+      <Filter>Engine\info\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\utility\Observer.h">
       <Filter>Engine\utilitiy</Filter>
@@ -458,9 +458,6 @@
     </Filter>
     <Filter Include="Externals\imgui">
       <UniqueIdentifier>{b3784c2d-ca3a-4b94-8cb1-3b6cda3cd414}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base">
-      <UniqueIdentifier>{475d57e9-a61e-461d-ae3a-eb5c492610e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\input">
       <UniqueIdentifier>{81360c44-81cf-410e-a5b3-c59d962c335b}</UniqueIdentifier>
@@ -540,15 +537,6 @@
     <Filter Include="Class\Mob\Derived">
       <UniqueIdentifier>{b78425e2-876a-4fc2-8102-2c1ba751a431}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX">
-      <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\descriptorHeap">
-      <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\command">
-      <UniqueIdentifier>{60100a09-802c-4da4-904f-ccf44e31b290}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Class\Ease">
       <UniqueIdentifier>{7e11bda2-6456-4497-a71e-dda4a6d1ce6c}</UniqueIdentifier>
     </Filter>
@@ -563,6 +551,18 @@
     </Filter>
     <Filter Include="Engine\scene\user">
       <UniqueIdentifier>{960e4147-4156-4275-832b-89f6c6c61824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\info\base">
+      <UniqueIdentifier>{475d57e9-a61e-461d-ae3a-eb5c492610e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\info\base\directX">
+      <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\info\base\directX\descriptorHeap">
+      <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\info\base\directX\command">
+      <UniqueIdentifier>{60100a09-802c-4da4-904f-ccf44e31b290}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

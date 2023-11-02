@@ -76,5 +76,7 @@ void MainCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 
 void MainCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {
 	pso_ = std::make_unique<PSO>();
-	pso_->Initialize(device, rootSignature, dxc, 1, 1, 1, DepthFormat::D24_UNORM_S8_UINT);
+	pso_->Initialize(device, rootSignature, dxc,
+		{ RasterizerState::CullMode::Back, RasterizerState::FillMode::Solid },
+		1, 1, DepthFormat::D24_UNORM_S8_UINT);
 }

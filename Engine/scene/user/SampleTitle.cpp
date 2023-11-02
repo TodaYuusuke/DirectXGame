@@ -21,6 +21,7 @@ void SampleTitle::Initialize() {
 	ground->transform.rotation.x = 1.57f;
 	ground->transform.scale = { 10.0f,10.0f, 10.0f };
 	ground->material.enableLighting = true;
+	ground->name = "Ground";
 	//ground->commonColor = new Color()
 
 	// 三角形

@@ -36,8 +36,8 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
 	// シャドウマップ用のテクスチャと同じサイズにする
-	viewport.Width = 1024.0f * Para::kShadowMapResolutionScale();
-	viewport.Height = 1024.0f * Para::kShadowMapResolutionScale();
+	viewport.Width = 1024.0f * Para::kShadowMapResolutionScale;
+	viewport.Height = 1024.0f * Para::kShadowMapResolutionScale;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -49,9 +49,9 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	D3D12_RECT scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = 1024 * static_cast<int>(Para::kShadowMapResolutionScale());
+	scissorRect.right = 1024 * static_cast<int>(Para::kShadowMapResolutionScale);
 	scissorRect.top = 0;
-	scissorRect.bottom = 1024 * static_cast<int>(Para::kShadowMapResolutionScale());
+	scissorRect.bottom = 1024 * static_cast<int>(Para::kShadowMapResolutionScale);
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }

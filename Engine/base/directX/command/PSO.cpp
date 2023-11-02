@@ -5,7 +5,7 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, UINT r, UINT vs, UINT ps, DepthFormat df) {
+void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, RasterizerState rState, UINT vs, UINT ps, DepthFormat df) {
 	HRESULT hr = S_FALSE;
 
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShader = CreateVertexShader(dxc, vs);
@@ -15,7 +15,7 @@ void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, 
 	graphicsPipelineStateDesc.pRootSignature = root;	// RootSignature
 	graphicsPipelineStateDesc.InputLayout = CreateInputLayout();		// InputLayout
 	graphicsPipelineStateDesc.BlendState = CreateBlendState();			// BlendState
-	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState(r);	// RasterizerState
+	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState(rState);	// RasterizerState
 	if (vs != 0) {
 		graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
 	}
@@ -47,7 +47,9 @@ void PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, 
 }
 
 void PSO::InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc) {
-	Initialize(device, root, dxc, 1, 2, 0, DepthFormat::D32_FLOAT);
+	Initialize(device, root, dxc, 
+		{RasterizerState::CullMode::Front, RasterizerState::FillMode::Solid },
+		2, 0, DepthFormat::D32_FLOAT);
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {
@@ -81,22 +83,12 @@ D3D12_BLEND_DESC PSO::CreateBlendState() {
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	return blendDesc;
 }
-D3D12_RASTERIZER_DESC PSO::CreateRasterizerState(UINT r) {
+D3D12_RASTERIZER_DESC PSO::CreateRasterizerState(RasterizerState rState) {
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面（時計回り）を表示しない
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
-
-	// 0 ... wire
-	// 1 ... fill
-	switch (r) {
-		case 0:
-		default:
-			rasterizerDesc.FillMode = D3D12_FILL_MODE_WIREFRAME;
-			break;
-		case 1:
-			rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-			break;
-	}
+	rasterizerDesc.CullMode = (D3D12_CULL_MODE)rState.cullMode;
+	// 埋め立てモード
+	rasterizerDesc.FillMode = (D3D12_FILL_MODE)rState.fillMode;
 
 	return rasterizerDesc;
 }

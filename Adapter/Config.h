@@ -18,17 +18,17 @@ namespace LWP {
 			/// <summary>
 			/// 頂点のResourceの最大数
 			/// </summary>
-			static UINT kMaxVertex = 655350;
+			static const UINT kMaxVertex = 655350;
 
 			/// <summary>
 			/// カメラのResourceの最大数
 			/// </summary>
-			static UINT kMaxCameraVP = 1 * 2;
+			static const UINT kMaxCameraVP = 1 * 2;
 
 			/// <summary>
 			/// トランスフォームのResourceの最大数
 			/// </summary>
-			static UINT kMaxMatrix = 12800;
+			static const UINT kMaxMatrix = 12800;
 
 			/// <summary>
 			/// シャドウマッピングの解像度スケール
@@ -37,7 +37,7 @@ namespace LWP {
 			/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
-			static float kShadowMapResolutionScale() { return 5.0f; }
+			static const float kShadowMapResolutionScale = 5.0f;
 		}
 	};
 };

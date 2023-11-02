@@ -17,8 +17,10 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET{
         float4 transformUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial[m].uvTransform);
         // シャドウマッピング
         float sm = gShadowMap.Sample(gShadowMapSampler, input.posSM.xy);
-        float sma = (input.posSM.z - 0.000001f < sm) ? 1.0f : 0.5f;
-        
+        float sma = (input.posSM.z - 0.0000004f < sm) ? 1.0f : 0.5f;
+        //float sma = (input.posSM.z - 0.0000005f < sm) ? 1.0f : 0.5f;
+        //float sma = (input.posSM.z - 0.000025f < sm) ? 1.0f : 0.5f;
+
         output.rgb = input.color.rgb * gTexture[t].Sample(gSampler, transformUV.xy).rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity * sma;
         output.w = input.color.a * gTexture[t].Sample(gSampler, transformUV.xy).a;   // 透明度を保持
     }
