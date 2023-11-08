@@ -41,5 +41,13 @@ namespace LWP::Utility {
 		/// ImGui
 		/// </summary>
 		void DebugGUI(const std::string& label = "Color");
+
+		/// <summary>
+		/// ケルビンの色温度からRGBを求める関数
+		/// </summary>
+		/// <param name="kelvin"></param>
+		/// <returns></returns>
+		static Color KelvinToRGB(int kelvin);
+
 	};
 }

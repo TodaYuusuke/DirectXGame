@@ -59,6 +59,7 @@ void SampleTitle::Initialize() {
 
 	pointLight = Object::CreateInstance<Object::PointLight>();
 	pointLight->position = { 1.0f,0.0f,-0.8f };
+	pointLight->color = Utility::Color::KelvinToRGB(2800);
 	pointLight->isActive = true;
 }
 

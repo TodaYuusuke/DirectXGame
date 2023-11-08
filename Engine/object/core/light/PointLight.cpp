@@ -13,7 +13,7 @@ void PointLight::Initialize() {
 // 更新
 void PointLight::Update(Base::CommandManager* manager) {
 	if (!isActive) { return; }
-
+		
 	// 6方向のビュープロジェクション
 	Vector3 rotation[6] = {
 		{1.57f,0.0f,1.57f},
