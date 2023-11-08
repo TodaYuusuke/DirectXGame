@@ -34,5 +34,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// SEデータ
 	LWP::Resource::Audio* audio;
 
+	// 点光源
+	LWP::Object::PointLight* pointLight;
+
 	bool useMonsterBall = true;
 };

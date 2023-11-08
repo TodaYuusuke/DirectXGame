@@ -18,7 +18,34 @@ namespace LWP::Base {
 
 		// インデックス情報の構造体
 		std::unique_ptr<IndexResourceBuffer> indexResourceBuffer_;
-		const UINT kMaxIndex = 655350 * 3;
+		const UINT kMaxIndex = 655350;
+
+		// リソースのビューを構造体に
+		// 0 ... バッファーのインデックス
+		// 1 ... 構造体のカウント
+		// 2 ... 平行光源
+		// 3 ... 点光源
+		// 4 ... 頂点データ
+		// 5 ... カメラのviewProjection
+		// 6 ... WorldTransform
+		// 7 ... lightのviewProjection
+		// 8 ... マテリアル
+		// 9 ... テクスチャ
+		// 10 ... （平行光源）シャドウマップ
+		// 11 ... （点光源）シャドウマップ
+		struct ViewStruct {
+			D3D12_GPU_VIRTUAL_ADDRESS structCount;
+			D3D12_GPU_VIRTUAL_ADDRESS directionLight;
+			D3D12_GPU_DESCRIPTOR_HANDLE pointLight;
+			D3D12_GPU_DESCRIPTOR_HANDLE vertex;
+			D3D12_GPU_DESCRIPTOR_HANDLE cameraVP;
+			D3D12_GPU_DESCRIPTOR_HANDLE wtf;
+			D3D12_GPU_DESCRIPTOR_HANDLE lightVP;
+			D3D12_GPU_DESCRIPTOR_HANDLE material;
+			D3D12_GPU_DESCRIPTOR_HANDLE texture;
+			D3D12_GPU_DESCRIPTOR_HANDLE directionShadowMap;
+			D3D12_GPU_DESCRIPTOR_HANDLE pointShadowMap;
+		};
 
 	public: // ** メンバ関数 ** //
 
@@ -29,16 +56,16 @@ namespace LWP::Base {
 		/// 初期化
 		/// </summary>
 		void Initialize(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature, ID3D12Resource* resource);
+		/// <summary>
+		/// 派生初期化
+		/// </summary>
+		virtual void DerivedInitialize();
 
 		/// <summary>
-		/// 描画前処理
+		/// 描画処理
 		/// </summary>
-		virtual void PreDraw(ID3D12GraphicsCommandList* list) = 0;
-
-		/// <summary>
-		/// 描画語処理
-		/// </summary>
-		virtual void PostDraw(ID3D12GraphicsCommandList* list) = 0;
+		/// <param name="viewStruct">全てのviewの構造体</param>
+		void Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, std::function<void()> ExecuteLambda, ViewStruct viewStruct);
 
 		/// <summary>
 		/// ディスクリプタヒープのポインタをセットする関数
@@ -48,12 +75,6 @@ namespace LWP::Base {
 			dsv_ = dsv;
 			srv_ = srv;
 		}
-
-		/// <summary>
-		/// PSOのStateを取得
-		/// </summary>
-		ID3D12PipelineState* GetPSOState() { return pso_->state_.Get(); }
-
 
 	protected: // ** メンバ変数 ** //
 
@@ -65,8 +86,21 @@ namespace LWP::Base {
 		// グラフィックパイプラインの状態を定義
 		std::unique_ptr<PSO> pso_;
 
+		// 複数回レンダリング回数
+		UINT multiRenderingCount_ = 1;
+		UINT currentRenderingCount_ = 0;
 
 	protected: // ** プライベートな関数 ** //
+
+		/// <summary>
+		/// 描画前処理
+		/// </summary>
+		virtual void PreDraw(ID3D12GraphicsCommandList* list);
+
+		/// <summary>
+		/// 描画語処理
+		/// </summary>
+		virtual void PostDraw(ID3D12GraphicsCommandList* list);
 
 		/// <summary>
 		/// PSOを作成

@@ -16,42 +16,44 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(ID3D12Device* device, int32_t width, int32_t height, SRV* srv);
+		void Initialize(ID3D12Device* device, SRV* srv);
 
 		/// <summary>
 		/// 深度をクリアする関数
 		/// </summary>
 		void ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList);
 
-		/// <summary>
-		/// シャドウマップのリソースを返す関数
-		/// </summary>
-		ID3D12Resource* GetShadowMapResource() { return shadowMapResource_.Get(); }
-
-		/// <summary>
-		/// シャドウマップのビューを返す関数
-		/// </summary>
-		D3D12_GPU_DESCRIPTOR_HANDLE GetShadowView() { return shadowView_; }
-
-	private: // ** メンバ変数 ** //
-		// DepthStencilテクスチャ
-		Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_;
-		// シャドウマップ用テクスチャ
-		Microsoft::WRL::ComPtr<ID3D12Resource> shadowMapResource_;
-		// シャドウマップのリソースへのビュー
-		D3D12_GPU_DESCRIPTOR_HANDLE shadowView_;
-
-
-	private: // ** プライベートなメンバ関数 ** //
-
+		
 		/// <summary>
 		/// 前後関係を保存するためのリソースを作成
 		/// </summary>
-		void CreateDepthStencil(int32_t width, int32_t height);
+		uint32_t CreateDepthStencil(ID3D12Resource* resource, D3D12_CPU_DESCRIPTOR_HANDLE* view, int32_t width, int32_t height);
 
 		/// <summary>
-		/// シャドウマップ用のリソースを作成
+		/// 平行光源シャドウマップ用のリソースを作成
 		/// </summary>
-		void CreateShadowMap(SRV* srv);
+		ID3D12Resource* CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view);
+		
+		/// <summary>
+		/// 点光源シャドウマップ用のリソースを作成
+		/// </summary>
+		ID3D12Resource* CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view);
+
+
+		/// <summary>
+		/// 使用数を+1増加
+		/// </summary>
+		void AddUsedCount() { usedCount_++; }
+		/// <summary>
+		/// 現在の使用数を取得
+		/// </summary>
+		uint32_t GetUsedCount() { return usedCount_; }
+
+
+	private: // ** メンバ変数 ** //
+		// シャドウマップ用にSRVのポインタを保持する
+		SRV* srv_ = nullptr;
+		// 使用済みカウント初期値0
+		uint32_t usedCount_ = 0;
 	};
 }

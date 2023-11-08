@@ -7,6 +7,9 @@
 #include <map>
 
 namespace LWP::Primitive {
+	/// <summary>
+	/// 描画用の形状をすべて管理するクラス
+	/// </summary>
 	class Manager {
 	public: // メンバ関数
 
@@ -65,7 +68,7 @@ namespace LWP::Primitive {
 		// 形状のリスト
 		std::vector<IPrimitive*> primitives_;
 
-		// 形状のインスタンスカウント
+		// インスタンスカウント用マップ
 		std::map<std::string, int> primitiveCountMap_;
 		
 #if _DEBUG
@@ -73,16 +76,5 @@ namespace LWP::Primitive {
 		int selectedClass = 0;
 		int currentItem = 0;
 #endif
-
-	private: // ** プライベートな関数 ** //
-		
-		// ImGuiのListBox用関数
-		static bool ListBoxGetter(void* data, int index, const char** output) {
-			//IPrimitive* primitives = static_cast<IPrimitive*>(data);
-			std::vector<IPrimitive*>* primitives = static_cast<std::vector<IPrimitive*>*>(data);
-			*output = (*primitives)[index]->name.c_str();
-			//*output = currentPrimitive.name.c_str();
-			return true;
-		}
 	};
 }

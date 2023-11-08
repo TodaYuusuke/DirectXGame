@@ -9,6 +9,7 @@
 // 前方宣言
 namespace LWP::Object {
 	class Camera;
+	class PointLight;
 }
 
 namespace LWP::Base {
@@ -82,6 +83,10 @@ namespace LWP::Base {
 		/// </summary>
 		void SetCameraViewProjection(const Object::Camera* camera);
 
+		/// <summary>
+		/// 点光源のデータを登録する
+		/// </summary>
+		void SetPointLightData(const Object::PointLight* light, const Math::Matrix4x4* viewProjections);
 
 	private: // メンバ変数
 		// デバイスのポインタを保持
@@ -98,8 +103,9 @@ namespace LWP::Base {
 		// リスト
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 
-		// 用途別コマンドリスト用クラス（現在は１つ）
-		std::vector<ICommand*> cmds_;
+		// 用途別コマンドリスト用クラス
+		std::unique_ptr<MainCommand> mainCommand;
+		std::unique_ptr<ShadowMapCommand> shadowCommand;
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
@@ -113,23 +119,17 @@ namespace LWP::Base {
 		/// </summary>
 		std::unique_ptr<DXC> dxc_;
 		
-		/// <summary>
-		// ディスクリプタテーブル番号
-		// <para>0 ... バッファーのインデックス</para>
-		// <para>1 ... 平行光源</para>
-		// <para>2 ... 頂点データ</para>
-		// <para>3 ... カメラのviewProjection</para>
-		// <para>4 ... WorldTransform</para>
-		// <para>5 ... マテリアル</para>
-		// <para>6 ... シャドウマップ</para>
-		// <para>7 ... テクスチャ</para>
-		/// </summary>
+		// ルートシグネチャ
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 
-
+		// 構造体のカウント
+		std::unique_ptr<StructCountResourceBuffer> structCountResourceBuffer_;
 		// 平行光源
-		std::unique_ptr<LightResourceBuffer> lightResourceBuffer_;
+		std::unique_ptr<DirectionLightResourceBuffer> directionLightResourceBuffer_;
 		//const UINT kMaxLight= 1;
+		// 点光源
+		std::unique_ptr<PointLightResourceBuffer> pointLightResourceBuffer_;
+
 
 		// 頂点データ
 		std::unique_ptr<VertexResourceBuffer> vertexResourceBuffer_;
@@ -146,6 +146,8 @@ namespace LWP::Base {
 #else      //release時
 		const UINT kMaxMatrix = 12800;
 #endif
+		// 光源のviewProjection行列
+		std::unique_ptr<MatrixResourceBuffer> lightVPResourceBuffer_;
 
 
 		// マテリアルデータ
@@ -176,10 +178,6 @@ namespace LWP::Base {
 		/// RootSignature生成
 		/// </summary>
 		void CreateRootSignature();
-		/// <summary>
-		/// シャドウマップ用のRootSignature生成
-		/// </summary>
-		void CreateShadowRS();
 
 		/// <summary>
 		/// ストラクチャーバッファ用のリソースを作成

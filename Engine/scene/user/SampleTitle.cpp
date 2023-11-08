@@ -56,16 +56,18 @@ void SampleTitle::Initialize() {
 	//stressTestModel = LWP::Resource::LoadModel("RGM-96XJesta_13_td.obj");
 	//stressTestModel->material.enableLighting = true;
 	//stressTestModel->isActive = true;
+
+	pointLight = Object::CreateInstance<Object::PointLight>();
+	pointLight->position = { 1.0f,0.0f,-0.8f };
+	pointLight->isActive = true;
 }
 
 // 更新
 void SampleTitle::Update() {
-#if _DEBUG
 	// カメラ操作
 	ImGui::Begin("Camera");
 	mainCamera->DebugGUI();
 	ImGui::End();
-#endif
 
 	// SPACEキーを押すとテクスチャ切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {

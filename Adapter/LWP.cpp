@@ -22,9 +22,10 @@ void Engine::Run(IScene* firstScene) {
 
 		// 更新処理
 		sceneManager_->Update();
-		objectManager_->Update();
-		primitiveManager_->Update();
 		directXCommon_->GetCommandManager()->ImGui();
+		objectManager_->Update(directXCommon_->GetCommandManager());	// 描画に必要なデータをCommandManagerに登録している
+		primitiveManager_->Update();
+
 		// カメラのビュープロジェクションをcommandManagerに
 		directXCommon_->GetCommandManager()->SetCameraViewProjection(sceneManager_->GetMainCamera());
 
@@ -89,10 +90,8 @@ bool Engine::ProcessMessage() {
 }
 
 void Engine::BeginFrame() {
-#if _DEBUG //debug時
 	// タイマー計測開始
 	debugTimer_.Start();
-#endif
 
 	directXCommon_->PreDraw();
 	imGuiManager_->Begin();
@@ -100,20 +99,14 @@ void Engine::BeginFrame() {
 }
 
 void Engine::EndFrame() {
-#if _DEBUG //debug時
 	// FPS系の情報描画
 	debugTimer_.DebugGUI();
-#endif
 
 	directXCommon_->DrawCall();
-	imGuiManager_->End();
-	imGuiManager_->Draw();
 	directXCommon_->PostDraw();
 
-#if _DEBUG //debug時
 	// 計測終了
 	debugTimer_.End();
-#endif
 }
 
 void Engine::Finalize() {

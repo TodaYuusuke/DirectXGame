@@ -31,6 +31,20 @@ namespace LWP {
 			static const UINT kMaxMatrix = 12800;
 
 			/// <summary>
+			/// 平行光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+			/// </summary>
+			static const UINT kMaxDirectionLight = 1;
+			/// <summary>
+			/// 点光源のResourceの最大数（１つにつき6回のレンダリングが起きるので注意）
+			/// </summary>
+			static const UINT kMaxPointLight = 8;
+
+			/// <summary>
+			/// シャドウマップの最大数
+			/// </summary>
+			static const UINT kMaxShadowMap = kMaxPointLight + (kMaxPointLight * 6);
+
+			/// <summary>
 			/// シャドウマッピングの解像度スケール
 			/// <para>default = 5</para>
 			/// <para>Range = 1 ~ ∞</para>

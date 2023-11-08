@@ -10,8 +10,9 @@ void Camera::Initialize() {
 	transform.Initialize();
 }
 // 更新
-void Camera::Update() {
-	
+void Camera::Update(Base::CommandManager* manager) {
+	manager; // マルチレンダリングを実装する際に再定義
+	//manager->SetCameraViewProjection(this);
 }
 
 void Camera::DebugGUI() {

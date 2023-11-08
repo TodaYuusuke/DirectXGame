@@ -10,10 +10,30 @@ namespace Para = LWP::Config::Rendering;
 
 using namespace LWP::Base;
 
+void ShadowMapCommand::InitializePreDraw() {
+	structCount_->directionLight = 0;
+	structCount_->pointLight = 0;
+	multiRenderingCount_ = *dirCount + *pointCount;
+}
+
 void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
+	// このレンダリングで描画する対象をセットする
+	if (currentRenderingCount_ < *dirCount) {
+		resource_ = direction_->shadowMap_[currentRenderingCount_].resource_.Get();
+		index_ = direction_->shadowMap_[currentRenderingCount_].dsvIndex_;
+		structCount_->directionLight++;
+	}
+	else if (currentRenderingCount_ - *dirCount < *pointCount * 6) {
+		int index = currentRenderingCount_ - *dirCount;
+		resource_ = point_->shadowMap_[index / 6].resource_.Get();
+		index_ = point_->shadowMap_[index / 6].dsvIndex_[index % 6];
+		structCount_->pointLight++;
+	}
+
+
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
-		dsv_->GetShadowMapResource(),
+		resource_,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE
 	);
@@ -22,12 +42,12 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	list->ResourceBarrier(1, &barrier);
 
 	// シャドウマップ用のDSVハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(1);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(index_);
 	// 描画先のDSVを設定する
 	list->OMSetRenderTargets(0, nullptr, false, &dsvHandle);
 
 	// 指定した深度で画面全体をクリアする（1はシャドウマップ用DSV）
-	dsv_->ClearDepth(1, list);
+	dsv_->ClearDepth(index_, list);
 
 	// 描画用のSRVのDescriptorHeapを設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
@@ -61,7 +81,7 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
-		dsv_->GetShadowMapResource(),
+		resource_,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		D3D12_RESOURCE_STATE_GENERIC_READ
 	);
@@ -72,6 +92,11 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
 	hr = list->Close();
 	assert(SUCCEEDED(hr));
+
+	// 最後に点光源の数を戻す(÷6)
+	if (currentRenderingCount_ == multiRenderingCount_ - 1) {
+		//structCount_->pointLight /= 6;
+	}
 }
 
 void ShadowMapCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

@@ -7,6 +7,12 @@
 
 using namespace LWP::Base;
 
+void MainCommand::DerivedInitialize() {
+	//深度マップを作成
+	depthStencil_ = std::make_unique<DepthStencil>();
+	dsv_->CreateDepthStencil(depthStencil_->resource_.Get(), &depthStencil_->view_, LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
+};
+
 void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
@@ -19,10 +25,8 @@ void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	list->ResourceBarrier(1, &barrier);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(rtv_->GetBackBufferIndex());
-	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(0);
 	// 描画先のRTVとDSVを設定する
-	list->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+	list->OMSetRenderTargets(1, &rtvHandle, false, &depthStencil_->view_);
 
 	// 全画面クリア
 	rtv_->ClearRenderTarget(list);
@@ -59,6 +63,10 @@ void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 void MainCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	HRESULT hr = S_FALSE;
 
+	// ImGuiの設定をする
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), list);
+
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
 		rtv_->GetBackBuffer(),
@@ -72,6 +80,7 @@ void MainCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
 	hr = list->Close();
 	assert(SUCCEEDED(hr));
+
 }
 
 void MainCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

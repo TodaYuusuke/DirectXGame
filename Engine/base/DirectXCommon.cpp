@@ -33,7 +33,7 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 
 	// DSV（深度バッファ）作成
 	dsv_ = std::make_unique<DSV>();
-	dsv_->Initialize(gpuDevice_->GetDevice(), backBufferWidth_, backBufferHeight_, srv_.get());
+	dsv_->Initialize(gpuDevice_->GetDevice(), srv_.get());
 
 	// ディスクリプタヒープを登録
 	commandManager_->SetDescriptorHeap(rtv_.get(), dsv_.get(), srv_.get());

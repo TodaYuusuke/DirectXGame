@@ -30,7 +30,7 @@ void Manager::Update() {
 	ImGui::Begin("PrimitiveManager");
 	
 	// 変更されて渡される値は添え字
-	ImGui::Combo("new Class", &selectedClass, classText.data(), static_cast<int>(classText.size()));
+	ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
 	if (ImGui::Button("Create")) { functions[selectedClass](); }
 
 	// 形状一覧

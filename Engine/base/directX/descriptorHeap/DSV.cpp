@@ -7,19 +7,15 @@ namespace Para = LWP::Config::Rendering;
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
-void DSV::Initialize(ID3D12Device* device, int32_t width, int32_t height, SRV* srv) {
+void DSV::Initialize(ID3D12Device* device, SRV* srv) {
 	device_ = device;
-	size_ = 2;
+	srv_ = srv;
+	size_ = Para::kMaxShadowMap + 1;
 	// サイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	// DSV用のヒープでディスクリプタの数は2。DSVはShader内で触らないものなので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, size_, false);
-
-	// 前後関係を保持するためのリソースを作成
-	CreateDepthStencil(width, height);
-	// シャドウマップのリソースを作成
-	CreateShadowMap(srv);
 }
 
 void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {
@@ -27,7 +23,7 @@ void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {
 	commandList->ClearDepthStencilView(GetCPUHandle(index), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void DSV::CreateDepthStencil(int32_t width, int32_t height) {
+uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, D3D12_CPU_DESCRIPTOR_HANDLE* view, int32_t width, int32_t height) {
 	HRESULT hr = S_FALSE;
 
 	// DSVResourceの設定
@@ -57,7 +53,7 @@ void DSV::CreateDepthStencil(int32_t width, int32_t height) {
 		&resourceDesc, // Resourceの設定
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, // 深度値を書き込む状態にしておく
 		&depthClearValue, // Clear最適値
-		IID_PPV_ARGS(&depthStencilResource_) // 作成するリソースへのポインタ
+		IID_PPV_ARGS(&resource) // 作成するリソースへのポインタ
 	);
 	assert(SUCCEEDED(hr));
 
@@ -66,11 +62,15 @@ void DSV::CreateDepthStencil(int32_t width, int32_t height) {
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本敵にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
 	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc, heap_.Get()->GetCPUDescriptorHandleForHeapStart());
+	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(usedCount_));
+	*view = GetCPUHandle(usedCount_);
+	return usedCount_++;
 }
 
-void DSV::CreateShadowMap(SRV* srv) {
+ID3D12Resource* DSV::CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view) {
 	HRESULT hr = S_FALSE;
+
+	ID3D12Resource* resource;
 
 	// DSVResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
@@ -98,9 +98,9 @@ void DSV::CreateShadowMap(SRV* srv) {
 		&heapProperties, // Heapの設定
 		D3D12_HEAP_FLAG_NONE, // Heapの特殊な設定。特になし
 		&resourceDesc, // Resourceの設定
-		D3D12_RESOURCE_STATE_GENERIC_READ, // 深度値を書き込む状態にしておく
+		D3D12_RESOURCE_STATE_GENERIC_READ, // デフォルトは読み取り専用
 		&depthClearValue, // Clear最適値
-		IID_PPV_ARGS(&shadowMapResource_) // 作成するリソースへのポインタ
+		IID_PPV_ARGS(&resource) // 作成するリソースへのポインタ
 	);
 	assert(SUCCEEDED(hr));
 
@@ -109,8 +109,7 @@ void DSV::CreateShadowMap(SRV* srv) {
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // Format。基本敵にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
 	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(shadowMapResource_.Get(), &dsvDesc, GetCPUHandle(1));
-
+	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(usedCount_));
 
 	// SRVにテクスチャとして登録
 
@@ -126,9 +125,83 @@ void DSV::CreateShadowMap(SRV* srv) {
 
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv->GetCPUHandle(srv->GetUsedCount());
-	shadowView_ = srv->GetGPUHandle(srv->GetUsedCount());
-	srv->AddUsedCount();
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srv_->GetUsedCount());
+	*view = srv_->GetGPUHandle(srv_->GetUsedCount());
+	srv_->AddUsedCount();
 	// SRVの生成
-	device_->CreateShaderResourceView(shadowMapResource_.Get(), &srvDesc, textureSRVHandleCPU);
+	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
+	*dsvIndex = usedCount_++;
+	return resource;
+}
+
+ID3D12Resource* DSV::CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view) {
+	HRESULT hr = S_FALSE;
+
+	ID3D12Resource* resource;
+	
+	// DSVResourceの設定
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの幅
+	resourceDesc.Height = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの高さ
+	resourceDesc.MipLevels = 1; // mipmapの数
+	resourceDesc.DepthOrArraySize = 6; // キューブマップなので6
+	resourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // DepthStencilとして利用可能なフォーマット
+	resourceDesc.SampleDesc.Count = 1; // サンプリングカウント、1固定
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; // 2次元
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // DepthStencilとして使う通知
+
+	// 利用するHeapの設定
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; // VRAM上に作る
+
+	// 深度地のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	depthClearValue.DepthStencil.Depth = 1.0f; // 1.0f(最大値)でクリア
+	depthClearValue.DepthStencil.Stencil = 0;
+
+	// Resourceの生成
+	hr = device_->CreateCommittedResource(
+		&heapProperties, // Heapの設定
+		D3D12_HEAP_FLAG_NONE, // Heapの特殊な設定。特になし
+		&resourceDesc, // Resourceの設定
+		D3D12_RESOURCE_STATE_GENERIC_READ, // デフォルトは読み取り専用
+		&depthClearValue, // Clear最適値
+		IID_PPV_ARGS(&resource) // 作成するリソースへのポインタ
+	);
+	assert(SUCCEEDED(hr));
+
+
+	for (int i = 0; i < 6; i++) {
+		// DSVの設定
+		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // Format。基本敵にはResourceに合わせる
+		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DARRAY; // 2DTexture配列
+		dsvDesc.Texture2DArray.MipSlice = 0;
+		dsvDesc.Texture2DArray.ArraySize = 1;
+		dsvDesc.Texture2DArray.FirstArraySlice = i;
+		// DSVを作る
+		device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(usedCount_));
+		dsvIndex[i] = usedCount_++;
+	}
+
+	// SRVにテクスチャとして登録
+
+	// metaDataを元にSRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MipLevels = 1;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.ResourceMinLODClamp = 0.0F;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	// SRVを作成するDescriptorHeapの場所を決める
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srv_->GetUsedCount());
+	*view = srv_->GetGPUHandle(srv_->GetUsedCount());
+	srv_->AddUsedCount();
+	// SRVの生成
+	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
+
+	return resource;
 }

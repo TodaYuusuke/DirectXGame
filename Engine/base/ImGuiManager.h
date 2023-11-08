@@ -30,16 +30,6 @@ namespace LWP::Base {
 		/// </summary>
 		void Begin();
 
-		/// <summary>
-		/// ImGui受付終了
-		/// </summary>
-		void End();
-
-		/// <summary>
-		/// 描画
-		/// </summary>
-		void Draw();
-
 	private:
 		// DirectX基盤インスタンス（借りてくる）
 		DirectXCommon* dxCommon_ = nullptr;
