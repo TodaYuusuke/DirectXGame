@@ -70,12 +70,12 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	defaultTexture_ = LWP::Resource::LoadTextureLongPath("resources/system/texture/white.png");
 }
 
-void CommandManager::PreDraw() {}
+void CommandManager::PreDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
 
 void CommandManager::DrawCall() {
 	HRESULT hr;
 
-	// コマンドリストの実行とリセットのラムダ式
+	// コマンドリストの実行とリセットのラムダ式（渡す引数が多いのでこちらで定義し、ラムダを渡す）
 	std::function<void()> ExecuteLambda = [&]() {
 		// GPUにコマンドリストの実行を行わせる
 		ID3D12CommandList* commandLists[] = { commandList_.Get() };
@@ -97,7 +97,7 @@ void CommandManager::DrawCall() {
 		hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
 		assert(SUCCEEDED(hr));
 	};
-	// コマンドのDrawを呼び出すラムダ式
+	// コマンドのDrawを呼び出すラムダ式（引数で渡すのは面倒なのでラムダで指定）
 	std::function<void(ICommand*)> DrawLambda = [&](ICommand* cmd) {
 		cmd->Draw(rootSignature_.Get(), commandList_.Get(), ExecuteLambda, {
 			structCountResourceBuffer_->view_,
@@ -124,9 +124,10 @@ void CommandManager::DrawCall() {
 	rtv_->GetSwapChain()->Present(1, 0);
 }
 
-void CommandManager::PostDraw() {}
+void CommandManager::PostDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
 
 void CommandManager::Reset() {
+	// 使用量をリセット
 	mainCommand->indexResourceBuffer_->usedCount_ = 0;
 	shadowCommand->indexResourceBuffer_->usedCount_ = 0;
 	pointLightResourceBuffer_->usedCount_ = 0;
@@ -137,10 +138,12 @@ void CommandManager::Reset() {
 }
 
 void CommandManager::SetCameraViewProjection(const Object::Camera* camera) {
+	// カメラのViewProjectionをリソースにコピー（現在はメインのカメラにしか対応していないので、そのうちマルチレンダリングに対応させる）
 	cameraResourceBuffer_->data_[0] = camera->GetViewProjectionMatrix3D();
 	cameraResourceBuffer_->data_[1] = camera->GetViewProjectionMatrix2D();
 }
 void CommandManager::SetPointLightData(const Object::PointLight* light, const Math::Matrix4x4* viewProjections) {
+	// 点光源のデータをリソースにコピー
 	PointLightStruct newData{};
 
 	newData.color = light->color.GetVector4();	// ライトの色

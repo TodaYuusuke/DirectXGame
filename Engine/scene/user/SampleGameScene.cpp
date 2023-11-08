@@ -26,13 +26,6 @@ void SampleGameScene::Update() {
 	hammer_.Update();
 	mobManager_.Update(&mapManager_);
 
-#if _DEBUG
-	ImGui::Begin("GameScene");
-	ImGui::Text("Camera");
-	mainCamera->DebugGUI();
-	ImGui::End();
-#endif
-
 	// Cキーを押すと敵召喚
 	if (Input::Keyboard::GetTrigger(DIK_C)) {
 		mobManager_.AddEnemy(1);

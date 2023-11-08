@@ -1,7 +1,7 @@
 #include "MainCommand.h"
-#include "../descriptorHeap/RTV.h"
-#include "../descriptorHeap/DSV.h"
-#include "../descriptorHeap/SRV.h"
+#include "../../descriptorHeap/RTV.h"
+#include "../../descriptorHeap/DSV.h"
+#include "../../descriptorHeap/SRV.h"
 
 #include <Adapter.h>
 

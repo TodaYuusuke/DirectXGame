@@ -161,9 +161,6 @@
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\MainCommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
@@ -188,9 +185,6 @@
     <ClCompile Include="Class\Tambourine\Tambourine.cpp">
       <Filter>Class\Tambourine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\ShadowMapCommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\utility\Observer.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
@@ -205,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="Engine\object\core\light\PointLight.cpp">
       <Filter>Engine\object\core\light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp">
+      <Filter>Engine\base\directX\command\Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapCommand.cpp">
+      <Filter>Engine\base\directX\command\Derived</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -394,9 +394,6 @@
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\MainCommand.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\command\CommandManager.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
@@ -424,9 +421,6 @@
     <ClInclude Include="Class\Tambourine\Tambourine.h">
       <Filter>Class\Tambourine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\ShadowMapCommand.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\utility\Observer.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
@@ -444,6 +438,12 @@
     </ClInclude>
     <ClInclude Include="Engine\object\core\light\PointLight.h">
       <Filter>Engine\object\core\light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\Derived\MainCommand.h">
+      <Filter>Engine\base\directX\command\Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\Derived\ShadowMapCommand.h">
+      <Filter>Engine\base\directX\command\Derived</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -569,6 +569,9 @@
     </Filter>
     <Filter Include="Engine\object\core\light">
       <UniqueIdentifier>{d7b05c18-6249-4f61-8559-8af414e7835e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\command\Derived">
+      <UniqueIdentifier>{5e93e1c4-b2c1-4c36-bae5-07b1bf3df8b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

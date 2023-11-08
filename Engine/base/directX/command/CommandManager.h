@@ -1,6 +1,6 @@
 #pragma once
-#include "MainCommand.h"
-#include "ShadowMapCommand.h"
+#include "Derived/MainCommand.h"
+#include "Derived/ShadowMapCommand.h"
 
 #include <vector>
 #include <dxcapi.h>

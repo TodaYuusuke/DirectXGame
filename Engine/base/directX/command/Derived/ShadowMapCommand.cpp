@@ -1,7 +1,7 @@
 #include "ShadowMapCommand.h"
-#include "../descriptorHeap/RTV.h"
-#include "../descriptorHeap/DSV.h"
-#include "../descriptorHeap/SRV.h"
+#include "../../descriptorHeap/RTV.h"
+#include "../../descriptorHeap/DSV.h"
+#include "../../descriptorHeap/SRV.h"
 
 #include <Config.h>
 namespace Para = LWP::Config::Rendering;
@@ -11,8 +11,10 @@ namespace Para = LWP::Config::Rendering;
 using namespace LWP::Base;
 
 void ShadowMapCommand::InitializePreDraw() {
+	// 初期化
 	structCount_->directionLight = 0;
 	structCount_->pointLight = 0;
+	// レンダリング回数（本当はpointCount * 6）
 	multiRenderingCount_ = *dirCount + *pointCount;
 }
 
