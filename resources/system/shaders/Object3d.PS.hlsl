@@ -30,11 +30,11 @@
 //}
 //
 //// 方向ベクトルから対応するキューブマップのテクスチャを選択
-//float SelectCubeMapTexture(float3 direction, uint pointLightIndex)
+//uint SelectCubeMapTexture(float3 direction, uint pointLightIndex)
 //{
 //    float2 cubeMapCoords = CalculateCubeMapCoords(direction);
 //
-//    // 選択されたキューブマップのテクスチャ
+//    // 選択されたキューブマップのインデックス
 //    uint selectedTextureIndex = (uint)(floor(cubeMapCoords.x * 6.0f + 0.5f));
 //    selectedTextureIndex = clamp(selectedTextureIndex, 0, 5);
 //    return gPointShadowMap[pointLightIndex * 6 + selectedTextureIndex].Sample(gPointShadowMapSampler, cubeMapCoords);
@@ -68,29 +68,51 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
             float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
             float3 light = gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
             // シャドウマッピング
-            float sm = gDirectionShadowMap[0].Sample(gDirectionShadowMapSampler, input.posSM.xy);
-            float sma = (input.posSM.z - 0.00000075f < sm) ? 1.0f : kShadowDensity;
+            float depth = gDirectionShadowMap[0].Sample(gDirectionShadowMapSampler, input.posSM.xy);
+            float sma = (input.posSM.z - 0.00000075f < depth) ? 1.0f : kShadowDensity;
             // 結果を加算
             lighting += light * sma;
         }
 
         // -- 点光源 -- //
+
+        const float far = 100.0f;  // パースペクティブのfar
+        const float near = 0.10;  // パースペクティブのnear
         for (uint n = 0; n < gStructCount.pointLight; n++) {
             // ライティング
-            float3 pointLightDirection = normalize(input.WorldPos - gPointLight[n].position);
-            float NdotL = dot(normalize(input.normal), -pointLightDirection);
+            float3 dir = input.WorldPos - gPointLight[n].position;
+            float NdotL = dot(normalize(input.normal), -normalize(dir));
             float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
             float distance = length(gPointLight[n].position - input.WorldPos);   // ポイントライトへの距離
             float factor = pow(saturate(-distance / gPointLight[n].radius + 1.0), gPointLight[n].decay);    // 逆二乗則による減衰係数
             float3 light = gPointLight[n].color.rgb * cos * gPointLight[n].intensity * factor;
             // シャドウマッピング
-            //float depth = SelectCubeMapTexture(-pointLightDirection, n);
-            //float3 absVec = abs(-pointLightDirection);
-            //float z = max(absVec.x, max(absVec.y, absVec.z));
-            //float normZComp = 100.0f / (100.0f - 0.1f) - (100.0f * 0.1f) / (100.0f - 0.1f) / z;
-            //float sma = (normZComp <= depth + 0.005f) ? 1.0f : kShadowDensity;
+            //float depth = gPointShadowMap[n].Sample(gPointShadowMapSampler, dir).x;
+            //float32_t4x4 view = {
+            //    {0.000796274282f,0.0f,0.999999702f,0.0f},
+            //    {0.0f,1.0f,0.0f,0.0f},
+            //    {-0.999999702f,0.0f,0.000796274282f,0.0f},
+            //    {-0.0995859057f,0.0f,0.520079434f,1.0f}
+            //};
+            //float32_t4x4 projection = {
+            //    {4.36919022f,0.0f,0.0f,0.0f},
+            //    {0.0f,4.36919022f,0.0f,0.0f},
+            //    {0.0f,0.0f,1.00100100f,1.0f},
+            //    {0.0f,0.0f,-0.100100100f,0.0f}
+            //};
+            //float4 Pos = mul(float4(input.WorldPos, 1.0f), gLightViewProjection[n + 1]);
+            //Pos.xyz = Pos.xyz / Pos.w;
+            //float z = 100.0f / (100.0f - 0.10f) - (100.0f * 0.10f) / (100.0f - 0.10f) / Pos.z;
+            //float sma = (z < depth) ? 1.0f : kShadowDensity;
+
+            // 現状維持
+            float depth = gPointShadowMap[n].Sample(gPointShadowMapSampler, normalize(dir)).x;
+            float3 absVec = abs(dir);
+            float z = max(absVec.x, max(absVec.y, absVec.z));
+            float normZComp = far / (far - near) - (far * near) / (far - near) / z;
+            float sma = (normZComp - 0.00000075f < depth)  ? 1.0f : kShadowDensity;
             // 結果を加算
-            lighting += light;
+            lighting += light * sma;
         }
         
 

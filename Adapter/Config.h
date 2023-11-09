@@ -42,7 +42,7 @@ namespace LWP {
 			/// <summary>
 			/// シャドウマップの最大数
 			/// </summary>
-			static const UINT kMaxShadowMap = kMaxPointLight + (kMaxPointLight * 6);
+			static const UINT kMaxShadowMap = kMaxDirectionLight + (kMaxPointLight * 6);
 
 			/// <summary>
 			/// シャドウマッピングの解像度スケール

@@ -88,6 +88,8 @@ D3D12_RESOURCE_BARRIER ICommand::MakeResourceBarrier(ID3D12Resource* pResource, 
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	// Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	// 全てのサブリソースを選択
+	barrier.Transition.Subresource = 0xFFFFFFFF;
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
 	barrier.Transition.pResource = pResource;
 	// 遷移前（現在）のResourceState

@@ -206,6 +206,9 @@
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapCommand.cpp">
       <Filter>Engine\base\directX\command\Derived</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\object\core\light\DirectionLight.cpp">
+      <Filter>Engine\object\core\light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -444,6 +447,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\Derived\ShadowMapCommand.h">
       <Filter>Engine\base\directX\command\Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\light\DirectionLight.h">
+      <Filter>Engine\object\core\light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

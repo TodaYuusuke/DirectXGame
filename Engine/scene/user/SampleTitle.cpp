@@ -58,7 +58,7 @@ void SampleTitle::Initialize() {
 	//stressTestModel->isActive = true;
 
 	pointLight = Object::CreateInstance<Object::PointLight>();
-	pointLight->position = { 1.0f,0.0f,-0.8f };
+	pointLight->transform.translation = { 1.6f,0.0f,-0.1f };
 	pointLight->color = Utility::Color::KelvinToRGB(2800);
 	pointLight->isActive = true;
 }

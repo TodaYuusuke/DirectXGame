@@ -15,7 +15,7 @@ void ShadowMapCommand::InitializePreDraw() {
 	structCount_->directionLight = 0;
 	structCount_->pointLight = 0;
 	// レンダリング回数（本当はpointCount * 6）
-	multiRenderingCount_ = *dirCount + *pointCount;
+	multiRenderingCount_ = *dirCount + *pointCount * 6;
 }
 
 void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
@@ -97,7 +97,7 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 
 	// 最後に点光源の数を戻す(÷6)
 	if (currentRenderingCount_ == multiRenderingCount_ - 1) {
-		//structCount_->pointLight /= 6;
+		structCount_->pointLight /= 6;
 	}
 }
 

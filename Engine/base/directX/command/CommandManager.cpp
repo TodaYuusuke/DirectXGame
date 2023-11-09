@@ -147,7 +147,7 @@ void CommandManager::SetPointLightData(const Object::PointLight* light, const Ma
 	PointLightStruct newData{};
 
 	newData.color = light->color.GetVector4();	// ライトの色
-	newData.position = light->position;	// ライトのワールド座標
+	newData.position = light->transform.translation;	// ライトのワールド座標
 	newData.intensity = light->intensity;		// 輝度
 	newData.radius = light->radius;			// ライトの届く最大距離
 	newData.decay = light->decay;			// 減衰率
@@ -366,7 +366,7 @@ void CommandManager::CreateRootSignature() {
 	D3D12_DESCRIPTOR_RANGE lightDesc[1] = { descRange[0] };	// DescriptorRangeを作成
 	lightDesc[0].BaseShaderRegister = 5; // レジスタ番号は5
 	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	rootParameters[7].DescriptorTable.pDescriptorRanges = lightDesc; // Tabelの中身の配列を指定
 	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(lightDesc); // Tableで利用する数
 
@@ -431,9 +431,10 @@ void CommandManager::CreateRootSignature() {
 #pragma region 点光源のシャドウマップ
 	// Samplerの設定
 	staticSamplers[2].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; // バイアスをかけて線形補間
-	staticSamplers[2].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
-	staticSamplers[2].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[2].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[2].AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER; // 0~1の範囲外をリピート
+	staticSamplers[2].AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	staticSamplers[2].AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	staticSamplers[2].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
 	staticSamplers[2].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数を設定
 	staticSamplers[2].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
 	staticSamplers[2].ShaderRegister = 2; // レジスタ番号は2

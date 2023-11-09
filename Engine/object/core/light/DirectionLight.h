@@ -6,9 +6,9 @@
 
 namespace LWP::Object {
 	/// <summary>
-	/// 点光源オブジェクト
+	/// 平行光源オブジェクト
 	/// </summary>
-	class PointLight : public IObject {
+	class DirectionLight : public IObject {
 	public:	// ** パブリックなメンバ変数 ** //
 		
 		// ライトの色

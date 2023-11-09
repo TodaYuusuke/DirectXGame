@@ -8,7 +8,7 @@ using namespace LWP::Object;
 
 // 初期化
 void PointLight::Initialize() {
-
+	transform.Initialize();
 }
 // 更新
 void PointLight::Update(Base::CommandManager* manager) {
@@ -16,18 +16,19 @@ void PointLight::Update(Base::CommandManager* manager) {
 		
 	// 6方向のビュープロジェクション
 	Vector3 rotation[6] = {
-		{1.57f,0.0f,1.57f},
-		{1.57f,0.0f,-1.57f},
-		{1.57f,0.0f,0.0f},
+		{0.0f,1.57f,0.0f},
+		{0.0f,-1.57f,0.0f},
 		{-1.57f,0.0f,0.0f},
+		{1.57f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f},
-		{3.14f,0.0f,0.0f},
+		{0.0f,3.14f,0.0f},// 多分ここだけ違う
 	};
 
 	Matrix4x4 viewProjections[6];
 	for (int i = 0; i < 6; i++) {
-		Matrix4x4 viewMatrix = (Matrix4x4::CreateRotateXYZMatrix(rotation[i]) * Matrix4x4::CreateTranslateMatrix(position)).Inverse();
-		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(0.45f, 1, 0.1f, 100.0f);
+		//Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
+		Matrix4x4 viewMatrix = (Matrix4x4::CreateRotateXYZMatrix(rotation[i]) * Matrix4x4::CreateTranslateMatrix(transform.translation)).Inverse();
+		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(1.571f, 1.0f, 0.1f, 100.0f);
 		viewProjections[i] = viewMatrix * projectionMatrix;
 	}
 
@@ -37,7 +38,7 @@ void PointLight::Update(Base::CommandManager* manager) {
 
 // デバッグ用GUI
 void PointLight::DebugGUI() {
-	ImGui::DragFloat3("position", &position.x, 0.01f);
+	transform.DebugGUI();
 	LWP::Base::ImGuiManager::ColorEdit4("color", color);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::DragFloat("Radius", &radius, 0.01f);
