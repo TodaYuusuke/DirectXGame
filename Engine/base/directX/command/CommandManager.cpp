@@ -405,17 +405,14 @@ void CommandManager::CreateRootSignature() {
 
 #pragma region 平行光源のシャドウマップ
 	// Samplerの設定
-	//staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
 	staticSamplers[1].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; // バイアスをかけて線形補間
 	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
 	staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	//staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
 	staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数を設定
 	staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
 	staticSamplers[1].ShaderRegister = 1; // レジスタ番号は1
 	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	//staticSamplers[1].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // ボーダーカラーを設定
 
 	// シャドウマップ
 	D3D12_DESCRIPTOR_RANGE dirShadowDesc[1] = { descRange[0] };	// DescriptorRangeを作成
@@ -431,10 +428,9 @@ void CommandManager::CreateRootSignature() {
 #pragma region 点光源のシャドウマップ
 	// Samplerの設定
 	staticSamplers[2].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; // バイアスをかけて線形補間
-	staticSamplers[2].AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER; // 0~1の範囲外をリピート
-	staticSamplers[2].AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-	staticSamplers[2].AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-	staticSamplers[2].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+	staticSamplers[2].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP; // 0~1の範囲外をリピート
+	staticSamplers[2].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	staticSamplers[2].AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 	staticSamplers[2].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数を設定
 	staticSamplers[2].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
 	staticSamplers[2].ShaderRegister = 2; // レジスタ番号は2
@@ -492,7 +488,7 @@ void CommandManager::CreateStructuredBufferResources() {
 	directionLightResourceBuffer_->shadowMap_[0].resource_ = dsv_->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[0].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[0].view_);
 	// 平行光源だけ今は生成を変える
 	directionLightResourceBuffer_->data_->color_ = { 1.0f,1.0f,1.0f,1.0f };
-	directionLightResourceBuffer_->data_->intensity_ = 1.0f;
+	directionLightResourceBuffer_->data_->intensity_ = 0.0f;
 	directionLightResourceBuffer_->usedCount_ = 1;
 	directionLightResourceBuffer_->rotation_ = { 1.57f,0.0f,0.0f };
 

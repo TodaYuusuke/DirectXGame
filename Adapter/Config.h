@@ -51,7 +51,7 @@ namespace LWP {
 			/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
-			static const float kShadowMapResolutionScale = 5.0f;
+			static const float kShadowMapResolutionScale = 1.0f;
 		}
 	};
 };

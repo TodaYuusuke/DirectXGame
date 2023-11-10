@@ -65,6 +65,12 @@ void SampleTitle::Initialize() {
 
 // 更新
 void SampleTitle::Update() {
+	ImGui::Begin("Test");
+	if (ImGui::Button("Create")) {
+		Object::CreateInstance<Object::PointLight>()->isActive = true;
+	}
+	ImGui::End();
+
 	// SPACEキーを押すとテクスチャ切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
 		if (!useMonsterBall) {
