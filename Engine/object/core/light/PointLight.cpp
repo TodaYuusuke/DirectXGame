@@ -15,20 +15,20 @@ void PointLight::Update(Base::CommandManager* manager) {
 	if (!isActive) { return; }
 		
 	// 6方向のビュープロジェクション
-	Vector3 rotation[6] = {
+	static Vector3 rotation[6] = {
 		{0.0f,1.57f,0.0f},
 		{0.0f,-1.57f,0.0f},
 		{-1.57f,0.0f,0.0f},
 		{1.57f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f},
-		{0.0f,3.14f,0.0f},// 多分ここだけ違う
+		{0.0f,-3.14f,0.0f},
 	};
 
 	Matrix4x4 viewProjections[6];
 	for (int i = 0; i < 6; i++) {
-		//Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
-		Matrix4x4 viewMatrix = (Matrix4x4::CreateRotateXYZMatrix(rotation[i]) * Matrix4x4::CreateTranslateMatrix(transform.translation)).Inverse();
-		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(1.571f, 1.0f, 0.1f, 100.0f);
+		Vector3 worldPosition = transform.GetWorldPosition();
+		Matrix4x4 viewMatrix = (Matrix4x4::CreateRotateXYZMatrix(rotation[i]) * Matrix4x4::CreateTranslateMatrix(worldPosition)).Inverse();
+		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(1.571f, 1.0f, 0.01f, 100.0f);
 		viewProjections[i] = viewMatrix * projectionMatrix;
 	}
 

@@ -35,6 +35,10 @@ namespace LWP::Base {
 		/// </summary>
 		void PostDraw(ID3D12GraphicsCommandList* list) override;
 
+		/// <summary>
+		/// 終了後処理
+		/// </summary>
+		void End();
 
 	private: // ** メンバ変数 ** // 
 

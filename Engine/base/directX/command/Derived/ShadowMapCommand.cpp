@@ -94,11 +94,11 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
 	hr = list->Close();
 	assert(SUCCEEDED(hr));
+}
 
+void ShadowMapCommand::End() {
 	// 最後に点光源の数を戻す(÷6)
-	if (currentRenderingCount_ == multiRenderingCount_ - 1) {
-		structCount_->pointLight /= 6;
-	}
+	structCount_->pointLight /= 6;
 }
 
 void ShadowMapCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

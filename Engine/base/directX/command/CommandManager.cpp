@@ -117,6 +117,7 @@ void CommandManager::DrawCall() {
 	// シャドウマップの描画
 	shadowCommand->InitializePreDraw();
 	DrawLambda(shadowCommand.get());
+	shadowCommand->End();
 	// 本描画
 	DrawLambda(mainCommand.get());
 
@@ -147,7 +148,7 @@ void CommandManager::SetPointLightData(const Object::PointLight* light, const Ma
 	PointLightStruct newData{};
 
 	newData.color = light->color.GetVector4();	// ライトの色
-	newData.position = light->transform.translation;	// ライトのワールド座標
+	newData.position = light->transform.GetWorldPosition();	// ライトのワールド座標
 	newData.intensity = light->intensity;		// 輝度
 	newData.radius = light->radius;			// ライトの届く最大距離
 	newData.decay = light->decay;			// 減衰率

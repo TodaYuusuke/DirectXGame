@@ -77,7 +77,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         // -- 点光源 -- //
 
         const float far = 100.0f;  // パースペクティブのfar
-        const float near = 0.10;  // パースペクティブのnear
+        const float near = 0.01f;  // パースペクティブのnear
         for (uint n = 0; n < gStructCount.pointLight; n++) {
             // ライティング
             float3 dir = input.WorldPos - gPointLight[n].position;
