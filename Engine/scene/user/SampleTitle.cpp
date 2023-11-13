@@ -61,6 +61,7 @@ void SampleTitle::Initialize() {
 	pointLight->transform.translation = { 1.6f,0.0f,-0.1f };
 	pointLight->color = Utility::Color::KelvinToRGB(2800);
 	pointLight->isActive = true;
+	pointLight->transform.Parent(&sphere->transform);
 }
 
 // 更新
