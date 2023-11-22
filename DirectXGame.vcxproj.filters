@@ -209,6 +209,9 @@
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp">
       <Filter>Engine\object\core\light</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\input\controller\XInputController.cpp">
+      <Filter>Engine\input\controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -450,6 +453,9 @@
     </ClInclude>
     <ClInclude Include="Engine\object\core\light\DirectionLight.h">
       <Filter>Engine\object\core\light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\controller\XInputController.h">
+      <Filter>Engine\input\controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

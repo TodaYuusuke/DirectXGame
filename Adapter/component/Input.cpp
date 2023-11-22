@@ -4,43 +4,53 @@ using namespace LWP::System;
 using namespace LWP;
 
 bool Input::Keyboard::GetNone(uint8_t keyID) {
-	return engine->inputManager_->GetKeyboardStateNone(keyID);
+	return engine->inputManager_->keyboard.None(keyID);
 }
 
 bool Input::Keyboard::GetTrigger(uint8_t keyID) {
-	return engine->inputManager_->GetKeyboardStateTrigger(keyID);
+	return engine->inputManager_->keyboard.Trigger(keyID);
 }
 
 bool Input::Keyboard::GetPress(uint8_t keyID) {
-	return engine->inputManager_->GetKeyboardStatePress(keyID);
+	return engine->inputManager_->keyboard.Press(keyID);
 }
 
 bool Input::Keyboard::GetRelease(uint8_t keyID) {
-	return engine->inputManager_->GetKeyboardStateRelease(keyID);
+	return engine->inputManager_->keyboard.Release(keyID);
 }
 
 
-bool Input::Controller::GetNone(uint8_t keyID) {
-	return engine->inputManager_->GetControllerStateNone(keyID);
+bool Input::Controller::GetNone(int playerNum, int keyID) {
+	return engine->inputManager_->controller[playerNum].None(keyID);
+}
+bool Input::Controller::GetTrigger(int playerNum, int keyID) {
+	return engine->inputManager_->controller[playerNum].Trigger(keyID);
+}
+bool Input::Controller::GetPress(int playerNum, int keyID) {
+	return engine->inputManager_->controller[playerNum].Press(keyID);
+}
+bool Input::Controller::GetRelease(int playerNum, int keyID) {
+	return engine->inputManager_->controller[playerNum].Release(keyID);
 }
 
-bool Input::Controller::GetTrigger(uint8_t keyID) {
-	return engine->inputManager_->GetControllerStateTrigger(keyID);
+float Input::Controller::GetLT(int playerNum) {
+	return engine->inputManager_->controller[playerNum].GetLT();
+}
+float Input::Controller::GetRT(int playerNum) {
+	return engine->inputManager_->controller[playerNum].GetRT();
 }
 
-bool Input::Controller::GetPress(uint8_t keyID) {
-	return engine->inputManager_->GetControllerStatePress(keyID);
+Math::Vector2 Input::Controller::GetLStick(int playerNum) {
+	return engine->inputManager_->controller[playerNum].GetLStick();
+}
+Math::Vector2 Input::Controller::GetRStick(int playerNum) {
+	return engine->inputManager_->controller[playerNum].GetRStick();
 }
 
-bool Input::Controller::GetRelease(uint8_t keyID) {
-	return engine->inputManager_->GetControllerStateRelease(keyID);
+void Input::Controller::SetDeadZone(int playerNum, float value) {
+	engine->inputManager_->controller[playerNum].SetDeadZone(value);
 }
-Math::Vector2 Input::Controller::GetLStick() {
-	return engine->inputManager_->GetControllerLStick();
-}
-Math::Vector2 Input::Controller::GetRStick() {
-	return engine->inputManager_->GetControllerRStick();
-}
-Math::Vector2 Input::Controller::GetCrossKey() {
-	return engine->inputManager_->GetControllerCrossKey();
+
+void Input::Controller::SetVibration(int playerNum, float bigVibrationPower, float smallVibrationPower) {
+	engine->inputManager_->controller[playerNum].SetVibration(bigVibrationPower, smallVibrationPower);
 }

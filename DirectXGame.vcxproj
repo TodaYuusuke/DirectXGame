@@ -59,6 +59,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -85,6 +86,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -125,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\info\DebugTimer.cpp" />
     <ClCompile Include="Engine\input\controller\DIController.cpp" />
+    <ClCompile Include="Engine\input\controller\XInputController.cpp" />
     <ClCompile Include="Engine\input\InputManager.cpp" />
     <ClCompile Include="Engine\input\keyboard\DIKeyboard.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp" />
@@ -207,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\info\DebugTimer.h" />
     <ClInclude Include="Engine\input\controller\DIController.h" />
+    <ClInclude Include="Engine\input\controller\XInputController.h" />
     <ClInclude Include="Engine\input\InputManager.h" />
     <ClInclude Include="Engine\input\keyboard\DIKeyboard.h" />
     <ClInclude Include="Engine\math\Math.h" />

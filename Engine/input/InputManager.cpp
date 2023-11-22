@@ -19,10 +19,16 @@ void Manager::Initialize(WinApp* winApp) {
 	result;
 
 	// キーボードデバイスの生成
-	keyboard_.Initialize(winApp_, directInput_.Get());
+	keyboard.Initialize(winApp_, directInput_.Get());
+	// コントローラーデバイスの生成
+	for (int i = 0; i < XBOX_CONTROLLER_MAX; i++) {
+		controller[i].Initialize(i);
+	}
 }
 
 void Manager::Update() {
+#pragma region DInput用コントローラー検知処理
+	/*
 	// 新たなデバイスが接続されていないか検出しカウント
 	UINT count = 0;
 	directInput_->EnumDevices(
@@ -43,60 +49,27 @@ void Manager::Update() {
 		isLoaded_ = true;
 	}
 
-
-	// デバイスの情報更新
-	keyboard_.Update();
 	if (isLoaded_) {
 		controller_.Update();
 
-		
-	ImGui::Begin("Input");
-	ImGui::Text("LStick x %f", controller_.GetLStick().x);
-	ImGui::Text("LStick y %f", controller_.GetLStick().y);
-	ImGui::Text("RStick x %f", controller_.GetRStick().x);
-	ImGui::Text("RStick y %f", controller_.GetRStick().y);
-	ImGui::Text("Cross x %f", controller_.GetCrossKey().x);
-	ImGui::Text("Cross y %f", controller_.GetCrossKey().y);
-	for (int i = 0; i < 32; i++) {
-		ImGui::Text(("button[" + std::to_string(i) + "] is %d").c_str(), controller_.Press((uint8_t)i));
+
+		ImGui::Begin("Input");
+		ImGui::Text("LStick x %f", controller_.GetLStick().x);
+		ImGui::Text("LStick y %f", controller_.GetLStick().y);
+		ImGui::Text("RStick x %f", controller_.GetRStick().x);
+		ImGui::Text("RStick y %f", controller_.GetRStick().y);
+		ImGui::Text("Cross x %f", controller_.GetCrossKey().x);
+		ImGui::Text("Cross y %f", controller_.GetCrossKey().y);
+		for (int i = 0; i < 32; i++) {
+			ImGui::Text(("button[" + std::to_string(i) + "] is %d").c_str(), controller_.Press((uint8_t)i));
+		}
+		ImGui::End();
+	}*/
+#pragma endregion
+
+	// デバイスの情報更新
+	keyboard.Update();
+	for (int i = 0; i < XBOX_CONTROLLER_MAX; i++) {
+		controller[i].Update();
 	}
-	ImGui::End();
-	}
-}
-
-bool Manager::GetKeyboardStateNone(uint8_t keyID) {
-	return keyboard_.None(keyID);
-}
-bool Manager::GetKeyboardStateTrigger(uint8_t keyID) {
-	return keyboard_.Trigger(keyID);
-}
-bool Manager::GetKeyboardStatePress(uint8_t keyID) {
-	return keyboard_.Press(keyID);
-}
-bool Manager::GetKeyboardStateRelease(uint8_t keyID) {
-	return keyboard_.Release(keyID);
-}
-
-bool Manager::GetControllerStateNone(uint8_t keyID) {
-	return controller_.None(keyID);
-}
-bool Manager::GetControllerStateTrigger(uint8_t keyID) {
-	return controller_.Trigger(keyID);
-}
-bool Manager::GetControllerStatePress(uint8_t keyID) {
-	return controller_.Press(keyID);
-}
-bool Manager::GetControllerStateRelease(uint8_t keyID) {
-	return controller_.Release(keyID);
-}
-
-Vector2 Manager::GetControllerLStick() {
-	return controller_.GetLStick();
-}
-Vector2 Manager::GetControllerRStick() {
-	return controller_.GetRStick();
-}
-
-Vector2 Manager::GetControllerCrossKey() {
-	return controller_.GetCrossKey();
 }
