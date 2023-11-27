@@ -13,12 +13,10 @@ namespace LWP::Object {
 		
 		// ライトの色
 		Utility::Color color = Utility::ColorPattern::WHITE;
+		// ライトの向き
+		Math::Vector3 direction = { 1.57f,0.0f,0.0f };
 		// 輝度
 		float intensity = 1.0f;
-		// ライトの届く最大距離
-		float radius = 5.0f;
-		// 減衰率
-		float decay = 2.0f;
 
 
 	public: // ** メンバ関数 ** //
