@@ -49,16 +49,16 @@ void Controller::Update() {
 
 
 bool Controller::None(int keyID) {
-	return !state_.Gamepad.wButtons && keyID;
+	return !(state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Trigger(int keyID) {
-	return !(preState_.Gamepad.wButtons && keyID) && (state_.Gamepad.wButtons && keyID);
+	return !(preState_.Gamepad.wButtons & keyID) && (state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Press(int keyID) {
-	return state_.Gamepad.wButtons && keyID;
+	return (state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Release(int keyID) {
-	return (preState_.Gamepad.wButtons && keyID) && !(state_.Gamepad.wButtons && keyID);
+	return (preState_.Gamepad.wButtons & keyID) && !(state_.Gamepad.wButtons & keyID);
 }
 
 float Controller::GetLT() {
