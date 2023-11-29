@@ -6,23 +6,8 @@
 using namespace LWP::Resource;
 
 Audio::Audio(IXAudio2* xAudio, const std::string& filePath) {
-	HRESULT hr;
 	xAudio_ = xAudio;
 	LoadWAV(filePath);
-
-	// 波形フォーマットを元にSourceVoiveの生成
-	hr = xAudio_->CreateSourceVoice(&pSourceVoice, &wfex_);
-	assert(SUCCEEDED(hr));
-
-	// 再生する波形のデータの設定
-	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = pBuffer_;
-	buf.AudioBytes = bufferSize_;
-	buf.Flags = XAUDIO2_END_OF_STREAM;
-	buf.LoopCount = loopCount_;
-
-	// 波形データの再生
-	pSourceVoice->SubmitSourceBuffer(&buf);
 }
 
 Audio::~Audio() {
@@ -36,7 +21,22 @@ Audio::~Audio() {
 
 
 void Audio::Play() {
-	pSourceVoice->Start();
+	HRESULT hr;
+
+	// 波形フォーマットを元にSourceVoiveの生成
+	hr = xAudio_->CreateSourceVoice(&pSourceVoice, &wfex_);
+	assert(SUCCEEDED(hr));
+
+	// 再生する波形のデータの設定
+	XAUDIO2_BUFFER buf{};
+	buf.pAudioData = pBuffer_;
+	buf.AudioBytes = bufferSize_;
+	buf.Flags = XAUDIO2_END_OF_STREAM;
+	buf.LoopCount = loopCount_;
+
+	// 波形データの再生
+	hr = pSourceVoice->SubmitSourceBuffer(&buf);
+	hr = pSourceVoice->Start();
 }
 void Audio::Stop() {
 	pSourceVoice->Stop();

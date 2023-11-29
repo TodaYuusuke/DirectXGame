@@ -35,7 +35,7 @@ namespace LWP::Resource {
 
 
 		/// <summary>
-		/// ループ回数を指定する 0ならば無限ループ
+		/// ループ回数を指定する 255ならば無限ループ
 		/// </summary>
 		void SetLoopCount(UINT value) { loopCount_ = value; }
 
