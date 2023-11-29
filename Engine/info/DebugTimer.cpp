@@ -72,11 +72,12 @@ void DebugTimer::DebugGUI() {
         frameRate = GetFPS();
     }
 
-
+#if _DEBUG
     ImGui::Begin("Information");
     ImGui::Text("ElapsedTime ... %02d:%02d:%02d:%02d", (int)GetElapsedTimeH() % 24, (int)GetElapsedTimeM() % 60, (int)GetElapsedTimeS() % 60, (int)GetElapsedTimeMS() % 1000 / 10);
     ImGui::Text("FPS ... %.1f (%.1f)", frameRate, GetFPS());
     ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());
     ImGui::Text("ElapsedFrame ... %d", elapsedFrame_);
     ImGui::End();
+#endif
 }
