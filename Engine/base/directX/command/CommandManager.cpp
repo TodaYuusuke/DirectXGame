@@ -98,9 +98,11 @@ void CommandManager::DrawCall() {
 		hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
 		assert(SUCCEEDED(hr));
 	};
+	std::function<void()> dummy = [&]() {};
+
 	// コマンドのDrawを呼び出すラムダ式（引数で渡すのは面倒なのでラムダで指定）
 	std::function<void(ICommand*)> DrawLambda = [&](ICommand* cmd) {
-		cmd->Draw(rootSignature_.Get(), commandList_.Get(), ExecuteLambda, {
+		cmd->Draw(rootSignature_.Get(), commandList_.Get(), dummy, {
 			structCountResourceBuffer_->view_,
 			directionLightResourceBuffer_->view_,
 			pointLightResourceBuffer_->view_,
@@ -121,6 +123,8 @@ void CommandManager::DrawCall() {
 	shadowCommand->End();
 	// 本描画
 	DrawLambda(mainCommand.get());
+
+	ExecuteLambda();
 
 	// GPUとOSに画面の交換を行うよう通知する
 	rtv_->GetSwapChain()->Present(FPSPara::kVsync, 0);	// 垂直同期をする際は左の数字を1にする

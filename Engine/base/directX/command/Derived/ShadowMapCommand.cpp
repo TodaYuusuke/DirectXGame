@@ -33,6 +33,11 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	}
 
 
+	// シャドウマップ用のDSVハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(index_);
+	// 描画先のDSVを設定する
+	list->OMSetRenderTargets(0, nullptr, false, &dsvHandle);
+
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
 		resource_,
@@ -42,11 +47,6 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 
 	// リソースバリアをセット
 	list->ResourceBarrier(1, &barrier);
-
-	// シャドウマップ用のDSVハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(index_);
-	// 描画先のDSVを設定する
-	list->OMSetRenderTargets(0, nullptr, false, &dsvHandle);
 
 	// 指定した深度で画面全体をクリアする（1はシャドウマップ用DSV）
 	dsv_->ClearDepth(index_, list);
@@ -80,6 +80,7 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 
 void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	HRESULT hr = S_FALSE;
+	hr;
 
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
@@ -91,9 +92,9 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	// リソースバリアをセット
 	list->ResourceBarrier(1, &barrier);
 
-	// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
-	hr = list->Close();
-	assert(SUCCEEDED(hr));
+	//// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
+	//hr = list->Close();
+	//assert(SUCCEEDED(hr));
 }
 
 void ShadowMapCommand::End() {
