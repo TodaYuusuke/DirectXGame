@@ -1,4 +1,4 @@
-#include "LWP.h"
+﻿#include "LWP.h"
 
 using namespace LWP::System;
 
@@ -13,7 +13,7 @@ void Engine::Run(IScene* firstScene) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
-	const char kWindowTitle[] = "CG2WindowClass";
+	const char kWindowTitle[] = "Window Title";
 	Initialize(kWindowTitle, 1280, 720, firstScene);
 
 	// ウィンドウの×ボタンが押されるまでループ

@@ -11,10 +11,32 @@ namespace LWP {
 	namespace Config {
 
 		/// <summary>
+		/// フレームレート関連
+		/// </summary>
+		namespace FrameRate {
+
+			/// <summary>
+			/// 垂直同期の切り替えフラグ
+			/// <para>default = 1</para>
+			/// <para>Range = 0 ~ 4</para>
+			/// <para>0 .... 新しいフレームがキューに入れられた場合、前に提示されたフレームの残り時間をキャンセルし、このフレームを廃棄します。</para>
+			/// <para>1 ~ 4 .... 少なくともn個の垂直ブランクのプレゼンテーションを同期します</para>
+			/// </summary>
+			static const UINT kVsync = 1;
+
+			/// <summary>
+			/// 固定するフレームレート
+			/// <para>default = 60</para>
+			/// <para>Range = 0 ~ ∞</para>
+			/// </summary>
+			static const UINT kFixedFPS = 60;
+		};
+
+		/// <summary>
 		/// レンダリング系パラメータ
 		/// </summary>
 		namespace Rendering {
-						
+
 			/// <summary>
 			/// 頂点のResourceの最大数
 			/// </summary>
@@ -52,6 +74,6 @@ namespace LWP {
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
 			static const float kShadowMapResolutionScale = 1.0f;
-		}
+		};
 	};
 };

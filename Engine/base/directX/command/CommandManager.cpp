@@ -8,7 +8,8 @@
 #include "../Engine/object/core/light/PointLight.h"
 
 #include <Config.h>
-namespace Para = LWP::Config::Rendering;
+namespace RenderingPara = LWP::Config::Rendering;
+namespace FPSPara = LWP::Config::FrameRate;
 
 #include <Adapter.h>
 
@@ -122,7 +123,7 @@ void CommandManager::DrawCall() {
 	DrawLambda(mainCommand.get());
 
 	// GPUとOSに画面の交換を行うよう通知する
-	rtv_->GetSwapChain()->Present(1, 0);
+	rtv_->GetSwapChain()->Present(FPSPara::kVsync, 0);	// 垂直同期をする際は左の数字を1にする
 }
 
 void CommandManager::PostDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
@@ -260,8 +261,8 @@ void CommandManager::ImGui() {
 	//	up                               // 上向きベクトル
 	//);
 
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * Para::kShadowMapResolutionScale, 10240.0f * Para::kShadowMapResolutionScale, -5000.0f, 5000.0f);
-	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * Para::kShadowMapResolutionScale, 1024.0f * Para::kShadowMapResolutionScale, 0.0f, 1.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * RenderingPara::kShadowMapResolutionScale, 10240.0f * RenderingPara::kShadowMapResolutionScale, -5000.0f, 5000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * RenderingPara::kShadowMapResolutionScale, 1024.0f * RenderingPara::kShadowMapResolutionScale, 0.0f, 1.0f);
 	lightVPResourceBuffer_->data_[lightVPResourceBuffer_->usedCount_++] = viewMatrix * projectionMatrix * viewportMatrix;
 }
 
@@ -419,7 +420,7 @@ void CommandManager::CreateRootSignature() {
 	D3D12_DESCRIPTOR_RANGE dirShadowDesc[1] = { descRange[0] };	// DescriptorRangeを作成
 	dirShadowDesc[0].BaseShaderRegister = 0; // レジスタ番号は0（スペースが違うので）
 	dirShadowDesc[0].RegisterSpace = 2; // スペースは2
-	dirShadowDesc[0].NumDescriptors = Para::kMaxDirectionLight;	// 最大数を定義
+	dirShadowDesc[0].NumDescriptors = RenderingPara::kMaxDirectionLight;	// 最大数を定義
 	rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
 	rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 	rootParameters[10].DescriptorTable.pDescriptorRanges = dirShadowDesc; // Tabelの中身の配列を指定
@@ -441,7 +442,7 @@ void CommandManager::CreateRootSignature() {
 	D3D12_DESCRIPTOR_RANGE pointShadowDesc[1] = { descRange[0] };	// DescriptorRangeを作成
 	pointShadowDesc[0].BaseShaderRegister = 0; // レジスタ番号は0（スペースが違うので）
 	pointShadowDesc[0].RegisterSpace = 3; // スペースは2
-	pointShadowDesc[0].NumDescriptors = Para::kMaxPointLight * 6;	// 最大数を定義
+	pointShadowDesc[0].NumDescriptors = RenderingPara::kMaxPointLight * 6;	// 最大数を定義
 	rootParameters[11].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
 	rootParameters[11].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 	rootParameters[11].DescriptorTable.pDescriptorRanges = pointShadowDesc; // Tabelの中身の配列を指定
@@ -481,11 +482,11 @@ void CommandManager::CreateStructuredBufferResources() {
 	structCountResourceBuffer_->view_ = structCountResourceBuffer_->resource_->GetGPUVirtualAddress();
 	// 平行光源
 	directionLightResourceBuffer_ = std::make_unique<DirectionLightResourceBuffer>();
-	directionLightResourceBuffer_->resource_ = CreateBufferResource(sizeof(DirectionalLightStruct) * Para::kMaxDirectionLight);
+	directionLightResourceBuffer_->resource_ = CreateBufferResource(sizeof(DirectionalLightStruct) * RenderingPara::kMaxDirectionLight);
 	directionLightResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&directionLightResourceBuffer_->data_));
 	directionLightResourceBuffer_->view_ = directionLightResourceBuffer_->resource_->GetGPUVirtualAddress();
 	// シャドウマップも作る
-	directionLightResourceBuffer_->shadowMap_ = new DirectionShadowMapStruct[Para::kMaxDirectionLight];
+	directionLightResourceBuffer_->shadowMap_ = new DirectionShadowMapStruct[RenderingPara::kMaxDirectionLight];
 	directionLightResourceBuffer_->shadowMap_[0].resource_ = dsv_->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[0].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[0].view_);
 	// 平行光源だけ今は生成を変える
 	directionLightResourceBuffer_->data_->color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -495,17 +496,17 @@ void CommandManager::CreateStructuredBufferResources() {
 
 	// 点光源
 	pointLightResourceBuffer_ = std::make_unique<PointLightResourceBuffer>();
-	pointLightResourceBuffer_->resource_ = CreateBufferResource(sizeof(PointLightStruct) * Para::kMaxPointLight);
+	pointLightResourceBuffer_->resource_ = CreateBufferResource(sizeof(PointLightStruct) * RenderingPara::kMaxPointLight);
 	pointLightResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightResourceBuffer_->data_));
 	D3D12_SHADER_RESOURCE_VIEW_DESC pointLightDesc = { commonDesc };
-	pointLightDesc.Buffer.NumElements = Para::kMaxPointLight;
+	pointLightDesc.Buffer.NumElements = RenderingPara::kMaxPointLight;
 	pointLightDesc.Buffer.StructureByteStride = sizeof(PointLightStruct);
 	pointLightResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
 	device_->CreateShaderResourceView(pointLightResourceBuffer_->resource_.Get(), &pointLightDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
 	srv_->AddUsedCount();	// SRV使用数を+1
 	// シャドウマップも作る
-	pointLightResourceBuffer_->shadowMap_ = new PointShadowMapStruct[Para::kMaxPointLight];
-	for (int i = 0; i < Para::kMaxPointLight; i++) {
+	pointLightResourceBuffer_->shadowMap_ = new PointShadowMapStruct[RenderingPara::kMaxPointLight];
+	for (int i = 0; i < RenderingPara::kMaxPointLight; i++) {
 		pointLightResourceBuffer_->shadowMap_[i].resource_ = dsv_->CreatePointShadowMap(pointLightResourceBuffer_->shadowMap_[i].dsvIndex_, &pointLightResourceBuffer_->shadowMap_[i].view_);
 	}
 
@@ -541,10 +542,10 @@ void CommandManager::CreateStructuredBufferResources() {
 	srv_->AddUsedCount();	// SRV使用数を+1
 	// lightのviewProjectionデータ
 	lightVPResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
-	lightVPResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * Para::kMaxShadowMap);
+	lightVPResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * RenderingPara::kMaxShadowMap);
 	lightVPResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&lightVPResourceBuffer_->data_));
 	D3D12_SHADER_RESOURCE_VIEW_DESC lightDesc = { commonDesc };
-	lightDesc.Buffer.NumElements = Para::kMaxShadowMap;
+	lightDesc.Buffer.NumElements = RenderingPara::kMaxShadowMap;
 	lightDesc.Buffer.StructureByteStride = sizeof(Math::Matrix4x4);
 	lightVPResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
 	device_->CreateShaderResourceView(lightVPResourceBuffer_->resource_.Get(), &lightDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));

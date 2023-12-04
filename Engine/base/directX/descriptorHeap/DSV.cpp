@@ -2,7 +2,7 @@
 #include "SRV.h"
 
 #include <Config.h>
-namespace Para = LWP::Config::Rendering;
+namespace RenderingPara = LWP::Config::Rendering;
 
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
@@ -10,7 +10,7 @@ using namespace Microsoft::WRL;
 void DSV::Initialize(ID3D12Device* device, SRV* srv) {
 	device_ = device;
 	srv_ = srv;
-	size_ = Para::kMaxShadowMap + 1;
+	size_ = RenderingPara::kMaxShadowMap + 1;
 	// サイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
@@ -74,8 +74,8 @@ ID3D12Resource* DSV::CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESC
 
 	// DSVResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの幅
-	resourceDesc.Height = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの高さ
+	resourceDesc.Width = 1024 * static_cast<int>(RenderingPara::kShadowMapResolutionScale); // Textureの幅
+	resourceDesc.Height = 1024 * static_cast<int>(RenderingPara::kShadowMapResolutionScale); // Textureの高さ
 	resourceDesc.MipLevels = 1; // mipmapの数
 	resourceDesc.DepthOrArraySize = 1; // 奥行き or 配列Textureの配列数
 	resourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // DepthStencilとして利用可能なフォーマット
@@ -141,8 +141,8 @@ ID3D12Resource* DSV::CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPT
 	
 	// DSVResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの幅
-	resourceDesc.Height = 1024 * static_cast<int>(Para::kShadowMapResolutionScale); // Textureの高さ
+	resourceDesc.Width = 1024 * static_cast<int>(RenderingPara::kShadowMapResolutionScale); // Textureの幅
+	resourceDesc.Height = 1024 * static_cast<int>(RenderingPara::kShadowMapResolutionScale); // Textureの高さ
 	resourceDesc.MipLevels = 1; // mipmapの数
 	resourceDesc.DepthOrArraySize = 6; // キューブマップなので6
 	resourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // DepthStencilとして利用可能なフォーマット

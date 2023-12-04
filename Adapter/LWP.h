@@ -100,6 +100,6 @@ namespace LWP::System {
 		std::unique_ptr<Scene::Manager> sceneManager_;
 
 		// デバッグ用タイマークラス
-		LWP::Information::DebugTimer debugTimer_;
+		LWP::Information::FrameTracker debugTimer_;
 	};
 }

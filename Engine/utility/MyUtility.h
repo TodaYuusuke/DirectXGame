@@ -44,7 +44,7 @@ namespace LWP::Utility {
             sum += data[i];
         }
 
-        return sum / static_cast<T>(n);
+        return static_cast<T>(n) / sum;
     }
 
     /// <summary>
