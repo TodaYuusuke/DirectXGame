@@ -457,6 +457,9 @@
     <ClInclude Include="Engine\input\controller\XInputController.h">
       <Filter>Engine\input\controller</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\utility\Counter.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
