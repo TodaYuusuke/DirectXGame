@@ -40,20 +40,8 @@ namespace LWP::Base {
 		ID3D12Resource* CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view);
 
 
-		/// <summary>
-		/// 使用数を+1増加
-		/// </summary>
-		void AddUsedCount() { usedCount_++; }
-		/// <summary>
-		/// 現在の使用数を取得
-		/// </summary>
-		uint32_t GetUsedCount() { return usedCount_; }
-
-
 	private: // ** メンバ変数 ** //
 		// シャドウマップ用にSRVのポインタを保持する
 		SRV* srv_ = nullptr;
-		// 使用済みカウント初期値0
-		uint32_t usedCount_ = 0;
 	};
 }

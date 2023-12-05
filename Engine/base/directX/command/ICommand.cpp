@@ -19,9 +19,8 @@ void ICommand::Initialize(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* r
 	indexDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	indexDesc.Buffer.NumElements = kMaxIndex;
 	indexDesc.Buffer.StructureByteStride = sizeof(IndexInfoStruct);
-	indexResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device->CreateShaderResourceView(indexResourceBuffer_->resource_.Get(), &indexDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	indexResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device->CreateShaderResourceView(indexResourceBuffer_->resource_.Get(), &indexDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 
 	// 派生クラスの初期化を呼び出し
 	DerivedInitialize();

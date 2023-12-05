@@ -505,9 +505,8 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC pointLightDesc = { commonDesc };
 	pointLightDesc.Buffer.NumElements = RenderingPara::kMaxPointLight;
 	pointLightDesc.Buffer.StructureByteStride = sizeof(PointLightStruct);
-	pointLightResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device_->CreateShaderResourceView(pointLightResourceBuffer_->resource_.Get(), &pointLightDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	pointLightResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(pointLightResourceBuffer_->resource_.Get(), &pointLightDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 	// シャドウマップも作る
 	pointLightResourceBuffer_->shadowMap_ = new PointShadowMapStruct[RenderingPara::kMaxPointLight];
 	for (int i = 0; i < RenderingPara::kMaxPointLight; i++) {
@@ -521,9 +520,8 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC vertexDesc = { commonDesc };
 	vertexDesc.Buffer.NumElements = kMaxVertex;
 	vertexDesc.Buffer.StructureByteStride = sizeof(VertexStruct);
-	vertexResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device_->CreateShaderResourceView(vertexResourceBuffer_->resource_.Get(), &vertexDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	vertexResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(vertexResourceBuffer_->resource_.Get(), &vertexDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 	// カメラのビュープロジェクション用
 	cameraResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
 	cameraResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * kMaxCameraVP);
@@ -531,9 +529,8 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC cameraDesc = { commonDesc };
 	cameraDesc.Buffer.NumElements = kMaxCameraVP;
 	cameraDesc.Buffer.StructureByteStride = sizeof(Math::Matrix4x4);
-	cameraResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device_->CreateShaderResourceView(cameraResourceBuffer_->resource_.Get(), &cameraDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	cameraResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(cameraResourceBuffer_->resource_.Get(), &cameraDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 	// WorldTransformデータ
 	matrixResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
 	matrixResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * kMaxMatrix);
@@ -541,9 +538,8 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC matrixDesc = { commonDesc };
 	matrixDesc.Buffer.NumElements = kMaxMatrix;
 	matrixDesc.Buffer.StructureByteStride = sizeof(Math::Matrix4x4);
-	matrixResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device_->CreateShaderResourceView(matrixResourceBuffer_->resource_.Get(), &matrixDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	matrixResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(matrixResourceBuffer_->resource_.Get(), &matrixDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 	// lightのviewProjectionデータ
 	lightVPResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
 	lightVPResourceBuffer_->resource_ = CreateBufferResource(sizeof(Math::Matrix4x4) * RenderingPara::kMaxShadowMap);
@@ -551,9 +547,8 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC lightDesc = { commonDesc };
 	lightDesc.Buffer.NumElements = RenderingPara::kMaxShadowMap;
 	lightDesc.Buffer.StructureByteStride = sizeof(Math::Matrix4x4);
-	lightVPResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device_->CreateShaderResourceView(lightVPResourceBuffer_->resource_.Get(), &lightDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	lightVPResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(lightVPResourceBuffer_->resource_.Get(), &lightDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 
 	// マテリアルデータ
 	materialResourceBuffer_ = std::make_unique<MaterialResourceBuffer>();
@@ -562,9 +557,8 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC materialDesc = { commonDesc };
 	materialDesc.Buffer.NumElements = kMaxMaterial;
 	materialDesc.Buffer.StructureByteStride = sizeof(MaterialStruct);
-	materialResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetUsedCount());
-	device_->CreateShaderResourceView(materialResourceBuffer_->resource_.Get(), &materialDesc, srv_->GetCPUHandle(srv_->GetUsedCount()));
-	srv_->AddUsedCount();	// SRV使用数を+1
+	materialResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(materialResourceBuffer_->resource_.Get(), &materialDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
 	// テクスチャデータ
 	textureResourceBuffer_ = std::make_unique<TextureResourceBuffer>();
 	//textureResource_->resource_ = CreateBufferResource(sizeof(IndexInfoStrict) * kMaxTexture);
@@ -657,10 +651,11 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount());
+	UINT srvIndex = srv_->GetAndIncrement();
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
 	// 初めてのテクスチャ生成ならviewを保存
 	if (textureResourceBuffer_->usedCount_ == 0) {
-		textureResourceBuffer_->view_ = srv_->GetGPUHandle(textureResourceBuffer_->usedCount_ + srv_->GetUsedCount());
+		textureResourceBuffer_->view_ = srv_->GetGPUHandle(srvIndex);
 	}
 	// SRVの生成
 	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);

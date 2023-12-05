@@ -206,6 +206,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h" />
     <ClInclude Include="Engine\base\directX\GPUDevice.h" />
+    <ClInclude Include="Engine\base\directX\resource\IResource.h" />
+    <ClInclude Include="Engine\base\directX\resource\structuredBuffer\IStructured.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\info\DebugTimer.h" />
@@ -243,6 +245,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\scene\user\SampleGameScene.h" />
     <ClInclude Include="Engine\scene\user\SampleTitle.h" />
     <ClInclude Include="Engine\utility\Color.h" />
+    <ClInclude Include="Engine\utility\Counter.h" />
     <ClInclude Include="Engine\utility\ErrorReporter.h" />
     <ClInclude Include="Engine\utility\MyUtility.h" />
     <ClInclude Include="Engine\utility\Observer.h" />

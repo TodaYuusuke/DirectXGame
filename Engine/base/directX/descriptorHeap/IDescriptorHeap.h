@@ -1,6 +1,8 @@
 #pragma once
 #include "../GPUDevice.h"
 
+#include "utility/Counter.h"
+
 namespace LWP::Base {
 	/// <summary>
 	/// ディスクリプタヒープ
@@ -35,11 +37,21 @@ namespace LWP::Base {
 		// ディスクリプタ1つ分のサイズを受け取る関数
 		uint32_t GetDescriptorSize() const { return kDescriptorSize_; }
 
+		/// <summary>
+		/// 使用数を+1増加
+		/// </summary>
+		int GetAndIncrement() { return count_.GetAndIncrement(); }
+		/// <summary>
+		/// 現在の使用数を取得
+		/// </summary>
+		int GetCount() { return count_.Get(); }
 
 	protected: // ** 外部変数 ** //
 		// デバイスのポインタ
 		ID3D12Device* device_ = nullptr;
 
+		// 使用済みカウンタ
+		LWP::Utility::Counter count_;
 
 	protected: // ** プライベートなメンバ関数 ** //
 

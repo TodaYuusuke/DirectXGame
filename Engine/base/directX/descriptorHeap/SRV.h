@@ -16,19 +16,7 @@ namespace LWP::Base {
 		/// </summary>
 		void Initialize(ID3D12Device* device);
 
-		/// <summary>
-		/// 使用数を+1増加
-		/// </summary>
-		void AddUsedCount() { usedCount_++; }
-		/// <summary>
-		/// 現在の使用数を取得
-		/// </summary>
-		uint32_t GetUsedCount() { return usedCount_; }
-
 
 	private: // ** メンバ変数 ** //
-
-		// 0番目はImGuiが使っているので初期値1
-		uint32_t usedCount_ = 1;
 	};
 }

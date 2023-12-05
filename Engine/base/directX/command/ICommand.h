@@ -16,9 +16,13 @@ namespace LWP::Base {
 	class ICommand {
 	public: // ** パブリックなメンバ変数 ** //
 
+		// -- 描画用リソース -- //
+
 		// インデックス情報の構造体
 		std::unique_ptr<IndexResourceBuffer> indexResourceBuffer_;
 		const UINT kMaxIndex = 655350;
+		// 計算に使うViewProjection
+		std::unique_ptr<MatrixResourceBuffer> vpResourceBuffer_;
 
 		// リソースのビューを構造体に
 		// 0 ... バッファーのインデックス
@@ -46,6 +50,22 @@ namespace LWP::Base {
 			D3D12_GPU_DESCRIPTOR_HANDLE directionShadowMap;
 			D3D12_GPU_DESCRIPTOR_HANDLE pointShadowMap;
 		};
+
+
+		// -- レンダリング先のハンドル -- //
+		
+		// RTVのハンドル
+		D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = nullptr;
+		// DSVのハンドル
+		D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle_ = nullptr;
+		
+
+		// -- リソースバリア -- //
+		
+		// 描画前に設定するバリア
+		D3D12_RESOURCE_BARRIER preBarrier_;
+		// 描画後に設定するバリア
+		D3D12_RESOURCE_BARRIER postBarrier_;
 
 	public: // ** メンバ関数 ** //
 

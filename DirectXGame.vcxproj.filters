@@ -457,6 +457,15 @@
     <ClInclude Include="Engine\input\controller\XInputController.h">
       <Filter>Engine\input\controller</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\IResource.h">
+      <Filter>Engine\base\directX\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\structuredBuffer\IStructured.h">
+      <Filter>Engine\base\directX\resource\structuredBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\Counter.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -584,6 +593,12 @@
     </Filter>
     <Filter Include="Engine\base\directX\command\Derived">
       <UniqueIdentifier>{5e93e1c4-b2c1-4c36-bae5-07b1bf3df8b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\resource">
+      <UniqueIdentifier>{a126ceca-736d-4cd4-9f44-53c374866266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\resource\structuredBuffer">
+      <UniqueIdentifier>{69b22e6e-c4cc-4bf9-915f-10b5f6cba812}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

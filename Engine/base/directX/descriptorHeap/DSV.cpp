@@ -62,9 +62,9 @@ uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, D3D12_CPU_DESCRIPTOR_
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本敵にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
 	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(usedCount_));
-	*view = GetCPUHandle(usedCount_);
-	return usedCount_++;
+	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(GetCount()));
+	*view = GetCPUHandle(GetCount());
+	return GetAndIncrement();
 }
 
 ID3D12Resource* DSV::CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view) {
@@ -109,7 +109,7 @@ ID3D12Resource* DSV::CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESC
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // Format。基本敵にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
 	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(usedCount_));
+	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(GetCount()));
 
 	// SRVにテクスチャとして登録
 
@@ -125,12 +125,12 @@ ID3D12Resource* DSV::CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESC
 
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiが先頭を使っているので+1）
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srv_->GetUsedCount());
-	*view = srv_->GetGPUHandle(srv_->GetUsedCount());
-	srv_->AddUsedCount();
+	int srvIndex = srv_->GetAndIncrement();
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
+	*view = srv_->GetGPUHandle(srvIndex);
 	// SRVの生成
 	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
-	*dsvIndex = usedCount_++;
+	*dsvIndex = GetAndIncrement();
 	return resource;
 }
 
@@ -181,8 +181,8 @@ ID3D12Resource* DSV::CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPT
 		dsvDesc.Texture2DArray.ArraySize = 1;
 		dsvDesc.Texture2DArray.FirstArraySlice = i;
 		// DSVを作る
-		device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(usedCount_));
-		dsvIndex[i] = usedCount_++;
+		device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(GetCount()));
+		dsvIndex[i] = GetAndIncrement();
 	}
 
 	// SRVにテクスチャとして登録
@@ -197,9 +197,8 @@ ID3D12Resource* DSV::CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPT
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	// SRVを作成するDescriptorHeapの場所を決める
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srv_->GetUsedCount());
-	*view = srv_->GetGPUHandle(srv_->GetUsedCount());
-	srv_->AddUsedCount();
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srv_->GetCount());
+	*view = srv_->GetGPUHandle(srv_->GetAndIncrement());
 	// SRVの生成
 	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
 
