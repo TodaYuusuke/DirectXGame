@@ -143,19 +143,20 @@ void CommandManager::Reset() {
 	for (int i = 0; i < shadowCount_; i++) {
 		shadowCommands_[i]->Reset();
 	}
-	mainCount_ = 0;
+	shadowCount_ = 0;
 	for (int i = 0; i < mainCount_; i++) {
 		mainCommands_[i]->Reset();
 	}
-	shadowCount_ = 0;
+	mainCount_ = 0;
 
 	// 使用量をリセット
-	pointLightResourceBuffer_->usedCount_ = 0;
 	vertexData_->Reset();
 	transformData_->Reset();
-	materialData_->Reset();
 	structCountResourceBuffer_->data_->directionLight = 0;
 	structCountResourceBuffer_->data_->pointLight = 0;
+	materialData_->Reset();
+	directionLightResourceBuffer_->usedCount_ = 0;
+	pointLightResourceBuffer_->usedCount_ = 0;
 }
 
 void CommandManager::SetCameraViewProjection(const Object::Camera* camera) {
@@ -171,8 +172,10 @@ void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, 
 	DirectionalLightStruct newData{};
 	newData.vp = viewProjection;	// viewProjection
 	newData.color = light->color.GetVector4();		// ライトの色
-	newData.direction = light->rotation;	// ライトの向き
+	newData.direction = (Vector3{ 0.0f,0.0f,1.0f } * Matrix4x4::CreateRotateXYZMatrix(light->rotation)).Normalize();	// ライトの向き
 	newData.intensity = light->intensity;	// 輝度
+	// データを登録
+	directionLightResourceBuffer_->data_[directionLightResourceBuffer_->usedCount_++] = newData;
 
 	shadowCommands_[shadowCount_++]->SetDrawTarget(
 		viewProjection,
@@ -223,8 +226,6 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 			ver.color_ = primitive->commonColor->GetVector4();
 		vertexData_->AddData(ver);	// データを追加
 	}
-	// 使用するカメラのビュープロジェクション行列をセット
-	//uint32_t cameraVP = primitive->isUI;
 	// ワールドトランスフォームをデータに登録
 	uint32_t worldMatrix = transformData_->GetCount();
 	transformData_->AddData(primitive->transform.GetWorldMatrix());
@@ -238,7 +239,6 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 	if (primitive->texture != nullptr) {
 		tex2d = primitive->texture->GetIndex();
 	}
-
 
 	// Indexの分だけIndexInfoを求める
 	for (int i = 0; i < primitive->GetIndexCount(); i++) {
@@ -479,12 +479,25 @@ void CommandManager::CreateStructuredBufferResources() {
 	
 	// 平行光源
 	directionLightResourceBuffer_ = std::make_unique<DirectionLightResourceBuffer>();
+	directionLightResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(DirectionalLightStruct) * lwpC::Shadow::Point::kMaxCount);
+	directionLightResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&directionLightResourceBuffer_->data_));
+	D3D12_SHADER_RESOURCE_VIEW_DESC dirLightDesc = { commonDesc };
+	dirLightDesc.Buffer.NumElements = lwpC::Shadow::Direction::kMaxCount;
+	dirLightDesc.Buffer.StructureByteStride = sizeof(DirectionalLightStruct);
+	directionLightResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
+	device_->CreateShaderResourceView(directionLightResourceBuffer_->resource_.Get(), &dirLightDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
+	// シャドウマップも作る
+	directionLightResourceBuffer_->shadowMap_ = new DirectionShadowMapStruct[lwpC::Shadow::Direction::kMaxCount];
+	for (int i = 0; i < lwpC::Shadow::Direction::kMaxCount; i++) {
+		directionLightResourceBuffer_->shadowMap_[i].resource_ = dsv_->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[i].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[i].view_);
+	}
+	/*directionLightResourceBuffer_ = std::make_unique<DirectionLightResourceBuffer>();
 	directionLightResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(DirectionalLightStruct) * lwpC::Shadow::Direction::kMaxCount);
 	directionLightResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&directionLightResourceBuffer_->data_));
 	directionLightResourceBuffer_->view_ = directionLightResourceBuffer_->resource_->GetGPUVirtualAddress();
 	// シャドウマップも作る
 	directionLightResourceBuffer_->shadowMap_ = new DirectionShadowMapStruct[lwpC::Shadow::Direction::kMaxCount];
-	directionLightResourceBuffer_->shadowMap_[0].resource_ = dsv_->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[0].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[0].view_);
+	directionLightResourceBuffer_->shadowMap_[0].resource_ = dsv_->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[0].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[0].view_);*/
 
 	// 点光源
 	pointLightResourceBuffer_ = std::make_unique<PointLightResourceBuffer>();

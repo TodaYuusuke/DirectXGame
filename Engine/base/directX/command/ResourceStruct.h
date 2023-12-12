@@ -114,7 +114,7 @@ namespace LWP::Base {
 	// 平行光源のバッファ
 	struct DirectionLightResourceBuffer {
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// リソース
-		D3D12_GPU_VIRTUAL_ADDRESS view_;	// ビュー
+		D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビュー
 		DirectionalLightStruct* data_ = nullptr;	// 実際のデータ
 		UINT usedCount_ = 0;
 		Math::Vector3 rotation_;	// 光源の回転向き

@@ -53,8 +53,11 @@ namespace LWP {
 			/// <summary>
 			/// トランスフォームのResourceの最大数
 			/// </summary>
+#if _DEBUG
+			static const UINT kMaxMatrix = 1280;
+#else
 			static const UINT kMaxMatrix = 12800;
-
+#endif
 			/// <summary>
 			/// マテリアルの最大数
 			/// </summary>

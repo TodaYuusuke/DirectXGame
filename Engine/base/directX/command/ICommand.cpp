@@ -43,7 +43,7 @@ void ICommand::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandLis
 	list->SetGraphicsRootDescriptorTable(3, viewStruct.wtf);
 	list->SetGraphicsRootConstantBufferView(4, viewStruct.structCount);
 	list->SetGraphicsRootDescriptorTable(5, viewStruct.material);
-	//list->SetGraphicsRootDescriptorTable(6, viewStruct.directionLight);
+	list->SetGraphicsRootDescriptorTable(6, viewStruct.directionLight);
 	list->SetGraphicsRootDescriptorTable(7, viewStruct.pointLight);
 	list->SetGraphicsRootDescriptorTable(8, viewStruct.texture);
 	list->SetGraphicsRootDescriptorTable(9, viewStruct.directionShadowMap);

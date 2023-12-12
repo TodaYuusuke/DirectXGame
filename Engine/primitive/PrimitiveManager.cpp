@@ -34,13 +34,14 @@ void Manager::Update() {
 	if (ImGui::Button("Create")) { functions[selectedClass](); }
 
 	// 形状一覧
-	std::vector<const char*> itemText;
-	for (IPrimitive* p : primitives_) {
-		itemText.push_back(p->name.c_str());
+	if (!primitives_.empty()) {
+		std::vector<const char*> itemText;
+		for (IPrimitive* p : primitives_) {
+			itemText.push_back(p->name.c_str());
+		}
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		primitives_[currentItem]->DebugGUI();
 	}
-	ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-	primitives_[currentItem]->DebugGUI();
-	
 	ImGui::End();
 #endif
 }

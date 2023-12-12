@@ -21,11 +21,12 @@ void Manager::Update(Base::CommandManager* manager) {
 	// 生成用の関数ポインタ
 	static std::vector<std::function<IObject*()>> functions = {
 		&LWP::Object::CreateInstance<Camera>,
+		& LWP::Object::CreateInstance<DirectionLight>,
 		&LWP::Object::CreateInstance<PointLight>,
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Camera","PointLight"
+		"Camera","DirectionLight","PointLight"
 	};
 
 	ImGui::Begin("ObjectManager");
@@ -35,13 +36,14 @@ void Manager::Update(Base::CommandManager* manager) {
 	if (ImGui::Button("Create")) { functions[selectedClass](); }
 
 	// 形状一覧
-	std::vector<const char*> itemText;
-	for (IObject* o : objects_) {
-		itemText.push_back(o->name.c_str());
+	if (!objects_.empty()) {
+		std::vector<const char*> itemText;
+		for (IObject* o : objects_) {
+			itemText.push_back(o->name.c_str());
+		}
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		objects_[currentItem]->DebugGUI();
 	}
-	ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-	objects_[currentItem]->DebugGUI();
-
 	ImGui::End();
 #endif
 
