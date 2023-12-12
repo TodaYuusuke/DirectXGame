@@ -14,7 +14,7 @@ namespace LWP::Object {
 		// ライトの色
 		Utility::Color color = Utility::ColorPattern::WHITE;
 		// ライトの向き
-		Math::Vector3 direction = { 1.57f,0.0f,0.0f };
+		Math::Vector3 rotation = { 1.57f,0.0f,0.0f };
 		// 輝度
 		float intensity = 1.0f;
 

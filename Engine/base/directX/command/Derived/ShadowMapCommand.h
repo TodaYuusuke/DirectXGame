@@ -6,24 +6,12 @@ namespace LWP::Base {
 	/// コマンドクラス
 	/// </summary>
 	class ShadowMapCommand : public ICommand {
-	public:
-		// ** メンバ関数 ** //
+	public:	// ** メンバ関数 ** //
 
 		/// <summary>
-		/// 描画に必要なデータ用のポインタをセットする関数
+		/// レンダリング先のデータをセット
 		/// </summary>
-		void SetDataPtr(StructCount* structCount, DirectionLightResourceBuffer* direction, PointLightResourceBuffer* point) {
-			structCount_ = structCount;
-			direction_ = direction;
-			point_ = point;
-			dirCount = &direction->usedCount_;
-			pointCount = &point->usedCount_;
-		}
-
-		/// <summary>
-		/// 描画前の初期化
-		/// </summary>
-		void InitializePreDraw();
+		void SetDrawTarget(const Math::Matrix4x4& vp, ID3D12Resource* resource, uint32_t dsvIndex);
 
 		/// <summary>
 		/// 描画前処理
@@ -35,25 +23,11 @@ namespace LWP::Base {
 		/// </summary>
 		void PostDraw(ID3D12GraphicsCommandList* list) override;
 
-		/// <summary>
-		/// 終了後処理
-		/// </summary>
-		void End();
 
 	private: // ** メンバ変数 ** // 
 
-		// カウントを入れる場所のポインタ（こちらで数を１つずつ増やすことでそれぞれのviewProjectionを参照する仕組み）
-		StructCount* structCount_ = nullptr;
-		// 光源データのポインタ
-		DirectionLightResourceBuffer* direction_ = nullptr;
-		PointLightResourceBuffer* point_ = nullptr;
-		// レンダリング回数の抜き出し
-		UINT* dirCount = nullptr;
-		UINT* pointCount = nullptr;
-
-		// レンダリング一回で使用するデータ
-		ID3D12Resource* resource_ = nullptr;	// 描画するリソース
-		uint32_t index_;		// 描画するDSVのインデックス
+		ID3D12Resource* resource_ = nullptr;	// 書き込み先のリソース
+		uint32_t dsvIndex_;		// 書き込み先のDSVインデックス
 
 
 	private: // ** プライベートな関数 ** //

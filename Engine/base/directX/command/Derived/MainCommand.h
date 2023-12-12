@@ -6,8 +6,12 @@ namespace LWP::Base {
 	/// コマンドクラス
 	/// </summary>
 	class MainCommand : public ICommand {
-	public:
-		// ** メンバ関数 ** //
+	public: // ** メンバ関数 ** //
+
+		/// <summary>
+		/// レンダリング先のデータをセット
+		/// </summary>
+		void SetDrawTarget(const Math::Matrix4x4& vp);
 
 		/// <summary>
 		/// 初期化

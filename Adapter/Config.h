@@ -37,15 +37,18 @@ namespace LWP {
 		/// </summary>
 		namespace Rendering {
 
+			// 本描画の最大数
+			static const UINT kMaxRenderingCount = 1;
+
+			/// <summary>
+			/// インデックスの最大数
+			/// </summary>
+			static const UINT kMaxIndex = 655350;
+
 			/// <summary>
 			/// 頂点のResourceの最大数
 			/// </summary>
 			static const UINT kMaxVertex = 655350;
-
-			/// <summary>
-			/// カメラのResourceの最大数
-			/// </summary>
-			static const UINT kMaxCameraVP = 1 * 2;
 
 			/// <summary>
 			/// トランスフォームのResourceの最大数
@@ -53,27 +56,78 @@ namespace LWP {
 			static const UINT kMaxMatrix = 12800;
 
 			/// <summary>
-			/// 平行光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+			/// マテリアルの最大数
 			/// </summary>
-			static const UINT kMaxDirectionLight = 1;
+			static const UINT kMaxMaterial = 12800;
+		};
+
+		/// <summary>
+		/// 影に関するパラメータ
+		/// </summary>
+		namespace Shadow {
+
 			/// <summary>
-			/// 点光源のResourceの最大数（１つにつき6回のレンダリングが起きるので注意）
+			/// 平行光源
 			/// </summary>
-			static const UINT kMaxPointLight = 8;
+			namespace Direction {
+				/// <summary>
+				/// 平行光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+				/// </summary>
+				static const UINT kMaxCount = 1;
+
+				/// <summary>
+				/// シャドウマッピングの解像度スケール
+				/// <para>default = 5</para>
+				/// <para>Range = 1 ~ ∞</para>
+				/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
+				/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
+				/// </summary>
+				//static const float kResolutionScale = 1.0f;
+			}
+
+			/// <summary>
+			/// 点光源
+			/// </summary>
+			namespace Point {
+				/// <summary>
+				/// 平行光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+				/// </summary>
+				static const UINT kMaxCount = 8;
+
+				/// <summary>
+				/// シャドウマッピングの解像度スケール
+				/// <para>default = 5</para>
+				/// <para>Range = 1 ~ ∞</para>
+				/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
+				/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
+				/// </summary>
+				//static const float kResolutionScale = 1.0f;
+			}
 
 			/// <summary>
 			/// シャドウマップの最大数
 			/// </summary>
-			static const UINT kMaxShadowMap = kMaxDirectionLight + (kMaxPointLight * 6);
+			static const UINT kMaxShadowMap = Direction::kMaxCount + (Point::kMaxCount * 6);
 
 			/// <summary>
-			/// シャドウマッピングの解像度スケール
+			/// シャドウマッピングの解像度スケール（現在は共通のスケールを使う）
 			/// <para>default = 5</para>
 			/// <para>Range = 1 ~ ∞</para>
 			/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
-			static const float kShadowMapResolutionScale = 1.0f;
-		};
+			static const float kResolutionScale = 1.0f;
+
+			/// <summary>
+			/// アンチエイリアスを有効にするか（未実装）
+			/// <para>※ シェーダーのコードを書き換える必要があるので、自動シェーダー生成の実装時に合わせて実装</para>
+			/// </summary>
+			static const bool kEnableAntiAliasing = true;
+		}
 	};
 };
+
+// 短縮形
+namespace lwpC {
+	using namespace LWP::Config;
+}

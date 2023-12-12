@@ -1,65 +1,58 @@
 #include "ICommand.h"
 #include "../descriptorHeap/SRV.h"
 
+#include <Config.h>
+
 using namespace LWP::Base;
 
-void ICommand::Initialize(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature, ID3D12Resource* resource) {
+void ICommand::Initialize(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {
 	CreatePSO(device, dxc, rootSignature);
 
-	// インデックス情報の構造体
-	indexResourceBuffer_ = std::make_unique<IndexResourceBuffer>();
-	indexResourceBuffer_->resource_ = resource;
-	indexResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&indexResourceBuffer_->data_));
-	
-	D3D12_SHADER_RESOURCE_VIEW_DESC indexDesc{};
-	indexDesc.Format = DXGI_FORMAT_UNKNOWN;
-	indexDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	indexDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	indexDesc.Buffer.FirstElement = 0;
-	indexDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	indexDesc.Buffer.NumElements = kMaxIndex;
-	indexDesc.Buffer.StructureByteStride = sizeof(IndexInfoStruct);
-	indexResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
-	device->CreateShaderResourceView(indexResourceBuffer_->resource_.Get(), &indexDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
+	// インデックスデータのResource生成
+	indexData_ = std::make_unique<IStructured<IndexInfoStruct>>(device, srv_, lwpC::Rendering::kMaxIndex);
+	// viewProjectionのResource生成
+	vpResourceBuffer_ = std::make_unique<MatrixResourceBuffer>();
+	vpResourceBuffer_->resource_ = LWP::Base::CreateBufferResourceStatic(device, sizeof(Math::Matrix4x4));
+	vpResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&vpResourceBuffer_->data_));
+	vpResourceBuffer_->view_ = vpResourceBuffer_->resource_->GetGPUVirtualAddress();
 
 	// 派生クラスの初期化を呼び出し
 	DerivedInitialize();
 }
 void ICommand::DerivedInitialize() { /* 基底クラスでは実装無し */ }
 
-void ICommand::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, std::function<void()> ExecuteLambda, ViewStruct viewStruct) {
-	for (currentRenderingCount_ = 0; currentRenderingCount_ < multiRenderingCount_; currentRenderingCount_++) {
-		// 描画前処理
-		PreDraw(list);
-		
-		// RootSignatureを設定。PSOに設定してるけど別途設定が必要
-		list->SetGraphicsRootSignature(rootSignature);
-		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
-		list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		// PSOを設定
-		list->SetPipelineState(pso_->state_.Get());
+void ICommand::SetDrawData(IndexInfoStruct data) {
+	indexData_->AddData(data);
+}
 
-		// ディスクリプタテーブルを登録
-		list->SetGraphicsRootDescriptorTable(0, indexResourceBuffer_->view_);
-		list->SetGraphicsRootConstantBufferView(1, viewStruct.structCount);
-		list->SetGraphicsRootConstantBufferView(2, viewStruct.directionLight);
-		list->SetGraphicsRootDescriptorTable(3, viewStruct.pointLight);
-		list->SetGraphicsRootDescriptorTable(4, viewStruct.vertex);
-		list->SetGraphicsRootDescriptorTable(5, viewStruct.cameraVP);
-		list->SetGraphicsRootDescriptorTable(6, viewStruct.wtf);
-		list->SetGraphicsRootDescriptorTable(7, viewStruct.lightVP);
-		list->SetGraphicsRootDescriptorTable(8, viewStruct.material);
-		list->SetGraphicsRootDescriptorTable(9, viewStruct.texture);
-		list->SetGraphicsRootDescriptorTable(10, viewStruct.directionShadowMap);
-		list->SetGraphicsRootDescriptorTable(11, viewStruct.pointShadowMap);
+void ICommand::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, ViewStruct viewStruct) {
+	// 描画前処理
+	PreDraw(list);
 
-		// 全三角形を１つのDrawCallで描画
-		list->DrawInstanced(3, indexResourceBuffer_->usedCount_ / 3, 0, 0);
+	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
+	list->SetGraphicsRootSignature(rootSignature);
+	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
+	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// PSOを設定
+	list->SetPipelineState(pso_->state_.Get());
 
-		PostDraw(list);
+	// ディスクリプタテーブルを登録
+	list->SetGraphicsRootDescriptorTable(0, indexData_->GetView());
+	list->SetGraphicsRootConstantBufferView(1, vpResourceBuffer_->view_);
+	list->SetGraphicsRootDescriptorTable(2, viewStruct.vertex);
+	list->SetGraphicsRootDescriptorTable(3, viewStruct.wtf);
+	list->SetGraphicsRootConstantBufferView(4, viewStruct.structCount);
+	list->SetGraphicsRootDescriptorTable(5, viewStruct.material);
+	//list->SetGraphicsRootDescriptorTable(6, viewStruct.directionLight);
+	list->SetGraphicsRootDescriptorTable(7, viewStruct.pointLight);
+	list->SetGraphicsRootDescriptorTable(8, viewStruct.texture);
+	list->SetGraphicsRootDescriptorTable(9, viewStruct.directionShadowMap);
+	list->SetGraphicsRootDescriptorTable(10, viewStruct.pointShadowMap);
 
-		ExecuteLambda();
-	}
+	// 全三角形を１つのDrawCallで描画
+	list->DrawInstanced(3, indexData_->GetCount() / 3, 0, 0);
+
+	PostDraw(list);
 }
 
 void ICommand::PreDraw(ID3D12GraphicsCommandList* list) {

@@ -7,6 +7,10 @@
 
 using namespace LWP::Base;
 
+void MainCommand::SetDrawTarget(const Math::Matrix4x4& vp) {
+	*vpResourceBuffer_->data_ = vp;
+}
+
 void MainCommand::DerivedInitialize() {
 	//深度マップを作成
 	depthStencil_ = std::make_unique<DepthStencil>();

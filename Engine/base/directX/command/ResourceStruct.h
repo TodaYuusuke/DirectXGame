@@ -10,7 +10,6 @@ namespace LWP::Base {
 	// インデックス情報の構造体
 	struct IndexInfoStruct {
 		uint32_t vertex;        // 実質頂点インデックスの役割
-		uint32_t cameraVP;      // カメラのビュープロジェクション行列
 		uint32_t worldMatrix;   // ワールドトランスフォーム
 		uint32_t material;      // マテリアル
 		uint32_t tex2d;         // テクスチャ
@@ -53,13 +52,6 @@ namespace LWP::Base {
 			return *this;
 		}
 	};
-	// 頂点データのバッファー
-	struct VertexResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// GPU上の頂点データの格納場所
-		D3D12_GPU_DESCRIPTOR_HANDLE view_{};			// BufferLocationは頂点データ格納場所のアドレス
-		VertexStruct* data_ = nullptr;	// 頂点リソース
-		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
-	};
 #pragma endregion
 
 #pragma region マテリアル
@@ -75,20 +67,13 @@ namespace LWP::Base {
 			return *this;
 		}
 	};
-	// マテリアルバッファー
-	struct MaterialResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;
-		MaterialStruct* data_;
-		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
-	};
 #pragma endregion
 
 #pragma region 行列
 	// 行列データのバッファー
 	struct MatrixResourceBuffer {
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;
+		D3D12_GPU_VIRTUAL_ADDRESS view_;
 		Math::Matrix4x4* data_;
 		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
 
@@ -121,9 +106,10 @@ namespace LWP::Base {
 
 	// 平行光源の構造体
 	struct DirectionalLightStruct {
-		Math::Vector4 color_;		// ライトの色
-		Math::Vector3 direction_;	// ライトの向き
-		float intensity_;	// 輝度
+		Math::Matrix4x4 vp;		// ViewProjectionをこっちにも登録
+		Math::Vector4 color;		// ライトの色
+		Math::Vector3 direction;	// ライトの向き
+		float intensity;	// 輝度
 	};
 	// 平行光源のバッファ
 	struct DirectionLightResourceBuffer {

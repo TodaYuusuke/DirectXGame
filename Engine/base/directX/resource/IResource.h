@@ -12,6 +12,10 @@ namespace LWP::Base {
 		IResource() = default;
 		virtual ~IResource() = default;
 
+		// 使用数をリセット
+		void Reset() { usedCount_.Reset(); }
+		// 使用済みのカウントを返す関数
+		int GetCount() { return usedCount_.Get(); }
 
 	protected: // ** メンバ変数 ** //
 		

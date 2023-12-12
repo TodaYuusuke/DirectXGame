@@ -11,4 +11,7 @@ void SRV::Initialize(ID3D12Device* device) {
 
 	// SRV用のヒープでディスクリプタの数は128。SRVはShader内で触るものなので、ShaderVisibleはtrue
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, size_, true);
+
+	// 0番目はImGuiが使うので+1しておく
+	count_.Increment();
 }

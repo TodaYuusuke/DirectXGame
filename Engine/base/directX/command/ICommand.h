@@ -3,6 +3,8 @@
 #include "ResourceStruct.h"
 #include "PSO.h"
 
+#include "../resource/structuredBuffer/IStructured.h"
+
 #include <memory>
 
 namespace LWP::Base {
@@ -15,15 +17,6 @@ namespace LWP::Base {
 	/// </summary>
 	class ICommand {
 	public: // ** パブリックなメンバ変数 ** //
-
-		// -- 描画用リソース -- //
-
-		// インデックス情報の構造体
-		std::unique_ptr<IndexResourceBuffer> indexResourceBuffer_;
-		const UINT kMaxIndex = 655350;
-		// 計算に使うViewProjection
-		std::unique_ptr<MatrixResourceBuffer> vpResourceBuffer_;
-
 		// リソースのビューを構造体に
 		// 0 ... バッファーのインデックス
 		// 1 ... 構造体のカウント
@@ -38,14 +31,12 @@ namespace LWP::Base {
 		// 10 ... （平行光源）シャドウマップ
 		// 11 ... （点光源）シャドウマップ
 		struct ViewStruct {
-			D3D12_GPU_VIRTUAL_ADDRESS structCount;
-			D3D12_GPU_VIRTUAL_ADDRESS directionLight;
-			D3D12_GPU_DESCRIPTOR_HANDLE pointLight;
 			D3D12_GPU_DESCRIPTOR_HANDLE vertex;
-			D3D12_GPU_DESCRIPTOR_HANDLE cameraVP;
 			D3D12_GPU_DESCRIPTOR_HANDLE wtf;
-			D3D12_GPU_DESCRIPTOR_HANDLE lightVP;
+			D3D12_GPU_VIRTUAL_ADDRESS structCount;
 			D3D12_GPU_DESCRIPTOR_HANDLE material;
+			D3D12_GPU_DESCRIPTOR_HANDLE directionLight;
+			D3D12_GPU_DESCRIPTOR_HANDLE pointLight;
 			D3D12_GPU_DESCRIPTOR_HANDLE texture;
 			D3D12_GPU_DESCRIPTOR_HANDLE directionShadowMap;
 			D3D12_GPU_DESCRIPTOR_HANDLE pointShadowMap;
@@ -55,9 +46,9 @@ namespace LWP::Base {
 		// -- レンダリング先のハンドル -- //
 		
 		// RTVのハンドル
-		D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = nullptr;
+		//D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = nullptr;
 		// DSVのハンドル
-		D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle_ = nullptr;
+		//D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle_ = nullptr;
 		
 
 		// -- リソースバリア -- //
@@ -75,17 +66,20 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature, ID3D12Resource* resource);
+		void Initialize(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature);
 		/// <summary>
 		/// 派生初期化
 		/// </summary>
 		virtual void DerivedInitialize();
 
+		// 描画用のデータをセット
+		virtual void SetDrawData(IndexInfoStruct data);
+
 		/// <summary>
 		/// 描画処理
 		/// </summary>
 		/// <param name="viewStruct">全てのviewの構造体</param>
-		void Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, std::function<void()> ExecuteLambda, ViewStruct viewStruct);
+		void Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, ViewStruct viewStruct);
 
 		/// <summary>
 		/// ディスクリプタヒープのポインタをセットする関数
@@ -95,6 +89,11 @@ namespace LWP::Base {
 			dsv_ = dsv;
 			srv_ = srv;
 		}
+
+		/// <summary>
+		/// 描画後のリセット処理
+		/// </summary>
+		void Reset() { indexData_->Reset(); }
 
 	protected: // ** メンバ変数 ** //
 
@@ -106,9 +105,14 @@ namespace LWP::Base {
 		// グラフィックパイプラインの状態を定義
 		std::unique_ptr<PSO> pso_;
 
-		// 複数回レンダリング回数
-		UINT multiRenderingCount_ = 1;
-		UINT currentRenderingCount_ = 0;
+
+		// -- 描画用リソース -- //
+
+		// インデックス情報の構造体
+		std::unique_ptr<IStructured<IndexInfoStruct>> indexData_;
+		// 計算に使うViewProjection
+		std::unique_ptr<MatrixResourceBuffer> vpResourceBuffer_;
+
 
 	protected: // ** プライベートな関数 ** //
 

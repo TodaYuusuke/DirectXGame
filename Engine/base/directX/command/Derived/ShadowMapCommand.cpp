@@ -4,37 +4,21 @@
 #include "../../descriptorHeap/SRV.h"
 
 #include <Config.h>
-namespace RenderingPara = LWP::Config::Rendering;
 
 #include <Adapter.h>
 
+using namespace LWP;
 using namespace LWP::Base;
 
-void ShadowMapCommand::InitializePreDraw() {
-	// 初期化
-	structCount_->directionLight = 0;
-	structCount_->pointLight = 0;
-	// レンダリング回数（本当はpointCount * 6）
-	multiRenderingCount_ = *dirCount + *pointCount * 6;
+void ShadowMapCommand::SetDrawTarget(const Math::Matrix4x4& vp, ID3D12Resource* resource, uint32_t dsvIndex) {
+	*vpResourceBuffer_->data_ = vp;
+	resource_ = resource;
+	dsvIndex_ = dsvIndex;
 }
 
 void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
-	// このレンダリングで描画する対象をセットする
-	if (currentRenderingCount_ < *dirCount) {
-		resource_ = direction_->shadowMap_[currentRenderingCount_].resource_.Get();
-		index_ = direction_->shadowMap_[currentRenderingCount_].dsvIndex_;
-		structCount_->directionLight++;
-	}
-	else if (currentRenderingCount_ - *dirCount < *pointCount * 6) {
-		int index = currentRenderingCount_ - *dirCount;
-		resource_ = point_->shadowMap_[index / 6].resource_.Get();
-		index_ = point_->shadowMap_[index / 6].dsvIndex_[index % 6];
-		structCount_->pointLight++;
-	}
-
-
 	// シャドウマップ用のDSVハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(index_);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(dsvIndex_);
 	// 描画先のDSVを設定する
 	list->OMSetRenderTargets(0, nullptr, false, &dsvHandle);
 
@@ -48,8 +32,8 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	// リソースバリアをセット
 	list->ResourceBarrier(1, &barrier);
 
-	// 指定した深度で画面全体をクリアする（1はシャドウマップ用DSV）
-	dsv_->ClearDepth(index_, list);
+	// 指定した深度で画面全体をクリアする
+	dsv_->ClearDepth(dsvIndex_, list);
 
 	// 描画用のSRVのDescriptorHeapを設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
@@ -58,8 +42,8 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
 	// シャドウマップ用のテクスチャと同じサイズにする
-	viewport.Width = 1024.0f * RenderingPara::kShadowMapResolutionScale;
-	viewport.Height = 1024.0f * RenderingPara::kShadowMapResolutionScale;
+	viewport.Width = 1024.0f * lwpC::Shadow::kResolutionScale;
+	viewport.Height = 1024.0f * lwpC::Shadow::kResolutionScale;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -71,9 +55,9 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	D3D12_RECT scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = 1024 * static_cast<int>(RenderingPara::kShadowMapResolutionScale);
+	scissorRect.right = 1024 * static_cast<int>(lwpC::Shadow::kResolutionScale);
 	scissorRect.top = 0;
-	scissorRect.bottom = 1024 * static_cast<int>(RenderingPara::kShadowMapResolutionScale);
+	scissorRect.bottom = 1024 * static_cast<int>(lwpC::Shadow::kResolutionScale);
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }
@@ -91,15 +75,6 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 
 	// リソースバリアをセット
 	list->ResourceBarrier(1, &barrier);
-
-	//// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
-	//hr = list->Close();
-	//assert(SUCCEEDED(hr));
-}
-
-void ShadowMapCommand::End() {
-	// 最後に点光源の数を戻す(÷6)
-	structCount_->pointLight /= 6;
 }
 
 void ShadowMapCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

@@ -9,6 +9,7 @@
 // 前方宣言
 namespace LWP::Object {
 	class Camera;
+	class DirectionLight;
 	class PointLight;
 }
 
@@ -54,17 +55,13 @@ namespace LWP::Base {
 		/// </summary>
 		void Reset();
 
-		/// <summary>
-		/// ImGui用
-		/// </summary>
-		void ImGui();
-
 
 	public: // ** getter ** //
 		// CommandQueueを受け取る関数
 		ID3D12CommandQueue* GetQueue() const { return commandQueue_.Get(); }
 		// メインレンダリング用のコマンドを受け取る関数
 		ID3D12GraphicsCommandList* GetMainRenderCommandList() const { return commandList_.Get(); }
+
 
 	public: // ** 外部からリソースの登録用関数 ** //
 
@@ -84,9 +81,15 @@ namespace LWP::Base {
 		void SetCameraViewProjection(const Object::Camera* camera);
 
 		/// <summary>
+		/// 平行光源のデータを登録する
+		/// </summary>
+		void SetDirectionLightData(const Object::DirectionLight* light, const Math::Matrix4x4& viewProjections);
+
+		/// <summary>
 		/// 点光源のデータを登録する
 		/// </summary>
 		void SetPointLightData(const Object::PointLight* light, const Math::Matrix4x4* viewProjections);
+
 
 	private: // メンバ変数
 		// デバイスのポインタを保持
@@ -104,8 +107,10 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 
 		// 用途別コマンドリスト用クラス
-		std::unique_ptr<MainCommand> mainCommand;
-		std::unique_ptr<ShadowMapCommand> shadowCommand;
+		std::vector<std::unique_ptr<MainCommand>> mainCommands_;
+		int mainCount_ = 0;	// 毎フレームの描画回数
+		std::vector<std::unique_ptr<ShadowMapCommand>> shadowCommands_;
+		int shadowCount_ = 0;	// 毎フレームの描画回数
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
@@ -121,38 +126,23 @@ namespace LWP::Base {
 		
 		// ルートシグネチャ
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+		
+
+		// 頂点データ
+		std::unique_ptr<IStructured<VertexStruct>> vertexData_;
+		// WorldTransformデータ
+		std::unique_ptr<IStructured<Math::Matrix4x4>> transformData_;
 
 		// 構造体のカウント
 		std::unique_ptr<StructCountResourceBuffer> structCountResourceBuffer_;
+		// マテリアルデータ
+		std::unique_ptr<IStructured<MaterialStruct>> materialData_;
+		
 		// 平行光源
 		std::unique_ptr<DirectionLightResourceBuffer> directionLightResourceBuffer_;
-		//const UINT kMaxLight= 1;
 		// 点光源
 		std::unique_ptr<PointLightResourceBuffer> pointLightResourceBuffer_;
 
-
-		// 頂点データ
-		std::unique_ptr<VertexResourceBuffer> vertexResourceBuffer_;
-		const UINT kMaxVertex = 655350;
-		// カメラのビュープロジェクション用
-		// 0 = 2D
-		// 1 = 3D
-		std::unique_ptr<MatrixResourceBuffer> cameraResourceBuffer_;
-		const UINT kMaxCameraVP = 1 * 2;
-		// WorldTransformデータ
-		std::unique_ptr<MatrixResourceBuffer> matrixResourceBuffer_;
-#if _DEBUG //debug時
-		const UINT kMaxMatrix = 1280;
-#else      //release時
-		const UINT kMaxMatrix = 12800;
-#endif
-		// 光源のviewProjection行列
-		std::unique_ptr<MatrixResourceBuffer> lightVPResourceBuffer_;
-
-
-		// マテリアルデータ
-		std::unique_ptr<MaterialResourceBuffer> materialResourceBuffer_;
-		const UINT kMaxMaterial = 12800;
 		// テクスチャデータ
 		std::unique_ptr<TextureResourceBuffer> textureResourceBuffer_;
 		const UINT kMaxTexture = 128;
@@ -184,10 +174,6 @@ namespace LWP::Base {
 		/// </summary>
 		void CreateStructuredBufferResources();
 
-		/// <summary>
-		/// 任意のサイズのResourceを作成する関数
-		/// </summary>
-		ID3D12Resource* CreateBufferResource(size_t size);
 		/// <summary>
 		/// 任意のサイズのResourceを作成（Textureバージョン）
 		/// </summary>

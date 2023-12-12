@@ -22,7 +22,6 @@ void Engine::Run(IScene* firstScene) {
 
 		// 更新処理
 		sceneManager_->Update();
-		directXCommon_->GetCommandManager()->ImGui();
 		objectManager_->Update(directXCommon_->GetCommandManager());	// 描画に必要なデータをCommandManagerに登録している
 		primitiveManager_->Update();
 
