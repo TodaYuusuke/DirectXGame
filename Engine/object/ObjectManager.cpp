@@ -21,7 +21,7 @@ void Manager::Update(Base::CommandManager* manager) {
 	// 生成用の関数ポインタ
 	static std::vector<std::function<IObject*()>> functions = {
 		&LWP::Object::CreateInstance<Camera>,
-		& LWP::Object::CreateInstance<DirectionLight>,
+		&LWP::Object::CreateInstance<DirectionLight>,
 		&LWP::Object::CreateInstance<PointLight>,
 	};
 	// 選択肢の変数
