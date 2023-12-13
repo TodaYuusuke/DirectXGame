@@ -1,7 +1,5 @@
 #include "SampleTitle.h"
 #include "SampleGameScene.h"
-#include "../Class/Ease/Easing.h"
-#include <time.h>
 
 using namespace LWP;
 using namespace LWP::Input;
@@ -13,7 +11,7 @@ using namespace LWP::Utility;
 void SampleTitle::Initialize() {
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
-	monsterBall = LWP::Resource::LoadTexture("monsterBall.png");
+	monsterBall = LWP::Resource::LoadTextureLongPath("resources/system/texture/monsterBall.png");
 
 	// 地面
 	ground = LWP::Primitive::CreateInstance<Surface>();

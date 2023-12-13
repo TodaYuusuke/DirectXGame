@@ -116,32 +116,8 @@
     <ClCompile Include="Engine\utility\MyUtility.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Map\MapManager.cpp">
-      <Filter>Class\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Hammer\Hammer.cpp">
-      <Filter>Class\Hammer</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Map\ShockWave.cpp">
-      <Filter>Class\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Map\MapChip.cpp">
-      <Filter>Class\Map</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\info\DebugTimer.cpp">
       <Filter>Engine\info</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Mob\IMob.cpp">
-      <Filter>Class\Mob</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Mob\MobManager.cpp">
-      <Filter>Class\Mob</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Mob\Derived\DefenseObject.cpp">
-      <Filter>Class\Mob\Derived</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Mob\Derived\Enemy.cpp">
-      <Filter>Class\Mob\Derived</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\base</Filter>
@@ -175,15 +151,6 @@
     </ClCompile>
     <ClCompile Include="Engine\resources\audio\Audio.cpp">
       <Filter>Engine\resources\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Ease\Easing.cpp">
-      <Filter>Class\Ease</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Skydome\Skydome.cpp">
-      <Filter>Class\Skydome</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Tambourine\Tambourine.cpp">
-      <Filter>Class\Tambourine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\utility\Observer.cpp">
       <Filter>Engine\utilitiy</Filter>
@@ -355,32 +322,8 @@
     <ClInclude Include="Engine\utility\ErrorReporter.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Map\MapManager.h">
-      <Filter>Class\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Hammer\Hammer.h">
-      <Filter>Class\Hammer</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Map\ShockWave.h">
-      <Filter>Class\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Map\MapChip.h">
-      <Filter>Class\Map</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\info\DebugTimer.h">
       <Filter>Engine\info</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Mob\IMob.h">
-      <Filter>Class\Mob</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Mob\MobManager.h">
-      <Filter>Class\Mob</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Mob\Derived\DefenseObject.h">
-      <Filter>Class\Mob\Derived</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Mob\Derived\Enemy.h">
-      <Filter>Class\Mob\Derived</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\base</Filter>
@@ -417,15 +360,6 @@
     </ClInclude>
     <ClInclude Include="Engine\resources\audio\Audio.h">
       <Filter>Engine\resources\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Ease\Easing.h">
-      <Filter>Class\Ease</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Skydome\Skydome.h">
-      <Filter>Class\Skydome</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Tambourine\Tambourine.h">
-      <Filter>Class\Tambourine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\utility\Observer.h">
       <Filter>Engine\utilitiy</Filter>
@@ -540,15 +474,6 @@
     <Filter Include="Engine\utilitiy">
       <UniqueIdentifier>{248bf45a-0c7d-4a30-9391-5cdb28b3cbcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Class">
-      <UniqueIdentifier>{1f9df0e8-8c72-45df-9278-04bdfb3bd6b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Map">
-      <UniqueIdentifier>{e1de4176-31ee-497c-834d-55629804adf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Hammer">
-      <UniqueIdentifier>{f2d1745d-494e-44ae-83ba-19e26540f9b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Adapter">
       <UniqueIdentifier>{6f9bea3b-c4e6-4c49-9886-547942559018}</UniqueIdentifier>
     </Filter>
@@ -558,12 +483,6 @@
     <Filter Include="Engine\info">
       <UniqueIdentifier>{1d859269-30c1-4a67-825c-4bbef6db24b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Class\Mob">
-      <UniqueIdentifier>{743a3501-c0a8-46af-a8ff-80dc57708e89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Mob\Derived">
-      <UniqueIdentifier>{b78425e2-876a-4fc2-8102-2c1ba751a431}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\base\directX">
       <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
     </Filter>
@@ -572,15 +491,6 @@
     </Filter>
     <Filter Include="Engine\base\directX\command">
       <UniqueIdentifier>{60100a09-802c-4da4-904f-ccf44e31b290}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Ease">
-      <UniqueIdentifier>{7e11bda2-6456-4497-a71e-dda4a6d1ce6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Skydome">
-      <UniqueIdentifier>{804ed76a-be55-4774-9abc-32a32240d01a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Tambourine">
-      <UniqueIdentifier>{be3db6a3-24de-43ef-945c-2ba7dae4db5e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\scene">
       <UniqueIdentifier>{093777cc-1db7-443d-b68b-e527690c6c7b}</UniqueIdentifier>
