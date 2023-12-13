@@ -101,5 +101,7 @@ namespace LWP::System {
 
 		// デバッグ用タイマークラス
 		LWP::Information::FrameTracker debugTimer_;
+		// デバッグ情報の表示切替フラグ
+		bool isShowDebugInfo = false;
 	};
 }

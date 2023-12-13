@@ -99,7 +99,7 @@ void Engine::BeginFrame() {
 
 void Engine::EndFrame() {
 	// FPS系の情報描画
-	debugTimer_.DebugGUI();
+	if (isShowDebugInfo) { debugTimer_.DebugGUI(); }
 
 	directXCommon_->DrawCall();
 	directXCommon_->PostDraw();

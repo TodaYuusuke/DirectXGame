@@ -69,7 +69,7 @@ void SampleTitle::Update() {
 		Object::CreateInstance<Object::PointLight>()->isActive = true;
 	}
 	ImGui::End();
-
+		
 	// SPACEキーを押すとテクスチャ切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
 		if (!useMonsterBall) {
@@ -80,6 +80,11 @@ void SampleTitle::Update() {
 			sphere->texture = uvTexture;
 			useMonsterBall = false;
 		}
+	}
+
+	// ESCキーでデバッグ情報表示切り替え
+	if (Keyboard::GetTrigger(DIK_ESCAPE)) {
+		Info::ChangeShowDebugGUI();
 	}
 
 	// ENTERキーを押すとシーン切り替え

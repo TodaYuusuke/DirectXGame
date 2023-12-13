@@ -26,6 +26,6 @@ Math::Vector2 Information::GetWindow() {
 	};
 }
 
-void Information::ShowDebugGUI() {
-
+void Information::ChangeShowDebugGUI() {
+	engine->isShowDebugInfo = !engine->isShowDebugInfo;
 }

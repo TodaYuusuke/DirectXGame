@@ -19,9 +19,9 @@ namespace LWP {
 		Math::Vector2 GetWindow();
 
 		/// <summary>
-		/// デバッグ情報を表示する
+		/// デバッグ情報の表示/非表示を切り替える
 		/// </summary>
-		void ShowDebugGUI();
+		void ChangeShowDebugGUI();
 	};
 	namespace Info = Information;
 };
