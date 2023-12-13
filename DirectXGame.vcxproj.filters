@@ -600,9 +600,6 @@
     <Filter Include="Engine\base\directX\resource\structuredBuffer">
       <UniqueIdentifier>{69b22e6e-c4cc-4bf9-915f-10b5f6cba812}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Externals\DirectXTex">
-      <UniqueIdentifier>{4cfedf85-44b9-472c-a11c-04608e7f14fc}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
