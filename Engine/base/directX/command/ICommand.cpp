@@ -39,9 +39,9 @@ void ICommand::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandLis
 	// ディスクリプタテーブルを登録
 	list->SetGraphicsRootDescriptorTable(0, indexData_->GetView());
 	list->SetGraphicsRootConstantBufferView(1, vpResourceBuffer_->view_);
-	list->SetGraphicsRootDescriptorTable(2, viewStruct.vertex);
-	list->SetGraphicsRootDescriptorTable(3, viewStruct.wtf);
-	list->SetGraphicsRootConstantBufferView(4, viewStruct.structCount);
+	list->SetGraphicsRootConstantBufferView(2, viewStruct.commonData);
+	list->SetGraphicsRootDescriptorTable(3, viewStruct.vertex);
+	list->SetGraphicsRootDescriptorTable(4, viewStruct.wtf);
 	list->SetGraphicsRootDescriptorTable(5, viewStruct.material);
 	list->SetGraphicsRootDescriptorTable(6, viewStruct.directionLight);
 	list->SetGraphicsRootDescriptorTable(7, viewStruct.pointLight);

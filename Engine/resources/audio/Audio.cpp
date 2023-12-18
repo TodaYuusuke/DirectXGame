@@ -19,7 +19,6 @@ Audio::~Audio() {
 	wfex_ = {};
 }
 
-
 void Audio::Play() {
 	HRESULT hr;
 

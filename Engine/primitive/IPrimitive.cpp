@@ -32,6 +32,10 @@ void IPrimitive::CreateIndexes() {
 	}
 }
 
+void IPrimitive::Update() {
+	// 特に何もしない
+}
+
 void IPrimitive::Draw(Base::CommandManager* manager) {
 	// アクティブでなければ描画しない
 	if (!isActive) { return; }
@@ -50,7 +54,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 		LWP::Base::ImGuiManager::ColorEdit4("color", vertices[vertexNum_].color);
 		ImGui::TreePop();
 	}
-	transform.DebugGUI();
+	isUI ? transform.DebugGUI2D() : transform.DebugGUI();
 	material.DebugGUI();
 
 	// 共通カラーがあるとき -> ColorEdit4を呼び出す
@@ -79,6 +83,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 		}
 		ImGui::Checkbox("isUI", &isUI);			// 2D描画
 		ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
+		ImGui::Text("- Below this are unique variables - ");
 		DerivedDebugGUI();
 		ImGui::TreePop();
 	}
@@ -88,6 +93,10 @@ void IPrimitive::DerivedDebugGUI(const std::string& label) {
 	// 基底クラスでは記述無し
 	label;
 }
+bool IPrimitive::DerivedGetChanged() {
+	// 基底クラスでは何もなし
+	return false;
+}
 
 
 int IPrimitive::GetVertexCount() const {
@@ -95,4 +104,8 @@ int IPrimitive::GetVertexCount() const {
 }
 int IPrimitive::GetIndexCount() const {
 	return (GetVertexCount() - 2) * 3;	// インデックスの数を求める
+}
+
+bool IPrimitive::GetChanged() {
+	return texture.GetChanged() + DerivedGetChanged();
 }

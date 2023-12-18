@@ -9,29 +9,24 @@
 namespace LWP::Base {
 	// インデックス情報の構造体
 	struct IndexInfoStruct {
-		uint32_t vertex;        // 実質頂点インデックスの役割
-		uint32_t worldMatrix;   // ワールドトランスフォーム
-		uint32_t material;      // マテリアル
-		uint32_t tex2d;         // テクスチャ
-	};
-	// インデックスバッファー
-	struct IndexResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;
-		IndexInfoStruct* data_;
-		UINT usedCount_ = 0;
+		uint32_t vertex;		// 実質頂点インデックスの役割
+		uint32_t worldMatrix;	// ワールドトランスフォーム
+		uint32_t material;		// マテリアル
+		uint32_t tex2d;			// テクスチャ
+		uint32_t isUI;			// UIとして表示するかのフラグ
 	};
 
-	// 構造体のカウント
-	struct StructCount {
+	// 全体で共通のデータ
+	struct CommonData {
+		Math::Matrix4x4 vp2D;		// 2D用のViewProjection
 		uint32_t directionLight;    // 平行光源の数
 		uint32_t pointLight;        // 点光源の数
 	};
 	// インデックスバッファー
-	struct StructCountResourceBuffer {
+	struct CommonDataResourceBuffer {
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 		D3D12_GPU_VIRTUAL_ADDRESS view_;
-		StructCount* data_;
+		CommonData* data_;
 	};
 
 

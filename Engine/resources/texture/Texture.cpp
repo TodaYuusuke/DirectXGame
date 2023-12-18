@@ -13,6 +13,10 @@ Texture::Texture(Base::CommandManager* manager, const std::string& filePath) {
 	index_ = manager->CreateTextureResource(mipImages);
 }
 
+LWP::Math::Vector2 Texture::GetTextureSize() const {
+	return LWP::Math::Vector2{ static_cast<float>(mipImages.GetImages()->width),static_cast<float>(mipImages.GetImages()->height) };
+}
+
 
 void Texture::Load(const string& filePath) {
 	// テクスチャファイルを読み込んでプログラムで扱えるようにする

@@ -21,10 +21,11 @@ void Manager::Update() {
 		&LWP::Primitive::CreateInstance<Triangle>,
 		&LWP::Primitive::CreateInstance<Surface>,
 		&LWP::Primitive::CreateInstance<Sphere>,
+		&LWP::Primitive::CreateInstance<Sprite>,
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Triangle","Surface","Sphere"
+		"Triangle","Surface","Sphere", "Sprite"
 	};
 
 	ImGui::Begin("PrimitiveManager");
@@ -44,6 +45,11 @@ void Manager::Update() {
 	}
 	ImGui::End();
 #endif
+
+	// 更新
+	for (IPrimitive* p : primitives_) {
+		p->Update();
+	}
 }
 
 void Manager::Draw(Base::CommandManager* manager) {

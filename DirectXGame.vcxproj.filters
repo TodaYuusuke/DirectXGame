@@ -179,6 +179,9 @@
     <ClCompile Include="Engine\input\controller\XInputController.cpp">
       <Filter>Engine\input\controller</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -399,6 +402,9 @@
     </ClInclude>
     <ClInclude Include="Engine\utility\Counter.h">
       <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Sprite.h">
+      <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,22 +18,19 @@ namespace LWP::Base {
 	class ICommand {
 	public: // ** パブリックなメンバ変数 ** //
 		// リソースのビューを構造体に
-		// 0 ... バッファーのインデックス
-		// 1 ... 構造体のカウント
-		// 2 ... 平行光源
-		// 3 ... 点光源
-		// 4 ... 頂点データ
-		// 5 ... カメラのviewProjection
-		// 6 ... WorldTransform
-		// 7 ... lightのviewProjection
-		// 8 ... マテリアル
-		// 9 ... テクスチャ
-		// 10 ... （平行光源）シャドウマップ
-		// 11 ... （点光源）シャドウマップ
+		// 0 ... 共通データ
+		// 1 ... 頂点データ
+		// 2 ... WorldTransform
+		// 3 ... マテリアル
+		// 4 ... 平行光源
+		// 5 ... 点光源
+		// 6 ... テクスチャ
+		// 7 ... （平行光源）シャドウマップ
+		// 8 ... （点光源）シャドウマップ
 		struct ViewStruct {
+			D3D12_GPU_VIRTUAL_ADDRESS commonData;
 			D3D12_GPU_DESCRIPTOR_HANDLE vertex;
 			D3D12_GPU_DESCRIPTOR_HANDLE wtf;
-			D3D12_GPU_VIRTUAL_ADDRESS structCount;
 			D3D12_GPU_DESCRIPTOR_HANDLE material;
 			D3D12_GPU_DESCRIPTOR_HANDLE directionLight;
 			D3D12_GPU_DESCRIPTOR_HANDLE pointLight;

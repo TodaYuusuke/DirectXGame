@@ -133,8 +133,8 @@ namespace LWP::Base {
 		// WorldTransformデータ
 		std::unique_ptr<IStructured<Math::Matrix4x4>> transformData_;
 
-		// 構造体のカウント
-		std::unique_ptr<StructCountResourceBuffer> structCountResourceBuffer_;
+		// 全描画で共通のデータ
+		std::unique_ptr<CommonDataResourceBuffer> commonDataResourceBuffer_;
 		// マテリアルデータ
 		std::unique_ptr<IStructured<MaterialStruct>> materialData_;
 		

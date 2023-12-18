@@ -37,11 +37,13 @@ struct IndexInfo {
     uint32_t worldMatrix;   // ワールドトランスフォーム
     uint32_t material;      // マテリアル
     uint32_t tex2d;         // テクスチャ
+    uint32_t isUI;          // UIで表示するかどうか
 };
-// 構造体の数をカウントした構造体
-struct StructCount {
-    uint32_t directionLight;    // 平行光源の数
-    uint32_t pointLight;    // 点光源の数
+// 全体で共通のデータ
+struct CommonData {
+    float32_t4x4 vp2D;              // 2D用のビュープロジェクション
+    uint32_t directionLightCount;   // 平行光源の数
+    uint32_t pointLightCount;       // 点光源の数
 };
 
 
@@ -52,6 +54,8 @@ StructuredBuffer<IndexInfo> gIndex : register(t0);
 // 描画するViewProjection
 ConstantBuffer<ViewProjection> gViewProjection : register(b0);
 
+// 全体描画で共通のデータ
+ConstantBuffer<CommonData> gCommonData : register(b1);
 
 // ** VS用 ** //
 
@@ -63,8 +67,6 @@ StructuredBuffer<float32_t4x4> gWorldMatrix : register(t2);
 
 // ** PS用 ** //
 
-// カウントした構造体の数
-ConstantBuffer<StructCount> gStructCount : register(b1);
 // マテリアル
 StructuredBuffer<Material> gMaterial : register(t1);
 

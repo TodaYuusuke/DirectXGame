@@ -5,6 +5,7 @@
 #include "../resources/texture/Texture.h"
 #include "../resources/material/Material.h"
 #include "../utility/Color.h"
+#include "../utility/Observer.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include <stdexcept>
@@ -40,7 +41,7 @@ namespace LWP::Primitive {
 		// マテリアル
 		Resource::Material material;
 		// テクスチャ
-		Resource::Texture* texture = nullptr;
+		LWP::Utility::Observer<Resource::Texture*> texture = nullptr;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する
@@ -74,6 +75,11 @@ namespace LWP::Primitive {
 		virtual void CreateIndexes();
 
 		/// <summary>
+		/// 更新処理
+		/// </summary>
+		virtual void Update();
+
+		/// <summary>
 		/// 描画
 		/// </summary>
 		virtual void Draw(Base::CommandManager* manager);
@@ -91,12 +97,21 @@ namespace LWP::Primitive {
 		/// </summary>
 		virtual int GetIndexCount() const;
 
+		/// <summary>
+		/// 値が変化したかを検知する関数
+		/// </summary>
+		virtual bool GetChanged();
 
 	protected: // ** 派生クラス用の関数 ** //
 		/// <summary>
 		/// 派生クラスで追加のImGuiを実装するとき用の関数
 		/// </summary>
 		virtual void DerivedDebugGUI(const std::string& label = "Derived");
+
+		/// <summary>
+		/// 派生クラスで追加された変数の値が変化したかを検知する用の関数
+		/// </summary>
+		virtual bool DerivedGetChanged();
 	};
 }
 

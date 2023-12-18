@@ -108,9 +108,9 @@ void CommandManager::DrawCall() {
 	// コマンドのDrawを呼び出すラムダ式（引数で渡すのは面倒なのでラムダで指定）
 	std::function<void(ICommand*)> DrawLambda = [&](ICommand* cmd) {
 		cmd->Draw(rootSignature_.Get(), commandList_.Get(), {
+			commonDataResourceBuffer_->view_,
 			vertexData_->GetView(),
 			transformData_->GetView(),
-			structCountResourceBuffer_->view_,
 			materialData_->GetView(),
 			directionLightResourceBuffer_->view_,
 			pointLightResourceBuffer_->view_,
@@ -152,8 +152,8 @@ void CommandManager::Reset() {
 	// 使用量をリセット
 	vertexData_->Reset();
 	transformData_->Reset();
-	structCountResourceBuffer_->data_->directionLight = 0;
-	structCountResourceBuffer_->data_->pointLight = 0;
+	commonDataResourceBuffer_->data_->directionLight = 0;
+	commonDataResourceBuffer_->data_->pointLight = 0;
 	materialData_->Reset();
 	directionLightResourceBuffer_->usedCount_ = 0;
 	pointLightResourceBuffer_->usedCount_ = 0;
@@ -161,11 +161,7 @@ void CommandManager::Reset() {
 
 void CommandManager::SetCameraViewProjection(const Object::Camera* camera) {
 	// カメラ視点の描画を予約
-	mainCommands_[mainCount_++]->SetDrawTarget(camera->GetViewProjectionMatrix3D());
-
-	// カメラのViewProjectionをリソースにコピー（現在はメインのカメラにしか対応していないので、そのうちマルチレンダリングに対応させる）
-	//cameraResourceBuffer_->data_[0] = camera->GetViewProjectionMatrix3D();
-	//cameraResourceBuffer_->data_[1] = camera->GetViewProjectionMatrix2D();
+	mainCommands_[mainCount_++]->SetDrawTarget(camera->GetViewProjection());
 }
 
 void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, const Math::Matrix4x4& viewProjection) {
@@ -183,7 +179,7 @@ void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, 
 		directionLightResourceBuffer_->shadowMap_->dsvIndex_
 	);
 	// 使用カウント+1
-	structCountResourceBuffer_->data_->directionLight++;
+	commonDataResourceBuffer_->data_->directionLight++;
 }
 void CommandManager::SetPointLightData(const Object::PointLight* light, const Math::Matrix4x4* viewProjections) {
 	// 点光源のデータをリソースにコピー
@@ -206,7 +202,7 @@ void CommandManager::SetPointLightData(const Object::PointLight* light, const Ma
 		);
 	}
 	// 使用カウント+1
-	structCountResourceBuffer_->data_->pointLight++;
+	commonDataResourceBuffer_->data_->pointLight++;
 }
 int CommandManager::CreateTextureResource(const DirectX::ScratchImage& image) {
 	textureResourceBuffer_->resource_.push_back(CreateBufferResource(image.GetMetadata()));
@@ -236,8 +232,8 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 	materialData_->AddData(m);
 	// テクスチャのインデックスを貰う
 	uint32_t tex2d = defaultTexture_->GetIndex();
-	if (primitive->texture != nullptr) {
-		tex2d = primitive->texture->GetIndex();
+	if (primitive->texture.t != nullptr) {
+		tex2d = primitive->texture.t->GetIndex();
 	}
 
 	// Indexの分だけIndexInfoを求める
@@ -246,7 +242,8 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 			startIndexNum + primitive->indexes[i],
 			worldMatrix,
 			material,
-			tex2d
+			tex2d,
+			primitive->isUI
 		};
 
 		// メインコマンドにデータをセット
@@ -260,7 +257,6 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 			}
 		}
 	}
-
 }
 
 
@@ -320,33 +316,32 @@ void CommandManager::CreateRootSignature() {
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
 	rootParameters[1].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
-
+	// 全描画で共通のデータ
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
+	rootParameters[2].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
 
 	// ** VertexShaderで使うデータ ** //
 
 	// 頂点データ
 	D3D12_DESCRIPTOR_RANGE vertexDesc[1] = { descRange[0] };	// DescriptorRangeを作成
 	vertexDesc[0].BaseShaderRegister = 1; // レジスタ番号は1
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[2].DescriptorTable.pDescriptorRanges = vertexDesc; // Tabelの中身の配列を指定
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(vertexDesc); // Tableで利用する数
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[3].DescriptorTable.pDescriptorRanges = vertexDesc; // Tabelの中身の配列を指定
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(vertexDesc); // Tableで利用する数
 
 	// WorldTransform
 	D3D12_DESCRIPTOR_RANGE wtfDesc[1] = { descRange[0] };	// DescriptorRangeを作成
 	wtfDesc[0].BaseShaderRegister = 2; // レジスタ番号は2
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = wtfDesc; // Tabelの中身の配列を指定
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(wtfDesc); // Tableで利用する数
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[4].DescriptorTable.pDescriptorRanges = wtfDesc; // Tabelの中身の配列を指定
+	rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(wtfDesc); // Tableで利用する数
 
 
 	// ** PixelShaderで使うデータ ** //
 
-	// 構造体のカウント
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;		// PixelとVertexで使う
-	rootParameters[4].Descriptor.ShaderRegister = 1;						// レジスタ番号0とバインド
 	// マテリアル
 	D3D12_DESCRIPTOR_RANGE materialDesc[1] = { descRange[0] };	// DescriptorRangeを作成
 	materialDesc[0].BaseShaderRegister = 1; // レジスタ番号は1
@@ -470,10 +465,12 @@ void CommandManager::CreateStructuredBufferResources() {
 	transformData_ = std::make_unique<IStructured<Math::Matrix4x4>>(device_, srv_, RenderingPara::kMaxMatrix);
 
 	// 構造体のカウント
-	structCountResourceBuffer_ = std::make_unique<StructCountResourceBuffer>();
-	structCountResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(StructCount));
-	structCountResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&structCountResourceBuffer_->data_));
-	structCountResourceBuffer_->view_ = structCountResourceBuffer_->resource_->GetGPUVirtualAddress();
+	commonDataResourceBuffer_ = std::make_unique<CommonDataResourceBuffer>();
+	commonDataResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(CommonData));
+	commonDataResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&commonDataResourceBuffer_->data_));
+	commonDataResourceBuffer_->view_ = commonDataResourceBuffer_->resource_->GetGPUVirtualAddress();
+	// 2D用のViewProjectionを作成しておく
+	commonDataResourceBuffer_->data_->vp2D = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
 	// マテリアルデータ
 	materialData_ = std::make_unique<IStructured<MaterialStruct>>(device_, srv_, RenderingPara::kMaxMaterial);
 	

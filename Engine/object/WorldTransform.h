@@ -52,6 +52,10 @@ namespace LWP::Object {
 		/// ImGui
 		/// </summary>
 		void DebugGUI(const std::string& label = "WorldTransform");
+		/// <summary>
+		/// 2D用のWorldTransform
+		/// </summary>
+		void DebugGUI2D(const std::string& label = "WorldTransform");
 
 	public: // ** オペレーターオーバーロード ** //
 

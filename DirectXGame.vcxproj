@@ -131,6 +131,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\WorldTransform.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Sprite.cpp" />
     <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
     <ClCompile Include="Engine\primitive\3d\Mesh.cpp" />
@@ -209,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\ObjectManager.h" />
     <ClInclude Include="Engine\object\WorldTransform.h" />
     <ClInclude Include="Engine\primitive\2d\2dList.h" />
+    <ClInclude Include="Engine\primitive\2d\Sprite.h" />
     <ClInclude Include="Engine\primitive\2d\Surface.h" />
     <ClInclude Include="Engine\primitive\2d\Triangle.h" />
     <ClInclude Include="Engine\primitive\3d\3dList.h" />

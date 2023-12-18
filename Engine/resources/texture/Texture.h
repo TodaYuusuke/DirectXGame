@@ -21,6 +21,8 @@ namespace LWP::Resource {
 		// デストラクタ
 		~Texture() = default;
 
+		// サイズをVector2で受け取る
+		LWP::Math::Vector2 GetTextureSize() const;
 
 	private: // ** プロパティ変数 ** //
 		// CommandManager上でのインデックス

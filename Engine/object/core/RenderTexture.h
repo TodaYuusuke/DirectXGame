@@ -24,6 +24,14 @@ namespace LWP::Object {
 		void DebugGUI() override;
 
 		// ビュープロジェクションを返す関数
-		Math::Matrix4x4 GetViewProjection() const;
+		Math::Matrix4x4 GetViewProjectionMatrix3D() const;
+		Math::Matrix4x4 GetViewProjectionMatrix2D() const;
+
+	private: // メンバ変数
+
+		// PrimitiveManagerのCBufferに渡す、3D用のワールドビュープロジェクション行列
+		Math::Matrix4x4 viewProjectionMatrix3D;
+		// 2D用のワールドビュープロジェクション行列
+		Math::Matrix4x4 viewProjectionMatrix2D;
 	};
 }

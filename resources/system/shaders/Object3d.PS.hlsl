@@ -22,7 +22,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         uint n = 0; // ループ用変数
 
         // -- 平行光源 -- //
-        for (n = 0; n < gStructCount.directionLight; n++) {
+        for (n = 0; n < gCommonData.directionLightCount; n++) {
             // ライティング
             float NdotL = dot(normalize(input.normal), -gDirectionalLight[n].direction);
             float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
@@ -40,7 +40,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         // -- 点光源 -- //
         const float far = 100.0f;  // パースペクティブのfar
         const float near = 0.01f;  // パースペクティブのnear
-        for (n = 0; n < gStructCount.pointLight; n++) {
+        for (n = 0; n < gCommonData.pointLightCount; n++) {
             // ライティング
             float3 dir = input.worldPos - gPointLight[n].position;
             float NdotL = dot(normalize(input.normal), -normalize(dir));

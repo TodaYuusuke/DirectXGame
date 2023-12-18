@@ -60,6 +60,10 @@ void SampleTitle::Initialize() {
 	pointLight->color = Utility::Color::KelvinToRGB(2800);
 	pointLight->isActive = true;
 	pointLight->transform.Parent(&sphere->transform);
+
+	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
+	s->texture = uvTexture;
+	s->isUI = true;
 }
 
 // 更新

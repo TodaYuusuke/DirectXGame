@@ -49,6 +49,14 @@ void WorldTransform::DebugGUI(const std::string& label) {
 		ImGui::TreePop();
 	}
 }
+void WorldTransform::DebugGUI2D(const std::string& label) {
+	if (ImGui::TreeNode(label.c_str())) {
+		ImGui::DragFloat2("Translation", &translation.x, 1.0f);
+		ImGui::DragFloat("Rotation", &rotation.z, 0.01f);
+		ImGui::DragFloat2("Scale", &scale.x, 0.01f);
+		ImGui::TreePop();
+	}
+}
 
 // ** プロパティ変数 ** //
 
