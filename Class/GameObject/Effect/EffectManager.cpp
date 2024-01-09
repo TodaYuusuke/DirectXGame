@@ -7,12 +7,12 @@ EffectManager* EffectManager::GetInstance() {
 
 void EffectManager::Initialize() {
 	for (int i = 0; i < kEffectAmount; i++) {
-		effect->Initialize();
+		effect[i].Initialize();
 	}
 }
 void EffectManager::Update() {
 	for (int i = 0; i < kEffectAmount; i++) {
-		effect->Update();
+		effect[i].Update();
 	}
 }
 

@@ -13,7 +13,7 @@ void Engine::Run(IScene* firstScene) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
-	const char kWindowTitle[] = "Window Title";
+	const char kWindowTitle[] = "AL4_GAME";
 	Initialize(kWindowTitle, 1280, 720, firstScene);
 
 	// ウィンドウの×ボタンが押されるまでループ
