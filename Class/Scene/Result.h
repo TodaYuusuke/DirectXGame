@@ -1,6 +1,5 @@
 #pragma once
-#include "IScene.h"
-#include <Sprite.h>
+#include "scene/IScene.h"
 
 class Result final : public IScene {
 public:
@@ -20,7 +19,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	bool preY = true; // YTrigger検知用
 
 	// 背景素材
-	std::unique_ptr<Sprite> resultSprite_ = nullptr;
+	//std::unique_ptr<Sprite> resultSprite_ = nullptr;
 	// サウンドデータハンドル
 	uint32_t gameStartSE = {0};
 };

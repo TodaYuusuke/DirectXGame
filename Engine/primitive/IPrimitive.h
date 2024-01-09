@@ -69,7 +69,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 初期化処理
 		/// </summary>
-		virtual void Initialize();
+		//virtual void Initialize();
 
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）

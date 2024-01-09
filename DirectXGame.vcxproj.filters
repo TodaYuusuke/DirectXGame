@@ -182,6 +182,9 @@
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
+    <ClCompile Include="Class\Scene\Title.cpp">
+      <Filter>Class\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -406,6 +409,9 @@
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
+    <ClInclude Include="Class\Scene\Title.h">
+      <Filter>Class\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -515,6 +521,12 @@
     </Filter>
     <Filter Include="Engine\base\directX\resource\structuredBuffer">
       <UniqueIdentifier>{69b22e6e-c4cc-4bf9-915f-10b5f6cba812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class">
+      <UniqueIdentifier>{dc7ee413-0377-4356-976c-14fdf0c62727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Scene">
+      <UniqueIdentifier>{8e07a5a6-5697-4857-ad42-0e6443a51504}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

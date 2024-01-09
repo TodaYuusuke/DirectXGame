@@ -103,6 +103,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Adapter\component\Resource.cpp" />
     <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
+    <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapCommand.cpp" />
@@ -175,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\Config.h" />
     <ClInclude Include="Adapter\LWP.h" />
+    <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\directX\command\CommandManager.h" />
     <ClInclude Include="Engine\base\directX\command\Derived\MainCommand.h" />
