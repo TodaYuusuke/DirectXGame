@@ -12,7 +12,9 @@ void HandGun::Initialize(WorldTransform* worldTransform) {
 
 	// 親子関係の登録
 	bodyModel_->transform.Parent(worldTransform);
+	bodyModel_->material.enableLighting = true;
 	sliderModel_->transform.Parent(&bodyModel_->transform);
+	sliderModel_->material.enableLighting = true;
 
 	SetModelNeutral();
 
@@ -158,9 +160,6 @@ void HandGun::SetModelNeutral() {
 }
 void HandGun::ApplyGlobalVariables() {
 	GlobalVariables* g = GlobalVariables::GetInstance();
-
-	g->Update();
-
 	verticalRecoilPower_ = g->GetVector3Value("HandGun", "VerticalRecoilPower");
 	horizontalRecoilPower_ = g->GetFloatValue("HandGun", "HorizontalRecoilPower");
 	kRecoilFrame_ = g->GetIntValue("HandGun", "RecoilFrame");

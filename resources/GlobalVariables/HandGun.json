@@ -6,7 +6,7 @@
             0.12099999934434891,
             -1.399999976158142
         ],
-        "HorizontalRecoilPower": 0.30000001192092896,
+        "HorizontalRecoilPower": 0.03999999910593033,
         "MAXAmmo": 13,
         "RecoilFrame": 10,
         "RecoilRotationX": -0.800000011920929,
@@ -16,7 +16,7 @@
         "ReloadWaitFrame": 30,
         "SliderTranslationZ": -2.0,
         "VerticalRecoilPower": [
-            -0.15000000596046448,
+            -0.07999999821186066,
             0.0,
             0.0
         ]

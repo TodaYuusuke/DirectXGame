@@ -119,7 +119,11 @@ namespace LWP {
 			/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
+#if _DEBUG
 			static const float kResolutionScale = 1.0f;
+#else
+			static const float kResolutionScale = 7.0f;
+#endif
 
 			/// <summary>
 			/// アンチエイリアスを有効にするか（未実装）

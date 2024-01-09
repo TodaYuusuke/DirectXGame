@@ -209,6 +209,12 @@
     <ClCompile Include="Class\GlobalVariables\GlobalVariables.cpp">
       <Filter>Class\GlobalVariables</Filter>
     </ClCompile>
+    <ClCompile Include="Class\GameObject\Character\Enemy.cpp">
+      <Filter>Class\GameObject\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Scene\Result.cpp">
+      <Filter>Class\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -474,6 +480,12 @@
     </ClInclude>
     <ClInclude Include="Class\Utility\TimedCall\TimedCall.h">
       <Filter>Class\Utility\TimedCall</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Character\Enemy.h">
+      <Filter>Class\GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Scene\Result.h">
+      <Filter>Class\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

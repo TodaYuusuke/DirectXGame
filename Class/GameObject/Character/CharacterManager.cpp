@@ -12,15 +12,9 @@ void CharacterManager::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize({0.0f, 4.0f, 0.0f});
 
-	//enemies_.clear();
-	//// enemyのモデル読み込み
-	//enemyCoreModel_.reset(Model::CreateFromOBJ("enemy_core", true));
-	//enemyBlock1Model_.reset(Model::CreateFromOBJ("enemy_block1", true));
-	//enemyBlock2Model_.reset(Model::CreateFromOBJ("enemy_block2", true));
-	//// テクスチャ読み込み
-	//enemyTextureHandle_ = TextureManager::Load("white1x1.png");
+	enemies_.clear();
 
-	//SetEnemyMovement();
+	SetEnemyMovement();
 
 	//// 当たり判定マネージャーを生成
 	collisionManager_ = std::make_unique<CollisionManager>();
@@ -31,38 +25,38 @@ void CharacterManager::Update() {
 	collisionManager_->ClearList();	// 当たり判定初期化
 
 	// 雑魚敵を召喚
-	//if (enemySpawnFrame_ < 0) {
-	//	SummonEnemies(static_cast<EnemyMoveType>(std::rand() % EnemyMoveTypeSize));
-	//	enemySpawnFrame_ = kEnemySpawnCycle_;
-	//} else {
-	//	enemySpawnFrame_--;
-	//}
-	//// コールバック更新
-	//for (TimedCall<void()>* timedCall : timedCalls_) {
-	//	timedCall->Update();
-	//}
+	if (enemySpawnFrame_ < 0) {
+		SummonEnemies(static_cast<EnemyMoveType>(std::rand() % EnemyMoveTypeSize));
+		enemySpawnFrame_ = kEnemySpawnCycle_;
+	} else {
+		enemySpawnFrame_--;
+	}
+	// コールバック更新
+	for (TimedCall<void()>* timedCall : timedCalls_) {
+		timedCall->Update();
+	}
 
 	// 更新処理
 	player_->Update();
-	//for (Enemy* enemy : enemies_) {
-	//	enemy->Update();
-	//}
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
 
 	// デスフラグの立った敵を削除
-	//enemies_.remove_if([](Enemy* enemy) {
-	//	if (enemy->GetisDead()) {
-	//		delete enemy;
-	//		return true;
-	//	}
-	//	return false;
-	//});
+	enemies_.remove_if([](Enemy* enemy) {
+		if (enemy->GetisDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
 
 	// 当たり判定を登録
 	collisionManager_->PushCollider(player_.get());
 	// 敵の全ての当たり判定
-	//for (const auto& enemy : enemies_) {
-	//	collisionManager_->PushCollider(enemy);
-	//}
+	for (const auto& enemy : enemies_) {
+		collisionManager_->PushCollider(enemy);
+	}
 	// 弾リストの取得
 	const std::list<Bullet*>& Bullets = player_->GetBullets();
 	// 弾の全ての当たり判定
@@ -72,7 +66,7 @@ void CharacterManager::Update() {
 
 	collisionManager_->CheckAllCollisions();
 }
-/*
+
 void CharacterManager::SetEnemyMovement() {
 	// 雑魚の挙動を定義
 	enemyControlPoints_[Parallel1] = {
@@ -134,10 +128,9 @@ void CharacterManager::SetEnemyMovement() {
 }
 void CharacterManager::SummonEnemy(EnemyMoveType moveType) {
 	Enemy* newEnemy = new Enemy();
-	std::vector<Model*> models = { enemyCoreModel_.get(), enemyBlock1Model_.get(), enemyBlock2Model_.get()};
-	newEnemy->Initialize(models, {30.0f, -50.0f, 0.0f});
+	newEnemy->Initialize({30.0f, -50.0f, 0.0f});
 	newEnemy->SetTextureHandle(enemyTextureHandle_);
-	newEnemy->SetPlayerWorldTransform(&player_->GetWorldTransform());
+	newEnemy->SetPlayerWorldTransform(player_->GetTransform());
 	newEnemy->SetControlPoints(enemyControlPoints_[moveType]);
 	newEnemy->killCount_ = &killedEnemyCount_;
 	enemies_.push_back(newEnemy);
@@ -148,4 +141,3 @@ void CharacterManager::SummonEnemies(EnemyMoveType moveType) {
 	timedCalls_.push_back(new TimedCall<void()>(f, 90));
 	timedCalls_.push_back(new TimedCall<void()>(f, 180));
 }
-*/

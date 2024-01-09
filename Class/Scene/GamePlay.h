@@ -22,6 +22,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Mesh* skydome_ = nullptr;
 	// グラウンド
 	LWP::Primitive::Mesh* ground_ = nullptr;
+	// 平行光源
+	LWP::Object::DirectionLight* light_ = nullptr;
+
 
 	// キャラクター管理クラス
 	std::unique_ptr<CharacterManager> characterManager_ = nullptr;

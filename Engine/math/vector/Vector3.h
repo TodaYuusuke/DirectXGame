@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <vector>
 
 /// <summary>
 /// 3次元ベクトル
@@ -72,5 +73,11 @@ namespace LWP::Math {
 		static Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 			return v1 * (1 - t) + v2 * t;
 		}
+
+
+		// Catmull-Romスプライン曲線補間
+		static Vector3 CatmullRom(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t);
+		// Catmull-Romスプライン曲線補間の座標を求める
+		static Vector3 GetCatmullRomPosition(std::vector<Vector3> controlPoints, float t);
 	};
 }

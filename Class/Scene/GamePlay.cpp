@@ -1,5 +1,5 @@
 #include "GamePlay.h"
-//#include "Result.h"
+#include "Result.h"
 
 void GamePlay::Initialize() {
 	// スカイドームの生成
@@ -8,6 +8,11 @@ void GamePlay::Initialize() {
 	// グラウンドの生成
 	ground_ = LWP::Resource::LoadModel("ground/ground.obj");
 	ground_->transform.scale = { 50, 50, 50 };
+	ground_->material.enableLighting = true;
+	// 平行光源の生成
+	light_ = LWP::Object::CreateInstance<LWP::Object::DirectionLight>();
+	light_->intensity = 7.5f;
+	light_->isActive = true;
 
 	// キャラクターマネージャーを生成
 	characterManager_ = std::make_unique<CharacterManager>();
@@ -16,27 +21,14 @@ void GamePlay::Initialize() {
 	// カメラが追従するようにセット
 	mainCamera->transform.Initialize();
 	mainCamera->transform.Parent(characterManager_->GetPlayerTransform());
-
-	//// 一人称カメラの生成
-	//fpsCamera_ = std::make_unique<FPSCamera>();
-	//fpsCamera_->Initialize();
-	//fpsCamera_->SetTarget(&characterManager_->GetPlayerWorldTransform());
 }
 
 void GamePlay::Update() {
-	//// カメラ更新
-	//fpsCamera_->Update();
-	//ViewProjection v = fpsCamera_->GetViewProjection();
-	//viewProjection_.matView = v.matView;
-	//viewProjection_.matProjection = v.matProjection;
-	//// ビュープロジェクション行列の転送
-	//viewProjection_.TransferMatrix();
-
-	//// キャラの更新
+	// キャラの更新
 	characterManager_->Update();
 
-	//// キルカウントが一定以上になったら -> 次のシーンへ
-	//if (characterManager_->killedEnemyCount_ >= 20) {
-	//	nextScene_ = new Result();
-	//}
+	// キルカウントが一定以上になったら -> 次のシーンへ
+	if (characterManager_->killedEnemyCount_ >= 20) {
+		nextScene_ = new Result();
+	}
 }

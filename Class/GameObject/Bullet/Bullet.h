@@ -13,7 +13,10 @@ public: // メンバ関数
 	bool isDead() { return isDead_; }
 
 	// 衝突時に呼ばれる関数
-	void OnCollision() override { isDead_ = true; }
+	void OnCollision() override { 
+		model_->isActive = false;
+		isDead_ = true;
+	}
 
 private: // メンバ定数
 	// 弾の生存時間

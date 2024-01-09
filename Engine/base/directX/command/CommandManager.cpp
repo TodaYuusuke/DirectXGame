@@ -173,11 +173,11 @@ void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, 
 	// データを登録
 	directionLightResourceBuffer_->data_[directionLightResourceBuffer_->usedCount_++] = newData;
 
-	shadowCommands_[shadowCount_++]->SetDrawTarget(
-		viewProjection,
-		directionLightResourceBuffer_->shadowMap_->resource_.Get(),
-		directionLightResourceBuffer_->shadowMap_->dsvIndex_
-	);
+	//shadowCommands_[shadowCount_++]->SetDrawTarget(
+	//	viewProjection,
+	//	directionLightResourceBuffer_->shadowMap_->resource_.Get(),
+	//	directionLightResourceBuffer_->shadowMap_->dsvIndex_
+	//);
 	// 使用カウント+1
 	commonDataResourceBuffer_->data_->directionLight++;
 }

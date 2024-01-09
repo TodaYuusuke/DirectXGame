@@ -26,6 +26,9 @@ void Player::Initialize(Vector3 position) {
 
 	// モデルのWorldTransformの初期化
 	SetModelNeutral();
+
+	// コライダー用のトランスフォームをセット
+	worldTransformPtr_ = &transform_;
 }
 
 void Player::Update() {
@@ -53,8 +56,9 @@ void Player::MoveJoyStick() {
 
 			// 弾を発射
 			Bullet* newBullet = new Bullet();
+			Vector3 v = transform_.GetWorldPosition();
 			newBullet->Initialize(
-				transform_.GetWorldPosition(), velocity);
+				v, velocity);
 			bullets_.push_back(newBullet);
 		}
 	}

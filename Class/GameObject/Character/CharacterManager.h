@@ -1,5 +1,5 @@
 #pragma once
-//#include "./Enemy/Enemy.h"
+#include "Enemy.h"
 #include "Player.h"
 #include "../Collision/CollisionManager.h"
 #include "../../Utility/TimedCall/TimedCall.h"
@@ -23,15 +23,11 @@ public: // メンバ関数
 private: // メンバ変数
 	// プレイヤー
 	std::unique_ptr<Player> player_;
-	//// 雑魚敵たち
-	//std::list<Enemy*> enemies_;
+	// 雑魚敵たち
+	std::list<Enemy*> enemies_;
 
-	//// 雑魚敵のモデル
-	//std::unique_ptr<Model> enemyCoreModel_;
-	//std::unique_ptr<Model> enemyBlock1Model_;
-	//std::unique_ptr<Model> enemyBlock2Model_;
-	//// 雑魚敵の被弾テクスチャハンドル
-	//uint32_t enemyTextureHandle_ = 0u;
+	// 雑魚敵の被弾テクスチャハンドル
+	uint32_t enemyTextureHandle_ = 0u;
 
 	//// 当たり判定マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_;
@@ -50,18 +46,18 @@ private: // メンバ関数
 		Parallel8, // 平行移動8
 		EnemyMoveTypeSize
 	};
-	//// 敵の制御点の配列
-	//std::vector<Vector3> enemyControlPoints_[EnemyMoveTypeSize];
-	//// 敵の遅延生成
-	//std::vector<TimedCall<void()>*> timedCalls_;
-	//// 敵を生成する間隔
-	//int32_t kEnemySpawnCycle_ = 120;
-	//int32_t enemySpawnFrame_ = 0;
+	// 敵の制御点の配列
+	std::vector<LWP::Math::Vector3> enemyControlPoints_[EnemyMoveTypeSize];
+	// 敵の遅延生成
+	std::vector<TimedCall<void()>*> timedCalls_;
+	// 敵を生成する間隔
+	int32_t kEnemySpawnCycle_ = 120;
+	int32_t enemySpawnFrame_ = 0;
 
-	//// 雑魚の挙動を定義
-	//void SetEnemyMovement();
-	//// 敵を召喚
-	//void SummonEnemy(EnemyMoveType moveType);
-	//// 複数の敵を召喚
-	//void SummonEnemies(EnemyMoveType moveType);
+	// 雑魚の挙動を定義
+	void SetEnemyMovement();
+	// 敵を召喚
+	void SummonEnemy(EnemyMoveType moveType);
+	// 複数の敵を召喚
+	void SummonEnemies(EnemyMoveType moveType);
 };

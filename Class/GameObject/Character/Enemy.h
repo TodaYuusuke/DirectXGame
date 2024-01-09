@@ -1,32 +1,24 @@
 #pragma once
 #include "../Collision/Collider.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 class Enemy : public Collider {
-
 public: // メンバ関数
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const std::vector<Model*>& models, Vector3 position) override;
+	void Initialize(LWP::Math::Vector3 position);
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update() override;
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw(const ViewProjection& viewProjection) override;
+	void Update();
 	
 	// エネミーの移動経路をセット
-	void SetControlPoints(std::vector<Vector3> controlPoints) { controlPoints_ = controlPoints; }
+	void SetControlPoints(std::vector<LWP::Math::Vector3> controlPoints) { controlPoints_ = controlPoints; }
 	// テクスチャハンドルをセット
 	void SetTextureHandle(uint32_t enemyTextureHandle) { hitTextureHandle_ = enemyTextureHandle; }
 	// プレイヤーのWorldTransformをセット
-	void SetPlayerWorldTransform(const WorldTransform* playerWorldTransform) {
+	void SetPlayerWorldTransform(LWP::Object::WorldTransform* playerWorldTransform) {
 		playerWorldTransform_ = playerWorldTransform;
 	}
 	
@@ -49,8 +41,21 @@ private: // メンバ変数
 		Block2,
 	};
 
+	// 雑魚敵のモデル
+	LWP::Primitive::Mesh* coreModel_;
+	LWP::Primitive::Mesh* block1Model_;
+	LWP::Primitive::Mesh* block2Model_;
+
+	// テクスチャたち
+	LWP::Resource::Texture* coreTex_;
+	LWP::Resource::Texture* block1Tex_;
+	LWP::Resource::Texture* block2Tex_;
+	// 被弾時のテクスチャ
+	LWP::Resource::Texture* hitTex_;
+
+
 	// 移動するスプライン曲線制御点
-	std::vector<Vector3> controlPoints_;
+	std::vector<LWP::Math::Vector3> controlPoints_;
 	// 補間
 	float t;
 
@@ -62,9 +67,10 @@ private: // メンバ変数
 	bool isDead_ = false;
 
 	// プレイヤーのWorldTransformのポインタ
-	const WorldTransform* playerWorldTransform_;
+	const LWP::Object::WorldTransform* playerWorldTransform_;
 
 private: // プライベートな関数
+	
 	// モデルを初期値に戻す
 	void SetModelNeutral();
 	// 調整項目適応
@@ -73,7 +79,7 @@ private: // プライベートな関数
 private: // アニメーション関連
 
 	// 回転パラメータ
-	Vector3 kRotationSpeed_ = {0.01f, 0.01f, 0.01f};	// 現在の回転速度
+	LWP::Math::Vector3 kRotationSpeed_ = {0.01f, 0.01f, 0.01f};	// 現在の回転速度
 	void Rotation();
 
 	// 伸縮パラメータ

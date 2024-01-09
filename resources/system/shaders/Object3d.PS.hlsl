@@ -5,7 +5,6 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
     uint32_t m = gIndex[input.id].material;
     uint32_t t = gIndex[input.id].tex2d;
 
-
     // 最終的な結果
     float32_t4 output;
 
@@ -65,5 +64,9 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         float4 transformUV = mul(float32_t4(input.texcoord,0.0f,1.0f), gMaterial[m].uvTransform);
         output = input.color * gTexture[t].Sample(gSampler, transformUV.xy);
     }
+
+    // 透明度が0の場合は破棄する
+    if (output.a == 0) { discard; }
+
     return output;
 }
