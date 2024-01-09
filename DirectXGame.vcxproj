@@ -108,6 +108,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\GameObject\Character\Enemy.cpp" />
     <ClCompile Include="Class\GameObject\Character\Player.cpp" />
     <ClCompile Include="Class\GameObject\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Class\GameObject\Effect\EffectManager.cpp" />
+    <ClCompile Include="Class\GameObject\Effect\HitEffect.cpp" />
     <ClCompile Include="Class\GameObject\Gun\HandGun.cpp" />
     <ClCompile Include="Class\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="Class\Scene\GamePlay.cpp" />
@@ -193,6 +195,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\GameObject\Collision\Collider.h" />
     <ClInclude Include="Class\GameObject\Collision\CollisionConfig.h" />
     <ClInclude Include="Class\GameObject\Collision\CollisionManager.h" />
+    <ClInclude Include="Class\GameObject\Effect\EffectManager.h" />
+    <ClInclude Include="Class\GameObject\Effect\HitEffect.h" />
     <ClInclude Include="Class\GameObject\Gun\HandGun.h" />
     <ClInclude Include="Class\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="Class\Scene\GamePlay.h" />

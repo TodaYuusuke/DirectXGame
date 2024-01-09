@@ -104,6 +104,10 @@ void HandGun::Update() {
 			redDotSprite->isActive = false;
 		}
 	}
+	// もしレッドドットを表示しているならば消す
+	else {
+		redDotSprite->isActive = false;
+	}
 }
 
 bool HandGun::Shot(Vector3* recoil) {

@@ -85,6 +85,8 @@ void Enemy::OnCollision() {
 	block1Model_->material.enableLighting = false;
 	block2Model_->texture.t = hitTex_;
 	block2Model_->material.enableLighting = false;
+
+	EffectManager::GetInstance()->Start(coreModel_->transform.GetWorldPosition());
 }
 
 

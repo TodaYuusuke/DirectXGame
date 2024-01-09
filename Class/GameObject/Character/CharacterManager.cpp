@@ -20,6 +20,8 @@ void CharacterManager::Initialize() {
 	collisionManager_ = std::make_unique<CollisionManager>();
 
 	killedEnemyCount_ = 0;
+
+	EffectManager::GetInstance()->Initialize();
 }
 void CharacterManager::Update() {
 	collisionManager_->ClearList();	// 当たり判定初期化
@@ -65,6 +67,8 @@ void CharacterManager::Update() {
 	}
 
 	collisionManager_->CheckAllCollisions();
+
+	EffectManager::GetInstance()->Update();
 }
 
 void CharacterManager::SetEnemyMovement() {

@@ -215,6 +215,12 @@
     <ClCompile Include="Class\Scene\Result.cpp">
       <Filter>Class\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Class\GameObject\Effect\HitEffect.cpp">
+      <Filter>Class\GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Effect\EffectManager.cpp">
+      <Filter>Class\GameObject\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -487,6 +493,12 @@
     <ClInclude Include="Class\Scene\Result.h">
       <Filter>Class\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Class\GameObject\Effect\HitEffect.h">
+      <Filter>Class\GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Effect\EffectManager.h">
+      <Filter>Class\GameObject\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -629,6 +641,9 @@
     </Filter>
     <Filter Include="Class\Utility\TimedCall">
       <UniqueIdentifier>{f01287e8-f5f6-45fa-be5e-6fcabbe78047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject\Effect">
+      <UniqueIdentifier>{80ced032-61d5-4fd7-8e05-e0fd18583ecf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

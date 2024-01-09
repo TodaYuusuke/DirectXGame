@@ -1,4 +1,5 @@
 #pragma once
+#include "../Effect/EffectManager.h"
 #include "../Collision/Collider.h"
 
 class Enemy : public Collider {
