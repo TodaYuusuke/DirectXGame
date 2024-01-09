@@ -28,6 +28,11 @@ private: // 非公開の関数
 	/// <param name="colliderB">コライダーB</param>
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 
+	// 二つのベクトル間の距離を求める
+	float Distance(LWP::Math::Vector3 v1, LWP::Math::Vector3 v2) {
+		return powf((v2.x - v1.x), 2) + powf((v2.y - v1.y), 2) + powf((v2.z - v1.z), 2);
+	}
+
 private: // メンバ変数
 	std::list<Collider*> colliders_;
 };

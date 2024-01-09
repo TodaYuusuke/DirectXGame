@@ -1,24 +1,19 @@
 #pragma once
-#include "Model.h"
-#include <Sprite.h>
-#include <Audio.h>
+#include <Adapter.h>
 
 class HandGun {
 public: // メンバ関数
 
 	// 初期化
-	void Initialize(const WorldTransform& worldTransform);
+	void Initialize(LWP::Object::WorldTransform* worldTransform);
 	// 更新
 	void Update();
-	// 描画
-	void Draw(const ViewProjection& viewProjection);
-	void DrawUI();
 
 	// レティクルのワールド座標を取得
-	Vector3 GetReticleWorldPosition() { return reticleWorldTransform.GetWorldPosition(); }
+	LWP::Math::Vector3 GetReticleWorldPosition() { return reticlePosition.GetWorldPosition(); }
 	
 	// 射撃
-	bool Shot(Vector3* recoil);
+	bool Shot(LWP::Math::Vector3* recoil);
 	int32_t GetAmmo() { return ammo_; } // 現在の装弾数を取得
 	// ADS
 	void SwitchADS();
@@ -27,31 +22,29 @@ public: // メンバ関数
 	void Reload();
 
 private: // メンバ変数
-	std::unique_ptr<Model> bodyModel_;
-	std::unique_ptr<Model> sliderModel_;
-	WorldTransform bodyWT_;
-	WorldTransform sliderWT_;
+	// 本体のモデル
+	LWP::Primitive::Mesh* bodyModel_ = nullptr;
+	LWP::Primitive::Mesh* sliderModel_ = nullptr;
 
-	WorldTransform reticleWorldTransform;
-	std::unique_ptr<Sprite> reticleSprite = nullptr;
-	std::unique_ptr<Sprite> redDotSprite = nullptr;
+	// サイトやレティクル用のUI
+	LWP::Object::WorldTransform reticlePosition;
+	LWP::Primitive::Sprite* reticleSprite = nullptr;
+	LWP::Primitive::Sprite* redDotSprite = nullptr;
 
-	enum SENum {
-		Fire,
-		Reload1,
-		Reload2,
-		EmptyAmmo
-	};
-	// オーディオクラスのインスタンス
-	Audio* audio_ = nullptr;
-	// サウンドデータハンドル
-	uint32_t soundDataHandle_[5] = {0};
+	//enum SENum {
+	//	Fire,
+	//	Reload1,
+	//	Reload2,
+	//	EmptyAmmo
+	//};
+	//// サウンドデータハンドル
+	//uint32_t soundDataHandle_[5] = {0};
 
 	// 装弾数表示用スプライト
-	std::unique_ptr<Sprite> secondDigitNumberSprite_[2];	// 10の位
-	std::unique_ptr<Sprite> firstDigitNumberSprite_[10];	// 1の位
-	std::unique_ptr<Sprite> slashSprite_;
-	std::unique_ptr<Sprite> maxAmmoNumSprite_[2];	// 最大装弾数を表示するためのスプライト
+	LWP::Primitive::Sprite* secondDigitNumberSprite_[2];	// 10の位
+	LWP::Primitive::Sprite* firstDigitNumberSprite_[10];	// 1の位
+	LWP::Primitive::Sprite* slashSprite_;
+	LWP::Primitive::Sprite* maxAmmoNumSprite_[2];	// 最大装弾数を表示するためのスプライト
 	// 装弾数
 	int32_t kMAXAmmo_ = 13;
 	// 弾数
@@ -61,8 +54,8 @@ private: // メンバ変数
 	bool isADS = false;
 
 	// 垂直リコイルパワー
-	Vector3 verticalRecoilPower_ = {-1.0f, 0.0f, 0.0f};
-	// 水平ランダムリコイル
+	LWP::Math::Vector3 verticalRecoilPower_ = {-1.0f, 0.0f, 0.0f};
+	// 水平ランダムリコイルパワー
 	float horizontalRecoilPower_ = 0.3f;
 
 private: // プライベートな関数
@@ -82,7 +75,7 @@ private: // アニメーション関連
 
 	// ADSのパラメータ
 	int32_t kADSFrame_ = 10;
-	Vector3 kADSTranslation_ = {0.0f, 0.0f, 0.0f};
+	LWP::Math::Vector3 kADSTranslation_ = { 0.0f, 0.0f, 0.0f };
 	int32_t adsFrame_ = 0;
 	void ADSAnimation();
 

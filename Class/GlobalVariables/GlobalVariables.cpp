@@ -1,6 +1,7 @@
 #include "GlobalVariables.h"
-#include "ImGuiManager.h"
 #include <fstream>
+
+using namespace LWP::Math;
 
 GlobalVariables* GlobalVariables::GetInstance() {
 	static GlobalVariables instance;

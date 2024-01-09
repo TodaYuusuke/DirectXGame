@@ -1,74 +1,71 @@
 #include "HandGun.h"
-#include <ImGuiManager.h>
 #include "../../GlobalVariables/GlobalVariables.h"
-#include "../../Utility/Math/Math.h"
 
-void HandGun::Initialize(const WorldTransform& worldTransform) {
-	bodyModel_.reset(Model::CreateFromOBJ("handgun_body", true));
-	sliderModel_.reset(Model::CreateFromOBJ("handgun_slider", true));
+using namespace LWP::Math;
+using namespace LWP::Primitive;
+using namespace LWP::Resource;
+using namespace LWP::Object;
+
+void HandGun::Initialize(WorldTransform* worldTransform) {
+	bodyModel_ = LoadModel("handgun_body/handgun_body.obj");
+	sliderModel_ = LoadModel("handgun_slider/handgun_slider.obj");
 
 	// 親子関係の登録
-	bodyWT_.Initialize();
-	bodyWT_.parent_ = &worldTransform;
-	sliderWT_.Initialize();
-	sliderWT_.parent_ = &bodyWT_;
+	bodyModel_->transform.Parent(worldTransform);
+	sliderModel_->transform.Parent(&bodyModel_->transform);
 
 	SetModelNeutral();
 
-	// レティクルのワールドトランスフォーム初期化
-	reticleWorldTransform.Initialize();
-	reticleWorldTransform.translation_.z += 50.0f;
-	reticleWorldTransform.parent_ = &worldTransform;
-	reticleWorldTransform.UpdateMatrix();
-	// スプライト生成
-	reticleSprite.reset(Sprite::Create(
-	    TextureManager::Load("reticle.png"), {1280.0f / 2.0f, 720.0f / 2.0f}, {1, 1, 1, 1},
-	    {0.5f, 0.5f}));
-	redDotSprite.reset(Sprite::Create(
-	    TextureManager::Load("dotsight.png"), {1280.0f / 2.0f, 720.0f / 2.0f}, {1, 1, 1, 1},
-	    {0.5f, 0.5f}));
+	// レティクルの生成
+	reticleSprite = CreateInstance<Sprite>();
+	reticleSprite->transform.translation.x = LWP::Info::GetWindowWidthF() / 2.0f;
+	reticleSprite->transform.translation.y = LWP::Info::GetWindowHeightF() / 2.0f;
+	reticleSprite->anchorPoint = { 0.5f,0.5f };
+	reticleSprite->texture = LoadTexture("reticle.png");
+	reticleSprite->isUI = true;
+	reticlePosition.translation.z = 50.0f;
+	reticlePosition.Parent(worldTransform);
+	// レッドドット生成
+	redDotSprite = CreateInstance<Sprite>();
+	redDotSprite->transform.translation.x = LWP::Info::GetWindowWidthF() / 2.0f;
+	redDotSprite->transform.translation.y = LWP::Info::GetWindowHeightF() / 2.0f;
+	redDotSprite->anchorPoint = { 0.5f,0.5f };
+	redDotSprite->texture = LoadTexture("dotsight.png");
+	redDotSprite->isUI = true;
 
 	// サウンドデータの読み込み
-	audio_ = Audio::GetInstance();
-	soundDataHandle_[Fire] = audio_->LoadWave("audio/gamePlay/Fire.wav");
-	soundDataHandle_[Reload1] = audio_->LoadWave("audio/gamePlay/Reload1.wav");
-	soundDataHandle_[Reload2] = audio_->LoadWave("audio/gamePlay/Reload2.wav");
-	soundDataHandle_[EmptyAmmo] = audio_->LoadWave("audio/gamePlay/EmptyAmmo.wav");
+	//soundDataHandle_[Fire] = audio_->LoadWave("audio/gamePlay/Fire.wav");
+	//soundDataHandle_[Reload1] = audio_->LoadWave("audio/gamePlay/Reload1.wav");
+	//soundDataHandle_[Reload2] = audio_->LoadWave("audio/gamePlay/Reload2.wav");
+	//soundDataHandle_[EmptyAmmo] = audio_->LoadWave("audio/gamePlay/EmptyAmmo.wav");
 
 	// スプライト読み込み
-	secondDigitNumberSprite_[0].reset(Sprite::Create(
-	    TextureManager::Load("number/0.png"), {45.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	secondDigitNumberSprite_[1].reset(Sprite::Create(
-	    TextureManager::Load("number/1.png"), {45.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[0].reset(Sprite::Create(
-	    TextureManager::Load("number/0.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[1].reset(Sprite::Create(
-	    TextureManager::Load("number/1.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[2].reset(Sprite::Create(
-	    TextureManager::Load("number/2.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[3].reset(Sprite::Create(
-	    TextureManager::Load("number/3.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[4].reset(Sprite::Create(
-	    TextureManager::Load("number/4.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[5].reset(Sprite::Create(
-	    TextureManager::Load("number/5.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[6].reset(Sprite::Create(
-	    TextureManager::Load("number/6.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[7].reset(Sprite::Create(
-	    TextureManager::Load("number/7.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[8].reset(Sprite::Create(
-	    TextureManager::Load("number/8.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	firstDigitNumberSprite_[9].reset(Sprite::Create(
-	    TextureManager::Load("number/9.png"), {110.0f, 625.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	slashSprite_.reset(Sprite::Create(
-	    TextureManager::Load("number/slash.png"), {165.0f, 670.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	maxAmmoNumSprite_[0].reset(Sprite::Create(
-	    TextureManager::Load("number/1.png"), {200.0f, 680.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	maxAmmoNumSprite_[0]->SetSize({36.0f, 44.0f});
-	maxAmmoNumSprite_[1].reset(Sprite::Create(
-	    TextureManager::Load("number/3.png"), {230.0f, 680.0f}, {1, 1, 1, 1}, {0.5f, 0.5f}));
-	maxAmmoNumSprite_[1]->SetSize({36.0f, 44.0f});
+	for (int i = 0; i < 2; i++) {
+		secondDigitNumberSprite_[i] = CreateInstance<Sprite>();
+		secondDigitNumberSprite_[i]->texture = LoadTexture("number/" + std::to_string(i) + ".png");
+		secondDigitNumberSprite_[i]->isUI = true;
+		secondDigitNumberSprite_[i]->isActive = false;
+	}
+	for (int i = 0; i < 10; i++) {
+		firstDigitNumberSprite_[i] = CreateInstance<Sprite>();
+		firstDigitNumberSprite_[i]->texture = LoadTexture("number/" + std::to_string(i) + ".png");
+		firstDigitNumberSprite_[i]->isUI = true;
+		firstDigitNumberSprite_[i]->isActive = false;
+	}
 
+	slashSprite_ = CreateInstance<Sprite>();
+	slashSprite_->texture = LoadTexture("number/slash.png");
+	slashSprite_->isUI = true;
+	slashSprite_->isActive = false;
+
+	maxAmmoNumSprite_[0] = CreateInstance<Sprite>();
+	maxAmmoNumSprite_[0]->texture = LoadTexture("number/1.png");
+	maxAmmoNumSprite_[0]->isUI = true;
+	maxAmmoNumSprite_[0]->isActive = false;
+	maxAmmoNumSprite_[1] = CreateInstance<Sprite>();
+	maxAmmoNumSprite_[1]->texture = LoadTexture("number/3.png");
+	maxAmmoNumSprite_[1]->isUI = true;
+	maxAmmoNumSprite_[1]->isActive = false;
 
 	// json登録
 	GlobalVariables* g = GlobalVariables::GetInstance();
@@ -94,29 +91,17 @@ void HandGun::Update() {
 	// 調整項目適応
 	ApplyGlobalVariables();
 
-	bodyWT_.UpdateMatrix();
-	sliderWT_.UpdateMatrix();
-	reticleWorldTransform.UpdateMatrix();
-}
-void HandGun::Draw(const ViewProjection& viewProjection) {
-	bodyModel_->Draw(bodyWT_, viewProjection);
-	sliderModel_->Draw(sliderWT_, viewProjection);
-}
-void HandGun::DrawUI() {
+	// レッドドットやレティクルの表示切り替え処理
 	if (reloadFrame_ < 0) {
 		if (adsFrame_ == kADSFrame_) {
-			redDotSprite->Draw();
-		} else {
-			reticleSprite->Draw();
+			redDotSprite->isActive = true;
+			reticleSprite->isActive = false;
+		}
+		else {
+			reticleSprite->isActive = true;
+			redDotSprite->isActive = false;
 		}
 	}
-
-	// 装弾数を描画
-	secondDigitNumberSprite_[ammo_ / 10]->Draw();
-	firstDigitNumberSprite_[ammo_ % 10]->Draw();
-	slashSprite_->Draw();
-	maxAmmoNumSprite_[0]->Draw();
-	maxAmmoNumSprite_[1]->Draw();
 }
 
 bool HandGun::Shot(Vector3* recoil) {
@@ -127,7 +112,7 @@ bool HandGun::Shot(Vector3* recoil) {
 	// 装弾数がなければ何もしない
 	if (ammo_ <= 0) {
 		// 弾切れの音
-		audio_->PlayWave(soundDataHandle_[EmptyAmmo], false, 0.3f);
+		//audio_->PlayWave(soundDataHandle_[EmptyAmmo], false, 0.3f);
 		return false;
 	}
 	// 装弾数-1
@@ -137,9 +122,9 @@ bool HandGun::Shot(Vector3* recoil) {
 
 	// リコイル量計測
 	*recoil += verticalRecoilPower_;
-	recoil->y += Math::RandomFloat(-horizontalRecoilPower_, horizontalRecoilPower_);
+	recoil->y += LWP::Utility::GenerateRandamNum<int>(int(-horizontalRecoilPower_ * 100), int(horizontalRecoilPower_ * 100)) / 100.0f;
 	// 銃声
-	audio_->PlayWave(soundDataHandle_[Fire], false, 0.3f);
+	//audio_->PlayWave(soundDataHandle_[Fire], false, 0.3f);
 
 	return true;
 }
@@ -164,15 +149,18 @@ void HandGun::Reload() {
 
 
 void HandGun::SetModelNeutral() {
-	bodyWT_.translation_ = {0.75f, -0.5f, 1.2f};
-	bodyWT_.rotation_ = {0.0f, 0.0f, 0.0f};
-	bodyWT_.scale_ = {0.1f, 0.1f, 0.1f};
-	sliderWT_.translation_ = {0.0f, 0.0f, 0.0f};
-	sliderWT_.rotation_ = {0.0f, 0.0f, 0.0f};
-	sliderWT_.scale_ = {1.0f, 1.0f, 1.0f};
+	bodyModel_->transform.translation = { 0.730f, -0.550f, 2.070f};
+	bodyModel_->transform.rotation = {0.0f, 0.0f, 0.0f};
+	bodyModel_->transform.scale = {0.1f, 0.1f, 0.1f};
+	sliderModel_->transform.translation = {0.0f, 0.0f, 0.0f};
+	sliderModel_->transform.rotation = {0.0f, 0.0f, 0.0f};
+	sliderModel_->transform.scale = {1.0f, 1.0f, 1.0f};
 }
 void HandGun::ApplyGlobalVariables() {
 	GlobalVariables* g = GlobalVariables::GetInstance();
+
+	g->Update();
+
 	verticalRecoilPower_ = g->GetVector3Value("HandGun", "VerticalRecoilPower");
 	horizontalRecoilPower_ = g->GetFloatValue("HandGun", "HorizontalRecoilPower");
 	kRecoilFrame_ = g->GetIntValue("HandGun", "RecoilFrame");
@@ -194,17 +182,17 @@ void HandGun::RecoilAnimation() {
 
 	if (recoilFrame_ == 0) {
 		if (!isADS)
-			bodyWT_.rotation_.x += kRecoilRotationX_;
-		sliderWT_.translation_.z += kRecoilSliderTranslationZ_;
+			bodyModel_->transform.rotation.x += kRecoilRotationX_;
+		sliderModel_->transform.translation.z += kRecoilSliderTranslationZ_;
 	} else if (recoilFrame_ <= kRecoilFrame_) {
 		if (!isADS)
-			bodyWT_.rotation_.x -= kRecoilRotationX_ / kRecoilFrame_;
+			bodyModel_->transform.rotation.x -= kRecoilRotationX_ / kRecoilFrame_;
 		if (ammo_ > 0) 
-			sliderWT_.translation_.z -= kRecoilSliderTranslationZ_ / kRecoilFrame_;
+			sliderModel_->transform.translation.z -= kRecoilSliderTranslationZ_ / kRecoilFrame_;
 	} else {
-		bodyWT_.rotation_.x = 0.0f;
+		bodyModel_->transform.rotation.x = 0.0f;
 		if (ammo_ > 0)
-			sliderWT_.translation_.z = 0.0f;
+			sliderModel_->transform.translation.z = 0.0f;
 		recoilFrame_ = -1;
 		return;
 	}
@@ -216,12 +204,12 @@ void HandGun::ADSAnimation() {
 	
 	if (isADS) {
 		if (adsFrame_ < kADSFrame_) {
-			bodyWT_.translation_ += adsMove;
+			bodyModel_->transform.translation += adsMove;
 			adsFrame_++;
 		}
 	} else {
 		if (adsFrame_ > 0) {
-			bodyWT_.translation_ -= adsMove;
+			bodyModel_->transform.translation -= adsMove;
 			adsFrame_--;
 		}
 	}
@@ -234,29 +222,29 @@ void HandGun::ReloadAnimation() {
 	// SE関連
 	if (reloadFrame_ == 0) {
 		// リロード音1
-		audio_->PlayWave(soundDataHandle_[Reload1], false, 0.3f);
+		//audio_->PlayWave(soundDataHandle_[Reload1], false, 0.3f);
 	} else if (reloadFrame_ == kReloadIOFrame_ + kReloadWaitFrame_) {
 		// リロード音2
-		audio_->PlayWave(soundDataHandle_[Reload2], false, 0.3f);
+		//audio_->PlayWave(soundDataHandle_[Reload2], false, 0.3f);
 		if (ammo_ <= 0)
-			sliderWT_.translation_.z = 0.0f;
+			sliderModel_->transform.translation.z = 0.0f;
 	}
 
 
 	// アニメーション
 	if (reloadFrame_ < kReloadIOFrame_) {
-		bodyWT_.translation_.y += kReloadTranslationY_ / kReloadIOFrame_;
-		bodyWT_.rotation_.x += kReloadRotationX_ / kReloadIOFrame_;
+		bodyModel_->transform.translation.y += kReloadTranslationY_ / kReloadIOFrame_;
+		bodyModel_->transform.rotation.x += kReloadRotationX_ / kReloadIOFrame_;
 	}
 	else if (reloadFrame_ < kReloadIOFrame_ + kReloadWaitFrame_) {
 	
 	}
 	else if (reloadFrame_ < kReloadIOFrame_ + kReloadWaitFrame_ + kReloadIOFrame_) {
-		bodyWT_.translation_.y -= kReloadTranslationY_ / kReloadIOFrame_;
-		bodyWT_.rotation_.x -= kReloadRotationX_ / kReloadIOFrame_;
+		bodyModel_->transform.translation.y -= kReloadTranslationY_ / kReloadIOFrame_;
+		bodyModel_->transform.rotation.x -= kReloadRotationX_ / kReloadIOFrame_;
 	}
 	else {
-		bodyWT_.rotation_.x = 0.0f;
+		bodyModel_->transform.rotation.x = 0.0f;
 		reloadFrame_ = -1;
 		ammo_ = kMAXAmmo_;
 		return;

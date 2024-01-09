@@ -1,7 +1,6 @@
 #pragma once
 #include "CollisionConfig.h"
-#include "../math/Vector3.h"
-#include <WorldTransform.h>
+#include <Adapter.h>
 
 class Collider {
 public: // メンバ関数
@@ -9,17 +8,12 @@ public: // メンバ関数
 	// 衝突時に呼ばれる関数
 	virtual void OnCollision() = 0;
 	// ワールド座標を受け取る関数
-	Vector3 GetWorldPosition() { return worldTransform_.GetWorldPosition(); }
-	/// <summary>
-	/// ワールド変換データを取得
-	/// </summary>
-	/// <returns>ワールド変換データ</returns>
-	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	LWP::Math::Vector3 GetWorldPosition() { return worldTransformPtr_->GetWorldPosition(); }
 
 
 protected: // メンバ変数
 	// ワールド変換データ
-	WorldTransform worldTransform_;
+	LWP::Object::WorldTransform* worldTransformPtr_;
 
 	// *** プロパティ変数 *** //
 

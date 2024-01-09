@@ -14,10 +14,9 @@ public:
 	void Update();
 
 	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
-
-private: //*** これより先に必要な処理や変数を記述 ***//;
+private: //*** これより先に必要な処理や変数を記述 ***//
 	// 背景素材
-	LWP::Primitive::Sprite* titleSprite_ = nullptr;
+	LWP::Primitive::Sprite* backGround_ = nullptr;
 	// サウンドデータハンドル
 	//LWP::Resource::Audio* gameStartSE_ = nullptr;
 };

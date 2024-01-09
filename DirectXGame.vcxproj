@@ -103,7 +103,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Adapter\component\Resource.cpp" />
     <ClCompile Include="Adapter\component\System.cpp" />
     <ClCompile Include="Adapter\LWP.cpp" />
+    <ClCompile Include="Class\GameObject\Bullet\Bullet.cpp" />
+    <ClCompile Include="Class\GameObject\Character\CharacterManager.cpp" />
+    <ClCompile Include="Class\GameObject\Character\Player.cpp" />
+    <ClCompile Include="Class\GameObject\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Class\GameObject\Gun\HandGun.cpp" />
+    <ClCompile Include="Class\GlobalVariables\GlobalVariables.cpp" />
+    <ClCompile Include="Class\Scene\GamePlay.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
+    <ClCompile Include="Class\Scene\Tutorial.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapCommand.cpp" />
@@ -176,7 +184,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Adapter\component\System.h" />
     <ClInclude Include="Adapter\Config.h" />
     <ClInclude Include="Adapter\LWP.h" />
+    <ClInclude Include="Class\GameObject\Bullet\Bullet.h" />
+    <ClInclude Include="Class\GameObject\Character\CharacterManager.h" />
+    <ClInclude Include="Class\GameObject\Character\Player.h" />
+    <ClInclude Include="Class\GameObject\Collision\Collider.h" />
+    <ClInclude Include="Class\GameObject\Collision\CollisionConfig.h" />
+    <ClInclude Include="Class\GameObject\Collision\CollisionManager.h" />
+    <ClInclude Include="Class\GameObject\Gun\HandGun.h" />
+    <ClInclude Include="Class\GlobalVariables\GlobalVariables.h" />
+    <ClInclude Include="Class\Scene\GamePlay.h" />
     <ClInclude Include="Class\Scene\Title.h" />
+    <ClInclude Include="Class\Scene\Tutorial.h" />
+    <ClInclude Include="Class\Utility\TimedCall\TimedCall.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\directX\command\CommandManager.h" />
     <ClInclude Include="Engine\base\directX\command\Derived\MainCommand.h" />
@@ -242,6 +261,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Externals\nlohmann\json.hpp" />
+    <ClInclude Include="Externals\nlohmann\json_fwd.hpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">

@@ -1,10 +1,10 @@
 #pragma once
-#include "../BaseCharacter.h"
+#include "../Collision/Collider.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-class Enemy : public BaseCharacter {
+class Enemy : public Collider {
 
 public: // メンバ関数
 

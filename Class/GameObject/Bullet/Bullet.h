@@ -1,17 +1,13 @@
 #pragma once
-#include "Model.h"
-#include <WorldTransform.h>
 #include "../Collision/Collider.h"
 
 class Bullet : public Collider {
 public: // メンバ関数
 	
 	// 初期化
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(const LWP::Math::Vector3& position, const LWP::Math::Vector3& velocity);
 	// 更新
 	void Update();
-	// 描画
-	void Draw(const ViewProjection& viewProjection);
 
 	// デスフラグをチェック
 	bool isDead() { return isDead_; }
@@ -25,10 +21,10 @@ private: // メンバ定数
 
 private: // メンバ変数
 	// 弾のモデル
-	Model* model_;
+	LWP::Primitive::Mesh* model_;
 	
 	// 速度
-	Vector3 velocity_;
+	LWP::Math::Vector3 velocity_;
 
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime;

@@ -67,5 +67,10 @@ namespace LWP::Math {
 		/// <returns>クロス積</returns>
 		static Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
+
+		// 球面線形補間
+		static Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+			return v1 * (1 - t) + v2 * t;
+		}
 	};
 }

@@ -2,23 +2,21 @@
     "HandGun": {
         "ADSFrame": 10,
         "ADSTranslation": [
-            -0.75,
-            0.0729999989271164,
-            -0.8299999833106995
+            -0.7300000190734863,
+            0.12099999934434891,
+            -1.399999976158142
         ],
-        "HorizontalRecoilPower": 0.05000000074505806,
+        "HorizontalRecoilPower": 0.30000001192092896,
         "MAXAmmo": 13,
         "RecoilFrame": 10,
-        "RecoilFrame_": 10,
         "RecoilRotationX": -0.800000011920929,
-        "RecoilRotationX_": -0.800000011920929,
         "ReloadIOFrame": 30,
         "ReloadRotationX": 1.75,
         "ReloadTranslationY": -1.0,
         "ReloadWaitFrame": 30,
         "SliderTranslationZ": -2.0,
         "VerticalRecoilPower": [
-            -0.10000000149011612,
+            -0.15000000596046448,
             0.0,
             0.0
         ]

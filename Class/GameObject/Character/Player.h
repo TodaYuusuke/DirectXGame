@@ -1,12 +1,12 @@
 #pragma once
-#include "../BaseCharacter.h"
-#include "../../Bullet/Bullet.h"
-#include "../../Gun/HandGun.h"
+#include "../Collision/Collider.h"
+#include "../Bullet/Bullet.h"
+#include "../Gun/HandGun.h"
 #include <optional>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-class Player : public BaseCharacter {
+class Player : public Collider {
 public: // メンバ関数
 
 	/// <summary>
@@ -21,24 +21,21 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const std::vector<Model*>& models, Vector3 position) override;
+	void Initialize(LWP::Math::Vector3 position);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update() override;
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw(const ViewProjection& viewProjection) override;
-	void DrawUI();
+	void Update();
 
 	// 弾リストを返す関数
 	const std::list<Bullet*>& GetBullets() const { return bullets_; }
 
 	// 衝突時に呼ばれる関数
 	void OnCollision() override {};
+
+	// プレイヤーのtransformを受け取る関数
+	LWP::Object::WorldTransform* GetTransform() { return &transform_; }
 
 private: // メンバ定数
 	// 移動速度
@@ -50,19 +47,16 @@ private: // メンバ定数
 
 private: // メンバ変数
 
-	bool preRS = false;	// RSTrigger検知用
-	bool preLS = false; // LSTrigger検知用
-	bool preX = true; // XTrigger検知用
+	// 自分の座標
+	LWP::Object::WorldTransform transform_;
 
-	// 弾丸のモデル
-	std::unique_ptr<Model> bulletModel_;
 	// 弾丸
 	std::list<Bullet*> bullets_;
 
 	// 受け取ったリコイル
-	Vector3 recoil_ = {0.0f, 0.0f, 0.0f};
+	LWP::Math::Vector3 recoil_ = {0.0f, 0.0f, 0.0f};
 	// 本来の向き
-	Vector3 rotation_ = {0.0f, 0.0f, 0.0f};
+	LWP::Math::Vector3 rotation_ = {0.0f, 0.0f, 0.0f};
 
 	// ハンドガン
 	std::unique_ptr<HandGun> handgun_;
