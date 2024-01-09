@@ -49,7 +49,8 @@ namespace LWP::Primitive {
 		Utility::Color* commonColor = nullptr;
 		
 		// UIとして描画するか
-		bool isUI = false;
+		LWP::Utility::Observer<bool> isUI = false;
+		
 		// アクティブ切り替え
 		bool isActive = true;
 		
@@ -64,7 +65,12 @@ namespace LWP::Primitive {
 		/// コンストラクタ（ユーザ呼び出し禁止）
 		/// </summary>
 		IPrimitive(Base::CommandManager* manager);
-		
+
+		/// <summary>
+		/// 初期化処理
+		/// </summary>
+		virtual void Initialize();
+
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
 		/// </summary>
@@ -98,11 +104,12 @@ namespace LWP::Primitive {
 		virtual int GetIndexCount() const;
 
 		/// <summary>
-		/// 値が変化したかを検知する関数
+		/// なにかしらの値が変化したかを検知する関数
 		/// </summary>
 		virtual bool GetChanged();
 
 	protected: // ** 派生クラス用の関数 ** //
+
 		/// <summary>
 		/// 派生クラスで追加のImGuiを実装するとき用の関数
 		/// </summary>

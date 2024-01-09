@@ -8,15 +8,22 @@ using namespace LWP::Primitive;
 
 void Sprite::Update() {
 	// 値が変化した場合にのみ再計算
-	if (!GetChanged()) { return; }
-	
-	// テクスチャがnullでなければサイズを取得
-	if (texture.t != nullptr) {
-		size.t = texture.t->GetTextureSize();
-	}
+	if (GetChanged()) {
 
-	// 頂点を再計算
-	CreateVertices();
+		// テクスチャがnullでなければサイズを取得
+		if (texture.t != nullptr) {
+			size.t = texture.t->GetTextureSize();
+		}
+
+		// 頂点を再計算
+		CreateVertices();
+	}
+	// isUIを切り替えた際に座標系を修正
+	else if (isUI.GetChanged()) {
+		for (Vertex& v : vertices) {
+			v.position.y *= -1.0f;
+		}
+	}
 }
 
 void Sprite::CreateVertices() {
@@ -27,10 +34,10 @@ void Sprite::CreateVertices() {
 	// サイズとアンカーポイントから頂点データ用の値を求める
 
 	// 座標
-	vertices[0].position = { size.t.x * -anchorPoint.t.x,         size.t.y * -anchorPoint.t.y,         0.00f };	// 左上
-	vertices[1].position = { size.t.x * (1.0f - anchorPoint.t.x), size.t.y * -anchorPoint.t.y,         0.00f };	// 右上
-	vertices[2].position = { size.t.x * (1.0f - anchorPoint.t.x), size.t.y * (1.0f - anchorPoint.t.y), 0.00f };	// 右下
-	vertices[3].position = { size.t.x * -anchorPoint.t.x,         size.t.y * (1.0f - anchorPoint.t.y), 0.00f };	// 左下
+	vertices[0].position = { size.t.x * -anchorPoint.t.x,         -size.t.y * -anchorPoint.t.y,         0.00f };	// 左上
+	vertices[1].position = { size.t.x * (1.0f - anchorPoint.t.x), -size.t.y * -anchorPoint.t.y,         0.00f };	// 右上
+	vertices[2].position = { size.t.x * (1.0f - anchorPoint.t.x), -size.t.y * (1.0f - anchorPoint.t.y), 0.00f };	// 右下
+	vertices[3].position = { size.t.x * -anchorPoint.t.x,         -size.t.y * (1.0f - anchorPoint.t.y), 0.00f };	// 左下
 	// テクスチャ座標
 	vertices[0].texCoord = { 0.0f,0.0f };
 	vertices[1].texCoord = { 1.0f,0.0f };

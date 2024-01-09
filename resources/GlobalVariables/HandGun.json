@@ -1,0 +1,26 @@
+{
+    "HandGun": {
+        "ADSFrame": 10,
+        "ADSTranslation": [
+            -0.75,
+            0.0729999989271164,
+            -0.8299999833106995
+        ],
+        "HorizontalRecoilPower": 0.05000000074505806,
+        "MAXAmmo": 13,
+        "RecoilFrame": 10,
+        "RecoilFrame_": 10,
+        "RecoilRotationX": -0.800000011920929,
+        "RecoilRotationX_": -0.800000011920929,
+        "ReloadIOFrame": 30,
+        "ReloadRotationX": 1.75,
+        "ReloadTranslationY": -1.0,
+        "ReloadWaitFrame": 30,
+        "SliderTranslationZ": -2.0,
+        "VerticalRecoilPower": [
+            -0.10000000149011612,
+            0.0,
+            0.0
+        ]
+    }
+}

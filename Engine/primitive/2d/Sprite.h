@@ -20,7 +20,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		using IPrimitive::IPrimitive;
+		Sprite(Base::CommandManager* manager);
 
 		/// <summary>
 		/// 更新処理

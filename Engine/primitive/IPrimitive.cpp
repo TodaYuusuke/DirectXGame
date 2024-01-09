@@ -33,7 +33,12 @@ void IPrimitive::CreateIndexes() {
 }
 
 void IPrimitive::Update() {
-	// 特に何もしない
+	// isUIを切り替えた際に座標系を修正
+	if (isUI.GetChanged()) {
+		for (Vertex& v : vertices) {
+			v.position.y *= -1.0f;
+		}
+	}
 }
 
 void IPrimitive::Draw(Base::CommandManager* manager) {
@@ -54,7 +59,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 		LWP::Base::ImGuiManager::ColorEdit4("color", vertices[vertexNum_].color);
 		ImGui::TreePop();
 	}
-	isUI ? transform.DebugGUI2D() : transform.DebugGUI();
+	isUI.t ? transform.DebugGUI2D() : transform.DebugGUI();
 	material.DebugGUI();
 
 	// 共通カラーがあるとき -> ColorEdit4を呼び出す
@@ -73,6 +78,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 		ImGui::TreePop();
 	}
 
+	bool preFlag = isUI.t;
 	// その他
 	// 名前が変更されたとき、ツリーノードを開きっぱなしにするための処理
 	if (ImGui::TreeNode("Other")) {
@@ -81,12 +87,15 @@ void IPrimitive::DebugGUI(const std::string& label) {
 			// 名前無しは禁止
 			if (name.empty()) { name = "noName"; }
 		}
-		ImGui::Checkbox("isUI", &isUI);			// 2D描画
+		ImGui::Checkbox("isUI", &isUI.t);			// 2D描画
 		ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
 		ImGui::Text("- Below this are unique variables - ");
 		DerivedDebugGUI();
 		ImGui::TreePop();
 	}
+
+	// オブザーバークラスの回避策 - isUIの値が変わったことを検知するためのコード -
+	if (isUI.t != preFlag) { isUI = isUI.t; }
 }
 
 void IPrimitive::DerivedDebugGUI(const std::string& label) {

@@ -63,7 +63,6 @@ void SampleTitle::Initialize() {
 
 	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
 	s->texture = uvTexture;
-	s->isUI = true;
 }
 
 // 更新

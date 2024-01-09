@@ -243,7 +243,7 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 			worldMatrix,
 			material,
 			tex2d,
-			primitive->isUI
+			primitive->isUI.t
 		};
 
 		// メインコマンドにデータをセット
