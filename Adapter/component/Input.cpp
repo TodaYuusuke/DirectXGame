@@ -20,16 +20,16 @@ bool Input::Keyboard::GetRelease(uint8_t keyID) {
 }
 
 
-bool Input::Controller::GetNone(int playerNum, int keyID) {
+bool Input::Controller::GetNone(int keyID, int playerNum) {
 	return engine->inputManager_->controller[playerNum].None(keyID);
 }
-bool Input::Controller::GetTrigger(int playerNum, int keyID) {
+bool Input::Controller::GetTrigger(int keyID, int playerNum) {
 	return engine->inputManager_->controller[playerNum].Trigger(keyID);
 }
-bool Input::Controller::GetPress(int playerNum, int keyID) {
+bool Input::Controller::GetPress(int keyID, int playerNum) {
 	return engine->inputManager_->controller[playerNum].Press(keyID);
 }
-bool Input::Controller::GetRelease(int playerNum, int keyID) {
+bool Input::Controller::GetRelease(int keyID, int playerNum) {
 	return engine->inputManager_->controller[playerNum].Release(keyID);
 }
 
@@ -47,10 +47,10 @@ Math::Vector2 Input::Controller::GetRStick(int playerNum) {
 	return engine->inputManager_->controller[playerNum].GetRStick();
 }
 
-void Input::Controller::SetDeadZone(int playerNum, float value) {
+void Input::Controller::SetDeadZone(float value, int playerNum) {
 	engine->inputManager_->controller[playerNum].SetDeadZone(value);
 }
 
-void Input::Controller::SetVibration(int playerNum, float bigVibrationPower, float smallVibrationPower) {
+void Input::Controller::SetVibration(float bigVibrationPower, float smallVibrationPower, int playerNum) {
 	engine->inputManager_->controller[playerNum].SetVibration(bigVibrationPower, smallVibrationPower);
 }

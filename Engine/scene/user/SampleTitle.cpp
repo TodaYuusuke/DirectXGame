@@ -92,7 +92,7 @@ void SampleTitle::Update() {
 	}
 
 	// ENTERキーを押すとシーン切り替え
-	if (Controller::GetTrigger(0, XBOX_A)) {
+	if (Controller::GetTrigger(XBOX_A)) {
 		nextScene_ = new SampleGameScene();
 	}
 }

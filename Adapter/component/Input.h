@@ -38,30 +38,30 @@ namespace LWP {
 			/// <summary>
 			/// playerNum のコントローラーの keyID が None のとき true を返す
 			/// </summary>
-			bool GetNone(int playerNum, int keyID);
+			bool GetNone(int keyID, int playerNum = 0);
 			/// <summary>
 			/// playerNum のコントローラーの keyID が Trigger のとき true を返す
 			/// </summary>
-			bool GetTrigger(int playerNum, int keyID);
+			bool GetTrigger(int keyID, int playerNum = 0);
 			/// <summary>
 			/// playerNum のコントローラーの keyID が Press のとき true を返す
 			/// </summary>
-			bool GetPress(int playerNum, int keyID);
+			bool GetPress(int keyID, int playerNum = 0);
 			/// <summary>
 			/// playerNum のコントローラーの keyID が Release のとき true を返す
 			/// </summary>
-			bool GetRelease(int playerNum, int keyID);
+			bool GetRelease(int keyID, int playerNum = 0);
 
 			/// <summary>
 			/// playerNum のコントローラーのLTの押し込みの強さを返す
 			/// <para>0.0f ~ 1.0f</para>
 			/// </summary>
-			float GetLT(int playerNum);
+			float GetLT(int playerNum = 0);
 			/// <summary>
 			/// playerNum のコントローラーのRTの押し込みの強さを返す
 			/// <para>0.0f ~ 1.0f</para>
 			/// </summary>
-			float GetRT(int playerNum);
+			float GetRT(int playerNum = 0);
 
 			/// <summary>
 			/// Lスティックの入力を受け取る関数
@@ -69,25 +69,25 @@ namespace LWP {
 			/// <para>| -X　+X |</para>
 			/// <para>| 　-Y　 |</para>
 			/// </summary>
-			Math::Vector2 GetLStick(int playerNum);
+			Math::Vector2 GetLStick(int playerNum = 0);
 			/// <summary>
 			/// Rスティックの入力を受け取る関数
 			/// <para>| 　+Y　 |</para>
 			/// <para>| -X　+X |</para>
 			/// <para>| 　-Y　 |</para>
 			/// </summary>
-			Math::Vector2 GetRStick(int playerNum);
+			Math::Vector2 GetRStick(int playerNum = 0);
 
 			/// <summary>
 			/// デッドゾーンを設定
 			/// </summary>
-			void SetDeadZone(int playerNum, float value);
+			void SetDeadZone(float value, int playerNum = 0);
 			/// <summary>
 			/// 振動をセットする
 			/// </summary>
 			/// <param name="bigVibrationPower">大きい振動を起こすモータの速度 ... 0.0f ~ 1.0f</param>
 			/// <param name="smallVibrationPower">細かな振動を起こすモータの速度 ... 0.0f ~ 1.0f</param>
-			void SetVibration(int playerNum, float bigVibrationPower, float smallVibrationPower);
+			void SetVibration(float bigVibrationPower, float smallVibrationPower, int playerNum = 0);
 		};
 		namespace Pad = Controller;
 	};
