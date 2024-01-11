@@ -13,8 +13,12 @@ void Controller::Initialize(DWORD controllerNumber) {
 void Controller::Update() {
 	// 前フレームの全キー入力の状態を保存する
 	preState_ = state_;
+	preLTFlag_ = LTFlag_;
+	preRTFlag_ = RTFlag_;
 	// 状態のデータを取得
 	DWORD result = XInputGetState(num_, &state_);
+	LTFlag_ = GetLTValue() > triggerDeadZone_;
+	RTFlag_ = GetRTValue() > triggerDeadZone_;
 
 	// コントローラーが接続されている
 	if (result == ERROR_SUCCESS) {
@@ -31,6 +35,10 @@ void Controller::Update() {
 		// データを空にしておく
 		preState_.Gamepad = XINPUT_GAMEPAD();
 		state_.Gamepad = XINPUT_GAMEPAD();
+		preLTFlag_ = false;
+		LTFlag_ = false;
+		preRTFlag_ = false;
+		RTFlag_ = false;
 		// カウントは進める
 		afkFrameCount_++;
 	}
@@ -49,22 +57,30 @@ void Controller::Update() {
 
 
 bool Controller::None(int keyID) {
+	if (keyID == XBOX_LT) { return !LTFlag_; }
+	if (keyID == XBOX_RT) { return !RTFlag_; }
 	return !(state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Trigger(int keyID) {
+	if (keyID == XBOX_LT) { return !preLTFlag_ && LTFlag_; }
+	if (keyID == XBOX_RT) { return !preRTFlag_ && RTFlag_; }
 	return !(preState_.Gamepad.wButtons & keyID) && (state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Press(int keyID) {
+	if (keyID == XBOX_LT) { return LTFlag_; }
+	if (keyID == XBOX_RT) { return RTFlag_; }
 	return (state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Release(int keyID) {
+	if (keyID == XBOX_LT) { return preLTFlag_ && !LTFlag_; }
+	if (keyID == XBOX_RT) { return preRTFlag_ && !RTFlag_; }
 	return (preState_.Gamepad.wButtons & keyID) && !(state_.Gamepad.wButtons & keyID);
 }
 
-float Controller::GetLT() {
+float Controller::GetLTValue() {
 	return static_cast<float>(state_.Gamepad.bLeftTrigger) / XBOX_TRIGGER_MAXVALUE;
 }
-float Controller::GetRT() {
+float Controller::GetRTValue() {
 	return static_cast<float>(state_.Gamepad.bRightTrigger) / XBOX_TRIGGER_MAXVALUE;
 }
 

@@ -34,10 +34,10 @@ bool Input::Controller::GetRelease(int keyID, int playerNum) {
 }
 
 float Input::Controller::GetLT(int playerNum) {
-	return engine->inputManager_->controller[playerNum].GetLT();
+	return engine->inputManager_->controller[playerNum].GetLTValue();
 }
 float Input::Controller::GetRT(int playerNum) {
-	return engine->inputManager_->controller[playerNum].GetRT();
+	return engine->inputManager_->controller[playerNum].GetRTValue();
 }
 
 Math::Vector2 Input::Controller::GetLStick(int playerNum) {
@@ -53,4 +53,8 @@ void Input::Controller::SetDeadZone(float value, int playerNum) {
 
 void Input::Controller::SetVibration(float bigVibrationPower, float smallVibrationPower, int playerNum) {
 	engine->inputManager_->controller[playerNum].SetVibration(bigVibrationPower, smallVibrationPower);
+}
+
+UINT Input::Controller::GetAFKCount(int playerNum) {
+	return engine->inputManager_->controller[playerNum].GetAFKCount();
 }

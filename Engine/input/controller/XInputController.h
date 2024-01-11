@@ -26,6 +26,9 @@
 #define XBOX_DPAD_LEFT	XINPUT_GAMEPAD_DPAD_LEFT	// 十字キー左
 #define XBOX_DPAD_RIGHT	XINPUT_GAMEPAD_DPAD_RIGHT	// 十字キー右
 
+#define XBOX_LT	0xFFF0	// Lトリガー
+#define XBOX_RT	0xFFF1	// Rトリガー
+
 // トリガーの最大値
 #define XBOX_TRIGGER_MAXVALUE 255
 // スティックの最大値
@@ -68,10 +71,10 @@ namespace LWP::Input::XInput {
 		// キーが離された瞬間の場合 -> true
 		bool Release(int keyID);
 
-		// Lトリガーの入力を受け取る関数
-		float GetLT();
-		// Rトリガーの入力を受け取る関数
-		float GetRT();
+		// Lトリガーの入力の強さを受け取る関数
+		float GetLTValue();
+		// Rトリガーの入力の強さを受け取る関数
+		float GetRTValue();
 
 		// Lスティックの入力を受け取る関数
 		Math::Vector2 GetLStick();
@@ -80,8 +83,13 @@ namespace LWP::Input::XInput {
 
 		// デッドゾーンを設定
 		void SetDeadZone(float value) { deadZone_ = value; }
+		// トリガーのデッドゾーンを設定
+		void SetTriggerDeadZone(float value) { triggerDeadZone_ = value; }
 		// 振動をセットする
 		void SetVibration(float bigVibrationPower, float smallVibrationPower);
+
+		// 無操作フレーム数を受け取る関数
+		UINT GetAFKCount() { return afkFrameCount_; }
 
 	private: // ** メンバ変数 ** //
 
@@ -97,5 +105,12 @@ namespace LWP::Input::XInput {
 
 		// デッドゾーンの範囲
 		float deadZone_ = 0.2f;
+		// トリガーのデッドゾーンの範囲
+		float triggerDeadZone_ = 0.2f;
+
+		bool LTFlag_ = false;
+		bool RTFlag_ = false;
+		bool preLTFlag_ = false;
+		bool preRTFlag_ = false;
 	};
 }

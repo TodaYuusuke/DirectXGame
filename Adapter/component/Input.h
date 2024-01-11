@@ -88,6 +88,11 @@ namespace LWP {
 			/// <param name="bigVibrationPower">大きい振動を起こすモータの速度 ... 0.0f ~ 1.0f</param>
 			/// <param name="smallVibrationPower">細かな振動を起こすモータの速度 ... 0.0f ~ 1.0f</param>
 			void SetVibration(float bigVibrationPower, float smallVibrationPower, int playerNum = 0);
+
+			/// <summary>
+			/// playerNum のコントローラーが操作されていないフレームを返す関数
+			/// </summary>
+			UINT GetAFKCount(int playerNum = 0);
 		};
 		namespace Pad = Controller;
 	};
