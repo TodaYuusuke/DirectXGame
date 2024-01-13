@@ -1,5 +1,6 @@
 #pragma once
 #include "../IObject.h"
+#include "resources/texture/RenderTexture.h"
 
 namespace LWP::Object {
 	class Camera final : public IObject {
@@ -11,7 +12,7 @@ namespace LWP::Object {
 		// -- ポストエフェクトフラグ -- //
 
 		// ブルームをかける
-		bool enableBloom = false;
+		//bool enableBloom = false;
 
 	public: // ** メンバ関数 ** //
 
@@ -25,5 +26,22 @@ namespace LWP::Object {
 
 		// ビュープロジェクションを返す関数
 		Math::Matrix4x4 GetViewProjection() const;
+
+		/// <summary>
+		/// このカメラからのサブ画面レンダリング用のテクスチャを生成する関数
+		/// </summary>
+		/// <param name="manager"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		void CreateRenderTexture(Base::CommandManager* manager, const int width, const int height);
+		// レンダリング結果のテクスチャのポインタを受け取る関数
+		Resource::RenderTexture* GetRenderTexture() { return renderTexture_; }
+
+
+	private: // ** メンバ変数 ** //
+
+		// このカメラからのレンダリング結果を格納する変数
+		Resource::RenderTexture* renderTexture_ = nullptr;
+
 	};
 }

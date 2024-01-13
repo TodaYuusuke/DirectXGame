@@ -13,6 +13,12 @@ void SampleTitle::Initialize() {
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
 	monsterBall = LWP::Resource::LoadTextureLongPath("resources/system/texture/monsterBall.png");
 
+	// サブカメラを生成
+	subCamera = LWP::Object::CreateInstance<LWP::Object::Camera>();
+	LWP::Object::CreateRenderTexture(subCamera, 640, 360);
+	subCamera->transform.translation = { 5.9f,4.5f,-10.0f };
+	subCamera->transform.rotation = { 0.4f,-0.5f,0.0f };
+		
 	// 地面
 	ground = LWP::Primitive::CreateInstance<Surface>();
 	ground->transform.translation.y = -1.5f;
@@ -62,7 +68,7 @@ void SampleTitle::Initialize() {
 	pointLight->transform.Parent(&sphere->transform);
 
 	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
-	s->texture = uvTexture;
+	s->texture = subCamera->GetRenderTexture();
 	s->isUI = true;
 }
 

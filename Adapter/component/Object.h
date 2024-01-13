@@ -18,5 +18,13 @@ namespace LWP {
 		TObject* CreateInstance() {
 			return System::engine->objectManager_->CreateInstance<TObject>();
 		}
+
+		/// <summary>
+		/// カメラに複数画面描画用のレンダーテクスチャを作成する関数
+		/// </summary>
+		/// <param name="camera">テクスチャを付与するカメラ</param>
+		/// <param name="width">レンダリング解像度（横幅）</param>
+		/// <param name="height">レンダリング解像度（縦幅）</param>
+		void CreateRenderTexture(LWP::Object::Camera* camera, const int width, const int height);
 	};
 };

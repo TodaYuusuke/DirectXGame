@@ -74,6 +74,14 @@ namespace LWP::Base {
 		/// テクスチャのリソースを作成
 		/// </summary>
 		int CreateTextureResource(const DirectX::ScratchImage& image);
+		/// <summary>
+		/// レンダリング用のテクスチャのリソースを作成
+		/// </summary>
+		/// <param name="width">レンダリング解像度（横幅）</param>
+		/// <param name="height">レンダリング解像度（縦幅）</param>
+		/// <returns></returns>
+		int CreateTextureResource(const int width, const int height);
+
 
 		/// <summary>
 		/// 描画に使うカメラのビュープロジェクション行列をセットする
@@ -179,9 +187,18 @@ namespace LWP::Base {
 		/// </summary>
 		ID3D12Resource* CreateBufferResource(const DirectX::TexMetadata& metadata);
 		/// <summary>
+		/// 任意のサイズのResourceを作成（RenderTextureバージョン）
+		/// </summary>
+		ID3D12Resource* CreateBufferResource(const int width, const int height);
+		
+		/// <summary>
 		/// テクスチャをアップロード
 		/// </summary>
 		void UploadTextureData(const DirectX::ScratchImage& mipImages);
+		/// <summary>
+		/// レンダリングテクスチャをアップロード
+		/// </summary>
+		void UploadTextureData(const int width, const int height);
 
 	};
 }

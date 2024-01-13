@@ -182,6 +182,10 @@
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\resources\parameter\Parameter.cpp" />
+    <ClCompile Include="Engine\resources\texture\RenderTexture.cpp">
+      <Filter>Engine\resources\texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -405,6 +409,13 @@
     </ClInclude>
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
       <Filter>Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\parameter\Parameter.h" />
+    <ClInclude Include="Engine\resources\texture\RenderTexture.h">
+      <Filter>Engine\resources\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\texture\ITexture.h">
+      <Filter>Engine\resources\texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -210,6 +210,12 @@ int CommandManager::CreateTextureResource(const DirectX::ScratchImage& image) {
 	return textureResourceBuffer_->usedCount_++;
 }
 
+int CommandManager::CreateTextureResource(const int width, const int height) {
+	textureResourceBuffer_->resource_.push_back(CreateBufferResource(width, height));
+	UploadTextureData(width, height);
+	return textureResourceBuffer_->usedCount_++;
+}
+
 void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 
 	uint32_t startIndexNum = vertexData_->GetCount();
@@ -542,12 +548,46 @@ ID3D12Resource* CommandManager::CreateBufferResource(const DirectX::TexMetadata&
 		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
 		&resourceDesc,						// Resourceの設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,	// 初回のResourceState。Textureは基本読むだけ
+		nullptr,							// Clear最適地。使わないでnullptr;
+		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
+	);
+	assert(SUCCEEDED(hr));
+	return resource;
+}
+ID3D12Resource* CommandManager::CreateBufferResource(const int width, const int height) {
+	HRESULT hr = S_FALSE;
+
+	// 1. Resourceの設定
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = UINT(width);
+	resourceDesc.Height = UINT(height);
+	resourceDesc.MipLevels = 0;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+	// 2. 利用するHeapの設定。非常に特殊な運用。
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
+	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
+	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
+
+	// 3. Resourceを生成する
+	ID3D12Resource* resource = nullptr;
+	hr = device_->CreateCommittedResource(
+		&heapProperties,					// Heapの設定
+		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
+		&resourceDesc,						// Resourceの設定
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	// 初回のResourceState。RTVで書き込むのでちょっとちがう設定
 		nullptr,							// Clear最適地。使わないでnullptr
 		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
 	);
 	assert(SUCCEEDED(hr));
 	return resource;
 }
+
 void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	HRESULT hr = S_FALSE;
 
@@ -574,6 +614,44 @@ void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+
+	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
+	UINT srvIndex = srv_->GetAndIncrement();
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
+	// 初めてのテクスチャ生成ならviewを保存
+	if (textureResourceBuffer_->usedCount_ == 0) {
+		textureResourceBuffer_->view_ = srv_->GetGPUHandle(srvIndex);
+	}
+	// SRVの生成
+	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);
+}
+
+void CommandManager::UploadTextureData(const int width, const int height) {
+	HRESULT hr = S_FALSE;
+
+	// 画素数
+	const UINT pixelCount = width * height;
+	// 画像1行分のデータサイズ
+	const UINT rowPitch = sizeof(UINT) * width;
+	// 画像全体のデータサイズ
+	const UINT depthPitch = rowPitch * height;
+	// 画像イメージ
+	UINT* img = new UINT[pixelCount];
+	// 一度赤で画像を初期化
+	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF0000FF; }
+
+	// TextureBufferに転送
+	hr = textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_]->WriteToSubresource(
+		0, nullptr, img, rowPitch, depthPitch
+	);
+	assert(SUCCEEDED(hr));
+
+	// SRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
 
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
 	UINT srvIndex = srv_->GetAndIncrement();

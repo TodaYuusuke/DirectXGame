@@ -41,7 +41,7 @@ namespace LWP::Primitive {
 		// マテリアル
 		Resource::Material material;
 		// テクスチャ
-		LWP::Utility::Observer<Resource::Texture*> texture = nullptr;
+		Utility::Observer<Resource::ITexture*> texture = nullptr;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する

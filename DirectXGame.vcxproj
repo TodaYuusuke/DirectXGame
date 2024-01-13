@@ -142,6 +142,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\resources\material\Material.cpp" />
     <ClCompile Include="Engine\resources\parameter\Parameter.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
+    <ClCompile Include="Engine\resources\texture\RenderTexture.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\scene\user\SampleGameScene.cpp" />
@@ -223,6 +224,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\material\Material.h" />
     <ClInclude Include="Engine\resources\parameter\Parameter.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />
+    <ClInclude Include="Engine\resources\texture\ITexture.h" />
+    <ClInclude Include="Engine\resources\texture\RenderTexture.h" />
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />

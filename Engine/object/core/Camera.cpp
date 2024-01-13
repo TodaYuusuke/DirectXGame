@@ -4,6 +4,7 @@
 using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Info;
+using namespace LWP::Resource;
 
 // 初期化
 void Camera::Initialize() {
@@ -11,9 +12,9 @@ void Camera::Initialize() {
 }
 // 更新
 void Camera::Update(Base::CommandManager* manager) {
-	if (!isActive) { return; }
-	manager; // マルチレンダリングを実装する際に再定義
-	//manager->SetCameraViewProjection(this);
+	if (!isActive || !renderTexture_) { return; }
+	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
+	manager->SetCameraViewProjection(this);
 }
 
 void Camera::DebugGUI() {
@@ -27,4 +28,8 @@ Matrix4x4 Camera::GetViewProjection() const {
 	float fovF = static_cast<float>(fov) / 100.0f / 2.0f;
 	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, LWP::Info::GetWindowWidthF() / LWP::Info::GetWindowHeightF(), 0.1f, 100.0f);
 	return viewMatrix * projectionMatrix;
+}
+
+void Camera::CreateRenderTexture(Base::CommandManager* manager, const int width, const int height) {
+	renderTexture_ = new RenderTexture(manager, width, height);
 }
