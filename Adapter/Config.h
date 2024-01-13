@@ -93,7 +93,7 @@ namespace LWP {
 			/// </summary>
 			namespace Point {
 				/// <summary>
-				/// 平行光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+				/// 点光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
 				/// </summary>
 				static const UINT kMaxCount = 8;
 

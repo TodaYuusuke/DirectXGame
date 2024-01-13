@@ -191,17 +191,18 @@ void CommandManager::SetPointLightData(const Object::PointLight* light, const Ma
 	newData.radius = light->radius;			// ライトの届く最大距離
 	newData.decay = light->decay;			// 減衰率
 	// データを登録
-	pointLightResourceBuffer_->data_[pointLightResourceBuffer_->usedCount_++] = newData;
+	pointLightResourceBuffer_->data_[pointLightResourceBuffer_->usedCount_] = newData;
 
 	// シャドウマップのレンダリングを予約
 	for (int i = 0; i < 6; i++) {
 		shadowCommands_[shadowCount_++]->SetDrawTarget(
 			viewProjections[i],
-			pointLightResourceBuffer_->shadowMap_->resource_.Get(),
-			pointLightResourceBuffer_->shadowMap_->dsvIndex_[i]
+			pointLightResourceBuffer_->shadowMap_[pointLightResourceBuffer_->usedCount_].resource_.Get(),
+			pointLightResourceBuffer_->shadowMap_[pointLightResourceBuffer_->usedCount_].dsvIndex_[i]
 		);
 	}
 	// 使用カウント+1
+	pointLightResourceBuffer_->usedCount_++;
 	commonDataResourceBuffer_->data_->pointLight++;
 }
 int CommandManager::CreateTextureResource(const DirectX::ScratchImage& image) {
