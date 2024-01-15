@@ -84,7 +84,6 @@ void MainCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	// コマンドリストの内容を確定させる。全てのコマンドを積んでからcloseすること
 	hr = list->Close();
 	assert(SUCCEEDED(hr));
-
 }
 
 void MainCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

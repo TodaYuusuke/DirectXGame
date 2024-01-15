@@ -38,7 +38,6 @@ namespace LWP::Base {
 		// 前後関係用の深度マップ
 		std::unique_ptr<DepthStencil> depthStencil_;
 
-
 	private: // ** プライベートな関数 ** //
 
 		/// <summary>

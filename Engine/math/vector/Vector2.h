@@ -29,6 +29,10 @@ namespace LWP::Math {
 		Vector2 operator*(const Matrix4x4& other) const;
 		//friend Vector2 operator*(Matrix4x4 scalar, const Vector2& vec) { return vec * scalar; }
 
+		// Vector2 == Vector2
+		bool operator==(const Vector2& other) const {
+			return { x == other.x && y == other.y };
+		}
 
 		/// <summary>
 		/// 2次元ベクトルの長さを求める

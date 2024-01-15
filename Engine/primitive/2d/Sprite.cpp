@@ -47,7 +47,6 @@ void Sprite::DerivedDebugGUI(const std::string& label) {
 
 	ImGui::DragFloat2("size", &size.t.x, 1.0f);
 	ImGui::SliderFloat2("anchorPoint", &anchorPoint.t.x, 0.0f, 1.0f);
-	anchorPoint = anchorPoint.t;
 }
 
 bool Sprite::GetChanged() {

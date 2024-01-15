@@ -27,7 +27,6 @@ namespace LWP::Math {
 		friend Matrix4x4 operator*(float scalar, const Matrix4x4& vec) { return vec * scalar; }
 
 
-
 		// *** 任意の行列を返す関数 *** //
 
 		// 行列式を返す関数

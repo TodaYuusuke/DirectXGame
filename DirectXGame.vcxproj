@@ -149,7 +149,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\user\SampleTitle.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
-    <ClCompile Include="Engine\utility\Observer.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\imgui\imgui_draw.cpp" />

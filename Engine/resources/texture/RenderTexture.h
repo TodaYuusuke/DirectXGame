@@ -21,10 +21,10 @@ namespace LWP::Resource {
 
 		// サイズをVector2で受け取る
 		Math::Vector2 GetTextureSize() const override;
-
+		
 	private: // ** メンバ変数 ** //
 
-		int width_ = 0;
-		int height_ = 0;
+		const int kWidth;
+		const int kHeight;
 	};
 }

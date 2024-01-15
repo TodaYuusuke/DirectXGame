@@ -1,5 +1,7 @@
 #include "RTV.h"
 
+#include <Config.h>
+
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
@@ -7,7 +9,8 @@ void RTV::Initialize(HWND hwnd, GPUDevice* gpuDevice, int32_t width, int32_t hei
 	HRESULT hr = S_FALSE;
 
 	device_ = gpuDevice->GetDevice();
-	size_ = 2;
+	// 複数画面の書き込み先 + メイン描画用(ダブルバッファ)
+	size_ = lwpC::Rendering::kMaxMultiWindowRendering + 2;
 	// 1つ分のサイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 

@@ -56,11 +56,10 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 	// コマンド用クラス実態宣言
 	
 	// 本描画
-	for (int i = 0; i < lwpC::Rendering::kMaxRenderingCount; i++) {
-		mainCommands_.push_back(std::make_unique<MainCommand>());
-		mainCommands_.back()->SetDescriptorHeap(rtv_, dsv_, srv_);
-		mainCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
-	}
+	mainCommands_.push_back(std::make_unique<MainCommand>());
+	mainCommands_.back()->SetDescriptorHeap(rtv_, dsv_, srv_);
+	mainCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
+	
 	// シャドウマップコマンド用の実体
 	for (int i = 0; i < lwpC::Shadow::kMaxShadowMap; i++) {
 		shadowCommands_.push_back(std::make_unique<ShadowMapCommand>());

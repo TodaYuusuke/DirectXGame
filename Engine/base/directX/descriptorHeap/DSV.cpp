@@ -9,7 +9,8 @@ using namespace Microsoft::WRL;
 void DSV::Initialize(ID3D12Device* device, SRV* srv) {
 	device_ = device;
 	srv_ = srv;
-	size_ = lwpC::Shadow::kMaxShadowMap + 1;
+	// シャドウマップの数 + 複数画面描画用の深度マップ + メイン描画用の深度マップ(1)
+	size_ = lwpC::Shadow::kMaxShadowMap + lwpC::Rendering::kMaxMultiWindowRendering + 1;
 	// サイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
