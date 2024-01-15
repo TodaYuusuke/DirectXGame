@@ -29,20 +29,26 @@ void Manager::Update(Base::CommandManager* manager) {
 		"Camera","DirectionLight","PointLight"
 	};
 
-	ImGui::Begin("ObjectManager");
+	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
-	// 変更されて渡される値は添え字
-	ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
-	if (ImGui::Button("Create")) { functions[selectedClass](); }
+	if (ImGui::BeginTabBar("LWP")) {
+		if (ImGui::BeginTabItem("Object")) {
+			// 変更されて渡される値は添え字
+			ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
+			if (ImGui::Button("Create")) { functions[selectedClass](); }
 
-	// 形状一覧
-	if (!objects_.empty()) {
-		std::vector<const char*> itemText;
-		for (IObject* o : objects_) {
-			itemText.push_back(o->name.c_str());
+			// 形状一覧
+			if (!objects_.empty()) {
+				std::vector<const char*> itemText;
+				for (IObject* o : objects_) {
+					itemText.push_back(o->name.c_str());
+				}
+				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+				objects_[currentItem]->DebugGUI();
+			}
+			ImGui::EndTabItem();
 		}
-		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-		objects_[currentItem]->DebugGUI();
+		ImGui::EndTabBar();
 	}
 	ImGui::End();
 #endif

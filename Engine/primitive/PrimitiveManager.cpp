@@ -28,20 +28,26 @@ void Manager::Update() {
 		"Triangle","Surface","Sphere", "Sprite"
 	};
 
-	ImGui::Begin("PrimitiveManager");
-	
-	// 変更されて渡される値は添え字
-	ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
-	if (ImGui::Button("Create")) { functions[selectedClass](); }
+	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
-	// 形状一覧
-	if (!primitives_.empty()) {
-		std::vector<const char*> itemText;
-		for (IPrimitive* p : primitives_) {
-			itemText.push_back(p->name.c_str());
+	if (ImGui::BeginTabBar("LWP")) {
+		if (ImGui::BeginTabItem("Primitive")) {
+			// 変更されて渡される値は添え字
+			ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
+			if (ImGui::Button("Create")) { functions[selectedClass](); }
+
+			// 形状一覧
+			if (!primitives_.empty()) {
+				std::vector<const char*> itemText;
+				for (IPrimitive* p : primitives_) {
+					itemText.push_back(p->name.c_str());
+				}
+				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+				primitives_[currentItem]->DebugGUI();
+			}
+			ImGui::EndTabItem();
 		}
-		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-		primitives_[currentItem]->DebugGUI();
+		ImGui::EndTabBar();
 	}
 	ImGui::End();
 #endif
