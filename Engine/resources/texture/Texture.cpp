@@ -10,7 +10,10 @@ using namespace std;
 
 Texture::Texture(Base::CommandManager* manager, const std::string& filePath) {
 	Load(filePath);
-	index_ = manager->CreateTextureResource(mipImages);
+	resource_ = manager->CreateTextureResource(mipImages.GetMetadata());
+
+	// テクスチャのインデックス
+	index_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), mipImages);
 }
 
 LWP::Math::Vector2 Texture::GetTextureSize() const {

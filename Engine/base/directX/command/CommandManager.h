@@ -79,14 +79,14 @@ namespace LWP::Base {
 		/// <summary>
 		/// テクスチャのリソースを作成
 		/// </summary>
-		int CreateTextureResource(const DirectX::ScratchImage& image);
+		ID3D12Resource* CreateTextureResource(const DirectX::TexMetadata& metadata);
 		/// <summary>
 		/// レンダリング用のテクスチャのリソースを作成
 		/// </summary>
 		/// <param name="width">レンダリング解像度（横幅）</param>
 		/// <param name="height">レンダリング解像度（縦幅）</param>
 		/// <returns></returns>
-		int CreateTextureResource(const int width, const int height);
+		ID3D12Resource* CreateTextureResource(const int width, const int height);
 
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace LWP::Base {
 		std::unique_ptr<PointLightResourceBuffer> pointLightResourceBuffer_;
 
 		// テクスチャデータ
-		std::unique_ptr<TextureResourceBuffer> textureResourceBuffer_;
+		//std::unique_ptr<TextureResourceBuffer> textureResourceBuffer_;
 		const UINT kMaxTexture = 128;
 		// テクスチャを適応しないとき用のデフォルトのテクスチャ
 		Resource::Texture* defaultTexture_;
@@ -188,14 +188,6 @@ namespace LWP::Base {
 		/// </summary>
 		void CreateStructuredBufferResources();
 
-		/// <summary>
-		/// 任意のサイズのResourceを作成（Textureバージョン）
-		/// </summary>
-		ID3D12Resource* CreateBufferResource(const DirectX::TexMetadata& metadata);
-		/// <summary>
-		/// 任意のサイズのResourceを作成（RenderTextureバージョン）
-		/// </summary>
-		ID3D12Resource* CreateBufferResource(const int width, const int height);
 		/// <summary>
 		/// 任意のサイズのResourceを作成
 		/// </summary>

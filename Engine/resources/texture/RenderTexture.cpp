@@ -11,8 +11,10 @@ using namespace std;
 
 RenderTexture::RenderTexture(Base::CommandManager* manager, const int width, const int height) 
 	: kWidth(width), kHeight(height) {
-	index_ = manager->CreateTextureResource(width, height);
+	resource_ = manager->CreateTextureResource(width, height);
 
+	// テクスチャのインデックス
+	index_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), width, height);
 	// RTVのインデックス
 	//rtvIndex_ = manager->GetRTV()->CreateRenderTargetView();
 	// DSVのインデックス

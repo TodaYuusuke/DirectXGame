@@ -3,6 +3,7 @@
 
 #include <d3d12.h>
 #pragma comment(lib, "d3d12.lib")
+#include <wrl.h>
 
 namespace LWP::Resource {
 	class ITexture {
@@ -20,9 +21,9 @@ namespace LWP::Resource {
 		// サイズをVector2で受け取る
 		virtual Math::Vector2 GetTextureSize() const = 0;
 
-	private: // ** メンバ変数 ** //
+	protected: // ** メンバ変数 ** //
 
 		// リソース
-		ID3D12Resource* resource_ = nullptr;
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource_ = nullptr;
 	};
 }

@@ -113,7 +113,7 @@ void CommandManager::DrawCall() {
 			materialData_->GetView(),
 			directionLightResourceBuffer_->view_,
 			pointLightResourceBuffer_->view_,
-			textureResourceBuffer_->view_,
+			srv_->GetView(),
 			directionLightResourceBuffer_->shadowMap_[0].view_,
 			pointLightResourceBuffer_->shadowMap_[0].view_
 		});
@@ -204,16 +204,33 @@ void CommandManager::SetPointLightData(const Object::PointLight* light, const Ma
 	pointLightResourceBuffer_->usedCount_++;
 	commonDataResourceBuffer_->data_->pointLight++;
 }
-int CommandManager::CreateTextureResource(const DirectX::ScratchImage& image) {
-	textureResourceBuffer_->resource_.push_back(CreateBufferResource(image.GetMetadata()));
-	UploadTextureData(image);
-	return textureResourceBuffer_->usedCount_++;
+ID3D12Resource* CommandManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
+	// 1. metadataを基にResourceの設定
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = UINT(metadata.width);
+	resourceDesc.Height = UINT(metadata.height);
+	resourceDesc.MipLevels = UINT16(metadata.mipLevels);
+	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);
+	resourceDesc.Format = metadata.format;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
+
+	return CreateBufferResource(resourceDesc);
 }
 
-int CommandManager::CreateTextureResource(const int width, const int height) {
-	textureResourceBuffer_->resource_.push_back(CreateBufferResource(width, height));
-	UploadTextureData(width, height);
-	return textureResourceBuffer_->usedCount_++;
+ID3D12Resource* CommandManager::CreateTextureResource(const int width, const int height) {
+	// 1. Resourceの設定
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = UINT(width);
+	resourceDesc.Height = UINT(height);
+	resourceDesc.MipLevels = 0;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+	return CreateBufferResource(resourceDesc);
 }
 
 void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
@@ -518,37 +535,10 @@ void CommandManager::CreateStructuredBufferResources() {
 	}
 
 	// テクスチャデータ
-	textureResourceBuffer_ = std::make_unique<TextureResourceBuffer>();
+	//textureResourceBuffer_ = std::make_unique<TextureResourceBuffer>();
 	//textureResource_->resource_ = CreateBufferResource(sizeof(IndexInfoStrict) * kMaxTexture);
 }
 
-ID3D12Resource* CommandManager::CreateBufferResource(const DirectX::TexMetadata& metadata) {
-	// 1. metadataを基にResourceの設定
-	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = UINT(metadata.width);
-	resourceDesc.Height = UINT(metadata.height);
-	resourceDesc.MipLevels = UINT16(metadata.mipLevels);
-	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);
-	resourceDesc.Format = metadata.format;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
-
-	return CreateBufferResource(resourceDesc);
-}
-ID3D12Resource* CommandManager::CreateBufferResource(const int width, const int height) {
-	// 1. Resourceの設定
-	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = UINT(width);
-	resourceDesc.Height = UINT(height);
-	resourceDesc.MipLevels = 0;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-	
-	return CreateBufferResource(resourceDesc);
-}
 ID3D12Resource* CommandManager::CreateBufferResource(D3D12_RESOURCE_DESC desc) {
 	HRESULT hr = S_FALSE;
 
@@ -571,79 +561,79 @@ ID3D12Resource* CommandManager::CreateBufferResource(D3D12_RESOURCE_DESC desc) {
 	assert(SUCCEEDED(hr));
 	return resource;
 }
-
-void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
-	HRESULT hr = S_FALSE;
-
-	// Meta情報を取得
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	// 全MipMapについて
-	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-		// MipMapLevelを指定して各Imageを取得
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		// Textureに転送
-		hr = textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_]->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,
-			img->pixels,
-			UINT(img->rowPitch),
-			UINT(img->slicePitch)
-		);
-		assert(SUCCEEDED(hr));
-	}
-
-	// metaDataを元にSRVの設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = metadata.format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
-
-	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
-	UINT srvIndex = srv_->GetAndIncrement();
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
-	// 初めてのテクスチャ生成ならviewを保存
-	if (textureResourceBuffer_->usedCount_ == 0) {
-		textureResourceBuffer_->view_ = srv_->GetGPUHandle(srvIndex);
-	}
-	// SRVの生成
-	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);
-}
-
-void CommandManager::UploadTextureData(const int width, const int height) {
-	HRESULT hr = S_FALSE;
-
-	// 画素数
-	const UINT pixelCount = width * height;
-	// 画像1行分のデータサイズ
-	const UINT rowPitch = sizeof(UINT) * width;
-	// 画像全体のデータサイズ
-	const UINT depthPitch = rowPitch * height;
-	// 画像イメージ
-	UINT* img = new UINT[pixelCount];
-	// 一度赤で画像を初期化
-	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF0000FF; }
-
-	// TextureBufferに転送
-	hr = textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_]->WriteToSubresource(
-		0, nullptr, img, rowPitch, depthPitch
-	);
-	assert(SUCCEEDED(hr));
-
-	// SRVの設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
-
-	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
-	UINT srvIndex = srv_->GetAndIncrement();
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
-	// 初めてのテクスチャ生成ならviewを保存
-	if (textureResourceBuffer_->usedCount_ == 0) {
-		textureResourceBuffer_->view_ = srv_->GetGPUHandle(srvIndex);
-	}
-	// SRVの生成
-	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);
-}
+//
+//void CommandManager::UploadTextureData(const DirectX::ScratchImage& mipImages) {
+//	HRESULT hr = S_FALSE;
+//
+//	// Meta情報を取得
+//	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+//	// 全MipMapについて
+//	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
+//		// MipMapLevelを指定して各Imageを取得
+//		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
+//		// Textureに転送
+//		hr = textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_]->WriteToSubresource(
+//			UINT(mipLevel),
+//			nullptr,
+//			img->pixels,
+//			UINT(img->rowPitch),
+//			UINT(img->slicePitch)
+//		);
+//		assert(SUCCEEDED(hr));
+//	}
+//
+//	// metaDataを元にSRVの設定
+//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+//	srvDesc.Format = metadata.format;
+//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+//	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+//
+//	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
+//	UINT srvIndex = srv_->GetAndIncrement();
+//	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
+//	// 初めてのテクスチャ生成ならviewを保存
+//	if (textureResourceBuffer_->usedCount_ == 0) {
+//		textureResourceBuffer_->view_ = srv_->GetGPUHandle(srvIndex);
+//	}
+//	// SRVの生成
+//	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);
+//}
+//
+//void CommandManager::UploadTextureData(const int width, const int height) {
+//	HRESULT hr = S_FALSE;
+//
+//	// 画素数
+//	const UINT pixelCount = width * height;
+//	// 画像1行分のデータサイズ
+//	const UINT rowPitch = sizeof(UINT) * width;
+//	// 画像全体のデータサイズ
+//	const UINT depthPitch = rowPitch * height;
+//	// 画像イメージ
+//	UINT* img = new UINT[pixelCount];
+//	// 一度赤で画像を初期化
+//	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF0000FF; }
+//
+//	// TextureBufferに転送
+//	hr = textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_]->WriteToSubresource(
+//		0, nullptr, img, rowPitch, depthPitch
+//	);
+//	assert(SUCCEEDED(hr));
+//
+//	// SRVの設定
+//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+//	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+//	srvDesc.Texture2D.MipLevels = 1;
+//
+//	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので + ）
+//	UINT srvIndex = srv_->GetAndIncrement();
+//	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = srv_->GetCPUHandle(srvIndex);
+//	// 初めてのテクスチャ生成ならviewを保存
+//	if (textureResourceBuffer_->usedCount_ == 0) {
+//		textureResourceBuffer_->view_ = srv_->GetGPUHandle(srvIndex);
+//	}
+//	// SRVの生成
+//	device_->CreateShaderResourceView(textureResourceBuffer_->resource_[textureResourceBuffer_->usedCount_].Get(), &srvDesc, textureSRVHandleCPU);
+//}
