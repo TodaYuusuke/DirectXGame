@@ -16,7 +16,17 @@ namespace LWP::Base {
 		/// </summary>
 		void Initialize(ID3D12Device* device);
 
+		/// <summary>
+		/// Viewをセット
+		/// </summary>
+		void SetView(D3D12_GPU_DESCRIPTOR_HANDLE view) { view_ = view; }
+
+
 
 	private: // ** メンバ変数 ** //
+
+		// テクスチャの一番最初のview
+		D3D12_GPU_DESCRIPTOR_HANDLE view_;
+
 	};
 }

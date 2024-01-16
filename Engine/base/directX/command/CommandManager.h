@@ -34,6 +34,12 @@ namespace LWP::Base {
 		/// ディスクリプタヒープのポインタをセットする関数
 		/// </summary>
 		void SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv);
+		/// <summary>
+		/// ディスクリプタヒープのポインタを返す関数
+		/// </summary>
+		RTV* GetRTV() { return rtv_; }
+		SRV* GetSRV() { return srv_; }
+		DSV* GetDSV() { return dsv_; }
 
 		/// <summary>
 		/// 描画前処理
@@ -190,6 +196,10 @@ namespace LWP::Base {
 		/// 任意のサイズのResourceを作成（RenderTextureバージョン）
 		/// </summary>
 		ID3D12Resource* CreateBufferResource(const int width, const int height);
+		/// <summary>
+		/// 任意のサイズのResourceを作成
+		/// </summary>
+		ID3D12Resource* CreateBufferResource(D3D12_RESOURCE_DESC desc);
 		
 		/// <summary>
 		/// テクスチャをアップロード

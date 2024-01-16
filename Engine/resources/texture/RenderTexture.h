@@ -14,17 +14,27 @@ namespace LWP::Resource {
 	public:
 		// ** 共通の変数 ** //
 
+		// レンダリング解像度
+		const int kWidth;
+		const int kHeight;
+
 		// コンストラクタ
+		RenderTexture() = delete;
 		RenderTexture(Base::CommandManager* manager, const int width, const int height);
 		// デストラクタ
 		~RenderTexture() = default;
+
+		// レンダリング解像度を変更する関数
+		//void ChangeRenderResolution(const int width, const int height);
 
 		// サイズをVector2で受け取る
 		Math::Vector2 GetTextureSize() const override;
 		
 	private: // ** メンバ変数 ** //
 
-		const int kWidth;
-		const int kHeight;
+		// RTVのインデックス
+		int rtvIndex_ = -1;
+		// DSVのインデックス
+		int dsvIndex_ = -1;
 	};
 }

@@ -11,6 +11,12 @@ namespace LWP::Utility {
 		// 変数
 		T t;
 
+		// 初期化
+		void Init(T value) {
+			t = value;
+			preT = value;
+		}
+
 		// 変化したかのフラグを返す関数
 		bool GetChanged() {
 			bool result = (t != preT);
@@ -19,6 +25,7 @@ namespace LWP::Utility {
 		}
 
 		// コンストラクタ
+		Observer() = default;
 		Observer(T initValue) {
 			t = initValue;
 			preT = initValue;

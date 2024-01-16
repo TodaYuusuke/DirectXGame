@@ -42,10 +42,5 @@ namespace LWP::Object {
 
 		// このカメラからのレンダリング結果を格納する変数
 		Resource::RenderTexture* renderTexture_ = nullptr;
-
-		// RTVのインデックス
-		
-		// DSVのインデックス
-		
 	};
 }

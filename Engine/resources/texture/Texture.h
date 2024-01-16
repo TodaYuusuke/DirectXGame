@@ -1,11 +1,9 @@
 #pragma once
 #include "ITexture.h"
-#include "../../../Externals/DirectXTex/DirectXTex.h"
-#include "../../../Engine/object/WorldTransform.h"
+#include "../Externals/DirectXTex/DirectXTex.h"
+#include "object/WorldTransform.h"
 #include <string>
 
-#include <d3d12.h>
-#pragma comment(lib, "d3d12.lib")
 
 namespace LWP::Base {
 	class DirectXCommon;

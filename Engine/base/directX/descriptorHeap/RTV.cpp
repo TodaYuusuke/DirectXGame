@@ -57,3 +57,8 @@ void RTV::ClearRenderTarget(ID3D12GraphicsCommandList* commandList) {
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	// 青っぽい色。RGBAの順
 	commandList->ClearRenderTargetView(GetCPUHandle(swapChain_->GetCurrentBackBufferIndex()), clearColor, 0, nullptr);
 }
+
+int RTV::CreateRenderTargetView(ID3D12Resource* resource) {
+	device_->CreateRenderTargetView(resource, &desc_, GetCPUHandle(GetCount()));
+	return GetAndIncrement();
+}

@@ -523,8 +523,6 @@ void CommandManager::CreateStructuredBufferResources() {
 }
 
 ID3D12Resource* CommandManager::CreateBufferResource(const DirectX::TexMetadata& metadata) {
-	HRESULT hr = S_FALSE;
-
 	// 1. metadataを基にResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = UINT(metadata.width);
@@ -535,28 +533,9 @@ ID3D12Resource* CommandManager::CreateBufferResource(const DirectX::TexMetadata&
 	resourceDesc.SampleDesc.Count = 1;
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
-	// 2. 利用するHeapの設定。非常に特殊な運用。
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
-	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
-
-	// 3. Resourceを生成する
-	ID3D12Resource* resource = nullptr;
-	hr = device_->CreateCommittedResource(
-		&heapProperties,					// Heapの設定
-		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
-		&resourceDesc,						// Resourceの設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,	// 初回のResourceState。Textureは基本読むだけ
-		nullptr,							// Clear最適地。使わないでnullptr;
-		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
-	);
-	assert(SUCCEEDED(hr));
-	return resource;
+	return CreateBufferResource(resourceDesc);
 }
 ID3D12Resource* CommandManager::CreateBufferResource(const int width, const int height) {
-	HRESULT hr = S_FALSE;
-
 	// 1. Resourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = UINT(width);
@@ -567,6 +546,11 @@ ID3D12Resource* CommandManager::CreateBufferResource(const int width, const int 
 	resourceDesc.SampleDesc.Count = 1;
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	
+	return CreateBufferResource(resourceDesc);
+}
+ID3D12Resource* CommandManager::CreateBufferResource(D3D12_RESOURCE_DESC desc) {
+	HRESULT hr = S_FALSE;
 
 	// 2. 利用するHeapの設定。非常に特殊な運用。
 	D3D12_HEAP_PROPERTIES heapProperties{};
@@ -579,7 +563,7 @@ ID3D12Resource* CommandManager::CreateBufferResource(const int width, const int 
 	hr = device_->CreateCommittedResource(
 		&heapProperties,					// Heapの設定
 		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
-		&resourceDesc,						// Resourceの設定
+		&desc,						// Resourceの設定
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	// 初回のResourceState。RTVで書き込むのでちょっとちがう設定
 		nullptr,							// Clear最適地。使わないでnullptr
 		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ

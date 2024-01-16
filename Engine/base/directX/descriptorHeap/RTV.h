@@ -21,6 +21,12 @@ namespace LWP::Base {
 		/// </summary>
 		void ClearRenderTarget(ID3D12GraphicsCommandList* commandList);
 
+		/// <summary>
+		/// RenderTargetViewを作成する関数
+		/// </summary>
+		int CreateRenderTargetView(ID3D12Resource* resource);
+
+
 	private: // ** メンバ変数 ** //
 
 		// スワップチェーン
