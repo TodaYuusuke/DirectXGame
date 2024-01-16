@@ -33,7 +33,7 @@ namespace LWP::Base {
 
 		struct DepthStencil {
 			Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// リソース
-			D3D12_CPU_DESCRIPTOR_HANDLE view_;					// ビュー
+			int index_;
 		};
 		// 前後関係用の深度マップ
 		std::unique_ptr<DepthStencil> depthStencil_;

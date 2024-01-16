@@ -23,7 +23,7 @@ void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {
 	commandList->ClearDepthStencilView(GetCPUHandle(index), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, D3D12_CPU_DESCRIPTOR_HANDLE* view, int32_t width, int32_t height) {
+uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, int32_t width, int32_t height) {
 	HRESULT hr = S_FALSE;
 
 	// DSVResourceの設定
@@ -63,7 +63,6 @@ uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, D3D12_CPU_DESCRIPTOR_
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
 	//DSVHeapの先頭にDSVを作る
 	device_->CreateDepthStencilView(resource, &dsvDesc, GetCPUHandle(GetCount()));
-	*view = GetCPUHandle(GetCount());
 	return GetAndIncrement();
 }
 

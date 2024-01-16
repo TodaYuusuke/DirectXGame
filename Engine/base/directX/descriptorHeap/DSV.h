@@ -27,7 +27,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 前後関係を保存するためのリソースを作成
 		/// </summary>
-		uint32_t CreateDepthStencil(ID3D12Resource* resource, D3D12_CPU_DESCRIPTOR_HANDLE* view, int32_t width, int32_t height);
+		uint32_t CreateDepthStencil(ID3D12Resource* resource, int32_t width, int32_t height);
 
 		/// <summary>
 		/// 平行光源シャドウマップ用のリソースを作成

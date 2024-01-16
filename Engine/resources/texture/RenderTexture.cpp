@@ -16,9 +16,9 @@ RenderTexture::RenderTexture(Base::CommandManager* manager, const int width, con
 	// テクスチャのインデックス
 	index_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), width, height);
 	// RTVのインデックス
-	//rtvIndex_ = manager->GetRTV()->CreateRenderTargetView();
+	rtvIndex_ = manager->GetRTV()->CreateRenderTargetView(resource_.Get());
 	// DSVのインデックス
-	dsvIndex_ = -1;
+	dsvIndex_ = manager->GetDSV()->CreateDepthStencil(resource_.Get(), width, height);
 }
 
 Vector2 RenderTexture::GetTextureSize() const {

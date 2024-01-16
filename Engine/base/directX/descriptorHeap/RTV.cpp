@@ -48,7 +48,8 @@ void RTV::Initialize(HWND hwnd, GPUDevice* gpuDevice, int32_t width, int32_t hei
 		assert(SUCCEEDED(hr));
 
 		// レンダーターゲットビューの生成
-		device_->CreateRenderTargetView(backBuffers_[i].Get(), &desc_, GetCPUHandle(i));
+		CreateRenderTargetView(backBuffers_[i].Get());
+		//device_->CreateRenderTargetView(backBuffers_[i].Get(), &desc_, GetCPUHandle(i));
 	}
 }
 

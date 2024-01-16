@@ -14,7 +14,7 @@ void MainCommand::SetDrawTarget(const Math::Matrix4x4& vp) {
 void MainCommand::DerivedInitialize() {
 	//深度マップを作成
 	depthStencil_ = std::make_unique<DepthStencil>();
-	dsv_->CreateDepthStencil(depthStencil_->resource_.Get(), &depthStencil_->view_, LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
+	depthStencil_->index_ = dsv_->CreateDepthStencil(depthStencil_->resource_.Get(), LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
 };
 
 void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {
@@ -29,8 +29,9 @@ void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	list->ResourceBarrier(1, &barrier);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(rtv_->GetBackBufferIndex());
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(depthStencil_->index_);
 	// 描画先のRTVとDSVを設定する
-	list->OMSetRenderTargets(1, &rtvHandle, false, &depthStencil_->view_);
+	list->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
 	rtv_->ClearRenderTarget(list);
