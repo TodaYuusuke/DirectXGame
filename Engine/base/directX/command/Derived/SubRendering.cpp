@@ -10,7 +10,8 @@ using namespace LWP::Base;
 void SubRendering::SetDrawTarget(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture, IStructured<IndexInfoStruct>* indexPtr) {
 	renderTexture_ = renderTexture;
 	*vpResourceBuffer_->data_ = vp;
-	indexPtr_ = indexPtr;
+	indexPtr;
+	//indexPtr_ = indexPtr;
 }
 
 
@@ -74,7 +75,7 @@ void SubRendering::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsComman
 	list->SetPipelineState(pso_->state_.Get());
 
 	// ディスクリプタテーブルを登録
-	list->SetGraphicsRootDescriptorTable(0, indexPtr_->GetView());
+	list->SetGraphicsRootDescriptorTable(0, indexData_->GetView());
 	list->SetGraphicsRootConstantBufferView(1, vpResourceBuffer_->view_);
 	list->SetGraphicsRootConstantBufferView(2, viewStruct.commonData);
 	list->SetGraphicsRootDescriptorTable(3, viewStruct.vertex);
@@ -87,21 +88,43 @@ void SubRendering::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsComman
 	list->SetGraphicsRootDescriptorTable(10, viewStruct.pointShadowMap);
 
 	// 全三角形を１つのDrawCallで描画
-	//list->DrawInstanced(3, indexPtr_->GetCount() / 3, 0, 0);
+	list->DrawInstanced(3, indexData_->GetCount() / 3, 0, 0);
 
 	PostDraw(list);
 }
 
 void SubRendering::PostDraw(ID3D12GraphicsCommandList* list) {
-	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
+	// 書き込み対象をコピーする用のバリアに
+	D3D12_RESOURCE_BARRIER barrier0 = MakeResourceBarrier(
 		renderTexture_->GetResource(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_COPY_SOURCE
+	);
+	// TexResourceのバリアを、コピーされる用に
+	D3D12_RESOURCE_BARRIER barrier1 = MakeResourceBarrier(
+		renderTexture_->GetTexResource(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_COPY_DEST
+	);
+	// 書き込み対象を読み取り用のバリアに
+	D3D12_RESOURCE_BARRIER barrier2 = MakeResourceBarrier(
+		renderTexture_->GetResource(),
+		D3D12_RESOURCE_STATE_COPY_SOURCE,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 	);
-
-	// リソースバリアをセット
-	list->ResourceBarrier(1, &barrier);
+	// TexResourceのバリアを、コピーされる用に
+	D3D12_RESOURCE_BARRIER barrier3 = MakeResourceBarrier(
+		renderTexture_->GetTexResource(),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+	);
+	
+	// レンダリング結果をコピーする
+	list->ResourceBarrier(1, &barrier0);
+	list->ResourceBarrier(1, &barrier1);
+	list->CopyResource(renderTexture_->GetTexResource(), renderTexture_->GetResource());
+	list->ResourceBarrier(1, &barrier2);
+	list->ResourceBarrier(1, &barrier3);
 }
 
 void SubRendering::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

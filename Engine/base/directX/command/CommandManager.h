@@ -201,6 +201,6 @@ namespace LWP::Base {
 		/// <summary>
 		/// 任意のサイズのResourceを作成
 		/// </summary>
-		ID3D12Resource* CreateBufferResource(D3D12_RESOURCE_DESC desc, D3D12_CLEAR_VALUE* clearColor);
+		ID3D12Resource* CreateBufferResource(D3D12_RESOURCE_DESC desc, D3D12_RESOURCE_STATES state, D3D12_CLEAR_VALUE* clearColor);
 	};
 }

@@ -14,11 +14,15 @@ RenderTexture::RenderTexture(Base::CommandManager* manager, const int width, con
 	resource_ = manager->CreateTextureResource(width, height);
 
 	// テクスチャのインデックス
-	index_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), width, height);
+	srvIndex_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), width, height);
 	// RTVのインデックス
 	rtvIndex_ = manager->GetRTV()->CreateRenderTargetView(resource_.Get());
-	// DSVのインデックス
-	dsvIndex_ = manager->GetDSV()->CreateDepthStencil(resource_.Get(), width, height);
+	// DSVのリソースとインデックス
+	dsvIndex_ = manager->GetDSV()->CreateDepthStencil(depthMapResource_.Get(), width, height);
+
+	// テクスチャのみのリソースを生成
+	texResource_ = manager->CreateTextureResource(width, height);
+	index_ = manager->GetSRV()->CreateShaderResourceView(texResource_.Get(), width, height);
 }
 
 Vector2 RenderTexture::GetTextureSize() const {

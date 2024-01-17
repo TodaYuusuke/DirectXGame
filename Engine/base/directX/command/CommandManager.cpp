@@ -134,6 +134,7 @@ void CommandManager::DrawCall() {
 	for (int i = 0; i < subCount_; i++) {
 		DrawLambda(subCommands_[i].get());
 	}
+
 	// 本描画
 	DrawLambda(mainCommand_.get());
 
@@ -231,7 +232,7 @@ ID3D12Resource* CommandManager::CreateTextureResource(const DirectX::TexMetadata
 	resourceDesc.SampleDesc.Count = 1;
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
-	return CreateBufferResource(resourceDesc, nullptr);
+	return CreateBufferResource(resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr);
 }
 
 ID3D12Resource* CommandManager::CreateTextureResource(const int width, const int height) {
@@ -253,7 +254,7 @@ ID3D12Resource* CommandManager::CreateTextureResource(const int width, const int
 	clearColor.Color[2] = 0.0f;
 	clearColor.Color[3] = 1.0f;
 
-	return CreateBufferResource(resourceDesc, &clearColor);
+	return CreateBufferResource(resourceDesc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearColor);
 }
 
 void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
@@ -294,6 +295,10 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 
 		// メインコマンドにデータをセット
 		mainCommand_->SetDrawData(indexInfo);
+		// サブにもセット
+		for (int s = 0; s < subCount_; s++) {
+			subCommands_[s]->SetDrawData(indexInfo);
+		}
 
 		// シャドウマップにも描画！
 		if (primitive->material.enableLighting) {
@@ -557,7 +562,7 @@ void CommandManager::CreateStructuredBufferResources() {
 	}
 }
 
-ID3D12Resource* CommandManager::CreateBufferResource(D3D12_RESOURCE_DESC desc, D3D12_CLEAR_VALUE* clearColor) {
+ID3D12Resource* CommandManager::CreateBufferResource(D3D12_RESOURCE_DESC desc, D3D12_RESOURCE_STATES state, D3D12_CLEAR_VALUE* clearColor) {
 	HRESULT hr = S_FALSE;
 
 	// 2. 利用するHeapの設定。非常に特殊な運用。
@@ -572,7 +577,7 @@ ID3D12Resource* CommandManager::CreateBufferResource(D3D12_RESOURCE_DESC desc, D
 		&heapProperties,					// Heapの設定
 		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
 		&desc,						// Resourceの設定
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	// 初回のResourceState。RTVで書き込むのでちょっとちがう設定
+		state,	// 初回のResourceState。RTVで書き込むのでちょっとちがう設定
 		clearColor,							// Clear最適地。使わないならnullptr
 		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
 	);
