@@ -28,6 +28,9 @@ namespace LWP::Base {
 		/// </summary>
 		void PostDraw(ID3D12GraphicsCommandList* list) override;
 
+		// indexInfoのポインタを返す関数（SubCommand用）
+		IStructured<IndexInfoStruct>* GetIndexInfoPtr() { return indexData_.get(); }
+
 
 	private: // ** メンバ変数 ** // 
 

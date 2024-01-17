@@ -39,6 +39,8 @@ namespace LWP::Base {
 
 		// Viewを返す関数
 		D3D12_GPU_DESCRIPTOR_HANDLE GetView() { return view_; }
+		// Viewを外部からセットする関数（subRendering用）
+		void SetView(D3D12_GPU_DESCRIPTOR_HANDLE view) { view_ = view; }
 
 
 	protected: // ** メンバ変数 ** //

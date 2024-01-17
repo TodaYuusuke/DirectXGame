@@ -1,10 +1,12 @@
 #pragma once
 #include "Derived/MainCommand.h"
+#include "Derived/SubRendering.h"
 #include "Derived/ShadowMapCommand.h"
 
 #include <vector>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
+
 
 // 前方宣言
 namespace LWP::Object {
@@ -93,6 +95,10 @@ namespace LWP::Base {
 		/// 描画に使うカメラのビュープロジェクション行列をセットする
 		/// </summary>
 		void SetCameraViewProjection(const Object::Camera* camera);
+		/// <summary>
+		/// このフレームでレンダリングするサブ画面のコマンドをセットする
+		/// </summary>
+		void SetSubRendering(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture);
 
 		/// <summary>
 		/// 平行光源のデータを登録する
@@ -121,8 +127,14 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 
 		// 用途別コマンドリスト用クラス
-		std::vector<std::unique_ptr<MainCommand>> mainCommands_;
-		int mainCount_ = 0;	// 毎フレームの描画回数
+		
+		// メイン描画
+		std::unique_ptr<MainCommand> mainCommand_;
+		
+		// サブ画面描画
+		std::vector<std::unique_ptr<SubRendering>> subCommands_;
+		int subCount_ = 0;	// 毎フレームの描画回数
+		// シャドウマップ計算
 		std::vector<std::unique_ptr<ShadowMapCommand>> shadowCommands_;
 		int shadowCount_ = 0;	// 毎フレームの描画回数
 
@@ -157,8 +169,6 @@ namespace LWP::Base {
 		// 点光源
 		std::unique_ptr<PointLightResourceBuffer> pointLightResourceBuffer_;
 
-		// テクスチャデータ
-		//std::unique_ptr<TextureResourceBuffer> textureResourceBuffer_;
 		const UINT kMaxTexture = 128;
 		// テクスチャを適応しないとき用のデフォルトのテクスチャ
 		Resource::Texture* defaultTexture_;
@@ -191,16 +201,6 @@ namespace LWP::Base {
 		/// <summary>
 		/// 任意のサイズのResourceを作成
 		/// </summary>
-		ID3D12Resource* CreateBufferResource(D3D12_RESOURCE_DESC desc);
-		
-		/// <summary>
-		/// テクスチャをアップロード
-		/// </summary>
-		void UploadTextureData(const DirectX::ScratchImage& mipImages);
-		/// <summary>
-		/// レンダリングテクスチャをアップロード
-		/// </summary>
-		void UploadTextureData(const int width, const int height);
-
+		ID3D12Resource* CreateBufferResource(D3D12_RESOURCE_DESC desc, D3D12_CLEAR_VALUE* clearColor);
 	};
 }

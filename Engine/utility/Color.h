@@ -20,6 +20,8 @@ namespace LWP::Utility {
 	public:
 		Color();
 		Color(int r, int g, int b, int a);
+		// 0.0 ~ 1.0対応
+		Color(float r, float g, float b, float a);
 		Color(unsigned int c);
 		Color(Math::Vector4 v);
 

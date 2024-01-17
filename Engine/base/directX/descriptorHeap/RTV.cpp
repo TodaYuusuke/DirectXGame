@@ -53,10 +53,11 @@ void RTV::Initialize(HWND hwnd, GPUDevice* gpuDevice, int32_t width, int32_t hei
 	}
 }
 
-void RTV::ClearRenderTarget(ID3D12GraphicsCommandList* commandList) {
+void RTV::ClearRenderTarget(UINT index, ID3D12GraphicsCommandList* commandList, Utility::Color color) {
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得し、指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	// 青っぽい色。RGBAの順
-	commandList->ClearRenderTargetView(GetCPUHandle(swapChain_->GetCurrentBackBufferIndex()), clearColor, 0, nullptr);
+	Math::Vector4 vec = color.GetVector4();
+	float clearColor[] = { vec.x,vec.y,vec.z,vec.w };	// デフォルトは青っぽい色。RGBAの順
+	commandList->ClearRenderTargetView(GetCPUHandle(index), clearColor, 0, nullptr);
 }
 
 int RTV::CreateRenderTargetView(ID3D12Resource* resource) {

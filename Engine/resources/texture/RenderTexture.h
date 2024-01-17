@@ -30,6 +30,13 @@ namespace LWP::Resource {
 		// サイズをVector2で受け取る
 		Math::Vector2 GetTextureSize() const override;
 		
+		// リソースを返す関数
+		ID3D12Resource* GetResource() { return resource_.Get(); }
+		// RTVのインデックスを返す関数
+		int GetRTV() { return rtvIndex_; }
+		// DSVのインデックス
+		int GetDSV() { return dsvIndex_; }
+
 	private: // ** メンバ変数 ** //
 
 		// RTVのインデックス

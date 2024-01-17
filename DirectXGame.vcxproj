@@ -106,6 +106,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapCommand.cpp" />
+    <ClCompile Include="Engine\base\directX\command\Derived\SubRendering.cpp" />
     <ClCompile Include="Engine\base\directX\command\ICommand.cpp" />
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp" />
     <ClCompile Include="Engine\base\directX\command\PSO.cpp" />
@@ -180,6 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\command\CommandManager.h" />
     <ClInclude Include="Engine\base\directX\command\Derived\MainCommand.h" />
     <ClInclude Include="Engine\base\directX\command\Derived\ShadowMapCommand.h" />
+    <ClInclude Include="Engine\base\directX\command\Derived\SubRendering.h" />
     <ClInclude Include="Engine\base\directX\command\ICommand.h" />
     <ClInclude Include="Engine\base\directX\command\PSO.h" />
     <ClInclude Include="Engine\base\directX\command\ResourceStruct.h" />

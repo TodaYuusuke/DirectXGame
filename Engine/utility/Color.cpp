@@ -17,6 +17,12 @@ Color::Color(int r, int g, int b, int a) {
 	B = static_cast<unsigned char>(b);
 	A = static_cast<unsigned char>(a);
 }
+Color::Color(float r, float g, float b, float a) {
+	R = static_cast<unsigned char>(r * 255.0f);
+	G = static_cast<unsigned char>(g * 255.0f);
+	B = static_cast<unsigned char>(b * 255.0f);
+	A = static_cast<unsigned char>(a * 255.0f);
+}
 
 Color::Color(unsigned int c) {
 	R = static_cast<unsigned char>(0);

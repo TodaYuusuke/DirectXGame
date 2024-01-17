@@ -1,6 +1,7 @@
 #pragma once
 #include "../IObject.h"
 #include "resources/texture/RenderTexture.h"
+#include "base/directX/command/Derived/SubRendering.h"
 
 namespace LWP::Object {
 	class Camera final : public IObject {
@@ -42,5 +43,8 @@ namespace LWP::Object {
 
 		// このカメラからのレンダリング結果を格納する変数
 		Resource::RenderTexture* renderTexture_ = nullptr;
+
+		// レンダリング用のコマンド
+		Base::SubRendering* command_ = nullptr;
 	};
 }

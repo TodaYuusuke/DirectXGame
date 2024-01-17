@@ -63,9 +63,6 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 }
 
 void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
-	HRESULT hr = S_FALSE;
-	hr;
-
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
 		resource_,

@@ -76,7 +76,7 @@ namespace LWP::Base {
 		/// 描画処理
 		/// </summary>
 		/// <param name="viewStruct">全てのviewの構造体</param>
-		void Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, ViewStruct viewStruct);
+		virtual void Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandList* list, ViewStruct viewStruct);
 
 		/// <summary>
 		/// ディスクリプタヒープのポインタをセットする関数
@@ -91,6 +91,7 @@ namespace LWP::Base {
 		/// 描画後のリセット処理
 		/// </summary>
 		void Reset() { indexData_->Reset(); }
+
 
 	protected: // ** メンバ変数 ** //
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "IDescriptorHeap.h"
+#include "utility/Color.h"
 
 #include <vector>
 
@@ -19,7 +20,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// レンダーターゲットをクリアする関数
 		/// </summary>
-		void ClearRenderTarget(ID3D12GraphicsCommandList* commandList);
+		void ClearRenderTarget(UINT index, ID3D12GraphicsCommandList* commandList, Utility::Color color = { 0.1f,0.25f,0.5f,1.0f });
 
 		/// <summary>
 		/// RenderTargetViewを作成する関数

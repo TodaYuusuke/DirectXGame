@@ -34,9 +34,9 @@ void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	list->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
-	rtv_->ClearRenderTarget(list);
+	rtv_->ClearRenderTarget(rtv_->GetBackBufferIndex(), list);
 	// 指定した深度で画面全体をクリアする
-	dsv_->ClearDepth(0, list);
+	dsv_->ClearDepth(depthStencil_->index_, list);
 
 	// 描画用のSRVのDescriptorHeapを設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };

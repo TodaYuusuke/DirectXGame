@@ -14,7 +14,8 @@ void Camera::Initialize() {
 void Camera::Update(Base::CommandManager* manager) {
 	if (!isActive || !renderTexture_) { return; }
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
-	manager->SetCameraViewProjection(this);
+	//manager->SetCameraViewProjection(this);
+	manager->SetSubRendering(GetViewProjection(), renderTexture_);
 }
 
 void Camera::DebugGUI() {
@@ -31,5 +32,6 @@ Matrix4x4 Camera::GetViewProjection() const {
 }
 
 void Camera::CreateRenderTexture(Base::CommandManager* manager, const int width, const int height) {
+	// レンダリング先のテクスチャを生成
 	renderTexture_ = new RenderTexture(manager, width, height);
 }
