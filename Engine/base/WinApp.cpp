@@ -86,3 +86,31 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
+
+void WinApp::ChangeWindowMode() {
+	// ウィンドウのスタイルを変更（WS_OVERLAPPEDWINDOWは適切なスタイルに置き換えてください）
+	SetWindowLong(hwnd_, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+
+	// ウィンドウを指定されたサイズと位置に移動
+	RECT windowRect = { 0, 0, clientWidth_, clientHeight_ };  // ウィンドウの新しいサイズ
+	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
+	int newWidth = windowRect.right - windowRect.left;
+	int newHeight = windowRect.bottom - windowRect.top;
+
+	int xPos = (GetSystemMetrics(SM_CXSCREEN) - newWidth) / 2;  // 画面中央に配置
+	int yPos = (GetSystemMetrics(SM_CYSCREEN) - newHeight) / 2;
+
+	MoveWindow(hwnd_, xPos, yPos, newWidth, newHeight, TRUE);
+}
+void WinApp::ChangeFullScreenMode() {
+	SetWindowLong(hwnd_, GWL_STYLE, WS_VISIBLE | WS_POPUP);//ウィンドウのスタイルを変更
+	MoveWindow(hwnd_, GetSystemMetrics(SM_XVIRTUALSCREEN),
+		GetSystemMetrics(SM_YVIRTUALSCREEN),
+		GetSystemMetrics(SM_CXVIRTUALSCREEN),
+		GetSystemMetrics(SM_CYVIRTUALSCREEN), TRUE);
+	//ウィンドウを画面に合わせる
+}
+void WinApp::ChangeBorderlessWindowMode() {
+	// 未実装
+}

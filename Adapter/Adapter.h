@@ -4,6 +4,7 @@
 #include "component/Primitive.h"
 #include "component/Object.h"
 #include "component/Resource.h"
+#include "component/Window.h"
 #include "component/Information.h"
 #include "../Engine/utility/MyUtility.h"
 
@@ -17,5 +18,6 @@ namespace lwp {
 	using namespace LWP::Primitive;
 	using namespace LWP::Object;
 	using namespace LWP::Resource;
+	using namespace LWP::Window;
 	using namespace LWP::Information;
 }

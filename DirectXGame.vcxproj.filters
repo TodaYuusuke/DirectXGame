@@ -165,10 +165,10 @@
       <Filter>Engine\object\core\light</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp">
-      <Filter>Engine\base\directX\command\Derived</Filter>
+      <Filter>Engine\base\directX\command\derived</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapCommand.cpp">
-      <Filter>Engine\base\directX\command\Derived</Filter>
+      <Filter>Engine\base\directX\command\derived</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp">
       <Filter>Engine\object\core\light</Filter>
@@ -184,10 +184,13 @@
       <Filter>Engine\resources\texture</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\Derived\SubRendering.cpp">
-      <Filter>Engine\base\directX\command\Derived</Filter>
+      <Filter>Engine\base\directX\command\derived</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\postEffect\LensDistortion.cpp">
       <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Window.cpp">
+      <Filter>Adapter\component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,10 +393,10 @@
       <Filter>Engine\object\core\light</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\Derived\MainCommand.h">
-      <Filter>Engine\base\directX\command\Derived</Filter>
+      <Filter>Engine\base\directX\command\derived</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\Derived\ShadowMapCommand.h">
-      <Filter>Engine\base\directX\command\Derived</Filter>
+      <Filter>Engine\base\directX\command\derived</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\light\DirectionLight.h">
       <Filter>Engine\object\core\light</Filter>
@@ -421,10 +424,13 @@
       <Filter>Engine\resources\texture</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\Derived\SubRendering.h">
-      <Filter>Engine\base\directX\command\Derived</Filter>
+      <Filter>Engine\base\directX\command\derived</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\postEffect\LensDistortion.h">
       <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Window.h">
+      <Filter>Adapter\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +533,6 @@
     <Filter Include="Engine\object\core\light">
       <UniqueIdentifier>{d7b05c18-6249-4f61-8559-8af414e7835e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX\command\Derived">
-      <UniqueIdentifier>{5e93e1c4-b2c1-4c36-bae5-07b1bf3df8b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\base\directX\resource">
       <UniqueIdentifier>{a126ceca-736d-4cd4-9f44-53c374866266}</UniqueIdentifier>
     </Filter>
@@ -538,6 +541,9 @@
     </Filter>
     <Filter Include="Engine\base\directX\command\postEffect">
       <UniqueIdentifier>{c27c5525-1f90-479c-9243-f6d4e8d37e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\command\derived">
+      <UniqueIdentifier>{5e93e1c4-b2c1-4c36-bae5-07b1bf3df8b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -94,6 +94,16 @@ void SampleTitle::Update() {
 		}
 	}
 
+	if (Keyboard::GetTrigger(DIK_1)) {
+		LWP::Window::ChangeWindowMode();
+	}
+	else if (Keyboard::GetTrigger(DIK_2)) {
+		LWP::Window::ChangeFullScreenMode();
+	}
+	else if (Keyboard::GetTrigger(DIK_3)) {
+		LWP::Window::ChangeBorderlessWindowMode();
+	}
+
 	// ESCキーでデバッグ情報表示切り替え
 	if (Keyboard::GetTrigger(DIK_ESCAPE)) {
 		Info::ChangeShowDebugGUI();

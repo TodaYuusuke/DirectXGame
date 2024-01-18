@@ -1,7 +1,8 @@
 #pragma once
 #include "../IObject.h"
 #include "resources/texture/RenderTexture.h"
-#include "base/directX/command/Derived/SubRendering.h"
+#include "base/directX/command/postEffect/LensDistortion.h"
+#include "base/directX/command/derived/SubRendering.h"
 
 namespace LWP::Object {
 	class Camera final : public IObject {
@@ -13,7 +14,7 @@ namespace LWP::Object {
 		// -- ポストエフェクトフラグ -- //
 
 		// レンズディストーション（歪曲収差）
-		LensDistortion lensDistortion = false;
+		LensDistortion lensDistortion;
 		// ブルームをかける
 		//bool enableBloom = false;
 

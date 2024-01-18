@@ -28,6 +28,19 @@ namespace LWP::Base {
 		/// <returns>true ... メッセージが来ていた場合、false ... メッセージが来ていない場合</returns>
 		bool ProcessMessage();
 
+		/// <summary>
+		/// ウィンドウモードにする関数
+		/// </summary>
+		void ChangeWindowMode();
+		/// <summary>
+		/// ウィンドウモードにする関数
+		/// </summary>
+		void ChangeFullScreenMode();
+		/// <summary>
+		/// ウィンドウモードにする関数
+		/// </summary>
+		void ChangeBorderlessWindowMode();
+
 
 		// アクセサ
 		int GetClientWidth() { return clientWidth_; }

@@ -11,6 +11,18 @@ namespace LWP {
 	namespace Config {
 
 		/// <summary>
+		/// ウィンドウ
+		/// </summary>
+		namespace Window {
+
+			// ウィンドウ解像度（横幅）
+			static const UINT kResolutionWidth = 1920;
+			// ウィンドウ解像度（縦幅）
+			static const UINT kResolutionHeight = 1080;
+
+		}
+
+		/// <summary>
 		/// フレームレート関連
 		/// </summary>
 		namespace FrameRate {

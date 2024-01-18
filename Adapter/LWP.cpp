@@ -1,4 +1,5 @@
 ﻿#include "LWP.h"
+#include "Config.h"
 
 using namespace LWP::System;
 
@@ -9,12 +10,14 @@ using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Scene;
 
+namespace kWind = LWP::Config::Window;
+
 void Engine::Run(IScene* firstScene) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	const char kWindowTitle[] = "Window Title";
-	Initialize(kWindowTitle, 1280, 720, firstScene);
+	Initialize(kWindowTitle, kWind::kResolutionWidth, kWind::kResolutionHeight, firstScene);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (ProcessMessage()) {

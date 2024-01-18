@@ -1,5 +1,6 @@
 #include "ImGuiManager.h"
 #include "../math/vector/Vector4.h"
+#include <Adapter.h>
 
 using namespace LWP::Base;
 using namespace LWP::Utility;
@@ -11,6 +12,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 	// ImGuiの初期化、詳細はさして重要ではないので省略
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImGui::GetIO().DisplaySize = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF() };
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
@@ -20,6 +22,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 		dxCommon_->GetSRVHeap()->GetCPUDescriptorHandleForHeapStart(),
 		dxCommon_->GetSRVHeap()->GetGPUDescriptorHandleForHeapStart()
 	);
+
 }
 
 void ImGuiManager::Finalize() {
