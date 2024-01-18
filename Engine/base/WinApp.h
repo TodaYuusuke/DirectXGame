@@ -63,6 +63,17 @@ namespace LWP::Base {
 		// ウィンドウ
 		HWND hwnd_;
 
+		// 現在のウィンドウモード
+		enum class WindowMode {
+			Window = 0,
+			FullScreen = 1,
+			BorderlessWindow = 2,
+		}currentMode = WindowMode::Window;
+
+		// 元のウィンドウの情報を保持
+		RECT windowRect_;
+		// スタイル
+		UINT windowStyle_;
 
 	private: // 非公開のメンバ関数
 		WinApp(const WinApp&) = delete;

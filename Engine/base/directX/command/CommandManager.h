@@ -1,7 +1,7 @@
 #pragma once
 #include "Derived/MainCommand.h"
 #include "Derived/SubRendering.h"
-#include "Derived/ShadowMapCommand.h"
+#include "Derived/ShadowMapping.h"
 
 #include <vector>
 #include <dxcapi.h>
@@ -135,7 +135,7 @@ namespace LWP::Base {
 		std::vector<std::unique_ptr<SubRendering>> subCommands_;
 		int subCount_ = 0;	// 毎フレームの描画回数
 		// シャドウマップ計算
-		std::vector<std::unique_ptr<ShadowMapCommand>> shadowCommands_;
+		std::vector<std::unique_ptr<ShadowMapping>> shadowCommands_;
 		int shadowCount_ = 0;	// 毎フレームの描画回数
 
 		// GPU同期用のフェンス

@@ -12,7 +12,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// レンダリング先のデータをセット
 		/// </summary>
-		void SetDrawTarget(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture, IStructured<IndexInfoStruct>* indexPtr);
+		void SetDrawTarget(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture);
 
 		/// <summary>
 		/// 描画前処理

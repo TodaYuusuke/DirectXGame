@@ -18,7 +18,7 @@ void SampleTitle::Initialize() {
 	LWP::Object::CreateRenderTexture(subCamera, 640, 360);
 	subCamera->transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera->transform.rotation = { 0.4f,-0.5f,0.0f };
-		
+	
 	// 地面
 	ground = LWP::Primitive::CreateInstance<Surface>();
 	ground->transform.translation.y = -1.5f;

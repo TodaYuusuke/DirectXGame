@@ -69,7 +69,7 @@ void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
 
 	// シャドウマップコマンド用の実体
 	for (int i = 0; i < lwpC::Shadow::kMaxShadowMap; i++) {
-		shadowCommands_.push_back(std::make_unique<ShadowMapCommand>());
+		shadowCommands_.push_back(std::make_unique<ShadowMapping>());
 		shadowCommands_.back()->SetDescriptorHeap(rtv_, dsv_, srv_);
 		shadowCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
 	}
@@ -176,7 +176,7 @@ void CommandManager::SetMainRendering(const Object::Camera* camera) {
 	mainCommand_->SetDrawTarget(camera->GetViewProjection());
 }
 void CommandManager::SetSubRendering(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture) {
-	subCommands_[subCount_++]->SetDrawTarget(vp, renderTexture, mainCommand_->GetIndexInfoPtr());
+	subCommands_[subCount_++]->SetDrawTarget(vp, renderTexture);
 }
 
 void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, const Math::Matrix4x4& viewProjection) {

@@ -24,6 +24,9 @@ void WinApp::Initialize(const char* title, int width, int height) {
 	// タイトル
 	title_ = title;
 
+	// ウィンドウスタイルを用意
+	windowStyle_ = WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME);
+
 	// クライアント領域のサイズ
 	clientWidth_ = (int32_t)width;
 	clientHeight_ = (int32_t)height;
@@ -88,28 +91,51 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 }
 
 void WinApp::ChangeWindowMode() {
-	// ウィンドウのスタイルを変更（WS_OVERLAPPEDWINDOWは適切なスタイルに置き換えてください）
-	SetWindowLong(hwnd_, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+	if (currentMode == WindowMode::Window) { return; }
+	currentMode = WindowMode::Window;
 
-	// ウィンドウを指定されたサイズと位置に移動
-	RECT windowRect = { 0, 0, clientWidth_, clientHeight_ };  // ウィンドウの新しいサイズ
-	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+	// 通常ウィンドウに戻す
+	SetWindowLong(hwnd_, GWL_STYLE, windowStyle_);
 
-	int newWidth = windowRect.right - windowRect.left;
-	int newHeight = windowRect.bottom - windowRect.top;
+	SetWindowPos(
+		hwnd_, HWND_NOTOPMOST, windowRect_.left, windowRect_.top,
+		windowRect_.right - windowRect_.left, windowRect_.bottom - windowRect_.top,
+		SWP_FRAMECHANGED | SWP_NOACTIVATE);
 
-	int xPos = (GetSystemMetrics(SM_CXSCREEN) - newWidth) / 2;  // 画面中央に配置
-	int yPos = (GetSystemMetrics(SM_CYSCREEN) - newHeight) / 2;
-
-	MoveWindow(hwnd_, xPos, yPos, newWidth, newHeight, TRUE);
+	ShowWindow(hwnd_, SW_NORMAL);
 }
 void WinApp::ChangeFullScreenMode() {
-	SetWindowLong(hwnd_, GWL_STYLE, WS_VISIBLE | WS_POPUP);//ウィンドウのスタイルを変更
-	MoveWindow(hwnd_, GetSystemMetrics(SM_XVIRTUALSCREEN),
-		GetSystemMetrics(SM_YVIRTUALSCREEN),
-		GetSystemMetrics(SM_CXVIRTUALSCREEN),
-		GetSystemMetrics(SM_CYVIRTUALSCREEN), TRUE);
+	//SetWindowLong(hwnd_, GWL_STYLE, WS_VISIBLE | WS_POPUP);//ウィンドウのスタイルを変更
+	//MoveWindow(hwnd_, GetSystemMetrics(SM_XVIRTUALSCREEN),
+	//	GetSystemMetrics(SM_YVIRTUALSCREEN),
+	//	GetSystemMetrics(SM_CXVIRTUALSCREEN),
+	//	GetSystemMetrics(SM_CYVIRTUALSCREEN), TRUE);
 	//ウィンドウを画面に合わせる
+
+	if (currentMode == WindowMode::FullScreen) { return; }
+	currentMode = WindowMode::FullScreen;
+
+	// 元の状態を覚えておく
+	GetWindowRect(hwnd_, &windowRect_);
+
+	// 仮想フルスクリーン化
+	SetWindowLong(
+		hwnd_, GWL_STYLE,
+		windowStyle_ &
+		~(WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME));
+
+	RECT fullscreenRect{ 0 };
+	HMONITOR monitor = MonitorFromWindow(hwnd_, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO info;
+	info.cbSize = sizeof(info);
+	GetMonitorInfo(monitor, &info);
+	fullscreenRect.right = info.rcMonitor.right - info.rcMonitor.left;
+	fullscreenRect.bottom = info.rcMonitor.bottom - info.rcMonitor.top;
+	// ここのNOTOPMOSTで最前面固定を設定する
+	SetWindowPos(
+		hwnd_, HWND_NOTOPMOST, fullscreenRect.left, fullscreenRect.top, fullscreenRect.right,
+		fullscreenRect.bottom, SWP_FRAMECHANGED | SWP_NOACTIVATE);
+	ShowWindow(hwnd_, SW_MAXIMIZE);
 }
 void WinApp::ChangeBorderlessWindowMode() {
 	// 未実装

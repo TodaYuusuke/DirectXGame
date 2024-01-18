@@ -7,11 +7,9 @@
 
 using namespace LWP::Base;
 
-void SubRendering::SetDrawTarget(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture, IStructured<IndexInfoStruct>* indexPtr) {
+void SubRendering::SetDrawTarget(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture) {
 	renderTexture_ = renderTexture;
 	*vpResourceBuffer_->data_ = vp;
-	indexPtr;
-	//indexPtr_ = indexPtr;
 }
 
 

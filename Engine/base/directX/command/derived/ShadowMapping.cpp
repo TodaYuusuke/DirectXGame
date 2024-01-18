@@ -1,4 +1,4 @@
-#include "ShadowMapCommand.h"
+#include "ShadowMapping.h"
 #include "../../descriptorHeap/RTV.h"
 #include "../../descriptorHeap/DSV.h"
 #include "../../descriptorHeap/SRV.h"
@@ -10,13 +10,13 @@
 using namespace LWP;
 using namespace LWP::Base;
 
-void ShadowMapCommand::SetDrawTarget(const Math::Matrix4x4& vp, ID3D12Resource* resource, uint32_t dsvIndex) {
+void ShadowMapping::SetDrawTarget(const Math::Matrix4x4& vp, ID3D12Resource* resource, uint32_t dsvIndex) {
 	*vpResourceBuffer_->data_ = vp;
 	resource_ = resource;
 	dsvIndex_ = dsvIndex;
 }
 
-void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
+void ShadowMapping::PreDraw(ID3D12GraphicsCommandList* list) {
 	// シャドウマップ用のDSVハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(dsvIndex_);
 	// 描画先のDSVを設定する
@@ -62,7 +62,7 @@ void ShadowMapCommand::PreDraw(ID3D12GraphicsCommandList* list) {
 	list->RSSetScissorRects(1, &scissorRect);
 }
 
-void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
+void ShadowMapping::PostDraw(ID3D12GraphicsCommandList* list) {
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
 		resource_,
@@ -74,7 +74,7 @@ void ShadowMapCommand::PostDraw(ID3D12GraphicsCommandList* list) {
 	list->ResourceBarrier(1, &barrier);
 }
 
-void ShadowMapCommand::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {
+void ShadowMapping::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {
 	pso_ = std::make_unique<PSO>();
 	pso_->InitializeForShadow(device, rootSignature, dxc);
 }

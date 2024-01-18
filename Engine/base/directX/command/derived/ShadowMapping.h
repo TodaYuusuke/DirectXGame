@@ -5,7 +5,7 @@ namespace LWP::Base {
 	/// <summary>
 	/// コマンドクラス
 	/// </summary>
-	class ShadowMapCommand : public ICommand {
+	class ShadowMapping : public ICommand {
 	public:	// ** メンバ関数 ** //
 
 		/// <summary>
