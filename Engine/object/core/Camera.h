@@ -12,6 +12,8 @@ namespace LWP::Object {
 
 		// -- ポストエフェクトフラグ -- //
 
+		// レンズディストーション（歪曲収差）
+		LensDistortion lensDistortion = false;
 		// ブルームをかける
 		//bool enableBloom = false;
 

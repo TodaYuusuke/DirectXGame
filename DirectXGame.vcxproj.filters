@@ -186,6 +186,9 @@
     <ClCompile Include="Engine\base\directX\command\Derived\SubRendering.cpp">
       <Filter>Engine\base\directX\command\Derived</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\postEffect\LensDistortion.cpp">
+      <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="Engine\base\directX\command\Derived\SubRendering.h">
       <Filter>Engine\base\directX\command\Derived</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\postEffect\LensDistortion.h">
+      <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -529,6 +535,9 @@
     </Filter>
     <Filter Include="Engine\base\directX\resource\structuredBuffer">
       <UniqueIdentifier>{69b22e6e-c4cc-4bf9-915f-10b5f6cba812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\command\postEffect">
+      <UniqueIdentifier>{c27c5525-1f90-479c-9243-f6d4e8d37e0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
