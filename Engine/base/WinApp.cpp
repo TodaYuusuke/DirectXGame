@@ -105,13 +105,6 @@ void WinApp::ChangeWindowMode() {
 	ShowWindow(hwnd_, SW_NORMAL);
 }
 void WinApp::ChangeFullScreenMode() {
-	//SetWindowLong(hwnd_, GWL_STYLE, WS_VISIBLE | WS_POPUP);//ウィンドウのスタイルを変更
-	//MoveWindow(hwnd_, GetSystemMetrics(SM_XVIRTUALSCREEN),
-	//	GetSystemMetrics(SM_YVIRTUALSCREEN),
-	//	GetSystemMetrics(SM_CXVIRTUALSCREEN),
-	//	GetSystemMetrics(SM_CYVIRTUALSCREEN), TRUE);
-	//ウィンドウを画面に合わせる
-
 	if (currentMode == WindowMode::FullScreen) { return; }
 	currentMode = WindowMode::FullScreen;
 
