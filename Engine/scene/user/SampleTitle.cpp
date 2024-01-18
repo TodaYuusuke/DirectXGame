@@ -70,6 +70,8 @@ void SampleTitle::Initialize() {
 	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
 	s->texture = subCamera->GetRenderTexture();
 	s->isUI = true;
+
+	SetMainRenderCamera(subCamera);
 }
 
 // 更新

@@ -26,7 +26,7 @@ void Engine::Run(IScene* firstScene) {
 		primitiveManager_->Update();
 
 		// カメラのビュープロジェクションをcommandManagerに
-		directXCommon_->GetCommandManager()->SetCameraViewProjection(sceneManager_->GetMainCamera());
+		directXCommon_->GetCommandManager()->SetMainRendering(sceneManager_->GetMainCamera());
 
 		// 描画処理
 		primitiveManager_->Draw(directXCommon_->GetCommandManager());

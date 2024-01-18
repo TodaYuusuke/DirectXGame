@@ -94,7 +94,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画に使うカメラのビュープロジェクション行列をセットする
 		/// </summary>
-		void SetCameraViewProjection(const Object::Camera* camera);
+		void SetMainRendering(const Object::Camera* camera);
 		/// <summary>
 		/// このフレームでレンダリングするサブ画面のコマンドをセットする
 		/// </summary>

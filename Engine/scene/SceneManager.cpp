@@ -27,5 +27,5 @@ void Manager::Update() {
 }
 
 const LWP::Object::Camera* Manager::GetMainCamera() {
-	return currentScene_->mainCamera;
+	return currentScene_->GetMainRenderCamera();
 }

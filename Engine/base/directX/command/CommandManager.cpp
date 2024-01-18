@@ -171,7 +171,7 @@ void CommandManager::Reset() {
 	pointLightResourceBuffer_->usedCount_ = 0;
 }
 
-void CommandManager::SetCameraViewProjection(const Object::Camera* camera) {
+void CommandManager::SetMainRendering(const Object::Camera* camera) {
 	// カメラ視点の描画を予約
 	mainCommand_->SetDrawTarget(camera->GetViewProjection());
 }
