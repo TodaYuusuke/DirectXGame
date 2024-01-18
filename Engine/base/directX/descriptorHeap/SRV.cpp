@@ -58,8 +58,8 @@ int SRV::CreateShaderResourceView(ID3D12Resource* resource, const int width, con
 	const UINT depthPitch = rowPitch * height;
 	// 画像イメージ
 	UINT* img = new UINT[pixelCount];
-	// 一度赤で画像を初期化
-	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF0000FF; }
+	// 一度緑で画像を初期化
+	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF00FF00; }
 
 	// TextureBufferに転送
 	hr = resource->WriteToSubresource(

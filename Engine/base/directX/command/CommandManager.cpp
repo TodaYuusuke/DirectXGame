@@ -295,9 +295,11 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 
 		// メインコマンドにデータをセット
 		mainCommand_->SetDrawData(indexInfo);
-		// サブにもセット
-		for (int s = 0; s < subCount_; s++) {
-			subCommands_[s]->SetDrawData(indexInfo);
+		// サブにもセット（現状サブカメラにUIはいらないので除外する）
+		if (!primitive->isUI) {
+			for (int s = 0; s < subCount_; s++) {
+				subCommands_[s]->SetDrawData(indexInfo);
+			}
 		}
 
 		// シャドウマップにも描画！
