@@ -31,17 +31,13 @@ namespace LWP::Resource {
 		// レンダーリソースを返す関数
 		Base::RenderResource* GetRenderResource() { return renderResource_.get(); }
 		// テクスチャ専用のリソースを返す関数
-		ID3D12Resource* GetTexResource() { return texResource_.Get(); }
+		ID3D12Resource* GetTexResource() { return resource_.Get(); }
 
 		// サイズをVector2で受け取る
 		Math::Vector2 GetTextureSize() const override { return renderResource_->GetResolution(); };
 
 
 	private: // ** メンバ変数 ** //
-
-		// レンダリング結果をコピーし、テクスチャとしてのみ扱うリソース
-		Microsoft::WRL::ComPtr<ID3D12Resource> texResource_ = nullptr;
-
 		// レンダリング先のテクスチャ
 		std::unique_ptr<Base::RenderResource> renderResource_ = nullptr;
 	};

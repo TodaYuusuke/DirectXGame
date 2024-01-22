@@ -8,7 +8,7 @@ RenderResource::RenderResource(ID3D12Device* device, HeapManager* heaps, const i
 	width_ = width;
 	height_ = height;
 	// リソースの実体を作る
-	resource_ = CreateResource(device);
+	CreateResource(device);
 	// heapマネージャーのポインタを登録しておく
 	heaps_ = heaps;
 }
@@ -78,7 +78,7 @@ bool RenderResource::ReRegisterDSV() {
 	return true;
 }
 
-ID3D12Resource* RenderResource::CreateResource(ID3D12Device* device) {
+void RenderResource::CreateResource(ID3D12Device* device) {
 	// 1. Resourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = UINT(width_);
@@ -105,18 +105,15 @@ ID3D12Resource* RenderResource::CreateResource(ID3D12Device* device) {
 	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
 
 	// 4. Resourceを生成する
-	ID3D12Resource* resource = nullptr;
 	HRESULT hr = device->CreateCommittedResource(
 		&heapProperties,					// Heapの設定
 		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
 		&resourceDesc,						// Resourceの設定
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	// 初回のResourceState。RTVで書き込むのでちょっとちがう設定
 		&clearColor,							// Clear最適地。使わないならnullptr
-		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
+		IID_PPV_ARGS(&resource_)				// 作成するResourceポインタへのポインタ
 	);
 	assert(SUCCEEDED(hr));
-
-	return resource;
 }
 
 D3D12_RESOURCE_BARRIER RenderResource::CreateResourceBarrier(D3D12_RESOURCE_STATES state) {

@@ -11,11 +11,11 @@ RenderTexture::RenderTexture(DirectXCommon* directX, const int width, const int 
 	: kWidth(width), kHeight(height) {
 	// レンダーリソース生成
 	renderResource_ = std::make_unique<RenderResource>(directX->GetDevice(), directX->GetHeaps(), kWidth, kHeight);
-	renderResource_->RegisterSRV();
 	renderResource_->RegisterRTV();
+	renderResource_->RegisterSRV();
 	renderResource_->RegisterDSV();
 
 	// テクスチャのみのリソースを生成
-	texResource_ = directX->GetCommandManager()->CreateTextureResource(width, height);
-	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(texResource_.Get(), width, height);
+	resource_ = directX->GetCommandManager()->CreateTextureResource(width, height);
+	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(resource_.Get(), width, height);
 }

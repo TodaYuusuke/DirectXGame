@@ -70,7 +70,7 @@ namespace LWP::Base {
 		int dsvIndex_ = -1;
 
 		// 現在のリソースバリア
-		D3D12_RESOURCE_STATES currentBarrierState_;
+		D3D12_RESOURCE_STATES currentBarrierState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 
 	private: // ** メンバ変数 ** //
@@ -83,7 +83,7 @@ namespace LWP::Base {
 		bool ReRegisterDSV();
 
 		// リソースの実体を作成する関数
-		ID3D12Resource* CreateResource(ID3D12Device* device);
+		void CreateResource(ID3D12Device* device);
 
 		// リソース
 		D3D12_RESOURCE_BARRIER CreateResourceBarrier(D3D12_RESOURCE_STATES state);
