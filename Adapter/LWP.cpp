@@ -19,7 +19,7 @@ void Engine::Run(IScene* firstScene) {
 	const char kWindowTitle[] = "Window Title";
 	Initialize(kWindowTitle, kWind::kResolutionWidth, kWind::kResolutionHeight, firstScene);
 
-	// ウィンドウの×ボタンが押されるまでループ
+	// ウィンドウの×ボタンが押されるまで もしくは　End関数が呼ばれるまでループ
 	while (ProcessMessage()) {
 		BeginFrame();
 

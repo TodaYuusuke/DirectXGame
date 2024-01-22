@@ -4,11 +4,11 @@
 
 using namespace LWP::Base;
 
-RenderResource::RenderResource(ID3D12Device* device, CommandManager* manager) {
+RenderResource::RenderResource(ID3D12Device* device, HeapManager* heaps) {
 	// リソースの実体を作る
 	CreateResource(device);
-	// マネージャーのポインタを登録しておく
-	manager_ = manager;
+	// heapマネージャーのポインタを登録しておく
+	heaps_ = heaps;
 }
 
 bool RenderResource::RegisterRTV() {
@@ -16,37 +16,44 @@ bool RenderResource::RegisterRTV() {
 	if (rtvIndex_ != -1) { return false; }
 
 	// RTVに登録
-	//rtvIndex_ = 
+	rtvIndex_ = heaps_->rtv()->CreateRenderTargetView(resource_.Get());
 	return true;
 }
 bool RenderResource::ReRegisterRTV() {
 	// 登録していないならば戻る
 	if (rtvIndex_ == -1) { return false; }
 
+	// 処理は未実装
 	return true;
 }
 bool RenderResource::RegisterSRV() {
 	// 登録済みならば戻る
 	if (srvIndex_ != -1) { return false; }
 
+	// SRVに登録
+	srvIndex_ = heaps_->srv()->CreateShaderResourceView(resource_.Get(), width_, height_);
 	return true;
 }
 bool RenderResource::ReRegisterSRV() {
 	// 登録していないならば戻る
 	if (srvIndex_ == -1) { return false; }
 
+	// 処理は未実装
 	return true;
 }
 bool RenderResource::RegisterDSV() {
 	// 登録済みならば戻る
 	if (dsvIndex_ != -1) { return false; }
 
+	// DSVに登録
+	dsvIndex_ = heaps_->dsv()->CreateDepthStencil(resource_.Get(), width_, height_);
 	return true;
 }
 bool RenderResource::ReRegisterDSV() {
 	// 登録していないならば戻る
 	if (dsvIndex_ == -1) { return false; }
 
+	// 処理は未実装
 	return true;
 }
 

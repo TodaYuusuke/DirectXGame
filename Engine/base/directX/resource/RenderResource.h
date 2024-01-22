@@ -1,11 +1,9 @@
 #pragma once
 #include "../GPUDevice.h"
+#include "../descriptorHeap/HeapManager.h"
 #include "math/vector/Vector2.h"
 
 namespace LWP::Base {
-	// 前方宣言
-	class CommandManager;
-
 	/// <summary>
 	/// レンダリングに使うリソースクラス
 	/// </summary>
@@ -13,7 +11,7 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 
 		RenderResource() = delete;
-		RenderResource(ID3D12Device* device, CommandManager* manager);
+		RenderResource(ID3D12Device* device, HeapManager* heaps);
 		~RenderResource() = default;
 
 		// 解像度をセットする関数
@@ -65,11 +63,11 @@ namespace LWP::Base {
 		// リソース本体
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource_ = nullptr;
 		// コマンドマネージャーのポインタ
-		CommandManager* manager_ = nullptr;
+		HeapManager* heaps_ = nullptr;
 
 		// 解像度
-		int width_ = -1;
-		int height_ = -1;
+		int width_ = 1280;
+		int height_ = 720;
 
 		// SRVのインデックス
 		int srvIndex_ = -1;

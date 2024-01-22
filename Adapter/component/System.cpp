@@ -9,6 +9,10 @@ void System::Run(IScene* firstScene) {
 	engine->Run(firstScene);
 }
 
+void System::End() {
+	DestroyWindow(engine->winApp_->GetHWND());
+}
+
 
 // 静的変数の実態
 std::unique_ptr<System::Engine> System::engine;

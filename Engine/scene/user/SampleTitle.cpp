@@ -104,6 +104,11 @@ void SampleTitle::Update() {
 		LWP::Window::ChangeBorderlessWindowMode();
 	}
 
+	// プログラム終了
+	if (Keyboard::GetTrigger(DIK_0)) {
+		LWP::System::End();
+	}
+
 	// ESCキーでデバッグ情報表示切り替え
 	if (Keyboard::GetTrigger(DIK_ESCAPE)) {
 		Info::ChangeShowDebugGUI();

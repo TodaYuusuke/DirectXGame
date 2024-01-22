@@ -18,5 +18,10 @@ namespace LWP {
 		/// エンジン起動（※二重呼び出し禁止）
 		/// </summary>
 		void Run(IScene* firstScene);
+
+		/// <summary>
+		/// プログラム終了
+		/// </summary>
+		void End();
 	};
 };
