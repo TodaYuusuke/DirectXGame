@@ -86,7 +86,7 @@ D3D12_RESOURCE_BARRIER ICommand::MakeResourceBarrier(ID3D12Resource* pResource, 
 	barrier.Transition.pResource = pResource;
 	// 遷移前（現在）のResourceState
 	barrier.Transition.StateBefore = stateBefore;
-	// 遷移前（現在）のResourceState
+	// 遷移後のResourceState
 	barrier.Transition.StateAfter = stateAfter;
 
 	return barrier;

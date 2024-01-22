@@ -31,7 +31,7 @@ Matrix4x4 Camera::GetViewProjection() const {
 	return viewMatrix * projectionMatrix;
 }
 
-void Camera::CreateRenderTexture(Base::CommandManager* manager, const int width, const int height) {
+void Camera::CreateRenderTexture(Base::DirectXCommon* directX, const int width, const int height) {
 	// レンダリング先のテクスチャを生成
-	renderTexture_ = new RenderTexture(manager, width, height);
+	renderTexture_ = new RenderTexture(directX, width, height);
 }

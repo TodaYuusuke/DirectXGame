@@ -7,7 +7,6 @@
 
 namespace LWP::Base {
 	class DirectXCommon;
-	class CommandManager;
 }
 
 namespace LWP::Resource {
@@ -17,7 +16,7 @@ namespace LWP::Resource {
 		// ** 共通の変数 ** //
 
 		// コンストラクタ
-		Texture(Base::CommandManager* manager, const std::string& filePath);
+		Texture(Base::DirectXCommon* directX, const std::string& filePath);
 		// デストラクタ
 		~Texture() = default;
 

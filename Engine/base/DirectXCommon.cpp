@@ -23,20 +23,12 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 	commandManager_ = std::make_unique<CommandManager>();
 	commandManager_->Initialize(gpuDevice_->GetDevice());
 
-	// RTV作成
-	rtv_ = std::make_unique<RTV>();
-	rtv_->Initialize(winApp->GetHWND(), gpuDevice_.get(), backBufferWidth_, backBufferHeight, commandManager_->GetQueue());
+	// HeapManager作成
+	heaps_ = std::make_unique<HeapManager>(winApp->GetHWND(), gpuDevice_.get(), backBufferWidth, backBufferHeight, commandManager_->GetQueue());
 
-	// SRV作成
-	srv_ = std::make_unique<SRV>();
-	srv_->Initialize(gpuDevice_->GetDevice());
-
-	// DSV（深度バッファ）作成
-	dsv_ = std::make_unique<DSV>();
-	dsv_->Initialize(gpuDevice_->GetDevice(), srv_.get());
 
 	// ディスクリプタヒープを登録
-	commandManager_->SetDescriptorHeap(rtv_.get(), dsv_.get(), srv_.get());
+	commandManager_->SetDescriptorHeap(heaps_.get());
 }
 
 void DirectXCommon::PreDraw() {

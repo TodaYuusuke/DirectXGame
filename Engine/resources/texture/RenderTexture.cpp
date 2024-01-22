@@ -1,7 +1,5 @@
 #include "RenderTexture.h"
-#include "../../base/directX/command/CommandManager.h"
-#include "../../base/directX/descriptorHeap/RTV.h"
-#include "../../base/directX/descriptorHeap/DSV.h"
+#include "../../base/DirectXCommon.h"
 
 using namespace LWP::Base;
 using namespace LWP::Math;
@@ -9,20 +7,20 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace std;
 
-RenderTexture::RenderTexture(Base::CommandManager* manager, const int width, const int height) 
+RenderTexture::RenderTexture(Base::DirectXCommon* directX, const int width, const int height)
 	: kWidth(width), kHeight(height) {
-	resource_ = manager->CreateTextureResource(width, height);
+	resource_ = directX->GetCommandManager()->CreateTextureResource(width, height);
 
 	// テクスチャのインデックス
-	srvIndex_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), width, height);
+	srvIndex_ = directX->GetHeaps()->srv()->CreateShaderResourceView(resource_.Get(), width, height);
 	// RTVのインデックス
-	rtvIndex_ = manager->GetRTV()->CreateRenderTargetView(resource_.Get());
+	rtvIndex_ = directX->GetHeaps()->rtv()->CreateRenderTargetView(resource_.Get());
 	// DSVのリソースとインデックス
-	dsvIndex_ = manager->GetDSV()->CreateDepthStencil(depthMapResource_.Get(), width, height);
+	dsvIndex_ = directX->GetHeaps()->dsv()->CreateDepthStencil(depthMapResource_.Get(), width, height);
 
 	// テクスチャのみのリソースを生成
-	texResource_ = manager->CreateTextureResource(width, height);
-	index_ = manager->GetSRV()->CreateShaderResourceView(texResource_.Get(), width, height);
+	texResource_ = directX->GetCommandManager()->CreateTextureResource(width, height);
+	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(texResource_.Get(), width, height);
 }
 
 Vector2 RenderTexture::GetTextureSize() const {

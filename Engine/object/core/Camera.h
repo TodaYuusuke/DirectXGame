@@ -37,7 +37,7 @@ namespace LWP::Object {
 		/// <param name="manager"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>
-		void CreateRenderTexture(Base::CommandManager* manager, const int width, const int height);
+		void CreateRenderTexture(Base::DirectXCommon* directX, const int width, const int height);
 		// レンダリング結果のテクスチャのポインタを受け取る関数
 		Resource::RenderTexture* GetRenderTexture() { return renderTexture_; }
 
@@ -46,8 +46,5 @@ namespace LWP::Object {
 
 		// このカメラからのレンダリング結果を格納する変数
 		Resource::RenderTexture* renderTexture_ = nullptr;
-
-		// レンダリング用のコマンド
-		Base::SubRendering* command_ = nullptr;
 	};
 }

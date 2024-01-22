@@ -1,6 +1,5 @@
 #include "Texture.h"
 #include "../../base/DirectXCommon.h"
-#include "../../base/directX/command/CommandManager.h"
 #include "../../utility/MyUtility.h"
 
 using namespace LWP::Base;
@@ -8,12 +7,12 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace std;
 
-Texture::Texture(Base::CommandManager* manager, const std::string& filePath) {
+Texture::Texture(Base::DirectXCommon* directX, const std::string& filePath) {
 	Load(filePath);
-	resource_ = manager->CreateTextureResource(mipImages.GetMetadata());
+	resource_ = directX->GetCommandManager()->CreateTextureResource(mipImages.GetMetadata());
 
 	// テクスチャのインデックス
-	index_ = manager->GetSRV()->CreateShaderResourceView(resource_.Get(), mipImages);
+	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(resource_.Get(), mipImages);
 }
 
 LWP::Math::Vector2 Texture::GetTextureSize() const {

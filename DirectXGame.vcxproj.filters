@@ -192,6 +192,12 @@
     <ClCompile Include="Adapter\component\Window.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\RenderResource.cpp">
+      <Filter>Engine\base\directX\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\descriptorHeap\HeapManager.cpp">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -431,6 +437,12 @@
     </ClInclude>
     <ClInclude Include="Adapter\component\Window.h">
       <Filter>Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\RenderResource.h">
+      <Filter>Engine\base\directX\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\descriptorHeap\HeapManager.h">
+      <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

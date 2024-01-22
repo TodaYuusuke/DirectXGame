@@ -2,6 +2,7 @@
 #include "Derived/MainCommand.h"
 #include "Derived/SubRendering.h"
 #include "Derived/ShadowMapping.h"
+#include "../descriptorHeap/HeapManager.h"
 
 #include <vector>
 #include <dxcapi.h>
@@ -35,13 +36,13 @@ namespace LWP::Base {
 		/// <summary>
 		/// ディスクリプタヒープのポインタをセットする関数
 		/// </summary>
-		void SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv);
+		void SetDescriptorHeap(HeapManager* manager);
 		/// <summary>
 		/// ディスクリプタヒープのポインタを返す関数
 		/// </summary>
-		RTV* GetRTV() { return rtv_; }
-		SRV* GetSRV() { return srv_; }
-		DSV* GetDSV() { return dsv_; }
+		//RTV* GetRTV() { return rtv_; }
+		//SRV* GetSRV() { return srv_; }
+		//DSV* GetDSV() { return dsv_; }
 
 		/// <summary>
 		/// 描画前処理
@@ -114,10 +115,8 @@ namespace LWP::Base {
 	private: // メンバ変数
 		// デバイスのポインタを保持
 		ID3D12Device* device_ = nullptr;
-		// 各ディスクリプタヒープのポインタも保持
-		RTV* rtv_ = nullptr;
-		DSV* dsv_ = nullptr;
-		SRV* srv_ = nullptr;
+		// ディスクリプタヒープ管理クラスのポインタも保持
+		HeapManager* heaps_ = nullptr;
 
 		// コマンドキュー
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;

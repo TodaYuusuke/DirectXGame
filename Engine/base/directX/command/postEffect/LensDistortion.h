@@ -2,11 +2,9 @@
 #include <math/vector/Vector2.h>
 
 /// <summary>
-/// 歪曲収差
+/// 歪曲収差パラメータ
 /// </summary>
-class LensDistortion final {
-public: // ** パラメータ ** //
-
+struct LensDistortion {
 	// アクティブフラグ
 	bool isActive = false;
 
@@ -18,4 +16,21 @@ public: // ** パラメータ ** //
 	LWP::Math::Vector2 center = { 0.5f,0.5f };
 	// レンズの拡大率（0.01f ~ 5.0f）
 	float scale = 1.0f;
+};
+
+/// <summary>
+/// 歪曲収差レンダリングコマンド
+/// </summary>
+struct LensDistortionRenderer {
+public: // ** メンバ関数 ** //
+
+	// コンストラクタ
+	LensDistortionRenderer() = default;
+	// デストラクタ
+	~LensDistortionRenderer() = default;
+
+
+
+private: // ** メンバ変数 ** //
+
 };

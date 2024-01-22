@@ -26,8 +26,8 @@ namespace LWP::Resource {
 		/// <param name="manager">マテリアル等のリソース作成用</param>
 		/// <param name="filepath">"resources/texture/" より後のファイルパス</param>
 		/// <returns></returns>
-		Texture* LoadTexture(Base::CommandManager* manager, const std::string& filepath);
-		Texture* LoadTextureLongPath(Base::CommandManager* manager, const std::string& filepath);
+		Texture* LoadTexture(Base::DirectXCommon* directX, const std::string& filepath);
+		Texture* LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
 		Audio* LoadAudio(const std::string& filepath);
 		Audio* LoadAudioLongPath(const std::string& filepath);
 		//Model LoadModel(const std::string& filepath);

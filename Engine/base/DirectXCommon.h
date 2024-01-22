@@ -1,8 +1,6 @@
 #pragma once
 #include "directX/GPUDevice.h"
-#include "directX/descriptorHeap/RTV.h"
-#include "directX/descriptorHeap/SRV.h"
-#include "directX/descriptorHeap/DSV.h"
+#include "directX/descriptorHeap/HeapManager.h"
 #include "directX/command/CommandManager.h"
 
 #include <memory>
@@ -46,11 +44,12 @@ namespace LWP::Base {
 
 		// アクセサ
 		ID3D12Device* GetDevice() const { return device_; }
+		HeapManager* GetHeaps() const { return heaps_.get(); }
 		CommandManager* GetCommandManager() const { return commandManager_.get(); }
 		// ImGui用
-		UINT GetBufferCount() { return rtv_->GetSwapChainDesc().BufferCount; }
-		DXGI_FORMAT GetFormat() { return rtv_->GetDesc().Format; }
-		ID3D12DescriptorHeap* GetSRVHeap() { return srv_->GetHeap(); }
+		UINT GetBufferCount() { return heaps_->rtv()->GetSwapChainDesc().BufferCount; }
+		DXGI_FORMAT GetFormat() { return heaps_->rtv()->GetDesc().Format; }
+		ID3D12DescriptorHeap* GetSRVHeap() { return heaps_->srv()->GetHeap(); }
 
 
 	private: // ** メンバ変数 ** //
@@ -62,12 +61,8 @@ namespace LWP::Base {
 		// いちいちポインタを貰うのが面倒なので保持する
 		ID3D12Device* device_ = nullptr;
 
-		// RTV
-		std::unique_ptr<RTV> rtv_;
-		// SRV
-		std::unique_ptr<SRV> srv_;
-		// DSV
-		std::unique_ptr<DSV> dsv_;
+		// RTV、SRV、DSVをまとめて管理するクラス
+		std::unique_ptr<HeapManager> heaps_;
 
 		// コマンド管理
 		std::unique_ptr<CommandManager> commandManager_;

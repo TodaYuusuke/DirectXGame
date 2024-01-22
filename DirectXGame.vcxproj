@@ -113,10 +113,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\command\postEffect\LensDistortion.cpp" />
     <ClCompile Include="Engine\base\directX\command\PSO.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp" />
+    <ClCompile Include="Engine\base\directX\descriptorHeap\HeapManager.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp" />
     <ClCompile Include="Engine\base\directX\GPUDevice.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\RenderResource.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\info\DebugTimer.cpp" />
@@ -190,11 +192,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\command\PSO.h" />
     <ClInclude Include="Engine\base\directX\command\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h" />
+    <ClInclude Include="Engine\base\directX\descriptorHeap\HeapManager.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h" />
     <ClInclude Include="Engine\base\directX\GPUDevice.h" />
     <ClInclude Include="Engine\base\directX\resource\IResource.h" />
+    <ClInclude Include="Engine\base\directX\resource\RenderResource.h" />
     <ClInclude Include="Engine\base\directX\resource\structuredBuffer\IStructured.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
     <ClInclude Include="Engine\base\WinApp.h" />

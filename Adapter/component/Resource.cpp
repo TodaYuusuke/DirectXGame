@@ -4,10 +4,10 @@ using namespace LWP::System;
 using namespace LWP;
 
 Resource::Texture* Resource::LoadTexture(const std::string& filePath) {
-	return engine->resourceManager_->LoadTexture(engine->directXCommon_->GetCommandManager(), filePath);
+	return engine->resourceManager_->LoadTexture(engine->directXCommon_.get(), filePath);
 }
 Resource::Texture* Resource::LoadTextureLongPath(const std::string& filePath) {
-	return engine->resourceManager_->LoadTextureLongPath(engine->directXCommon_->GetCommandManager(), filePath);
+	return engine->resourceManager_->LoadTextureLongPath(engine->directXCommon_.get(), filePath);
 }
 
 

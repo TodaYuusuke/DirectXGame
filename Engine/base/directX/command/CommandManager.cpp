@@ -48,29 +48,27 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	CreateRootSignature();
 }
 
-void CommandManager::SetDescriptorHeap(RTV* rtv, DSV* dsv, SRV* srv) {
-	rtv_ = rtv;
-	dsv_ = dsv;
-	srv_ = srv;
+void CommandManager::SetDescriptorHeap(HeapManager* manager) {
+	heaps_ = manager;
 
 	// コマンド用クラス実態宣言
 	
 	// 本描画
 	mainCommand_ = std::make_unique<MainCommand>();
-	mainCommand_->SetDescriptorHeap(rtv_, dsv_, srv_);
+	mainCommand_->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
 	mainCommand_->Initialize(device_, dxc_.get(), rootSignature_.Get());
 	
 	// サブ描画
 	for (int i = 0; i < lwpC::Rendering::kMaxMultiWindowRendering; i++) {
 		subCommands_.push_back(std::make_unique<SubRendering>());
-		subCommands_.back()->SetDescriptorHeap(rtv_, dsv_, srv_);
+		subCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
 		subCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
 	}
 
 	// シャドウマップコマンド用の実体
 	for (int i = 0; i < lwpC::Shadow::kMaxShadowMap; i++) {
 		shadowCommands_.push_back(std::make_unique<ShadowMapping>());
-		shadowCommands_.back()->SetDescriptorHeap(rtv_, dsv_, srv_);
+		shadowCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
 		shadowCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
 	}
 	
@@ -120,7 +118,7 @@ void CommandManager::DrawCall() {
 			materialData_->GetView(),
 			directionLightResourceBuffer_->view_,
 			pointLightResourceBuffer_->view_,
-			srv_->GetView(),
+			heaps_->srv()->GetView(),
 			directionLightResourceBuffer_->shadowMap_[0].view_,
 			pointLightResourceBuffer_->shadowMap_[0].view_
 		});
@@ -142,7 +140,7 @@ void CommandManager::DrawCall() {
 	ExecuteLambda();
 
 	// GPUとOSに画面の交換を行うよう通知する
-	rtv_->GetSwapChain()->Present(FPSPara::kVsync, 0);	// 垂直同期をする際は左の数字を1にする
+	heaps_->rtv()->GetSwapChain()->Present(FPSPara::kVsync, 0);	// 垂直同期をする際は左の数字を1にする
 }
 
 void CommandManager::PostDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
@@ -512,9 +510,9 @@ void CommandManager::CreateStructuredBufferResources() {
 
 
 	// 頂点データ
-	vertexData_ = std::make_unique<IStructured<VertexStruct>>(device_, srv_, RenderingPara::kMaxVertex);
+	vertexData_ = std::make_unique<IStructured<VertexStruct>>(device_, heaps_->srv(), RenderingPara::kMaxVertex);
 	// WorldTransformデータ
-	transformData_ = std::make_unique<IStructured<Math::Matrix4x4>>(device_, srv_, RenderingPara::kMaxMatrix);
+	transformData_ = std::make_unique<IStructured<Math::Matrix4x4>>(device_, heaps_->srv(), RenderingPara::kMaxMatrix);
 
 	// 構造体のカウント
 	commonDataResourceBuffer_ = std::make_unique<CommonDataResourceBuffer>();
@@ -524,7 +522,7 @@ void CommandManager::CreateStructuredBufferResources() {
 	// 2D用のViewProjectionを作成しておく
 	commonDataResourceBuffer_->data_->vp2D = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
 	// マテリアルデータ
-	materialData_ = std::make_unique<IStructured<MaterialStruct>>(device_, srv_, RenderingPara::kMaxMaterial);
+	materialData_ = std::make_unique<IStructured<MaterialStruct>>(device_, heaps_->srv(), RenderingPara::kMaxMaterial);
 	
 	// 平行光源
 	directionLightResourceBuffer_ = std::make_unique<DirectionLightResourceBuffer>();
@@ -533,12 +531,12 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC dirLightDesc = { commonDesc };
 	dirLightDesc.Buffer.NumElements = lwpC::Shadow::Direction::kMaxCount;
 	dirLightDesc.Buffer.StructureByteStride = sizeof(DirectionalLightStruct);
-	directionLightResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
-	device_->CreateShaderResourceView(directionLightResourceBuffer_->resource_.Get(), &dirLightDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
+	directionLightResourceBuffer_->view_ = heaps_->srv()->GetGPUHandle(heaps_->srv()->GetCount());
+	device_->CreateShaderResourceView(directionLightResourceBuffer_->resource_.Get(), &dirLightDesc, heaps_->srv()->GetCPUHandle(heaps_->srv()->GetAndIncrement()));
 	// シャドウマップも作る
 	directionLightResourceBuffer_->shadowMap_ = new DirectionShadowMapStruct[lwpC::Shadow::Direction::kMaxCount];
 	for (int i = 0; i < lwpC::Shadow::Direction::kMaxCount; i++) {
-		directionLightResourceBuffer_->shadowMap_[i].resource_ = dsv_->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[i].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[i].view_);
+		directionLightResourceBuffer_->shadowMap_[i].resource_ = heaps_->dsv()->CreateDirectionShadowMap(&directionLightResourceBuffer_->shadowMap_[i].dsvIndex_, &directionLightResourceBuffer_->shadowMap_[i].view_);
 	}
 	/*directionLightResourceBuffer_ = std::make_unique<DirectionLightResourceBuffer>();
 	directionLightResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(DirectionalLightStruct) * lwpC::Shadow::Direction::kMaxCount);
@@ -555,12 +553,12 @@ void CommandManager::CreateStructuredBufferResources() {
 	D3D12_SHADER_RESOURCE_VIEW_DESC pointLightDesc = { commonDesc };
 	pointLightDesc.Buffer.NumElements = lwpC::Shadow::Point::kMaxCount;
 	pointLightDesc.Buffer.StructureByteStride = sizeof(PointLightStruct);
-	pointLightResourceBuffer_->view_ = srv_->GetGPUHandle(srv_->GetCount());
-	device_->CreateShaderResourceView(pointLightResourceBuffer_->resource_.Get(), &pointLightDesc, srv_->GetCPUHandle(srv_->GetAndIncrement()));
+	pointLightResourceBuffer_->view_ = heaps_->srv()->GetGPUHandle(heaps_->srv()->GetCount());
+	device_->CreateShaderResourceView(pointLightResourceBuffer_->resource_.Get(), &pointLightDesc, heaps_->srv()->GetCPUHandle(heaps_->srv()->GetAndIncrement()));
 	// シャドウマップも作る
 	pointLightResourceBuffer_->shadowMap_ = new PointShadowMapStruct[lwpC::Shadow::Point::kMaxCount];
 	for (int i = 0; i < lwpC::Shadow::Point::kMaxCount; i++) {
-		pointLightResourceBuffer_->shadowMap_[i].resource_ = dsv_->CreatePointShadowMap(pointLightResourceBuffer_->shadowMap_[i].dsvIndex_, &pointLightResourceBuffer_->shadowMap_[i].view_);
+		pointLightResourceBuffer_->shadowMap_[i].resource_ = heaps_->dsv()->CreatePointShadowMap(pointLightResourceBuffer_->shadowMap_[i].dsvIndex_, &pointLightResourceBuffer_->shadowMap_[i].view_);
 	}
 }
 

@@ -2,7 +2,7 @@
 #include "ITexture.h"
 
 namespace LWP::Base {
-	class CommandManager;
+	class DirectXCommon;
 }
 
 namespace LWP::Resource {
@@ -11,8 +11,7 @@ namespace LWP::Resource {
 	/// </summary>
 	class RenderTexture final
 		: public ITexture {
-	public:
-		// ** 共通の変数 ** //
+	public: // ** 共通の変数 ** //
 
 		// レンダリング解像度
 		const int kWidth;
@@ -20,7 +19,7 @@ namespace LWP::Resource {
 
 		// コンストラクタ
 		RenderTexture() = delete;
-		RenderTexture(Base::CommandManager* manager, const int width, const int height);
+		RenderTexture(Base::DirectXCommon* directX, const int width, const int height);
 		// デストラクタ
 		~RenderTexture() = default;
 

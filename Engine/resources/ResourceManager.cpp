@@ -19,14 +19,14 @@ void Manager::Initialize() {
 	assert(SUCCEEDED(hr));
 }
 
-Texture* Manager::LoadTexture(Base::CommandManager* manager, const std::string& filepath) {
-	return LoadTextureLongPath(manager, textureDirectoryPath_ + filepath);
+Texture* Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
+	return LoadTextureLongPath(directX, textureDirectoryPath_ + filepath);
 }
-Texture* Manager::LoadTextureLongPath(Base::CommandManager* manager, const std::string& filepath) {
+Texture* Manager::LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath) {
 	// 読み込み済みかをチェック
 	if (!textureMap_.count(filepath)) {
 		// 新しいテクスチャをロード
-		textureMap_[filepath] = new Texture(manager, filepath);
+		textureMap_[filepath] = new Texture(directX, filepath);
 	}
 	return textureMap_[filepath];
 }
