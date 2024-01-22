@@ -14,35 +14,31 @@ void SubRendering::SetDrawTarget(const Math::Matrix4x4& vp, Resource::RenderText
 
 
 void SubRendering::PreDraw(ID3D12GraphicsCommandList* list) {
-	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier = MakeResourceBarrier(
-		renderTexture_->GetResource(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET
-	);
+	// 書き込み先のリソースを取得
+	RenderResource* rr = renderTexture_->GetRenderResource();
 
 	// リソースバリアをセット
-	list->ResourceBarrier(1, &barrier);
+	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(renderTexture_->GetRTV());
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(renderTexture_->GetDSV());
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(rr->GetRTV());
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(rr->GetDSV());
 	// 描画先のRTVとDSVを設定する
 	list->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
-	rtv_->ClearRenderTarget(renderTexture_->GetRTV(), list, { 0.0f,1.0f,0.0f,1.0f });
+	rtv_->ClearRenderTarget(rr->GetRTV(), list, { 0.0f,1.0f,0.0f,1.0f });
 	// 指定した深度で画面全体をクリアする
-	dsv_->ClearDepth(renderTexture_->GetDSV(), list);
+	dsv_->ClearDepth(rr->GetDSV(), list);
 
 	// 描画用のSRVのDescriptorHeapを設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
 	list->SetDescriptorHeaps(1, descriptorHeaps);
-
+	
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = static_cast<float>(renderTexture_->kWidth);
-	viewport.Height = static_cast<float>(renderTexture_->kHeight);
+	viewport.Width = rr->GetResolution().x;
+	viewport.Height = rr->GetResolution().y;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -54,9 +50,9 @@ void SubRendering::PreDraw(ID3D12GraphicsCommandList* list) {
 	D3D12_RECT scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = renderTexture_->kWidth;
+	scissorRect.right = static_cast<LONG>(rr->GetResolution().x);
 	scissorRect.top = 0;
-	scissorRect.bottom = renderTexture_->kHeight;
+	scissorRect.bottom = static_cast<LONG>(rr->GetResolution().y);
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }
@@ -92,37 +88,30 @@ void SubRendering::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsComman
 }
 
 void SubRendering::PostDraw(ID3D12GraphicsCommandList* list) {
-	// 書き込み対象をコピーする用のバリアに
-	D3D12_RESOURCE_BARRIER barrier0 = MakeResourceBarrier(
-		renderTexture_->GetResource(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_COPY_SOURCE
-	);
+	// 書き込み先のリソースを取得
+	RenderResource* rr = renderTexture_->GetRenderResource();
+
 	// TexResourceのバリアを、コピーされる用に
-	D3D12_RESOURCE_BARRIER barrier1 = MakeResourceBarrier(
+	D3D12_RESOURCE_BARRIER barrier0 = MakeResourceBarrier(
 		renderTexture_->GetTexResource(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_COPY_DEST
 	);
-	// 書き込み対象を読み取り用のバリアに
-	D3D12_RESOURCE_BARRIER barrier2 = MakeResourceBarrier(
-		renderTexture_->GetResource(),
-		D3D12_RESOURCE_STATE_COPY_SOURCE,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-	);
 	// TexResourceのバリアを、コピーされる用に
-	D3D12_RESOURCE_BARRIER barrier3 = MakeResourceBarrier(
+	D3D12_RESOURCE_BARRIER barrier1 = MakeResourceBarrier(
 		renderTexture_->GetTexResource(),
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 	);
 	
 	// レンダリング結果をコピーする
+	
+	// 書き込み対象をコピーする用のバリアに
+	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_COPY_SOURCE, list);
 	list->ResourceBarrier(1, &barrier0);
+	list->CopyResource(renderTexture_->GetTexResource(), rr->GetResource());
+	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 	list->ResourceBarrier(1, &barrier1);
-	list->CopyResource(renderTexture_->GetTexResource(), renderTexture_->GetResource());
-	list->ResourceBarrier(1, &barrier2);
-	list->ResourceBarrier(1, &barrier3);
 }
 
 void SubRendering::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {

@@ -4,11 +4,23 @@
 
 using namespace LWP::Base;
 
-RenderResource::RenderResource(ID3D12Device* device, HeapManager* heaps) {
+RenderResource::RenderResource(ID3D12Device* device, HeapManager* heaps, const int width, const int height) {
+	width_ = width;
+	height_ = height;
 	// リソースの実体を作る
-	CreateResource(device);
+	resource_ = CreateResource(device);
 	// heapマネージャーのポインタを登録しておく
 	heaps_ = heaps;
+}
+
+void RenderResource::SetResolution(const int width, const int height) {
+	width_ = width;
+	height_ = height;
+
+	// リソース再生成
+	//ReRegisterRTV();
+	//ReRegisterSRV();
+	//ReRegisterDSV();
 }
 
 bool RenderResource::RegisterRTV() {
@@ -19,13 +31,6 @@ bool RenderResource::RegisterRTV() {
 	rtvIndex_ = heaps_->rtv()->CreateRenderTargetView(resource_.Get());
 	return true;
 }
-bool RenderResource::ReRegisterRTV() {
-	// 登録していないならば戻る
-	if (rtvIndex_ == -1) { return false; }
-
-	// 処理は未実装
-	return true;
-}
 bool RenderResource::RegisterSRV() {
 	// 登録済みならば戻る
 	if (srvIndex_ != -1) { return false; }
@@ -34,19 +39,35 @@ bool RenderResource::RegisterSRV() {
 	srvIndex_ = heaps_->srv()->CreateShaderResourceView(resource_.Get(), width_, height_);
 	return true;
 }
-bool RenderResource::ReRegisterSRV() {
-	// 登録していないならば戻る
-	if (srvIndex_ == -1) { return false; }
-
-	// 処理は未実装
-	return true;
-}
 bool RenderResource::RegisterDSV() {
 	// 登録済みならば戻る
 	if (dsvIndex_ != -1) { return false; }
 
 	// DSVに登録
-	dsvIndex_ = heaps_->dsv()->CreateDepthStencil(resource_.Get(), width_, height_);
+	dsvIndex_ = heaps_->dsv()->CreateDepthStencil(depthMapResource_.Get(), width_, height_);
+	return true;
+}
+
+void RenderResource::SetResourceBarrier(D3D12_RESOURCE_STATES state, ID3D12GraphicsCommandList* list) {
+	// リソースバリアを生成
+	D3D12_RESOURCE_BARRIER barrier = CreateResourceBarrier(state);
+	list->ResourceBarrier(1, &barrier);
+	// 現在のステータスを変更しておく
+	currentBarrierState_ = state;
+}
+
+bool RenderResource::ReRegisterRTV() {
+	// 登録していないならば戻る
+	if (rtvIndex_ == -1) { return false; }
+
+	// 処理は未実装
+	return true;
+}
+bool RenderResource::ReRegisterSRV() {
+	// 登録していないならば戻る
+	if (srvIndex_ == -1) { return false; }
+
+	// 処理は未実装
 	return true;
 }
 bool RenderResource::ReRegisterDSV() {
@@ -57,13 +78,7 @@ bool RenderResource::ReRegisterDSV() {
 	return true;
 }
 
-void RenderResource::SetResourceBarrier(D3D12_RESOURCE_BARRIER barrier) {
-	
-	// 現在のステータスを変更しておく
-	currentBarrier_ = barrier;
-}
-
-void RenderResource::CreateResource(ID3D12Device* device) {
+ID3D12Resource* RenderResource::CreateResource(ID3D12Device* device) {
 	// 1. Resourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = UINT(width_);
@@ -100,4 +115,25 @@ void RenderResource::CreateResource(ID3D12Device* device) {
 		IID_PPV_ARGS(&resource)				// 作成するResourceポインタへのポインタ
 	);
 	assert(SUCCEEDED(hr));
+
+	return resource;
+}
+
+D3D12_RESOURCE_BARRIER RenderResource::CreateResourceBarrier(D3D12_RESOURCE_STATES state) {
+	// TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	// 今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	// Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	// 全てのサブリソースを選択
+	barrier.Transition.Subresource = 0xFFFFFFFF;
+	// バリアを張る対象のリソース
+	barrier.Transition.pResource = resource_.Get();
+	// 遷移前（現在）のResourceState
+	barrier.Transition.StateBefore = currentBarrierState_;
+	// 遷移後のResourceState
+	barrier.Transition.StateAfter = state;
+
+	return barrier;
 }

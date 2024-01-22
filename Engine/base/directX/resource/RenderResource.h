@@ -11,30 +11,21 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 
 		RenderResource() = delete;
-		RenderResource(ID3D12Device* device, HeapManager* heaps);
+		RenderResource(ID3D12Device* device, HeapManager* heaps, const int width, const int height);
 		~RenderResource() = default;
 
 		// 解像度をセットする関数
-		void SetResolution(const int width, const int height) {
-			width_ = width;
-			height_ = height;
-		}
+		void SetResolution(const int width, const int height);
 
 		// RTVに登録する関数
 		bool RegisterRTV();
-		// RTVに再登録する関数
-		bool ReRegisterRTV();
 		// SRVに登録する関数
 		bool RegisterSRV();
-		// SRVに再登録する関数
-		bool ReRegisterSRV();
 		// DSVに登録する関数
 		bool RegisterDSV();
-		// DSVに再登録する関数
-		bool ReRegisterDSV();
-
+		
 		// リソースバリアをセットする関数
-		void SetResourceBarrier(D3D12_RESOURCE_BARRIER barrier);
+		void SetResourceBarrier(D3D12_RESOURCE_STATES barrier, ID3D12GraphicsCommandList* list);
 
 
 	public: // ** ゲッター ** //
@@ -48,14 +39,14 @@ namespace LWP::Base {
 		};
 
 		// RTVのインデックスを返す関数
-		int GetSRV() { return srvIndex_; }
-		// RTVのインデックスを返す関数
 		int GetRTV() { return rtvIndex_; }
+		// RTVのインデックスを返す関数
+		int GetSRV() { return srvIndex_; }
 		// DSVのインデックスを返す関数
 		int GetDSV() { return dsvIndex_; }
 
 		// 現在のリソースバリアを受け取る関数
-		D3D12_RESOURCE_BARRIER SetResourceBarrier() { return currentBarrier_; }
+		D3D12_RESOURCE_STATES GetResourceBarrier() { return currentBarrierState_; }
 
 
 	private: // ** メンバ変数 ** //
@@ -79,12 +70,22 @@ namespace LWP::Base {
 		int dsvIndex_ = -1;
 
 		// 現在のリソースバリア
-		D3D12_RESOURCE_BARRIER currentBarrier_;
+		D3D12_RESOURCE_STATES currentBarrierState_;
 
 
 	private: // ** メンバ変数 ** //
 
+		// RTVに再登録する関数
+		bool ReRegisterRTV();
+		// SRVに再登録する関数
+		bool ReRegisterSRV();
+		// DSVに再登録する関数
+		bool ReRegisterDSV();
+
 		// リソースの実体を作成する関数
-		void CreateResource(ID3D12Device* device);
+		ID3D12Resource* CreateResource(ID3D12Device* device);
+
+		// リソース
+		D3D12_RESOURCE_BARRIER CreateResourceBarrier(D3D12_RESOURCE_STATES state);
 	};
 }

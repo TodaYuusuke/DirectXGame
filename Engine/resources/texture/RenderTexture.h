@@ -1,6 +1,8 @@
 #pragma once
 #include "ITexture.h"
+#include "base/directX/resource/RenderResource.h"
 
+// 前方宣言
 namespace LWP::Base {
 	class DirectXCommon;
 }
@@ -26,19 +28,13 @@ namespace LWP::Resource {
 		// レンダリング解像度を変更する関数
 		//void ChangeRenderResolution(const int width, const int height);
 
-		// サイズをVector2で受け取る
-		Math::Vector2 GetTextureSize() const override;
-		
-		// リソースを返す関数
-		ID3D12Resource* GetResource() { return resource_.Get(); }
+		// レンダーリソースを返す関数
+		Base::RenderResource* GetRenderResource() { return renderResource_.get(); }
 		// テクスチャ専用のリソースを返す関数
 		ID3D12Resource* GetTexResource() { return texResource_.Get(); }
-		// RTVのインデックスを返す関数
-		int GetSRV() { return srvIndex_; }
-		// RTVのインデックスを返す関数
-		int GetRTV() { return rtvIndex_; }
-		// DSVのインデックスを返す関数
-		int GetDSV() { return dsvIndex_; }
+
+		// サイズをVector2で受け取る
+		Math::Vector2 GetTextureSize() const override { return renderResource_->GetResolution(); };
 
 
 	private: // ** メンバ変数 ** //
@@ -46,13 +42,7 @@ namespace LWP::Resource {
 		// レンダリング結果をコピーし、テクスチャとしてのみ扱うリソース
 		Microsoft::WRL::ComPtr<ID3D12Resource> texResource_ = nullptr;
 
-		// SRVのインデックス
-		int srvIndex_ = -1;
-		// RTVのインデックス
-		int rtvIndex_ = -1;
-		// 深度マップのリソース
-		Microsoft::WRL::ComPtr<ID3D12Resource> depthMapResource_ = nullptr;
-		// DSVのインデックス
-		int dsvIndex_ = -1;
+		// レンダリング先のテクスチャ
+		std::unique_ptr<Base::RenderResource> renderResource_ = nullptr;
 	};
 }
