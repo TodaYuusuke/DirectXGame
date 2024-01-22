@@ -139,6 +139,21 @@ namespace LWP {
 			/// </summary>
 			static const bool kEnableAntiAliasing = true;
 		}
+
+
+		/// <summary>
+		/// ポストプロセスに関するパラメータ
+		/// </summary>
+		namespace PostProcess {
+
+			/// <summary>
+			/// 歪曲収差（LensDistortion）の最大回数
+			/// <para>default = 5</para>
+			/// <para>Range = 1 ~ ∞</para>
+			/// </summary>
+			static const int kMaxLensDistortion = 5;
+
+		}
 	};
 };
 
