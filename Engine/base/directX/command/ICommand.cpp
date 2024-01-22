@@ -34,7 +34,7 @@ void ICommand::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsCommandLis
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// PSOを設定
-	list->SetPipelineState(pso_->state_.Get());
+	list->SetPipelineState(pso_->GetState());
 
 	// ディスクリプタテーブルを登録
 	list->SetGraphicsRootDescriptorTable(0, indexData_->GetView());

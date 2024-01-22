@@ -66,7 +66,7 @@ void SubRendering::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsComman
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// PSOを設定
-	list->SetPipelineState(pso_->state_.Get());
+	list->SetPipelineState(pso_->GetState());
 
 	// ディスクリプタテーブルを登録
 	list->SetGraphicsRootDescriptorTable(0, indexData_->GetView());
@@ -116,7 +116,8 @@ void SubRendering::PostDraw(ID3D12GraphicsCommandList* list) {
 
 void SubRendering::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {
 	pso_ = std::make_unique<PSO>();
-	pso_->Initialize(device, rootSignature, dxc,
-		{ RasterizerState::CullMode::Back, RasterizerState::FillMode::Solid },
-		1, 1, DepthFormat::D24_UNORM_S8_UINT);
+	pso_->Init(rootSignature, dxc)
+		.SetVertexShader("Object3d.VS.hlsl")
+		.SetPixelShader("Object3d.PS.hlsl")
+		.Build(device);
 }

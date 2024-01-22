@@ -76,5 +76,9 @@ void ShadowMapping::PostDraw(ID3D12GraphicsCommandList* list) {
 
 void ShadowMapping::CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature) {
 	pso_ = std::make_unique<PSO>();
-	pso_->InitializeForShadow(device, rootSignature, dxc);
+	pso_->Init(rootSignature, dxc)
+		.SetVertexShader("ShadowMap.VS.hlsl")
+		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
+		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
+		.Build(device);
 }

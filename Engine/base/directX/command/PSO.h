@@ -14,60 +14,50 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_;	// hlslファイル内でコンパイルするファイルの処理を行うハンドラ
 	};
 
-	
-	// パイプラインの詳細設定
-	//enum class FillMode : UINT {
-	//	Wire = 0,
-	//	Fill = 1
-	//};
-	struct RasterizerState {
-		enum class CullMode : UINT {
-			None = D3D12_CULL_MODE_NONE,	// カリングしない
-			Front = D3D12_CULL_MODE_FRONT,	// 前面を削除
-			Back = D3D12_CULL_MODE_BACK		// 背面を削除
-		}cullMode = CullMode::Back;
-		enum class FillMode : UINT {
-			WireFrame = D3D12_FILL_MODE_WIREFRAME,	// 汎用
-			Solid = D3D12_FILL_MODE_SOLID	// シャドウマップ用
-		}fillMode = FillMode::Solid;
-	};
-
-	enum class DepthFormat : UINT {
-		D24_UNORM_S8_UINT = 0,	// 汎用
-		D32_FLOAT = 1	// シャドウマップ用
-	};
-
-
 	/// <summary>
 	/// グラフィックスパイプライン
 	/// </summary>
 	class PSO final {
-	public: // ** パブリックなメンバ変数 ** //
-		Microsoft::WRL::ComPtr<ID3D12PipelineState> state_;	// グラフィックパイプラインの状態を定義
-
-
 	public: // **　メンバ関数 ** //
 
 		/// <summary>
-		/// 初期化
+		/// ビルダーデザインパターン
 		/// </summary>
-		/// <param name="r">0 ... Wire、1 ... Fill</param>
-		/// <param name="vs">0 ... nullptr、1 ... Object3d、2 ... ShadowMap</param>
-		/// <param name="ps">0 ... nullptr、1 ... Object3d</param>
-		void Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, RasterizerState rState, UINT vs, UINT ps, DepthFormat df);
+		PSO& Init(ID3D12RootSignature* root, DXC* dxc);
+		PSO& SetInputLayout();
+		PSO& SetBlendState();
+		PSO& SetRasterizerState(
+			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
+			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
+		PSO& SetVertexShader(std::string filePath);
+		PSO& SetPixelShader(std::string filePath);
+		PSO& SetDepthStencilState();
+		PSO& SetDSVFormat(DXGI_FORMAT format);
+		void Build(ID3D12Device* device);
 
-		/// <summary>
-		/// シャドウマップ専用のPSO初期化用
-		/// </summary>
-		void InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc);
+		// PipelineStateを受け取る関数
+		ID3D12PipelineState* GetState() { return state_.Get(); }
+
+
+	private: // ** メンバ変数 ** //
+		// グラフィックパイプラインの状態を定義
+		Microsoft::WRL::ComPtr<ID3D12PipelineState> state_ = nullptr;
+		// PSOの詳細
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc_;
+		// DXCのポインタ
+		DXC* dxc_ = nullptr;
+
 
 	private: // ** プライベートな関数 ** //
 
+		/// <summary>
+		/// デフォルトの生成
+		/// </summary>
 		D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
 		D3D12_BLEND_DESC CreateBlendState();
-		D3D12_RASTERIZER_DESC CreateRasterizerState(RasterizerState rState);
-		IDxcBlob* CreateVertexShader(DXC* dxc, UINT vs);
-		IDxcBlob* CreatePixelShader(DXC* dxc, UINT ps);
+		D3D12_RASTERIZER_DESC CreateRasterizerState();
+		//IDxcBlob* CreateVertexShader();
+		//IDxcBlob* CreatePixelShader();
 		D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState();
 
 		/// <summary>
