@@ -56,20 +56,20 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 	// 本描画
 	mainCommand_ = std::make_unique<MainCommand>();
 	mainCommand_->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-	mainCommand_->Initialize(device_, dxc_.get(), rootSignature_.Get());
+	mainCommand_->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	
 	// サブ描画
 	for (int i = 0; i < lwpC::Rendering::kMaxMultiWindowRendering; i++) {
 		subCommands_.push_back(std::make_unique<SubRendering>());
 		subCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-		subCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
+		subCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	}
 
 	// シャドウマップコマンド用の実体
 	for (int i = 0; i < lwpC::Shadow::kMaxShadowMap; i++) {
 		shadowCommands_.push_back(std::make_unique<ShadowMapping>());
 		shadowCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-		shadowCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_.Get());
+		shadowCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	}
 	
 	// グラフィックリソースを作成
@@ -111,7 +111,7 @@ void CommandManager::DrawCall() {
 
 	// コマンドのDrawを呼び出すラムダ式（引数で渡すのは面倒なのでラムダで指定）
 	std::function<void(ICommand*)> DrawLambda = [&](ICommand* cmd) {
-		cmd->Draw(rootSignature_.Get(), commandList_.Get(), {
+		cmd->Draw(rootSignature_->GetRoot(), commandList_.Get(), {
 			commonDataResourceBuffer_->view_,
 			vertexData_->GetView(),
 			transformData_->GetView(),
@@ -328,178 +328,23 @@ void CommandManager::InitializeDXC() {
 }
 
 void CommandManager::CreateRootSignature() {
-	HRESULT hr = S_FALSE;
-
-	// RootSignature作成
-	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
-	// RootParameter作成。複数設定できるように配列。今回は結果12つ
-	//D3D12_ROOT_PARAMETER rootParameters[11] = {};
-	std::vector<D3D12_ROOT_PARAMETER> rootParameters;
-	rootParameters.resize(11);
-	//D3D12_ROOT_PARAMETER* rootParameters = new D3D12_ROOT_PARAMETER[11];
-	// テクスチャ用サンプラー
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[3] = {};
-	// 配列用のRangeDesc
-	D3D12_DESCRIPTOR_RANGE descRange[1] = {};	// DescriptorRangeを作成
-	descRange[0].BaseShaderRegister = 0; // 0から始まる
-	descRange[0].NumDescriptors = 1; // 数は1つ
-	descRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-	descRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
-
-	// ** 両方で使うデータ ** //
-
-	// ストラクチャーバッファーのインデックス
-	D3D12_DESCRIPTOR_RANGE indexDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	indexDesc[0].BaseShaderRegister = 0; // レジスタ番号は0
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rootParameters[0].DescriptorTable.pDescriptorRanges = indexDesc; // Tabelの中身の配列を指定
-	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(indexDesc); // Tableで利用する数
-	// 描画するViewProjection
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
-	rootParameters[1].Descriptor.ShaderRegister = 0;						// レジスタ番号0とバインド
-	// 全描画で共通のデータ
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		// CBVを使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		// PixelとVertexで使う
-	rootParameters[2].Descriptor.ShaderRegister = 1;						// レジスタ番号1とバインド
-
-	// ** VertexShaderで使うデータ ** //
-
-	// 頂点データ
-	D3D12_DESCRIPTOR_RANGE vertexDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	vertexDesc[0].BaseShaderRegister = 1; // レジスタ番号は1
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = vertexDesc; // Tabelの中身の配列を指定
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(vertexDesc); // Tableで利用する数
-
-	// WorldTransform
-	D3D12_DESCRIPTOR_RANGE wtfDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	wtfDesc[0].BaseShaderRegister = 2; // レジスタ番号は2
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[4].DescriptorTable.pDescriptorRanges = wtfDesc; // Tabelの中身の配列を指定
-	rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(wtfDesc); // Tableで利用する数
-
-
-	// ** PixelShaderで使うデータ ** //
-
-	// マテリアル
-	D3D12_DESCRIPTOR_RANGE materialDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	materialDesc[0].BaseShaderRegister = 1; // レジスタ番号は1
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[5].DescriptorTable.pDescriptorRanges = materialDesc; // Tabelの中身の配列を指定
-	rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(materialDesc); // Tableで利用する数
-
-	// 平行光源
-	D3D12_DESCRIPTOR_RANGE dirLightDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	dirLightDesc[0].BaseShaderRegister = 2; // レジスタ番号は2
-	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[6].DescriptorTable.pDescriptorRanges = dirLightDesc; // Tabelの中身の配列を指定
-	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(dirLightDesc); // Tableで利用する数
-	// 点光源
-	D3D12_DESCRIPTOR_RANGE pointLightDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	pointLightDesc[0].BaseShaderRegister = 3; // レジスタ番号は3
-	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	// DescriptorTableを使う
-	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[7].DescriptorTable.pDescriptorRanges = pointLightDesc; // Tabelの中身の配列を指定
-	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(pointLightDesc); // Tableで利用する数
-
-
-#pragma region テクスチャ実装
-	// Samplerの設定
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイオリニアフィルタ
-	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
-	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
-	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
-	staticSamplers[0].ShaderRegister = 0; // レジスタ番号は0
-	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-
-	// テクスチャ
-	D3D12_DESCRIPTOR_RANGE textureDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	textureDesc[0].BaseShaderRegister = 0; // レジスタ番号は0（スペースが違うので）
-	textureDesc[0].RegisterSpace = 1; // スペースは1
-	textureDesc[0].NumDescriptors = kMaxTexture;	// 最大数を定義
-	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
-	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	rootParameters[8].DescriptorTable.pDescriptorRanges = textureDesc; // Tabelの中身の配列を指定
-	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(textureDesc); // Tableで利用する数
-#pragma endregion
-
-#pragma region 平行光源のシャドウマップ
-	// Samplerの設定
-	staticSamplers[1].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; // バイアスをかけて線形補間
-	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
-	staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数を設定
-	staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
-	staticSamplers[1].ShaderRegister = 1; // レジスタ番号は1
-	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-
-	// シャドウマップ
-	D3D12_DESCRIPTOR_RANGE dirShadowDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	dirShadowDesc[0].BaseShaderRegister = 0; // レジスタ番号は0（スペースが違うので）
-	dirShadowDesc[0].RegisterSpace = 2; // スペースは2
-	dirShadowDesc[0].NumDescriptors = lwpC::Shadow::Direction::kMaxCount;	// 最大数を定義
-	rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
-	rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	rootParameters[9].DescriptorTable.pDescriptorRanges = dirShadowDesc; // Tabelの中身の配列を指定
-	rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(dirShadowDesc); // Tableで利用する数
-#pragma endregion
-
-#pragma region 点光源のシャドウマップ
-	// Samplerの設定
-	staticSamplers[2].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; // バイアスをかけて線形補間
-	staticSamplers[2].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP; // 0~1の範囲外をリピート
-	staticSamplers[2].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSamplers[2].AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSamplers[2].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数を設定
-	staticSamplers[2].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
-	staticSamplers[2].ShaderRegister = 2; // レジスタ番号は2
-	staticSamplers[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-
-	// シャドウマップ
-	D3D12_DESCRIPTOR_RANGE pointShadowDesc[1] = { descRange[0] };	// DescriptorRangeを作成
-	pointShadowDesc[0].BaseShaderRegister = 0; // レジスタ番号は0（スペースが違うので）
-	pointShadowDesc[0].RegisterSpace = 3; // スペースは2
-	pointShadowDesc[0].NumDescriptors = lwpC::Shadow::Point::kMaxCount * 6;	// 最大数を定義
-	rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTabelを使う
-	rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-	rootParameters[10].DescriptorTable.pDescriptorRanges = pointShadowDesc; // Tabelの中身の配列を指定
-	rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(pointShadowDesc); // Tableで利用する数
-#pragma endregion
-
-	// RootSignatureにrootParametersを登録
-	descriptionRootSignature.pParameters = rootParameters.data();					// ルートパラメータ配列へのポインタ
-	descriptionRootSignature.NumParameters = /*_countof(rootParameters)*/11;		// 配列の長さ
-
-	// RootSignatureにサンプラーを登録
-	descriptionRootSignature.pStaticSamplers = staticSamplers;
-	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
-
-
-	// シリアライズしてバイナリにする
-	ID3DBlob* signatureBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
-		assert(false);
-	}
-	// バイナリを元に生成
-	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-	assert(SUCCEEDED(hr));
-
-	signatureBlob->Release();
-	//errorBlob->Release();
+	rootSignature_ = std::make_unique<RootSignature>();
+	rootSignature_->AddTableParameter(0, SV_All)	// インデックスのデータ
+		.AddCBVParameter(0, SV_All)	// 描画に使うViewprojection
+		.AddCBVParameter(1, SV_All)	// 全画面で共通のデータ
+		.AddTableParameter(1, SV_Vertex)	// 頂点データ
+		.AddTableParameter(2, SV_Vertex)	// トランスフォーム
+		.AddTableParameter(1, SV_Pixel)	// マテリアル
+		.AddTableParameter(2, SV_Pixel)	// 平行光源
+		.AddTableParameter(3, SV_Pixel)	// 点光源
+		.AddTableParameter(0, SV_Pixel, 1, kMaxTexture)	// テクスチャ
+		.AddTableParameter(0, SV_Pixel, 2, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(0, SV_Pixel, 3, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
+		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
+			,D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
+		.Build(device_);
 }
 
 void CommandManager::CreateStructuredBufferResources() {

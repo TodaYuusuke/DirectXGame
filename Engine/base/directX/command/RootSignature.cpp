@@ -15,15 +15,18 @@ RootSignature& RootSignature::AddCBVParameter(int registerNum, ShaderVisibility 
 }
 RootSignature& RootSignature::AddTableParameter(int registerNum, ShaderVisibility visibility, int space, UINT maxSize) {
 	// 新しく登録するTableの設定
-	D3D12_DESCRIPTOR_RANGE desc = defaultTableDesc_;
-	desc.BaseShaderRegister = registerNum;	// レジスタ番号を登録
-	desc.RegisterSpace = space;	// スペースを設定（デフォは0）
-	if (maxSize != 0) { desc.NumDescriptors = maxSize; }	// 0じゃないときのみ最大数を登録
+	D3D12_DESCRIPTOR_RANGE newDesc = defaultTableDesc_;
+	newDesc.BaseShaderRegister = registerNum;	// レジスタ番号を登録
+	newDesc.RegisterSpace = space;	// スペースを設定（デフォは0）
+	if (maxSize != 0) { newDesc.NumDescriptors = maxSize; }	// 0じゃないときのみ最大数を登録
+	// 設定も登録
+	parametersDesc_.push_back(newDesc);
+
 	// 新しく登録するデータ
 	D3D12_ROOT_PARAMETER newPara{};
 	newPara.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	newPara.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(visibility);
-	newPara.DescriptorTable.pDescriptorRanges = &desc; // Tabelの中身の配列を指定
+	newPara.DescriptorTable.pDescriptorRanges = &parametersDesc_.back(); // Tabelの中身の配列を指定
 	newPara.DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
 	// 登録
 	parameters_.push_back(newPara);

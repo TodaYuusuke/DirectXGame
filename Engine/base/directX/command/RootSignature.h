@@ -2,6 +2,7 @@
 #include "../GPUDevice.h"
 
 #include <vector>
+#include <list>
 
 namespace LWP::Base {
 	// シェーダー上での可視性
@@ -43,6 +44,7 @@ namespace LWP::Base {
 
 		// パラメータの可変長配列
 		std::vector<D3D12_ROOT_PARAMETER> parameters_;
+		std::list<D3D12_DESCRIPTOR_RANGE> parametersDesc_;	// listにすることで途中で追加してもメモリが再割り当てされない
 		// サンプラーの可変長配列
 		std::vector<D3D12_STATIC_SAMPLER_DESC> samplers_;
 

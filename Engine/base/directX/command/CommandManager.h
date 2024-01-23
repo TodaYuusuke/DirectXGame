@@ -3,6 +3,7 @@
 #include "Derived/SubRendering.h"
 #include "Derived/ShadowMapping.h"
 #include "../descriptorHeap/HeapManager.h"
+#include "RootSignature.h"
 
 #include <vector>
 #include <dxcapi.h>
@@ -150,8 +151,8 @@ namespace LWP::Base {
 		std::unique_ptr<DXC> dxc_;
 		
 		// ルートシグネチャ
-		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
-		
+		std::unique_ptr<RootSignature> rootSignature_;
+
 
 		// 頂点データ
 		std::unique_ptr<IStructured<VertexStruct>> vertexData_;
