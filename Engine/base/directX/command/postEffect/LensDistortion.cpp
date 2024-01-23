@@ -9,6 +9,7 @@ void LensDistortionRenderer::Init() {
 void LensDistortionRenderer::SetRenderData(RenderResource* target, LensDistortion data) {
 	target;
 	data;
+
 }
 void LensDistortionRenderer::Clear() {
 

@@ -198,6 +198,9 @@
     <ClCompile Include="Engine\base\directX\descriptorHeap\HeapManager.cpp">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\RootSignature.cpp">
+      <Filter>Engine\base\directX\command</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -443,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\descriptorHeap\HeapManager.h">
       <Filter>Engine\base\directX\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\RootSignature.h">
+      <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -79,6 +79,8 @@ bool RenderResource::ReRegisterDSV() {
 }
 
 void RenderResource::CreateResource(ID3D12Device* device) {
+	HRESULT hr = S_FALSE;
+	
 	// 1. Resourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = UINT(width_);
@@ -105,7 +107,7 @@ void RenderResource::CreateResource(ID3D12Device* device) {
 	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
 
 	// 4. Resourceを生成する
-	HRESULT hr = device->CreateCommittedResource(
+	hr = device->CreateCommittedResource(
 		&heapProperties,					// Heapの設定
 		D3D12_HEAP_FLAG_NONE,				// Heapの特殊な設定。特になし。
 		&resourceDesc,						// Resourceの設定

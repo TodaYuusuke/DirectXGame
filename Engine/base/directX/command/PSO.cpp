@@ -120,8 +120,9 @@ PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
 	return *this;
 }
 void PSO::Build(ID3D12Device* device) {
+	HRESULT hr = S_FALSE;
 	// 実際に生成
-	HRESULT hr = device->CreateGraphicsPipelineState(&desc_, IID_PPV_ARGS(&state_));
+	hr = device->CreateGraphicsPipelineState(&desc_, IID_PPV_ARGS(&state_));
 	assert(SUCCEEDED(hr));
 }
 
