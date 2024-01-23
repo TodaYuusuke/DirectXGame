@@ -4,11 +4,6 @@
 #include <vector>
 
 namespace LWP::Base {
-	// パラメータのタイプ
-	//enum ParameterType {
-	//	PT_Constant = D3D12_ROOT_PARAMETER_TYPE_CBV,
-	//	PT_Structerd = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE,
-	//};
 	// シェーダー上での可視性
 	enum ShaderVisibility {
 		SV_Vertex = D3D12_SHADER_VISIBILITY_VERTEX,
