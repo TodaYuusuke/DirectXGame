@@ -334,7 +334,10 @@ void CommandManager::CreateRootSignature() {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
 	// RootParameter作成。複数設定できるように配列。今回は結果12つ
-	D3D12_ROOT_PARAMETER rootParameters[11] = {};
+	//D3D12_ROOT_PARAMETER rootParameters[11] = {};
+	std::vector<D3D12_ROOT_PARAMETER> rootParameters;
+	rootParameters.resize(11);
+	//D3D12_ROOT_PARAMETER* rootParameters = new D3D12_ROOT_PARAMETER[11];
 	// テクスチャ用サンプラー
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[3] = {};
 	// 配列用のRangeDesc
@@ -343,14 +346,6 @@ void CommandManager::CreateRootSignature() {
 	descRange[0].NumDescriptors = 1; // 数は1つ
 	descRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 	descRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
-	// RootSignatureにrootParametersを登録
-	descriptionRootSignature.pParameters = rootParameters;					// ルートパラメータ配列へのポインタ
-	descriptionRootSignature.NumParameters = _countof(rootParameters);		// 配列の長さ
-
-	// RootSignatureにサンプラーを登録
-	descriptionRootSignature.pStaticSamplers = staticSamplers;
-	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
 
 	// ** 両方で使うデータ ** //
@@ -481,6 +476,14 @@ void CommandManager::CreateRootSignature() {
 	rootParameters[10].DescriptorTable.pDescriptorRanges = pointShadowDesc; // Tabelの中身の配列を指定
 	rootParameters[10].DescriptorTable.NumDescriptorRanges = _countof(pointShadowDesc); // Tableで利用する数
 #pragma endregion
+
+	// RootSignatureにrootParametersを登録
+	descriptionRootSignature.pParameters = rootParameters.data();					// ルートパラメータ配列へのポインタ
+	descriptionRootSignature.NumParameters = /*_countof(rootParameters)*/11;		// 配列の長さ
+
+	// RootSignatureにサンプラーを登録
+	descriptionRootSignature.pStaticSamplers = staticSamplers;
+	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
 
 	// シリアライズしてバイナリにする

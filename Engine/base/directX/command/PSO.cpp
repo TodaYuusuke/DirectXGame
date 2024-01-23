@@ -126,55 +126,6 @@ void PSO::Build(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-/*
-PSO& PSO::Initialize(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc, RasterizerState rState, UINT vs, UINT ps, DepthFormat df) {
-	HRESULT hr = S_FALSE;
-
-	Microsoft::WRL::ComPtr<IDxcBlob> vertexShader = CreateVertexShader(dxc, vs);
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShader = CreatePixelShader(dxc, ps);
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = root;	// RootSignature
-	graphicsPipelineStateDesc.InputLayout = CreateInputLayout();		// InputLayout
-	graphicsPipelineStateDesc.BlendState = CreateBlendState();			// BlendState
-	graphicsPipelineStateDesc.RasterizerState = CreateRasterizerState(rState);	// RasterizerState
-	if (vs != 0) {
-		graphicsPipelineStateDesc.VS = { vertexShader->GetBufferPointer(),vertexShader->GetBufferSize() };	// VertexShader
-	}
-	if (ps != 0) {
-		graphicsPipelineStateDesc.PS = { pixelShader->GetBufferPointer(),pixelShader->GetBufferSize() };	// PixelShader
-	}
-	graphicsPipelineStateDesc.DepthStencilState = CreateDepthStencilState();
-	switch (df)
-	{
-		default:
-		case LWP::Base::DepthFormat::D24_UNORM_S8_UINT:
-			graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-			break;
-		case LWP::Base::DepthFormat::D32_FLOAT:
-			graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-			break;
-	}
-	// 書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	// 利用するトポロジ（形状）のタイプ。三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	// どのように画面に色を打ち込むかの設定（気にしなくて良い）	
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	// 実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&state_));
-	assert(SUCCEEDED(hr));
-}
-
-void PSO::InitializeForShadow(ID3D12Device* device, ID3D12RootSignature* root, DXC* dxc) {
-	Initialize(device, root, dxc, 
-		{RasterizerState::CullMode::Front, RasterizerState::FillMode::Solid },
-		2, 0, DepthFormat::D32_FLOAT);
-}
-*/
-
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {
 	/* 頂点はバッファーで送信するので、InputLayoutは不要
 	// 頂点レイアウト
