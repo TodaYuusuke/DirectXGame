@@ -2,6 +2,7 @@
 #include "../math/vector/Vector4.h"
 #include <Adapter.h>
 
+
 using namespace LWP::Base;
 using namespace LWP::Utility;
 using namespace LWP::Math;
@@ -12,8 +13,10 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 	// ImGuiの初期化、詳細はさして重要ではないので省略
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGui::GetIO().DisplaySize = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF() };
+	//ImGui::GetIO().DisplaySize = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF() };
 	ImGui::StyleColorsDark();
+	// 拡大率を適応
+	ImGui::GetStyle().ScaleAllSizes(static_cast<float>(winApp->GetScaleFactor() / 100.0f));
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
 		dxCommon_->GetBufferCount(),
@@ -47,10 +50,3 @@ void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColor
 	ImGui::ColorEdit4(label, &v.x, flags);
 	col = *new Color(v);
 }
-
-//template <typename T>
-//void ImGuiManager::CheckBox(const char* label, T* v) {
-//	bool b = static_cast<bool>(v);
-//	ImGui::Checkbox(label, &b);
-//	*v = static_cast<T>(b);
-//}

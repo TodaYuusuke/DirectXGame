@@ -2,6 +2,9 @@
 #include <cstdint>
 #include "../utility/MyUtility.h"
 
+#include <ShellScalingApi.h>
+#pragma comment(lib,"Shcore.lib")
+
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
@@ -132,4 +135,29 @@ void WinApp::ChangeFullScreenMode() {
 }
 void WinApp::ChangeBorderlessWindowMode() {
 	// 未実装
+}
+
+int WinApp::GetScaleFactor() {
+	int scale = -1;
+	
+	// プロセス番号を取得
+	DWORD processId;
+	GetWindowThreadProcessId(hwnd_, &processId);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
+
+	PROCESS_DPI_AWARENESS awareness;
+	if (GetProcessDpiAwareness(hProcess, &awareness) == S_OK) {
+		if (awareness == PROCESS_SYSTEM_DPI_AWARE) {
+			// System DPI aware
+			scale = 100;
+		}
+		else if (awareness == PROCESS_PER_MONITOR_DPI_AWARE) {
+			// Per-monitor DPI aware
+			UINT dpiX, dpiY;
+			if (SUCCEEDED(GetDpiForMonitor(MonitorFromWindow(GetConsoleWindow(), MONITOR_DEFAULTTONEAREST), MDT_EFFECTIVE_DPI, &dpiX, &dpiY))) {
+				scale = static_cast<int>(dpiX * 100.0 / 96.0 + 0.5);
+			}
+		}
+	}
+	return scale;
 }

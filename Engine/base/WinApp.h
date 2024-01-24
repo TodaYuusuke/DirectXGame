@@ -41,6 +41,11 @@ namespace LWP::Base {
 		/// </summary>
 		void ChangeBorderlessWindowMode();
 
+		/// <summary>
+		/// 画面の拡大率を取得する関数
+		/// </summary>
+		/// <returns></returns>
+		int GetScaleFactor();
 
 		// アクセサ
 		int GetClientWidth() { return clientWidth_; }

@@ -48,7 +48,6 @@ void CCTVEffectRenderer::Draw(ID3D12GraphicsCommandList* list) {
 		// ディスクリプタテーブルを登録
 		list->SetGraphicsRootConstantBufferView(0, renderData_[i]->view);
 		list->SetGraphicsRootDescriptorTable(1, heaps_->srv()->GetGPUHandle(renderData_[i]->target->GetTexSRVIndex()));
-		//list->SetGraphicsRootDescriptorTable(1, heaps_->srv()->GetGPUHandle(74));
 
 		// 四角形を描画
 		list->DrawInstanced(3, 2, 0, 0);
