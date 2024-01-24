@@ -15,7 +15,10 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	// 拡大率を適応
-	ImGui::GetStyle().ScaleAllSizes(static_cast<float>(winApp->GetScaleFactor() / 100.0f));
+	int factor = winApp->GetScaleFactor();
+	if (factor != -1) {
+		ImGui::GetStyle().ScaleAllSizes(static_cast<float>(factor / 100.0f));
+	}
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
 		dxCommon_->GetBufferCount(),

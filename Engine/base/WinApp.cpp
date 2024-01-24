@@ -141,12 +141,12 @@ int WinApp::GetScaleFactor() {
 	int scale = -1;
 	
 	// プロセス番号を取得
-	DWORD processId;
-	GetWindowThreadProcessId(hwnd_, &processId);
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
+	//DWORD processId;
+	//GetWindowThreadProcessId(hwnd_, &processId);
+	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
 
 	PROCESS_DPI_AWARENESS awareness;
-	if (GetProcessDpiAwareness(hProcess, &awareness) == S_OK) {
+	if (GetProcessDpiAwareness(NULL, &awareness) == S_OK) {
 		if (awareness == PROCESS_SYSTEM_DPI_AWARE) {
 			// System DPI aware
 			scale = 100;
