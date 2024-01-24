@@ -24,7 +24,6 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 		dxCommon_->GetSRVHeap()->GetCPUDescriptorHandleForHeapStart(),
 		dxCommon_->GetSRVHeap()->GetGPUDescriptorHandleForHeapStart()
 	);
-
 }
 
 void ImGuiManager::Finalize() {
