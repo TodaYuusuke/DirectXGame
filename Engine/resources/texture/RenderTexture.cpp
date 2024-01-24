@@ -18,4 +18,6 @@ RenderTexture::RenderTexture(DirectXCommon* directX, const int width, const int 
 	// テクスチャのみのリソースを生成
 	resource_ = directX->GetCommandManager()->CreateTextureResource(width, height);
 	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(resource_.Get(), width, height);
+	// SRV上でのインデックスも取得しておく
+	srvIndex_ = directX->GetHeaps()->srv()->GetCount() - 1;
 }

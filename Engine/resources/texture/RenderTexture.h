@@ -32,6 +32,8 @@ namespace LWP::Resource {
 		Base::RenderResource* GetRenderResource() { return renderResource_.get(); }
 		// テクスチャ専用のリソースを返す関数
 		ID3D12Resource* GetTexResource() { return resource_.Get(); }
+		// テクスチャのSRV上のリソースを返す関数
+		int GetTexSRVIndex() { return srvIndex_; }
 
 		// サイズをVector2で受け取る
 		Math::Vector2 GetTextureSize() const override { return renderResource_->GetResolution(); };
@@ -40,5 +42,7 @@ namespace LWP::Resource {
 	private: // ** メンバ変数 ** //
 		// レンダリング先のテクスチャ
 		std::unique_ptr<Base::RenderResource> renderResource_ = nullptr;
+		// SRV上でのテクスチャのインデックス
+		int srvIndex_ = -1;
 	};
 }
