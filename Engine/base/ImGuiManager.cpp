@@ -13,7 +13,6 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 	// ImGuiの初期化、詳細はさして重要ではないので省略
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	//ImGui::GetIO().DisplaySize = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF() };
 	ImGui::StyleColorsDark();
 	// 拡大率を適応
 	ImGui::GetStyle().ScaleAllSizes(static_cast<float>(winApp->GetScaleFactor() / 100.0f));
