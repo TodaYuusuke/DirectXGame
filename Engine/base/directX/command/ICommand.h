@@ -93,6 +93,12 @@ namespace LWP::Base {
 		void Reset() { indexData_->Reset(); }
 
 
+		/// <summary>
+		/// リソースバリアの実態を作る関数（今だけ静的関数）
+		/// </summary>
+		static D3D12_RESOURCE_BARRIER MakeResourceBarrier(ID3D12Resource*, D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES);
+
+
 	protected: // ** メンバ変数 ** //
 
 		// ディスクリプタヒープのポインタ
@@ -128,10 +134,5 @@ namespace LWP::Base {
 		/// PSOを作成
 		/// </summary>
 		virtual void CreatePSO(ID3D12Device* device, DXC* dxc, ID3D12RootSignature* rootSignature);
-
-		/// <summary>
-		/// リソースバリアの実態を作る関数
-		/// </summary>
-		D3D12_RESOURCE_BARRIER MakeResourceBarrier(ID3D12Resource*, D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES);
 	};
 }

@@ -8,54 +8,38 @@
 #include "Config.h"
 
 /// <summary>
-/// 歪曲収差パラメータ
+/// 監視カメラ風演出のパラメータ
 /// </summary>
-struct LensDistortion {
+struct CCTVEffect {
 	// アクティブフラグ
 	bool isActive = false;
 
-	// 強度（-100 ~ 100）
-	int intensity = 0;
-	// 影響度合い（0.0f ~ 1.0f）
-	LWP::Math::Vector2 multiplier = { 1.0f,1.0f };
-	// 歪みの中心（アンカーポイント）
-	LWP::Math::Vector2 center = { 0.5f,0.5f };
-	// レンズの拡大率（0.01f ~ 5.0f）
-	float scale = 1.0f;
+	// 時間
+	int time = 0;
 };
 
 
 namespace LWP::Base::PostProcess {
 	// リソース用のisActive抜きの構造体
-	struct LensStruct {
-		// 影響度合い（0.0f ~ 1.0f）
-		LWP::Math::Vector2 multiplier;
-		// 歪みの中心（アンカーポイント）
-		LWP::Math::Vector2 center;
-		// レンズの拡大率（0.01f ~ 5.0f）
-		float scale;
-		// 強度（-100 ~ 100）
-		int intensity;
+	struct CCTVStruct {
+		int time;
 
-		LensStruct& operator=(const LensDistortion& value) {
-			multiplier = value.multiplier;
-			center = value.center;
-			scale = value.scale;
-			intensity = value.intensity;
+		CCTVStruct& operator=(const CCTVEffect& value) {
+			time = value.time;
 			return *this;
 		}
 	};
 
 	/// <summary>
-	/// 歪曲収差レンダリングコマンド
+	/// 監視カメラエフェクトレンダリングコマンド
 	/// </summary>
-	class LensDistortionRenderer {
+	class CCTVEffectRenderer {
 	public: // ** メンバ関数 ** //
 
 		// コンストラクタ
-		LensDistortionRenderer() = default;
+		CCTVEffectRenderer() = default;
 		// デストラクタ
-		~LensDistortionRenderer() = default;
+		~CCTVEffectRenderer() = default;
 
 		// 初期化処理
 		void Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps);
@@ -65,7 +49,7 @@ namespace LWP::Base::PostProcess {
 		void Reset();
 
 		// レンダリングするためのデータをセットする関数
-		void SetRenderData(Resource::RenderTexture* target, LensDistortion data);
+		void SetRenderData(Resource::RenderTexture* target, CCTVEffect data);
 
 
 	private: // ** メンバ変数 ** //
@@ -73,7 +57,7 @@ namespace LWP::Base::PostProcess {
 		// レンダリングするためのデータ
 		struct RenderData {
 			Resource::RenderTexture* target;	// レンダリングを行う先のリソース
-			LensStruct* data;	// レンダリングに使うデータ
+			CCTVStruct* data;	// レンダリングに使うデータ
 			ID3D12Resource* resource;	// データのリソース
 			D3D12_GPU_VIRTUAL_ADDRESS view;	// データのビュー
 		};

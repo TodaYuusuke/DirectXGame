@@ -201,6 +201,12 @@
     <ClCompile Include="Engine\base\directX\command\RootSignature.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\postEffect\PostProcessManager.cpp">
+      <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\postEffect\CCTVEffect.cpp">
+      <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -450,11 +456,20 @@
     <ClInclude Include="Engine\base\directX\command\RootSignature.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\postEffect\PostProcessManager.h">
+      <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\postEffect\CCTVEffect.h">
+      <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="resources\system\shaders\Object3d.hlsli">
       <Filter>Engine\resources\shaders</Filter>
+    </None>
+    <None Include="resources\system\shaders\postProcess\PassThrough.hlsli">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -563,6 +578,9 @@
     <Filter Include="Engine\base\directX\command\derived">
       <UniqueIdentifier>{5e93e1c4-b2c1-4c36-bae5-07b1bf3df8b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\resources\shaders\postProcess">
+      <UniqueIdentifier>{3107d1da-6626-4c88-ad3e-86e371277c01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
@@ -573,6 +591,15 @@
     </FxCompile>
     <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\postProcess\LensDistortion.PS.hlsl">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\postProcess\PassThrough.VS.hlsl">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\postProcess\CCTV.PS.hlsl">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

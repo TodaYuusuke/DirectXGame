@@ -40,7 +40,7 @@ namespace LWP::Base {
 
 		// RTVのインデックスを返す関数
 		int GetRTV() { return rtvIndex_; }
-		// RTVのインデックスを返す関数
+		// SRVのインデックスを返す関数
 		int GetSRV() { return srvIndex_; }
 		// DSVのインデックスを返す関数
 		int GetDSV() { return dsvIndex_; }

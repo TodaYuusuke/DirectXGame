@@ -1,7 +1,7 @@
 #pragma once
 #include "../IObject.h"
 #include "resources/texture/RenderTexture.h"
-#include "base/directX/command/postEffect/LensDistortion.h"
+#include "base/directX/command/postEffect/PostProcessManager.h"
 #include "base/directX/command/derived/SubRendering.h"
 
 namespace LWP::Object {
@@ -13,6 +13,8 @@ namespace LWP::Object {
 
 		// -- ポストエフェクトフラグ -- //
 
+		// 監視カメラのエフェクト
+		CCTVEffect cctvEffect;
 		// レンズディストーション（歪曲収差）
 		LensDistortion lensDistortion;
 		// ブルームをかける

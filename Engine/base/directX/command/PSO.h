@@ -31,8 +31,9 @@ namespace LWP::Base {
 			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
 		PSO& SetVertexShader(std::string filePath);
 		PSO& SetPixelShader(std::string filePath);
-		PSO& SetDepthStencilState();
+		PSO& SetDepthStencilState(bool enable);
 		PSO& SetDSVFormat(DXGI_FORMAT format);
+		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
 		void Build(ID3D12Device* device);
 
 		// PipelineStateを受け取る関数

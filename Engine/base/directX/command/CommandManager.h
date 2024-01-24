@@ -5,6 +5,8 @@
 #include "../descriptorHeap/HeapManager.h"
 #include "RootSignature.h"
 
+#include "postEffect/PostProcessManager.h"
+
 #include <vector>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
@@ -100,7 +102,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// このフレームでレンダリングするサブ画面のコマンドをセットする
 		/// </summary>
-		void SetSubRendering(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture);
+		void SetSubRendering(Object::Camera* camera);
 
 		/// <summary>
 		/// 平行光源のデータを登録する
@@ -137,6 +139,9 @@ namespace LWP::Base {
 		// シャドウマップ計算
 		std::vector<std::unique_ptr<ShadowMapping>> shadowCommands_;
 		int shadowCount_ = 0;	// 毎フレームの描画回数
+
+		// ポストプロセス管理クラス
+		std::unique_ptr<PostProcess::Manager> ppManager_;
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;

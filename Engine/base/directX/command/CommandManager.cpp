@@ -72,6 +72,10 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 		shadowCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	}
 	
+	// ポストプロセスのコマンド実装
+	ppManager_ = std::make_unique<PostProcess::Manager>();
+	ppManager_->Init(device_, dxc_.get(), heaps_);
+
 	// グラフィックリソースを作成
 	CreateStructuredBufferResources();
 
@@ -132,6 +136,8 @@ void CommandManager::DrawCall() {
 	for (int i = 0; i < subCount_; i++) {
 		DrawLambda(subCommands_[i].get());
 	}
+	// ポストプロセス実行
+	ppManager_->Draw(commandList_.Get());
 
 	// 本描画
 	DrawLambda(mainCommand_.get());
@@ -167,14 +173,19 @@ void CommandManager::Reset() {
 	materialData_->Reset();
 	directionLightResourceBuffer_->usedCount_ = 0;
 	pointLightResourceBuffer_->usedCount_ = 0;
+
+	// ポストプロセスもリセット
+	ppManager_->Reset();
 }
 
 void CommandManager::SetMainRendering(const Object::Camera* camera) {
 	// カメラ視点の描画を予約
 	mainCommand_->SetDrawTarget(camera->GetViewProjection());
 }
-void CommandManager::SetSubRendering(const Math::Matrix4x4& vp, Resource::RenderTexture* renderTexture) {
-	subCommands_[subCount_++]->SetDrawTarget(vp, renderTexture);
+void CommandManager::SetSubRendering(Object::Camera* camera) {
+	subCommands_[subCount_++]->SetDrawTarget(camera->GetViewProjection(), camera->GetRenderTexture());
+	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
+	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->lensDistortion);
 }
 
 void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, const Math::Matrix4x4& viewProjection) {

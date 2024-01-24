@@ -1,4 +1,4 @@
-#include "LensDistortion.h"
+#include "CCTVEffect.h"
 
 // 今だけResourceを作る関数のためにincludeする
 #include "../../resource/structuredBuffer/IStructured.h"
@@ -9,7 +9,7 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 constexpr int kMax = LWP::Config::PostProcess::kMaxLensDistortion;	// 最大値を省略
 
-void LensDistortionRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
+void CCTVEffectRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	// ルートシグネチャを生成
 	root_ = std::make_unique<RootSignature>();
 	root_->AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
@@ -21,7 +21,7 @@ void LensDistortionRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* h
 	pso_->Init(root_->GetRoot(), dxc)
 		.SetDepthStencilState(false)
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/LensDistortion.PS.hlsl")
+		.SetPixelShader("postProcess/CCTV.PS.hlsl")
 		.Build(device);
 	// ヒープ管理クラスをセット
 	heaps_ = heaps;
@@ -29,12 +29,12 @@ void LensDistortionRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* h
 	// リソースを生成
 	for (int i = 0; i < kMax; i++) {
 		renderData_[i] = std::make_unique<RenderData>();
-		renderData_[i]->resource = CreateBufferResourceStatic(device, sizeof(LensStruct));
+		renderData_[i]->resource = CreateBufferResourceStatic(device, sizeof(CCTVStruct));
 		renderData_[i]->resource->Map(0, nullptr, reinterpret_cast<void**>(&renderData_[i]->data));
 		renderData_[i]->view = renderData_[i]->resource->GetGPUVirtualAddress();
 	}
 }
-void LensDistortionRenderer::Draw(ID3D12GraphicsCommandList* list) {
+void CCTVEffectRenderer::Draw(ID3D12GraphicsCommandList* list) {
 	for (int i = 0; i < counter_.Get(); i++) {
 		PreDraw(list, i);
 
@@ -57,12 +57,12 @@ void LensDistortionRenderer::Draw(ID3D12GraphicsCommandList* list) {
 		PostDraw(list, i);
 	}
 }
-void LensDistortionRenderer::Reset() {
+void CCTVEffectRenderer::Reset() {
 	// 使用数を元に戻す
 	counter_.Reset();
 }
 
-void LensDistortionRenderer::SetRenderData(Resource::RenderTexture* target, LensDistortion data) {
+void CCTVEffectRenderer::SetRenderData(Resource::RenderTexture* target, CCTVEffect data) {
 	// オフならば何もしない
 	if (!data.isActive) { return; }
 
@@ -74,7 +74,7 @@ void LensDistortionRenderer::SetRenderData(Resource::RenderTexture* target, Lens
 	counter_.GetAndIncrement();
 }
 
-void LensDistortionRenderer::PreDraw(ID3D12GraphicsCommandList* list, int index) {
+void CCTVEffectRenderer::PreDraw(ID3D12GraphicsCommandList* list, int index) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_[index]->target->GetRenderResource();
 
@@ -117,7 +117,7 @@ void LensDistortionRenderer::PreDraw(ID3D12GraphicsCommandList* list, int index)
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }
-void LensDistortionRenderer::PostDraw(ID3D12GraphicsCommandList* list, int index) {
+void CCTVEffectRenderer::PostDraw(ID3D12GraphicsCommandList* list, int index) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_[index]->target->GetRenderResource();
 

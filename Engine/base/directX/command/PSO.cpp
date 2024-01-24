@@ -104,9 +104,9 @@ PSO& PSO::SetPixelShader(std::string filePath) {
 	desc_.PS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetDepthStencilState() {
+PSO& PSO::SetDepthStencilState(bool enable) {
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	depthStencilDesc.DepthEnable = true; // Depthの機能を有効化する
+	depthStencilDesc.DepthEnable = enable; // Depthの機能を有効化する
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
 	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
 	
@@ -117,6 +117,11 @@ PSO& PSO::SetDepthStencilState() {
 PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
 	// セット
 	desc_.DSVFormat = format;
+	return *this;
+}
+PSO& PSO::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
+	// セット
+	desc_.PrimitiveTopologyType = type;
 	return *this;
 }
 void PSO::Build(ID3D12Device* device) {
