@@ -178,14 +178,14 @@ void CommandManager::Reset() {
 	ppManager_->Reset();
 }
 
-void CommandManager::SetMainRendering(const Object::Camera* camera) {
+void CommandManager::SetMainRendering(Object::Camera* camera) {
 	// カメラ視点の描画を予約
 	mainCommand_->SetDrawTarget(camera->GetViewProjection());
+	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect, true);
 }
 void CommandManager::SetSubRendering(Object::Camera* camera) {
 	subCommands_[subCount_++]->SetDrawTarget(camera->GetViewProjection(), camera->GetRenderTexture());
 	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
-	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->lensDistortion);
 }
 
 void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, const Math::Matrix4x4& viewProjection) {

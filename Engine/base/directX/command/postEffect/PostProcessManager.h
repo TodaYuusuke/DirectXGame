@@ -17,7 +17,7 @@ namespace LWP::Base::PostProcess {
 		void Reset();
 
 		// レンダリングするためのデータをセットする関数
-		void SetRenderData(Resource::RenderTexture* target, CCTVEffect data);
+		void SetRenderData(Resource::RenderTexture* target, CCTVEffect data, bool isMain = false);
 		void SetRenderData(Resource::RenderTexture* target, LensDistortion data);
 
 	private: // ** メンバ変数 ** //

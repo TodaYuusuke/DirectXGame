@@ -1,4 +1,4 @@
-#include "CCTVEffect.h"
+#include "Renderer.h"
 
 // 今だけResourceを作る関数のためにincludeする
 #include "../../resource/structuredBuffer/IStructured.h"
@@ -6,35 +6,59 @@
 #include "../ICommand.h"
 
 using namespace LWP::Base;
-using namespace LWP::Base::PostProcess;
-constexpr int kMax = LWP::Config::PostProcess::kMaxLensDistortion;	// 最大値を省略
+constexpr int kMaxRendering = lwpC::Rendering::kMaxMultiWindowRendering;	// 最大値を省略
 
-void CCTVEffectRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
+void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	// ルートシグネチャを生成
 	root_ = std::make_unique<RootSignature>();
-	root_->AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
-		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
-		.AddSampler(0, SV_Pixel)	// テクスチャのサンプラー
+	root_->AddTableParameter(0, SV_All)	// インデックスのデータ
+		.AddCBVParameter(0, SV_All)	// 描画に使うViewprojection
+		.AddCBVParameter(1, SV_All)	// 全画面で共通のデータ
+		.AddTableParameter(1, SV_Vertex)	// 頂点データ
+		.AddTableParameter(2, SV_Vertex)	// トランスフォーム
+		.AddTableParameter(1, SV_Pixel)	// マテリアル
+		.AddTableParameter(2, SV_Pixel)	// 平行光源
+		.AddTableParameter(3, SV_Pixel)	// 点光源
+		.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// テクスチャ
+		.AddTableParameter(0, SV_Pixel, 2, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(0, SV_Pixel, 3, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
+		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
+			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build(device);
 	// PSOを生成
 	pso_ = std::make_unique<PSO>();
 	pso_->Init(root_->GetRoot(), dxc)
-		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/CCTV.PS.hlsl")
+		.SetVertexShader("Object3d.VS.hlsl")
+		.SetPixelShader("Object3d.PS.hlsl")
 		.Build(device);
 	// ヒープ管理クラスをセット
 	heaps_ = heaps;
 
-	// リソースを生成
-	for (int i = 0; i < kMax; i++) {
-		renderData_[i] = std::make_unique<RenderData>();
-		renderData_[i]->resource = CreateBufferResourceStatic(device, sizeof(CCTVStruct));
-		renderData_[i]->resource->Map(0, nullptr, reinterpret_cast<void**>(&renderData_[i]->data));
-		renderData_[i]->view = renderData_[i]->resource->GetGPUVirtualAddress();
+	// メインのリソースを生成する
+	mainRenderData_ = std::make_unique<MainRenderData>();
+	mainRenderData_->indexInfo = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	mainRenderData_->renderData = std::make_unique<RenderData>();
+	mainRenderData_->renderData->vpResource = std::make_unique<MatrixResourceBuffer>();
+	mainRenderData_->renderData->vpResource->resource_ = LWP::Base::CreateBufferResourceStatic(device, sizeof(Math::Matrix4x4));
+	mainRenderData_->renderData->vpResource->resource_->Map(0, nullptr, reinterpret_cast<void**>(mainRenderData_->renderData->vpResource->data_));
+	mainRenderData_->renderData->vpResource->view_ = mainRenderData_->renderData->vpResource->resource_->GetGPUVirtualAddress();
+
+	// サブのリソースを生成する
+	subRenderData_ = std::make_unique<SubRenderData>();
+	subRenderData_->indexInfo = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	for (int i = 0; i < kMaxRendering; i++) {
+		subRenderData_->renderData[i]->vpResource = std::make_unique<MatrixResourceBuffer>();
+		subRenderData_->renderData[i]->vpResource->resource_ = LWP::Base::CreateBufferResourceStatic(device, sizeof(Math::Matrix4x4));
+		subRenderData_->renderData[i]->vpResource->resource_->Map(0, nullptr, reinterpret_cast<void**>(subRenderData_->renderData[i]->vpResource->data_));
+		subRenderData_->renderData[i]->vpResource->view_ = subRenderData_->renderData[i]->vpResource->resource_->GetGPUVirtualAddress();
 	}
 }
-void CCTVEffectRenderer::Draw(ID3D12GraphicsCommandList* list) {
+void Renderer::MainDraw(ID3D12GraphicsCommandList* list, int instanceCount) {
+
+	
+
 	for (int i = 0; i < counter_.Get(); i++) {
 		PreDraw(list, i);
 
@@ -61,12 +85,12 @@ void CCTVEffectRenderer::Draw(ID3D12GraphicsCommandList* list) {
 		}
 	}
 }
-void CCTVEffectRenderer::Reset() {
+void Renderer::Reset() {
 	// 使用数を元に戻す
 	counter_.Reset();
 }
 
-void CCTVEffectRenderer::SetRenderData(Resource::RenderTexture* target, CCTVEffect data, bool isMain) {
+void Renderer::SetSubRenderData(Resource::RenderTexture* target, Math::Matrix4x4 vp) {
 	// オフならば何もしない
 	if (!data.isActive) { return; }
 
@@ -79,7 +103,7 @@ void CCTVEffectRenderer::SetRenderData(Resource::RenderTexture* target, CCTVEffe
 	counter_.GetAndIncrement();
 }
 
-void CCTVEffectRenderer::PreDraw(ID3D12GraphicsCommandList* list, int index) {
+void Renderer::PreDraw(ID3D12GraphicsCommandList* list, int index) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_[index]->target->GetRenderResource();
 
@@ -122,7 +146,7 @@ void CCTVEffectRenderer::PreDraw(ID3D12GraphicsCommandList* list, int index) {
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }
-void CCTVEffectRenderer::PostDraw(ID3D12GraphicsCommandList* list, int index) {
+void Renderer::PostDraw(ID3D12GraphicsCommandList* list, int index) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_[index]->target->GetRenderResource();
 
@@ -149,7 +173,7 @@ void CCTVEffectRenderer::PostDraw(ID3D12GraphicsCommandList* list, int index) {
 	list->ResourceBarrier(1, &barrier1);
 }
 
-void CCTVEffectRenderer::PostMainDraw(ID3D12GraphicsCommandList* list, int index) {
+void Renderer::PostMainDraw(ID3D12GraphicsCommandList* list, int index) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_[index]->target->GetRenderResource();
 	// メインレンダリングのときはバックバッファにコピーする

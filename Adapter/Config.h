@@ -74,6 +74,11 @@ namespace LWP {
 			/// マテリアルの最大数
 			/// </summary>
 			static const UINT kMaxMaterial = 12800;
+
+			/// <summary>
+			/// テクスチャの最大数
+			/// </summary>
+			static const UINT kMaxTexture = 128;
 		};
 
 		/// <summary>

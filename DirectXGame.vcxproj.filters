@@ -581,6 +581,9 @@
     <Filter Include="Engine\resources\shaders\postProcess">
       <UniqueIdentifier>{3107d1da-6626-4c88-ad3e-86e371277c01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\base\directX\command\renderer">
+      <UniqueIdentifier>{376f5f05-25f4-4b0f-aa2a-ac21f55e8270}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">

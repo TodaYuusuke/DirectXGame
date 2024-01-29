@@ -16,7 +16,7 @@ namespace LWP::Object {
 		// 監視カメラのエフェクト
 		CCTVEffect cctvEffect;
 		// レンズディストーション（歪曲収差）
-		LensDistortion lensDistortion;
+		//LensDistortion lensDistortion;
 		// ブルームをかける
 		//bool enableBloom = false;
 

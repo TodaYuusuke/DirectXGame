@@ -49,7 +49,7 @@ namespace LWP::Base::PostProcess {
 		void Reset();
 
 		// レンダリングするためのデータをセットする関数
-		void SetRenderData(Resource::RenderTexture* target, CCTVEffect data);
+		void SetRenderData(Resource::RenderTexture* target, CCTVEffect data, bool isMain = false);
 
 
 	private: // ** メンバ変数 ** //
@@ -60,6 +60,7 @@ namespace LWP::Base::PostProcess {
 			CCTVStruct* data;	// レンダリングに使うデータ
 			ID3D12Resource* resource;	// データのリソース
 			D3D12_GPU_VIRTUAL_ADDRESS view;	// データのビュー
+			bool isMain;	// メインレンダリングフラグ
 		};
 		std::unique_ptr<RenderData> renderData_[lwpC::PostProcess::kMaxLensDistortion];
 
@@ -78,5 +79,6 @@ namespace LWP::Base::PostProcess {
 
 		void PreDraw(ID3D12GraphicsCommandList* list, int index);
 		void PostDraw(ID3D12GraphicsCommandList* list, int index);
+		void PostMainDraw(ID3D12GraphicsCommandList* list, int index);
 	};
 }

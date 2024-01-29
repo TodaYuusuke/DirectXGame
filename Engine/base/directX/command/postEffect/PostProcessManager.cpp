@@ -18,8 +18,8 @@ void Manager::Reset() {
 	cctvEffect_->Reset();
 }
 
-void Manager::SetRenderData(Resource::RenderTexture* target, CCTVEffect data) {
-	cctvEffect_->SetRenderData(target, data);
+void Manager::SetRenderData(Resource::RenderTexture* target, CCTVEffect data, bool isMain) {
+	cctvEffect_->SetRenderData(target, data, isMain);
 }
 void Manager::SetRenderData(Resource::RenderTexture* target, LensDistortion data) {
 	lensDistortion_->SetRenderData(target, data);
