@@ -28,7 +28,7 @@ void RailCamera::Initialize(LWP::Math::Vector3 worldPosition, LWP::Math::Vector3
 void RailCamera::Update() {
 	// レールに沿って進む
 	catmullRom_.t += 0.001f;
-	catmullRom_.t = std::clamp(catmullRom_.t, 0.0f, 1.0f);
+	catmullRom_.t = std::clamp(catmullRom_.t, 0.0f, 0.999f);
 	camera_->transform.translation = catmullRom_.GetPosition();
 
 	// 回転角を求める

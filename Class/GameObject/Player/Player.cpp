@@ -105,7 +105,7 @@ void Player::Update() {
 	// 押した方向で移動ベクトルを変更
 	if (Keyboard::GetPress(DIK_Q)) {
 		model_->transform.rotation.y -= kRotSpeed;
-	} else if (Keyboard::GetPress(DIK_R)) {
+	} else if (Keyboard::GetPress(DIK_E)) {
 		model_->transform.rotation.y += kRotSpeed;
 	}
 #pragma endregion
@@ -220,7 +220,7 @@ Vector3 Player::GetReticleTargetPosition() {
 	// マウスレイの方向
 	Vector3 mouseDirection = Vector3{ posFar - posNear }.Normalize();
 	// カメラから照準オブジェクトへの距離
-	const float kDistanceTestObject = 50.0f;
+	const float kDistanceTestObject = 100.0f;
 	return posNear + mouseDirection * kDistanceTestObject;
 }
 
