@@ -179,7 +179,6 @@
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\parameter\Parameter.cpp" />
     <ClCompile Include="Engine\resources\texture\RenderTexture.cpp">
       <Filter>Engine\resources\texture</Filter>
     </ClCompile>
@@ -206,6 +205,36 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\postEffect\CCTVEffect.cpp">
       <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Collision\CollisionManager.cpp">
+      <Filter>Class\GameObject\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Enemy\Enemy.cpp">
+      <Filter>Class\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Enemy\EnemyBullet.cpp">
+      <Filter>Class\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Enemy\EnemyState.cpp">
+      <Filter>Class\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Player\Player.cpp">
+      <Filter>Class\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Player\PlayerBullet.cpp">
+      <Filter>Class\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\Skydome\Skydome.cpp">
+      <Filter>Class\GameObject\Skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\GameObject\RailCamera\RailCamera.cpp">
+      <Filter>Class\GameObject\RailCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Scene\GameScene.cpp">
+      <Filter>Class\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\CatmullRom.cpp">
+      <Filter>Engine\utilitiy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -431,7 +460,6 @@
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\parameter\Parameter.h" />
     <ClInclude Include="Engine\resources\texture\RenderTexture.h">
       <Filter>Engine\resources\texture</Filter>
     </ClInclude>
@@ -461,6 +489,45 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\postEffect\CCTVEffect.h">
       <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Collision\Collider.h">
+      <Filter>Class\GameObject\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Collision\CollisionConfig.h">
+      <Filter>Class\GameObject\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Collision\CollisionManager.h">
+      <Filter>Class\GameObject\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Enemy\Enemy.h">
+      <Filter>Class\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Enemy\EnemyBullet.h">
+      <Filter>Class\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Enemy\EnemyState.h">
+      <Filter>Class\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Player\Player.h">
+      <Filter>Class\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Player\PlayerBullet.h">
+      <Filter>Class\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\Skydome\Skydome.h">
+      <Filter>Class\GameObject\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\GameObject\RailCamera\RailCamera.h">
+      <Filter>Class\GameObject\RailCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Utility\TimedCall\TimedCall.h">
+      <Filter>Class\Utility\TimedCall</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Scene\GameScene.h">
+      <Filter>Class\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\CatmullRom.h">
+      <Filter>Engine\utilitiy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -508,9 +575,6 @@
     </Filter>
     <Filter Include="Engine\object\core">
       <UniqueIdentifier>{14b23d91-589d-429f-b0d8-70fc17a034e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\object\user">
-      <UniqueIdentifier>{66b7ab0e-c424-446a-bfe6-ab374be49187}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\primitive">
       <UniqueIdentifier>{b19cce8c-d886-4e1a-bf91-3b61d3281892}</UniqueIdentifier>
@@ -584,12 +648,39 @@
     <Filter Include="Engine\base\directX\command\renderer">
       <UniqueIdentifier>{376f5f05-25f4-4b0f-aa2a-ac21f55e8270}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Class">
+      <UniqueIdentifier>{a25c42c6-1e66-46cd-954e-cae8b7b32e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject">
+      <UniqueIdentifier>{80efcaed-3cf3-47ab-80a4-7c76764d151a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject\Collision">
+      <UniqueIdentifier>{14466aae-0436-41db-827e-6f31cb7db400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject\Enemy">
+      <UniqueIdentifier>{1875bb04-59b5-48d0-b03f-625e88652682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject\Player">
+      <UniqueIdentifier>{2c1bd70c-b4af-4d1e-b409-b7f4aa144215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject\RailCamera">
+      <UniqueIdentifier>{4a4bf483-0544-4678-9f8f-33a0b1fd538f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\GameObject\Skydome">
+      <UniqueIdentifier>{14f15b69-e955-4e82-ae89-8359243f8684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Utility">
+      <UniqueIdentifier>{51feadd6-20f4-41c7-84d6-137459a01ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Utility\TimedCall">
+      <UniqueIdentifier>{64d59dff-17b6-41cc-aa28-bcf26d88e8a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Scene">
+      <UniqueIdentifier>{9be4d15c-30bc-4b8b-b885-3e318fc1bc0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
     <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
@@ -603,6 +694,9 @@
     </FxCompile>
     <FxCompile Include="resources\system\shaders\postProcess\CCTV.PS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

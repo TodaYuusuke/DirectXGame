@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <random>
+#include "CatmullRom.h"
+#include "Color.h"
+#include "Observer.h"
 
 namespace LWP::Utility {
 
