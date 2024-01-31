@@ -1,7 +1,7 @@
 #include "DebugTimer.h"
 #include "Adapter.h"
 #include "../Engine/utility/MyUtility.h"
-
+#include <thread>
 #pragma comment(lib, "winmm.lib")
 
 #include "Config.h"

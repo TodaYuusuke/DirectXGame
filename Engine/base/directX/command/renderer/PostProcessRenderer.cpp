@@ -1,5 +1,7 @@
 #include "PostProcessRenderer.h"
 
+#include <Adapter.h>
+
 // 今だけResourceを作る関数のためにincludeする
 #include "../../resource/structuredBuffer/IStructured.h"
 // 今だけResourceBarrierを作る関数のためにincludeする
@@ -34,7 +36,7 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 	*renderData_->time += 1;
 
 	if (isMain) {
-		PreLastDraw(list, target);
+		PreLastDraw(list);
 	}
 	else {
 		PreDraw(list, target);
@@ -144,11 +146,7 @@ void PostProcessRenderer::PostDraw(ID3D12GraphicsCommandList* list, Resource::Re
 	list->ResourceBarrier(1, &barrier1);
 }
 
-void PostProcessRenderer::PreLastDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target) {
-	// 書き込み先のリソースを取得
-	RenderResource* rr = target->GetRenderResource();
-	rr;
-
+void PostProcessRenderer::PreLastDraw(ID3D12GraphicsCommandList* list) {
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = ICommand::MakeResourceBarrier(
 		heaps_->rtv()->GetBackBuffer(),
@@ -173,8 +171,8 @@ void PostProcessRenderer::PreLastDraw(ID3D12GraphicsCommandList* list, Resource:
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = rr->GetResolution().x;
-	viewport.Height = rr->GetResolution().y;
+	viewport.Width = LWP::Info::GetWindowWidthF();
+	viewport.Height = LWP::Info::GetWindowHeightF();
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -186,9 +184,9 @@ void PostProcessRenderer::PreLastDraw(ID3D12GraphicsCommandList* list, Resource:
 	D3D12_RECT scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = static_cast<LONG>(rr->GetResolution().x);
+	scissorRect.right = LWP::Info::GetWindowWidth();
 	scissorRect.top = 0;
-	scissorRect.bottom = static_cast<LONG>(rr->GetResolution().y);
+	scissorRect.bottom = LWP::Info::GetWindowHeight();
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }

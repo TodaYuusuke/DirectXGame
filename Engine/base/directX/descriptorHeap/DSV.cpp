@@ -14,8 +14,12 @@ void DSV::Initialize(ID3D12Device* device, SRV* srv) {
 	// サイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	// DSV用のヒープでディスクリプタの数は2。DSVはShader内で触らないものなので、ShaderVisibleはfalse
+	// DSV用のヒープでディスクリプタの数はシャドウマップ用などで増加する。DSVはShader内で触らないものなので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, size_, false);
+
+	// バックバッファ用の深度マップ生成
+	backBuffersDepthIndex_ = CreateDepthStencil(backBuffersDepthMap_.Get(), lwpC::Window::kResolutionWidth, lwpC::Window::kResolutionHeight);
+	backBuffersDepthView_ = GetCPUHandle(backBuffersDepthIndex_);
 }
 
 void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {

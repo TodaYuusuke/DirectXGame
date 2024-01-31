@@ -74,7 +74,8 @@ void SampleTitle::Initialize() {
 	s->texture = subCamera->GetRenderTexture();
 	s->isUI = true;
 
-	//mainCamera->isUsePostProcess = false;
+	//mainCamera->isUsePostProcess = true;
+	subCamera->isUsePostProcess = true;
 	SetMainRenderCamera(subCamera);
 }
 
@@ -99,7 +100,7 @@ void SampleTitle::Update() {
 	}
 
 	if (Keyboard::GetTrigger(DIK_1)) {
-		LWP::Window::ChangeWindowMode();
+		subCamera->isUsePostProcess = !subCamera->isUsePostProcess;
 	}
 	else if (Keyboard::GetTrigger(DIK_2)) {
 		LWP::Window::ChangeFullScreenMode();

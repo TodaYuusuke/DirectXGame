@@ -179,7 +179,6 @@
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\parameter\Parameter.cpp" />
     <ClCompile Include="Engine\resources\texture\RenderTexture.cpp">
       <Filter>Engine\resources\texture</Filter>
     </ClCompile>
@@ -206,6 +205,16 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\postEffect\CCTVEffect.cpp">
       <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\CatmullRom.cpp" />
+    <ClCompile Include="Engine\base\directX\command\renderer\MainRenderer.cpp">
+      <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\renderer\PostProcessRenderer.cpp">
+      <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\renderer\Renderer.cpp">
+      <Filter>Engine\base\directX\command\renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -431,7 +440,6 @@
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\parameter\Parameter.h" />
     <ClInclude Include="Engine\resources\texture\RenderTexture.h">
       <Filter>Engine\resources\texture</Filter>
     </ClInclude>
@@ -461,6 +469,16 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\postEffect\CCTVEffect.h">
       <Filter>Engine\base\directX\command\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\CatmullRom.h" />
+    <ClInclude Include="Engine\base\directX\command\renderer\MainRenderer.h">
+      <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\renderer\PostProcessRenderer.h">
+      <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\renderer\Renderer.h">
+      <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

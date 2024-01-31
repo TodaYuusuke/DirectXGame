@@ -1,6 +1,8 @@
 #include "MainRenderer.h"
 #include "object/core/Camera.h"
 
+#include <Adapter.h>
+
 // 今だけResourceを作る関数のためにincludeする
 #include "../../resource/structuredBuffer/IStructured.h"
 // 今だけResourceBarrierを作る関数のためにincludeする
@@ -179,9 +181,6 @@ void MainRenderer::PostDraw(ID3D12GraphicsCommandList* list) {
 // -----  ラストDraw  ----- //
 
 void MainRenderer::PreLastDraw(ID3D12GraphicsCommandList* list) {
-	// 書き込み先のリソースを取得
-	RenderResource* rr = renderData_->target->GetRenderTexture()->GetRenderResource();
-
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier = ICommand::MakeResourceBarrier(
 		heaps_->rtv()->GetBackBuffer(),
@@ -192,14 +191,14 @@ void MainRenderer::PreLastDraw(ID3D12GraphicsCommandList* list) {
 	list->ResourceBarrier(1, &barrier);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = heaps_->rtv()->GetCPUHandle(heaps_->rtv()->GetBackBufferIndex());
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = heaps_->dsv()->GetCPUHandle(rr->GetDSV());
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = heaps_->dsv()->GetBackBuffersDepthView();
 	// 描画先のRTVとDSVを設定する
 	list->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
 	heaps_->rtv()->ClearRenderTarget(heaps_->rtv()->GetBackBufferIndex(), list);
 	// 指定した深度で画面全体をクリアする
-	heaps_->dsv()->ClearDepth(rr->GetDSV(), list);
+	heaps_->dsv()->ClearDepth(heaps_->dsv()->GetBackBuffersDepthIndex(), list);
 
 	// 描画用のSRVのDescriptorHeapを設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { heaps_->srv()->GetHeap() };
@@ -208,8 +207,8 @@ void MainRenderer::PreLastDraw(ID3D12GraphicsCommandList* list) {
 	// ビューポート
 	D3D12_VIEWPORT viewport = {};
 	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = rr->GetResolution().x;
-	viewport.Height = rr->GetResolution().y;
+	viewport.Width = LWP::Info::GetWindowWidthF();
+	viewport.Height = LWP::Info::GetWindowHeightF();
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -221,9 +220,9 @@ void MainRenderer::PreLastDraw(ID3D12GraphicsCommandList* list) {
 	D3D12_RECT scissorRect = {};
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = static_cast<LONG>(rr->GetResolution().x);
+	scissorRect.right = LWP::Info::GetWindowWidth();
 	scissorRect.top = 0;
-	scissorRect.bottom = static_cast<LONG>(rr->GetResolution().y);
+	scissorRect.bottom = LWP::Info::GetWindowHeight();
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 }

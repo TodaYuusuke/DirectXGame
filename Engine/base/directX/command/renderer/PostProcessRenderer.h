@@ -51,7 +51,7 @@ namespace LWP::Base {
         void PreDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
         void PostDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
         
-        void PreLastDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
+        void PreLastDraw(ID3D12GraphicsCommandList* list);
         void PostLastDraw(ID3D12GraphicsCommandList* list);
     };
 }
