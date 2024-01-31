@@ -15,11 +15,11 @@ void EnemyBullet::Initialize(const Vector3& position, const Vector3& velocity) {
 
 	// 引数で受け取った初期座標をセット
 	model_->transform.translation = position;
+	model_->transform.scale = {0.2f,0.2f,0.5f};
 
 	// 引数で受け取った速度を代入
 	velocity_ = velocity;
 
-	model_->transform.scale = { 0.5f,0.5f,0.5f };
 }
 
 void EnemyBullet::Update() {
