@@ -13,6 +13,11 @@ public: // メンバ関数
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// レールカメラが最後までたどり着いたかを返す関数
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsEnd() { return waitFrame_ <= 0; }
 
 	/// <summary>
 	/// カメラのインスタンスを取得
@@ -27,4 +32,7 @@ private: // メンバ変数
 
 	// スプライン曲線制御
 	LWP::Utility::CatmullRom catmullRom_;
+	// 最後までたどり着いた後待つフレーム数
+	const int kWaitFrameCount = 60 * 10;
+	int waitFrame_ = kWaitFrameCount;
 };

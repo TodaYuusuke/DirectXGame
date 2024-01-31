@@ -118,7 +118,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Class\GameObject\Player\PlayerBullet.cpp" />
     <ClCompile Include="Class\GameObject\RailCamera\RailCamera.cpp" />
     <ClCompile Include="Class\GameObject\Skydome\Skydome.cpp" />
+    <ClCompile Include="Class\Scene\GameOver.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
+    <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp" />
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapping.cpp" />
@@ -214,7 +216,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Class\GameObject\Player\PlayerBullet.h" />
     <ClInclude Include="Class\GameObject\RailCamera\RailCamera.h" />
     <ClInclude Include="Class\GameObject\Skydome\Skydome.h" />
+    <ClInclude Include="Class\Scene\GameOver.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
+    <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\Utility\TimedCall\TimedCall.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\directX\command\CommandManager.h" />

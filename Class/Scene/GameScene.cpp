@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "GameOver.h"
 #include <cassert>
 #include <fstream>
 
@@ -49,9 +50,6 @@ void GameScene::Initialize() {
 	// カメラをメイン描画に
 	SetMainRenderCamera(railCamera_->GetCamera());
 	//mainCamera->transform.translation.z = -50.0f;
-	// フルスクリーンに
-	LWP::Window::ChangeFullScreenMode();
-
 }
 
 void GameScene::Update() {
@@ -61,10 +59,6 @@ void GameScene::Update() {
 	// 当たり判定マネージャーの初期化
 	collisionManager_->ClearList();
 
-	// リトライ
-	if (Keyboard::GetTrigger(DIK_R)) {
-		nextScene_ = new GameScene();
-	}
 	// プログラム終了
 	if (Keyboard::GetTrigger(DIK_ESCAPE)) {
 		LWP::System::End();
@@ -72,10 +66,13 @@ void GameScene::Update() {
 
 	// レールカメラ更新
 	railCamera_->Update();
+	// 最後までたどり着いたらゲーム終了
+	if (railCamera_->GetIsEnd()) {
+		nextScene_ = new GameOver();
+	}
 
 	// 自キャラの更新
 	player_->Update();
-	//OutputDebugStringA(("x:" + std::to_string(player_->GetWorldPosition().x) + " y:" + std::to_string(player_->GetWorldPosition().y) + " z:" + std::to_string(player_->GetWorldPosition().z) + "\n").c_str());
 
 	// 敵の更新
 	for (Enemy* enemy : enemys_) {
