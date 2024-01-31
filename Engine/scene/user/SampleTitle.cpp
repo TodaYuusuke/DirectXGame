@@ -74,7 +74,8 @@ void SampleTitle::Initialize() {
 	s->texture = subCamera->GetRenderTexture();
 	s->isUI = true;
 
-	//SetMainRenderCamera(subCamera);
+	//mainCamera->isUsePostProcess = false;
+	SetMainRenderCamera(subCamera);
 }
 
 // 更新

@@ -53,10 +53,13 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 
 	// コマンド用クラス実態宣言
 	
+	renderer_ = std::make_unique<Renderer>();
+	renderer_->Init(device_, dxc_.get(), heaps_);
+
 	// 本描画
-	mainCommand_ = std::make_unique<MainCommand>();
-	mainCommand_->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-	mainCommand_->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
+	//mainCommand_ = std::make_unique<MainCommand>();
+	//mainCommand_->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
+	//mainCommand_->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	
 	// サブ描画
 	for (int i = 0; i < lwpC::Rendering::kMaxMultiWindowRendering; i++) {
@@ -82,6 +85,19 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 	// SRVを登録してからでないとテクスチャが読み込めないので、
 	// ここでデフォルトテクスチャを読み込む
 	defaultTexture_ = LWP::Resource::LoadTextureLongPath("resources/system/texture/white.png");
+
+	// リソースのViewを登録
+	renderer_->SetViewStruct(ViewStruct{
+		commonDataResourceBuffer_->view_,
+		vertexData_->GetView(),
+		transformData_->GetView(),
+		materialData_->GetView(),
+		directionLightResourceBuffer_->view_,
+		pointLightResourceBuffer_->view_,
+		heaps_->srv()->GetView(),
+		directionLightResourceBuffer_->shadowMap_[0].view_,
+		pointLightResourceBuffer_->shadowMap_[0].view_
+		});
 }
 
 void CommandManager::PreDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
@@ -140,7 +156,8 @@ void CommandManager::DrawCall() {
 	ppManager_->Draw(commandList_.Get());
 
 	// 本描画
-	DrawLambda(mainCommand_.get());
+	//DrawLambda(mainCommand_.get());
+	renderer_->Draw(commandList_.Get());
 
 	// 実行
 	ExecuteLambda();
@@ -163,7 +180,8 @@ void CommandManager::Reset() {
 	}
 	subCount_ = 0;
 
-	mainCommand_->Reset();
+	//mainCommand_->Reset();
+	renderer_->Reset();
 
 	// 使用量をリセット
 	vertexData_->Reset();
@@ -180,8 +198,9 @@ void CommandManager::Reset() {
 
 void CommandManager::SetMainRendering(Object::Camera* camera) {
 	// カメラ視点の描画を予約
-	mainCommand_->SetDrawTarget(camera->GetViewProjection());
-	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect, true);
+	//mainCommand_->SetDrawTarget(camera->GetViewProjection());
+	renderer_->SetMainRenderTarget(camera);
+	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
 }
 void CommandManager::SetSubRendering(Object::Camera* camera) {
 	subCommands_[subCount_++]->SetDrawTarget(camera->GetViewProjection(), camera->GetRenderTexture());
@@ -303,7 +322,8 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 		};
 
 		// メインコマンドにデータをセット
-		mainCommand_->SetDrawData(indexInfo);
+		//mainCommand_->SetDrawData(indexInfo);
+		renderer_->AddMainRenderData(indexInfo);
 		// サブにもセット（現状サブカメラにUIはいらないので除外する）
 		if (!primitive->isUI) {
 			for (int s = 0; s < subCount_; s++) {

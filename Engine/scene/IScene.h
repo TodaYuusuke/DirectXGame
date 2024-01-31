@@ -12,6 +12,7 @@ public:
 		// デフォルトのメインカメラを登録
 		mainCamera = LWP::Object::CreateInstance<LWP::Object::Camera>();
 		mainCamera->transform.translation = { 0.0f,0.0f,-10.0f };
+		LWP::Object::CreateRenderTexture(mainCamera, LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
 		SetMainRenderCamera(mainCamera);
 	}
 
@@ -33,7 +34,7 @@ protected:	// ** メンバ変数 ** //
 
 
 private: // ** プロパティ変数 ** //
-	// シーンが持つデフォルトのカメラ
+	// メイン画面の描画を担当するカメラのポインタ
 	LWP::Object::Camera* mainRenderCamera_ = nullptr;
 public:
 	// メインのレンダリングに使うカメラをセットする関数

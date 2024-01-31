@@ -5,6 +5,7 @@
 #include "../descriptorHeap/HeapManager.h"
 #include "RootSignature.h"
 
+#include "renderer/Renderer.h"
 #include "postEffect/PostProcessManager.h"
 
 #include <vector>
@@ -130,8 +131,11 @@ namespace LWP::Base {
 
 		// 用途別コマンドリスト用クラス
 		
+		std::unique_ptr<Renderer> renderer_;
+
 		// メイン描画
-		std::unique_ptr<MainCommand> mainCommand_;
+		//std::unique_ptr<MainCommand> mainCommand_;
+
 		
 		// サブ画面描画
 		std::vector<std::unique_ptr<SubRendering>> subCommands_;

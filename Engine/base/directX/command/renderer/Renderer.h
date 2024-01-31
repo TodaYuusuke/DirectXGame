@@ -1,6 +1,8 @@
 #pragma once
 #include "MainRenderer.h"
+#include "PostProcessRenderer.h"
 
+#include <map>
 
 namespace LWP::Base {
 	/// <summary>
@@ -16,22 +18,26 @@ namespace LWP::Base {
 
 		// 初期化処理
 		void Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps);
-		// サブをレンダリング
-		//void SubDraw(ID3D12GraphicsCommandList* list, int instanceCount);
-		// メインをレンダリング
-		void MainDraw(ID3D12GraphicsCommandList* list, int instanceCount);
+		// Viewのリストを渡す
+		void SetViewStruct(ViewStruct viewStruct);
+		// レンダリング
+		void Draw(ID3D12GraphicsCommandList* list);
 		// データをリセット
 		void Reset();
 
 		// レンダリングするためのデータをセットする関数
 		//void SetSubRenderData(Resource::RenderTexture* target, Math::Matrix4x4 vp);
-		void SetMainRenderData(Resource::RenderTexture* target, Math::Matrix4x4 vp);
+		void SetMainRenderTarget(LWP::Object::Camera* camera);
+
+		// レンダリングに使うデータを追加する関数
+		void AddMainRenderData(const IndexInfoStruct& indexInfo);
 
 
 	private: // ** メンバ変数 ** //
 
+		// メインレンダリング
 		std::unique_ptr<MainRenderer> mainRenderer_;
-		
+
 		// サブレンダリング用
 		//struct SubRenderData {
 		//	std::unique_ptr<RenderData> renderData[lwpC::Rendering::kMaxMultiWindowRendering];	// 計算に使うViewProjection
@@ -39,16 +45,16 @@ namespace LWP::Base {
 		//};
 		//std::unique_ptr<SubRenderData> subRenderData_;
 
+		// ポストプロセス用のルートシグネチャ
+		std::unique_ptr<RootSignature> ppRoot_;
 
-		// ルートシグネチャ
-		std::unique_ptr<RootSignature> root_;
-		// PSO
-		std::unique_ptr<PSO> pso_;
+		// デバイスポインタ
+		ID3D12Device* device_ = nullptr;
+		// DirectXコンパイラのポインタ
+		DXC* dxc_ = nullptr;
 		// ディスクリプタヒープ管理クラスのポインタ
 		HeapManager* heaps_ = nullptr;
 
-		// カウンター
-		Utility::Counter counter_;
 
 	private: // ** メンバ変数 ** //
 

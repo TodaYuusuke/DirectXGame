@@ -14,8 +14,7 @@ void Camera::Initialize() {
 void Camera::Update(Base::CommandManager* manager) {
 	if (!isActive || !renderTexture_) { return; }
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
-	//manager->SetCameraViewProjection(this);
-	cctvEffect.time += 1;
+	cctvEffect.time++;
 	manager->SetSubRendering(this);
 }
 

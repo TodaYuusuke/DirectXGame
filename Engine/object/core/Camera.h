@@ -3,6 +3,7 @@
 #include "resources/texture/RenderTexture.h"
 #include "base/directX/command/postEffect/PostProcessManager.h"
 #include "base/directX/command/derived/SubRendering.h"
+#include "base/directX//command/renderer/PostProcessRenderer.h"
 
 namespace LWP::Object {
 	class Camera final : public IObject {
@@ -12,6 +13,11 @@ namespace LWP::Object {
 		int fov = 90;
 
 		// -- ポストエフェクトフラグ -- //
+
+		// ポストプロセスを行うかのフラグ
+		bool isUsePostProcess = false;
+		// シェーダー用のパス（作成後は意味をなくすのでいつか再設計）
+		std::string shaderPath = "postProcess/CCTV.PS.hlsl";
 
 		// 監視カメラのエフェクト
 		CCTVEffect cctvEffect;
@@ -43,10 +49,16 @@ namespace LWP::Object {
 		// レンダリング結果のテクスチャのポインタを受け取る関数
 		Resource::RenderTexture* GetRenderTexture() { return renderTexture_; }
 
+		// レンダラーのポインタを返す関数
+		Base::PostProcessRenderer* GetPPRenderer() { return ppRenderer_; }
+		// レンダラーのポインタをセットする関数
+		void SetPPRenderer(Base::PostProcessRenderer* ppRenderer) { ppRenderer_ = ppRenderer; }
 
 	private: // ** メンバ変数 ** //
 
 		// このカメラからのレンダリング結果を格納する変数
 		Resource::RenderTexture* renderTexture_ = nullptr;
+		// ポストプロセス用レンダラー
+		Base::PostProcessRenderer* ppRenderer_ = nullptr;
 	};
 }

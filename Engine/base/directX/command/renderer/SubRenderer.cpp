@@ -147,6 +147,11 @@ void MainRenderer::PreDraw(ID3D12GraphicsCommandList* list) {
 	list->RSSetScissorRects(1, &scissorRect);
 }
 void MainRenderer::PostDraw(ID3D12GraphicsCommandList* list) {
+
+	// ImGuiの設定をする
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), list);
+
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_->target->GetRenderTexture()->GetRenderResource();
 
@@ -171,9 +176,6 @@ void MainRenderer::PostDraw(ID3D12GraphicsCommandList* list) {
 	list->CopyResource(renderData_->target->GetRenderTexture()->GetTexResource(), rr->GetResource());
 	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 	list->ResourceBarrier(1, &barrier1);
-
-	// 最後にポストプロセスを実行
-	renderData_->target->GetPPRenderer()->Draw(list, renderData_->target->GetRenderTexture(), true);
 }
 
 // -----  ラストDraw  ----- //
