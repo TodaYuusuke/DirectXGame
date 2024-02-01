@@ -123,6 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\command\renderer\MainRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\command\renderer\PostProcessRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\command\renderer\Renderer.cpp" />
+    <ClCompile Include="Engine\base\directX\command\renderer\SubRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\command\RootSignature.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp" />
     <ClCompile Include="Engine\base\directX\descriptorHeap\HeapManager.cpp" />
@@ -211,6 +212,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\command\renderer\MainRenderer.h" />
     <ClInclude Include="Engine\base\directX\command\renderer\PostProcessRenderer.h" />
     <ClInclude Include="Engine\base\directX\command\renderer\Renderer.h" />
+    <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h" />
     <ClInclude Include="Engine\base\directX\command\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\command\RootSignature.h" />
     <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h" />

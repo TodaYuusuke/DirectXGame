@@ -216,6 +216,9 @@
     <ClCompile Include="Engine\base\directX\command\renderer\Renderer.cpp">
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\command\renderer\SubRenderer.cpp">
+      <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -478,6 +481,9 @@
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\renderer\Renderer.h">
+      <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h">
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
   </ItemGroup>

@@ -65,8 +65,13 @@ namespace LWP::Base {
 		// レンダリングするためのデータをセットする関数
 		void AddRenderData(const IndexInfoStruct& indexInfo);
 
+		// サブレンダリングのためにRootSignatureを返す関数
+		RootSignature* GetRoot() { return root_.get(); }
+		// サブレンダリングのためにPSOを返す関数
+		PSO* GetPSO() { return pso_.get(); }
 		// レンダリングターゲットのカメラクラスを返す関数
 		LWP::Object::Camera* GetTarget() { return renderData_->target; }
+
 
 	private: // ** メンバ変数 ** //
 

@@ -62,11 +62,11 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 	//mainCommand_->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	
 	// サブ描画
-	for (int i = 0; i < lwpC::Rendering::kMaxMultiWindowRendering; i++) {
-		subCommands_.push_back(std::make_unique<SubRendering>());
-		subCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-		subCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
-	}
+	//for (int i = 0; i < lwpC::Rendering::kMaxMultiWindowRendering; i++) {
+	//	subCommands_.push_back(std::make_unique<SubRendering>());
+	//	subCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
+	//	subCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
+	//}
 
 	// シャドウマップコマンド用の実体
 	for (int i = 0; i < lwpC::Shadow::kMaxShadowMap; i++) {
@@ -149,13 +149,13 @@ void CommandManager::DrawCall() {
 		DrawLambda(shadowCommands_[i].get());
 	}
 	// サブ描画
-	for (int i = 0; i < subCount_; i++) {
+	/*for (int i = 0; i < subCount_; i++) {
 		DrawLambda(subCommands_[i].get());
-	}
+	}*/
 	// ポストプロセス実行
-	ppManager_->Draw(commandList_.Get());
+	//ppManager_->Draw(commandList_.Get());
 
-	// 本描画
+	// 描画
 	//DrawLambda(mainCommand_.get());
 	renderer_->Draw(commandList_.Get());
 
@@ -175,10 +175,10 @@ void CommandManager::Reset() {
 	}
 	shadowCount_ = 0;
 	
-	for (int i = 0; i < subCount_; i++) {
-		subCommands_[i]->Reset();
-	}
-	subCount_ = 0;
+	//for (int i = 0; i < subCount_; i++) {
+	//	subCommands_[i]->Reset();
+	//}
+	//subCount_ = 0;
 
 	//mainCommand_->Reset();
 	renderer_->Reset();
@@ -200,11 +200,11 @@ void CommandManager::SetMainRendering(Object::Camera* camera) {
 	// カメラ視点の描画を予約
 	//mainCommand_->SetDrawTarget(camera->GetViewProjection());
 	renderer_->SetMainRenderTarget(camera);
-	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
+	//ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
 }
 void CommandManager::SetSubRendering(Object::Camera* camera) {
-	subCommands_[subCount_++]->SetDrawTarget(camera->GetViewProjection(), camera->GetRenderTexture());
-	ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
+	renderer_->SetSubRenderTarget(camera);
+	//ppManager_->SetRenderData(camera->GetRenderTexture(), camera->cctvEffect);
 }
 
 void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, const Math::Matrix4x4& viewProjection) {
@@ -326,9 +326,10 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 		renderer_->AddMainRenderData(indexInfo);
 		// サブにもセット（現状サブカメラにUIはいらないので除外する）
 		if (!primitive->isUI) {
-			for (int s = 0; s < subCount_; s++) {
-				subCommands_[s]->SetDrawData(indexInfo);
-			}
+			//for (int s = 0; s < subCount_; s++) {
+				//subCommands_[s]->SetDrawData(indexInfo);
+			renderer_->AddSubRenderData(indexInfo);
+			//}
 		}
 
 		// シャドウマップにも描画！

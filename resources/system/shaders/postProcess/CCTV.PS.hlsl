@@ -51,7 +51,7 @@ float32_t4 main(PSInput input) : SV_TARGET{
 	float2 uv = input.texcoord;
 
 	// 樽状彎曲させる
-	//uv = LensDistortion(uv);
+	uv = LensDistortion(uv);
 	// サンプリング
 	output = gTexture.Sample(gSampler, uv);
 	

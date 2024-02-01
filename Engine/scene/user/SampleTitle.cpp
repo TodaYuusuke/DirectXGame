@@ -19,7 +19,6 @@ void SampleTitle::Initialize() {
 	subCamera->transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera->transform.rotation = { 0.4f,-0.5f,0.0f };
 	// ポストプロセステスト
-	subCamera->cctvEffect.isActive = true;
 	subCamera->isActive = true;
 	
 	// 地面
@@ -75,7 +74,7 @@ void SampleTitle::Initialize() {
 	s->isUI = true;
 
 	//mainCamera->isUsePostProcess = true;
-	subCamera->isUsePostProcess = true;
+	//subCamera->isUsePostProcess = true;
 	SetMainRenderCamera(subCamera);
 }
 
@@ -100,13 +99,13 @@ void SampleTitle::Update() {
 	}
 
 	if (Keyboard::GetTrigger(DIK_1)) {
-		subCamera->isUsePostProcess = !subCamera->isUsePostProcess;
+		mainCamera->isUsePostProcess = !mainCamera->isUsePostProcess;
 	}
 	else if (Keyboard::GetTrigger(DIK_2)) {
 		LWP::Window::ChangeFullScreenMode();
 	}
 	else if (Keyboard::GetTrigger(DIK_3)) {
-		LWP::Window::ChangeBorderlessWindowMode();
+		LWP::Window::ChangeWindowMode();
 	}
 
 	// プログラム終了

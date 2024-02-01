@@ -1,56 +1,56 @@
 #pragma once
 #include "MainRenderer.h"
 
+// 前方宣言
+namespace LWP::Object {
+	class Camera;
+}
+
 namespace LWP::Base {
 	/// <summary>
-	/// サブ画面のレンダリングコマンド
+	/// サブ画面レンダリングコマンド
 	/// </summary>
 	class SubRenderer {
 	public: // ** メンバ関数 ** //
-
 		// コンストラクタ
 		SubRenderer() = default;
 		// デストラクタ
 		~SubRenderer() = default;
 
 		// 初期化処理
-		void Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps);
+		void Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoPtr, HeapManager* heaps);
 		// Viewのリストを渡す
-		void SetViewStruct(ViewStruct viewStruct);
+		void SetViewStruct(ViewStruct viewStruct, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoView);
 		// レンダリング
-		void Draw(ID3D12GraphicsCommandList* list);
-		// データをリセット
-		void Reset();
+		void Draw(ID3D12GraphicsCommandList* list, int instanceCount);
 
 		// レンダリングするためのターゲットをセットする関数
 		void SetRenderTarget(LWP::Object::Camera* camera);
-		// レンダリングするためのデータをセットする関数
-		void AddRenderData(const IndexInfoStruct& indexInfo);
+		
+		// レンダリングターゲットのカメラクラスを返す関数
+		LWP::Object::Camera* GetTarget() { return renderData_->target; }
 
 
 	private: // ** メンバ変数 ** //
 
-		// レンダリング先のデータ
+		// レンダリングを行うターゲットのリソース
 		std::unique_ptr<RenderData> renderData_;
-		// レンダリングに使うデータ
-		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfo_;
-
-		// ルートシグネチャ
-		std::unique_ptr<RootSignature> root_;
-		// PSO
-		std::unique_ptr<PSO> pso_;
+		
+		// 共通のルートシグネチャのポインタ
+		RootSignature* rootPtr_;
+		// 共通のPSOのポインタ
+		PSO* psoPtr_;
 		// ディスクリプタヒープ管理クラスのポインタ
 		HeapManager* heaps_ = nullptr;
 		// レンダリングにつかうリソースのViewをまとめた構造体
 		ViewStruct viewStruct_;
+		// IndexInfo用のView
+		D3D12_GPU_DESCRIPTOR_HANDLE indexInfoView_;
 
 
 	private: // ** メンバ変数 ** //
 
 		void PreDraw(ID3D12GraphicsCommandList* list);
 		void PostDraw(ID3D12GraphicsCommandList* list);
-
-		void PreLastDraw(ID3D12GraphicsCommandList* list);
-		void PostLastDraw(ID3D12GraphicsCommandList* list);
 	};
 }

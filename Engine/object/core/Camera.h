@@ -19,12 +19,6 @@ namespace LWP::Object {
 		// シェーダー用のパス（作成後は意味をなくすのでいつか再設計）
 		std::string shaderPath = "postProcess/CCTV.PS.hlsl";
 
-		// 監視カメラのエフェクト
-		CCTVEffect cctvEffect;
-		// レンズディストーション（歪曲収差）
-		//LensDistortion lensDistortion;
-		// ブルームをかける
-		//bool enableBloom = false;
 
 	public: // ** メンバ関数 ** //
 
