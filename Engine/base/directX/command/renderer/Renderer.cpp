@@ -21,8 +21,10 @@ void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	mainRenderer_->Init(device, dxc, heaps);
 
 	// サブレンダリングの実体を生成する
-	subRenderer_ = std::make_unique<SubRenderer>();
-	subRenderer_->Init(device, mainRenderer_->GetRoot(), mainRenderer_->GetPSO(), heaps);
+	for (int i = 0; i < kMaxRendering; i++) {
+		subRenderer_.push_back(std::make_unique<SubRenderer>());
+		subRenderer_[i]->Init(device, mainRenderer_->GetRoot(), mainRenderer_->GetPSO(), heaps);
+	}
 	// サブレンダリング用
 	subIndexInfo_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
 
@@ -35,13 +37,15 @@ void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 }
 void Renderer::SetViewStruct(ViewStruct viewStruct) {
 	mainRenderer_->SetViewStruct(viewStruct);
-	subRenderer_->SetViewStruct(viewStruct, subIndexInfo_->GetView());
+	for (int i = 0; i < kMaxRendering; i++) {
+		subRenderer_[i]->SetViewStruct(viewStruct, subIndexInfo_->GetView());
+	}
 }
 void Renderer::Draw(ID3D12GraphicsCommandList* list) {
 	HRESULT hr = S_FALSE;
 	
 	for (int i = 0; i < subCount_.Get(); i++) {
-		subRenderer_->Draw(list, subIndexInfo_->GetCount() / 3);
+		subRenderer_[i]->Draw(list, subIndexInfo_->GetCount() / 3);
 	}
 	mainRenderer_->Draw(list);
 
@@ -66,8 +70,7 @@ void Renderer::SetMainRenderTarget(LWP::Object::Camera* camera) {
 	}
 }
 void Renderer::SetSubRenderTarget(LWP::Object::Camera* camera) {
-	subRenderer_->SetRenderTarget(camera);
-	subCount_.GetAndIncrement();
+	subRenderer_[subCount_.GetAndIncrement()]->SetRenderTarget(camera);
 
 	// ポストプロセスをする予定で、ポストプロセス用のコマンドクラスを持っていない場合作成する
 	if (camera->isUsePostProcess && !camera->GetPPRenderer()) {

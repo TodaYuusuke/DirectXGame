@@ -206,7 +206,6 @@
     <ClCompile Include="Engine\base\directX\command\postEffect\CCTVEffect.cpp">
       <Filter>Engine\base\directX\command\postEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\utility\CatmullRom.cpp" />
     <ClCompile Include="Engine\base\directX\command\renderer\MainRenderer.cpp">
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClCompile>
@@ -218,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\renderer\SubRenderer.cpp">
       <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\CatmullRom.cpp">
+      <Filter>Engine\utilitiy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,7 +475,6 @@
     <ClInclude Include="Engine\base\directX\command\postEffect\CCTVEffect.h">
       <Filter>Engine\base\directX\command\postEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\CatmullRom.h" />
     <ClInclude Include="Engine\base\directX\command\renderer\MainRenderer.h">
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
@@ -485,6 +486,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h">
       <Filter>Engine\base\directX\command\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\CatmullRom.h">
+      <Filter>Engine\utilitiy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

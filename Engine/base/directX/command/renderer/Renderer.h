@@ -43,7 +43,7 @@ namespace LWP::Base {
 		std::unique_ptr<MainRenderer> mainRenderer_;
 		
 		// サブレンダリング
-		std::unique_ptr<SubRenderer> subRenderer_;
+		std::vector<std::unique_ptr<SubRenderer>> subRenderer_;
 		// サブレンダリング用IndexInfo
 		std::unique_ptr<IStructured<IndexInfoStruct>> subIndexInfo_;
 		// サブレンダリングの回数
