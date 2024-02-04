@@ -14,7 +14,7 @@ void MainCommand::SetDrawTarget(const Math::Matrix4x4& vp) {
 void MainCommand::DerivedInitialize() {
 	//深度マップを作成
 	depthStencil_ = std::make_unique<DepthStencil>();
-	depthStencil_->index_ = dsv_->CreateDepthStencil(depthStencil_->resource_.Get(), LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
+	//depthStencil_->index_ = dsv_->CreateDepthStencil(depthStencil_->resource_.Get(), LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
 };
 
 void MainCommand::PreDraw(ID3D12GraphicsCommandList* list) {

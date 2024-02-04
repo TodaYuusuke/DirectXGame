@@ -111,6 +111,7 @@ void MainRenderer::PreDraw(ID3D12GraphicsCommandList* list) {
 
 	// リソースバリアをセット
 	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
+	//rr->SetResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = heaps_->rtv()->GetCPUHandle(rr->GetRTV());
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = heaps_->dsv()->GetCPUHandle(rr->GetDSV());
@@ -151,6 +152,9 @@ void MainRenderer::PreDraw(ID3D12GraphicsCommandList* list) {
 void MainRenderer::PostDraw(ID3D12GraphicsCommandList* list) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_->target->GetRenderTexture()->GetRenderResource();
+	
+	// 深度マップを読み取り専用に
+	//rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_GENERIC_READ, list);
 
 	// TexResourceのバリアを、コピーされる用に
 	D3D12_RESOURCE_BARRIER barrier0 = ICommand::MakeResourceBarrier(
@@ -187,8 +191,16 @@ void MainRenderer::PreLastDraw(ID3D12GraphicsCommandList* list) {
 		D3D12_RESOURCE_STATE_PRESENT,
 		D3D12_RESOURCE_STATE_RENDER_TARGET
 	);
+	D3D12_RESOURCE_BARRIER depthBarrier = ICommand::MakeResourceBarrier(
+		heaps_->dsv()->GetBackBuffersDepth(),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE
+	);
 	// リソースバリアをセット
 	list->ResourceBarrier(1, &barrier);
+	// リソースバリアをセット
+	depthBarrier;
+	//list->ResourceBarrier(1, &depthBarrier);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = heaps_->rtv()->GetCPUHandle(heaps_->rtv()->GetBackBufferIndex());
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = heaps_->dsv()->GetBackBuffersDepthView();
@@ -237,7 +249,15 @@ void MainRenderer::PostLastDraw(ID3D12GraphicsCommandList* list) {
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
 		D3D12_RESOURCE_STATE_PRESENT
 	);
+	D3D12_RESOURCE_BARRIER depthBarrier = ICommand::MakeResourceBarrier(
+		heaps_->dsv()->GetBackBuffersDepth(),
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		D3D12_RESOURCE_STATE_GENERIC_READ
+	);
 
 	// リソースバリアをセット
 	list->ResourceBarrier(1, &barrier);
+	// リソースバリアをセット
+	depthBarrier;
+	//list->ResourceBarrier(1, &depthBarrier);
 }

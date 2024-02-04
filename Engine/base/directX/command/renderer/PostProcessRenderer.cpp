@@ -35,6 +35,10 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 	// 経過時間を追加
 	*renderData_->time += 1;
 
+	// 深度マップのステータス変更
+	//RenderResource* rr = target->GetRenderResource();
+	//rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_S, list);
+
 	if (isMain) {
 		PreLastDraw(list);
 	}
@@ -52,10 +56,13 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 	// ディスクリプタテーブルを登録
 	list->SetGraphicsRootConstantBufferView(0, renderData_->view);
 	list->SetGraphicsRootDescriptorTable(1, heaps_->srv()->GetGPUHandle(target->GetTexSRVIndex()));
+	//list->SetGraphicsRootDescriptorTable(2, heaps_->srv()->GetGPUHandle(target->GetDepthMapSRVIndex()));
 
 	// 四角形を描画
 	list->DrawInstanced(3, 2, 0, 0);
 
+	// 深度マップのステータスを戻す
+	//rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 	if (isMain) {
 		PostLastDraw(list);
 	}

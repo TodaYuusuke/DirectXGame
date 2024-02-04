@@ -24,6 +24,10 @@ namespace LWP::Base {
 		void ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList);
 
 		/// <summary>
+		/// バックバッファ用の深度マップのリソースを受け取る関数
+		/// </summary>
+		ID3D12Resource* GetBackBuffersDepth() { return backBuffersDepthMap_.Get(); }
+		/// <summary>
 		/// バックバッファ用の深度マップのIndexを受け取る関数
 		/// </summary>
 		uint32_t GetBackBuffersDepthIndex() { return backBuffersDepthIndex_; }
@@ -35,7 +39,11 @@ namespace LWP::Base {
 		/// <summary>
 		/// 前後関係を保存するためのリソースを作成
 		/// </summary>
-		uint32_t CreateDepthStencil(ID3D12Resource* resource, int32_t width, int32_t height);
+		ID3D12Resource* CreateDepthStencilResource(int32_t width, int32_t height);
+		/// <summary>
+		/// 前後関係を保存するためのリソースを作成
+		/// </summary>
+		uint32_t CreateDepthStencil(ID3D12Resource* resource);
 
 		/// <summary>
 		/// 平行光源シャドウマップ用のリソースを作成

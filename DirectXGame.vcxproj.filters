@@ -484,11 +484,11 @@
     <ClInclude Include="Engine\base\directX\command\renderer\Renderer.h">
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\utility\CatmullRom.h">
       <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h">
+      <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

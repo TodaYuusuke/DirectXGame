@@ -19,18 +19,21 @@ void SampleTitle::Initialize() {
 	subCamera->transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera->transform.rotation = { 0.4f,-0.5f,0.0f };
 	// ポストプロセステスト
-	subCamera->isUsePostProcess = true;
+	//subCamera->isUsePostProcess = true;
 	subCamera->isActive = true;
 
 	// サブカメラを生成
 	LWP::Object::Camera* c = LWP::Object::CreateInstance<LWP::Object::Camera>();
 	LWP::Object::CreateRenderTexture(c, 640, 360);
-	c->transform.translation = { 5.9f,4.5f,-10.0f };
-	c->transform.rotation = { 0.4f,-0.5f,0.0f };
+	c->transform.translation = { -5.9f,4.5f,-10.0f };
+	c->transform.rotation = { 0.4f,0.5f,0.0f };
 	// ポストプロセステスト
-	c->isUsePostProcess = true;
+	//c->isUsePostProcess = true;
 	c->isActive = true;
 	
+	//mainCamera->isUsePostProcess = true;
+	//SetMainRenderCamera(subCamera);
+
 	// 地面
 	ground = LWP::Primitive::CreateInstance<Surface>();
 	ground->transform.translation.y = -1.5f;
@@ -86,10 +89,6 @@ void SampleTitle::Initialize() {
 	s2->transform.translation.x = 640.0f;
 	s2->texture = c->GetRenderTexture();
 	s2->isUI = true;
-
-	//mainCamera->isUsePostProcess = true;
-	//subCamera->isUsePostProcess = true;
-	//SetMainRenderCamera(subCamera);
 }
 
 // 更新

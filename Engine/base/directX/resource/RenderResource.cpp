@@ -44,16 +44,33 @@ bool RenderResource::RegisterDSV() {
 	if (dsvIndex_ != -1) { return false; }
 
 	// DSVに登録
-	dsvIndex_ = heaps_->dsv()->CreateDepthStencil(depthMapResource_.Get(), width_, height_);
+	depthMapResource_ = heaps_->dsv()->CreateDepthStencilResource(width_, height_);
+	dsvIndex_ = heaps_->dsv()->CreateDepthStencil(depthMapResource_.Get());
+	return true;
+}
+
+bool RenderResource::RegisterDepthToSRV() {
+	// 登録済みならば戻る
+	if (depthSRVIndex_ != -1) { return false; }
+
+	// SRVに登録
+	depthSRVIndex_ = heaps_->srv()->UploadDepthMap(depthMapResource_.Get());
 	return true;
 }
 
 void RenderResource::SetResourceBarrier(D3D12_RESOURCE_STATES state, ID3D12GraphicsCommandList* list) {
 	// リソースバリアを生成
-	D3D12_RESOURCE_BARRIER barrier = CreateResourceBarrier(state);
+	D3D12_RESOURCE_BARRIER barrier = CreateResourceBarrier(resource_.Get(), currentBarrierState_, state);
 	list->ResourceBarrier(1, &barrier);
 	// 現在のステータスを変更しておく
 	currentBarrierState_ = state;
+}
+void RenderResource::SetDepthMapResourceBarrier(D3D12_RESOURCE_STATES state, ID3D12GraphicsCommandList* list) {
+	// リソースバリアを生成
+	D3D12_RESOURCE_BARRIER barrier = CreateResourceBarrier(depthMapResource_.Get(), currentDepthMapBarrierState_, state);
+	list->ResourceBarrier(1, &barrier);
+	// 現在のステータスを変更しておく
+	currentDepthMapBarrierState_ = state;
 }
 
 bool RenderResource::ReRegisterRTV() {
@@ -118,7 +135,7 @@ void RenderResource::CreateResource(ID3D12Device* device) {
 	assert(SUCCEEDED(hr));
 }
 
-D3D12_RESOURCE_BARRIER RenderResource::CreateResourceBarrier(D3D12_RESOURCE_STATES state) {
+D3D12_RESOURCE_BARRIER RenderResource::CreateResourceBarrier(ID3D12Resource* resoruce, D3D12_RESOURCE_STATES preState, D3D12_RESOURCE_STATES state) {
 	// TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier{};
 	// 今回のバリアはTransition
@@ -128,9 +145,9 @@ D3D12_RESOURCE_BARRIER RenderResource::CreateResourceBarrier(D3D12_RESOURCE_STAT
 	// 全てのサブリソースを選択
 	barrier.Transition.Subresource = 0xFFFFFFFF;
 	// バリアを張る対象のリソース
-	barrier.Transition.pResource = resource_.Get();
+	barrier.Transition.pResource = resoruce;
 	// 遷移前（現在）のResourceState
-	barrier.Transition.StateBefore = currentBarrierState_;
+	barrier.Transition.StateBefore = preState;
 	// 遷移後のResourceState
 	barrier.Transition.StateAfter = state;
 

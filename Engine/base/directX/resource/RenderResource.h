@@ -23,9 +23,14 @@ namespace LWP::Base {
 		bool RegisterSRV();
 		// DSVに登録する関数
 		bool RegisterDSV();
+
+		// 深度マップをテクスチャに登録する関数
+		bool RegisterDepthToSRV();
 		
 		// リソースバリアをセットする関数
 		void SetResourceBarrier(D3D12_RESOURCE_STATES barrier, ID3D12GraphicsCommandList* list);
+		// 深度マップのリソースバリアをセットする関数
+		void SetDepthMapResourceBarrier(D3D12_RESOURCE_STATES barrier, ID3D12GraphicsCommandList* list);
 
 
 	public: // ** ゲッター ** //
@@ -44,6 +49,9 @@ namespace LWP::Base {
 		int GetSRV() { return srvIndex_; }
 		// DSVのインデックスを返す関数
 		int GetDSV() { return dsvIndex_; }
+
+		// DepthのSRVのインデックスを返す関数
+		int GetDepthSRV() { return depthSRVIndex_; }
 
 		// 現在のリソースバリアを受け取る関数
 		D3D12_RESOURCE_STATES GetResourceBarrier() { return currentBarrierState_; }
@@ -68,9 +76,13 @@ namespace LWP::Base {
 		Microsoft::WRL::ComPtr<ID3D12Resource> depthMapResource_ = nullptr;
 		// DSVのインデックス
 		int dsvIndex_ = -1;
+		// DepthのSRVのインデックス
+		int depthSRVIndex_ = -1;
 
 		// 現在のリソースバリア
 		D3D12_RESOURCE_STATES currentBarrierState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		// 現在の深度マップバリア
+		D3D12_RESOURCE_STATES currentDepthMapBarrierState_ = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
 
 	private: // ** メンバ変数 ** //
@@ -86,6 +98,6 @@ namespace LWP::Base {
 		void CreateResource(ID3D12Device* device);
 
 		// リソース
-		D3D12_RESOURCE_BARRIER CreateResourceBarrier(D3D12_RESOURCE_STATES state);
+		D3D12_RESOURCE_BARRIER CreateResourceBarrier(ID3D12Resource* resoruce, D3D12_RESOURCE_STATES preState, D3D12_RESOURCE_STATES state);
 	};
 }

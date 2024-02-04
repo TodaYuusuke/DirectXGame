@@ -19,6 +19,7 @@ void SubRendering::PreDraw(ID3D12GraphicsCommandList* list) {
 
 	// リソースバリアをセット
 	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
+	rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv_->GetCPUHandle(rr->GetRTV());
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv_->GetCPUHandle(rr->GetDSV());
@@ -90,6 +91,8 @@ void SubRendering::Draw(ID3D12RootSignature* rootSignature, ID3D12GraphicsComman
 void SubRendering::PostDraw(ID3D12GraphicsCommandList* list) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderTexture_->GetRenderResource();
+
+	rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_GENERIC_READ, list);
 
 	// TexResourceのバリアを、コピーされる用に
 	D3D12_RESOURCE_BARRIER barrier0 = MakeResourceBarrier(

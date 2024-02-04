@@ -32,6 +32,7 @@ void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	ppRoot_ = std::make_unique<RootSignature>();
 	ppRoot_->AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
 		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
+		.AddTableParameter(1, SV_Pixel)	// 使用された深度マップを画像として渡す
 		.AddSampler(0, SV_Pixel)	// テクスチャのサンプラー
 		.Build(device);
 }

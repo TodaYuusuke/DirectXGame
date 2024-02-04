@@ -35,6 +35,10 @@ namespace LWP::Base {
 		/// </summary>
 		int CreateShaderResourceView(ID3D12Resource* resource, const int width, const int height);
 
+		/// <summary>
+		/// 深度マップをSRVに登録する関数
+		/// </summary>
+		int UploadDepthMap(ID3D12Resource* resource);
 
 	private: // ** メンバ変数 ** //
 

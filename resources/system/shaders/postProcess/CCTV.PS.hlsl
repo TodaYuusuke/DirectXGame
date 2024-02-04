@@ -9,6 +9,8 @@ struct Parameter {
 ConstantBuffer<Parameter> gPara : register(b0);
 // ポストプロセスをかけるテクスチャ
 Texture2D<float32_t4> gTexture : register(t0);
+// 深度マップ
+Texture2D<float> gDepth : register(t1);
 // サンプラー
 SamplerState gSampler : register(s0);
 

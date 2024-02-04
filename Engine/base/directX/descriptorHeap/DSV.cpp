@@ -13,12 +13,13 @@ void DSV::Initialize(ID3D12Device* device, SRV* srv) {
 	size_ = lwpC::Shadow::kMaxShadowMap + lwpC::Rendering::kMaxMultiWindowRendering + 1;
 	// サイズを計算
 	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
+	
 	// DSV用のヒープでディスクリプタの数はシャドウマップ用などで増加する。DSVはShader内で触らないものなので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, size_, false);
 
 	// バックバッファ用の深度マップ生成
-	backBuffersDepthIndex_ = CreateDepthStencil(backBuffersDepthMap_.Get(), lwpC::Window::kResolutionWidth, lwpC::Window::kResolutionHeight);
+	backBuffersDepthMap_ = CreateDepthStencilResource(lwpC::Window::kResolutionWidth, lwpC::Window::kResolutionHeight);
+	backBuffersDepthIndex_ = CreateDepthStencil(backBuffersDepthMap_.Get());
 	backBuffersDepthView_ = GetCPUHandle(backBuffersDepthIndex_);
 }
 
@@ -27,7 +28,8 @@ void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {
 	commandList->ClearDepthStencilView(GetCPUHandle(index), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, int32_t width, int32_t height) {
+
+ID3D12Resource* DSV::CreateDepthStencilResource(int32_t width, int32_t height) {
 	HRESULT hr = S_FALSE;
 
 	// DSVResourceの設定
@@ -51,16 +53,20 @@ uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource, int32_t width, int32_
 	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// Resourceの生成
+	ID3D12Resource* newResource;
 	hr = device_->CreateCommittedResource(
 		&heapProperties, // Heapの設定
 		D3D12_HEAP_FLAG_NONE, // Heapの特殊な設定。特になし
 		&resourceDesc, // Resourceの設定
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, // 深度値を書き込む状態にしておく
 		&depthClearValue, // Clear最適値
-		IID_PPV_ARGS(&resource) // 作成するリソースへのポインタ
+		IID_PPV_ARGS(&newResource) // 作成するリソースへのポインタ
 	);
 	assert(SUCCEEDED(hr));
+	return newResource;
+}
 
+uint32_t DSV::CreateDepthStencil(ID3D12Resource* resource) {
 	// DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本敵にはResourceに合わせる
