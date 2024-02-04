@@ -17,6 +17,8 @@ namespace LWP::Resource {
 		Object::WorldTransform uvTransform;
 		// ライティングを行うかどうか
 		bool enableLighting = false;
+		// 光沢度
+		float shininess = 100000.0f;	// この値にするとほぼ見えない
 		// ブレンドモード
 		// 
 		// 形状を描画する際の設定
@@ -42,4 +44,4 @@ namespace LWP::Resource {
 		// 別のMaterialと同期する
 		void SetIndex(int value) { index_ = value; }
 	};
-}
+}	

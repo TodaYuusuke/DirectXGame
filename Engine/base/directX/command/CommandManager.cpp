@@ -299,7 +299,9 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 	}
 	// ワールドトランスフォームをデータに登録
 	uint32_t worldMatrix = transformData_->GetCount();
-	transformData_->AddData(primitive->transform.GetWorldMatrix());
+	WTFStruct wtf;
+	wtf = primitive->transform;
+	transformData_->AddData(wtf);
 	// マテリアルをデータに登録
 	uint32_t material = materialData_->GetCount();
 	MaterialStruct m;
@@ -392,7 +394,7 @@ void CommandManager::CreateStructuredBufferResources() {
 	// 頂点データ
 	vertexData_ = std::make_unique<IStructured<VertexStruct>>(device_, heaps_->srv(), RenderingPara::kMaxVertex);
 	// WorldTransformデータ
-	transformData_ = std::make_unique<IStructured<Math::Matrix4x4>>(device_, heaps_->srv(), RenderingPara::kMaxMatrix);
+	transformData_ = std::make_unique<IStructured<WTFStruct>>(device_, heaps_->srv(), RenderingPara::kMaxMatrix);
 
 	// 構造体のカウント
 	commonDataResourceBuffer_ = std::make_unique<CommonDataResourceBuffer>();

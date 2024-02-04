@@ -17,10 +17,10 @@ void SubRenderer::Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoPtr
 
 	// ViewProjection用のリソースを生成する
 	renderData_ = std::make_unique<RenderData>();
-	renderData_->vpResource = std::make_unique<MatrixResourceBuffer>();
-	renderData_->vpResource->resource_ = LWP::Base::CreateBufferResourceStatic(device, sizeof(Math::Matrix4x4));
-	renderData_->vpResource->resource_->Map(0, nullptr, reinterpret_cast<void**>(&renderData_->vpResource->data_));
-	renderData_->vpResource->view_ = renderData_->vpResource->resource_->GetGPUVirtualAddress();
+	renderData_->cameraBuffer = std::make_unique<CameraResourceBuffer>();
+	renderData_->cameraBuffer->resource_ = LWP::Base::CreateBufferResourceStatic(device, sizeof(CameraStruct));
+	renderData_->cameraBuffer->resource_->Map(0, nullptr, reinterpret_cast<void**>(&renderData_->cameraBuffer->data_));
+	renderData_->cameraBuffer->view_ = renderData_->cameraBuffer->resource_->GetGPUVirtualAddress();
 }
 void SubRenderer::SetViewStruct(ViewStruct viewStruct, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoView) {
 	viewStruct_ = viewStruct;
@@ -38,7 +38,7 @@ void SubRenderer::Draw(ID3D12GraphicsCommandList* list, int instanceCount) {
 
 	// ディスクリプタテーブルを登録
 	list->SetGraphicsRootDescriptorTable(0, indexInfoView_);
-	list->SetGraphicsRootConstantBufferView(1, renderData_->vpResource->view_);
+	list->SetGraphicsRootConstantBufferView(1, renderData_->cameraBuffer->view_);
 	list->SetGraphicsRootConstantBufferView(2, viewStruct_.commonData);
 	list->SetGraphicsRootDescriptorTable(3, viewStruct_.vertex);
 	list->SetGraphicsRootDescriptorTable(4, viewStruct_.wtf);
@@ -58,7 +58,7 @@ void SubRenderer::Draw(ID3D12GraphicsCommandList* list, int instanceCount) {
 void SubRenderer::SetRenderTarget(Camera* camera) {
 	// レンダリングターゲットを登録
 	renderData_->target = camera;
-	*renderData_->vpResource->data_ = camera->GetViewProjection();
+	*renderData_->cameraBuffer->data_ = *camera;
 }
 
 void SubRenderer::PreDraw(ID3D12GraphicsCommandList* list) {

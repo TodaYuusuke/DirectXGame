@@ -18,9 +18,6 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	// 地面
-	LWP::Primitive::Surface* ground;
-
 	LWP::Primitive::Triangle* tri[2];
 	LWP::Primitive::Surface* surface;
 	LWP::Primitive::Sphere* sphere;
@@ -34,8 +31,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// SEデータ
 	LWP::Resource::Audio* audio;
 
-	// 点光源
-	LWP::Object::PointLight* pointLight;
 	// サブカメラ
 	LWP::Object::Camera* subCamera;
 

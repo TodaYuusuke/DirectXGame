@@ -9,6 +9,9 @@ using namespace LWP::Utility;
 
 // 初期化
 void SampleTitle::Initialize() {
+	// デバッグ情報表示
+	Info::ChangeShowDebugGUI();
+
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
 	monsterBall = LWP::Resource::LoadTextureLongPath("resources/system/texture/monsterBall.png");
@@ -35,10 +38,9 @@ void SampleTitle::Initialize() {
 	//SetMainRenderCamera(subCamera);
 
 	// 地面
-	ground = LWP::Primitive::CreateInstance<Surface>();
+	Mesh* ground = LWP::Resource::LoadModel("cube/cube.obj");
 	ground->transform.translation.y = -1.5f;
-	ground->transform.rotation.x = 1.57f;
-	ground->transform.scale = { 10.0f,10.0f, 10.0f };
+	ground->transform.scale = { 10.0f,0.1f, 10.0f };
 	ground->material.enableLighting = true;
 	ground->name = "Ground";
 	//ground->commonColor = new Color()
@@ -61,9 +63,10 @@ void SampleTitle::Initialize() {
 
 	// 球
 	sphere = LWP::Primitive::CreateInstance<Sphere>();
-	sphere->Radius(0.2f);
-	sphere->transform.translation.x = 0.7f;
+	sphere->Radius(0.3f);
+	sphere->transform.translation.z = -1.0f;
 	sphere->material.enableLighting = true;
+	sphere->material.shininess = 40.0f;
 	sphere->texture = uvTexture;
 
 	// モデル読み込み
@@ -76,12 +79,21 @@ void SampleTitle::Initialize() {
 	//stressTestModel->material.enableLighting = true;
 	//stressTestModel->isActive = true;
 
-	pointLight = Object::CreateInstance<Object::PointLight>();
-	pointLight->transform.translation = { 1.6f,0.0f,-0.1f };
-	pointLight->color = Utility::Color::KelvinToRGB(2800);
-	pointLight->isActive = true;
-	pointLight->transform.Parent(&sphere->transform);
+	// 平行光源
+	Object::DirectionLight* dirLight = Object::CreateInstance<Object::DirectionLight>();
+	dirLight->isActive = true;
+	dirLight->intensity = 0.5f;
 
+	// 点光源
+	Object::PointLight* pL1 = Object::CreateInstance<Object::PointLight>();
+	pL1->transform.translation = { 1.6f,0.0f,-0.1f };
+	pL1->color = Utility::Color::KelvinToRGB(2800);
+	//pL1->isActive = true;
+	Object::PointLight* pL2 = Object::CreateInstance<Object::PointLight>();
+	pL2->transform.translation = { -1.5f,-1.0f,-0.1f };
+	//pL2->isActive = true;
+
+	// 複数画面描画の結果を張り付けるスプライト
 	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
 	s->texture = subCamera->GetRenderTexture();
 	s->isUI = true;
@@ -93,12 +105,6 @@ void SampleTitle::Initialize() {
 
 // 更新
 void SampleTitle::Update() {
-	ImGui::Begin("Test");
-	if (ImGui::Button("Create")) {
-		Object::CreateInstance<Object::PointLight>()->isActive = true;
-	}
-	ImGui::End();
-		
 	// SPACEキーを押すとテクスチャ切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
 		if (!useMonsterBall) {
@@ -111,9 +117,9 @@ void SampleTitle::Update() {
 		}
 	}
 
-	if (Keyboard::GetTrigger(DIK_1)) {
-		mainCamera->isUsePostProcess = !mainCamera->isUsePostProcess;
-	}
+	//if (Keyboard::GetTrigger(DIK_1)) {
+	//	mainCamera->isUsePostProcess = !mainCamera->isUsePostProcess;
+	//}
 	else if (Keyboard::GetTrigger(DIK_2)) {
 		LWP::Window::ChangeFullScreenMode();
 	}
@@ -122,7 +128,7 @@ void SampleTitle::Update() {
 	}
 
 	// プログラム終了
-	if (Keyboard::GetTrigger(DIK_0)) {
+	if (Keyboard::GetTrigger(DIK_O)) {
 		LWP::System::End();
 	}
 

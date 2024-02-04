@@ -156,7 +156,7 @@ namespace LWP::Base {
 		// 頂点データ
 		std::unique_ptr<IStructured<VertexStruct>> vertexData_;
 		// WorldTransformデータ
-		std::unique_ptr<IStructured<Math::Matrix4x4>> transformData_;
+		std::unique_ptr<IStructured<WTFStruct>> transformData_;
 
 		// 全描画で共通のデータ
 		std::unique_ptr<CommonDataResourceBuffer> commonDataResourceBuffer_;

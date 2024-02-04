@@ -37,7 +37,7 @@ namespace LWP::Base {
 	// レンダリング先を示す構造体
 	struct RenderData {
 		LWP::Object::Camera* target;	// レンダリングを行う先のカメラ
-		std::unique_ptr<MatrixResourceBuffer> vpResource;	// 計算に使うViewProjection
+		std::unique_ptr<CameraResourceBuffer> cameraBuffer;	// カメラのバッファー
 	};
 
 	/// <summary>

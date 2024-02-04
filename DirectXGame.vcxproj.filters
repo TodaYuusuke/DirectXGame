@@ -164,9 +164,6 @@
     <ClCompile Include="Engine\object\core\light\PointLight.cpp">
       <Filter>Engine\object\core\light</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\Derived\MainCommand.cpp">
-      <Filter>Engine\base\directX\command\derived</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapping.cpp">
       <Filter>Engine\base\directX\command\derived</Filter>
     </ClCompile>
@@ -181,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="Engine\resources\texture\RenderTexture.cpp">
       <Filter>Engine\resources\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\Derived\SubRendering.cpp">
-      <Filter>Engine\base\directX\command\derived</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\postEffect\LensDistortion.cpp">
       <Filter>Engine\base\directX\command\postEffect</Filter>
@@ -421,9 +415,6 @@
     <ClInclude Include="Engine\object\core\light\PointLight.h">
       <Filter>Engine\object\core\light</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\Derived\MainCommand.h">
-      <Filter>Engine\base\directX\command\derived</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\command\Derived\ShadowMapping.h">
       <Filter>Engine\base\directX\command\derived</Filter>
     </ClInclude>
@@ -450,9 +441,6 @@
     </ClInclude>
     <ClInclude Include="Engine\resources\texture\ITexture.h">
       <Filter>Engine\resources\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\Derived\SubRendering.h">
-      <Filter>Engine\base\directX\command\derived</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\postEffect\LensDistortion.h">
       <Filter>Engine\base\directX\command\postEffect</Filter>

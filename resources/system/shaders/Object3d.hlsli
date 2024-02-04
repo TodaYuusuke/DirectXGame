@@ -5,14 +5,21 @@ struct Vertex {
     float32_t3 normal;
     float32_t4 color;
 };
-struct ViewProjection {
+struct WorldTransform {
+    float32_t4x4 wtf;
+    float32_t4x4 inverse;
+};
+
+struct CameraData {
     float32_t4x4 m;  // !< ビュープロジェクション
+    float32_t3 position;
 };
 
 // マテリアル
 struct Material {
     float32_t4x4 uvTransform;
     int32_t enableLighting;
+    float32_t shinines;
 };
 
 // 平行光源
@@ -34,7 +41,7 @@ struct PointLight {
 // インデックス情報の構造体
 struct IndexInfo {
     uint32_t vertex;        // 実質頂点インデックスの役割
-    uint32_t worldMatrix;   // ワールドトランスフォーム
+    uint32_t worldTransform; // ワールドトランスフォーム
     uint32_t material;      // マテリアル
     uint32_t tex2d;         // テクスチャ
     uint32_t isUI;          // UIで表示するかどうか
@@ -52,7 +59,7 @@ struct CommonData {
 // 各ストラクチャーバッファーのインデックス
 StructuredBuffer<IndexInfo> gIndex : register(t0);
 // 描画するViewProjection
-ConstantBuffer<ViewProjection> gViewProjection : register(b0);
+ConstantBuffer<CameraData> gCameraData : register(b0);
 
 // 全体描画で共通のデータ
 ConstantBuffer<CommonData> gCommonData : register(b1);
@@ -62,7 +69,7 @@ ConstantBuffer<CommonData> gCommonData : register(b1);
 // 頂点データ
 StructuredBuffer<Vertex> gVertex : register(t1);
 // WorldTransform
-StructuredBuffer<float32_t4x4> gWorldMatrix : register(t2);
+StructuredBuffer<WorldTransform> gWorldTransform : register(t2);
 
 
 // ** PS用 ** //
@@ -99,3 +106,4 @@ struct VertexShaderOutput {
     float32_t4 color : COLOR0;
     uint32_t id : SV_InstanceID;        // VSで参照したIndexInfoの番号
 };
+

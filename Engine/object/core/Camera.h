@@ -2,7 +2,6 @@
 #include "../IObject.h"
 #include "resources/texture/RenderTexture.h"
 #include "base/directX/command/postEffect/PostProcessManager.h"
-#include "base/directX/command/derived/SubRendering.h"
 #include "base/directX//command/renderer/PostProcessRenderer.h"
 
 namespace LWP::Object {
