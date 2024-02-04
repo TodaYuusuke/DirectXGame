@@ -25,24 +25,26 @@ float3 DirectionLightingShadow(VertexShaderOutput input, uint32_t n) {
 
 
 // -- 点光源のライティング -- //
-float3 PointLightingDiffuse(VertexShaderOutput input, uint32_t n) {
+float3 PointLightingDiffuse(VertexShaderOutput input, uint32_t n, float3 dir) {
     // 拡散反射
-    float3 dir = input.worldPos - gPointLight[n].position;
     float NdotL = dot(normalize(input.normal), -normalize(dir));
     float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
     float distance = length(gPointLight[n].position - input.worldPos); // ポイントライトへの距離
     float factor = pow(saturate(-distance / gPointLight[n].radius + 1.0), gPointLight[n].decay); // 逆二乗則による減衰係数
     return gPointLight[n].color.rgb * cos * gPointLight[n].intensity * factor;
 }
-//float3 PointLightingSpecular(VertexShaderOutput input, uint32_t n, float3 toEye, uint32_t m) {
-//    // 鏡面反射
-//}
-float3 PointLightingShadow(VertexShaderOutput input, uint32_t n) {
+float3 PointLightingSpecular(VertexShaderOutput input, uint32_t n, float3 dir, float3 toEye, uint32_t m) {
+    // 鏡面反射
+    float32_t3 halfVector = normalize(-dir + toEye);
+    float NdotH = dot(normalize(input.normal), halfVector);
+    float specularPow = pow(saturate(NdotH), gMaterial[m].shinines); // 反射強度
+    return gPointLight[n].color.rgb * gPointLight[n].intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
+}
+float3 PointLightingShadow(VertexShaderOutput input, uint32_t n, float3 dir) {
     // シャドウマッピング
     const float far = 100.0f; // パースペクティブのfar
     const float near = 0.01f; // パースペクティブのnear
     
-    float3 dir = input.worldPos - gPointLight[n].position;
     float depth = gPointShadowMap[n].Sample(gPointShadowMapSampler, normalize(dir)).x;
     float3 absVec = abs(dir);
     float z = max(absVec.x, max(absVec.y, absVec.z));
@@ -78,7 +80,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         float3 shadow = { 0.0f, 0.0f, 0.0f }; // 最終的なシャドウマップの値
         uint n = 0; // ループ用変数
 
-        // 平行光源のループ
+        // -- 平行光源 -- //
         for (n = 0; n < gCommonData.directionLightCount; n++) {
             diffuse += DirectionLightingDiffuse(input, n);
             specular += DirectionLightingSpecular(input, n, toEye, m);
@@ -87,9 +89,10 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         
         // -- 点光源 -- //
         for (n = 0; n < gCommonData.pointLightCount; n++) {
-            diffuse += PointLightingDiffuse(input, n);
-            //specular += PointLightingSpecular(input, n, toEye, m);
-            shadow += PointLightingShadow(input, n);
+            float3 dir = input.worldPos - gPointLight[n].position;
+            diffuse += PointLightingDiffuse(input, n, dir);
+            specular += PointLightingSpecular(input, n, dir, toEye, m);
+            shadow += PointLightingShadow(input, n, dir);
         }
         
         output.rgb = ((input.color.rgb * texColor.rgb * diffuse) + specular) * shadow;

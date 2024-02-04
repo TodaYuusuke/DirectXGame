@@ -82,16 +82,17 @@ void SampleTitle::Initialize() {
 	// 平行光源
 	Object::DirectionLight* dirLight = Object::CreateInstance<Object::DirectionLight>();
 	dirLight->isActive = true;
-	dirLight->intensity = 0.5f;
+	dirLight->intensity = 0.3f;
 
 	// 点光源
 	Object::PointLight* pL1 = Object::CreateInstance<Object::PointLight>();
 	pL1->transform.translation = { 1.6f,0.0f,-0.1f };
-	pL1->color = Utility::Color::KelvinToRGB(2800);
-	//pL1->isActive = true;
+	pL1->intensity = 0.3f;
+	pL1->isActive = true;
 	Object::PointLight* pL2 = Object::CreateInstance<Object::PointLight>();
 	pL2->transform.translation = { -1.5f,-1.0f,-0.1f };
-	//pL2->isActive = true;
+	pL2->intensity = 0.3f;
+	pL2->isActive = true;
 
 	// 複数画面描画の結果を張り付けるスプライト
 	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
