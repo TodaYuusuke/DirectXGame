@@ -17,6 +17,11 @@ void Camera::Update(Base::CommandManager* manager) {
 	manager->SetSubRendering(this);
 }
 
+void Camera::ReCreateShader() {
+	if (!ppRenderer_) { return; }
+	ppRenderer_->ReCreateShader(shaderPath);
+}
+
 void Camera::DebugGUI() {
 	transform.DebugGUI();
 	ImGui::DragInt("FOV", &fov, 1);

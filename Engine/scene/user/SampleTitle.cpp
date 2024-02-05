@@ -31,10 +31,10 @@ void SampleTitle::Initialize() {
 	c->transform.translation = { -5.9f,4.5f,-10.0f };
 	c->transform.rotation = { 0.4f,0.5f,0.0f };
 	// ポストプロセステスト
-	c->isUsePostProcess = true;
+	//c->isUsePostProcess = true;
 	c->isActive = true;
 	
-	mainCamera->isUsePostProcess = true;
+	//mainCamera->isUsePostProcess = true;
 	//SetMainRenderCamera(subCamera);
 
 	// 地面
@@ -86,11 +86,11 @@ void SampleTitle::Initialize() {
 
 	// 点光源
 	Object::PointLight* pL1 = Object::CreateInstance<Object::PointLight>();
-	pL1->transform.translation = { 1.6f,0.0f,-0.1f };
+	pL1->transform.translation = { 1.6f,0.0f,-1.3f };
 	pL1->intensity = 0.3f;
 	pL1->isActive = true;
 	Object::PointLight* pL2 = Object::CreateInstance<Object::PointLight>();
-	pL2->transform.translation = { -1.5f,-1.0f,-0.1f };
+	pL2->transform.translation = { -1.5f,-0.1f,-1.3f };
 	pL2->intensity = 0.3f;
 	pL2->isActive = true;
 
@@ -128,6 +128,10 @@ void SampleTitle::Update() {
 		LWP::Window::ChangeWindowMode();
 	}
 
+	// シェーダー作り直し
+	if (Keyboard::GetTrigger(DIK_R)) {
+		mainCamera->ReCreateShader();
+	}
 	// プログラム終了
 	if (Keyboard::GetTrigger(DIK_O)) {
 		LWP::System::End();

@@ -26,6 +26,9 @@ namespace LWP::Object {
 		// 更新
 		void Update(Base::CommandManager* manager) override;
 
+		// シェーダー作り直し関数
+		void ReCreateShader();
+
 		// デバッグ用GUI
 		void DebugGUI() override;
 

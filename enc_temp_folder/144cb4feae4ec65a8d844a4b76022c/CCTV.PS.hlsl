@@ -70,11 +70,11 @@ float SSAO(float2 uv) {
     float result = 0.0f;
 	
     for (uint n = 0; n < kSampleCount; n++)
-	{
+    {
 		// ランダムな地点からサンプリングした深度値
         float sampleDepth = gTexture[0].Sample(gSampler, RandomPointInRadius(uv, 0.00001f, n)).r;
 		// 中央との深度値の差が大きい場合は1を返す
-        //result += 1.0f - step(0.001f, abs(centerDepth - sampleDepth));
+        //result += 1.0f - step(0.1f, abs(centerDepth - sampleDepth));
         result += step(centerDepth, sampleDepth);
     }
     return result / kSampleCount;
@@ -94,7 +94,7 @@ float32_t4 main(PSInput input) : SV_TARGET {
     output = gTexture[1].Sample(gSampler, uv);
 	
 	// SSAO
-    //output.rgb *= SSAO(uv);
+    output.rgb *= SSAO(uv);
 	// 走査線
 	//output.rgb += ScanLine(uv);
 	// ビネット（ビネットは画面自体へついてほしいので元のUVを使う）

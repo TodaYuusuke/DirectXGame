@@ -31,9 +31,10 @@ void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	// ポストプロセス用のRootSignatureを生成
 	ppRoot_ = std::make_unique<RootSignature>();
 	ppRoot_->AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
-		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
-		.AddTableParameter(1, SV_Pixel)	// 使用された深度マップを画像として渡す
+		.AddTableParameter(0, SV_Pixel, {}, 2)	// レンダリングに使うテクスチャ
+		//.AddTableParameter(1, SV_Pixel)	// 使用された深度マップを画像として渡す
 		.AddSampler(0, SV_Pixel)	// テクスチャのサンプラー
+		//.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 深度マップのサンプラー
 		.Build(device);
 }
 void Renderer::SetViewStruct(ViewStruct viewStruct) {

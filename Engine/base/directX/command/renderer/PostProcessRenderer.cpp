@@ -22,6 +22,8 @@ void PostProcessRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heap
 		.Build(device);
 
 	// ポインタ達をセット
+	device_ = device;
+	dxc_ = dxc;
 	heaps_ = heaps;
 
 	// リソースを生成
@@ -55,7 +57,8 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 
 	// ディスクリプタテーブルを登録
 	list->SetGraphicsRootConstantBufferView(0, renderData_->view);
-	list->SetGraphicsRootDescriptorTable(1, heaps_->srv()->GetGPUHandle(target->GetTexSRVIndex()));
+	list->SetGraphicsRootDescriptorTable(1, heaps_->srv()->GetGPUHandle(target->GetDepthMapSRVIndex()));
+	//list->SetGraphicsRootDescriptorTable(1, heaps_->srv()->GetGPUHandle(target->GetTexSRVIndex()));
 	//list->SetGraphicsRootDescriptorTable(2, heaps_->srv()->GetGPUHandle(target->GetDepthMapSRVIndex()));
 
 	// 四角形を描画
@@ -72,14 +75,14 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 }
 
 // シェーダー作り直し
-void PostProcessRenderer::ReCreateShader(ID3D12Device* device, DXC* dxc, std::string path) {
+void PostProcessRenderer::ReCreateShader(std::string path) {
 	// PSOを生成
 	pso_.reset(new PSO());
-	pso_->Init(rootPtr_->GetRoot(), dxc)
+	pso_->Init(rootPtr_->GetRoot(), dxc_)
 		.SetDepthStencilState(false)
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
 		.SetPixelShader(path)
-		.Build(device);
+		.Build(device_);
 }
 
 

@@ -8,50 +8,52 @@
 #include "Config.h"
 
 namespace LWP::Base {
-    /// <summary>
-    /// ポストプロセスレンダリングコマンド
-    /// </summary>
-    class PostProcessRenderer {
-    public: // ** メンバ関数 ** //
-        // コンストラクタ
-        PostProcessRenderer() = default;
-        // デストラクタ
-        ~PostProcessRenderer() = default;
+	/// <summary>
+	/// ポストプロセスレンダリングコマンド
+	/// </summary>
+	class PostProcessRenderer {
+	public: // ** メンバ関数 ** //
+		// コンストラクタ
+		PostProcessRenderer() = default;
+		// デストラクタ
+		~PostProcessRenderer() = default;
 
-        // 初期化処理
-        void Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps, RootSignature* root, std::string path);
-        // レンダリング
-        void Draw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target, bool isMain = false);
+		// 初期化処理
+		void Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps, RootSignature* root, std::string path);
+		// レンダリング
+		void Draw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target, bool isMain = false);
 
-        // シェーダー作り直し
-        void ReCreateShader(ID3D12Device* device, DXC* dxc, std::string path);
-
-
-    private: // ** メンバ変数 ** //
-
-        // レンダリングするためのデータ
-        struct RenderData {
-            int* time;	// 時間のデータ
-            ID3D12Resource* resource;	// データのリソース
-            D3D12_GPU_VIRTUAL_ADDRESS view;	// データのビュー
-        };
-        std::unique_ptr<RenderData> renderData_;
-
-        // ルートシグネチャ（全ポストプロセスで共通なのでポインタ）
-        RootSignature* rootPtr_;
-        // PSO
-        std::unique_ptr<PSO> pso_;
-                
-        // ディスクリプタヒープ管理クラスのポインタ
-        HeapManager* heaps_ = nullptr;
+		// シェーダー作り直し
+		void ReCreateShader(std::string path);
 
 
-    private: // ** メンバ変数 ** //
+	private: // ** メンバ変数 ** //
 
-        void PreDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
-        void PostDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
-        
-        void PreLastDraw(ID3D12GraphicsCommandList* list);
-        void PostLastDraw(ID3D12GraphicsCommandList* list);
-    };
+		// レンダリングするためのデータ
+		struct RenderData {
+			int* time;	// 時間のデータ
+			ID3D12Resource* resource;	// データのリソース
+			D3D12_GPU_VIRTUAL_ADDRESS view;	// データのビュー
+		};
+		std::unique_ptr<RenderData> renderData_;
+
+		// ルートシグネチャ（全ポストプロセスで共通なのでポインタ）
+		RootSignature* rootPtr_;
+		// PSO
+		std::unique_ptr<PSO> pso_;
+
+		ID3D12Device* device_ = nullptr;
+		DXC* dxc_ = nullptr;
+		// ディスクリプタヒープ管理クラスのポインタ
+		HeapManager* heaps_ = nullptr;
+
+
+	private: // ** メンバ変数 ** //
+
+		void PreDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
+		void PostDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target);
+
+		void PreLastDraw(ID3D12GraphicsCommandList* list);
+		void PostLastDraw(ID3D12GraphicsCommandList* list);
+	};
 }
