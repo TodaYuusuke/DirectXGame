@@ -215,6 +215,9 @@
     <ClCompile Include="Engine\utility\CatmullRom.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\object\core\Particle.cpp">
+      <Filter>Engine\object\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -478,6 +481,9 @@
     <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h">
       <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\object\core\Particle.h">
+      <Filter>Engine\object\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -524,9 +530,6 @@
     </Filter>
     <Filter Include="Engine\object\core">
       <UniqueIdentifier>{14b23d91-589d-429f-b0d8-70fc17a034e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\object\user">
-      <UniqueIdentifier>{66b7ab0e-c424-446a-bfe6-ab374be49187}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\primitive">
       <UniqueIdentifier>{b19cce8c-d886-4e1a-bf91-3b61d3281892}</UniqueIdentifier>

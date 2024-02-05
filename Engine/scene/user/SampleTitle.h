@@ -34,5 +34,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// サブカメラ
 	LWP::Object::Camera* subCamera;
 
+	// パーティクル
+	LWP::Object::Particle* particle;
+
 	bool useMonsterBall = true;
 };

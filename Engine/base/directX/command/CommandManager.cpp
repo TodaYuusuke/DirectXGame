@@ -343,6 +343,67 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 	}
 }
 
+void CommandManager::SetParticleData(Primitive::IPrimitive* primitive, std::vector<ParticleData>& wtfVec) {
+	uint32_t startIndexNum = vertexData_->GetCount();
+
+	// 頂点データを登録
+	for (int i = 0; i < primitive->GetVertexCount(); i++) {
+		VertexStruct ver;
+		ver = primitive->vertices[i];
+		if (primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
+			ver.color_ = primitive->commonColor->GetVector4();
+		vertexData_->AddData(ver);	// データを追加
+	}
+	// マテリアルをデータに登録
+	uint32_t material = materialData_->GetCount();
+	MaterialStruct m;
+	m = primitive->material;
+	materialData_->AddData(m);
+	// テクスチャのインデックスを貰う
+	uint32_t tex2d = defaultTexture_->GetIndex();
+	if (primitive->texture.t != nullptr) {
+		tex2d = primitive->texture.t->GetIndex();
+	}
+
+	// ワールドトランスフォームの分ループ
+	for (int w = 0; w < wtfVec.size(); w++) {
+		// ワールドトランスフォームをデータに登録
+		uint32_t worldMatrix = transformData_->GetCount();
+		wtfVec[w].wtf.Parent(&primitive->transform);	// 形状のトランスフォームにペアレントしておく
+		WTFStruct wtf;
+		wtf = wtfVec[w].wtf;
+		transformData_->AddData(wtf);
+
+		// Indexの分だけIndexInfoを求める
+		for (int i = 0; i < primitive->GetIndexCount(); i++) {
+			IndexInfoStruct indexInfo = {
+				startIndexNum + primitive->indexes[i],
+				worldMatrix,
+				material,
+				tex2d,
+				primitive->isUI
+			};
+
+			// メインコマンドにデータをセット
+			//mainCommand_->SetDrawData(indexInfo);
+			renderer_->AddMainRenderData(indexInfo);
+			// サブにもセット（現状サブカメラにUIはいらないので除外する）
+			if (!primitive->isUI) {
+				//for (int s = 0; s < subCount_; s++) {
+				//subCommands_[s]->SetDrawData(indexInfo);
+				renderer_->AddSubRenderData(indexInfo);
+				//}
+			}
+
+			// シャドウマップにも描画！
+			if (primitive->material.enableLighting) {
+				for (int s = 0; s < shadowCount_; s++) {
+					shadowCommands_[s]->SetDrawData(indexInfo);
+				}
+			}
+		}
+	}
+}
 
 void CommandManager::InitializeDXC() {
 	HRESULT hr = S_FALSE;

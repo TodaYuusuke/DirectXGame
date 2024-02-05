@@ -14,6 +14,7 @@
 // 前方宣言
 namespace LWP::Object {
 	class Camera;
+	struct ParticleData;
 	class DirectionLight;
 	class PointLight;
 }
@@ -80,6 +81,7 @@ namespace LWP::Base {
 		/// 描画データ登録関数
 		/// </summary>
 		void SetDrawData(Primitive::IPrimitive* primitive);
+		void SetParticleData(Primitive::IPrimitive* primitive, std::vector<Object::ParticleData>& wtf);
 
 		/// <summary>
 		/// テクスチャのリソースを作成

@@ -102,6 +102,22 @@ void SampleTitle::Initialize() {
 	s2->transform.translation.x = 640.0f;
 	s2->texture = c->GetRenderTexture();
 	s2->isUI = true;
+
+
+	// パーティクルテスト
+	particle = Object::CreateInstance<Object::Particle>();
+	particle->primitive = LWP::Resource::LoadModel("cube/cube.obj");
+	particle->func = [](Object::ParticleData* data, int frame) {
+		data->wtf.translation += data->velocity;	// 速度ベクトルを加算
+		data->wtf.rotation += data->velocity;	// ついでに回転させとく
+		data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
+
+		// 速度ベクトルを弱める
+		data->velocity *= 0.9f;
+
+		return frame > 180 ? true : false;
+	};
+	particle->isActive = true;
 }
 
 // 更新
@@ -131,6 +147,28 @@ void SampleTitle::Update() {
 	// シェーダー作り直し
 	if (Keyboard::GetTrigger(DIK_R)) {
 		mainCamera->ReCreateShader();
+	}
+	// パーティクル呼び出し
+	if (Keyboard::GetTrigger(DIK_P)) {
+		particle->elapsedFrame = 0;
+		// 全部スケールを小さく
+		for (int i = 0; i < 16; i++) {
+			Object::ParticleData newData{};
+			newData.wtf.translation = { 0.0f,0.0f,0.0f };
+			newData.wtf.rotation = { 0.0f,0.0f,0.0f };
+			newData.wtf.scale = { 0.1f,0.1f,0.1f };
+
+			// 速度ベクトルを生成
+			int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
+			int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
+			int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
+			// 発射のベクトル
+			Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
+			newData.velocity = dir.Normalize() * 0.2f;
+
+			// パーティクル追加
+			particle->data.push_back(newData);
+		}
 	}
 	// プログラム終了
 	if (Keyboard::GetTrigger(DIK_O)) {

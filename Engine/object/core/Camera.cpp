@@ -8,7 +8,7 @@ using namespace LWP::Resource;
 
 // 初期化
 void Camera::Initialize() {
-	transform.Initialize();
+	
 }
 // 更新
 void Camera::Update(Base::CommandManager* manager) {
