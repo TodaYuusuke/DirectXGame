@@ -107,16 +107,17 @@ void SubRenderer::PreDraw(ID3D12GraphicsCommandList* list) {
 void SubRenderer::PostDraw(ID3D12GraphicsCommandList* list) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = renderData_->target->GetRenderTexture()->GetRenderResource();
+	ID3D12Resource* rTex = renderData_->target->GetRenderTexture()->GetTexResource();
 
 	// TexResourceのバリアを、コピーされる用に
 	D3D12_RESOURCE_BARRIER barrier0 = ICommand::MakeResourceBarrier(
-		renderData_->target->GetRenderTexture()->GetTexResource(),
+		rTex,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_COPY_DEST
 	);
 	// TexResourceのバリアを、コピーされる用に
 	D3D12_RESOURCE_BARRIER barrier1 = ICommand::MakeResourceBarrier(
-		renderData_->target->GetRenderTexture()->GetTexResource(),
+		rTex,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 	);
@@ -126,7 +127,7 @@ void SubRenderer::PostDraw(ID3D12GraphicsCommandList* list) {
 	// 書き込み対象をコピーする用のバリアに
 	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_COPY_SOURCE, list);
 	list->ResourceBarrier(1, &barrier0);
-	list->CopyResource(renderData_->target->GetRenderTexture()->GetTexResource(), rr->GetResource());
+	list->CopyResource(rTex, rr->GetResource());
 	rr->SetResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 	list->ResourceBarrier(1, &barrier1);
 

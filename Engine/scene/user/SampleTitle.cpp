@@ -22,7 +22,7 @@ void SampleTitle::Initialize() {
 	subCamera->transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera->transform.rotation = { 0.4f,-0.5f,0.0f };
 	// ポストプロセステスト
-	//subCamera->isUsePostProcess = true;
+	subCamera->isUsePostProcess = true;
 	subCamera->isActive = true;
 
 	// サブカメラを生成
@@ -31,10 +31,10 @@ void SampleTitle::Initialize() {
 	c->transform.translation = { -5.9f,4.5f,-10.0f };
 	c->transform.rotation = { 0.4f,0.5f,0.0f };
 	// ポストプロセステスト
-	//c->isUsePostProcess = true;
+	c->isUsePostProcess = true;
 	c->isActive = true;
 	
-	//mainCamera->isUsePostProcess = true;
+	mainCamera->isUsePostProcess = true;
 	//SetMainRenderCamera(subCamera);
 
 	// 地面

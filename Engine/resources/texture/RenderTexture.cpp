@@ -14,12 +14,12 @@ RenderTexture::RenderTexture(DirectXCommon* directX, const int width, const int 
 	renderResource_->RegisterRTV();
 	renderResource_->RegisterSRV();
 	renderResource_->RegisterDSV();
-	// SRV上でのインデックスも取得しておく
-	srvIndex_ = directX->GetHeaps()->srv()->GetCount();
 	// 深度マップをSRVに登録
 	renderResource_->RegisterDepthToSRV();
 
 	// テクスチャのみのリソースを生成
 	resource_ = directX->GetCommandManager()->CreateTextureResource(width, height);
 	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(resource_.Get(), width, height);	// これはテクスチャ番号
+	// SRV上でのインデックスも取得しておく
+	srvIndex_ = directX->GetHeaps()->srv()->GetCount() - 1;
 }

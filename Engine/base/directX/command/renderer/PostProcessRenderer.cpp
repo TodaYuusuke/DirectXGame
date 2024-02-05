@@ -36,8 +36,8 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 	*renderData_->time += 1;
 
 	// 深度マップのステータス変更
-	//RenderResource* rr = target->GetRenderResource();
-	//rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_S, list);
+	RenderResource* rr = target->GetRenderResource();
+	rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 
 	if (isMain) {
 		PreLastDraw(list);
@@ -62,7 +62,7 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 	list->DrawInstanced(3, 2, 0, 0);
 
 	// 深度マップのステータスを戻す
-	//rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
+	rr->SetDepthMapResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 	if (isMain) {
 		PostLastDraw(list);
 	}
@@ -129,7 +129,7 @@ void PostProcessRenderer::PreDraw(ID3D12GraphicsCommandList* list, Resource::Ren
 void PostProcessRenderer::PostDraw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target) {
 	// 書き込み先のリソースを取得
 	RenderResource* rr = target->GetRenderResource();
-
+	
 	// TexResourceのバリアを、コピーされる用に
 	D3D12_RESOURCE_BARRIER barrier0 = ICommand::MakeResourceBarrier(
 		target->GetTexResource(),

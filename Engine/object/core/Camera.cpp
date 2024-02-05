@@ -20,6 +20,7 @@ void Camera::Update(Base::CommandManager* manager) {
 void Camera::DebugGUI() {
 	transform.DebugGUI();
 	ImGui::DragInt("FOV", &fov, 1);
+	ImGui::Checkbox("isUsePostProcess", &isUsePostProcess);
 	ImGui::Checkbox("isActive", &isActive);
 }
 
