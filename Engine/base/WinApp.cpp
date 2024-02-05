@@ -134,7 +134,23 @@ void WinApp::ChangeFullScreenMode() {
 	ShowWindow(hwnd_, SW_MAXIMIZE);
 }
 void WinApp::ChangeBorderlessWindowMode() {
-	// 未実装
+	//if (currentMode == WindowMode::BorderlessWindow) { return; }
+	//currentMode = WindowMode::BorderlessWindow;
+
+	//// 元の状態を覚えておく
+	//GetWindowRect(hwnd_, &windowRect_);
+
+	//// 通常ウィンドウに戻す
+	//SetWindowLong(hwnd_, GWL_STYLE, windowStyle_);
+	//// タイトルバーのないウィンドウにする
+	////SetWindowLong(hwnd_, GWL_STYLE, WS_POPUP | WS_BORDER);
+
+	//SetWindowPos(
+	//	hwnd_, HWND_NOTOPMOST, 0, 0,
+	//	windowRect_.right, windowRect_.bottom,
+	//	SWP_FRAMECHANGED | SWP_NOACTIVATE);
+
+	//ShowWindow(hwnd_, SW_NORMAL);
 }
 
 int WinApp::GetScaleFactor() {

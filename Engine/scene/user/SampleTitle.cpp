@@ -118,14 +118,14 @@ void SampleTitle::Update() {
 		}
 	}
 
-	//if (Keyboard::GetTrigger(DIK_1)) {
-	//	mainCamera->isUsePostProcess = !mainCamera->isUsePostProcess;
-	//}
+	if (Keyboard::GetTrigger(DIK_1)) {
+		LWP::Window::ChangeWindowMode();
+	}
 	else if (Keyboard::GetTrigger(DIK_2)) {
 		LWP::Window::ChangeFullScreenMode();
 	}
 	else if (Keyboard::GetTrigger(DIK_3)) {
-		LWP::Window::ChangeWindowMode();
+		LWP::Window::ChangeBorderlessWindowMode();
 	}
 
 	// シェーダー作り直し
