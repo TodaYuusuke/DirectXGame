@@ -10,7 +10,7 @@ using namespace LWP::Utility;
 // 初期化
 void SampleTitle::Initialize() {
 	// デバッグ情報表示
-	Info::ChangeShowDebugGUI();
+	//Info::ChangeShowDebugGUI();
 
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");

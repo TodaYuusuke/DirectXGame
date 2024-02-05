@@ -15,7 +15,7 @@ void Manager::Initialize() {
 
 void Manager::Update() {
 	// Debugビルド時のみImGuiを表示
-#if _DEBUG
+#if DEMO
 	// 生成用の関数ポインタ
 	static std::vector<std::function<IPrimitive*()>> functions = {
 		&LWP::Primitive::CreateInstance<Triangle>,

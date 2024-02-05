@@ -61,7 +61,7 @@ namespace LWP::Object {
 		// インスタンスカウント用マップ
 		std::map<std::string, int> objectCountMap_;
 
-#if _DEBUG
+#if DEMO
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;

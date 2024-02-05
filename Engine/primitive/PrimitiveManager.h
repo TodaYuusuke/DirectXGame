@@ -71,7 +71,7 @@ namespace LWP::Primitive {
 		// インスタンスカウント用マップ
 		std::map<std::string, int> primitiveCountMap_;
 		
-#if _DEBUG
+#if DEMO
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;

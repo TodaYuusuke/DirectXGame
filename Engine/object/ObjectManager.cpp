@@ -17,7 +17,7 @@ void Manager::Initialize() {
 
 void Manager::Update(Base::CommandManager* manager) {
 	// Debugビルド時のみImGuiを表示
-#if _DEBUG
+#if DEMO
 	// 生成用の関数ポインタ
 	static std::vector<std::function<IObject*()>> functions = {
 		&LWP::Object::CreateInstance<Camera>,
