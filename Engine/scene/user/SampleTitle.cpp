@@ -86,11 +86,11 @@ void SampleTitle::Initialize() {
 
 	// 点光源
 	Object::PointLight* pL1 = Object::CreateInstance<Object::PointLight>();
-	pL1->transform.translation = { 1.6f,0.0f,-1.3f };
+	pL1->transform.translation = { 1.6f,0.0f,-0.1f };
 	pL1->intensity = 0.3f;
 	pL1->isActive = true;
 	Object::PointLight* pL2 = Object::CreateInstance<Object::PointLight>();
-	pL2->transform.translation = { -1.5f,-0.1f,-1.3f };
+	pL2->transform.translation = { -1.5f,-0.1f,-0.1f };
 	pL2->intensity = 0.3f;
 	pL2->isActive = true;
 

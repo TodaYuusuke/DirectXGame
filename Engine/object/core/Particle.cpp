@@ -13,7 +13,6 @@ void Particle::Update(Base::CommandManager* manager) {
 	if (!isActive || !primitive) { return; }
 	// 必須の設定だがいい感じに設定できるタイミングがないので無理やりここで設定
 	primitive->isActive = false;
-	primitive->isActive = false;
 
 	// 関数ポインタがあるなら実行
 	if (func) {
