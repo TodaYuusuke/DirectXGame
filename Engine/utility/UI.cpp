@@ -9,6 +9,7 @@ UI& UI::AddSprite(LWP::Resource::Texture* texture, LWP::Math::Vector2 position, 
 	newSprite->transform.translation.y = position.y;
 	newSprite->anchorPoint = anchor;
 	newSprite->texture = texture;
+	newSprite->isUI = true;
 	sprites_.push_back(newSprite);
 	return *this;
 }
