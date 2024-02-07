@@ -15,10 +15,9 @@ void Particle::Update(Base::CommandManager* manager) {
 	primitive->isActive = false;
 
 	// 関数ポインタがあるなら実行
-	if (func) {
-		elapsedFrame++;
+	if (updateFunction) {
 		for (int i = 0; i < data.size(); i++) {
-			if (func(&data[i], elapsedFrame)) {
+			if (updateFunction(&data[i])) {
 				data.erase(data.begin() + i);
 				i--;
 			}
@@ -28,6 +27,13 @@ void Particle::Update(Base::CommandManager* manager) {
 	manager->SetParticleData(primitive, data);
 }
 
+void Particle::Add(int value) {
+	if (initFunction) {
+		for (int i = 0; i < value; i++) {
+			data.push_back(initFunction(primitive));
+		}
+	}
+}
 void Particle::DebugGUI() {
 	primitive->DebugGUI();
 	ImGui::Checkbox("isActive", &isActive);

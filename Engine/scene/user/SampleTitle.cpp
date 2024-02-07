@@ -27,11 +27,12 @@ void SampleTitle::Initialize() {
 
 	// サブカメラを生成
 	LWP::Object::Camera* c = LWP::Object::CreateInstance<LWP::Object::Camera>();
+	c->shaderPath = "postProcess/SSAO.PS.hlsl";
 	LWP::Object::CreateRenderTexture(c, 640, 360);
 	c->transform.translation = { -5.9f,4.5f,-10.0f };
 	c->transform.rotation = { 0.4f,0.5f,0.0f };
 	// ポストプロセステスト
-	//c->isUsePostProcess = true;
+	c->isUsePostProcess = true;
 	c->isActive = true;
 	
 	mainCamera->isUsePostProcess = true;
@@ -117,7 +118,27 @@ void SampleTitle::Initialize() {
 	// パーティクルテスト
 	particle = Object::CreateInstance<Object::Particle>();
 	particle->primitive = LWP::Resource::LoadModel("cube/cube.obj");
-	particle->func = [](Object::ParticleData* data, int frame) {
+	particle->initFunction = [](Primitive::IPrimitive* primitive) {
+		Object::ParticleData newData{};
+		newData.wtf.translation = primitive->transform.GetWorldPosition();
+		newData.wtf.rotation = primitive->transform.rotation;
+		newData.wtf.scale = primitive->transform.scale;
+
+		// 速度ベクトルを生成
+		int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
+		int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
+		int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
+		// 発射のベクトル
+		Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
+		newData.velocity = dir.Normalize() * 0.2f;
+
+		// パーティクル追加
+		return newData;
+	};
+	particle->updateFunction = [](Object::ParticleData* data) {
+		// 経過フレーム追加
+		data->elapsedFrame++;
+
 		data->wtf.translation += data->velocity;	// 速度ベクトルを加算
 		data->wtf.rotation += data->velocity;	// ついでに回転させとく
 		data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
@@ -125,7 +146,7 @@ void SampleTitle::Initialize() {
 		// 速度ベクトルを弱める
 		data->velocity *= 0.9f;
 
-		return frame > 180 ? true : false;
+		return data->elapsedFrame > 180 ? true : false;
 	};
 	particle->isActive = true;
 }
@@ -160,25 +181,7 @@ void SampleTitle::Update() {
 	}
 	// パーティクル呼び出し
 	if (Keyboard::GetTrigger(DIK_P)) {
-		particle->elapsedFrame = 0;
-		// 全部スケールを小さく
-		for (int i = 0; i < 16; i++) {
-			Object::ParticleData newData{};
-			newData.wtf.translation = { 0.0f,0.0f,0.0f };
-			newData.wtf.rotation = { 0.0f,0.0f,0.0f };
-			newData.wtf.scale = { 0.1f,0.1f,0.1f };
-
-			// 速度ベクトルを生成
-			int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
-			int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
-			int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
-			// 発射のベクトル
-			Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
-			newData.velocity = dir.Normalize() * 0.2f;
-
-			// パーティクル追加
-			particle->data.push_back(newData);
-		}
+		particle->Add(16);
 	}
 	// プログラム終了
 	if (Keyboard::GetTrigger(DIK_O)) {

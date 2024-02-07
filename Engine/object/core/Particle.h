@@ -7,6 +7,7 @@ namespace LWP::Object {
 	struct ParticleData {
 		LWP::Object::WorldTransform wtf;
 		LWP::Math::Vector3 velocity;
+		int elapsedFrame = 0;
 	};
 
 	/// <summary>
@@ -24,21 +25,22 @@ namespace LWP::Object {
 		// 更新
 		void Update(Base::CommandManager* manager) override;
 
+		// パーティクルを追加
+		void Add(int value);
 		// デバッグ用GUI
 		void DebugGUI() override;
 
-
-
-		// 経過フレーム
-		int elapsedFrame = 0;
 		// パーティクルの形状を設定
 		LWP::Primitive::IPrimitive* primitive = nullptr;
-		// パーティクルのトランスフォーム
-		std::vector<ParticleData> data;
-		// 関数ポインタ（返り値：このWTFを削除するかのフラグ、ワールドトランスフォームのポインタ、経過フレーム、インデックス）
-		std::function<bool(ParticleData*, int)> func = nullptr;
+		// 初期化関数ポインタ（）
+		std::function<ParticleData(LWP::Primitive::IPrimitive*)> initFunction = nullptr;
+		// 更新ポインタ（返り値：このWTFを削除するかのフラグ）
+		std::function<bool(ParticleData*)> updateFunction = nullptr;
 
 
 	private: // ** メンバ変数 ** //
+
+		// パーティクルのトランスフォーム
+		std::vector<ParticleData> data;
 	};
 }

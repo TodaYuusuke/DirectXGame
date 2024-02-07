@@ -90,13 +90,10 @@ float2 RandomPointInRadius(float2 center, float radius, uint n)
 float CheckDepth(float a, float b, float c)
 {
     // aとcの中間のデータ - 中心の深度値が大きすぎなければ1を返す
-    if (b < a && b < c)
+    if ((b < a && b < c) || (b > a && b < c) || (b < a && b > c))
     {
         return smoothstep(0.0000002f, 0.0001f, (b - a) + (b - c));
-    }
-    if ((b > a && b < c) || (b < a && b > c))
-    {
-        return smoothstep(0.0000002f, 0.0001f, ((a + c) / 2.0f) - b);
+       //return step(0.0000002f, (b - a) + (b - c));
     }
     return 0;
     // なんかアウトラインになった

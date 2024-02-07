@@ -369,7 +369,6 @@ void CommandManager::SetParticleData(Primitive::IPrimitive* primitive, std::vect
 	for (int w = 0; w < wtfVec.size(); w++) {
 		// ワールドトランスフォームをデータに登録
 		uint32_t worldMatrix = transformData_->GetCount();
-		wtfVec[w].wtf.Parent(&primitive->transform);	// 形状のトランスフォームにペアレントしておく
 		WTFStruct wtf;
 		wtf = wtfVec[w].wtf;
 		transformData_->AddData(wtf);

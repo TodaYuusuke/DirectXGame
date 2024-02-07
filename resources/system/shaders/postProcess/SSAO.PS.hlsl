@@ -89,16 +89,27 @@ float2 RandomPointInRadius(float2 center, float radius, uint n)
 }*/
 float CheckDepth(float a, float b, float c)
 {
+    //float depth = (b * b) - (a + c);
+    //return smoothstep(0.000000002f, 1.1f, depth);
+    
     // aとcの中間のデータ - 中心の深度値が大きすぎなければ1を返す
-    if ((b < a && b < c) || (b > a && b < c) || (b < a && b > c))
+    if ((b > a && b > c) || (b >= a && b > c) || (b > a && b >= c))
     {
-        return smoothstep(0.0000002f, 0.0001f, (b - a) + (b - c));
-        //return step(0.0000002f, (b - a) + (b - c));
+        if ((b - a) + (b - c) > 0.0000001f && (b - a) + (b - c) < 0.001f)
+        {
+            return 1;
+        }
+        //return smoothstep(0.0000002f, 0.0001f, (b - a) + (b - c));
     }
+    //if ((b > a && b < c) || (b < a && b > c))
+    //{
+    //    return 0;
+    //    //return smoothstep(0.00000002f, 0.1f, ((a + c) / 2.0f) - b);
+    //}
     return 0;
     // なんかアウトラインになった
     //if ((a + b + c) == b * 3.0f) { return 0; }
-    //return step((b - a) + (b - c), -0.0002f);
+    //return step((b - a) + (b - c), -0.00001f);
     
     //return step(b * 2, a + c - (abs(a - c) / 2.0f));
     //return step(b, a) * step(b, c);
@@ -115,8 +126,8 @@ float Sampling(float2 uv, float depth, float x, float y)
 float SSAO(float2 uv)
 {
 	// サンプリングする外周の数
-    const uint kSampleCount = 20;
-    const uint kSkipPixel = 2; // 飛ばす距離
+    const uint kSampleCount = 40;
+    const uint kSkipPixel = 4; // 飛ばす距離
 	// 一ピクセル分の値
     const float kWidth = 1.0f / gPara.rWidth;
     const float kHeight = 1.0f / gPara.rHeight;
