@@ -218,6 +218,9 @@
     <ClCompile Include="Engine\object\core\Particle.cpp">
       <Filter>Engine\object\core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\utility\UI.cpp">
+      <Filter>Engine\utilitiy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -484,6 +487,9 @@
     <ClInclude Include="Engine\object\core\Particle.h">
       <Filter>Engine\object\core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\utility\UI.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -621,6 +627,9 @@
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
     <FxCompile Include="resources\system\shaders\postProcess\CCTV.PS.hlsl">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\postProcess\SSAO.PS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
   </ItemGroup>
