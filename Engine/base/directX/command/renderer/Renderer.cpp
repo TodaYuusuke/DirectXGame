@@ -68,6 +68,8 @@ void Renderer::SetMainRenderTarget(LWP::Object::Camera* camera) {
 	if (camera->isUsePostProcess && !camera->GetPPRenderer()) {
 		PostProcessRenderer* newRenderer = new PostProcessRenderer();
 		newRenderer->Init(device_, dxc_, heaps_, ppRoot_.get(), camera->shaderPath);
+		Math::Vector2 reso = camera->GetRenderTexture()->GetTextureSize();
+		newRenderer->SetResolution(static_cast<int>(reso.x), static_cast<int>(reso.y));
 		camera->SetPPRenderer(newRenderer);
 	}
 }
@@ -78,6 +80,8 @@ void Renderer::SetSubRenderTarget(LWP::Object::Camera* camera) {
 	if (camera->isUsePostProcess && !camera->GetPPRenderer()) {
 		PostProcessRenderer* newRenderer = new PostProcessRenderer();
 		newRenderer->Init(device_, dxc_, heaps_, ppRoot_.get(), camera->shaderPath);
+		Math::Vector2 reso = camera->GetRenderTexture()->GetTextureSize();
+		newRenderer->SetResolution(static_cast<int>(reso.x), static_cast<int>(reso.y));
 		camera->SetPPRenderer(newRenderer);
 	}
 }

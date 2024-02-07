@@ -23,6 +23,8 @@ namespace LWP::Base {
 		// レンダリング
 		void Draw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target, bool isMain = false);
 
+		// 解像度をセット
+		void SetResolution(const int& rWidth, const int& rHeight);
 		// シェーダー作り直し
 		void ReCreateShader(std::string path);
 
@@ -30,8 +32,13 @@ namespace LWP::Base {
 	private: // ** メンバ変数 ** //
 
 		// レンダリングするためのデータ
+		struct PostProcessStruct {
+			int time;		// 時間
+			int rWidth;		// 解像度（横幅）
+			int rHeight;	// 解像度（縦幅）
+		};
 		struct RenderData {
-			int* time;	// 時間のデータ
+			PostProcessStruct* data;	// データ
 			ID3D12Resource* resource;	// データのリソース
 			D3D12_GPU_VIRTUAL_ADDRESS view;	// データのビュー
 		};

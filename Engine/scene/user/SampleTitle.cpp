@@ -10,7 +10,7 @@ using namespace LWP::Utility;
 // 初期化
 void SampleTitle::Initialize() {
 	// デバッグ情報表示
-	//Info::ChangeShowDebugGUI();
+	Info::ChangeShowDebugGUI();
 
 	// テクスチャ読み込み
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
@@ -34,14 +34,14 @@ void SampleTitle::Initialize() {
 	//c->isUsePostProcess = true;
 	c->isActive = true;
 	
-	//mainCamera->isUsePostProcess = true;
+	mainCamera->isUsePostProcess = true;
 	//SetMainRenderCamera(subCamera);
 
 	// 地面
 	Mesh* ground = LWP::Resource::LoadModel("cube/cube.obj");
 	ground->transform.translation.y = -1.5f;
 	ground->transform.scale = { 10.0f,0.1f, 10.0f };
-	ground->material.enableLighting = true;
+	//ground->material.enableLighting = true;
 	ground->name = "Ground";
 	//ground->commonColor = new Color()
 
@@ -64,8 +64,9 @@ void SampleTitle::Initialize() {
 	// 球
 	sphere = LWP::Primitive::CreateInstance<Sphere>();
 	sphere->Radius(0.3f);
+	sphere->transform.translation.x = -1.0f;
 	sphere->transform.translation.z = -1.0f;
-	sphere->material.enableLighting = true;
+	//sphere->material.enableLighting = true;
 	sphere->material.shininess = 40.0f;
 	sphere->texture = uvTexture;
 
@@ -73,11 +74,18 @@ void SampleTitle::Initialize() {
 	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
 	cubeModel->transform.translation.y = -3.0f;
 	cubeModel->transform.scale = { 5.0f,5.0f, 0.05f };
-	cubeModel->material.enableLighting = true;
 	cubeModel->isActive = true;
+	//cubeModel->material.enableLighting = true;
 	//stressTestModel = LWP::Resource::LoadModel("RGM-96XJesta_13_td.obj");
 	//stressTestModel->material.enableLighting = true;
 	//stressTestModel->isActive = true;
+	// 左側に壁を置く
+	Primitive::Mesh* cube2 = LWP::Resource::LoadModel("cube/cube.obj");
+	cube2->transform.translation = { -2.1f, -3.0f, -2.0f };
+	cube2->transform.rotation.y = -1.54f;
+	cube2->transform.scale = { 5.0f,5.0f, 0.05f };
+	cube2->isActive = true;
+
 
 	// 平行光源
 	Object::DirectionLight* dirLight = Object::CreateInstance<Object::DirectionLight>();

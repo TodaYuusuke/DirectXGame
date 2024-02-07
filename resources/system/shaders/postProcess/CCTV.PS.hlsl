@@ -3,6 +3,8 @@
 // パラメータ
 struct Parameter {
 	int time;	// !< 時間
+    int rWidth;	// !< 解像度（横幅）
+    int rHeight; // !< 解像度（縦幅） 
 };
 
 // パラメータのバインド
@@ -61,7 +63,7 @@ float2 RandomPointInRadius(float2 center, float radius, uint n) {
     return float2(center.x + xOffset, center.y + yOffset);
 }
 // SSAO
-float SSAO(float2 uv) {
+/*float SSAO(float2 uv) {
 	// サンプリングの数
     const uint kSampleCount = 15;
 	// 中央の深度値
@@ -78,6 +80,102 @@ float SSAO(float2 uv) {
         result += step(centerDepth, sampleDepth);
     }
     return result / kSampleCount;
+}*/
+float CheckDepth(float a, float b, float c) {
+    // aとcの中間のデータ - 中心の深度値が大きすぎなければ1を返す
+    if ((b < a && b < c) || (b > a && b < c) || (b < a && b > c))
+    {
+        return smoothstep(0.0000002f, 0.0001f, (b - a) + (b - c));
+        //return step(0.0000002f, (b - a) + (b - c));
+    }
+    return 0;
+    // なんかアウトラインになった
+    //if ((a + b + c) == b * 3.0f) { return 0; }
+    //return step((b - a) + (b - c), -0.0002f);
+    
+    //return step(b * 2, a + c - (abs(a - c) / 2.0f));
+    //return step(b, a) * step(b, c);
+	
+}
+float Sampling(float2 uv, float depth, float x, float y)
+{
+    return CheckDepth(
+		gTexture[0].Sample(gSampler, float2(uv.x + x, uv.y + y)).r,
+		depth,
+		gTexture[0].Sample(gSampler, float2(uv.x - x, uv.y - y)).r
+	);
+}
+float SSAO(float2 uv)
+{
+	// サンプリングする外周の数
+    const uint kSampleCount = 20;
+    const uint kSkipPixel = 2; // 飛ばす距離
+	// 一ピクセル分の値
+    const float kWidth = 1.0f / gPara.rWidth;
+    const float kHeight = 1.0f / gPara.rHeight;
+	// 中央の深度値
+    float cDepth = gTexture[0].Sample(gSampler, uv).r;
+	// 結果
+    float result = 0.0f;
+	// サンプリングした数
+    int sampleCount = 0;
+	
+	// 十字の部分を担当
+    for (int n = 1; n <= kSampleCount; n += kSkipPixel)
+    {
+        result += Sampling(uv, cDepth, n * kWidth, 0); // 右
+        result += Sampling(uv, cDepth, -n * kWidth, 0); // 左
+        result += Sampling(uv, cDepth, 0, n * kHeight); // 上
+        result += Sampling(uv, cDepth, 0, -n * kHeight); // 下
+        sampleCount += 4;
+    }
+	// 角を担当
+    for (int y = 1; y <= kSampleCount; y += kSkipPixel)
+    {
+        for (int x = 1; x <= kSampleCount; x += kSkipPixel)
+        {
+            result += Sampling(uv, cDepth, x * kWidth, y * kHeight);
+            result += Sampling(uv, cDepth, -x * kWidth, y * kHeight);
+            sampleCount += 2;
+        }
+    }
+	
+    return 1.0f - (result / sampleCount);
+}
+
+// なんかSSAO作ってたはずなのにOutLineになっちゃった(´・ω・｀)
+float OutLine(float2 uv) {
+	// サンプリングする外周の数
+    const uint kSampleCount = 10;
+    const uint kSkipPixel = 1;	// 飛ばす距離
+	// 一ピクセル分の値
+    const float kWidth = 1.0f / gPara.rWidth;
+    const float kHeight = 1.0f / gPara.rHeight;
+	// 中央の深度値
+    float cDepth = gTexture[0].Sample(gSampler, uv).r;
+	// 結果
+    float result = 0.0f;
+	// サンプリングした数
+    int sampleCount = 0;
+	
+	// 十字の部分を担当
+    for (int n = 1; n <= kSampleCount; n+=kSkipPixel) {
+        result += Sampling(uv, cDepth, n * kWidth, 0); // 右
+        result += Sampling(uv, cDepth, -n * kWidth, 0); // 左
+        result += Sampling(uv, cDepth, 0, n * kHeight); // 上
+        result += Sampling(uv, cDepth, 0, -n * kHeight); // 下
+        sampleCount += 4;
+    }
+	// 角を担当
+    for (int y = 1; y <= kSampleCount; y+=kSkipPixel) {
+        for (int x = 1; x <= kSampleCount; x+=kSkipPixel) {
+            result += Sampling(uv, cDepth, x * kWidth, y * kHeight);
+            result += Sampling(uv, cDepth, -x * kWidth, y * kHeight);
+			sampleCount += 2;
+        }
+    }
+	
+    return 1.0f - (result / sampleCount);
 }
 
 float32_t4 main(PSInput input) : SV_TARGET {

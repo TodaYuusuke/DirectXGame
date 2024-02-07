@@ -28,14 +28,14 @@ void PostProcessRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heap
 
 	// リソースを生成
 	renderData_ = std::make_unique<RenderData>();
-	renderData_->resource = CreateBufferResourceStatic(device, sizeof(int));
-	renderData_->resource->Map(0, nullptr, reinterpret_cast<void**>(&renderData_->time));
+	renderData_->resource = CreateBufferResourceStatic(device, sizeof(PostProcessStruct));
+	renderData_->resource->Map(0, nullptr, reinterpret_cast<void**>(&renderData_->data));
 	renderData_->view = renderData_->resource->GetGPUVirtualAddress();
 }
 // レンダリング
 void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::RenderTexture* target, bool isMain) {
 	// 経過時間を追加
-	*renderData_->time += 1;
+	renderData_->data->time += 1;
 
 	// 深度マップのステータス変更
 	RenderResource* rr = target->GetRenderResource();
@@ -74,7 +74,11 @@ void PostProcessRenderer::Draw(ID3D12GraphicsCommandList* list, Resource::Render
 	}
 }
 
-// シェーダー作り直し
+void PostProcessRenderer::SetResolution(const int& rWidth, const int& rHeight) {
+	renderData_->data->rWidth = rWidth;
+	renderData_->data->rHeight = rHeight;
+}
+
 void PostProcessRenderer::ReCreateShader(std::string path) {
 	// PSOを生成
 	pso_.reset(new PSO());
