@@ -153,8 +153,13 @@ void SampleTitle::Initialize() {
 
 // 更新
 void SampleTitle::Update() {
-	// SPACEキーを押すとテクスチャ切り替え
+	// ポストプロセスの切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
+		mainCamera->isUsePostProcess = !mainCamera->isUsePostProcess;
+	}
+
+	// Tキーを押すとテクスチャ切り替え
+	if (Keyboard::GetTrigger(DIK_T)) {
 		if (!useMonsterBall) {
 			sphere->texture = monsterBall;
 			useMonsterBall = true;
