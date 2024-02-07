@@ -35,6 +35,8 @@ void SampleTitle::Initialize() {
 	c->isActive = true;
 	
 	mainCamera->isUsePostProcess = true;
+	mainCamera->shaderPath = "postProcess/SSAO.PS.hlsl";
+	mainCamera->ReCreateShader();
 	//SetMainRenderCamera(subCamera);
 
 	// 地面

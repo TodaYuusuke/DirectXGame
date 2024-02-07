@@ -186,17 +186,11 @@ float32_t4 main(PSInput input) : SV_TARGET {
 	// レンダリングする座標
 	float2 uv = input.texcoord;
 
-	// 樽状彎曲させる
-	uv = LensDistortion(uv);
 	// サンプリング
     output = gTexture[1].Sample(gSampler, uv);
 	
 	// SSAO
-    //output.rgb *= SSAO(uv);
-	// 走査線
-	output.rgb += ScanLine(uv);
-	// ビネット（ビネットは画面自体へついてほしいので元のUVを使う）
-	output.rgb -= Vignette(input.texcoord);
+    output.rgb *= SSAO(uv);
 
 	return output;
 }

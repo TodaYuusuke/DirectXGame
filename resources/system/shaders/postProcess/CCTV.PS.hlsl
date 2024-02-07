@@ -192,7 +192,7 @@ float32_t4 main(PSInput input) : SV_TARGET {
     output = gTexture[1].Sample(gSampler, uv);
 	
 	// SSAO
-    //output.rgb *= SSAO(uv);
+    output.rgb *= SSAO(uv);
 	// 走査線
 	output.rgb += ScanLine(uv);
 	// ビネット（ビネットは画面自体へついてほしいので元のUVを使う）

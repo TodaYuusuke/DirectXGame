@@ -10,6 +10,7 @@ UI& UI::AddSprite(LWP::Resource::Texture* texture, LWP::Math::Vector2 position, 
 	newSprite->anchorPoint = anchor;
 	newSprite->texture = texture;
 	sprites_.push_back(newSprite);
+	return *this;
 }
 
 // 全部のisActiveを変更する関数
