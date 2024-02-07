@@ -1,4 +1,10 @@
 #pragma once
+#include "CatmullRom.h"
+#include "Color.h"
+#include "Counter.h"
+#include "Observer.h"
+#include "UI.h"
+
 #include <string>
 #include <random>
 
