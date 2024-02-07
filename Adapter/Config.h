@@ -50,7 +50,7 @@ namespace LWP {
 		namespace Rendering {
 
 			// 複数描画の最大数（メインの描画はカウントしない）
-			static const UINT kMaxMultiWindowRendering = 5;
+			static const UINT kMaxMultiWindowRendering = 50;
 
 			/// <summary>
 			/// インデックスの最大数

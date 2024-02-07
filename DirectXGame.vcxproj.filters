@@ -632,5 +632,8 @@
     <FxCompile Include="resources\system\shaders\postProcess\SSAO.PS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
+    <FxCompile Include="resources\system\shaders\postProcess\PostProcess.PS.hlsl">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

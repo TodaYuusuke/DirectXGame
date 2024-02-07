@@ -1,9 +1,10 @@
 #include "PassThrough.hlsli"
 
 // パラメータ
-struct Parameter {
-	int time;	// !< 時間
-    int rWidth;	// !< 解像度（横幅）
+struct Parameter
+{
+    int time; // !< 時間
+    int rWidth; // !< 解像度（横幅）
     int rHeight; // !< 解像度（縦幅） 
 };
 
@@ -18,39 +19,44 @@ Texture2D<float32_t4> gTexture[] : register(t0);
 SamplerState gSampler : register(s0);
 
 // ホワイトノイズ
-float WhiteNoise(float2 coord) {
-	return frac(sin(dot(coord, float2(8.7819, 3.255))) * 437.645);
+float WhiteNoise(float2 coord)
+{
+    return frac(sin(dot(coord, float2(8.7819, 3.255))) * 437.645);
 }
 
 // 走査線
-float3 ScanLine(float2 uv) {
-	float time = gPara.time;
-	float3 result = float3(0.0, 0.0, 0.0);
-	float sinv = sin(uv.y * 2 + time * -0.01);
-	float steped = step(0.99, sinv * sinv);
-	result.rgb -= (1 - steped) * abs(sin(uv.y * 50.0 + time * 1.0)) * 0.05;
-	result.rgb -= (1 - steped) * abs(sin(uv.y * 100.0 - time * 2.0)) * 0.08;
-	result.rgb += steped * 0.1;
-	return result;
+float3 ScanLine(float2 uv)
+{
+    float time = gPara.time;
+    float3 result = float3(0.0, 0.0, 0.0);
+    float sinv = sin(uv.y * 2 + time * -0.01);
+    float steped = step(0.99, sinv * sinv);
+    result.rgb -= (1 - steped) * abs(sin(uv.y * 50.0 + time * 1.0)) * 0.05;
+    result.rgb -= (1 - steped) * abs(sin(uv.y * 100.0 - time * 2.0)) * 0.08;
+    result.rgb += steped * 0.1;
+    return result;
 }
 // 樽状彎曲
-float2 LensDistortion(float2 uv) {
-	uv -= float2(0.5, 0.5);
-	float distPower = pow(length(uv), 0.1);
-	uv *= float2(distPower,distPower);
-	uv += float2(0.5 , 0.5);
-	return uv;
+float2 LensDistortion(float2 uv)
+{
+    uv -= float2(0.5, 0.5);
+    float distPower = pow(length(uv), 0.1);
+    uv *= float2(distPower, distPower);
+    uv += float2(0.5, 0.5);
+    return uv;
 }
 // ビネット
-float Vignette(float2 uv) {
-	float vignette = length(float2(0.5,0.5) - uv);
-	vignette = clamp(vignette - 0.2, 0, 1);
-	return vignette;
+float Vignette(float2 uv)
+{
+    float vignette = length(float2(0.5, 0.5) - uv);
+    vignette = clamp(vignette - 0.2, 0, 1);
+    return vignette;
 }
 
 
 // 半径内のランダムな点をサンプリングする関数
-float2 RandomPointInRadius(float2 center, float radius, uint n) {
+float2 RandomPointInRadius(float2 center, float radius, uint n)
+{
     // ランダムな角度を生成する
     float angle = WhiteNoise(float2(center.x + n, center.y + n)); // ホワイトノイズからランダムな角度を生成
     // ランダムな距離を生成する
@@ -81,12 +87,16 @@ float2 RandomPointInRadius(float2 center, float radius, uint n) {
     }
     return result / kSampleCount;
 }*/
-float CheckDepth(float a, float b, float c) {
+float CheckDepth(float a, float b, float c)
+{
     // aとcの中間のデータ - 中心の深度値が大きすぎなければ1を返す
-    if ((b < a && b < c) || (b > a && b < c) || (b < a && b > c))
+    if (b < a && b < c)
     {
         return smoothstep(0.0000002f, 0.0001f, (b - a) + (b - c));
-        //return step(0.0000002f, (b - a) + (b - c));
+    }
+    if ((b > a && b < c) || (b < a && b > c))
+    {
+        return smoothstep(0.0000002f, 0.0001f, ((a + c) / 2.0f) - b);
     }
     return 0;
     // なんかアウトラインになった
@@ -108,8 +118,8 @@ float Sampling(float2 uv, float depth, float x, float y)
 float SSAO(float2 uv)
 {
 	// サンプリングする外周の数
-    const uint kSampleCount = 20;
-    const uint kSkipPixel = 2; // 飛ばす距離
+    const uint kSampleCount = 30;
+    const uint kSkipPixel = 3; // 飛ばす距離
 	// 一ピクセル分の値
     const float kWidth = 1.0f / gPara.rWidth;
     const float kHeight = 1.0f / gPara.rHeight;
@@ -144,10 +154,11 @@ float SSAO(float2 uv)
 }
 
 // なんかSSAO作ってたはずなのにOutLineになっちゃった(´・ω・｀)
-float OutLine(float2 uv) {
+float OutLine(float2 uv)
+{
 	// サンプリングする外周の数
     const uint kSampleCount = 10;
-    const uint kSkipPixel = 1;	// 飛ばす距離
+    const uint kSkipPixel = 1; // 飛ばす距離
 	// 一ピクセル分の値
     const float kWidth = 1.0f / gPara.rWidth;
     const float kHeight = 1.0f / gPara.rHeight;
@@ -159,7 +170,8 @@ float OutLine(float2 uv) {
     int sampleCount = 0;
 	
 	// 十字の部分を担当
-    for (int n = 1; n <= kSampleCount; n+=kSkipPixel) {
+    for (int n = 1; n <= kSampleCount; n += kSkipPixel)
+    {
         result += Sampling(uv, cDepth, n * kWidth, 0); // 右
         result += Sampling(uv, cDepth, -n * kWidth, 0); // 左
         result += Sampling(uv, cDepth, 0, n * kHeight); // 上
@@ -167,11 +179,13 @@ float OutLine(float2 uv) {
         sampleCount += 4;
     }
 	// 角を担当
-    for (int y = 1; y <= kSampleCount; y+=kSkipPixel) {
-        for (int x = 1; x <= kSampleCount; x+=kSkipPixel) {
+    for (int y = 1; y <= kSampleCount; y += kSkipPixel)
+    {
+        for (int x = 1; x <= kSampleCount; x += kSkipPixel)
+        {
             result += Sampling(uv, cDepth, x * kWidth, y * kHeight);
             result += Sampling(uv, cDepth, -x * kWidth, y * kHeight);
-			sampleCount += 2;
+            sampleCount += 2;
         }
     }
 	

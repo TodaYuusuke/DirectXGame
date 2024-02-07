@@ -7,6 +7,7 @@ using namespace LWP::Utility;
 
 // 初期化
 void SampleGameScene::Initialize() {
+
 }
 // 更新
 void SampleGameScene::Update() {
