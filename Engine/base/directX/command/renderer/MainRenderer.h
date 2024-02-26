@@ -63,12 +63,13 @@ namespace LWP::Base {
 		// レンダリングするためのターゲットをセットする関数
 		void SetRenderTarget(LWP::Object::Camera* camera);
 		// レンダリングするためのデータをセットする関数
-		void AddRenderData(const IndexInfoStruct& indexInfo);
+		void AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWireFrame);
 
 		// サブレンダリングのためにRootSignatureを返す関数
 		RootSignature* GetRoot() { return root_.get(); }
 		// サブレンダリングのためにPSOを返す関数
-		PSO* GetPSO() { return pso_.get(); }
+		PSO* GetPSOSolid() { return psoSolid_.get(); }
+		PSO* GetPSOWire() { return psoWire_.get(); }
 		// レンダリングターゲットのカメラクラスを返す関数
 		LWP::Object::Camera* GetTarget() { return renderData_->target; }
 
@@ -79,12 +80,14 @@ namespace LWP::Base {
 		std::unique_ptr<RenderData> renderData_;
 
 		// レンダリングに使うデータ
-		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfo_;
+		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfoSolid_;
+		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfoWire_;
 
 		// ルートシグネチャ
 		std::unique_ptr<RootSignature> root_;
 		// PSO
-		std::unique_ptr<PSO> pso_;
+		std::unique_ptr<PSO> psoSolid_;
+		std::unique_ptr<PSO> psoWire_;
 		// ディスクリプタヒープ管理クラスのポインタ
 		HeapManager* heaps_ = nullptr;
 		// レンダリングにつかうリソースのViewをまとめた構造体

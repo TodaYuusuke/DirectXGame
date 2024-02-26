@@ -221,6 +221,15 @@
     <ClCompile Include="Engine\utility\UI.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\object\collider\cAABB.cpp">
+      <Filter>Engine\object\collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\collider\cOBB.cpp">
+      <Filter>Engine\object\collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\collider\cSphere.cpp">
+      <Filter>Engine\object\collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -490,6 +499,21 @@
     <ClInclude Include="Engine\utility\UI.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\object\collider\cAABB.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\cOBB.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\cSphere.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\ICollider.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\ColliderManager.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -608,6 +632,9 @@
     </Filter>
     <Filter Include="Engine\base\directX\command\renderer">
       <UniqueIdentifier>{376f5f05-25f4-4b0f-aa2a-ac21f55e8270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object\collider">
+      <UniqueIdentifier>{5c833c51-fe4d-4823-a931-9c1782e5bba2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

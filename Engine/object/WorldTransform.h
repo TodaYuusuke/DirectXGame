@@ -63,5 +63,10 @@ namespace LWP::Object {
 		WorldTransform operator+(const WorldTransform& other) const;
 		WorldTransform& operator+=(const WorldTransform& other);
 		WorldTransform operator/(const float &other) const;
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(const WorldTransform& other) const {
+			return { translation == other.translation && rotation == other.rotation && scale == other.scale };
+		}
 	};
 }

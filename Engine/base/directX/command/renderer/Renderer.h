@@ -32,9 +32,7 @@ namespace LWP::Base {
 		void SetSubRenderTarget(LWP::Object::Camera* camera);
 
 		// レンダリングに使うデータを追加する関数
-		void AddMainRenderData(const IndexInfoStruct& indexInfo);
-		// レンダリングに使うデータを追加する関数
-		void AddSubRenderData(const IndexInfoStruct& indexInfo);
+		void AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWireFrame, const bool& isMain);
 
 
 	private: // ** メンバ変数 ** //
@@ -45,7 +43,8 @@ namespace LWP::Base {
 		// サブレンダリング
 		std::vector<std::unique_ptr<SubRenderer>> subRenderer_;
 		// サブレンダリング用IndexInfo
-		std::unique_ptr<IStructured<IndexInfoStruct>> subIndexInfo_;
+		std::unique_ptr<IStructured<IndexInfoStruct>> subIndexInfoSolid_;
+		std::unique_ptr<IStructured<IndexInfoStruct>> subIndexInfoWire_;
 		// サブレンダリングの回数
 		Utility::Counter subCount_;
 

@@ -23,10 +23,11 @@ void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	// サブレンダリングの実体を生成する
 	for (int i = 0; i < kMaxRendering; i++) {
 		subRenderer_.push_back(std::make_unique<SubRenderer>());
-		subRenderer_[i]->Init(device, mainRenderer_->GetRoot(), mainRenderer_->GetPSO(), heaps);
+		subRenderer_[i]->Init(device, mainRenderer_->GetRoot(), mainRenderer_->GetPSOSolid(), mainRenderer_->GetPSOWire(), heaps);
 	}
 	// サブレンダリング用
-	subIndexInfo_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	subIndexInfoSolid_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	subIndexInfoWire_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
 
 	// ポストプロセス用のRootSignatureを生成
 	ppRoot_ = std::make_unique<RootSignature>();
@@ -40,14 +41,14 @@ void Renderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 void Renderer::SetViewStruct(ViewStruct viewStruct) {
 	mainRenderer_->SetViewStruct(viewStruct);
 	for (int i = 0; i < kMaxRendering; i++) {
-		subRenderer_[i]->SetViewStruct(viewStruct, subIndexInfo_->GetView());
+		subRenderer_[i]->SetViewStruct(viewStruct, subIndexInfoSolid_->GetView(), subIndexInfoWire_->GetView());
 	}
 }
 void Renderer::Draw(ID3D12GraphicsCommandList* list) {
 	HRESULT hr = S_FALSE;
 	
 	for (int i = 0; i < subCount_.Get(); i++) {
-		subRenderer_[i]->Draw(list, subIndexInfo_->GetCount() / 3);
+		subRenderer_[i]->Draw(list, subIndexInfoSolid_->GetCount() / 3, subIndexInfoWire_->GetCount() / 3);
 	}
 	mainRenderer_->Draw(list);
 
@@ -57,7 +58,8 @@ void Renderer::Draw(ID3D12GraphicsCommandList* list) {
 }
 void Renderer::Reset() {
 	mainRenderer_->Reset();
-	subIndexInfo_->Reset();
+	subIndexInfoSolid_->Reset();
+	subIndexInfoWire_->Reset();
 	subCount_.Reset();
 }
 
@@ -85,9 +87,16 @@ void Renderer::SetSubRenderTarget(LWP::Object::Camera* camera) {
 		camera->SetPPRenderer(newRenderer);
 	}
 }
-void Renderer::AddMainRenderData(const IndexInfoStruct& indexInfo) {
-	mainRenderer_->AddRenderData(indexInfo);
-}
-void Renderer::AddSubRenderData(const IndexInfoStruct& indexInfo) {
-	subIndexInfo_->AddData(indexInfo);
+void Renderer::AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWireFrame, const bool& isMain) {
+	if (isMain) {
+		mainRenderer_->AddRenderData(indexInfo, isWireFrame);
+	}
+	else {
+		if (isWireFrame) {
+			subIndexInfoWire_->AddData(indexInfo);
+		}
+		else {
+			subIndexInfoSolid_->AddData(indexInfo);
+		}
+	}
 }

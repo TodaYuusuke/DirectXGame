@@ -34,6 +34,11 @@ namespace LWP::Math {
 		Vector3 operator*(const Matrix4x4& other) const;
 		//friend Vector3 operator*(Matrix4x4 scalar, const Vector3& vec) { return vec * scalar; }
 
+		// Vector3 == Vector3
+		bool operator==(const Vector3& other) const {
+			return { x == other.x && y == other.y && z == other.z };
+		}
+
 		/// <summary>
 		/// 3次元ベクトルの長さを求める
 		/// </summary>

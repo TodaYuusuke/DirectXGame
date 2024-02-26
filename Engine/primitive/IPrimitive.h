@@ -50,6 +50,8 @@ namespace LWP::Primitive {
 		
 		// UIとして描画するか
 		bool isUI = false;
+		// ワイヤーフレームで描画する
+		bool isWireFrame = false;
 		// アクティブ切り替え
 		bool isActive = true;
 		

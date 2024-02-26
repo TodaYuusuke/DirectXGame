@@ -325,12 +325,12 @@ void CommandManager::SetDrawData(Primitive::IPrimitive* primitive) {
 
 		// メインコマンドにデータをセット
 		//mainCommand_->SetDrawData(indexInfo);
-		renderer_->AddMainRenderData(indexInfo);
+		renderer_->AddRenderData(indexInfo, primitive->isWireFrame, true);
 		// サブにもセット（現状サブカメラにUIはいらないので除外する）
 		if (!primitive->isUI) {
 			//for (int s = 0; s < subCount_; s++) {
 				//subCommands_[s]->SetDrawData(indexInfo);
-			renderer_->AddSubRenderData(indexInfo);
+			renderer_->AddRenderData(indexInfo, primitive->isWireFrame, false);
 			//}
 		}
 
@@ -385,12 +385,12 @@ void CommandManager::SetParticleData(Primitive::IPrimitive* primitive, std::vect
 
 			// メインコマンドにデータをセット
 			//mainCommand_->SetDrawData(indexInfo);
-			renderer_->AddMainRenderData(indexInfo);
+			renderer_->AddRenderData(indexInfo, primitive->isWireFrame, true);
 			// サブにもセット（現状サブカメラにUIはいらないので除外する）
 			if (!primitive->isUI) {
 				//for (int s = 0; s < subCount_; s++) {
 				//subCommands_[s]->SetDrawData(indexInfo);
-				renderer_->AddSubRenderData(indexInfo);
+				renderer_->AddRenderData(indexInfo, primitive->isWireFrame, false);
 				//}
 			}
 

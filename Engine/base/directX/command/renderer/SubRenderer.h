@@ -18,11 +18,11 @@ namespace LWP::Base {
 		~SubRenderer() = default;
 
 		// 初期化処理
-		void Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoPtr, HeapManager* heaps);
+		void Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoSolidPtr, PSO* psoWirePtr, HeapManager* heaps);
 		// Viewのリストを渡す
-		void SetViewStruct(ViewStruct viewStruct, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoView);
+		void SetViewStruct(ViewStruct viewStruct, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoSolidView, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoWireView);
 		// レンダリング
-		void Draw(ID3D12GraphicsCommandList* list, int instanceCount);
+		void Draw(ID3D12GraphicsCommandList* list, int instanceCountSolid, int instanceCountWire);
 
 		// レンダリングするためのターゲットをセットする関数
 		void SetRenderTarget(LWP::Object::Camera* camera);
@@ -39,13 +39,15 @@ namespace LWP::Base {
 		// 共通のルートシグネチャのポインタ
 		RootSignature* rootPtr_;
 		// 共通のPSOのポインタ
-		PSO* psoPtr_;
+		PSO* psoSolidPtr_;
+		PSO* psoWirePtr_;
 		// ディスクリプタヒープ管理クラスのポインタ
 		HeapManager* heaps_ = nullptr;
 		// レンダリングにつかうリソースのViewをまとめた構造体
 		ViewStruct viewStruct_;
 		// IndexInfo用のView
-		D3D12_GPU_DESCRIPTOR_HANDLE indexInfoView_;
+		D3D12_GPU_DESCRIPTOR_HANDLE indexInfoSolidView_;
+		D3D12_GPU_DESCRIPTOR_HANDLE indexInfoWireView_;
 
 
 	private: // ** メンバ変数 ** //

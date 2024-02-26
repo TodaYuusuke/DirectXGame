@@ -32,8 +32,14 @@ void MainRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build(device);
 	// PSOを生成
-	pso_ = std::make_unique<PSO>();
-	pso_->Init(root_->GetRoot(), dxc)
+	psoSolid_ = std::make_unique<PSO>();
+	psoSolid_->Init(root_->GetRoot(), dxc)
+		.SetVertexShader("Object3d.VS.hlsl")
+		.SetPixelShader("Object3d.PS.hlsl")
+		.Build(device);
+	psoWire_ = std::make_unique<PSO>();
+	psoWire_->Init(root_->GetRoot(), dxc)
+		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
 		.SetVertexShader("Object3d.VS.hlsl")
 		.SetPixelShader("Object3d.PS.hlsl")
 		.Build(device);
@@ -48,7 +54,8 @@ void MainRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	renderData_->cameraBuffer->view_ = renderData_->cameraBuffer->resource_->GetGPUVirtualAddress();
 
 	// IndexInfoの実態作成
-	indexInfo_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	indexInfoSolid_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	indexInfoWire_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
 }
 void MainRenderer::SetViewStruct(ViewStruct viewStruct) {
 	viewStruct_ = viewStruct;
@@ -67,10 +74,10 @@ void MainRenderer::Draw(ID3D12GraphicsCommandList* list) {
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// PSOを設定
-	list->SetPipelineState(pso_->GetState());
+	list->SetPipelineState(psoSolid_->GetState());
 
 	// ディスクリプタテーブルを登録
-	list->SetGraphicsRootDescriptorTable(0, indexInfo_->GetView());
+	list->SetGraphicsRootDescriptorTable(0, indexInfoSolid_->GetView());
 	list->SetGraphicsRootConstantBufferView(1, renderData_->cameraBuffer->view_);
 	list->SetGraphicsRootConstantBufferView(2, viewStruct_.commonData);
 	list->SetGraphicsRootDescriptorTable(3, viewStruct_.vertex);
@@ -83,7 +90,12 @@ void MainRenderer::Draw(ID3D12GraphicsCommandList* list) {
 	list->SetGraphicsRootDescriptorTable(10, viewStruct_.pointShadowMap);
 
 	// 全三角形を１つのDrawCallで描画
-	list->DrawInstanced(3, indexInfo_->GetCount() / 3, 0, 0);
+	list->DrawInstanced(3, indexInfoSolid_->GetCount() / 3, 0, 0);
+
+	// ワイヤーフレームも描画する
+	list->SetGraphicsRootDescriptorTable(0, indexInfoWire_->GetView());
+	list->SetPipelineState(psoWire_->GetState());
+	list->DrawInstanced(3, indexInfoWire_->GetCount() / 3, 0, 0);
 
 	if (renderData_->target->isUsePostProcess) {
 		PostDraw(list);
@@ -93,7 +105,8 @@ void MainRenderer::Draw(ID3D12GraphicsCommandList* list) {
 	}
 }
 void MainRenderer::Reset() {
-	indexInfo_->Reset();
+	indexInfoSolid_->Reset();
+	indexInfoWire_->Reset();
 }
 
 void MainRenderer::SetRenderTarget(Camera* camera) {
@@ -101,8 +114,13 @@ void MainRenderer::SetRenderTarget(Camera* camera) {
 	renderData_->target = camera;
 	*renderData_->cameraBuffer->data_ = *camera;
 }
-void MainRenderer::AddRenderData(const IndexInfoStruct& indexInfo) {
-	indexInfo_->AddData(indexInfo);
+void MainRenderer::AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWireFrame) {
+	if (isWireFrame) {
+		indexInfoWire_->AddData(indexInfo);
+	}
+	else {
+		indexInfoSolid_->AddData(indexInfo);
+	}
 }
 
 void MainRenderer::PreDraw(ID3D12GraphicsCommandList* list) {

@@ -10,9 +10,10 @@ using namespace LWP::Base;
 using namespace LWP::Object;
 constexpr int kMaxRendering = lwpC::Rendering::kMaxMultiWindowRendering;	// 最大値を省略
 
-void SubRenderer::Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoPtr, HeapManager* heaps) {
+void SubRenderer::Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoSolidPtr, PSO* psoWirePtr, HeapManager* heaps) {
 	rootPtr_ = rootPtr;
-	psoPtr_ = psoPtr;
+	psoSolidPtr_ = psoSolidPtr;
+	psoWirePtr_ = psoWirePtr;
 	heaps_ = heaps;
 
 	// ViewProjection用のリソースを生成する
@@ -22,11 +23,12 @@ void SubRenderer::Init(ID3D12Device* device, RootSignature* rootPtr, PSO* psoPtr
 	renderData_->cameraBuffer->resource_->Map(0, nullptr, reinterpret_cast<void**>(&renderData_->cameraBuffer->data_));
 	renderData_->cameraBuffer->view_ = renderData_->cameraBuffer->resource_->GetGPUVirtualAddress();
 }
-void SubRenderer::SetViewStruct(ViewStruct viewStruct, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoView) {
+void SubRenderer::SetViewStruct(ViewStruct viewStruct, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoSolidView, D3D12_GPU_DESCRIPTOR_HANDLE indexInfoWireView) {
 	viewStruct_ = viewStruct;
-	indexInfoView_ = indexInfoView;
+	indexInfoSolidView_ = indexInfoSolidView;
+	indexInfoWireView_ = indexInfoWireView;
 }
-void SubRenderer::Draw(ID3D12GraphicsCommandList* list, int instanceCount) {
+void SubRenderer::Draw(ID3D12GraphicsCommandList* list, int instanceCountSolid, int instanceCountWire) {
 	PreDraw(list);
 
 	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
@@ -34,10 +36,10 @@ void SubRenderer::Draw(ID3D12GraphicsCommandList* list, int instanceCount) {
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// PSOを設定
-	list->SetPipelineState(psoPtr_->GetState());
+	list->SetPipelineState(psoSolidPtr_->GetState());
 
 	// ディスクリプタテーブルを登録
-	list->SetGraphicsRootDescriptorTable(0, indexInfoView_);
+	list->SetGraphicsRootDescriptorTable(0, indexInfoSolidView_);
 	list->SetGraphicsRootConstantBufferView(1, renderData_->cameraBuffer->view_);
 	list->SetGraphicsRootConstantBufferView(2, viewStruct_.commonData);
 	list->SetGraphicsRootDescriptorTable(3, viewStruct_.vertex);
@@ -50,7 +52,12 @@ void SubRenderer::Draw(ID3D12GraphicsCommandList* list, int instanceCount) {
 	list->SetGraphicsRootDescriptorTable(10, viewStruct_.pointShadowMap);
 
 	// 全三角形を１つのDrawCallで描画
-	list->DrawInstanced(3, instanceCount, 0, 0);
+	list->DrawInstanced(3, instanceCountSolid, 0, 0);
+
+	// ワイヤーフレームを描画
+	list->SetGraphicsRootDescriptorTable(0, indexInfoWireView_);
+	list->SetPipelineState(psoWirePtr_->GetState());
+	list->DrawInstanced(3, instanceCountWire, 0, 0);
 
 	PostDraw(list);
 }
