@@ -34,7 +34,7 @@ namespace LWP {
 			/// <para>0 .... 新しいフレームがキューに入れられた場合、前に提示されたフレームの残り時間をキャンセルし、このフレームを廃棄します。</para>
 			/// <para>1 ~ 4 .... 少なくともn個の垂直ブランクのプレゼンテーションを同期します</para>
 			/// </summary>
-			static const UINT kVsync = 1;
+			static const UINT kVsync = 0;
 
 			/// <summary>
 			/// 固定するフレームレート

@@ -1,4 +1,4 @@
-#include "DebugTimer.h"
+#include "FrameTracker.h"
 #include "Adapter.h"
 #include "../Engine/utility/MyUtility.h"
 #include <thread>
@@ -46,7 +46,7 @@ void FrameTracker::Initialize() {
 }
 
 void FrameTracker::Start() {
-	frameStartTime_ = std::chrono::steady_clock::now();
+	//frameStartTime_ = std::chrono::steady_clock::now();
 }
 
 void FrameTracker::End() {
@@ -54,8 +54,8 @@ void FrameTracker::End() {
 	// 経過時間を取得する
 	std::chrono::microseconds frameDuration = std::chrono::duration_cast<std::chrono::microseconds>(frameEndTime_ - frameStartTime_);
 
-	// 固定フレームより早い場合 ->
-	if (frameDuration < kMinTime) {
+	// 固定フレームより早い場合 -> 
+	if (frameDuration < kMinCheckTime) {
 		// 1/N秒経過するまで微小なスリープを繰り返す
 		while (std::chrono::steady_clock::now() - frameStartTime_ < kMinTime) {
 			// 1マイクロ秒スリープ
@@ -69,7 +69,7 @@ void FrameTracker::End() {
 
 	// 経過フレームを足す
 	elapsedFrame_++;
-	//frameStartTime_ = frameEndTime_;
+	frameStartTime_ = frameEndTime_;
 }
 
 double FrameTracker::GetFPS() {
@@ -94,6 +94,11 @@ double FrameTracker::GetElapsedTimeH() {
 	return GetElapsedTimeM() / 60.0;
 }
 
+double FrameTracker::GetDeltaTime() {
+	// N分の1フレームからどれだけ離れているかを係数にする
+	return frameDurations_[frameDurationIndex_ - 1];
+}
+
 void FrameTracker::DebugGUI() {
 	// 60処理ごとに一度取得するFPS
 	if (elapsedFrame_ % 60 == 0) {
@@ -104,6 +109,7 @@ void FrameTracker::DebugGUI() {
 	ImGui::Text("ElapsedTime ... %02d:%02d:%02d:%02d", (int)GetElapsedTimeH() % 24, (int)GetElapsedTimeM() % 60, (int)GetElapsedTimeS() % 60, (int)GetElapsedTimeMS() % 1000 / 10);
 	ImGui::Text("FPS ... %.1f (%.1lf)", frameRate, GetFPS());
 	ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());
+	ImGui::Text("DeltaTime ... %lf", GetDeltaTime());
 	ImGui::Text("ElapsedFrame ... %d", elapsedFrame_);
 	ImGui::End();
 }

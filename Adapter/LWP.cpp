@@ -85,6 +85,8 @@ void Engine::Initialize(const char* title, int width, int height, IScene* firstS
 	resourceManager_->Initialize();
 	// Scene
 	sceneManager_->Initialize(firstScene);
+	// フレームトラッカー
+	debugTimer_.Initialize();
 }
 
 bool Engine::ProcessMessage() {

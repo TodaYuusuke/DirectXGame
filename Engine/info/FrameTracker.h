@@ -26,6 +26,9 @@ namespace LWP::Information {
 		double GetElapsedTimeM();
 		double GetElapsedTimeH();
 
+		// デルタタイムを返す関数
+		double GetDeltaTime();
+
 		// ImGuiを用いて情報表示
 		void DebugGUI();
 
@@ -59,7 +62,5 @@ namespace LWP::Information {
 		long elapsedFrame_ = 0;
 		// 60フレームごとのFPS
 		double frameRate = 0;
-
-
 	};
 }

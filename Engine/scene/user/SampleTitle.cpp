@@ -149,6 +149,10 @@ void SampleTitle::Initialize() {
 		return data->elapsedFrame > 180 ? true : false;
 	};
 	particle->isActive = true;
+
+	mainCamera->isUsePostProcess = false;
+	subCamera->isUsePostProcess = false;
+	c->isUsePostProcess = false;
 }
 
 // 更新

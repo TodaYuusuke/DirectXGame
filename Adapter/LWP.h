@@ -14,7 +14,7 @@
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
-#include "../Engine/info/DebugTimer.h"
+#include "../Engine/info/FrameTracker.h"
 
 #include <dxgidebug.h>
 

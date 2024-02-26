@@ -29,3 +29,7 @@ Math::Vector2 Information::GetWindow() {
 void Information::ChangeShowDebugGUI() {
 	engine->isShowDebugInfo = !engine->isShowDebugInfo;
 }
+
+double Information::GetDeltaTime() {
+	return engine->debugTimer_.GetDeltaTime();
+}

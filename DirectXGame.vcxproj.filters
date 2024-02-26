@@ -116,7 +116,7 @@
     <ClCompile Include="Engine\utility\MyUtility.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\info\DebugTimer.cpp">
+    <ClCompile Include="Engine\info\FrameTracker.cpp">
       <Filter>Engine\info</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
@@ -364,7 +364,7 @@
     <ClInclude Include="Engine\utility\ErrorReporter.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\info\DebugTimer.h">
+    <ClInclude Include="Engine\info\FrameTracker.h">
       <Filter>Engine\info</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXCommon.h">

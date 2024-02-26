@@ -22,6 +22,12 @@ namespace LWP {
 		/// デバッグ情報の表示/非表示を切り替える
 		/// </summary>
 		void ChangeShowDebugGUI();
+
+		/// <summary>
+		/// デルタタイムを取得する関数
+		/// </summary>
+		/// <returns></returns>
+		double GetDeltaTime();
 	};
 	namespace Info = Information;
 };
