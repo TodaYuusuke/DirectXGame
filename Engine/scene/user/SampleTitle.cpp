@@ -153,6 +153,10 @@ void SampleTitle::Initialize() {
 	mainCamera->isUsePostProcess = false;
 	subCamera->isUsePostProcess = false;
 	c->isUsePostProcess = false;
+
+
+	Cube* cube =LWP::Primitive::CreateInstance<Cube>();
+	cube->texture = monsterBall;
 }
 
 // 更新

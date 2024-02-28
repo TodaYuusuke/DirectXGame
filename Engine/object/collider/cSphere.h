@@ -16,11 +16,22 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(OBB* c) override;
 		bool CheckCollision(Sphere* c) override;
 
-		// observer用のオペレーターオーバーロード
+		// コンストラクタ
+		Sphere() = default;
+		Sphere(const float& radius_);
+
+		// ** オペレーターオーバーロード ** //
+		// Observer用（==）
 		bool operator==(const Sphere& other) const {
-			return { *followPtr_ == *other.followPtr_ &&
+			return {
+				*followPtr_ == *other.followPtr_ &&
 				radius == other.radius
 			};
 		}
+
+
+	private: // ** プライベートな関数 ** //
+		// ImGuiの派生クラス
+		void DerivedDebugGUI() override;
 	};
 };

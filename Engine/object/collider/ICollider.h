@@ -1,5 +1,11 @@
 #include "object/WorldTransform.h"
 
+#if DEMO
+namespace LWP::Base {
+	class CommandManager;
+}
+#endif
+
 namespace LWP::Object::Collider {
 	// 前方宣言
 	class AABB;
@@ -14,18 +20,30 @@ namespace LWP::Object::Collider {
 		// デストラクタ
 		~ICollider() = default;
 
-		// セットする関数
+		// 追従するトランスフォームのポインタをセットする関数
 		void SetFollowTarget(LWP::Object::WorldTransform* ptr) { followPtr_ = ptr; }
 		// ヒット時に正常な位置に修正するベクトルを加算
 		void AdjustPosition(const LWP::Math::Vector3& fixVector) { followPtr_->translation += fixVector; }
 
+		// ワールド座標を取得
+		LWP::Math::Vector3 GetWorldPosition() { return followPtr_->GetWorldPosition(); }
+		// ImGui
+		void DebugGUI();
+#if DEMO
+		// ** デバッグ用の描画関数 ** //
+		virtual void ShowWireFrame(Base::CommandManager* manager) { manager; }
+#endif
 
 	public: // ** 各形状に対する当たり判定 ** //
-		virtual bool CheckCollision(AABB* c) { return false; }
-		virtual bool CheckCollision(OBB* c) { return false; }
-		virtual bool CheckCollision(Sphere* c) { return false; }
+		virtual bool CheckCollision(AABB* c) { c; return false; }
+		virtual bool CheckCollision(OBB* c) { c; return false; }
+		virtual bool CheckCollision(Sphere* c) { c; return false; }
 
-	protected: // ** 継承用変数 ** //
+	protected: // ** 派生クラス用の関数 ** //
+		// 派生クラスで追加のImGuiを実装するとき用の関数
+		virtual void DerivedDebugGUI() {/* 基底クラスでは記述なし */}
+
+	protected: // ** 派生クラス用の変数 ** //
 		// 追従するワールドトランスフォーム
 		LWP::Object::WorldTransform* followPtr_ = nullptr;
 
@@ -33,5 +51,12 @@ namespace LWP::Object::Collider {
 		bool isMove = true;
 		// 前フレーム当たっていたかのフラグ
 		bool preHit = false;
+		// アクティブ切り替え
+		bool isActive = true;
+#if DEMO
+		// ** デバッグ用の変数 ** //
+		bool isShowWireFrame = true;
+#endif
+
 	};
 };

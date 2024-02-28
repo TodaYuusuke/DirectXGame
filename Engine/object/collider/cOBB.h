@@ -18,7 +18,7 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(OBB* c) override;
 		bool CheckCollision(Sphere* c) override;
 
-		// observer用のオペレーターオーバーロード
+		// Observer用のオペレーターオーバーロード
 		bool operator==(const OBB& other) const {
 			return { *followPtr_ == *other.followPtr_ &&
 				orientations[0] == other.orientations[0] &&
@@ -27,5 +27,9 @@ namespace LWP::Object::Collider {
 				size == other.size
 			};
 		}
+
+	private: // ** プライベートな関数 ** //
+		// ImGuiの派生クラス
+		void DerivedDebugGUI() override;
 	};
 };

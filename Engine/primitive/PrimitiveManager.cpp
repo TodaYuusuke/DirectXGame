@@ -20,12 +20,13 @@ void Manager::Update() {
 	static std::vector<std::function<IPrimitive*()>> functions = {
 		&LWP::Primitive::CreateInstance<Triangle>,
 		&LWP::Primitive::CreateInstance<Surface>,
-		&LWP::Primitive::CreateInstance<Sphere>,
 		&LWP::Primitive::CreateInstance<Sprite>,
+		&LWP::Primitive::CreateInstance<Cube>,
+		&LWP::Primitive::CreateInstance<Sphere>,
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Triangle","Surface","Sphere", "Sprite"
+		"Triangle","Surface","Sprite", "Cube", "Sphere"
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
