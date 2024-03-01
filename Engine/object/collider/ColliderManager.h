@@ -9,6 +9,20 @@ namespace LWP::Object::Collider {
 	/// </summary>
 	class Manager {
 	public: // ** パブリックなメンバ関数 ** //
+		// コンストラクタ
+		Manager() = default;
+		// デストラクタ
+		~Manager() = default;
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// 更新
+		/// </summary>
+		void Update();
 
 	private: // ** メンバ関数 ** //
 

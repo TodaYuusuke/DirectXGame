@@ -17,6 +17,7 @@
 namespace lwp {
 	using namespace LWP::Common;
 	using namespace LWP::Input;
+	using namespace LWP::Math;
 	using namespace LWP::Primitive;
 	using namespace LWP::Object;
 	using namespace LWP::Resource;
