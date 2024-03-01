@@ -105,7 +105,7 @@ void FrameTracker::DebugGUI() {
 		frameRate = GetFPS();
 	}
 
-	ImGui::Begin("Information");
+	ImGui::Begin("Information", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Text("ElapsedTime ... %02d:%02d:%02d:%02d", (int)GetElapsedTimeH() % 24, (int)GetElapsedTimeM() % 60, (int)GetElapsedTimeS() % 60, (int)GetElapsedTimeMS() % 1000 / 10);
 	ImGui::Text("FPS ... %.1f (%.1lf)", frameRate, GetFPS());
 	ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());

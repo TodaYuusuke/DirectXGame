@@ -1,3 +1,4 @@
+#pragma once
 #include "ICollider.h"
 
 // 前方宣言
@@ -13,10 +14,9 @@ namespace LWP::Object::Collider {
 		: public ICollider {
 	public:
 		// 最小
-		LWP::Math::Vector3 min;
+		LWP::Math::Vector3 min = { -0.5f,-0.5f,-0.5f };
 		// 最大
-		LWP::Math::Vector3 max;
-
+		LWP::Math::Vector3 max = { 0.5f,0.5f,0.5f };
 
 		// 形状から包み込む最小のAABBを生成する関数
 		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);

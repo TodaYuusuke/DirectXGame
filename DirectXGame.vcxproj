@@ -149,6 +149,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Adapter\component\Common.cpp" />
     <ClCompile Include="Adapter\component\Information.cpp" />
     <ClCompile Include="Adapter\component\Input.cpp" />
     <ClCompile Include="Adapter\component\Object.cpp" />
@@ -244,6 +245,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h" />
+    <ClInclude Include="Adapter\component\Common.h" />
     <ClInclude Include="Adapter\component\Information.h" />
     <ClInclude Include="Adapter\component\Input.h" />
     <ClInclude Include="Adapter\component\Object.h" />
@@ -290,10 +292,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\vector\Vector3.h" />
     <ClInclude Include="Engine\math\vector\Vector4.h" />
     <ClInclude Include="Engine\object\collider\cAABB.h" />
-    <ClInclude Include="Engine\object\collider\ColliderManager.h" />
-    <ClInclude Include="Engine\object\collider\ICollider.h" />
     <ClInclude Include="Engine\object\collider\cOBB.h" />
+    <ClInclude Include="Engine\object\collider\ColliderManager.h" />
     <ClInclude Include="Engine\object\collider\cSphere.h" />
+    <ClInclude Include="Engine\object\collider\ICollider.h" />
+    <ClInclude Include="Engine\object\collider\Mask.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
     <ClInclude Include="Engine\object\core\CoreList.h" />
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />

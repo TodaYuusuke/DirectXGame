@@ -1,6 +1,7 @@
 #include "cAABB.h"
 #include "primitive/IPrimitive.h"
 #if DEMO
+//#include "component/Primitive.h"
 #include "base/directX/command/CommandManager.h"
 #endif
 
@@ -40,10 +41,16 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 	max = max_;
 }
 
+#if DEMO
 void AABB::ShowWireFrame(Base::CommandManager* manager) {
+	// 立方体のインスタンスを作成
+	//static Cube* cube = LWP::Primitive::CreateInstance<Cube>();
+	//cube->CreateFromAABB(*this);
+	//cube->isWireFrame = true;
+	//manager->SetDrawData(cube);
 	manager;
-	//manager->SetDrawData();
 };
+#endif
 
 void AABB::DerivedDebugGUI() {
 

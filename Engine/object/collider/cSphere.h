@@ -1,3 +1,4 @@
+#pragma once
 #include "ICollider.h"
 
 namespace LWP::Object::Collider {

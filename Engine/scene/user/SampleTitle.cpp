@@ -17,7 +17,7 @@ void SampleTitle::Initialize() {
 	monsterBall = LWP::Resource::LoadTextureLongPath("resources/system/texture/monsterBall.png");
 
 	// サブカメラを生成
-	subCamera = LWP::Object::CreateInstance<LWP::Object::Camera>();
+	subCamera = LWP::Common::CreateInstance<LWP::Object::Camera>();
 	LWP::Object::CreateRenderTexture(subCamera, 640, 360);
 	subCamera->transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera->transform.rotation = { 0.4f,-0.5f,0.0f };
@@ -26,7 +26,7 @@ void SampleTitle::Initialize() {
 	subCamera->isActive = true;
 
 	// サブカメラを生成
-	LWP::Object::Camera* c = LWP::Object::CreateInstance<LWP::Object::Camera>();
+	LWP::Object::Camera* c = LWP::Common::CreateInstance<LWP::Object::Camera>();
 	c->shaderPath = "postProcess/SSAO.PS.hlsl";
 	LWP::Object::CreateRenderTexture(c, 640, 360);
 	c->transform.translation = { -5.9f,4.5f,-10.0f };
@@ -50,7 +50,7 @@ void SampleTitle::Initialize() {
 
 	// 三角形
 	for (int i = 0; i < 2; i++) {
-		tri[i] = LWP::Primitive::CreateInstance<Triangle>();
+		tri[i] = LWP::Common::CreateInstance<Triangle>();
 	}
 	tri[0]->vertices[0].color = Color(RED);
 	tri[0]->vertices[1].color = Color(BLUE);
@@ -59,13 +59,13 @@ void SampleTitle::Initialize() {
 	tri[1]->texture = uvTexture;
 
 	// 平面
-	surface = LWP::Primitive::CreateInstance<Surface>();
+	surface = LWP::Common::CreateInstance<Surface>();
 	surface->transform.translation.x = -0.7f;
 	surface->texture = uvTexture;
 	surface->isActive = false;
 
 	// 球
-	sphere = LWP::Primitive::CreateInstance<Sphere>();
+	sphere = LWP::Common::CreateInstance<Sphere>();
 	sphere->Radius(0.3f);
 	sphere->transform.translation.x = -1.0f;
 	sphere->transform.translation.z = -1.0f;
@@ -157,6 +157,11 @@ void SampleTitle::Initialize() {
 
 	Cube* cube =LWP::Primitive::CreateInstance<Cube>();
 	cube->texture = monsterBall;
+
+
+	LWP::Object::Collider::AABB* aabbCol = new LWP::Object::Collider::AABB();
+	aabbCol->CreateFromPrimitive(sphere);
+
 }
 
 // 更新

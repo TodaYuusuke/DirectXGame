@@ -1,4 +1,6 @@
+#pragma once
 #include "object/WorldTransform.h"
+#include "Mask.h"
 
 #if DEMO
 namespace LWP::Base {
@@ -35,17 +37,19 @@ namespace LWP::Object::Collider {
 #endif
 
 	public: // ** 各形状に対する当たり判定 ** //
-		virtual bool CheckCollision(AABB* c) { c; return false; }
-		virtual bool CheckCollision(OBB* c) { c; return false; }
-		virtual bool CheckCollision(Sphere* c) { c; return false; }
+		virtual bool CheckCollision(AABB* c) = 0;
+		virtual bool CheckCollision(OBB* c) = 0;
+		virtual bool CheckCollision(Sphere* c) = 0;
 
-	protected: // ** 派生クラス用の関数 ** //
+	protected: // ** 派生クラス用の関数と変数 ** //
+		// 追従するワールドトランスフォーム
+		LWP::Object::WorldTransform* followPtr_ = nullptr;
 		// 派生クラスで追加のImGuiを実装するとき用の関数
 		virtual void DerivedDebugGUI() {/* 基底クラスでは記述なし */}
 
-	protected: // ** 派生クラス用の変数 ** //
-		// 追従するワールドトランスフォーム
-		LWP::Object::WorldTransform* followPtr_ = nullptr;
+	public: // ** 共通の変数 ** //
+		// マスク処理
+		Mask mask;
 
 		// 動くかのフラグ
 		bool isMove = true;

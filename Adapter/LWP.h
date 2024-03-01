@@ -11,6 +11,7 @@
 #include "../Engine/input/InputManager.h"
 
 #include "../Engine/object/ObjectManager.h"
+#include "../Engine/object/collider/ColliderManager.h"
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"

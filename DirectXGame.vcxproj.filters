@@ -224,17 +224,20 @@
     <ClCompile Include="Engine\object\collider\cAABB.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\collider\cOBB.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\collider\cSphere.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\collider\ICollider.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\primitive\3d\Cube.cpp">
       <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\collider\cSphere.cpp">
+      <Filter>Engine\object\collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\collider\cOBB.cpp">
+      <Filter>Engine\object\collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter\component\Common.cpp">
+      <Filter>Adapter\component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -508,12 +511,6 @@
     <ClInclude Include="Engine\object\collider\cAABB.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\collider\cOBB.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\collider\cSphere.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\collider\ICollider.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
@@ -522,6 +519,18 @@
     </ClInclude>
     <ClInclude Include="Engine\primitive\3d\Cube.h">
       <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\cSphere.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\cOBB.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\collider\Mask.h">
+      <Filter>Engine\object\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Common.h">
+      <Filter>Adapter\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

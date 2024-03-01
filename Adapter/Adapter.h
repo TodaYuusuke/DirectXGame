@@ -1,4 +1,5 @@
 #pragma once
+#include "component/Common.h"
 #include "component/System.h"
 #include "component/Input.h"
 #include "component/Primitive.h"
@@ -14,6 +15,7 @@
 
 // ** 短縮名 ** //
 namespace lwp {
+	using namespace LWP::Common;
 	using namespace LWP::Input;
 	using namespace LWP::Primitive;
 	using namespace LWP::Object;
