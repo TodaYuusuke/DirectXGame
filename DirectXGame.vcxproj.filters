@@ -239,6 +239,9 @@
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\object\collider\ColliderManager.cpp">
+      <Filter>Engine\object\collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">

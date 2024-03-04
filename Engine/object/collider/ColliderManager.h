@@ -3,6 +3,8 @@
 //#include "cOBB.h"
 //#include "cSphere.h"
 
+#include <map>
+
 namespace LWP::Object::Collider {
 	/// <summary>
 	/// 当たり判定用の管理クラス
@@ -24,8 +26,43 @@ namespace LWP::Object::Collider {
 		/// </summary>
 		void Update();
 
+		/// <summary>
+		/// インスタンスを登録する
+		/// </summary>
+		/// <param name="object">登録するオブジェクト</param>
+		template <IsICollider TCollider>
+		inline TCollider* CreateInstance() {
+			TCollider* newObject = new TCollider();
+
+			// typeid を使用して型情報を取得
+			const std::type_info& typeInfo = typeid(TCollider);
+			// type_info オブジェクトからクラス名を取得
+			std::string className = typeInfo.name();
+			// 名前空間部分を削除（LWP::Object::Collider::）
+			className = className.erase(0, 29);
+
+			// カウントのマップから数を測定し、デフォルトの名前を登録
+			if (!colliderCountMap_.count(className)) {
+				// 存在しない場合のみ0で初期化
+				colliderCountMap_[className] = 0;
+			}
+			newObject->name = className + "_" + std::to_string(colliderCountMap_[className]++);
+
+			colliders_.push_back(newObject);
+			return newObject;
+		}
+
 	private: // ** メンバ関数 ** //
 
+		// コライダーのリスト
+		std::vector<ICollider*> colliders_;
+		// インスタンスカウント用マップ
+		std::map<std::string, int> colliderCountMap_;
 
+#if DEMO
+		// ImGui用変数
+		int selectedClass = 0;
+		int currentItem = 0;
+#endif
 	};
 };

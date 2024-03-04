@@ -1,6 +1,8 @@
 #include "DIKeyboard.h"
 #include "../../base/WinApp.h"
 
+#include "utility/MyUtility.h"
+
 using namespace LWP::Input;
 
 void DIKeyboard::Initialize(Base::WinApp* winApp, IDirectInput8* directInput) {
@@ -29,7 +31,10 @@ void DIKeyboard::Update() {
 	memcpy(preKeys_, keys_, sizeof(keys_));
 
 	// 全キーの入力状態を取得する
-	keyboard_->GetDeviceState(sizeof(keys_), keys_);
+	if (FAILED(keyboard_->GetDeviceState(sizeof(keys_), keys_))) {
+		// キー入力をクリアしておく
+		ZeroMemory(keys_, sizeof(keys_));
+	}
 
 }
 

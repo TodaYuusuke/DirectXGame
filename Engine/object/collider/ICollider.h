@@ -2,6 +2,8 @@
 #include "object/WorldTransform.h"
 #include "Mask.h"
 
+#include <functional>
+
 #if DEMO
 namespace LWP::Base {
 	class CommandManager;
@@ -20,7 +22,7 @@ namespace LWP::Object::Collider {
 	class ICollider {
 	public: // ** パブリックなメンバ関数 ** //
 		// デストラクタ
-		~ICollider() = default;
+		virtual ~ICollider() = default;
 
 		// 追従するトランスフォームのポインタをセットする関数
 		void SetFollowTarget(LWP::Object::WorldTransform* ptr) { followPtr_ = ptr; }
@@ -41,9 +43,13 @@ namespace LWP::Object::Collider {
 		virtual bool CheckCollision(OBB* c) = 0;
 		virtual bool CheckCollision(Sphere* c) = 0;
 
+
 	protected: // ** 派生クラス用の関数と変数 ** //
 		// 追従するワールドトランスフォーム
 		LWP::Object::WorldTransform* followPtr_ = nullptr;
+		// 前フレーム当たっていたかのフラグ
+		bool preHit = false;
+
 		// 派生クラスで追加のImGuiを実装するとき用の関数
 		virtual void DerivedDebugGUI() {/* 基底クラスでは記述なし */}
 
@@ -53,14 +59,27 @@ namespace LWP::Object::Collider {
 
 		// 動くかのフラグ
 		bool isMove = true;
-		// 前フレーム当たっていたかのフラグ
-		bool preHit = false;
 		// アクティブ切り替え
 		bool isActive = true;
 #if DEMO
 		// ** デバッグ用の変数 ** //
 		bool isShowWireFrame = true;
+		std::string name = "ICollider";	// 固有名詞
 #endif
 
+	public: // ** ヒット時のリアクション用の関数たち ** //
+
+		// ヒットした瞬間に呼び出される関数
+		std::function<void(ICollider* self, ICollider* hit)> trigger = [](ICollider*, ICollider*){};
+		// ヒットしている間呼び出される関数
+		std::function<void(ICollider* self, ICollider* hit)> stay = [](ICollider*, ICollider*) {};
+		// 離れた瞬間に呼び出される関数5
+		std::function<void(ICollider* self, ICollider* hit)> exit = [](ICollider*, ICollider*) {};
 	};
 };
+
+/// <summary>
+/// IColliderを継承したクラスのみを選択できるテンプレート
+/// </summary>
+template<class ColliderT>
+concept IsICollider = std::is_base_of<LWP::Object::Collider::ICollider, ColliderT>::value;

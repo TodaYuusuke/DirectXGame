@@ -26,5 +26,20 @@ namespace LWP {
 		/// <param name="width">レンダリング解像度（横幅）</param>
 		/// <param name="height">レンダリング解像度（縦幅）</param>
 		void CreateRenderTexture(LWP::Object::Camera* camera, const int width, const int height);
+
+		/// <summary>
+		/// 当たり判定関連
+		/// </summary>
+		namespace Collider {
+			/// <summary>
+			/// コライダーのインスタンスを作成
+			/// </summary>
+			/// <typeparam name="TObject">オブジェクトの種類</typeparam>
+			/// <returns>オブジェクトのインスタンス</returns>
+			template <IsICollider TCollider>
+			TCollider* CreateInstance() {
+				return System::engine->colliderManager_->CreateInstance<TCollider>();
+			}
+		};
 	};
 };

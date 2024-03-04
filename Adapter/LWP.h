@@ -92,6 +92,7 @@ namespace LWP::System {
 
 		// オブジェクト管理
 		std::unique_ptr<Object::Manager> objectManager_;
+		std::unique_ptr<Object::Collider::Manager> colliderManager_;
 		// 描画管理
 		std::unique_ptr<Primitive::Manager> primitiveManager_;
 		// リソース管理

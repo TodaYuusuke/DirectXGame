@@ -206,6 +206,10 @@ void SampleTitle::Update() {
 		LWP::System::End();
 	}
 
+	if (Keyboard::GetPress(DIK_L)) {
+		Utility::Log("Test");
+	}
+
 	// ESCキーでデバッグ情報表示切り替え
 	if (Keyboard::GetTrigger(DIK_ESCAPE)) {
 		Info::ChangeShowDebugGUI();

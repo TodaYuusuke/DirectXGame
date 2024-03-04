@@ -27,6 +27,7 @@ void Engine::Run(IScene* firstScene) {
 		sceneManager_->Update();
 		objectManager_->Update(directXCommon_->GetCommandManager());	// 描画に必要なデータをCommandManagerに登録している
 		primitiveManager_->Update();
+		colliderManager_->Update();	// 当たり判定検証
 
 		// カメラのビュープロジェクションをcommandManagerに
 		directXCommon_->GetCommandManager()->SetMainRendering(sceneManager_->GetMainCamera());
@@ -47,6 +48,8 @@ void Engine::InitializeForScene() {
 	objectManager_->Initialize();
 	// Primitive
 	primitiveManager_->Initialize();
+	// Primitive
+	colliderManager_->Initialize();
 	// Resource
 	//resourceManager_->Initialize();
 }
@@ -62,6 +65,8 @@ void Engine::Initialize(const char* title, int width, int height, IScene* firstS
 	inputManager_ = std::make_unique<Input::Manager>();
 	// Object
 	objectManager_ = std::make_unique<Object::Manager>();
+	// Collider
+	colliderManager_ = std::make_unique<Object::Collider::Manager>();
 	// Primitive
 	primitiveManager_ = std::make_unique<Primitive::Manager>();
 	// Resource
@@ -79,6 +84,8 @@ void Engine::Initialize(const char* title, int width, int height, IScene* firstS
 	inputManager_->Initialize(winApp_.get());
 	// Object
 	objectManager_->Initialize();
+	// Collider
+	colliderManager_->Initialize();
 	// Primitive
 	primitiveManager_->Initialize();
 	// Resource
