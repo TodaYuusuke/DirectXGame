@@ -35,7 +35,6 @@ void DIKeyboard::Update() {
 		// キー入力をクリアしておく
 		ZeroMemory(keys_, sizeof(keys_));
 	}
-
 }
 
 
