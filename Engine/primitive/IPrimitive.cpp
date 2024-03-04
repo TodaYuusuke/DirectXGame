@@ -108,5 +108,5 @@ int IPrimitive::GetIndexCount() const {
 }
 
 bool IPrimitive::GetChanged() {
-	return texture.GetChanged() + DerivedGetChanged();
+	return DerivedGetChanged();
 }

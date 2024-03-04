@@ -6,6 +6,7 @@ using namespace LWP::Input;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
+using namespace LWP::Object;
 
 // 初期化
 void SampleTitle::Initialize() {
@@ -159,7 +160,7 @@ void SampleTitle::Initialize() {
 	cube->texture = monsterBall;
 
 
-	LWP::Object::Collider::AABB* aabbCol = new LWP::Object::Collider::AABB();
+	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
 	aabbCol->CreateFromPrimitive(sphere);
 
 }
@@ -204,10 +205,6 @@ void SampleTitle::Update() {
 	// プログラム終了
 	if (Keyboard::GetTrigger(DIK_O)) {
 		LWP::System::End();
-	}
-
-	if (Keyboard::GetPress(DIK_L)) {
-		Utility::Log("Test");
 	}
 
 	// ESCキーでデバッグ情報表示切り替え

@@ -1,5 +1,6 @@
 #pragma once
-#include "object/WorldTransform.h"
+#include "primitive/IPrimitive.h"
+#include "utility/Observer.h"
 #include "Mask.h"
 
 #include <functional>
@@ -25,12 +26,12 @@ namespace LWP::Object::Collider {
 		virtual ~ICollider() = default;
 
 		// 追従するトランスフォームのポインタをセットする関数
-		void SetFollowTarget(LWP::Object::WorldTransform* ptr) { followPtr_ = ptr; }
+		void SetFollowTarget(LWP::Primitive::IPrimitive* ptr) { follow_ = ptr; }
 		// ヒット時に正常な位置に修正するベクトルを加算
-		void AdjustPosition(const LWP::Math::Vector3& fixVector) { followPtr_->translation += fixVector; }
+		void AdjustPosition(const LWP::Math::Vector3& fixVector) { follow_.t->transform += fixVector; }
 
 		// ワールド座標を取得
-		LWP::Math::Vector3 GetWorldPosition() { return followPtr_->GetWorldPosition(); }
+		LWP::Math::Vector3 GetWorldPosition() { return follow_.t->transform.GetWorldPosition(); }
 		// ImGui
 		void DebugGUI();
 #if DEMO
@@ -45,8 +46,8 @@ namespace LWP::Object::Collider {
 
 
 	protected: // ** 派生クラス用の関数と変数 ** //
-		// 追従するワールドトランスフォーム
-		LWP::Object::WorldTransform* followPtr_ = nullptr;
+		// 追従する形状
+		Utility::Observer<LWP::Primitive::IPrimitive*> follow_ = nullptr;
 		// 前フレーム当たっていたかのフラグ
 		bool preHit = false;
 
@@ -64,6 +65,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 		// ** デバッグ用の変数 ** //
 		bool isShowWireFrame = true;
+		bool hitting = false;
 		std::string name = "ICollider";	// 固有名詞
 #endif
 

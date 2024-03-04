@@ -22,5 +22,9 @@ namespace LWP {
 		inline TOb* CreateInstance() {
 			return System::engine->objectManager_->CreateInstance<TOb>();
 		}
+		template<IsICollider TCol>
+		inline TCol* CreateInstance() {
+			return System::engine->colliderManager_->CreateInstance<TCol>();
+		}
 	};
 };

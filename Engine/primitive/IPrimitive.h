@@ -21,6 +21,13 @@ namespace LWP::Primitive {
 		Math::Vector2 texCoord; // UV座標
 		Math::Vector3 normal;	// 法線
 		Utility::Color color = { 255,255,255,255 };	// 色
+
+		/// <summary>
+		/// Observerクラス用のオペレーターオーバーロード
+		/// </summary>
+		bool operator==(const Vertex& other) const {
+			return { position == other.position && texCoord == other.texCoord && normal == other.normal };
+		}
 	};
 
 
@@ -41,7 +48,7 @@ namespace LWP::Primitive {
 		// マテリアル
 		Resource::Material material;
 		// テクスチャ
-		Utility::Observer<Resource::ITexture*> texture = nullptr;
+		Utility::ObserverPtr<Resource::ITexture*> texture = nullptr;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する
@@ -63,10 +70,22 @@ namespace LWP::Primitive {
 	public: // ** 共通関数 ** //
 		
 		/// <summary>
+		/// デフォルトコンストラクタ（ユーザ呼び出し禁止）
+		/// </summary>
+		IPrimitive() = default;
+		/// <summary>
 		/// コンストラクタ（ユーザ呼び出し禁止）
 		/// </summary>
 		IPrimitive(Base::CommandManager* manager);
-		
+
+		/// <summary>
+		/// Observerクラス用のオペレーターオーバーロード
+		/// </summary>
+		bool operator==(const IPrimitive& other) const {
+			return { vertices == other.vertices && indexes == other.indexes && transform == other.transform };
+		}
+
+
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
 		/// </summary>

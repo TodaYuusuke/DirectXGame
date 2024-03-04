@@ -8,7 +8,7 @@ void ICollider::DebugGUI() {
 	DerivedDebugGUI();
 	ImGui::Text("- Below this are common variables - ");
 	// 追従先のワールドトランスフォーム
-	if (followPtr_) { followPtr_->DebugGUI(); }
+	if (follow_.t) { follow_.t->DebugGUI(); }
 	
 	ImGui::Checkbox("isMove", &isMove);	// 動くかのフラグ
 	ImGui::Checkbox("isActive", &isActive);	// 有効/無効

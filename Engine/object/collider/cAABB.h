@@ -20,8 +20,6 @@ namespace LWP::Object::Collider {
 
 		// 形状から包み込む最小のAABBを生成する関数
 		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
-		// ワールドトランスフォームを適応したAABBの値を返す関数
-		const AABB& GetTransformed() { return *this * *followPtr_; };
 
 
 	public: // ** 各形状に対する当たり判定 ** //
@@ -33,17 +31,10 @@ namespace LWP::Object::Collider {
 		AABB() = default;
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
 
-		// ** オペレーターオーバーロード ** //
-		AABB operator*(const LWP::Object::WorldTransform& wtf) const {
-			return {
-				min * wtf.GetWorldMatrix(),
-				max * wtf.GetWorldMatrix()
-			};
-		}
 		// Observer用（==）
-		bool operator==(const AABB& other) const {
+		bool operator==(const AABB& other) {
 			return { 
-				*followPtr_ == *other.followPtr_ &&
+				follow_.GetChanged() &&
 				min == other.min &&
 				max == other.max
 			};
