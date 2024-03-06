@@ -13,24 +13,22 @@ namespace LWP::Object::Collider {
 	/// </summary>
 	class AABB 
 		: public ICollider {
-	public:
+	public: // ** パブリックなメンバ変数 ** //
 		// 最小
 		LWP::Math::Vector3 min = { -0.5f,-0.5f,-0.5f };
 		// 最大
 		LWP::Math::Vector3 max = { 0.5f,0.5f,0.5f };
 
-		// 形状から包み込む最小のAABBを生成する関数
-		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
 
-
-	public: // ** 各形状に対する当たり判定 ** //
-		bool CheckCollision(AABB* c) override;
-		bool CheckCollision(OBB* c) override;
-		bool CheckCollision(Sphere* c) override;
-
+	public: // ** メンバ関数 ** //
 		// コンストラクタ
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
+
+		// 形状から包み込む最小のAABBを生成する関数
+		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
+		// 形状を返す
+		Shape GetShape() override { return Shape::AABB; }
 
 		// Observer用（==）
 		bool operator==(const AABB& other) {
@@ -42,8 +40,10 @@ namespace LWP::Object::Collider {
 		}
 
 #if DEMO
+	private:
 		// デバッグ用モデル
 		LWP::Primitive::Cube* cube = nullptr;
+	public:
 		// デバッグ用の描画関数
 		void ShowWireFrame(Base::CommandManager* manager) override;
 #endif

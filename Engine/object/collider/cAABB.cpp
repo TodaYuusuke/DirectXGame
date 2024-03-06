@@ -37,33 +37,14 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 	// 最小の値と最大の値を求める
 	for (const Vertex& vertex : primitive->vertices) {
 		Vector3&& v = vertex.position * matrix;
-		min.x = min.x < v.x ? v.x : min.x;
-		min.y = min.y < v.y ? v.y : min.y;
-		min.z = min.z < v.z ? v.z : min.z;
-		max.x = max.x > v.x ? v.x : max.x;
-		max.y = max.y > v.y ? v.y : max.y;
-		max.z = max.z > v.z ? v.z : max.z;
+		min.x = min.x > v.x ? v.x : min.x;
+		min.y = min.y > v.y ? v.y : min.y;
+		min.z = min.z > v.z ? v.z : min.z;
+		max.x = max.x < v.x ? v.x : max.x;
+		max.y = max.y < v.y ? v.y : max.y;
+		max.z = max.z < v.z ? v.z : max.z;
 	}
 }
-
-bool AABB::CheckCollision(AABB* c) {
-	if ((min.x <= c->max.x && max.x >= c->min.x) &&
-		(min.y <= c->max.y && max.y >= c->min.y) &&
-		(min.z <= c->max.z && max.z >= c->min.z)) {
-		return true;	// ヒットしているのでtrue
-	}
-
-	return false;	// 単純な当たり判定を返す
-}
-bool AABB::CheckCollision(OBB* c) {
-	c;
-	return false;	// 未実装
-}
-bool AABB::CheckCollision(Sphere* c) {
-	c;
-	return false;	// 未実装
-}
-
 
 #if DEMO
 void AABB::ShowWireFrame(Base::CommandManager* manager) {

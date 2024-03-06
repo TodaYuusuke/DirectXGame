@@ -25,7 +25,7 @@ namespace LWP::Object::Collider {
 		/// 更新
 		/// </summary>
 		void Update();
-
+				
 		/// <summary>
 		/// インスタンスを登録する
 		/// </summary>
@@ -54,10 +54,15 @@ namespace LWP::Object::Collider {
 			return newObject;
 		}
 
-	private: // ** メンバ関数 ** //
+	private: // ** メンバ変数 ** //
 
 		// コライダーのリスト
 		std::vector<ICollider*> colliders_;
+
+		// 関数ポインタの型
+		using CollisionFunction = std::function<bool(ICollider*, ICollider*)>;
+		CollisionFunction checkCollisions_[3][3];	// Shape::Countの値がサイズだよ！
+
 #if DEMO
 		// インスタンスカウント用マップ
 		std::map<std::string, int> colliderCountMap_;
@@ -65,5 +70,18 @@ namespace LWP::Object::Collider {
 		int selectedClass = 0;
 		int currentItem = 0;
 #endif
+
+	public: // ** プライベートなメンバ関数 ** //
+
+		bool CheckCollision(AABB* f, AABB* t);
+		//bool CheckCollision(AABB* f, OBB* t);
+		//bool CheckCollision(AABB* f, Sphere* t);
+		//bool CheckCollision(OBB* f, AABB* t) { return CheckCollision(t, f); }
+		//bool CheckCollision(OBB* f, OBB* t);
+		//bool CheckCollision(OBB* f, Sphere* t);
+		//bool CheckCollision(Sphere* f, AABB* t) { return CheckCollision(t, f); }
+		//bool CheckCollision(Sphere* f, OBB* t) { return CheckCollision(t, f); }
+		//bool CheckCollision(Sphere* f, Sphere* t);
+
 	};
 };

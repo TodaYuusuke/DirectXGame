@@ -12,10 +12,13 @@ namespace LWP::Base {
 #endif
 
 namespace LWP::Object::Collider {
-	// 前方宣言
-	class AABB;
-	class OBB;
-	class Sphere;
+	// 識別子
+	enum class Shape : int {
+		AABB = 0,
+		OBB = 1,
+		Sphere = 2,
+		Count = 3,	// カウント
+	};
 
 	/// <summary>
 	/// 当たり判定用の基底クラス
@@ -30,6 +33,8 @@ namespace LWP::Object::Collider {
 		// ヒット時に正常な位置に修正するベクトルを加算
 		void AdjustPosition(const LWP::Math::Vector3& fixVector) { follow_.t->transform += fixVector; }
 
+		// 自身の形状を返す関数
+		virtual Shape GetShape() = 0;
 		// ワールド座標を取得
 		LWP::Math::Vector3 GetWorldPosition() { return follow_.t->transform.GetWorldPosition(); }
 		// ImGui
@@ -38,12 +43,6 @@ namespace LWP::Object::Collider {
 		// ** デバッグ用の描画関数 ** //
 		virtual void ShowWireFrame(Base::CommandManager* manager) { manager; }
 #endif
-
-	public: // ** 各形状に対する当たり判定 ** //
-		virtual bool CheckCollision(AABB* c) = 0;
-		virtual bool CheckCollision(OBB* c) = 0;
-		virtual bool CheckCollision(Sphere* c) = 0;
-
 
 	protected: // ** 派生クラス用の関数と変数 ** //
 		// 追従する形状
