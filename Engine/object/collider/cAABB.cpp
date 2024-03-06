@@ -48,11 +48,12 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 
 #if DEMO
 void AABB::ShowWireFrame(Base::CommandManager* manager) {
-	if (!isShowWireFrame) { return; }
-
+	// isActive切り替え
+	cube->isActive = isShowWireFrame && isActive;
 	// hitしているときは色を変える
 	cube->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-	manager->SetDrawData(cube);
+	//manager->SetDrawData(cube);
+	manager;
 };
 #endif
 
@@ -60,10 +61,11 @@ void AABB::UpdateShape() {
 	// データが変わったらデバッグ用のCubeを再生成
 	if (follow_.t && follow_.GetChanged()) {
 		CreateFromPrimitive(follow_.t);
-#if DEMO
-		cube->CreateFromAABB(*this);	// cubeも再生成
-#endif
 	}
+
+	#if DEMO
+	cube->CreateFromAABB(*this);	// cube再生成
+	#endif
 }
 
 void AABB::DerivedDebugGUI() {
