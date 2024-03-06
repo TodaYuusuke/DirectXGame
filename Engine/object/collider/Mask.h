@@ -18,7 +18,7 @@
 #define ColMask13 0b1 << 13	// 10000000000000
 #define ColMask14 0b1 << 14	// 100000000000000
 #define ColMask15 0b1 << 15	// 1000000000000000
-#define ColMaskALL (0b1 << 16) || !(0b1 << 16)	// 1111111111111111
+#define ColMaskALL (0b1 << 16) | !(0b1 << 16)	// 1111111111111111
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -31,22 +31,22 @@ namespace LWP::Object::Collider {
 
 	private: // ** プロパティ変数 ** //
 		// 衝突を検証するグループのフラグ
-		uint16_t hitFrag = ColMaskALL;
+		uint32_t hitFrag = ColMaskALL;
 	public:
 		// ゲッター
-		uint16_t GetHitFrag() { return hitFrag; }
+		uint32_t GetHitFrag() { return hitFrag; }
 		// セッター
-		void SetHitFrag(uint16_t frag) { hitFrag = frag; }
+		void SetHitFrag(uint32_t frag) { hitFrag = frag; }
 
 
 	private: // ** プロパティ変数 ** //
 		// 自身が属するグループのフラグ
-		uint16_t belongFrag = ColMaskALL;
+		uint32_t belongFrag = ColMaskALL;
 	public:
 		// ゲッター
-		uint16_t GetBelongFrag() { return belongFrag; }
+		uint32_t GetBelongFrag() { return belongFrag; }
 		// セッター
-		void SetBelongFrag(uint16_t frag) { belongFrag = frag; }
+		void SetBelongFrag(uint32_t frag) { belongFrag = frag; }
 
 	};
 };

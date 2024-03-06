@@ -51,15 +51,20 @@ void AABB::ShowWireFrame(Base::CommandManager* manager) {
 	if (!isShowWireFrame) { return; }
 
 	// hitしているときは色を変える
-	cube->commonColor = new Utility::Color(hitting ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-	// データが変わったらデバッグ用のCubeを再生成
-	if (follow_.t && follow_.GetChanged()) {
-		CreateFromPrimitive(follow_.t);
-		cube->CreateFromAABB(*this);
-	}
+	cube->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 	manager->SetDrawData(cube);
 };
 #endif
+
+void AABB::UpdateShape() {
+	// データが変わったらデバッグ用のCubeを再生成
+	if (follow_.t && follow_.GetChanged()) {
+		CreateFromPrimitive(follow_.t);
+#if DEMO
+		cube->CreateFromAABB(*this);	// cubeも再生成
+#endif
+	}
+}
 
 void AABB::DerivedDebugGUI() {
 	ImGui::DragFloat3("min", &min.x, 0.01f);

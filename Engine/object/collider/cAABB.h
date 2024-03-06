@@ -49,6 +49,8 @@ namespace LWP::Object::Collider {
 #endif
 
 	private: // ** プライベートな関数 ** //
+		// 更新時に形状を追従するための処理
+		void UpdateShape() override;
 		// ImGuiの派生クラス
 		void DerivedDebugGUI() override;
 	};

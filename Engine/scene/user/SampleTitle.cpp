@@ -162,6 +162,11 @@ void SampleTitle::Initialize() {
 
 	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
 	aabbCol->CreateFromPrimitive(sphere);
+
+	// 試しにラムダ式を入れてみる
+	aabbCol->SetTriggerLambda([](Collider::ICollider* self, Collider::ICollider* hit) { self; hit; Utility::Log("Trigger\n"); });
+	aabbCol->SetReleaseLambda([](Collider::ICollider* self, Collider::ICollider* hit) { self; hit; Utility::Log("Release\n"); });
+
 	Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
 	aabbCol2->CreateFromPrimitive(LWP::Common::CreateInstance<Primitive::Sphere>());
 }

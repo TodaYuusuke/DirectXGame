@@ -73,6 +73,10 @@ namespace LWP::Object::Collider {
 
 	public: // ** プライベートなメンバ関数 ** //
 
+		// マスクチェック
+		bool CheckMask(ICollider* f, ICollider* t);
+
+		// 各形状同士の当たり判定
 		bool CheckCollision(AABB* f, AABB* t);
 		//bool CheckCollision(AABB* f, OBB* t);
 		//bool CheckCollision(AABB* f, Sphere* t);

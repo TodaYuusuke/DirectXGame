@@ -3,6 +3,18 @@
 
 using namespace LWP::Object::Collider;
 
+void ICollider::Update() {
+	// アクティブがOffのとき
+	if (!isActive) { return; }
+
+	// preHit更新
+	preHit = hit;
+	hit = false;	// この後にヒット判定をするのでとりまfalse
+
+	// 派生先の更新
+	UpdateShape();
+}
+
 void ICollider::DebugGUI() {
 	// 派生クラス用
 	DerivedDebugGUI();

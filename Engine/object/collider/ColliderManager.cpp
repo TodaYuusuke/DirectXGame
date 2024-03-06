@@ -63,37 +63,43 @@ void Manager::Update() {
 	}
 	ImGui::End();
 
-	// デバッグしやすいようにワイヤーフレームを描画
-	for (ICollider* c : colliders_) {
-		c->ShowWireFrame(LWP::System::engine->directXCommon_->GetCommandManager());
-	}
 #endif
+
+	// 全体を更新
+	for (ICollider* c : colliders_) {
+		c->Update();
+		// デバッグしやすいようにワイヤーフレームを描画
+		#if DEMO
+		c->ShowWireFrame(LWP::System::engine->directXCommon_->GetCommandManager());
+		#endif
+	}
 
 	// 当たり判定チェック
 	for (int f = 0; f < colliders_.size(); f++) {
 		for (int t = f + 1; t < colliders_.size(); t++) {
-			checkCollisions_
-				[static_cast<int>(colliders_[f]->GetShape())]
-				[static_cast<int>(colliders_[t]->GetShape())]
-				(colliders_[f], colliders_[t]);
+			// マスク処理が成立していて　かつ　ヒットしているかチェック
+			if (CheckMask(colliders_[f], colliders_[t]) &&
+				checkCollisions_[static_cast<int>(colliders_[f]->GetShape())][static_cast<int>(colliders_[t]->GetShape())](colliders_[f], colliders_[t])) {
+				// ヒットしていた場合 -> ヒットフラグをtrueする
+				colliders_[f]->SetHit(true);
+				colliders_[t]->SetHit(true);
+			}
+			// ラムダ実行
+			colliders_[f]->ExecuteLambda(colliders_[t]);
+			colliders_[t]->ExecuteLambda(colliders_[t]);
 		}
 	}
 }
 
 
+bool Manager::CheckMask(ICollider* f, ICollider* t) { return t->mask.CheckBelong(f->mask); }
 
 bool Manager::CheckCollision(AABB* f, AABB* t) {
 	if ((f->min.x <= t->max.x && f->max.x >= t->min.x) &&
 		(f->min.y <= t->max.y && f->max.y >= t->min.y) &&
 		(f->min.z <= t->max.z && f->max.z >= t->min.z)) {
-		
-		f->hitting = true;
-		t->hitting = true;
 		return true;	// ヒットしているのでtrue
 	}
-
-	f->hitting = false;
-	t->hitting = false;
 	return false;	// 単純な当たり判定を返す
 }
 //bool Manager::CheckCollision(AABB* f, OBB* t) {
