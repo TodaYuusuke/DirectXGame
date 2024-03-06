@@ -18,7 +18,7 @@ void Manager::Update() {
 	// Debugビルド時のみImGuiを表示
 #if DEMO
 	// 生成用の関数ポインタ
-	static std::vector<std::function<ICollider* ()>> functions = {
+	static std::vector<std::function<ICollider*()>> functions = {
 		&LWP::Object::Collider::CreateInstance<AABB>,
 	};
 	// 選択肢の変数
@@ -32,7 +32,9 @@ void Manager::Update() {
 		if (ImGui::BeginTabItem("Collider")) {
 			// 変更されて渡される値は添え字
 			ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
-			if (ImGui::Button("Create")) { functions[selectedClass](); }
+			if (ImGui::Button("Create")) { 
+				functions[selectedClass]();
+			}
 
 			// 形状一覧
 			if (!colliders_.empty()) {

@@ -9,7 +9,21 @@ using namespace LWP::Object::Collider;
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 
-// 形状から包み込む最小のAABBを生成する関数
+// 移譲コンストラクタ
+AABB::AABB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {}
+
+AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
+	min = min_;
+	max = max_;
+
+#if DEMO
+	// 立方体のインスタンスを作成
+	cube = LWP::Primitive::CreateInstance<Cube>();
+	cube->CreateFromAABB(*this);
+	cube->isWireFrame = true;
+#endif
+}
+
 void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 	// ワールドトランスフォームのペアレントもしておく
 	follow_ = primitive;
@@ -17,7 +31,7 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 	Matrix4x4 matrix = primitive->transform.GetWorldMatrix();
 	// 初期化
 	min = primitive->vertices[0].position * matrix;
-	max = primitive->vertices[0].position * matrix;
+	max = min;
 
 	// 最小の値と最大の値を求める
 	for (const Vertex& vertex : primitive->vertices) {
@@ -32,8 +46,13 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 }
 
 bool AABB::CheckCollision(AABB* c) {
-	c;
-	return false;	// 未実装
+	if ((min.x <= c->max.x && max.x >= c->min.x) &&
+		(min.y <= c->max.y && max.y >= c->min.y) &&
+		(min.z <= c->max.z && max.z >= c->min.z)) {
+		return true;	// ヒットしているのでtrue
+	}
+
+	return false;	// 単純な当たり判定を返す
 }
 bool AABB::CheckCollision(OBB* c) {
 	c;
@@ -44,22 +63,17 @@ bool AABB::CheckCollision(Sphere* c) {
 	return false;	// 未実装
 }
 
-AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
-	min = min_;
-	max = max_;
-}
 
 #if DEMO
 void AABB::ShowWireFrame(Base::CommandManager* manager) {
-	// 立方体のインスタンスを作成
-	static Cube* cube = LWP::Primitive::CreateInstance<Cube>();
-	cube->CreateFromAABB(*this);
-	cube->isWireFrame = true;
+	if (!isShowWireFrame) { return; }
+
+	// hitしているときは色を変える
 	cube->commonColor = new Utility::Color(hitting ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-	if (follow_.GetChanged()) {
-		//cube->transform.translation = follow_.t->transform.translation;
-		//cube->transform.scale = follow_.t->transform.scale;
+	// データが変わったらデバッグ用のCubeを再生成
+	if (follow_.t && follow_.GetChanged()) {
 		CreateFromPrimitive(follow_.t);
+		cube->CreateFromAABB(*this);
 	}
 	manager->SetDrawData(cube);
 };

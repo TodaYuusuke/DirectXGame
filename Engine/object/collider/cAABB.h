@@ -4,6 +4,7 @@
 // 前方宣言
 namespace LWP::Primitive {
 	class IPrimitive;
+	class Cube;
 }
 
 namespace LWP::Object::Collider {
@@ -28,7 +29,7 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(Sphere* c) override;
 
 		// コンストラクタ
-		AABB() = default;
+		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
 
 		// Observer用（==）
@@ -41,7 +42,9 @@ namespace LWP::Object::Collider {
 		}
 
 #if DEMO
-		// ** デバッグ用の描画関数 ** //
+		// デバッグ用モデル
+		LWP::Primitive::Cube* cube = nullptr;
+		// デバッグ用の描画関数
 		void ShowWireFrame(Base::CommandManager* manager) override;
 #endif
 
