@@ -1,5 +1,6 @@
 #include "cAABB.h"
 #include "primitive/IPrimitive.h"
+#include "base/ImGuiManager.h"
 #if DEMO
 #include "component/Primitive.h"
 #include "base/directX/command/CommandManager.h"

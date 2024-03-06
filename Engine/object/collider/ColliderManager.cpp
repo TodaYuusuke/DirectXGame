@@ -50,9 +50,11 @@ void Manager::Update() {
 		ImGui::EndTabBar();
 	}
 	ImGui::End();
-#endif
 
+	// デバッグしやすいようにワイヤーフレームを描画
 	for (ICollider* c : colliders_) {
 		c->ShowWireFrame(LWP::System::engine->directXCommon_->GetCommandManager());
 	}
+#endif
+
 }

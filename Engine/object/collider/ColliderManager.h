@@ -34,6 +34,7 @@ namespace LWP::Object::Collider {
 		inline TCollider* CreateInstance() {
 			TCollider* newObject = new TCollider();
 
+#if DEMO
 			// typeid を使用して型情報を取得
 			const std::type_info& typeInfo = typeid(TCollider);
 			// type_info オブジェクトからクラス名を取得
@@ -47,6 +48,7 @@ namespace LWP::Object::Collider {
 				colliderCountMap_[className] = 0;
 			}
 			newObject->name = className + "_" + std::to_string(colliderCountMap_[className]++);
+#endif
 
 			colliders_.push_back(newObject);
 			return newObject;
@@ -56,10 +58,9 @@ namespace LWP::Object::Collider {
 
 		// コライダーのリスト
 		std::vector<ICollider*> colliders_;
+#if DEMO
 		// インスタンスカウント用マップ
 		std::map<std::string, int> colliderCountMap_;
-
-#if DEMO
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;
