@@ -83,10 +83,15 @@ void Manager::Update() {
 				// ヒットしていた場合 -> ヒットフラグをtrueする
 				colliders_[f]->SetHit(true);
 				colliders_[t]->SetHit(true);
+				// ラムダ実行
+				colliders_[f]->ExecuteLambda(colliders_[t]);
+				colliders_[t]->ExecuteLambda(colliders_[f]);
 			}
-			// ラムダ実行
-			colliders_[f]->ExecuteLambda(colliders_[t]);
-			colliders_[t]->ExecuteLambda(colliders_[t]);
+		}
+
+		// 一度もヒットしていないならばそれはそれで実行
+		if (!colliders_[f]->GetHit()) {
+			colliders_[f]->ExecuteLambda(nullptr);
 		}
 	}
 }
