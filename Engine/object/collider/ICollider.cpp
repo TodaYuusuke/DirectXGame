@@ -4,13 +4,12 @@
 using namespace LWP::Object::Collider;
 
 void ICollider::Update() {
-	// アクティブがOffのとき
-	if (!isActive) { return; }
-
 	// preHit更新
 	preHit = hit;
 	hit = false;	// この後にヒット判定をするのでとりまfalse
 
+	// アクティブがOffのとき
+	if (!isActive) { return; }
 	// 派生先の更新
 	UpdateShape();
 }

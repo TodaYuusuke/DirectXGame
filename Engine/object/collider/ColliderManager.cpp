@@ -76,9 +76,9 @@ void Manager::Update() {
 
 	// 当たり判定チェック
 	for (int f = 0; f < colliders_.size(); f++) {
-		for (int t = f + 1; t < colliders_.size(); t++) {
-			// マスク処理が成立していて　かつ　ヒットしているかチェック
-			if (CheckMask(colliders_[f], colliders_[t]) &&
+		for (int t = f + 1; t < colliders_.size() && colliders_[f]->isActive; t++) {
+			// isActiveがtrue　かつ　マスク処理が成立していて　かつ　ヒットしているかチェック
+			if (colliders_[t]->isActive && CheckMask(colliders_[f], colliders_[t]) &&
 				checkCollisions_[static_cast<int>(colliders_[f]->GetShape())][static_cast<int>(colliders_[t]->GetShape())](colliders_[f], colliders_[t])) {
 				// ヒットしていた場合 -> ヒットフラグをtrueする
 				colliders_[f]->SetHit(true);
