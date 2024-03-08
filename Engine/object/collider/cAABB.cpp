@@ -58,7 +58,7 @@ void AABB::ShowWireFrame(Base::CommandManager* manager) {
 #endif
 
 void AABB::UpdateShape() {
-	// データが変わったらデバッグ用のCubeを再生成
+	// データが変わったら再生成
 	if (follow_.t && follow_.GetChanged()) {
 		CreateFromPrimitive(follow_.t);
 	}
