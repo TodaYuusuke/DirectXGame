@@ -3,7 +3,6 @@
 
 // 前方宣言
 namespace LWP::Primitive {
-	class IPrimitive;
 	class Cube;
 }
 
@@ -26,7 +25,7 @@ namespace LWP::Object::Collider {
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
 
 		// 形状から包み込む最小のAABBを生成する関数
-		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
+		virtual void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
 		// 形状を返す
 		Shape GetShape() override { return Shape::AABB; }
 
@@ -40,15 +39,15 @@ namespace LWP::Object::Collider {
 		}
 
 #if DEMO
-	private:
+	protected:
 		// デバッグ用モデル
 		LWP::Primitive::Cube* cube = nullptr;
 	public:
 		// デバッグ用の描画関数
-		void ShowWireFrame(Base::CommandManager* manager) override;
+		void ShowWireFrame() override;
 #endif
 
-	private: // ** プライベートな関数 ** //
+	protected: // ** プライベートな関数 ** //
 		// 更新時に形状を追従するための処理
 		void UpdateShape() override;
 		// ImGuiの派生クラス

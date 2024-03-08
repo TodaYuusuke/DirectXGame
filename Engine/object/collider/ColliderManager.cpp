@@ -15,10 +15,10 @@ void Manager::Initialize() {
 
 	// 関数ポインタをセット
 	checkCollisions_[0][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<AABB*>(c2)); };
-	//checkCollisions_[0][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<OBB*>(c2));
+	checkCollisions_[0][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<OBB*>(c2)); };
 	//checkCollisions_[0][2] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<Sphere*>(c2));
-	//checkCollisions_[1][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<AABB*>(c2));
-	//checkCollisions_[1][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<OBB*>(c2));
+	checkCollisions_[1][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<AABB*>(c2)); };
+	checkCollisions_[1][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<OBB*>(c2)); };
 	//checkCollisions_[1][2] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<Sphere*>(c2));
 	//checkCollisions_[2][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Sphere*>(c1), dynamic_cast<AABB*>(c2));
 	//checkCollisions_[2][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Sphere*>(c1), dynamic_cast<OBB*>(c2));
@@ -32,10 +32,11 @@ void Manager::Update() {
 	// 生成用の関数ポインタ
 	static std::vector<std::function<ICollider*()>> functions = {
 		&LWP::Object::Collider::CreateInstance<AABB>,
+		&LWP::Object::Collider::CreateInstance<OBB>,
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"AABB"
+		"AABB","OBB"
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -70,7 +71,7 @@ void Manager::Update() {
 		c->Update();
 		// デバッグしやすいようにワイヤーフレームを描画
 		#if DEMO
-		c->ShowWireFrame(LWP::System::engine->directXCommon_->GetCommandManager());
+		c->ShowWireFrame();
 		#endif
 	}
 
@@ -107,15 +108,15 @@ bool Manager::CheckCollision(AABB* f, AABB* t) {
 	}
 	return false;	// 単純な当たり判定を返す
 }
-//bool Manager::CheckCollision(AABB* f, OBB* t) {
-//	f;	t; return false;
-//}
+bool Manager::CheckCollision(AABB* f, OBB* t) {
+	f;	t; return false;
+}
 //bool Manager::CheckCollision(AABB* f, Sphere* t) {
 //	f;	t; return false;
 //}
-//bool Manager::CheckCollision(OBB* f, OBB* t) {
-//	f;	t; return false;
-//}
+bool Manager::CheckCollision(OBB* f, OBB* t) {
+	f;	t; return false;
+}
 //bool Manager::CheckCollision(OBB* f, Sphere* t) {
 //	f;	t; return false;
 //}

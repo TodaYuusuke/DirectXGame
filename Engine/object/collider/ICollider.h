@@ -77,7 +77,7 @@ namespace LWP::Object::Collider {
 		void DebugGUI();
 #if DEMO
 		// ** デバッグ用の描画関数 ** //
-		virtual void ShowWireFrame(Base::CommandManager* manager) { manager; }
+		virtual void ShowWireFrame() {}
 #endif
 
 	protected: // ** 派生クラス用の関数と変数 ** //

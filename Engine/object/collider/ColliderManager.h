@@ -1,6 +1,6 @@
 #pragma once
 #include "cAABB.h"
-//#include "cOBB.h"
+#include "cOBB.h"
 //#include "cSphere.h"
 
 #include <map>
@@ -78,10 +78,10 @@ namespace LWP::Object::Collider {
 
 		// 各形状同士の当たり判定
 		bool CheckCollision(AABB* f, AABB* t);
-		//bool CheckCollision(AABB* f, OBB* t);
+		bool CheckCollision(AABB* f, OBB* t);
 		//bool CheckCollision(AABB* f, Sphere* t);
-		//bool CheckCollision(OBB* f, AABB* t) { return CheckCollision(t, f); }
-		//bool CheckCollision(OBB* f, OBB* t);
+		bool CheckCollision(OBB* f, AABB* t) { return CheckCollision(t, f); }
+		bool CheckCollision(OBB* f, OBB* t);
 		//bool CheckCollision(OBB* f, Sphere* t);
 		//bool CheckCollision(Sphere* f, AABB* t) { return CheckCollision(t, f); }
 		//bool CheckCollision(Sphere* f, OBB* t) { return CheckCollision(t, f); }

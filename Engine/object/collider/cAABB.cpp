@@ -1,5 +1,4 @@
 #include "cAABB.h"
-#include "primitive/IPrimitive.h"
 #include "base/ImGuiManager.h"
 #if DEMO
 #include "component/Primitive.h"
@@ -47,13 +46,11 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 }
 
 #if DEMO
-void AABB::ShowWireFrame(Base::CommandManager* manager) {
+void AABB::ShowWireFrame() {
 	// isActive切り替え
 	cube->isActive = isShowWireFrame && isActive;
 	// hitしているときは色を変える
 	cube->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-	//manager->SetDrawData(cube);
-	manager;
 };
 #endif
 

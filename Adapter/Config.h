@@ -153,7 +153,7 @@ namespace LWP::Config {
 	/// </summary>
 	namespace Collider {
 		// 当たり判定マスク用の列挙子定義
-		enum class MaskLayer {
+		enum MaskLayer : uint32_t {
 			Player = ColMask0,
 			Enemy = ColMask1,
 			Layer2 = ColMask2,
