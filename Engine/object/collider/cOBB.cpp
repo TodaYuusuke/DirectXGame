@@ -15,10 +15,10 @@ OBB::OBB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {
 
 void OBB::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	follow_ = primitive;
-	#if DEMO
-	// ワールドトランスフォームのペアレントもしておく
-	cube->transform.Parent(&follow_.t->transform);
-	#endif
+	//#if DEMO
+	//// ワールドトランスフォームのペアレントもしておく
+	//cube->transform.Parent(&follow_.t->transform);
+	//#endif
 
 	// 回転行列だけ抜き出しておく
 	rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(follow_.t->transform.rotation);
@@ -38,12 +38,14 @@ void OBB::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	}
 }
 
+#if DEMO
 void OBB::ShowWireFrame() {
 	// isActive切り替え
 	cube->isActive = isShowWireFrame && isActive;
 	// hitしているときは色を変える
 	cube->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 }
+#endif
 
 void OBB::UpdateShape() {
 	// データが変わったら再生成
