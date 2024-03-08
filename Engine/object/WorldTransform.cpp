@@ -31,12 +31,12 @@ Matrix4x4 WorldTransform::GetWorldMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 
 	// 親があれば親のワールド行列を掛ける
-	/*if (parent_.t) {
-		result = result * parent_.t->GetWorldMatrix();
-	}*/
 	if (parent_) {
-		result = result * parent_->GetWorldMatrix();
+		result = result * parent_->t->GetWorldMatrix();
 	}
+	//if (parent_) {
+	//	result = result * parent_->GetWorldMatrix();
+	//}
 	return result;
 }
 Vector3 WorldTransform::GetWorldPosition() const {
@@ -63,7 +63,10 @@ void WorldTransform::DebugGUI2D(const std::string& label) {
 
 // ** プロパティ変数 ** //
 
-void WorldTransform::Parent(WorldTransform* parent) { parent_ = parent; }
+void WorldTransform::Parent(WorldTransform* parent) { 
+	parent_ = new Utility::Observer<WorldTransform*>;
+	parent_->t = parent;
+}
 
 WorldTransform WorldTransform::operator+(const WorldTransform& other) const {
 	return {

@@ -5,9 +5,7 @@
 
 namespace LWP::Object {
 	class WorldTransform {
-	public:
-		// ** 変数 ** //
-
+	public: // ** パブリックな変数 ** //
 		// ローカル座標
 		Math::Vector3 translation;
 		// X,Y,Z軸回りのローカル回転角
@@ -18,8 +16,8 @@ namespace LWP::Object {
 
 	private: // ** プロパティ変数 ** //
 		// 親となるワールド変換へのポインタ（読み取り専用）
-		//Utility::Observer<WorldTransform*> parent_ = nullptr;
-		WorldTransform* parent_ = nullptr;
+		Utility::Observer<WorldTransform*>* parent_ = nullptr;
+		//WorldTransform* parent_ = nullptr;
 	public: // アクセッサ
 		// 親関係を登録
 		void Parent(WorldTransform* parent);
@@ -67,13 +65,14 @@ namespace LWP::Object {
 		WorldTransform operator/(const float &other) const;
 
 		// Observerクラス用のオペレーターオーバーロード
-		bool operator==(const WorldTransform& other) const {
+		bool operator==(const WorldTransform& other) const = delete;
+		bool operator==(WorldTransform& other) {
 			return {
 				translation == other.translation &&
 				rotation == other.rotation &&
 				scale == other.scale &&
 				// ペアレントがある場合はペアレント先が変更されていないかも検知
-				parent_/* && parent_.GetChanged()*/
+				parent_ && parent_->GetChanged()
 			};
 		}
 	};

@@ -81,10 +81,10 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// Observerクラス用のオペレーターオーバーロード
 		/// </summary>
-		bool operator==(const IPrimitive& other) const {
+		bool operator==(const IPrimitive& other) const = delete;
+		bool operator==(IPrimitive& other) {
 			return { vertices == other.vertices && indexes == other.indexes && transform == other.transform };
 		}
-
 
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
