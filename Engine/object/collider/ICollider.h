@@ -26,11 +26,21 @@ namespace LWP::Object::Collider {
 		Press = 0b11,
 		Release = 0b10,
 	};
-
 	// 別名定義のためだけに前方宣言させられてる
 	class ICollider;
+	// コールバック用構造体
+	struct HitData {
+		// 自身の当たり判定クラス
+		ICollider* self;
+		// 当たった対象の当たり判定クラス
+		ICollider* hit;
+		// 当たった時の状態（None,Trigger,Press,Release）
+		OnCollisionState state;
+	};
+
 	// ヒット時の関数ポインタの型
-	typedef void (*OnColliderFunction)(ICollider* self, ICollider* hit, OnCollisionState state);
+	//typedef void (*OnColliderFunction)(ICollider* self, ICollider* hit, OnCollisionState state);
+	typedef std::function<void(HitData hitData)> OnColliderFunction;
 	
 
 	/// <summary>
@@ -67,7 +77,7 @@ namespace LWP::Object::Collider {
 		// ヒット時のラムダ式をセットする関数
 		void SetOnCollisionLambda(const OnColliderFunction& func) { onCollisionLambda = func; }
 		// ヒット時に関数を呼び出す関数（※ユーザー呼び出し禁止）
-		void ExecuteLambda(ICollider* hitCollision) { onCollisionLambda(this, hitCollision, static_cast<OnCollisionState>((preHit << 1) + hit)); }
+		void ExecuteLambda(ICollider* hitCollision) { onCollisionLambda({ this, hitCollision, static_cast<OnCollisionState>((preHit << 1) + hit) }); }
 
 		// 自身の形状を返す純粋仮想関数関数
 		virtual Shape GetShape() = 0;
@@ -85,7 +95,7 @@ namespace LWP::Object::Collider {
 		Utility::Observer<LWP::Primitive::IPrimitive*> follow_ = nullptr;
 
 		// ヒット時のリアクション用の関数
-		Collider::OnColliderFunction onCollisionLambda = [](ICollider* self, ICollider* hit, OnCollisionState state) { self; hit; state; };
+		Collider::OnColliderFunction onCollisionLambda = [](HitData data) { data; };
 		
 		// 更新時に形状を追従するための処理
 		virtual void UpdateShape() {/* 基底クラスでは記述なし */ }

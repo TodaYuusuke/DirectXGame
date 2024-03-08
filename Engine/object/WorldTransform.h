@@ -1,6 +1,7 @@
 #pragma once
 #include "../math/Math.h"
 #include <string>
+#include "utility/Observer.h"
 
 namespace LWP::Object {
 	class WorldTransform {
@@ -17,6 +18,7 @@ namespace LWP::Object {
 
 	private: // ** プロパティ変数 ** //
 		// 親となるワールド変換へのポインタ（読み取り専用）
+		//Utility::Observer<WorldTransform*> parent_ = nullptr;
 		WorldTransform* parent_ = nullptr;
 	public: // アクセッサ
 		// 親関係を登録
@@ -66,7 +68,13 @@ namespace LWP::Object {
 
 		// Observerクラス用のオペレーターオーバーロード
 		bool operator==(const WorldTransform& other) const {
-			return { translation == other.translation && rotation == other.rotation && scale == other.scale };
+			return {
+				translation == other.translation &&
+				rotation == other.rotation &&
+				scale == other.scale &&
+				// ペアレントがある場合はペアレント先が変更されていないかも検知
+				parent_/* && parent_.GetChanged()*/
+			};
 		}
 	};
 }

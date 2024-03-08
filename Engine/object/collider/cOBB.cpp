@@ -15,10 +15,10 @@ OBB::OBB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {
 
 void OBB::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	follow_ = primitive;
-	//#if DEMO
-	//// ワールドトランスフォームのペアレントもしておく
-	//cube->transform.Parent(&follow_.t->transform);
-	//#endif
+	#if DEMO
+	// ワールドトランスフォームのペアレントもしておく
+	cube->transform.Parent(&follow_.t->transform);
+	#endif
 
 	// 回転行列だけ抜き出しておく
 	rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(follow_.t->transform.rotation);

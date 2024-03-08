@@ -142,6 +142,13 @@ namespace LWP::Utility {
 			preT = *t; // チェックしたので戻す
 			return result;
 		}
+		// 変化したかのフラグを返す関数
+		bool GetChangedConst() const {
+			// テンプレートがポインタの時の処理
+			bool result = !(*t == preT);
+			//preT = *t; // チェックしたが戻さない
+			return result;
+		}
 
 		// コンストラクタ
 		Observer() = default;

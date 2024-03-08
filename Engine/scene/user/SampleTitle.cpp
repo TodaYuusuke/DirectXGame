@@ -160,14 +160,12 @@ void SampleTitle::Initialize() {
 	cube->texture = monsterBall;
 
 
-	Collider::OBB* obbCol = LWP::Common::CreateInstance<Collider::OBB>();
+	Collider::AABB* obbCol = LWP::Common::CreateInstance<Collider::AABB>();
 	obbCol->CreateFromPrimitive(sphere);
 
 	// 試しにラムダ式を入れてみる
-	obbCol->SetOnCollisionLambda([](Collider::ICollider* self, Collider::ICollider* hit, Collider::OnCollisionState state) {
-		self;
-		hit;
-		if (state == Collider::OnCollisionState::None) {
+	obbCol->SetOnCollisionLambda([](Collider::HitData data) {
+		if (data.state == Collider::OnCollisionState::None) {
 			Utility::Log("None\n");
 		}
 		else {
