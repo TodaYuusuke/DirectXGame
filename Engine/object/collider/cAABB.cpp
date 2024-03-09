@@ -2,7 +2,6 @@
 #include "base/ImGuiManager.h"
 #if DEMO
 #include "component/Primitive.h"
-#include "base/directX/command/CommandManager.h"
 #endif
 
 using namespace LWP::Object::Collider;

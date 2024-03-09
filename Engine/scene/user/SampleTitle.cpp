@@ -173,8 +173,10 @@ void SampleTitle::Initialize() {
 		}
 	});
 
-	Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
-	aabbCol2->CreateFromPrimitive(LWP::Common::CreateInstance<Primitive::Sphere>());
+	Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
+	Collider::Sphere* sphereCol1 = LWP::Common::CreateInstance<Collider::Sphere>();
+	sphereCol0->CreateFromPrimitive(cube);
+	sphereCol1->CreateFromPrimitive(cube2);
 }
 
 // 更新

@@ -4,6 +4,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+// 前方宣言
+namespace LWP::Object::Collider {
+	class Sphere;
+}
+
 namespace LWP::Primitive {
 	/// <summary>
 	/// 球
@@ -47,7 +52,13 @@ namespace LWP::Primitive {
 		/// インデックスの数を返す関数
 		/// </summary>
 		int GetIndexCount() const override;
-		
+
+		/// <summary>
+		/// スフィアコライダーから描画用のスフィアを生成
+		/// </summary>
+		/// <param name="sphere"></param>
+		void CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere);
+
 
 	private: // ** プライベートな関数 ** //
 

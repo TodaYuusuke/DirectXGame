@@ -1,6 +1,8 @@
 #include "Sphere.h"
 #include "../../../Adapter/LWP.h"
 
+#include "object/collider/cSphere.h"
+
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
@@ -87,6 +89,15 @@ void Sphere::CreateIndexes() {
 
 int Sphere::GetVertexCount() const { return (subdivision_ + 1) * (subdivision_ + 1); }
 int Sphere::GetIndexCount() const { return subdivision_ * (subdivision_ - 1) * 2 * 3; }
+
+void Sphere::CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere) {
+	transform.translation = sphere.position;
+	radius_ = sphere.radius;
+	subdivision_ = 16;
+	isWireFrame = true;
+	CreateVertices();	// 再計算
+	CreateIndexes();
+}
 
 void Sphere::DerivedDebugGUI(const std::string& label) {
 	int s = static_cast<int>(Subdivision());
