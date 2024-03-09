@@ -5,6 +5,7 @@
 #endif
 
 using namespace LWP;
+using namespace LWP::Math;
 using namespace LWP::Object::Collider;
 
 void Manager::Initialize() {
@@ -122,5 +123,13 @@ bool Manager::CheckCollision(AABB* f, Sphere* t) {
 //	f;	t; return false;
 //}
 bool Manager::CheckCollision(Sphere* f, Sphere* t) {
-	f;	t; return false;
+	// 二つの球体の中心点間の距離を求める
+	Vector3 dist = f->position - t->position;
+	// 半径の合計よりも短ければ衝突
+	if (dist.Length() <= f->radius + t->radius) {
+		// 当たった処理
+		return true;
+	}
+
+	return false;
 }
