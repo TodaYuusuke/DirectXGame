@@ -242,6 +242,12 @@
     <ClCompile Include="Engine\object\collider\ColliderManager.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Capsule.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Quaternion.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -540,6 +546,12 @@
     </ClInclude>
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h">
       <Filter>Engine\utilitiy\observers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Capsule.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Quaternion.h">
+      <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

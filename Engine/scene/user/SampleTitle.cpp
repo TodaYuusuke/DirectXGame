@@ -177,6 +177,11 @@ void SampleTitle::Initialize() {
 
 	Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
 	sphereCol0->Create({ 3.0f,0.0f,0.0f });
+
+	// カプセル実験
+	Capsule* capsule = LWP::Common::CreateInstance<Capsule>();
+	capsule->endOffset = {0.0f,1.0f,0.0f};
+	capsule->isWireFrame = true;
 }
 
 // 更新

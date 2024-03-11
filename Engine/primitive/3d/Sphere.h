@@ -81,6 +81,6 @@ namespace LWP::Primitive {
 		/// パラメータが変わっているかを検証
 		/// </summary>
 		/// <returns></returns>
-		bool GetChanged();
+		virtual bool GetChanged();
 	};
 }

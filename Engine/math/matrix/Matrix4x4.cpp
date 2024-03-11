@@ -1,5 +1,6 @@
 #include "Matrix4x4.h"
 #include "../vector/Vector3.h"
+#include "../Quaternion.h"
 
 using namespace LWP::Math;
 
@@ -199,6 +200,30 @@ Matrix4x4 Matrix4x4::CreateRotateXYZMatrix(const Vector3& rotate) {
 	Matrix4x4 z = CreateRotateZMatrix(rotate.z);
 	return x * y * z;
 }
+Matrix4x4 Matrix4x4::CreateRotateXYZMatrix(const Quaternion& q) {
+	Matrix4x4 result;
+	result.m[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
+	result.m[0][1] = 2.0f * ((q.x * q.y) + (q.w * q.z));
+	result.m[0][2] = 2.0f * ((q.x * q.z) - (q.w * q.y));
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = 2.0f * ((q.x * q.y) - (q.w * q.z));
+	result.m[1][1] = (q.w * q.w) - (q.x * q.x) + (q.y * q.y) - (q.z * q.z);
+	result.m[1][2] = 2.0f * ((q.y * q.z) + (q.w * q.x));
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = 2.0f * ((q.x * q.z) + (q.w * q.y));
+	result.m[2][1] = 2.0f * ((q.y * q.z) - (q.w * q.x));
+	result.m[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
 // 拡大縮小行列
 Matrix4x4 Matrix4x4::CreateScaleMatrix(const Vector3& scale) {
 	Matrix4x4 result{};
@@ -319,3 +344,28 @@ Vector3 Matrix4x4::TransformCoord(const Vector3& vector, const Matrix4x4& matrix
 	result.z /= w;
 	return result;
 }
+
+Matrix4x4 Matrix4x4::DirectionToDirection(const Vector3& from, const Vector3& to) {
+	float c = Vector3::Dot(from, to);
+	float s = Vector3::Cross(from, to).Length();
+	Vector3 n = Vector3::Cross(from, to).Normalize();
+	n = c == -1.0f ? Vector3{ from.y, -from.x, 0.0f } : n;
+
+	Matrix4x4 result{};
+	result.m[0][0] = (n.x * n.x) * (1.0f - c) + c;
+	result.m[0][1] = (n.x * n.y) * (1.0f - c) + n.z * s;
+	result.m[0][2] = (n.x * n.z) * (1.0f - c) - n.y * s;
+
+	result.m[1][0] = (n.y * n.x) * (1.0f - c) - n.z * s;
+	result.m[1][1] = (n.y * n.y) * (1.0f - c) + c;
+	result.m[1][2] = (n.y * n.z) * (1.0f - c) + n.x * s;
+
+	result.m[2][0] = (n.z * n.x) * (1.0f - c) + n.y * s;
+	result.m[2][1] = (n.z * n.y) * (1.0f - c) - n.x * s;
+	result.m[2][2] = (n.z * n.z) * (1.0f - c) + c;
+
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
+

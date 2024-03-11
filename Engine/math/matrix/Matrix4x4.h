@@ -2,12 +2,14 @@
 #include <cmath>
 #include <assert.h>
 
-/// <summary>
-/// 4x4行列
-/// </summary>
 namespace LWP::Math {
+	// 前方宣言
 	class Vector3;
+	class Quaternion;
 
+	/// <summary>
+	/// 4x4行列
+	/// </summary>
 	class Matrix4x4 final {
 	public:
 		float m[4][4];
@@ -49,8 +51,9 @@ namespace LWP::Math {
 		static Matrix4x4 CreateRotateYMatrix(const float& radian);
 		// z軸回転行列
 		static Matrix4x4 CreateRotateZMatrix(const float& radian);
-		// 合成された回転行列を返す vb、。
+		// 合成された回転行列を返す
 		static Matrix4x4 CreateRotateXYZMatrix(const Vector3& rotate);
+		static Matrix4x4 CreateRotateXYZMatrix(const Quaternion& q);
 		// 拡大縮小行列
 		static Matrix4x4 CreateScaleMatrix(const Vector3& scale);
 
@@ -78,5 +81,7 @@ namespace LWP::Math {
 
 		// 座標変換
 		static Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix);
+		// ある方向からある方向への回転
+		static Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 	};
 }

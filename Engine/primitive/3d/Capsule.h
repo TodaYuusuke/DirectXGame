@@ -1,8 +1,8 @@
 #pragma once
 #include "Sphere.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+template<class T>
+class TEMP;
 
 namespace LWP::Primitive {
 	/// <summary>
@@ -10,7 +10,18 @@ namespace LWP::Primitive {
 	/// </summary>
 	class Capsule final
 		: public Sphere {
+	public: // ** パブリックなメンバ変数 ** //
+		// 終点
+		Utility::Observer<LWP::Math::Vector3> endOffset = LWP::Math::Vector3{ 0.0f,0.0f, 0.0f };
+		// 始点
+		LWP::Math::Vector3 start() const { return transform.GetWorldPosition(); }
+
 	public: // ** 関数 ** //
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		using Sphere::Sphere;
 
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
@@ -38,7 +49,15 @@ namespace LWP::Primitive {
 		/// </summary>
 		void DerivedDebugGUI(const std::string& label = "Derived") override;
 
+		/// <summary>
+		/// パラメータが変わっているかを検証
+		/// </summary>
+		/// <returns></returns>
+		bool GetChanged() override;
+
+
 		// スフィアコライダーから描画用のスフィアを生成する関数だが、使用しないので隠蔽
 		using Sphere::CreateFromSphereCol;
+
 	};
 }

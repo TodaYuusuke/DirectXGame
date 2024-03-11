@@ -10,7 +10,7 @@ using namespace LWP::Primitive;
 using namespace LWP::Object::Collider;
 
 OBB::OBB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {
-	rotateMatrix = Matrix4x4::CreateRotateXYZMatrix({ 0.0f,0.0f,0.0f });
+	rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(Vector3{ 0.0f,0.0f,0.0f });
 }
 
 void OBB::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {

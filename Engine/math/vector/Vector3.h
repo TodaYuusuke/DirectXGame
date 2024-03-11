@@ -44,14 +44,14 @@ namespace LWP::Math {
 		/// </summary>
 		/// <param name="v">... ベクトル</param>
 		/// <returns>ベクトルの長さ</returns>
-		float Length();
+		float Length() const;
 
 		/// <summary>
 		/// 3次元ベクトルの正規化を求める
 		/// </summary>
 		/// <param name="v">... ベクトル</param>
 		/// <returns>正規化されたベクトル</returns>
-		Vector3 Normalize();
+		Vector3 Normalize() const;
 
 
 		// *** 静的なメンバ関数 *** //
