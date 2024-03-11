@@ -160,11 +160,10 @@ void SampleTitle::Initialize() {
 	cube->texture = monsterBall;
 
 
-	Collider::AABB* obbCol = LWP::Common::CreateInstance<Collider::AABB>();
-	obbCol->CreateFromPrimitive(sphere);
-
+	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
+	aabbCol->CreateFromPrimitive(sphere);
 	// 試しにラムダ式を入れてみる
-	obbCol->SetOnCollisionLambda([](Collider::HitData data) {
+	aabbCol->SetOnCollisionLambda([](Collider::HitData data) {
 		if (data.state == Collider::OnCollisionState::None) {
 			Utility::Log("None\n");
 		}
@@ -173,10 +172,11 @@ void SampleTitle::Initialize() {
 		}
 	});
 
+	Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
+	aabbCol2->Create({2.0f,0.0f,0.0f});
+
 	Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
-	Collider::Sphere* sphereCol1 = LWP::Common::CreateInstance<Collider::Sphere>();
 	sphereCol0->CreateFromPrimitive(cube);
-	sphereCol1->CreateFromPrimitive(cube2);
 }
 
 // 更新

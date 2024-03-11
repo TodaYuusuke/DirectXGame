@@ -24,6 +24,9 @@ namespace LWP::Object::Collider {
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
 
+		// 場所を指定して生成する関数
+		virtual void Create(const LWP::Math::Vector3& position);
+		virtual void Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size);
 		// 形状から包み込む最小のAABBを生成する関数
 		virtual void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
 		// 形状を返す

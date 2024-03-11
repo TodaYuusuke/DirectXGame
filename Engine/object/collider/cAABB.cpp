@@ -23,6 +23,15 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 #endif
 }
 
+void AABB::Create(const LWP::Math::Vector3& position) { Create(position, { 1.0f,1.0f,1.0 }); }
+void AABB::Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size) {
+	// サイズの値を求める
+	LWP::Math::Vector3 s = size / 2.0f;
+	// 座標を足す
+	min = (s * -1.0f) + position;
+	max = s + position;
+}
+
 void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 	// ワールドトランスフォームのペアレントもしておく
 	follow_ = primitive;
