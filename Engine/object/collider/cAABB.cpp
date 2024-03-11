@@ -27,23 +27,25 @@ void AABB::Create(const LWP::Math::Vector3& position) { Create(position, { 1.0f,
 void AABB::Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size) {
 	// サイズの値を求める
 	LWP::Math::Vector3 s = size / 2.0f;
-	// 座標を足す
-	min = (s * -1.0f) + position;
-	max = s + position;
+	min = (s * -1.0f);
+	max = s;
+	// トランスフォームに座標をセット
+	transform.translation = position;
 }
 
 void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 	// ワールドトランスフォームのペアレントもしておく
 	follow_ = primitive;
+	transform.Parent(&primitive->transform);
 	// アフィン変換行列
-	Matrix4x4 matrix = primitive->transform.GetWorldMatrix();
+	//Matrix4x4 matrix = primitive->transform.GetWorldMatrix();
 	// 初期化
-	min = primitive->vertices[0].position * matrix;
+	min = primitive->vertices[0].position;
 	max = min;
 
 	// 最小の値と最大の値を求める
 	for (const Vertex& vertex : primitive->vertices) {
-		Vector3&& v = vertex.position * matrix;
+		Vector3 v = vertex.position;
 		min.x = min.x > v.x ? v.x : min.x;
 		min.y = min.y > v.y ? v.y : min.y;
 		min.z = min.z > v.z ? v.z : min.z;
@@ -66,15 +68,26 @@ void AABB::UpdateShape() {
 	// データが変わったら再生成
 	if (follow_.t && follow_.GetChanged()) {
 		CreateFromPrimitive(follow_.t);
+		#if DEMO
+		cube->CreateFromAABB(*this);	// cube再生成
+		#endif
 	}
 
 	#if DEMO
-	cube->CreateFromAABB(*this);	// cube再生成
+	// transformから無理やり回転を削除するやり方
+	cube->transform.translation = transform.GetWorldPosition();
+	cube->transform.scale = transform.GetFinalScale();
 	#endif
 }
 
 void AABB::DerivedDebugGUI() {
 	ImGui::DragFloat3("min", &min.x, 0.01f);
 	ImGui::DragFloat3("max", &max.x, 0.01f);
+	if (ImGui::TreeNode("transform")) {
+		ImGui::DragFloat3("Translation", &transform.translation.x, 0.01f);
+		// rotateは意味ないので消す
+		ImGui::DragFloat3("Scale", &transform.scale.x, 0.01f);
+		ImGui::TreePop();
+	}
 }
 

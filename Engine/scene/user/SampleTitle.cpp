@@ -155,12 +155,10 @@ void SampleTitle::Initialize() {
 	subCamera->isUsePostProcess = false;
 	c->isUsePostProcess = false;
 
-
 	Cube* cube =LWP::Primitive::CreateInstance<Cube>();
 	cube->texture = monsterBall;
 
-
-	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
+	Collider::Sphere* aabbCol = LWP::Common::CreateInstance<Collider::Sphere>();
 	aabbCol->CreateFromPrimitive(sphere);
 	// 試しにラムダ式を入れてみる
 	aabbCol->SetOnCollisionLambda([](Collider::HitData data) {

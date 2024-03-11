@@ -19,7 +19,10 @@ void ICollider::DebugGUI() {
 	DerivedDebugGUI();
 	ImGui::Text("- Below this are common variables - ");
 	// 追従先のワールドトランスフォーム
-	if (follow_.t) { follow_.t->DebugGUI(); }
+	if (follow_.t && ImGui::TreeNode("FollowTarget Info")) {
+		follow_.t->DebugGUI();
+		ImGui::TreePop();
+	}
 	
 	ImGui::Checkbox("isMove", &isMove);	// 動くかのフラグ
 	ImGui::Checkbox("isActive", &isActive);	// 有効/無効

@@ -32,6 +32,7 @@ void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
 void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	// ワールドトランスフォームのペアレントもしておく
 	follow_ = primitive;
+	//transform.Parent(&primitive->transform);
 	// アフィン変換行列
 	Matrix4x4 matrix = primitive->transform.GetWorldMatrix();
 	// 初期化
@@ -68,7 +69,6 @@ void Sphere::UpdateShape() {
 	if (follow_.t && follow_.GetChanged()) {
 		CreateFromPrimitive(follow_.t);
 	}
-
 #if DEMO
 	sphereModel->CreateFromSphereCol(*this);	// cube再生成
 #endif

@@ -102,10 +102,13 @@ void Manager::Update() {
 
 bool Manager::CheckMask(ICollider* f, ICollider* t) { return t->mask.CheckBelong(f->mask) || f->mask.CheckBelong(t->mask); }
 
-bool Manager::CheckCollision(AABB* f, AABB* t) {
-	if ((f->min.x <= t->max.x && f->max.x >= t->min.x) &&
-		(f->min.y <= t->max.y && f->max.y >= t->min.y) &&
-		(f->min.z <= t->max.z && f->max.z >= t->min.z)) {
+bool Manager::CheckCollision(AABB* c1, AABB* c2) {
+	AABB_Data data1 = *c1;	// transformをかけたデータで計算する
+	AABB_Data data2 = *c2;
+
+	if ((data1.min.x <= data2.max.x && data1.max.x >= data2.min.x) &&
+		(data1.min.y <= data2.max.y && data1.max.y >= data2.min.y) &&
+		(data1.min.z <= data2.max.z && data1.max.z >= data2.min.z)) {
 		return true;	// ヒットしているのでtrue
 	}
 	return false;	// 単純な当たり判定を返す
@@ -113,8 +116,8 @@ bool Manager::CheckCollision(AABB* f, AABB* t) {
 //bool Manager::CheckCollision(AABB* f, OBB* t) {
 //	f;	t; return false;
 //}
-bool Manager::CheckCollision(AABB* f, Sphere* t) {
-	f;	t; return false;
+bool Manager::CheckCollision(AABB* c1, Sphere* c2) {
+	c1;	c2; return false;
 }
 //bool Manager::CheckCollision(OBB* f, OBB* t) {
 //	f;	t; return false;
@@ -122,11 +125,14 @@ bool Manager::CheckCollision(AABB* f, Sphere* t) {
 //bool Manager::CheckCollision(OBB* f, Sphere* t) {
 //	f;	t; return false;
 //}
-bool Manager::CheckCollision(Sphere* f, Sphere* t) {
+bool Manager::CheckCollision(Sphere* c1, Sphere* c2) {
+	Sphere_Data data1 = *c1;	// transformをかけたデータで計算する
+	Sphere_Data data2 = *c2;
+
 	// 二つの球体の中心点間の距離を求める
-	Vector3 dist = f->position - t->position;
+	Vector3 dist = data1.position - data2.position;
 	// 半径の合計よりも短ければ衝突
-	if (dist.Length() <= f->radius + t->radius) {
+	if (dist.Length() <= data1.radius + data2.radius) {
 		// 当たった処理
 		return true;
 	}

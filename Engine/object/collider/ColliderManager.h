@@ -77,15 +77,15 @@ namespace LWP::Object::Collider {
 		bool CheckMask(ICollider* f, ICollider* t);
 
 		// 各形状同士の当たり判定
-		bool CheckCollision(AABB* f, AABB* t);
-		//bool CheckCollision(AABB* f, OBB* t);
-		bool CheckCollision(AABB* f, Sphere* t);
-		//bool CheckCollision(OBB* f, AABB* t) { return CheckCollision(t, f); }
-		//bool CheckCollision(OBB* f, OBB* t);
-		//bool CheckCollision(OBB* f, Sphere* t);
-		bool CheckCollision(Sphere* f, AABB* t) { return CheckCollision(t, f); }
-		//bool CheckCollision(Sphere* f, OBB* t) { return CheckCollision(t, f); }
-		bool CheckCollision(Sphere* f, Sphere* t);
+		bool CheckCollision(AABB* c1, AABB* c2);
+		//bool CheckCollision(AABB* c1, OBB* c2);
+		bool CheckCollision(AABB* c1, Sphere* c2);
+		//bool CheckCollision(OBB* c1, AABB* c2) { return CheckCollision(c2, c1); }
+		//bool CheckCollision(OBB* c1, OBB* c2);
+		//bool CheckCollision(OBB* c1, Sphere* c2);
+		bool CheckCollision(Sphere* c1, AABB* c2) { return CheckCollision(c2, c1); }
+		//bool CheckCollision(Sphere* c1, OBB* c2) { return CheckCollision(c2, c1); }
+		bool CheckCollision(Sphere* c1, Sphere* c2);
 
 	};
 };

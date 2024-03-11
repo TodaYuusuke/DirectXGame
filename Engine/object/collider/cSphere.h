@@ -38,7 +38,6 @@ namespace LWP::Object::Collider {
 		bool operator==(const Sphere& other) {
 			return {
 				follow_.GetChanged() &&
-				position == other.position &&
 				radius == other.radius
 			};
 		}
@@ -57,5 +56,21 @@ namespace LWP::Object::Collider {
 		void UpdateShape() override;
 		// ImGuiの派生クラス
 		void DerivedDebugGUI() override;
+	};
+
+
+	// データ構造体
+	struct Sphere_Data {
+		// 中心座標
+		LWP::Math::Vector3 position;
+		// 半径
+		float radius;
+
+		// コンストラクタ
+		Sphere_Data(const Sphere& sphere) {
+			position = sphere.position;
+			// 球体は半径しかscaleが変わらないのでxのみ参照する
+			radius = sphere.radius;
+		}
 	};
 };

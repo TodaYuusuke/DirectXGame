@@ -18,6 +18,8 @@ namespace LWP::Object::Collider {
 		// 最大
 		LWP::Math::Vector3 max = { 0.5f,0.5f,0.5f };
 
+		// トランスフォーム
+		WorldTransform transform;
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
@@ -55,5 +57,23 @@ namespace LWP::Object::Collider {
 		void UpdateShape() override;
 		// ImGuiの派生クラス
 		void DerivedDebugGUI() override;
+	};
+
+
+	// データ構造体
+	struct AABB_Data {
+		// 最小
+		LWP::Math::Vector3 min;
+		// 最大
+		LWP::Math::Vector3 max;
+
+		// コンストラクタ
+		AABB_Data(const AABB& aabb) {
+			LWP::Math::Matrix4x4 scale = aabb.transform.GetScaleMatrix();
+			LWP::Math::Vector3 translate = aabb.transform.GetWorldPosition();
+
+			min = aabb.min * scale + translate;
+			max = aabb.max * scale + translate;
+		}
 	};
 };

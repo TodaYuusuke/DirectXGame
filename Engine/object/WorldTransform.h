@@ -42,11 +42,23 @@ namespace LWP::Object {
 		/// ワールド行列を返す
 		/// </summary>
 		Math::Matrix4x4 GetWorldMatrix() const;
-		/// <summary>
-		/// ワールド座標を返す
-		/// </summary>
+
+		// 移動だけのワールド行列を返す
+		Math::Matrix4x4 GetTranslationMatrix() const;
+		// ワールド座標を返す
 		Math::Vector3 GetWorldPosition() const;
 
+		// 回転だけのワールド行列を返す
+		Math::Matrix4x4 GetRotateMatrix() const;
+		// 最終的な回転を返す
+		//Math::Vector3 GetFinalRotate() const;
+
+		// 拡大縮小だけのワールド行列を返す
+		Math::Matrix4x4 GetScaleMatrix() const;
+		// 最終的なスケールを返す
+		Math::Vector3 GetFinalScale() const;
+
+	
 
 		/// <summary>
 		/// ImGui
