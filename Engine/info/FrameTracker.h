@@ -28,6 +28,8 @@ namespace LWP::Information {
 
 		// デルタタイムを返す関数
 		double GetDeltaTime();
+		// デルタタイムに掛ける係数をセットする関数
+		void SetDeltaTimeMultiply(float value);
 
 		// ImGuiを用いて情報表示
 		void DebugGUI();
@@ -62,5 +64,8 @@ namespace LWP::Information {
 		long elapsedFrame_ = 0;
 		// 60フレームごとのFPS
 		double frameRate = 0;
+
+		// デルタタイムに掛ける係数
+		float deltaFactor = 1.0f;
 	};
 }

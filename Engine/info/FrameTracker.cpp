@@ -96,7 +96,10 @@ double FrameTracker::GetElapsedTimeH() {
 
 double FrameTracker::GetDeltaTime() {
 	// N分の1フレームからどれだけ離れているかを係数にする
-	return frameDurations_[frameDurationIndex_ - 1];
+	return frameDurations_[frameDurationIndex_ - 1] * deltaFactor;
+}
+void FrameTracker::SetDeltaTimeMultiply(float value) {
+	deltaFactor = value;
 }
 
 void FrameTracker::DebugGUI() {

@@ -28,6 +28,12 @@ namespace LWP {
 		/// </summary>
 		/// <returns></returns>
 		double GetDeltaTime();
+
+		/// <summary>
+		/// デルタタイムに掛ける係数を設定する関数
+		/// </summary>
+		/// <param name="value">係数の値：default ... 1.0f</param>
+		void SetDeltaTimeMultiply(float value);
 	};
 	namespace Info = Information;
 };
