@@ -16,10 +16,10 @@ void Capsule::CreateVertices() {
 	int arrayIndex = 0;
 	
 	// カプセルの長さ
-	float length = endOffset.t.Length();
+	float length = (end.t - start()).Length();
 	// カプセルの回転行列
 	Matrix4x4 rotate = Matrix4x4::DirectionToDirection(
-		{0.0f,1.0f,0.0f}, endOffset.t.Normalize()
+		{0.0f,1.0f,0.0f}, (end.t - start()).Normalize()
 	);
 
 
@@ -96,7 +96,7 @@ int Capsule::GetIndexCount() const { return subdivision * (subdivision - 1u) * 2
 
 void Capsule::DerivedDebugGUI(const std::string& label) {
 	ImGui::DragFloat3("start", &transform.translation.x, 0.01f);
-	ImGui::DragFloat3("endOffset", &endOffset.t.x, 0.01f);
+	ImGui::DragFloat3("end", &end.t.x, 0.01f);
 	int s = static_cast<int>(subdivision);
 	ImGui::SliderInt("subdivision", &s, 4, 32);
 	subdivision = static_cast<uint32_t>(s);
@@ -105,5 +105,5 @@ void Capsule::DerivedDebugGUI(const std::string& label) {
 }
 
 bool Capsule::GetChanged() {
-	return radius.GetChanged() + subdivision.GetChanged() + endOffset.GetChanged();
+	return radius.GetChanged() + subdivision.GetChanged() + obsTransform.GetChanged() + end.GetChanged();
 }

@@ -11,10 +11,11 @@ namespace LWP::Primitive {
 	class Capsule final
 		: public Sphere {
 	public: // ** パブリックなメンバ変数 ** //
-		// 終点
-		Utility::Observer<LWP::Math::Vector3> endOffset = LWP::Math::Vector3{ 0.0f,0.0f, 0.0f };
 		// 始点
 		LWP::Math::Vector3 start() const { return transform.GetWorldPosition(); }
+		// 終点
+		Utility::Observer<LWP::Math::Vector3> end = LWP::Math::Vector3{ 0.0f,0.0f, 0.0f };
+		
 
 	public: // ** 関数 ** //
 
@@ -48,6 +49,9 @@ namespace LWP::Primitive {
 		/// ImGui
 		/// </summary>
 		void DerivedDebugGUI(const std::string& label = "Derived") override;
+
+		// 始点が変わっているかを監視するための変数
+		Utility::Observer<LWP::Object::WorldTransform*> obsTransform = &transform;
 
 		/// <summary>
 		/// パラメータが変わっているかを検証

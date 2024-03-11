@@ -180,7 +180,7 @@ void SampleTitle::Initialize() {
 
 	// カプセル実験
 	Capsule* capsule = LWP::Common::CreateInstance<Capsule>();
-	capsule->endOffset = {0.0f,1.0f,0.0f};
+	capsule->end = {0.0f,1.0f,0.0f};
 	capsule->isWireFrame = true;
 }
 
