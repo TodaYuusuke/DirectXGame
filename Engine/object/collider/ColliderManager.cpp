@@ -100,7 +100,7 @@ void Manager::Update() {
 }
 
 
-bool Manager::CheckMask(ICollider* f, ICollider* t) { return t->mask.CheckBelong(f->mask); }
+bool Manager::CheckMask(ICollider* f, ICollider* t) { return t->mask.CheckBelong(f->mask) || f->mask.CheckBelong(t->mask); }
 
 bool Manager::CheckCollision(AABB* f, AABB* t) {
 	if ((f->min.x <= t->max.x && f->max.x >= t->min.x) &&
