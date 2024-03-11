@@ -176,7 +176,7 @@ void SampleTitle::Initialize() {
 	aabbCol2->Create({2.0f,0.0f,0.0f});
 
 	Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
-	sphereCol0->CreateFromPrimitive(cube);
+	sphereCol0->Create({ 3.0f,0.0f,0.0f });
 }
 
 // 更新

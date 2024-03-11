@@ -23,9 +23,10 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 }
 
 
-// 座標を指定して生成
+void Sphere::Create(const LWP::Math::Vector3& pos) { Create(pos, 1.0f); }
 void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
-	*this = Sphere(pos, rad);
+	position = pos;
+	radius = rad;
 }
 // 形状から包み込む最小のAABBを生成する関数
 void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {

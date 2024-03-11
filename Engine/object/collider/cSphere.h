@@ -27,6 +27,7 @@ namespace LWP::Object::Collider {
 		Sphere(const LWP::Math::Vector3& pos, const float& rad);
 
 		// 座標を指定して生成
+		void Create(const LWP::Math::Vector3& pos);
 		void Create(const LWP::Math::Vector3& pos, const float& rad);
 		// 形状から包み込む最小のAABBを生成する関数
 		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
