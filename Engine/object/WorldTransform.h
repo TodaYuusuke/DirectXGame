@@ -1,7 +1,7 @@
 #pragma once
 #include "../math/Math.h"
 #include <string>
-#include "utility/Observer.h"
+#include "utility/observers/Observer.h"
 
 namespace LWP::Object {
 	class WorldTransform {

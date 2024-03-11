@@ -13,19 +13,13 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 球
 	/// </summary>
-	class Sphere final
+	class Sphere
 		: public IPrimitive {
-	private: // 分割数
-		uint32_t subdivision_ = 16;
-	public: // アクセッサ
-		void Subdivision(uint32_t value);
-		uint32_t Subdivision() { return subdivision_; }
-
-	private: // 半径
-		float radius_ = 1.0f;
-	public: // アクセッサ
-		void Radius(float value);
-		float Radius() { return radius_; }
+	public:	// ** パブリックなメンバ変数 ** //
+		// 分割数
+		Utility::Observer<uint32_t> subdivision = 16;
+		// 半径
+		Utility::Observer<float> radius = 1.0f;
 
 
 	public: // ** 関数 ** //
@@ -45,6 +39,11 @@ namespace LWP::Primitive {
 		void CreateIndexes() override;
 
 		/// <summary>
+		/// 更新処理
+		/// </summary>
+		void Update() override;
+
+		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>
 		int GetVertexCount() const override;
@@ -60,22 +59,28 @@ namespace LWP::Primitive {
 		void CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere);
 
 
-	private: // ** プライベートな関数 ** //
+	protected: // ** プライベートな関数 ** //
 
 		/// <summary>
 		/// 経度分割1つ分の角度を求める
 		/// </summary>
 		/// <returns></returns>
-		float GetLonEvery() const { return (float)(2.0f * M_PI) / (float)subdivision_; }
+		float GetLonEvery() const { return (float)(2.0f * M_PI) / static_cast<float>(subdivision.t); }
 		/// <summary>
 		/// 緯度分割1つ分の角度を求める
 		/// </summary>
 		/// <returns></returns>
-		float GetLatEvery() const { return (float)M_PI / (float)subdivision_; }
+		float GetLatEvery() const { return (float)M_PI / static_cast<float>(subdivision.t); }
 
 		/// <summary>
 		/// ImGui
 		/// </summary>
 		void DerivedDebugGUI(const std::string& label = "Derived") override;
+
+		/// <summary>
+		/// パラメータが変わっているかを検証
+		/// </summary>
+		/// <returns></returns>
+		bool GetChanged();
 	};
 }

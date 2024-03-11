@@ -1,6 +1,5 @@
 #include "Cube.h"
-#include "../../../Adapter/LWP.h"
-
+#include "base/ImGuiManager.h"
 #include "object/collider/cAABB.h"
 
 using namespace LWP::Primitive;

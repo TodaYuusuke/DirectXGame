@@ -424,9 +424,6 @@
     <ClInclude Include="Engine\resources\audio\Audio.h">
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\Observer.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
     <ClInclude Include="Adapter\Config.h">
       <Filter>Adapter</Filter>
     </ClInclude>
@@ -534,6 +531,15 @@
     </ClInclude>
     <ClInclude Include="Adapter\component\Common.h">
       <Filter>Adapter\component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\observers\Observer.h">
+      <Filter>Engine\utilitiy\observers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\observers\Observer2.h">
+      <Filter>Engine\utilitiy\observers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\observers\ObserverPtr.h">
+      <Filter>Engine\utilitiy\observers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -656,6 +662,9 @@
     </Filter>
     <Filter Include="Engine\object\collider">
       <UniqueIdentifier>{5c833c51-fe4d-4823-a931-9c1782e5bba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\utilitiy\observers">
+      <UniqueIdentifier>{2ec6478e-d841-4aa1-827b-1ad8487bd9cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

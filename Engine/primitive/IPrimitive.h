@@ -5,7 +5,7 @@
 #include "../resources/texture/Texture.h"
 #include "../resources/material/Material.h"
 #include "../utility/Color.h"
-#include "../utility/Observer.h"
+#include "../utility/observers/ObserverPtr.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include <stdexcept>

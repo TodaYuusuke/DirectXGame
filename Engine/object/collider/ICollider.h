@@ -1,6 +1,6 @@
 #pragma once
 #include "primitive/IPrimitive.h"
-#include "utility/Observer.h"
+#include "utility/observers/Observer.h"
 #include "Mask.h"
 
 #include <functional>

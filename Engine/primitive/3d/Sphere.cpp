@@ -1,23 +1,11 @@
 #include "Sphere.h"
-#include "../../../Adapter/LWP.h"
-
+#include "base/ImGuiManager.h"
 #include "object/collider/cSphere.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
-
-void Sphere::Subdivision(uint32_t value) {
-	subdivision_ = value;
-	CreateVertices();	// 再計算
-	CreateIndexes();
-}
-void Sphere::Radius(float value) {
-	radius_ = value;
-	CreateVertices();	// 再計算
-	CreateIndexes();
-}
 
 void Sphere::CreateVertices() {
 	// 頂点をクリア
@@ -27,18 +15,18 @@ void Sphere::CreateVertices() {
 	int arrayIndex = 0;
 	
 	// 緯度の方向に分割 -π/2 ~ π/2
-	for (uint32_t latIndex = 0; latIndex <= subdivision_; ++latIndex) {
+	for (uint32_t latIndex = 0; latIndex <= subdivision; ++latIndex) {
 		float lat = (float)(-M_PI / 2.0f + GetLatEvery() * latIndex); // 現在の緯度
 		// 緯度の方向に分割 0 ~ 2π
-		for (uint32_t lonIndex = 0; lonIndex <= subdivision_; ++lonIndex) {
+		for (uint32_t lonIndex = 0; lonIndex <= subdivision; ++lonIndex) {
 			float lon = lonIndex * GetLonEvery(); // 現在の経度
 			// world座標系での点を求める
 			vertices[arrayIndex].position =
-			{ cosf(lat) * cosf(lon) * radius_, sinf(lat) * radius_, cosf(lat) * sinf(lon) * radius_ };
+			{ cosf(lat) * cosf(lon) * radius, sinf(lat) * radius, cosf(lat) * sinf(lon) * radius };
 
 			// UV座標系をセット
-			float u = float(lonIndex) / float(subdivision_);
-			float v = 1.0f - float(latIndex) / float(subdivision_);
+			float u = float(lonIndex) / float(subdivision);
+			float v = 1.0f - float(latIndex) / float(subdivision);
 			vertices[arrayIndex].texCoord = { u,v };
 
 			// 法線をセット
@@ -60,53 +48,60 @@ void Sphere::CreateIndexes() {
 
 	int arrayIndex = 0;
 	// 一番下の頂点
-	for (uint32_t x = 0; x < subdivision_; x++) {
+	for (uint32_t x = 0; x < subdivision; x++) {
 		indexes[arrayIndex++] = x;
-		indexes[arrayIndex++] = x + subdivision_ + 1;
-		indexes[arrayIndex++] = x + subdivision_ + 2;
+		indexes[arrayIndex++] = x + subdivision + 1;
+		indexes[arrayIndex++] = x + subdivision + 2;
 	}
 
-	for (uint32_t y = 1; y <= subdivision_ - 2; y++) {
-		for (uint32_t x = 0; x < subdivision_; x++) {
-			indexes[arrayIndex++] = (y * (subdivision_ + 1)) + x;
-			indexes[arrayIndex++] = ((y + 1) * (subdivision_ + 1)) + x;
-			indexes[arrayIndex++] = (y * (subdivision_ + 1)) + (x + 1);
-			indexes[arrayIndex++] = ((y + 1) * (subdivision_ + 1)) + x;
-			indexes[arrayIndex++] = ((y + 1) * (subdivision_ + 1)) + (x + 1);
-			indexes[arrayIndex++] = (y * (subdivision_ + 1)) + (x + 1);
+	for (uint32_t y = 1; y <= subdivision - 2u; y++) {
+		for (uint32_t x = 0; x < subdivision; x++) {
+			indexes[arrayIndex++] = (y * (subdivision + 1u)) + x;
+			indexes[arrayIndex++] = ((y + 1) * (subdivision + 1u)) + x;
+			indexes[arrayIndex++] = (y * (subdivision + 1u)) + (x + 1);
+			indexes[arrayIndex++] = ((y + 1) * (subdivision + 1u)) + x;
+			indexes[arrayIndex++] = ((y + 1) * (subdivision + 1u)) + (x + 1);
+			indexes[arrayIndex++] = (y * (subdivision + 1u)) + (x + 1);
 		}
 	}
 
 	// 一番上の頂点
-	for (uint32_t x = 0; x < subdivision_; x++) {
-		indexes[arrayIndex++] = subdivision_ * subdivision_ + x - 1;
-		indexes[arrayIndex++] = (subdivision_ * (subdivision_ + 1)) + x;
-		indexes[arrayIndex++] = subdivision_ * subdivision_ + x;
+	for (uint32_t x = 0; x < subdivision; x++) {
+		indexes[arrayIndex++] = subdivision * subdivision + x - 1u;
+		indexes[arrayIndex++] = (subdivision * (subdivision + 1u)) + x;
+		indexes[arrayIndex++] = subdivision * subdivision + x;
 	}
 }
 
+void Sphere::Update() {
+	// 値が更新されていたら再生成
+	if (GetChanged()) {
+		CreateVertices();
+		CreateIndexes();
+	}
+};
 
 
-int Sphere::GetVertexCount() const { return (subdivision_ + 1) * (subdivision_ + 1); }
-int Sphere::GetIndexCount() const { return subdivision_ * (subdivision_ - 1) * 2 * 3; }
+int Sphere::GetVertexCount() const { return (subdivision + 1u) * (subdivision + 1u); }
+int Sphere::GetIndexCount() const { return subdivision * (subdivision - 1u) * 2u * 3u; }
 
 void Sphere::CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere) {
 	transform.translation = sphere.position;
-	radius_ = sphere.radius;
-	subdivision_ = 16;
+	radius = sphere.radius;
+	subdivision = 16;
 	isWireFrame = true;
 	CreateVertices();	// 再計算
 	CreateIndexes();
 }
 
 void Sphere::DerivedDebugGUI(const std::string& label) {
-	int s = static_cast<int>(Subdivision());
-	float r = Radius();
+	int s = static_cast<int>(subdivision);
 	ImGui::SliderInt("subdivision", &s, 4, 32);
-	ImGui::DragFloat("radius", &r, 0.01f);
-	if (s != static_cast<int>(Subdivision()) || r != Radius()) {
-		subdivision_ = static_cast<uint32_t>(s);
-		Radius(r);	// 再計算用に関数呼び出し
-	}
+	ImGui::DragFloat("radius", &radius.t, 0.01f);
+	subdivision = static_cast<uint32_t>(s);
 	label; // ラベルは使用しない
+}
+
+bool Sphere::GetChanged() {
+	return radius.GetChanged() + subdivision.GetChanged();
 }

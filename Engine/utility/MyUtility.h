@@ -2,7 +2,9 @@
 #include "CatmullRom.h"
 #include "Color.h"
 #include "Counter.h"
-#include "Observer.h"
+#include "observers/Observer.h"
+#include "observers/Observer2.h"
+#include "observers/ObserverPtr.h"
 #include "UI.h"
 
 #include <string>
