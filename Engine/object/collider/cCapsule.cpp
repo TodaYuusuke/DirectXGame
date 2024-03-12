@@ -25,9 +25,9 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_) { Create(start_, end_, 1.0f); }
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_, const float& rad_) {
-	this->start = start_;
-	this->end = end_;
-	this->radius = rad_;
+	start = start_;
+	end = end_;
+	radius = rad_;
 }
 
 #if DEMO
