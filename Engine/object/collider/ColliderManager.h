@@ -2,6 +2,7 @@
 #include "cAABB.h"
 //#include "cOBB.h"
 #include "cSphere.h"
+#include "cCapsule.h"
 
 #include <map>
 
@@ -61,7 +62,7 @@ namespace LWP::Object::Collider {
 
 		// 関数ポインタの型
 		using CollisionFunction = std::function<bool(ICollider*, ICollider*)>;
-		CollisionFunction checkCollisions_[3][3];	// Shape::Countの値がサイズだよ！
+		CollisionFunction checkCollisions_[4][4];	// Shape::Countの値がサイズだよ！
 
 #if DEMO
 		// インスタンスカウント用マップ
@@ -80,12 +81,19 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(AABB* c1, AABB* c2);
 		//bool CheckCollision(AABB* c1, OBB* c2);
 		bool CheckCollision(AABB* c1, Sphere* c2);
+		bool CheckCollision(AABB* c1, Capsule* c2);
 		//bool CheckCollision(OBB* c1, AABB* c2) { return CheckCollision(c2, c1); }
 		//bool CheckCollision(OBB* c1, OBB* c2);
 		//bool CheckCollision(OBB* c1, Sphere* c2);
+		//bool CheckCollision(OBB* c1, Capsule* c2);
 		bool CheckCollision(Sphere* c1, AABB* c2) { return CheckCollision(c2, c1); }
 		//bool CheckCollision(Sphere* c1, OBB* c2) { return CheckCollision(c2, c1); }
 		bool CheckCollision(Sphere* c1, Sphere* c2);
+		bool CheckCollision(Sphere* c1, Capsule* c2);
+		bool CheckCollision(Capsule* c1, AABB* c2) { return CheckCollision(c2, c1); }
+		//bool CheckCollision(Capsule* c1, OBB* c2) { return CheckCollision(c2, c1); }
+		bool CheckCollision(Capsule* c1, Sphere* c2) { return CheckCollision(c2, c1); }
+		bool CheckCollision(Capsule* c1, Capsule* c2);
 
 	};
 };

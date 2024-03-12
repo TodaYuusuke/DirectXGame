@@ -16,7 +16,7 @@ namespace LWP::Object::Collider {
 		// 始点
 		LWP::Math::Vector3 start = { 0.0f,0.0f,0.0f };
 		// 終点
-		LWP::Math::Vector3 end = { 0.0f,0.0f,0.0f };
+		LWP::Math::Vector3 end = { 0.0f,1.0f,0.0f };
 		// 半径
 		float radius = 1.0f;
 
@@ -24,23 +24,22 @@ namespace LWP::Object::Collider {
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
 		Capsule();
-		Capsule(const LWP::Math::Vector3& pos);
-		Capsule(const float& rad);
-		Capsule(const LWP::Math::Vector3& pos, const float& rad);
+		Capsule(const LWP::Math::Vector3& start);
+		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
+		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
 
 		// 座標を指定して生成
-		void Create(const LWP::Math::Vector3& pos);
-		void Create(const LWP::Math::Vector3& pos, const float& rad);
-		// 形状から包み込む最小のAABBを生成する関数
-		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
+		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
+		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
 		// 形状を返す
-		Shape GetShape() override { return Shape::Sphere; }
+		Shape GetShape() override { return Shape::Capsule; }
 
 		// Observer用（==）
-		bool operator==(const Sphere& other) {
+		bool operator==(const Capsule& other) {
 			return {
 				follow_.GetChanged() &&
-				position == other.position &&
+				start == other.start &&
+				end == other.end &&
 				radius == other.radius
 			};
 		}
@@ -48,7 +47,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Sphere* sphereModel = nullptr;
+		LWP::Primitive::Capsule* capsuleModel = nullptr;
 	public:
 		// デバッグ用の描画関数
 		void ShowWireFrame() override;
@@ -59,5 +58,23 @@ namespace LWP::Object::Collider {
 		void UpdateShape() override;
 		// ImGuiの派生クラス
 		void DerivedDebugGUI() override;
+	};
+
+
+	// データ構造体
+	struct Capsule_Data {
+		// 始点
+		LWP::Math::Vector3 start;
+		// 終点
+		LWP::Math::Vector3 end;
+		// 半径
+		float radius;
+
+		// コンストラクタ
+		Capsule_Data(const Capsule& cap) {
+			start = cap.start;
+			end = cap.end;
+			radius = cap.radius;
+		}
 	};
 };

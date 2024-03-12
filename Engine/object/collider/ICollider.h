@@ -17,7 +17,8 @@ namespace LWP::Object::Collider {
 		AABB = 0,
 		OBB = 1,
 		Sphere = 2,
-		Count = 3,	// カウント
+		Capsule = 3,
+		Count	// カウント
 	};
 	// 現在のヒット状況
 	enum class OnCollisionState : int {

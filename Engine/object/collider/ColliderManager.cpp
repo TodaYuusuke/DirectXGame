@@ -1,4 +1,5 @@
 #include "ColliderManager.h"
+#include <algorithm>
 
 #if DEMO
 #include <component/Object.h>
@@ -18,12 +19,19 @@ void Manager::Initialize() {
 	checkCollisions_[0][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<AABB*>(c2)); };
 	//checkCollisions_[0][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<OBB*>(c2)); };
 	checkCollisions_[0][2] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<Sphere*>(c2)); };
+	checkCollisions_[0][3] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<Capsule*>(c2)); };
 	//checkCollisions_[1][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<AABB*>(c2)); };
 	//checkCollisions_[1][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<OBB*>(c2)); };
 	//checkCollisions_[1][2] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<Sphere*>(c2));
+	//checkCollisions_[1][3] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<OBB*>(c1), dynamic_cast<Capsule*>(c2));
 	checkCollisions_[2][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Sphere*>(c1), dynamic_cast<AABB*>(c2)); };
 	//checkCollisions_[2][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Sphere*>(c1), dynamic_cast<OBB*>(c2));
 	checkCollisions_[2][2] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Sphere*>(c1), dynamic_cast<Sphere*>(c2)); };
+	checkCollisions_[2][3] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Sphere*>(c1), dynamic_cast<Capsule*>(c2)); };
+	checkCollisions_[3][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Capsule*>(c1), dynamic_cast<AABB*>(c2)); };
+	//checkCollisions_[3][1] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Capsule*>(c1), dynamic_cast<OBB*>(c2));
+	checkCollisions_[3][2] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Capsule*>(c1), dynamic_cast<Sphere*>(c2)); };
+	checkCollisions_[3][3] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<Capsule*>(c1), dynamic_cast<Capsule*>(c2)); };
 }
 
 
@@ -35,10 +43,11 @@ void Manager::Update() {
 		&LWP::Object::Collider::CreateInstance<AABB>,
 		//&LWP::Object::Collider::CreateInstance<OBB>,
 		&LWP::Object::Collider::CreateInstance<Sphere>,
+		&LWP::Object::Collider::CreateInstance<Capsule>,
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"AABB",/*"OBB",*/"Sphere"
+		"AABB",/*"OBB",*/"Sphere","Capsule"
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -117,7 +126,60 @@ bool Manager::CheckCollision(AABB* c1, AABB* c2) {
 //	f;	t; return false;
 //}
 bool Manager::CheckCollision(AABB* c1, Sphere* c2) {
-	c1;	c2; return false;
+	AABB_Data aabb = *c1;
+	Sphere_Data sphere = *c2;
+
+	// 最近接点
+	Vector3 closestPoint = {
+		std::clamp(sphere.position.x, aabb.min.x, aabb.max.x),
+		std::clamp(sphere.position.y, aabb.min.y, aabb.max.y),
+		std::clamp(sphere.position.z, aabb.min.z, aabb.max.z),
+	};
+
+	float dist = (closestPoint - sphere.position).Length();
+	if (dist <= sphere.radius) {
+		return true;
+	}
+	return false;
+}
+bool Manager::CheckCollision(AABB* c1, Capsule* c2) {
+	AABB_Data aabb = *c1;	// transformをかけたデータで計算する
+	Capsule_Data capsule = *c2;
+
+	Vector3 d = aabb.center - capsule.start;
+	Vector3 ba = capsule.end - capsule.start;
+	// カプセルのベクトルの長さ
+	float length = ba.Length();
+	// 正規化
+	Vector3 e = ba.Normalize();
+	// 内積
+	float dot = Vector3::Dot(d, e);
+
+	float t = dot / length;
+	if (t > 1) {
+		t = 1;
+	}
+	else if (t < 0) {
+		t = 0;
+	}
+	// 線形補間
+	Vector3 f;
+	f.x = (1.0f - t) * capsule.start.x + t * capsule.end.x;
+	f.y = (1.0f - t) * capsule.start.y + t * capsule.end.y;
+	f.z = (1.0f - t) * capsule.start.z + t * capsule.end.z;
+
+	// 最近接点
+	Vector3 closestPoint = {
+		std::clamp(f.x, aabb.min.x, aabb.max.x),
+		std::clamp(f.y, aabb.min.y, aabb.max.y),
+		std::clamp(f.z, aabb.min.z, aabb.max.z),
+	};
+
+	float dist = (closestPoint - f).Length();
+	if (dist <= capsule.radius) {
+		return true;
+	}
+	return false;
 }
 //bool Manager::CheckCollision(OBB* f, OBB* t) {
 //	f;	t; return false;
@@ -138,4 +200,10 @@ bool Manager::CheckCollision(Sphere* c1, Sphere* c2) {
 	}
 
 	return false;
+}
+bool Manager::CheckCollision(Sphere* c1, Capsule* c2) {
+	c1;	c2; return false;
+}
+bool Manager::CheckCollision(Capsule* c1, Capsule* c2) {
+	c1;	c2; return false;
 }

@@ -1,8 +1,10 @@
 #pragma once
 #include "Sphere.h"
 
-template<class T>
-class TEMP;
+// 前方宣言
+namespace LWP::Object::Collider {
+	class Capsule;
+}
 
 namespace LWP::Primitive {
 	/// <summary>
@@ -41,6 +43,12 @@ namespace LWP::Primitive {
 		/// インデックスの数を返す関数
 		/// </summary>
 		int GetIndexCount() const override;
+
+		/// <summary>
+		/// スフィアコライダーから描画用のスフィアを生成
+		/// </summary>
+		/// <param name="sphere"></param>
+		void CreateFromCapsuleCol(const LWP::Object::Collider::Capsule& capsule);
 
 
 	private: // ** プライベートな関数 ** //

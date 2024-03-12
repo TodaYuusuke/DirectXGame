@@ -1,7 +1,7 @@
 #include "Capsule.h"
-#include "../../../Adapter/LWP.h"
+#include "base/ImGuiManager.h"
 
-#include "object/collider/cSphere.h"
+#include "object/collider/cCapsule.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
@@ -93,6 +93,17 @@ void Capsule::CreateIndexes() {
 
 int Capsule::GetVertexCount() const { return (subdivision + 1u) * (subdivision + 1u); }
 int Capsule::GetIndexCount() const { return subdivision * (subdivision - 1u) * 2u * 3u; }
+
+void Capsule::CreateFromCapsuleCol(const LWP::Object::Collider::Capsule& capsule) {
+	transform.translation = capsule.start;
+	end = capsule.end;
+	radius = capsule.radius;
+	subdivision = 16;
+	isWireFrame = true;
+	CreateVertices();	// 再計算
+	CreateIndexes();
+}
+
 
 void Capsule::DerivedDebugGUI(const std::string& label) {
 	ImGui::DragFloat3("start", &transform.translation.x, 0.01f);

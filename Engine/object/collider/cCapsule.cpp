@@ -1,4 +1,4 @@
-#include "cSphere.h"
+#include "cCapsule.h"
 #include "base/ImGuiManager.h"
 #if DEMO
 #include "component/Primitive.h"
@@ -8,73 +8,45 @@ using namespace LWP::Object::Collider;
 using namespace LWP;
 using namespace LWP::Math;
 
-Sphere::Sphere() : Sphere({ 0.0f,0.0f,0.0f }, 1.0f) {};
-Sphere::Sphere(const LWP::Math::Vector3& pos) : Sphere(pos, 1.0f) {};
-Sphere::Sphere(const float& rad) : Sphere({ 0.0f,0.0f,0.0f }, rad) {};
-Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
-	position = pos;
-	radius = rad;
+Capsule::Capsule() : Capsule({ 0.0f,0.0f ,0.0f }, { 0.0f,1.0f,0.0f }, 1.0f) {};
+Capsule::Capsule(const LWP::Math::Vector3& start) : Capsule(start, { 0.0f,1.0f,0.0f }, 1.0f) {};
+Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end) : Capsule(start, end, 1.0f) {};
+Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad_) {
+	this->start = start;
+	this->end = end;
+	this->radius = rad_;
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	sphereModel = LWP::Primitive::CreateInstance<Primitive::Sphere>();
-	sphereModel->CreateFromSphereCol(*this);
+	capsuleModel = LWP::Primitive::CreateInstance<Primitive::Capsule>();
+	capsuleModel->CreateFromCapsuleCol(*this);
 #endif
-}
+};
 
-
-void Sphere::Create(const LWP::Math::Vector3& pos) { Create(pos, 1.0f); }
-void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
-	position = pos;
-	radius = rad;
-}
-// 形状から包み込む最小のAABBを生成する関数
-void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
-	// ワールドトランスフォームのペアレントもしておく
-	follow_ = primitive;
-	// アフィン変換行列
-	Matrix4x4 matrix = primitive->transform.GetWorldMatrix();
-	// 初期化
-	Vector3 min = primitive->vertices[0].position * matrix;
-	Vector3 max = min;
-
-	// 最小の値と最大の値を求める
-	for (const Primitive::Vertex& vertex : primitive->vertices) {
-		Vector3&& v = vertex.position * matrix;
-		min.x = min.x > v.x ? v.x : min.x;
-		min.y = min.y > v.y ? v.y : min.y;
-		min.z = min.z > v.z ? v.z : min.z;
-		max.x = max.x < v.x ? v.x : max.x;
-		max.y = max.y < v.y ? v.y : max.y;
-		max.z = max.z < v.z ? v.z : max.z;
-	}
-	// ここから中心点を割り出す
-	position = (max + min) / 2.0f;
-	// 半径を割り出す
-	radius = (max - position).Length();
+void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_) { Create(start_, end_, 1.0f); }
+void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_, const float& rad_) {
+	this->start = start_;
+	this->end = end_;
+	this->radius = rad_;
 }
 
 #if DEMO
-void Sphere::ShowWireFrame() {
+void Capsule::ShowWireFrame() {
 	// isActive切り替え
-	sphereModel->isActive = isShowWireFrame && isActive;
+	capsuleModel->isActive = isShowWireFrame && isActive;
 	// hitしているときは色を変える
-	sphereModel->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+	capsuleModel->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 };
 #endif
 
-void Sphere::UpdateShape() {
-	// データが変わったら再生成
-	if (follow_.t && follow_.GetChanged()) {
-		CreateFromPrimitive(follow_.t);
-	}
-
+void Capsule::UpdateShape() {
 #if DEMO
-	sphereModel->CreateFromSphereCol(*this);	// cube再生成
+	capsuleModel->CreateFromCapsuleCol(*this);	// Capsule再生成
 #endif
 }
 
-void Sphere::DerivedDebugGUI() {
-	ImGui::DragFloat3("position", &position.x, 0.01f);
+void Capsule::DerivedDebugGUI() {
+	ImGui::DragFloat3("start", &start.x, 0.01f);
+	ImGui::DragFloat3("end", &end.x, 0.01f);
 	ImGui::DragFloat("radius", &radius, 0.01f);
 }

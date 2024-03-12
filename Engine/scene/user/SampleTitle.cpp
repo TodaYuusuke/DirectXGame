@@ -35,7 +35,7 @@ void SampleTitle::Initialize() {
 	// ポストプロセステスト
 	c->isUsePostProcess = true;
 	c->isActive = true;
-	
+
 	mainCamera->isUsePostProcess = true;
 	mainCamera->shaderPath = "postProcess/SSAO.PS.hlsl";
 	mainCamera->ReCreateShader();
@@ -135,7 +135,7 @@ void SampleTitle::Initialize() {
 
 		// パーティクル追加
 		return newData;
-	};
+		};
 	particle->updateFunction = [](Object::ParticleData* data) {
 		// 経過フレーム追加
 		data->elapsedFrame++;
@@ -148,18 +148,18 @@ void SampleTitle::Initialize() {
 		data->velocity *= 0.9f;
 
 		return data->elapsedFrame > 180 ? true : false;
-	};
+		};
 	particle->isActive = true;
 
 	mainCamera->isUsePostProcess = false;
 	subCamera->isUsePostProcess = false;
 	c->isUsePostProcess = false;
 
-	Cube* cube =LWP::Primitive::CreateInstance<Cube>();
+	Cube* cube = LWP::Primitive::CreateInstance<Cube>();
 	cube->texture = monsterBall;
 
-	Collider::Sphere* aabbCol = LWP::Common::CreateInstance<Collider::Sphere>();
-	aabbCol->CreateFromPrimitive(sphere);
+	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
+	aabbCol->CreateFromPrimitive(cube);
 	// 試しにラムダ式を入れてみる
 	aabbCol->SetOnCollisionLambda([](Collider::HitData data) {
 		if (data.state == Collider::OnCollisionState::None) {
@@ -171,15 +171,16 @@ void SampleTitle::Initialize() {
 	});
 
 	Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
-	aabbCol2->Create({2.0f,0.0f,0.0f});
+	aabbCol2->Create({ 2.0f,0.0f,0.0f });
+	Collider::AABB* aabbCol3 = LWP::Common::CreateInstance<Collider::AABB>();
+	aabbCol3->Create({ -2.0f,0.0f,0.0f });
 
 	Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
 	sphereCol0->Create({ 3.0f,0.0f,0.0f });
 
 	// カプセル実験
-	Capsule* capsule = LWP::Common::CreateInstance<Capsule>();
-	capsule->end = {0.0f,1.0f,0.0f};
-	capsule->isWireFrame = true;
+	Collider::Capsule* capsule = LWP::Common::CreateInstance<Collider::Capsule>();
+	capsule->Create({ 0.0f,0.0f,-3.0f }, { 0.0f,1.0f,-3.0f }, 0.5f);
 }
 
 // 更新

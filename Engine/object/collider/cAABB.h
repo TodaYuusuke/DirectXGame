@@ -18,8 +18,6 @@ namespace LWP::Object::Collider {
 		// 最大
 		LWP::Math::Vector3 max = { 0.5f,0.5f,0.5f };
 
-		// トランスフォーム
-		WorldTransform transform;
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
@@ -66,14 +64,14 @@ namespace LWP::Object::Collider {
 		LWP::Math::Vector3 min;
 		// 最大
 		LWP::Math::Vector3 max;
+		// 中心の座標
+		LWP::Math::Vector3 center;
 
 		// コンストラクタ
 		AABB_Data(const AABB& aabb) {
-			LWP::Math::Matrix4x4 scale = aabb.transform.GetScaleMatrix();
-			LWP::Math::Vector3 translate = aabb.transform.GetWorldPosition();
-
-			min = aabb.min * scale + translate;
-			max = aabb.max * scale + translate;
+			min = aabb.min;
+			max = aabb.max;
+			center = (min + max) / 2.0f;
 		}
 	};
 };

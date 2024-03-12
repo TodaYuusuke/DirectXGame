@@ -238,6 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\vector\Vector3.cpp" />
     <ClCompile Include="Engine\math\vector\Vector4.cpp" />
     <ClCompile Include="Engine\object\collider\cAABB.cpp" />
+    <ClCompile Include="Engine\object\collider\cCapsule.cpp" />
     <ClCompile Include="Engine\object\collider\cOBB.cpp" />
     <ClCompile Include="Engine\object\collider\ColliderManager.cpp" />
     <ClCompile Include="Engine\object\collider\cSphere.cpp" />
@@ -344,6 +345,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\vector\Vector3.h" />
     <ClInclude Include="Engine\math\vector\Vector4.h" />
     <ClInclude Include="Engine\object\collider\cAABB.h" />
+    <ClInclude Include="Engine\object\collider\cCapsule.h" />
     <ClInclude Include="Engine\object\collider\cOBB.h" />
     <ClInclude Include="Engine\object\collider\ColliderManager.h" />
     <ClInclude Include="Engine\object\collider\cSphere.h" />
