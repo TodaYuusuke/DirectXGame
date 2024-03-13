@@ -29,6 +29,10 @@ namespace LWP::System {
 		/// <summary>
 		/// エンジン起動（※ユーザ呼び出し禁止）
 		/// </summary>
+		void StartUp(std::string str);
+		/// <summary>
+		/// エンジン起動（※ユーザ呼び出し禁止）
+		/// </summary>
 		void Run(IScene* firstScene);
 
 		/// <summary>
@@ -43,7 +47,7 @@ namespace LWP::System {
 		/// <param name="title">ウィンドウタイトル</param>
 		/// <param name="width">ウィンドウの横幅</param>
 		/// <param name="height">ウィンドウの縦幅</param>
-		void Initialize(const char* title, int width, int height, IScene* firstScene);
+		void Initialize(const char* title, int width, int height);
 		/// <summary>
 		/// ウィンドウからのイベントをチェックする関数
 		/// </summary>

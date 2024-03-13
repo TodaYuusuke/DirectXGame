@@ -73,7 +73,7 @@ void Motion::Update() {
 	}
 
 	// 一度も実行されなかったので、終了処理（if使う必要すらなさそうなんでこれで）
-	isStart_ = !isExecute;
+	isStart_ = isExecute;
 }
 
 bool Motion::isEnd() { return !isStart_; }

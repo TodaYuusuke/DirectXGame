@@ -1,6 +1,8 @@
 ﻿#include "LWP.h"
 #include "Config.h"
 
+#include "scene/user/SampleTitle.h"
+
 using namespace LWP::System;
 
 using namespace LWP::Base;
@@ -12,12 +14,17 @@ using namespace LWP::Scene;
 
 namespace kWind = LWP::Config::Window;
 
-void Engine::Run(IScene* firstScene) {
+void Engine::StartUp(std::string str) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
+	Initialize(str.c_str(), kWind::kResolutionWidth, kWind::kResolutionHeight);
+}
 
-	const char kWindowTitle[] = "Window Title";
-	Initialize(kWindowTitle, kWind::kResolutionWidth, kWind::kResolutionHeight, firstScene);
+void Engine::Run(IScene* firstScene) {
+	// Sceneはここで生成
+	sceneManager_ = std::make_unique<Scene::Manager>();
+	// Scene初期化
+	sceneManager_->Initialize(firstScene);
 
 	// ウィンドウの×ボタンが押されるまで もしくは　End関数が呼ばれるまでループ
 	while (ProcessMessage()) {
@@ -56,7 +63,7 @@ void Engine::InitializeForScene() {
 	//resourceManager_->Initialize();
 }
 
-void Engine::Initialize(const char* title, int width, int height, IScene* firstScene) {
+void Engine::Initialize(const char* title, int width, int height) {
 	// インスタンスを受け取る
 	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
 	// Base
@@ -73,8 +80,6 @@ void Engine::Initialize(const char* title, int width, int height, IScene* firstS
 	primitiveManager_ = std::make_unique<Primitive::Manager>();
 	// Resource
 	resourceManager_ = std::make_unique<Resource::Manager>();
-	// Scene
-	sceneManager_ = std::make_unique<Scene::Manager>();
 
 	// 初期化
 	
@@ -92,8 +97,6 @@ void Engine::Initialize(const char* title, int width, int height, IScene* firstS
 	primitiveManager_->Initialize();
 	// Resource
 	resourceManager_->Initialize();
-	// Scene
-	sceneManager_->Initialize(firstScene);
 	// フレームトラッカー
 	debugTimer_.Initialize();
 }

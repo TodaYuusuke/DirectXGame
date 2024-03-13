@@ -137,10 +137,7 @@ bool Manager::CheckCollision(AABB* c1, Sphere* c2) {
 	};
 
 	float dist = (closestPoint - sphere.position).Length();
-	if (dist <= sphere.radius) {
-		return true;
-	}
-	return false;
+	return dist <= sphere.radius;
 }
 bool Manager::CheckCollision(AABB* c1, Capsule* c2) {
 	AABB_Data aabb = *c1;	// transformをかけたデータで計算する
@@ -176,10 +173,7 @@ bool Manager::CheckCollision(AABB* c1, Capsule* c2) {
 	};
 
 	float dist = (closestPoint - f).Length();
-	if (dist <= capsule.radius) {
-		return true;
-	}
-	return false;
+	return dist <= capsule.radius;
 }
 //bool Manager::CheckCollision(OBB* f, OBB* t) {
 //	f;	t; return false;
@@ -194,14 +188,40 @@ bool Manager::CheckCollision(Sphere* c1, Sphere* c2) {
 	// 二つの球体の中心点間の距離を求める
 	Vector3 dist = data1.position - data2.position;
 	// 半径の合計よりも短ければ衝突
-	if (dist.Length() <= data1.radius + data2.radius) {
-		// 当たった処理
-		return true;
-	}
-
-	return false;
+	return dist.Length() <= (data1.radius + data2.radius);
 }
 bool Manager::CheckCollision(Sphere* c1, Capsule* c2) {
+	//Vector3 d = Subtract(sphere.center, capsule.start);
+	//Vector3 ba = Subtract(capsule.end, capsule.start);
+	//// カプセルのベクトルの長さ
+	//float length = Length(ba);
+	//// 正規化
+	//Vector3 e = Normalize(ba);
+	//// 内積
+	//float dot = Dot(d, e);
+
+	//float t = dot / length;
+	//if (t > 1) {
+	//	t = 1;
+	//}
+	//else if (t < 0) {
+	//	t = 0;
+	//}
+	//// 線形補間
+	//Vector3 f;
+	//f.x = (1.0f - t) * capsule.start.x + t * capsule.end.x;
+	//f.y = (1.0f - t) * capsule.start.y + t * capsule.end.y;
+	//f.z = (1.0f - t) * capsule.start.z + t * capsule.end.z;
+
+	//Vector3 c = Subtract(sphere.center, f);
+	//// 距離
+	//float distance = Length(c);
+
+	//// 当たっているかを判定
+	//if (distance < sphere.radius + capsule.radius) {
+	//	return true;
+	//}
+	//return false;
 	c1;	c2; return false;
 }
 bool Manager::CheckCollision(Capsule* c1, Capsule* c2) {
