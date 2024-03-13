@@ -251,6 +251,15 @@
     <ClCompile Include="Engine\object\collider\cCapsule.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\resources\motion\Motion.cpp">
+      <Filter>Engine\resources\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\motionEffects\Easing.cpp">
+      <Filter>Engine\utilitiy\motionEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp">
+      <Filter>Engine\utilitiy\motionEffects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -559,6 +568,15 @@
     <ClInclude Include="Engine\object\collider\cCapsule.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\resources\motion\Motion.h">
+      <Filter>Engine\resources\motion</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\motionEffects\Easing.h">
+      <Filter>Engine\utilitiy\motionEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\motionEffects\Interpolation.h">
+      <Filter>Engine\utilitiy\motionEffects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -683,6 +701,12 @@
     </Filter>
     <Filter Include="Engine\utilitiy\observers">
       <UniqueIdentifier>{2ec6478e-d841-4aa1-827b-1ad8487bd9cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\motion">
+      <UniqueIdentifier>{86ff66cd-5a03-4691-ab76-a4dc90153b57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\utilitiy\motionEffects">
+      <UniqueIdentifier>{c5321e51-94f6-4368-b6fd-3a13797ba681}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

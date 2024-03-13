@@ -4,6 +4,7 @@
 
 #include "texture/Texture.h"
 #include "audio/Audio.h"
+#include "motion/Motion.h"
 //#include "model/Model.h"
 
 namespace LWP::Resource {
@@ -17,6 +18,8 @@ namespace LWP::Resource {
 
 		// 初期化
 		void Initialize();
+		// 更新
+		void Update();
 
 		// 読み込み
 		
@@ -31,6 +34,10 @@ namespace LWP::Resource {
 		Audio* LoadAudio(const std::string& filepath);
 		Audio* LoadAudioLongPath(const std::string& filepath);
 		//Model LoadModel(const std::string& filepath);
+
+		// インスタンスをセット
+		void SetMotionInstance(Motion* ptr);
+
 
 	private: // 各種リソース
 
@@ -47,5 +54,8 @@ namespace LWP::Resource {
 		// 3Dモデルの配列
 		const std::string modelDirectoryPath_ = "resources/obj/";
 		//std::map<std::string, Model> modelMap_;
+		// モーションの配列
+		std::list<Motion*> motionList_;
+
 	};
 }

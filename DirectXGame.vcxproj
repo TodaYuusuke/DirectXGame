@@ -260,6 +260,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
     <ClCompile Include="Engine\resources\audio\Audio.cpp" />
     <ClCompile Include="Engine\resources\material\Material.cpp" />
+    <ClCompile Include="Engine\resources\motion\Motion.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
     <ClCompile Include="Engine\resources\texture\RenderTexture.cpp" />
     <ClCompile Include="Engine\resources\texture\Texture.cpp" />
@@ -268,6 +269,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\user\SampleTitle.cpp" />
     <ClCompile Include="Engine\utility\CatmullRom.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
+    <ClCompile Include="Engine\utility\motionEffects\Easing.cpp" />
+    <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="Engine\utility\UI.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
@@ -372,6 +375,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\PrimitiveManager.h" />
     <ClInclude Include="Engine\resources\audio\Audio.h" />
     <ClInclude Include="Engine\resources\material\Material.h" />
+    <ClInclude Include="Engine\resources\motion\Motion.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />
     <ClInclude Include="Engine\resources\texture\ITexture.h" />
     <ClInclude Include="Engine\resources\texture\RenderTexture.h" />
@@ -384,6 +388,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\Color.h" />
     <ClInclude Include="Engine\utility\Counter.h" />
     <ClInclude Include="Engine\utility\ErrorReporter.h" />
+    <ClInclude Include="Engine\utility\motionEffects\Easing.h" />
+    <ClInclude Include="Engine\utility\motionEffects\Interpolation.h" />
     <ClInclude Include="Engine\utility\MyUtility.h" />
     <ClInclude Include="Engine\utility\observers\Observer.h" />
     <ClInclude Include="Engine\utility\observers\Observer2.h" />

@@ -28,6 +28,13 @@ namespace LWP {
 		/// </summary>
 		/// <returns></returns>
 		double GetDeltaTime();
+		float GetDeltaTimeF();
+		/// <summary>
+		/// 係数を掛けていないデルタタイムを取得する関数
+		/// </summary>
+		/// <returns></returns>
+		double GetDefaultDeltaTime();
+		float GetDefaultDeltaTimeF();
 
 		/// <summary>
 		/// デルタタイムに掛ける係数を設定する関数

@@ -9,6 +9,8 @@ Manager::~Manager() {
 	textureMap_.clear();
 	// オーディオ解放
 	audioMap_.clear();
+	// モーション解放
+	motionList_.clear();
 }
 
 void Manager::Initialize() {
@@ -17,6 +19,12 @@ void Manager::Initialize() {
 	assert(SUCCEEDED(hr));
 	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
 	assert(SUCCEEDED(hr));
+}
+void Manager::Update() {
+	// モーション更新
+	for (Motion* m : motionList_) {
+		m->Update();
+	}
 }
 
 Texture* Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
@@ -43,4 +51,6 @@ Audio* Manager::LoadAudioLongPath(const std::string& filepath) {
 	return audioMap_[filepath];
 }
 
-//Model Manager::LoadModel(const std::string& filepath);
+void Manager::SetMotionInstance(Motion* ptr) {
+	motionList_.push_back(ptr);
+}

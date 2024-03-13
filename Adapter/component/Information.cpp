@@ -33,6 +33,15 @@ void Information::ChangeShowDebugGUI() {
 double Information::GetDeltaTime() {
 	return engine->debugTimer_.GetDeltaTime();
 }
+float Information::GetDeltaTimeF() {
+	return static_cast<float>(GetDeltaTime());
+}
+double Information::GetDefaultDeltaTime() {
+	return engine->debugTimer_.GetDefaultDeltaTime();
+}
+float Information::GetDefaultDeltaTimeF() {
+	return static_cast<float>(GetDefaultDeltaTime());
+}
 
 void Information::SetDeltaTimeMultiply(float value) {
 	engine->debugTimer_.SetDeltaTimeMultiply(value);

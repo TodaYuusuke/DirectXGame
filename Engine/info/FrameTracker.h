@@ -28,6 +28,7 @@ namespace LWP::Information {
 
 		// デルタタイムを返す関数
 		double GetDeltaTime();
+		double GetDefaultDeltaTime();
 		// デルタタイムに掛ける係数をセットする関数
 		void SetDeltaTimeMultiply(float value);
 

@@ -24,3 +24,7 @@ Primitive::Mesh* Resource::LoadModel(const std::string& filePath) {
 	instance->LoadFile(filePath);
 	return instance;
 }
+
+void Resource::SetInstance(Resource::Motion* ptr) {
+	engine->resourceManager_->SetMotionInstance(ptr);
+}
