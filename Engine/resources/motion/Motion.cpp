@@ -18,18 +18,14 @@ Motion& Motion::Add(Vector3* target, const Vector3& move,
 	Easing::Type easingType, Interp::Type interType) {
 	return Add({
 		target,
-		*target,	// 初期値
-		*target + move,	// 終了値
+		nullptr,
+		move,
 		startSec,
 		durationSec,
 		easingType,
 		interType,
 		false
 		});
-}
-Motion& Motion::Add(MotionData data) {
-	data_.push_back(data);
-	return *this;
 }
 
 Motion& Motion::DisableDeltaTimeMultiply() {
@@ -48,36 +44,42 @@ void Motion::Start(float startSec) {
 	}
 }
 
-void Motion::Update() {
-	if (!isStart_) { return; }	// 早期リターン
+void Motion::Update() {	if (!isStart_) { return; }	// 早期リターン
 
 	// 時間を更新
 	currentSec_ += isUseDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF();
 
-	// １つでもアニメーションが実行されたかフラグ
-	bool isExecute = false;
+	// 実行し終わったモーションをカウント
+	int executed = 0;
 
 	for (MotionData& d : data_) {
-		// 終了済みなら早期コンティニュー
-		if (d.isEnd) { continue; }
+		// 終了済み または 開始秒数より前ならば早期コンティニュー
+		if (d.isEnd || currentSec_ < d.startSec) { 
+			executed += d.isEnd;	// 終了済みならカウント
+			continue; 
+		}
+		// スタート地点を生成
+		if (!d.start) { d.start = new Vector3(*d.target); } 
 
 		// 0を基準にした経過時間（現在の秒 - 開始する秒）/ 終了までの時間（durationSec）= 0 ~ 1のt
 		float t = easingFunc[static_cast<int>(d.easingType)]((currentSec_ - d.startSec) / d.durationSec);
 		// ターゲットに書き込む
-		*d.target = interpFunc[static_cast<int>(d.interType)](d.start, d.end, t);
+		*d.target = interpFunc[static_cast<int>(d.interType)](*d.start, d.End(), t);
 
 		// tが1なら終了
 		d.isEnd = static_cast<int>(t);	// 小数点以下切り捨て
-		// 実行したフラグをtrueに
-		isExecute = true;
 	}
 
-	// 一度も実行されなかったので、終了処理（if使う必要すらなさそうなんでこれで）
-	isStart_ = isExecute;
+	// すべて実行され終わったので終了
+	isStart_ = !(executed >= data_.size());
 }
 
 bool Motion::isEnd() { return !isStart_; }
 
+Motion& Motion::Add(MotionData data) {
+	data_.push_back(data);
+	return *this;
+}
 
 // -- 静的メンバ変数宣言 -- //
 

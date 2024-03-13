@@ -39,7 +39,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// パーティクル
 	LWP::Object::Particle* particle;
 
-	LWP::Resource::Motion motion;
 
 	bool useMonsterBall = true;
 };
