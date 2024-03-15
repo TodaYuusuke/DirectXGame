@@ -12,6 +12,10 @@ Motion::Motion() {
 	// インスタンスをエンジンに送る
 	SetInstance(this);
 }
+Motion::~Motion() {
+	// ここでどうにかしてエンジン上のポインタを破棄させたい！
+	DeleteInstance(this);
+}
 
 Motion& Motion::Add(Vector3* target, const Vector3& move,
 	const float& startSec, const float& durationSec,
@@ -44,7 +48,8 @@ void Motion::Start(float startSec) {
 	}
 }
 
-void Motion::Update() {	if (!isStart_) { return; }	// 早期リターン
+void Motion::Update() {
+	if (!isStart_) { return; }	// 早期リターン
 
 	// 時間を更新
 	currentSec_ += isUseDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF();

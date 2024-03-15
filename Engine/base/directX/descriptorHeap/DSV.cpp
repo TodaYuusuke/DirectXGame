@@ -26,6 +26,7 @@ void DSV::Initialize(ID3D12Device* device, SRV* srv) {
 void DSV::ClearDepth(UINT index, ID3D12GraphicsCommandList* commandList) {
 	// 指定した深度で画面全体をクリアする
 	commandList->ClearDepthStencilView(GetCPUHandle(index), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
 }
 
 

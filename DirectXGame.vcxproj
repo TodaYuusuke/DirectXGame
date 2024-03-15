@@ -394,6 +394,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\observers\Observer.h" />
     <ClInclude Include="Engine\utility\observers\Observer2.h" />
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h" />
+    <ClInclude Include="Engine\utility\PtrManager.h" />
     <ClInclude Include="Engine\utility\UI.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />

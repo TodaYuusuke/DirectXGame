@@ -13,8 +13,9 @@ void Manager::Initialize(IScene* firstScene) {
 // 更新
 void Manager::Update() {
 	if (currentScene_->nextScene_ != nullptr) {
-		//delete currentScene_;
-		currentScene_ = currentScene_->nextScene_;
+		IScene* temp = currentScene_->nextScene_;
+		delete currentScene_;
+		currentScene_ = temp;
 		
 		// 仮置きなのでそのうち消去する
 		LWP::System::engine->InitializeForScene();

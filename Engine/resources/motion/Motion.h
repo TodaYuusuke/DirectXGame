@@ -31,6 +31,7 @@ namespace LWP::Resource {
 	public: // **　メンバ関数 ** //
 		// デフォルトコンストラクタ
 		Motion();
+		~Motion();
 
 		/// <summary>
 		/// 動作を追加する関数

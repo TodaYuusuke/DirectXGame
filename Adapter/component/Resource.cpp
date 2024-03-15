@@ -26,5 +26,9 @@ Primitive::Mesh* Resource::LoadModel(const std::string& filePath) {
 }
 
 void Resource::SetInstance(Resource::Motion* ptr) {
-	engine->resourceManager_->SetMotionInstance(ptr);
+	engine->resourceManager_->SetMotionPointer(ptr);
 }
+void Resource::DeleteInstance(Resource::Motion* ptr) {
+	engine->resourceManager_->DeleteMotionPointer(ptr);
+}
+

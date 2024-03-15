@@ -577,6 +577,9 @@
     <ClInclude Include="Engine\utility\motionEffects\Interpolation.h">
       <Filter>Engine\utilitiy\motionEffects</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\utility\PtrManager.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

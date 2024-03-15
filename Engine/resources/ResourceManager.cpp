@@ -9,8 +9,6 @@ Manager::~Manager() {
 	textureMap_.clear();
 	// オーディオ解放
 	audioMap_.clear();
-	// モーション解放
-	motionList_.clear();
 }
 
 void Manager::Initialize() {
@@ -22,7 +20,7 @@ void Manager::Initialize() {
 }
 void Manager::Update() {
 	// モーション更新
-	for (Motion* m : motionList_) {
+	for (Motion* m : motions_.list) {
 		m->Update();
 	}
 }
@@ -49,8 +47,4 @@ Audio* Manager::LoadAudioLongPath(const std::string& filepath) {
 		audioMap_[filepath] = new Audio(xAudio2_.Get(), filepath);
 	}
 	return audioMap_[filepath];
-}
-
-void Manager::SetMotionInstance(Motion* ptr) {
-	motionList_.push_back(ptr);
 }

@@ -7,6 +7,8 @@
 #include "motion/Motion.h"
 //#include "model/Model.h"
 
+#include "utility/PtrManager.h"
+
 namespace LWP::Resource {
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
@@ -35,9 +37,10 @@ namespace LWP::Resource {
 		Audio* LoadAudioLongPath(const std::string& filepath);
 		//Model LoadModel(const std::string& filepath);
 
-		// インスタンスをセット
-		void SetMotionInstance(Motion* ptr);
-
+		// インスタンスのポインタをセット
+		void SetMotionPointer(Motion* ptr) { motions_.SetPointer(ptr); }
+		// インスタンスのポインタを解放
+		void DeleteMotionPointer(Motion* ptr) {	motions_.DeletePointer(ptr); }
 
 	private: // 各種リソース
 
@@ -55,7 +58,7 @@ namespace LWP::Resource {
 		const std::string modelDirectoryPath_ = "resources/obj/";
 		//std::map<std::string, Model> modelMap_;
 		// モーションの配列
-		std::list<Motion*> motionList_;
+		Utility::PtrManager<Motion*> motions_;
 
 	};
 }
