@@ -19,7 +19,7 @@ void Manager::Update() {
 	// 生成用の関数ポインタ
 	static std::vector<std::function<void()>> functions = {
 		[this]() { debugPris.push_back(Surface()); },
-		[this]() { debugPris.push_back(Sprite()); },
+		//[this]() { debugPris.push_back(Sprite()); },
 		[this]() { debugPris.push_back(Triangle()); },
 		[this]() { debugPris.push_back(Capsule()); },
 		[this]() { debugPris.push_back(Cube()); },
@@ -28,7 +28,7 @@ void Manager::Update() {
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Surface","Sprite","Triangle", "Capsule", "Cube", "Sphere"
+		"Surface",/*"Sprite",*/"Triangle", "Capsule", "Cube",/*"Mesh",*/ "Sphere"
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);

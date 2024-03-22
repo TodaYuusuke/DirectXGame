@@ -4,7 +4,6 @@
 class SampleGameScene final
 	: public IScene {
 public:
-
 	//*** 純粋仮想関数の実体宣言 ***//
 
 	// 初期化

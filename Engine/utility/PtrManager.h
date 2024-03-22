@@ -43,7 +43,6 @@ namespace LWP::Utility {
 			}
 			// 存在しなかったのでエラー
 			assert(false);
-			return;
 		}
 	};
 }
