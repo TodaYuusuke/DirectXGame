@@ -12,23 +12,21 @@ void Manager::Initialize(IScene* firstScene) {
 
 // 更新
 void Manager::Update() {
-	// 次のシーンへ差し替え
-	if (currentScene_->nextScene_ != nullptr) {
-		IScene* temp = currentScene_->nextScene_;
+	// 次のシーンへ
+	if (currentScene_->nextSceneFunction != nullptr) {
+		// シーンクリア（仮置きなのでそのうち消去する)
+		LWP::System::engine->InitializeForScene();
+
+		// 関数実行
+		IScene* temp = currentScene_->nextSceneFunction();
 		delete currentScene_;
 		currentScene_ = temp;
-		
-		// 仮置きなのでそのうち消去する
-		LWP::System::engine->InitializeForScene();
+		// 初期化処理
+		currentScene_->PreInitialize();
+		currentScene_->Initialize();
 	}
 
 	currentScene_->Update();
-
-	// 次のシーンの初期化だけ行う
-	if (currentScene_->nextScene_ != nullptr) {
-		currentScene_->nextScene_->PreInitialize();
-		currentScene_->nextScene_->Initialize();
-	}
 }
 
 LWP::Object::Camera* Manager::GetMainCamera() {

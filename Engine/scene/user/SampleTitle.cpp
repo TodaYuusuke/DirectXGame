@@ -42,12 +42,12 @@ void SampleTitle::Initialize() {
 	//SetMainRenderCamera(subCamera);
 
 	// 地面
-	//Mesh* ground = LWP::Resource::LoadModel("cube/cube.obj");
-	//ground->transform.translation.y = -1.5f;
-	//ground->transform.scale = { 10.0f,0.1f, 10.0f };
-	////ground->material.enableLighting = true;
-	//ground->name = "Ground";
-	////ground->commonColor = new Color()
+	ground.LoadFile("cube/cube.obj");
+	ground.transform.translation.y = -1.5f;
+	ground.transform.scale = { 10.0f,0.1f, 10.0f };
+	//ground.material.enableLighting = true;
+	ground.name = "Ground";
+	//ground.commonColor = new Color()
 
 	// 三角形
 	//for (int i = 0; i < 2; i++) {
@@ -234,6 +234,6 @@ void SampleTitle::Update() {
 
 	// ENTERキーを押すとシーン切り替え
 	if (Keyboard::GetTrigger(DIK_N)) {
-		nextScene_ = new SampleGameScene();
+		nextSceneFunction = []() { return new SampleGameScene(); };
 	}
 }

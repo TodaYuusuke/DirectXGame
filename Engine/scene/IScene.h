@@ -22,8 +22,9 @@ public:
 	// 更新
 	virtual void Update() = 0;
 	
-	// 次のシーン（nullの間はシーン遷移しない）
-	IScene* nextScene_ = nullptr;
+	// 次のシーンを生成する関数を代入
+	// 返り値：次のシーンの新しいインスタンス
+	std::function<IScene*()> nextSceneFunction = nullptr;
 
 
 protected:	// ** メンバ変数 ** //

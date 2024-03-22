@@ -9,6 +9,10 @@
 
 #include "utility/PtrManager.h"
 
+namespace LWP::Primitive {
+	struct MeshData;
+};
+
 namespace LWP::Resource {
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
@@ -35,7 +39,8 @@ namespace LWP::Resource {
 		Texture* LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
 		Audio* LoadAudio(const std::string& filepath);
 		Audio* LoadAudioLongPath(const std::string& filepath);
-		//Model LoadModel(const std::string& filepath);
+		const Primitive::MeshData& LoadMesh(const std::string& filepath);
+		const Primitive::MeshData& LoadMeshLongPath(const std::string& filepath);
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetMotionPointer(Motion* ptr) { motions_.SetPointer(ptr); }
@@ -55,10 +60,20 @@ namespace LWP::Resource {
 		const std::string audioDirectoryPath_ = "resources/audio/";
 		std::map<std::string, Audio*> audioMap_;
 		// 3Dモデルの配列
-		const std::string modelDirectoryPath_ = "resources/obj/";
-		//std::map<std::string, Model> modelMap_;
+		const std::string meshDirectoryPath_ = "resources/obj/";
+		std::map<std::string, Primitive::MeshData> meshDataMap_;
 		// モーションの配列
 		Utility::PtrManager<Motion*> motions_;
 
+
+
+	private: // ** プライベートなメンバ変数 ** //
+
+		// 3Dモデルの形式別読み込み処理
+		void LoadObj(Primitive::MeshData* mesh, const std::string& filepath);
+
+
+		// マテリアルの読み込み
+		void LoadMtl(Primitive::MeshData* mesh, const std::string& filepath);
 	};
 }

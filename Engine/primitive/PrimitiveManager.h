@@ -55,7 +55,7 @@ namespace LWP::Primitive {
 		int selectedClass = 0;
 		int currentItem = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
-		std::vector<IPrimitive> debugPris;
+		std::vector<IPrimitive*> debugPris;
 #endif
 	};
 }

@@ -31,10 +31,10 @@ void SampleGameScene::Update() {
 
 	// Rキーを押すとシーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {
-		nextScene_ = new SampleGameScene();
+		nextSceneFunction = []() { return new SampleGameScene(); };
 	}
 	// ENTERキーを押すとシーン切り替え
 	if (Input::Keyboard::GetTrigger(DIK_RETURN)) {
-		nextScene_ = new SampleTitle();
+		nextSceneFunction = []() { return new SampleTitle(); };
 	}
 }

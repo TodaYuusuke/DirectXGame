@@ -12,6 +12,9 @@ void Manager::Initialize() {
 	//primitives_.list.clear();
 	primitiveCountMap_.clear();
 #if DEMO
+	for (IPrimitive* p : debugPris) {
+		delete p;
+	}
 	debugPris.clear();
 #endif
 }
@@ -21,13 +24,13 @@ void Manager::Update() {
 #if DEMO
 	// 生成用の関数ポインタ
 	static std::vector<std::function<void()>> functions = {
-		[this]() { debugPris.push_back(Surface()); },
-		//[this]() { debugPris.push_back(Sprite()); },
-		[this]() { debugPris.push_back(Triangle()); },
-		[this]() { debugPris.push_back(Capsule()); },
-		[this]() { debugPris.push_back(Cube()); },
-		//[this]() { debugPris.push_back(Mesh()); },
-		[this]() { debugPris.push_back(Sphere()); }
+		[this]() { debugPris.push_back(new Surface()); },
+		//[this]() { debugPris.push_back(new Sprite()); },
+		[this]() { debugPris.push_back(new Triangle()); },
+		[this]() { debugPris.push_back(new Capsule()); },
+		[this]() { debugPris.push_back(new Cube()); },
+		//[this]() { debugPris.push_back(new Mesh()); },
+		[this]() { debugPris.push_back(new Sphere()); }
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {

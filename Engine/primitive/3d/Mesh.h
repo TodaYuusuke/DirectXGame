@@ -1,10 +1,27 @@
 #pragma once
 #include "../IPrimitive.h"
 
+#include "resources/material/Material.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+
 namespace LWP::Primitive {
+	/// <summary>
+	/// 3Dモデルのデータ構造体
+	/// </summary>
+	struct MeshData {
+		// 描画する頂点
+		std::vector<Vertex> vertices;
+		// インデックス
+		std::vector<uint32_t> indexes;
+		// マテリアル
+		Resource::Material material;
+		// テクスチャ
+		Resource::ITexture* texture;
+	};
+
 	/// <summary>
 	/// 3Dモデル
 	/// </summary>
@@ -40,23 +57,21 @@ namespace LWP::Primitive {
 		/// </summary>
 		int GetIndexCount() const override { return static_cast<int>(indexes.size()); };
 
-	private: // ** ファイルパス ** //
-		const std::string directoryPath_ = "resources/obj/";
-		// objがフォルダに入っている際の追加のディレクトリパス
-		std::string path_ = "";
 
-	private: // ** プライベートな関数 ** //
+	public: // ** オペレーターオーバーロード ** //
+		
+		// コピー演算
+		bool operator=(const MeshData& other) {
+			// 描画する頂点
+			vertices = other.vertices;
+			// インデックス
+			indexes = other.indexes;
+			// マテリアル
+			material = other.material;
+			// テクスチャ
+			texture = other.texture;
 
-		/// <summary>
-		/// ImGui
-		/// </summary>
-		//void DerivedDebugGUI(const std::string& label = "Derived") override;
-
-		// 3Dモデルの形式別読み込み処理
-		void LoadObj(const std::string& filename);
-
-
-		// マテリアルの読み込み
-		void LoadMtl(const std::string& filename);
+			return this;
+		};
 	};
 }
