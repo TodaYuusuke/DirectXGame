@@ -1,6 +1,6 @@
 #pragma once
 #include "primitive/IPrimitive.h"
-#include "utility/observers/Observer.h"
+#include "utility/observers/Observer2.h"
 #include "Mask.h"
 
 #include <functional>
@@ -87,8 +87,7 @@ namespace LWP::Object::Collider {
 
 	protected: // ** 派生クラス用の関数と変数 ** //
 		// 追従する形状
-		Utility::Observer<LWP::Primitive::IPrimitive*> follow_ = nullptr;
-
+		Utility::ObserverStruct<Primitive::IPrimitive*, Primitive::IPrimitiveStruct> follow_ = nullptr;
 		// ヒット時のリアクション用の関数
 		Collider::OnColliderFunction onCollisionLambda = [](HitData data) { data; };
 		

@@ -155,21 +155,20 @@ void SampleTitle::Initialize() {
 	subCamera->isUsePostProcess = false;
 	c->isUsePostProcess = false;
 
-	//Cube cube;/* = LWP::Primitive::CreateInstance<Cube>();*/
-	//cube.texture = monsterBall;
+	cube.texture = monsterBall;
 
-	//Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
-	//aabbCol->CreateFromPrimitive(&cube);
-	//// 試しにラムダ式を入れてみる
-	//aabbCol->SetOnCollisionLambda([](Collider::HitData data) {
-	//	if (data.state == Collider::OnCollisionState::None) {
-	//		Utility::Log("None\n");
-	//	}
-	//	else {
-	//		Utility::Log("Not None\n");
-	//	}
-	//});
-
+	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
+	aabbCol->CreateFromPrimitive(&cube);
+	// 試しにラムダ式を入れてみる
+	aabbCol->SetOnCollisionLambda([](Collider::HitData data) {
+		if (data.state == Collider::OnCollisionState::None) {
+			Utility::Log("None\n");
+		}
+		else {
+			Utility::Log("Not None\n");
+		}
+	});
+		
 	//Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
 	//aabbCol2->Create({ 2.0f,0.0f,0.0f });
 	//Collider::AABB* aabbCol3 = LWP::Common::CreateInstance<Collider::AABB>();

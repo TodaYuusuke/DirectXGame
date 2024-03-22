@@ -1,10 +1,9 @@
 #pragma once
 #include "ICollider.h"
 
-// 前方宣言
-namespace LWP::Primitive {
-	class Cube;
-}
+#if DEMO
+#include "primitive/3d/Cube.h"
+#endif
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -44,7 +43,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	protected:
 		// デバッグ用モデル
-		LWP::Primitive::Cube* cube = nullptr;
+		LWP::Primitive::Cube cube;
 	public:
 		// デバッグ用の描画関数
 		void ShowWireFrame() override;

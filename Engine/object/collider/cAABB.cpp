@@ -1,8 +1,5 @@
 #include "cAABB.h"
 #include "base/ImGuiManager.h"
-#if DEMO
-#include "component/Primitive.h"
-#endif
 
 using namespace LWP::Object::Collider;
 using namespace LWP::Primitive;
@@ -17,9 +14,8 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	cube = new Cube();
-	cube->CreateFromAABB(*this);
-	cube->isWireFrame = true;
+	cube.CreateFromAABB(*this);
+	cube.isWireFrame = true;
 #endif
 }
 
@@ -55,9 +51,9 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 #if DEMO
 void AABB::ShowWireFrame() {
 	// isActive切り替え
-	cube->isActive = isShowWireFrame && isActive;
+	cube.isActive = isShowWireFrame && isActive;
 	// hitしているときは色を変える
-	cube->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+	cube.commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 };
 #endif
 
@@ -78,7 +74,7 @@ void AABB::UpdateShape() {
 	}
 
 	#if DEMO
-	cube->CreateFromAABB(*this);	// cube再生成
+	cube.CreateFromAABB(*this);	// cube再生成
 	#endif
 }
 

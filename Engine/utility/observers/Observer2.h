@@ -7,7 +7,7 @@ namespace LWP::Utility {
 	/// <para>必要なメンバ変数を持った構の代入演算子のオーバーロードを定義すること</para>
 	/// </summary>
 	template <typename T, typename U>
-	class Observer2 {
+	class ObserverStruct {
 	public:	// ** パブリックなメンバ変数 ** //
 
 		// 変数
@@ -28,8 +28,8 @@ namespace LWP::Utility {
 		}
 
 		// コンストラクタ
-		Observer2() = default;
-		Observer2(T initValue) {
+		ObserverStruct() = default;
+		ObserverStruct(T initValue) {
 			// テンプレートがポインタの時の処理
 			t = initValue;
 			preT = t;
@@ -38,49 +38,49 @@ namespace LWP::Utility {
 		// ** オペレーターオーバーロード ** //
 #pragma region オペレーターオーバーロード
 		// Observer2 Add(+) T
-		Observer2 operator+(const T& other) const {
-			return Observer2(t + other);
+		ObserverStruct operator+(const T& other) const {
+			return ObserverStruct(t + other);
 		}
-		Observer2& operator+=(const T& other) {
+		ObserverStruct& operator+=(const T& other) {
 			t += other;
 			return *this;
 		}
 
 		// Observer2 Subtract(-) T
-		Observer2 operator-(const T& other) const {
-			return Observer2(t - other);
+		ObserverStruct operator-(const T& other) const {
+			return ObserverStruct(t - other);
 		}
-		Observer2& operator-=(const T& other) {
+		ObserverStruct& operator-=(const T& other) {
 			t -= other;
 			return *this;
 		}
 
 		// Observer2 Multiply(*) T
-		Observer2 operator*(const T& other) const {
-			return Observer2(t * other);
+		ObserverStruct operator*(const T& other) const {
+			return ObserverStruct(t * other);
 		}
-		Observer2& operator*=(const T& other) {
+		ObserverStruct& operator*=(const T& other) {
 			t *= other;
 			return *this;
 		}
 
 		// Observer2 Division(/) T
-		Observer2 operator/(const T& other) const {
-			return Observer2(t / other);
+		ObserverStruct operator/(const T& other) const {
+			return ObserverStruct(t / other);
 		}
-		Observer2& operator/=(const T& other) {
+		ObserverStruct& operator/=(const T& other) {
 			t /= other;
 			return *this;
 		}
 
 		// Observer2 Equal(=) T
 		// 代入されるとき
-		Observer2& operator=(const T& other) {
+		ObserverStruct& operator=(const T& other) {
 			t = other;
 			return *this;
 		}
 		// 代入するとき
-		Observer2& operator=(const Observer2& other) {
+		ObserverStruct& operator=(const ObserverStruct& other) {
 			t = other.t;
 			return *this;
 		};
@@ -90,24 +90,24 @@ namespace LWP::Utility {
 		};
 
 		// 前置インクリメント
-		Observer2& operator++() {
+		ObserverStruct& operator++() {
 			++t;
 			return *this;
 		}
 		// 後置インクリメント
-		Observer2 operator++(int) {
-			Observer2 temp = *this;
+		ObserverStruct operator++(int) {
+			ObserverStruct temp = *this;
 			++t;
 			return temp;
 		}
 		// 前置デクリメント
-		Observer2& operator--() {
+		ObserverStruct& operator--() {
 			--t;
 			return *this;
 		}
 		// 後置デクリメント
-		Observer2 operator--(int) {
-			Observer2 temp = *this;
+		ObserverStruct operator--(int) {
+			ObserverStruct temp = *this;
 			--t;
 			return temp;
 		}
@@ -128,7 +128,7 @@ namespace LWP::Utility {
 	/// <para>必要なメンバ変数を持った構の代入演算子のオーバーロードを定義すること</para>
 	/// </summary>
 	template <typename T, typename U>
-	class Observer2<T*, U> {
+	class ObserverStruct<T*, U> {
 	public:	// ** パブリックなメンバ変数 ** //
 
 		// 変数
@@ -137,7 +137,7 @@ namespace LWP::Utility {
 		// 初期化
 		void Init(T* value) {
 			t = value;
-			preT = *t;
+			if (t) { preT = *t; }
 		}
 
 		// 変化したかのフラグを返す関数
@@ -149,59 +149,55 @@ namespace LWP::Utility {
 		}
 
 		// コンストラクタ
-		Observer2() = default;
-		Observer2(T* initValue) {
-			// テンプレートがポインタの時の処理
-			t = initValue;
-			preT = *t;
-		}
+		ObserverStruct() = default;
+		ObserverStruct(T* initValue) { Init(initValue); }
 
 		// ** オペレーターオーバーロード ** //
 #pragma region オペレーターオーバーロード
 		// Observer2 Add(+) T
-		Observer2 operator+(const T& other) const {
-			return Observer2(t + other);
+		ObserverStruct operator+(const T& other) const {
+			return ObserverStruct(t + other);
 		}
-		Observer2& operator+=(const T& other) {
+		ObserverStruct& operator+=(const T& other) {
 			t += other;
 			return *this;
 		}
 
 		// Observer2 Subtract(-) T
-		Observer2 operator-(const T& other) const {
-			return Observer2(t - other);
+		ObserverStruct operator-(const T& other) const {
+			return ObserverStruct(t - other);
 		}
-		Observer2& operator-=(const T& other) {
+		ObserverStruct& operator-=(const T& other) {
 			t -= other;
 			return *this;
 		}
 
 		// Observer2 Multiply(*) T
-		Observer2 operator*(const T& other) const {
-			return Observer2(t * other);
+		ObserverStruct operator*(const T& other) const {
+			return ObserverStruct(t * other);
 		}
-		Observer2& operator*=(const T& other) {
+		ObserverStruct& operator*=(const T& other) {
 			t *= other;
 			return *this;
 		}
 
 		// Observer2 Division(/) T
-		Observer2 operator/(const T& other) const {
-			return Observer2(t / other);
+		ObserverStruct operator/(const T& other) const {
+			return ObserverStruct(t / other);
 		}
-		Observer2& operator/=(const T& other) {
+		ObserverStruct& operator/=(const T& other) {
 			t /= other;
 			return *this;
 		}
 
 		// Observer2 Equal(=) T
 		// 代入されるとき
-		Observer2& operator=(const T& other) {
+		ObserverStruct& operator=(const T& other) {
 			t = other;
 			return *this;
 		}
 		// 代入するとき
-		Observer2& operator=(const Observer2& other) {
+		ObserverStruct& operator=(const ObserverStruct& other) {
 			t = other.t;
 			return *this;
 		};
@@ -211,24 +207,24 @@ namespace LWP::Utility {
 		};
 
 		// 前置インクリメント
-		Observer2& operator++() {
+		ObserverStruct& operator++() {
 			++t;
 			return *this;
 		}
 		// 後置インクリメント
-		Observer2 operator++(int) {
-			Observer2 temp = *this;
+		ObserverStruct operator++(int) {
+			ObserverStruct temp = *this;
 			++t;
 			return temp;
 		}
 		// 前置デクリメント
-		Observer2& operator--() {
+		ObserverStruct& operator--() {
 			--t;
 			return *this;
 		}
 		// 後置デクリメント
-		Observer2 operator--(int) {
-			Observer2 temp = *this;
+		ObserverStruct operator--(int) {
+			ObserverStruct temp = *this;
 			--t;
 			return temp;
 		}

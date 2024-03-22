@@ -13,11 +13,12 @@ IPrimitive::IPrimitive() {
 	transform.Initialize();
 
 	// 派生クラスでoverrideした関数を基底クラスのコンストラクタで呼び出すことはできないので、
-	// 派生クラスに初期化処理をを呼び出してもらう
+	// 派生クラスに初期化処理を呼び出してもらう
 
 	// 管理クラスにポインタを送信
 	SetInstance(this);
 }
+
 IPrimitive::~IPrimitive() {
 	// 管理クラスのポインタを削除
 	DeleteInstance(this);

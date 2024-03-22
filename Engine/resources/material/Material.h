@@ -43,5 +43,19 @@ namespace LWP::Resource {
 		int GetIndex() const { return index_; }
 		// 別のMaterialと同期する
 		void SetIndex(int value) { index_ = value; }
+
+
+	public: // ** オペレーターオーバーロード ** //
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(Material& other) {
+			return {
+				uvTransform == other.uvTransform &&
+				enableLighting == other.enableLighting &&
+				shininess == other.shininess &&
+				fillMode == other.fillMode
+			};
+		}
+
 	};
 }	

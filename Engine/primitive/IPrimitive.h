@@ -5,6 +5,7 @@
 #include "../resources/texture/Texture.h"
 #include "../resources/material/Material.h"
 #include "../utility/Color.h"
+#include "../utility/observers/Observer.h"
 #include "../utility/observers/ObserverPtr.h"
 #include <wrl.h>
 #include <d3d12.h>
@@ -73,6 +74,7 @@ namespace LWP::Primitive {
 		/// デフォルトコンストラクタ
 		/// </summary>
 		IPrimitive();
+
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
@@ -138,6 +140,40 @@ namespace LWP::Primitive {
 		/// 派生クラスで追加された変数の値が変化したかを検知する用の関数
 		/// </summary>
 		virtual bool DerivedGetChanged();
+	};
+
+
+	// IPrimitiveのデータのみ（Observerクラス用）
+	struct IPrimitiveStruct {
+		std::string name;
+		std::vector<Vertex> vertices;
+		std::vector<uint32_t> indexes;
+		Object::WorldTransform transform;
+		Resource::Material material;
+		Resource::ITexture* texture = nullptr;
+		Utility::Color* commonColor = nullptr;
+
+		IPrimitiveStruct& operator=(const IPrimitive& other) {
+			name = other.name;
+			vertices = other.vertices;
+			indexes = other.indexes;
+			transform = other.transform;
+			material = other.material;
+			texture = other.texture;
+			commonColor = other.commonColor;
+			return *this;
+		}
+		bool operator==(IPrimitive& other) {
+			return {
+				name == other.name &&
+				vertices == other.vertices &&
+				indexes == other.indexes &&
+				transform == other.transform &&
+				material == other.material &&
+				texture == other.texture &&
+				commonColor == other.commonColor
+			};
+		}
 	};
 }
 
