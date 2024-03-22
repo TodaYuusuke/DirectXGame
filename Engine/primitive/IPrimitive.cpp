@@ -19,7 +19,6 @@ IPrimitive::IPrimitive() {
 	SetInstance(this);
 }
 IPrimitive::~IPrimitive() {
-	std::cout << "IPrimitive" << std::endl;
 	// 管理クラスのポインタを削除
 	DeleteInstance(this);
 }

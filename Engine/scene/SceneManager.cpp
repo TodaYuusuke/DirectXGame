@@ -19,7 +19,7 @@ void Manager::Update() {
 		currentScene_ = temp;
 		
 		// 仮置きなのでそのうち消去する
-		//LWP::System::engine->InitializeForScene();
+		LWP::System::engine->InitializeForScene();
 	}
 
 	currentScene_->Update();

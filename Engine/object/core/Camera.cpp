@@ -24,14 +24,14 @@ void Camera::ReCreateShader() {
 
 void Camera::DebugGUI() {
 	transform.DebugGUI();
-	ImGui::DragInt("FOV", &fov, 1);
+	ImGui::DragFloat("FOV", &fov, 0.01f);
 	ImGui::Checkbox("isUsePostProcess", &isUsePostProcess);
 	ImGui::Checkbox("isActive", &isActive);
 }
 
 Matrix4x4 Camera::GetViewProjection() const {
 	Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
-	float fovF = static_cast<float>(fov) / 100.0f / 2.0f;
+	float fovF = fov / 100.0f / 2.0f;
 	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, LWP::Info::GetWindowWidthF() / LWP::Info::GetWindowHeightF(), 0.1f, 100.0f);
 	return viewMatrix * projectionMatrix;
 }

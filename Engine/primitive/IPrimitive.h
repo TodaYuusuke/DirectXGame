@@ -10,8 +10,6 @@
 #include <d3d12.h>
 #include <stdexcept>
 
-#include <iostream>
-
 // 前方宣言
 namespace LWP::Base {
 	class CommandManager;
@@ -19,9 +17,9 @@ namespace LWP::Base {
 
 namespace LWP::Primitive {
 	struct Vertex {
-		Math::Vector3 position;	// 座標
-		Math::Vector2 texCoord; // UV座標
-		Math::Vector3 normal;	// 法線
+		Math::Vector3 position = { 0.0f,0.0f,0.0f };// 座標
+		Math::Vector2 texCoord = { 0.0f,0.0f };		// UV座標
+		Math::Vector3 normal = { 0.0f,0.0f,0.0f };	// 法線
 		Utility::Color color = { 255,255,255,255 };	// 色
 
 		/// <summary>

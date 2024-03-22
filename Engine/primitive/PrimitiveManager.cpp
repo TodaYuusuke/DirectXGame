@@ -11,6 +11,9 @@ void Manager::Initialize() {
 	//}
 	//primitives_.list.clear();
 	primitiveCountMap_.clear();
+#if DEMO
+	debugPris.clear();
+#endif
 }
 
 void Manager::Update() {
@@ -23,7 +26,7 @@ void Manager::Update() {
 		[this]() { debugPris.push_back(Triangle()); },
 		[this]() { debugPris.push_back(Capsule()); },
 		[this]() { debugPris.push_back(Cube()); },
-		//&[this]() { debugPris.push_back(Mesh()); },
+		//[this]() { debugPris.push_back(Mesh()); },
 		[this]() { debugPris.push_back(Sphere()); }
 	};
 	// 選択肢の変数

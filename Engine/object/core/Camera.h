@@ -9,7 +9,7 @@ namespace LWP::Object {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// FOV
-		int fov = 90;
+		float fov = 90.0f;
 
 		// -- ポストエフェクトフラグ -- //
 
