@@ -42,53 +42,53 @@ void SampleTitle::Initialize() {
 	//SetMainRenderCamera(subCamera);
 
 	// 地面
-	Mesh* ground = LWP::Resource::LoadModel("cube/cube.obj");
-	ground->transform.translation.y = -1.5f;
-	ground->transform.scale = { 10.0f,0.1f, 10.0f };
-	//ground->material.enableLighting = true;
-	ground->name = "Ground";
-	//ground->commonColor = new Color()
+	//Mesh* ground = LWP::Resource::LoadModel("cube/cube.obj");
+	//ground->transform.translation.y = -1.5f;
+	//ground->transform.scale = { 10.0f,0.1f, 10.0f };
+	////ground->material.enableLighting = true;
+	//ground->name = "Ground";
+	////ground->commonColor = new Color()
 
 	// 三角形
-	for (int i = 0; i < 2; i++) {
-		tri[i] = LWP::Common::CreateInstance<Triangle>();
-	}
-	tri[0]->vertices[0].color = Color(RED);
-	tri[0]->vertices[1].color = Color(BLUE);
-	tri[0]->vertices[2].color = Color(GREEN);
-	tri[1]->transform.rotation.y = 1.0f;
-	tri[1]->texture = uvTexture;
+	//for (int i = 0; i < 2; i++) {
+	//	tri[i] = LWP::Common::CreateInstance<Triangle>();
+	//}
+	tri[0].vertices[0].color = Color(RED);
+	tri[0].vertices[1].color = Color(BLUE);
+	tri[0].vertices[2].color = Color(GREEN);
+	tri[1].transform.rotation.y = 1.0f;
+	tri[1].texture = uvTexture;
 
 	// 平面
-	surface = LWP::Common::CreateInstance<Surface>();
-	surface->transform.translation.x = -0.7f;
-	surface->texture = uvTexture;
-	surface->isActive = false;
+	//surface = LWP::Common::CreateInstance<Surface>();
+	surface.transform.translation.x = -0.7f;
+	surface.texture = uvTexture;
+	surface.isActive = false;
 
 	// 球
-	sphere = LWP::Common::CreateInstance<Sphere>();
-	sphere->radius = 0.3f;
-	sphere->transform.translation.x = -1.0f;
-	sphere->transform.translation.z = -1.0f;
+	//sphere = LWP::Common::CreateInstance<Sphere>();
+	sphere.radius = 0.3f;
+	sphere.transform.translation.x = -1.0f;
+	sphere.transform.translation.z = -1.0f;
 	//sphere->material.enableLighting = true;
-	sphere->material.shininess = 40.0f;
-	sphere->texture = uvTexture;
+	sphere.material.shininess = 40.0f;
+	sphere.texture = uvTexture;
 
 	// モデル読み込み
-	cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
-	cubeModel->transform.translation.y = -3.0f;
-	cubeModel->transform.scale = { 5.0f,5.0f, 0.05f };
-	cubeModel->isActive = true;
+	//cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
+	//cubeModel->transform.translation.y = -3.0f;
+	//cubeModel->transform.scale = { 5.0f,5.0f, 0.05f };
+	//cubeModel->isActive = true;
 	//cubeModel->material.enableLighting = true;
 	//stressTestModel = LWP::Resource::LoadModel("RGM-96XJesta_13_td.obj");
 	//stressTestModel->material.enableLighting = true;
 	//stressTestModel->isActive = true;
 	// 左側に壁を置く
-	Primitive::Mesh* cube2 = LWP::Resource::LoadModel("cube/cube.obj");
-	cube2->transform.translation = { -2.1f, -3.0f, -2.0f };
-	cube2->transform.rotation.y = -1.54f;
-	cube2->transform.scale = { 5.0f,5.0f, 0.05f };
-	cube2->isActive = true;
+	//Primitive::Mesh* cube2 = LWP::Resource::LoadModel("cube/cube.obj");
+	//cube2->transform.translation = { -2.1f, -3.0f, -2.0f };
+	//cube2->transform.rotation.y = -1.54f;
+	//cube2->transform.scale = { 5.0f,5.0f, 0.05f };
+	//cube2->isActive = true;
 
 
 	// 平行光源
@@ -106,81 +106,81 @@ void SampleTitle::Initialize() {
 	pL2->intensity = 0.3f;
 	pL2->isActive = true;
 
-	// 複数画面描画の結果を張り付けるスプライト
-	Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
-	s->texture = subCamera->GetRenderTexture();
-	s->isUI = true;
-	Sprite* s2 = LWP::Primitive::CreateInstance<Sprite>();
-	s2->transform.translation.x = 640.0f;
-	s2->texture = c->GetRenderTexture();
-	s2->isUI = true;
+	//// 複数画面描画の結果を張り付けるスプライト
+	////Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
+	//s->texture = subCamera->GetRenderTexture();
+	//s->isUI = true;
+	////Sprite* s2 = LWP::Primitive::CreateInstance<Sprite>();
+	//s2->transform.translation.x = 640.0f;
+	//s2->texture = c->GetRenderTexture();
+	//s2->isUI = true;
 
 
 	// パーティクルテスト
-	particle = Object::CreateInstance<Object::Particle>();
-	particle->primitive = LWP::Resource::LoadModel("cube/cube.obj");
-	particle->initFunction = [](Primitive::IPrimitive* primitive) {
-		Object::ParticleData newData{};
-		newData.wtf.translation = primitive->transform.GetWorldPosition();
-		newData.wtf.rotation = primitive->transform.rotation;
-		newData.wtf.scale = primitive->transform.scale;
+	//particle = Object::CreateInstance<Object::Particle>();
+	//particle->primitive = LWP::Resource::LoadModel("cube/cube.obj");
+	//particle->initFunction = [](Primitive::IPrimitive* primitive) {
+	//	Object::ParticleData newData{};
+	//	newData.wtf.translation = primitive->transform.GetWorldPosition();
+	//	newData.wtf.rotation = primitive->transform.rotation;
+	//	newData.wtf.scale = primitive->transform.scale;
 
-		// 速度ベクトルを生成
-		int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
-		int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
-		int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
-		// 発射のベクトル
-		Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
-		newData.velocity = dir.Normalize() * 0.2f;
+	//	// 速度ベクトルを生成
+	//	int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
+	//	int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
+	//	int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
+	//	// 発射のベクトル
+	//	Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
+	//	newData.velocity = dir.Normalize() * 0.2f;
 
-		// パーティクル追加
-		return newData;
-		};
-	particle->updateFunction = [](Object::ParticleData* data) {
-		// 経過フレーム追加
-		data->elapsedFrame++;
+	//	// パーティクル追加
+	//	return newData;
+	//	};
+	//particle->updateFunction = [](Object::ParticleData* data) {
+	//	// 経過フレーム追加
+	//	data->elapsedFrame++;
 
-		data->wtf.translation += data->velocity;	// 速度ベクトルを加算
-		data->wtf.rotation += data->velocity;	// ついでに回転させとく
-		data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
+	//	data->wtf.translation += data->velocity;	// 速度ベクトルを加算
+	//	data->wtf.rotation += data->velocity;	// ついでに回転させとく
+	//	data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
 
-		// 速度ベクトルを弱める
-		data->velocity *= 0.9f;
+	//	// 速度ベクトルを弱める
+	//	data->velocity *= 0.9f;
 
-		return data->elapsedFrame > 180 ? true : false;
-		};
-	particle->isActive = true;
+	//	return data->elapsedFrame > 180 ? true : false;
+	//	};
+	//particle->isActive = true;
 
 	mainCamera->isUsePostProcess = false;
 	subCamera->isUsePostProcess = false;
 	c->isUsePostProcess = false;
 
-	Cube* cube = LWP::Primitive::CreateInstance<Cube>();
-	cube->texture = monsterBall;
+	//Cube cube;/* = LWP::Primitive::CreateInstance<Cube>();*/
+	//cube.texture = monsterBall;
 
-	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
-	aabbCol->CreateFromPrimitive(cube);
-	// 試しにラムダ式を入れてみる
-	aabbCol->SetOnCollisionLambda([](Collider::HitData data) {
-		if (data.state == Collider::OnCollisionState::None) {
-			Utility::Log("None\n");
-		}
-		else {
-			Utility::Log("Not None\n");
-		}
-	});
+	//Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
+	//aabbCol->CreateFromPrimitive(&cube);
+	//// 試しにラムダ式を入れてみる
+	//aabbCol->SetOnCollisionLambda([](Collider::HitData data) {
+	//	if (data.state == Collider::OnCollisionState::None) {
+	//		Utility::Log("None\n");
+	//	}
+	//	else {
+	//		Utility::Log("Not None\n");
+	//	}
+	//});
 
-	Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
-	aabbCol2->Create({ 2.0f,0.0f,0.0f });
-	Collider::AABB* aabbCol3 = LWP::Common::CreateInstance<Collider::AABB>();
-	aabbCol3->Create({ -2.0f,0.0f,0.0f });
+	//Collider::AABB* aabbCol2 = LWP::Common::CreateInstance<Collider::AABB>();
+	//aabbCol2->Create({ 2.0f,0.0f,0.0f });
+	//Collider::AABB* aabbCol3 = LWP::Common::CreateInstance<Collider::AABB>();
+	//aabbCol3->Create({ -2.0f,0.0f,0.0f });
 
-	Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
-	sphereCol0->Create({ 3.0f,0.0f,0.0f });
+	//Collider::Sphere* sphereCol0 = LWP::Common::CreateInstance<Collider::Sphere>();
+	//sphereCol0->Create({ 3.0f,0.0f,0.0f });
 
-	// カプセル実験
-	Collider::Capsule* capsule = LWP::Common::CreateInstance<Collider::Capsule>();
-	capsule->Create({ 0.0f,0.0f,-3.0f }, { 0.0f,1.0f,-3.0f }, 0.5f);
+	//// カプセル実験
+	//Collider::Capsule* capsule = LWP::Common::CreateInstance<Collider::Capsule>();
+	//capsule->Create({ 0.0f,0.0f,-3.0f }, { 0.0f,1.0f,-3.0f }, 0.5f);
 
 	
 }
@@ -194,14 +194,14 @@ void SampleTitle::Update() {
 
 	// Tキーを押すとテクスチャ切り替え
 	if (Keyboard::GetTrigger(DIK_T)) {
-		if (!useMonsterBall) {
-			sphere->texture = monsterBall;
-			useMonsterBall = true;
-		}
-		else {
-			sphere->texture = uvTexture;
-			useMonsterBall = false;
-		}
+		//if (!useMonsterBall) {
+		//	sphere->texture = monsterBall;
+		//	useMonsterBall = true;
+		//}
+		//else {
+		//	sphere->texture = uvTexture;
+		//	useMonsterBall = false;
+		//}
 	}
 
 	if (Keyboard::GetTrigger(DIK_1)) {

@@ -17,7 +17,7 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	sphereModel = LWP::Primitive::CreateInstance<Primitive::Sphere>();
+	sphereModel = new Primitive::Sphere();
 	sphereModel->CreateFromSphereCol(*this);
 #endif
 }

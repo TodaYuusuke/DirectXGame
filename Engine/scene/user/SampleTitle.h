@@ -1,8 +1,6 @@
 #pragma once
 #include "../IScene.h"
 
-#include <iostream>
-
 class SampleTitle final
 	: public IScene {
 public:
@@ -20,12 +18,12 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Triangle* tri[2];
-	LWP::Primitive::Surface* surface;
-	LWP::Primitive::Sphere* sphere;
+	LWP::Primitive::Triangle tri[2];
+	LWP::Primitive::Surface surface;
+	LWP::Primitive::Sphere sphere;
 	
 	LWP::Primitive::Mesh* cubeModel;
-	LWP::Primitive::Mesh* stressTestModel;	// 描画負荷検証用モデル
+	//LWP::Primitive::Mesh* stressTestModel;	// 描画負荷検証用モデル
 
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;

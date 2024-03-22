@@ -5,12 +5,6 @@
 
 #include <functional>
 
-#if DEMO
-namespace LWP::Base {
-	class CommandManager;
-}
-#endif
-
 namespace LWP::Object::Collider {
 	// 識別子
 	enum class Shape : int {

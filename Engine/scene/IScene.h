@@ -1,9 +1,8 @@
 #pragma once
-#include "../../Adapter/Adapter.h"
+#include <Adapter.h>
 
 class IScene {
 public:
-
 	// 仮想デストラクタ
 	virtual ~IScene() = default;
 

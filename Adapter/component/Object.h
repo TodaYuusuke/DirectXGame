@@ -16,7 +16,7 @@ namespace LWP {
 		/// <returns>オブジェクトのインスタンス</returns>
 		template <IsIObject TObject>
 		TObject* CreateInstance() {
-			return System::engine->objectManager_->CreateInstance<TObject>();
+			return LWP::System::engine->objectManager_->CreateInstance<TObject>();
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace LWP {
 			/// <returns>オブジェクトのインスタンス</returns>
 			template <IsICollider TCollider>
 			TCollider* CreateInstance() {
-				return System::engine->colliderManager_->CreateInstance<TCollider>();
+				return LWP::System::engine->colliderManager_->CreateInstance<TCollider>();
 			}
 		};
 	};

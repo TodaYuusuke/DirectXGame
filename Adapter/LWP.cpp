@@ -1,8 +1,6 @@
 ﻿#include "LWP.h"
 #include "Config.h"
 
-#include "scene/user/SampleTitle.h"
-
 using namespace LWP::System;
 
 using namespace LWP::Base;

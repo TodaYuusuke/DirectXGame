@@ -24,7 +24,7 @@ namespace LWP::Resource {
 		void Update();
 
 		// 読み込み
-		
+
 		/// <summary>
 		/// テクスチャを読み込む関数
 		/// </summary>
@@ -37,10 +37,10 @@ namespace LWP::Resource {
 		Audio* LoadAudioLongPath(const std::string& filepath);
 		//Model LoadModel(const std::string& filepath);
 
-		// インスタンスのポインタをセット
+		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetMotionPointer(Motion* ptr) { motions_.SetPointer(ptr); }
-		// インスタンスのポインタを解放
-		void DeleteMotionPointer(Motion* ptr) {	motions_.DeletePointer(ptr); }
+		// インスタンスのポインタを解放（ユーザー呼び出し不要）
+		void DeleteMotionPointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 
 	private: // 各種リソース
 

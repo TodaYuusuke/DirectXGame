@@ -17,7 +17,7 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	cube = LWP::Primitive::CreateInstance<Cube>();
+	cube = new Cube();
 	cube->CreateFromAABB(*this);
 	cube->isWireFrame = true;
 #endif
@@ -86,4 +86,3 @@ void AABB::DerivedDebugGUI() {
 	ImGui::DragFloat3("min", &min.x, 0.01f);
 	ImGui::DragFloat3("max", &max.x, 0.01f);
 }
-

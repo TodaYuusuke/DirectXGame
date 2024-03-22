@@ -20,7 +20,7 @@ Resource::Audio* Resource::LoadAudioLongPath(const std::string& filePath) {
 
 
 Primitive::Mesh* Resource::LoadModel(const std::string& filePath) {
-	Primitive::Mesh* instance = engine->primitiveManager_->CreateInstance<Primitive::Mesh>(engine->directXCommon_->GetCommandManager());
+	Primitive::Mesh* instance = new Primitive::Mesh();
 	instance->LoadFile(filePath);
 	return instance;
 }

@@ -17,8 +17,8 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 	this->radius = rad_;
 
 #if DEMO
-	// 立方体のインスタンスを作成
-	capsuleModel = LWP::Primitive::CreateInstance<Primitive::Capsule>();
+	// カプセルモデルを生成
+	capsuleModel = new Primitive::Capsule();
 	capsuleModel->CreateFromCapsuleCol(*this);
 #endif
 };

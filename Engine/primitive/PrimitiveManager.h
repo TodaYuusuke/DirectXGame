@@ -3,7 +3,9 @@
 #include "3d/3dList.h"
 
 #include "IPrimitive.h"
+#include "utility/PtrManager.h"
 
+#include <vector>
 #include <map>
 
 namespace LWP::Primitive {
@@ -34,39 +36,16 @@ namespace LWP::Primitive {
 		void Draw(Base::CommandManager* manager);
 
 
-		/// <summary>
-		/// インスタンスを登録する
-		/// </summary>
-		/// <param name="TPrimitive">登録する形状</param>
-		template <IsIPrimitive TPrimitive>
-		inline TPrimitive* CreateInstance(Base::CommandManager* manager) {
-			TPrimitive* newPrimitive = new TPrimitive(manager);
-			newPrimitive->CreateVertices();
-			newPrimitive->CreateIndexes();
-			
-			// typeid を使用して型情報を取得
-			const std::type_info& typeInfo = typeid(TPrimitive);
-			// type_info オブジェクトからクラス名を取得
-			std::string className = typeInfo.name();
-			// 名前空間部分を削除（LWP::Primitive::）
-			className = className.erase(0, 22);
+		// インスタンスのポインタをセット（ユーザー呼び出し不要）
+		void SetPointer(IPrimitive* ptr);
+		// インスタンスのポインタを解放（ユーザー呼び出し不要）
+		void DeletePointer(IPrimitive* ptr);
 
-			// カウントのマップから数を測定し、デフォルトの名前を登録
-			if (!primitiveCountMap_.count(className)) {
-				// 存在しない場合のみ0で初期化
-				primitiveCountMap_[className] = 0;
-			}
-			newPrimitive->name = className + "_" + std::to_string(primitiveCountMap_[className]++);
-			
-			// リストに登録
-			primitives_.push_back(newPrimitive);
-			return newPrimitive;
-		}
 
 	private: // メンバ変数
 
 		// 形状のリスト
-		std::vector<IPrimitive*> primitives_;
+		Utility::PtrManager<IPrimitive*> primitives_;
 
 		// インスタンスカウント用マップ
 		std::map<std::string, int> primitiveCountMap_;
@@ -75,6 +54,8 @@ namespace LWP::Primitive {
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;
+		// デバッグ用の生成したインスンタンスを格納しておく配列
+		std::vector<IPrimitive> debugPris;
 #endif
 	};
 }

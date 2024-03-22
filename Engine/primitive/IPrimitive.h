@@ -10,6 +10,8 @@
 #include <d3d12.h>
 #include <stdexcept>
 
+#include <iostream>
+
 // 前方宣言
 namespace LWP::Base {
 	class CommandManager;
@@ -70,13 +72,13 @@ namespace LWP::Primitive {
 	public: // ** 共通関数 ** //
 		
 		/// <summary>
-		/// デフォルトコンストラクタ（ユーザ呼び出し禁止）
+		/// デフォルトコンストラクタ
 		/// </summary>
-		IPrimitive() = default;
+		IPrimitive();
 		/// <summary>
-		/// コンストラクタ（ユーザ呼び出し禁止）
+		/// デフォルトデストラクタ
 		/// </summary>
-		IPrimitive(Base::CommandManager* manager);
+		~IPrimitive();
 
 		/// <summary>
 		/// Observerクラス用のオペレーターオーバーロード
@@ -85,6 +87,11 @@ namespace LWP::Primitive {
 		bool operator==(IPrimitive& other) {
 			return { vertices == other.vertices && indexes == other.indexes && transform == other.transform };
 		}
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Init();
 
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）

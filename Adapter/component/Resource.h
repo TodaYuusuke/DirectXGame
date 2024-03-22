@@ -46,11 +46,11 @@ namespace LWP {
 		/// <para>モーションクラスのインスタンスをエンジンにセットする関数</para>
 		/// <para>※ ユーザー呼び出し禁止</para>
 		/// </summary>
-		void SetInstance(Resource::Motion* ptr);
+		void SetInstance(Motion* ptr);
 		/// <summary>
 		/// <para>モーションクラスのインスタンスをエンジンから解放する関数</para>
 		/// <para>※ ユーザー呼び出し禁止</para>
 		/// </summary>
-		void DeleteInstance(Resource::Motion* ptr);
+		void DeleteInstance(Motion* ptr);
 	};
 };

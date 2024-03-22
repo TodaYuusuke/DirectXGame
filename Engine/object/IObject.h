@@ -14,7 +14,7 @@ namespace LWP::Object {
 		std::string name = "IObject";
 
 		// アクティブ切り替え
-		bool isActive;
+		bool isActive = true;
 		// ワールドトランスフォーム
 		WorldTransform transform;
 

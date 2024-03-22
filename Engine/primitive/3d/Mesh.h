@@ -13,10 +13,8 @@ namespace LWP::Primitive {
 
 	public: // ** 関数 ** //
 
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		using IPrimitive::IPrimitive;
+		// 初期化を呼び出す
+		Mesh() { Init(); }
 		
 		/// <summary>
 		/// 頂点を生成する関数

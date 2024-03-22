@@ -55,6 +55,28 @@ std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) 
 	}
 }
 
+std::string LWP::Utility::GetClassNameShort(const std::type_info& type) {
+	// まず名前を取得
+	std::string result = type.name();
+
+	// 最後の::の位置を検索
+	size_t pos = result.rfind("::");
+	if (pos != std::string::npos) {
+		// 名前空間部分を除いた部分を返す
+		result = result.substr(pos + 2); // "::"の直後から末尾までを取得
+	}
+
+	// pointerの時につく文字列の位置を検索
+	pos = result.rfind(" * __ptr64");
+	if (pos != std::string::npos) {
+		// pointerの時につく文字列を削除する
+		result = result.erase(pos, 10);
+	}
+
+	// 文字列を返す
+	return result;
+}
+
 int LWP::Utility::RadianToDegree(float radian) {
 	return static_cast<int>(radian * (180.0f / M_PI));
 }

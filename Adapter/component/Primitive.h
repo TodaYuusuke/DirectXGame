@@ -10,13 +10,14 @@ namespace LWP {
 	/// </summary>
 	namespace Primitive {
 		/// <summary>
-		/// 形状のインスタンスを作成
+		/// <para>モーションクラスのインスタンスをエンジンにセットする関数</para>
+		/// <para>※ ユーザー呼び出し禁止</para>
 		/// </summary>
-		/// <typeparam name="TPrimitive">形の種類</typeparam>
-		/// <returns>形のインスタンス</returns>
-		template <IsIPrimitive TPrimitive>
-		TPrimitive* CreateInstance() {
-			return System::engine->primitiveManager_->CreateInstance<TPrimitive>(System::engine->directXCommon_->GetCommandManager());
-		}
+		void SetInstance(IPrimitive* ptr);
+		/// <summary>
+		/// <para>モーションクラスのインスタンスをエンジンから解放する関数</para>
+		/// <para>※ ユーザー呼び出し禁止</para>
+		/// </summary>
+		void DeleteInstance(IPrimitive* ptr);
 	};
 };

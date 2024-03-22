@@ -17,10 +17,8 @@ namespace LWP::Primitive {
 		: public IPrimitive {
 	public: // ** 関数 ** //
 
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		using IPrimitive::IPrimitive;
+		// 初期化を呼び出す
+		Cube() { Init(); }
 
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）

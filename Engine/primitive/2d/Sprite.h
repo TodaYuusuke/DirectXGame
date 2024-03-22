@@ -17,10 +17,8 @@ namespace LWP::Primitive {
 
 	public: // ** 関数 ** //
 
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		using IPrimitive::IPrimitive;
+		// 初期化を呼び出す
+		Sprite() { Init(); }
 
 		/// <summary>
 		/// 更新処理

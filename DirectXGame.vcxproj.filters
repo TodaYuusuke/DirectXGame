@@ -11,9 +11,6 @@
     <ClCompile Include="Adapter\component\Information.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
-    <ClCompile Include="Adapter\component\Primitive.cpp">
-      <Filter>Adapter\component</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Resource.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
@@ -233,9 +230,6 @@
     <ClCompile Include="Engine\object\collider\cSphere.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\collider\cOBB.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
@@ -260,6 +254,9 @@
     <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp">
       <Filter>Engine\utilitiy\motionEffects</Filter>
     </ClCompile>
+    <ClCompile Include="Adapter\component\Primitive.cpp">
+      <Filter>Adapter\component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -272,9 +269,6 @@
       <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Information.h">
-      <Filter>Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Adapter\component\Primitive.h">
       <Filter>Adapter\component</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Resource.h">
@@ -541,9 +535,6 @@
     <ClInclude Include="Engine\object\collider\cSphere.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\collider\cOBB.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\collider\Mask.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
@@ -579,6 +570,9 @@
     </ClInclude>
     <ClInclude Include="Engine\utility\PtrManager.h">
       <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Adapter\component\Primitive.h">
+      <Filter>Adapter\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

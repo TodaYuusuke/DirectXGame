@@ -1,17 +1,34 @@
 #pragma once
 #include "IPrimitive.h"
-#include "../base/directX/command/CommandManager.h"
-#include "../base/ImGuiManager.h"
+#include "base/directX/command/CommandManager.h"
+#include "base/ImGuiManager.h"
+#include "component/Primitive.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 
-IPrimitive::IPrimitive(Base::CommandManager* manager) {
-	// 引数で要求はするが使用しない
-	manager;
+IPrimitive::IPrimitive() {
 	// トランスフォーム初期化
 	transform.Initialize();
+
+	// 派生クラスでoverrideした関数を基底クラスのコンストラクタで呼び出すことはできないので、
+	// 派生クラスに初期化処理をを呼び出してもらう
+
+	// 管理クラスにポインタを送信
+	SetInstance(this);
+}
+IPrimitive::~IPrimitive() {
+	std::cout << "IPrimitive" << std::endl;
+	// 管理クラスのポインタを削除
+	DeleteInstance(this);
+}
+
+void IPrimitive::Init() {
+	// 頂点データ作成
+	CreateVertices();
+	// インデックスデータ作成
+	CreateIndexes();
 }
 
 void IPrimitive::CreateVertices() {
