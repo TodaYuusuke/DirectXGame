@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "utility/MyUtility.h"
+#include <iostream>
 
 #if DEMO
 #include <component/Object.h>
@@ -208,39 +209,32 @@ bool Manager::CheckCollision(Sphere* c1, Sphere* c2) {
 	return dist.Length() <= (data1.radius + data2.radius);
 }
 bool Manager::CheckCollision(Sphere* c1, Capsule* c2) {
-	//Vector3 d = Subtract(sphere.center, capsule.start);
-	//Vector3 ba = Subtract(capsule.end, capsule.start);
-	//// カプセルのベクトルの長さ
-	//float length = Length(ba);
-	//// 正規化
-	//Vector3 e = Normalize(ba);
-	//// 内積
-	//float dot = Dot(d, e);
+	Sphere_Data sphere = *c1;
+	Capsule_Data capsule = *c2;
 
-	//float t = dot / length;
-	//if (t > 1) {
-	//	t = 1;
-	//}
-	//else if (t < 0) {
-	//	t = 0;
-	//}
-	//// 線形補間
-	//Vector3 f;
-	//f.x = (1.0f - t) * capsule.start.x + t * capsule.end.x;
-	//f.y = (1.0f - t) * capsule.start.y + t * capsule.end.y;
-	//f.z = (1.0f - t) * capsule.start.z + t * capsule.end.z;
+	Vector3 d = sphere.position - capsule.start;
+	Vector3 ba =capsule.end - capsule.start;
+	// カプセルのベクトルの長さ
+	float length = ba.Length();
+	// 正規化
+	Vector3 e = ba.Normalize();
+	// 内積
+	float dot = Vector3::Dot(d, e);
 
-	//Vector3 c = Subtract(sphere.center, f);
-	//// 距離
-	//float distance = Length(c);
+	float t = dot / length;
+	t = std::clamp<float>(t, 0.0f, 1.0f);
+	// 線形補間
+	Vector3 f;
+	f = (1.0f - t) * capsule.start + t * capsule.end;
 
-	//// 当たっているかを判定
-	//if (distance < sphere.radius + capsule.radius) {
-	//	return true;
-	//}
-	//return false;
-	c1;	c2; return false;
+	Vector3 c = sphere.position - f;
+	// 距離
+	float distance = c.Length();
+
+	// 当たっているかを判定
+	return distance < sphere.radius + capsule.radius;
 }
 bool Manager::CheckCollision(Capsule* c1, Capsule* c2) {
+	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
 	c1;	c2; return false;
 }
