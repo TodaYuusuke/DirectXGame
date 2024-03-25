@@ -13,17 +13,5 @@ namespace LWP {
 		/// さまざまなクラスのインスタンスを作成
 		/// </summary>
 		/// <returns>クラスのインスタンス</returns>
-		//template<IsIPrimitive TPri>
-		//inline TPri* CreateInstance() {
-		//	return System::engine->primitiveManager_->CreateInstance<TPri>(System::engine->directXCommon_->GetCommandManager());
-		//}
-		template<IsIObject TOb>
-		inline TOb* CreateInstance() {
-			return LWP::System::engine->objectManager_->CreateInstance<TOb>();
-		}
-		template<IsICollider TCol>
-		inline TCol* CreateInstance() {
-			return LWP::System::engine->colliderManager_->CreateInstance<TCol>();
-		}
 	};
 };

@@ -10,14 +10,15 @@ namespace LWP {
 	/// </summary>
 	namespace Object {
 		/// <summary>
-		/// オブジェクトのインスタンスを作成
+		/// <para>オブジェクトのインスタンスをエンジンにセットする関数</para>
+		/// <para>※ ユーザー呼び出し禁止</para>
 		/// </summary>
-		/// <typeparam name="TObject">オブジェクトの種類</typeparam>
-		/// <returns>オブジェクトのインスタンス</returns>
-		template <IsIObject TObject>
-		TObject* CreateInstance() {
-			return LWP::System::engine->objectManager_->CreateInstance<TObject>();
-		}
+		void SetPointer(IObject* ptr);
+		/// <summary>
+		/// <para>オブジェクトのインスタンスをエンジンから解放する関数</para>
+		/// <para>※ ユーザー呼び出し禁止</para>
+		/// </summary>
+		void DeletePointer(IObject* ptr);
 
 		/// <summary>
 		/// カメラに複数画面描画用のレンダーテクスチャを作成する関数
@@ -32,14 +33,15 @@ namespace LWP {
 		/// </summary>
 		namespace Collider {
 			/// <summary>
-			/// コライダーのインスタンスを作成
+			/// <para>コライダーのインスタンスをエンジンにセットする関数</para>
+			/// <para>※ ユーザー呼び出し禁止</para>
 			/// </summary>
-			/// <typeparam name="TObject">オブジェクトの種類</typeparam>
-			/// <returns>オブジェクトのインスタンス</returns>
-			template <IsICollider TCollider>
-			TCollider* CreateInstance() {
-				return LWP::System::engine->colliderManager_->CreateInstance<TCollider>();
-			}
+			void SetPointer(ICollider* ptr);
+			/// <summary>
+			/// <para>コライダーのインスタンスをエンジンから解放する関数</para>
+			/// <para>※ ユーザー呼び出し禁止</para>
+			/// </summary>
+			void DeletePointer(ICollider* ptr);
 		};
 	};
 };

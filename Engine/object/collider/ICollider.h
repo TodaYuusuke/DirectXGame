@@ -58,8 +58,14 @@ namespace LWP::Object::Collider {
 
 
 	public: // ** メンバ関数 ** //
-		// デストラクタ
-		virtual ~ICollider() = default;
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		ICollider();
+		/// <summary>
+		/// デフォルトデストラクタ
+		/// </summary>
+		virtual ~ICollider();
 
 		// 更新処理
 		void Update();

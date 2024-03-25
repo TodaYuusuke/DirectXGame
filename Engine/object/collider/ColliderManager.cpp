@@ -1,6 +1,8 @@
 #include "ColliderManager.h"
 #include <algorithm>
 
+#include "utility/MyUtility.h"
+
 #if DEMO
 #include <component/Object.h>
 #endif
@@ -10,10 +12,10 @@ using namespace LWP::Math;
 using namespace LWP::Object::Collider;
 
 void Manager::Initialize() {
-	for (ICollider* c : colliders_) {
-		delete c;
-	}
-	colliders_.clear();
+	//for (ICollider* c : colliders_) {
+	//	delete c;
+	//}
+	//colliders_.clear();
 
 	// 関数ポインタをセット
 	checkCollisions_[0][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<AABB*>(c2)); };
@@ -39,11 +41,11 @@ void Manager::Update() {
 	// Debugビルド時のみImGuiを表示
 #if DEMO
 	// 生成用の関数ポインタ
-	static std::vector<std::function<ICollider*()>> functions = {
-		&LWP::Object::Collider::CreateInstance<AABB>,
-		//&LWP::Object::Collider::CreateInstance<OBB>,
-		&LWP::Object::Collider::CreateInstance<Sphere>,
-		&LWP::Object::Collider::CreateInstance<Capsule>,
+	static std::vector<std::function<void()>> functions = {
+		[this]() { debugPris.push_back(new AABB()); },
+		/*[this]() { debugPris.push_back(new OBB()); },*/
+		[this]() { debugPris.push_back(new Sphere()); },
+		[this]() { debugPris.push_back(new Capsule()); },
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
@@ -61,13 +63,13 @@ void Manager::Update() {
 			}
 
 			// 形状一覧
-			if (!colliders_.empty()) {
+			if (!colliders_.list.empty()) {
 				std::vector<const char*> itemText;
-				for (ICollider* c : colliders_) {
+				for (ICollider* c : colliders_.list) {
 					itemText.push_back(c->name.c_str());
 				}
 				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-				colliders_[currentItem]->DebugGUI();
+				(*Utility::GetIteratorAtIndex<ICollider*>(colliders_.list, currentItem))->DebugGUI();
 			}
 			ImGui::EndTabItem();
 		}
@@ -78,7 +80,7 @@ void Manager::Update() {
 #endif
 
 	// 全体を更新
-	for (ICollider* c : colliders_) {
+	for (ICollider* c : colliders_.list) {
 		c->Update();
 		// デバッグしやすいようにワイヤーフレームを描画
 		#if DEMO
@@ -87,25 +89,43 @@ void Manager::Update() {
 	}
 
 	// 当たり判定チェック
-	for (int f = 0; f < colliders_.size(); f++) {
-		for (int t = f + 1; t < colliders_.size() && colliders_[f]->isActive; t++) {
+	for (int f = 0; f < colliders_.list.size(); f++) {
+		// イテレーター取得
+		std::list<ICollider*>::iterator itrF = Utility::GetIteratorAtIndex<ICollider*>(colliders_.list, f);
+		for (int t = f + 1; t < colliders_.list.size() && (*itrF)->isActive; t++) {
+			// イテレーター取得
+			std::list<ICollider*>::iterator itrT = Utility::GetIteratorAtIndex<ICollider*>(colliders_.list, t);
 			// isActiveがtrue　かつ　マスク処理が成立していて　かつ　ヒットしているかチェック
-			if (colliders_[t]->isActive && CheckMask(colliders_[f], colliders_[t]) &&
-				checkCollisions_[static_cast<int>(colliders_[f]->GetShape())][static_cast<int>(colliders_[t]->GetShape())](colliders_[f], colliders_[t])) {
+			if ((*itrT)->isActive && CheckMask((*itrF), (*itrT)) &&
+				checkCollisions_[static_cast<int>((*itrF)->GetShape())][static_cast<int>((*itrT)->GetShape())]((*itrF), (*itrT))) {
 				// ヒットしていた場合 -> ヒットフラグをtrueする
-				colliders_[f]->SetHit(true);
-				colliders_[t]->SetHit(true);
+				(*itrF)->SetHit(true);
+				(*itrT)->SetHit(true);
 				// ラムダ実行
-				colliders_[f]->ExecuteLambda(colliders_[t]);
-				colliders_[t]->ExecuteLambda(colliders_[f]);
+				(*itrF)->ExecuteLambda((*itrT));
+				(*itrT)->ExecuteLambda((*itrF));
 			}
 		}
 
 		// 一度もヒットしていないならばそれはそれで実行
-		if (!colliders_[f]->GetHit()) {
-			colliders_[f]->ExecuteLambda(nullptr);
+		if (!(*itrF)->GetHit()) {
+			(*itrF)->ExecuteLambda(nullptr);
 		}
 	}
+}
+
+void Manager::SetPointer(ICollider* ptr) {
+	colliders_.SetPointer(ptr);
+
+	// カウントのマップから数を測定し、デフォルトの名前を登録
+	if (!colliderCountMap_.count(ptr->name)) {
+		// 存在しない場合のみ0で初期化
+		colliderCountMap_[ptr->name] = 0;
+	}
+	ptr->name += std::to_string(colliderCountMap_[ptr->name]++);
+}
+void Manager::DeletePointer(ICollider* ptr) {
+	colliders_.DeletePointer(ptr);
 }
 
 
@@ -115,12 +135,9 @@ bool Manager::CheckCollision(AABB* c1, AABB* c2) {
 	AABB_Data data1 = *c1;	// transformをかけたデータで計算する
 	AABB_Data data2 = *c2;
 
-	if ((data1.min.x <= data2.max.x && data1.max.x >= data2.min.x) &&
+	return (data1.min.x <= data2.max.x && data1.max.x >= data2.min.x) &&
 		(data1.min.y <= data2.max.y && data1.max.y >= data2.min.y) &&
-		(data1.min.z <= data2.max.z && data1.max.z >= data2.min.z)) {
-		return true;	// ヒットしているのでtrue
-	}
-	return false;	// 単純な当たり判定を返す
+		(data1.min.z <= data2.max.z && data1.max.z >= data2.min.z);
 }
 //bool Manager::CheckCollision(AABB* f, OBB* t) {
 //	f;	t; return false;

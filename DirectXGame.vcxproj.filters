@@ -257,6 +257,9 @@
     <ClCompile Include="Adapter\component\Primitive.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\object\IObject.cpp">
+      <Filter>Engine\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">

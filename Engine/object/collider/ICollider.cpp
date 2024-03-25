@@ -1,7 +1,18 @@
 #include "ICollider.h"
 #include "base/ImGuiManager.h"
 
+#include "component/Object.h"
+
 using namespace LWP::Object::Collider;
+
+// コンストラクタ
+ICollider::ICollider() {
+	SetPointer(this);
+}
+// デストラクタ
+ICollider::~ICollider() {
+	DeletePointer(this);
+}
 
 void ICollider::Update() {
 	// preHit更新

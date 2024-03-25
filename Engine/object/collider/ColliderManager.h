@@ -4,6 +4,7 @@
 #include "cSphere.h"
 #include "cCapsule.h"
 
+#include "utility/PtrManager.h"
 #include <map>
 
 namespace LWP::Object::Collider {
@@ -26,39 +27,17 @@ namespace LWP::Object::Collider {
 		/// 更新
 		/// </summary>
 		void Update();
-				
-		/// <summary>
-		/// インスタンスを登録する
-		/// </summary>
-		/// <param name="object">登録するオブジェクト</param>
-		template <IsICollider TCollider>
-		inline TCollider* CreateInstance() {
-			TCollider* newObject = new TCollider();
 
-#if DEMO
-			// typeid を使用して型情報を取得
-			const std::type_info& typeInfo = typeid(TCollider);
-			// type_info オブジェクトからクラス名を取得
-			std::string className = typeInfo.name();
-			// 名前空間部分を削除（LWP::Object::Collider::）
-			className = className.erase(0, 29);
+		// インスタンスのポインタをセット（ユーザー呼び出し不要）
+		void SetPointer(ICollider* ptr);
+		// インスタンスのポインタを解放（ユーザー呼び出し不要）
+		void DeletePointer(ICollider* ptr);
 
-			// カウントのマップから数を測定し、デフォルトの名前を登録
-			if (!colliderCountMap_.count(className)) {
-				// 存在しない場合のみ0で初期化
-				colliderCountMap_[className] = 0;
-			}
-			newObject->name = className + "_" + std::to_string(colliderCountMap_[className]++);
-#endif
-
-			colliders_.push_back(newObject);
-			return newObject;
-		}
 
 	private: // ** メンバ変数 ** //
 
 		// コライダーのリスト
-		std::vector<ICollider*> colliders_;
+		Utility::PtrManager<ICollider*> colliders_;
 
 		// 関数ポインタの型
 		using CollisionFunction = std::function<bool(ICollider*, ICollider*)>;
@@ -70,6 +49,8 @@ namespace LWP::Object::Collider {
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;
+		// デバッグ用の生成したインスンタンスを格納しておく配列
+		std::vector<ICollider*> debugPris;
 #endif
 
 	public: // ** プライベートなメンバ関数 ** //

@@ -9,10 +9,10 @@ public:
 	// 共通の処理
 	void PreInitialize() {
 		// デフォルトのメインカメラを登録
-		mainCamera = LWP::Object::CreateInstance<LWP::Object::Camera>();
-		mainCamera->transform.translation = { 0.0f,0.0f,-10.0f };
-		LWP::Object::CreateRenderTexture(mainCamera, LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
-		SetMainRenderCamera(mainCamera);
+		mainCamera.transform.translation = { 0.0f,0.0f,-10.0f };
+		mainCamera.name = "MainCamera";
+		LWP::Object::CreateRenderTexture(&mainCamera, LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
+		SetMainRenderCamera(&mainCamera);
 	}
 
 	//*** 純粋仮想関数 ***//
@@ -30,7 +30,7 @@ public:
 protected:	// ** メンバ変数 ** //
 	
 	// シーンが持つデフォルトのカメラ
-	LWP::Object::Camera* mainCamera = nullptr;
+	LWP::Object::Camera mainCamera;
 
 
 private: // ** プロパティ変数 ** //

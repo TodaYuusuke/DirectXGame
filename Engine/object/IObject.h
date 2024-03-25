@@ -7,6 +7,9 @@ namespace LWP::Base {
 }
 
 namespace LWP::Object {
+	/// <summary>
+	/// オブジェクトの基底クラス
+	/// </summary>
 	class IObject {
 	public: // パブリックな変数
 
@@ -18,7 +21,7 @@ namespace LWP::Object {
 		// ワールドトランスフォーム
 		WorldTransform transform;
 
-		// ** 純粋仮想関数 ** //
+	public: // ** 純粋仮想関数 ** //
 
 		// 初期化
 		virtual void Initialize() = 0;
@@ -28,7 +31,17 @@ namespace LWP::Object {
 		// デバッグ用GUI
 		virtual void DebugGUI() = 0;
 
-		virtual ~IObject() = default;
+
+	public: // ** メンバ関数 ** //
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		IObject();
+
+		/// <summary>
+		/// デフォルトデストラクタ
+		/// </summary>
+		~IObject();
 	};
 }
 

@@ -35,11 +35,15 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::Audio* audio;
 
 	// サブカメラ
-	LWP::Object::Camera* subCamera;
+	LWP::Object::Camera subCamera[2];
+	// 点光源
+	LWP::Object::PointLight pl;
 
 	// パーティクル
 	LWP::Object::Particle* particle;
 
+	// コライダー
+	LWP::Object::Collider::AABB aabbCol;
 
 	bool useMonsterBall = true;
 };
