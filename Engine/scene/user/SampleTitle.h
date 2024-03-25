@@ -14,7 +14,6 @@ public:
 	// 更新
 	void Update() override;
 
-	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
@@ -22,10 +21,12 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Surface surface;
 	LWP::Primitive::Sphere sphere;
 	LWP::Primitive::Cube cube;
-	
+	LWP::Primitive::Capsule capsule;
+	LWP::Primitive::Sprite sprite[2];
+
 	LWP::Primitive::Mesh ground;
-	//LWP::Primitive::Mesh* cubeModel;
-	//LWP::Primitive::Mesh* stressTestModel;	// 描画負荷検証用モデル
+	LWP::Primitive::Mesh wall[2];
+	//LWP::Primitive::Mesh stressTestModel;	// 描画負荷検証用モデル
 
 	LWP::Resource::Texture* uvTexture;
 	LWP::Resource::Texture* monsterBall;

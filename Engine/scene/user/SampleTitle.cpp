@@ -17,6 +17,10 @@ void SampleTitle::Initialize() {
 	uvTexture = LWP::Resource::LoadTextureLongPath("resources/system/texture/uvChecker.png");
 	monsterBall = LWP::Resource::LoadTextureLongPath("resources/system/texture/monsterBall.png");
 
+
+	// メインカメラの設定
+	mainCamera->name = "MainCamera";
+
 	// サブカメラを生成
 	subCamera = LWP::Common::CreateInstance<LWP::Object::Camera>();
 	LWP::Object::CreateRenderTexture(subCamera, 640, 360);
@@ -26,28 +30,15 @@ void SampleTitle::Initialize() {
 	subCamera->isUsePostProcess = true;
 	subCamera->isActive = true;
 
-	// サブカメラを生成
-	LWP::Object::Camera* c = LWP::Common::CreateInstance<LWP::Object::Camera>();
-	c->shaderPath = "postProcess/SSAO.PS.hlsl";
-	LWP::Object::CreateRenderTexture(c, 640, 360);
-	c->transform.translation = { -5.9f,4.5f,-10.0f };
-	c->transform.rotation = { 0.4f,0.5f,0.0f };
-	// ポストプロセステスト
-	c->isUsePostProcess = true;
-	c->isActive = true;
-
-	mainCamera->isUsePostProcess = true;
-	mainCamera->shaderPath = "postProcess/SSAO.PS.hlsl";
-	mainCamera->ReCreateShader();
-	//SetMainRenderCamera(subCamera);
-
-	// 地面
-	ground.LoadFile("cube/cube.obj");
-	ground.transform.translation.y = -1.5f;
-	ground.transform.scale = { 10.0f,0.1f, 10.0f };
-	//ground.material.enableLighting = true;
-	ground.name = "Ground";
-	//ground.commonColor = new Color()
+	// サブカメラ2を生成
+	LWP::Object::Camera* subCamera2 = LWP::Common::CreateInstance<LWP::Object::Camera>();
+	subCamera2->shaderPath = "postProcess/SSAO.PS.hlsl";
+	LWP::Object::CreateRenderTexture(subCamera2, 640, 360);
+	subCamera2->transform.translation = { -5.9f,4.5f,-10.0f };
+	subCamera2->transform.rotation = { 0.4f,0.5f,0.0f };
+	subCamera2->isUsePostProcess = true;
+	subCamera2->isActive = true;
+	
 
 	// 三角形
 	//for (int i = 0; i < 2; i++) {
@@ -56,64 +47,89 @@ void SampleTitle::Initialize() {
 	tri[0].vertices[0].color = Color(RED);
 	tri[0].vertices[1].color = Color(BLUE);
 	tri[0].vertices[2].color = Color(GREEN);
+	tri[0].name = "Triangle0";
 	tri[1].transform.rotation.y = 1.0f;
 	tri[1].texture = uvTexture;
+	tri[1].name = "Triangle1";
 
 	// 平面
 	//surface = LWP::Common::CreateInstance<Surface>();
 	surface.transform.translation.x = -0.7f;
 	surface.texture = uvTexture;
 	surface.isActive = false;
+	surface.name = "Surface";
 
 	// 球
 	//sphere = LWP::Common::CreateInstance<Sphere>();
 	sphere.radius = 0.3f;
 	sphere.transform.translation.x = -1.0f;
 	sphere.transform.translation.z = -1.0f;
-	//sphere->material.enableLighting = true;
+	sphere.material.enableLighting = true;
 	sphere.material.shininess = 40.0f;
 	sphere.texture = uvTexture;
+	sphere.name = "Sphere";
 
-	// モデル読み込み
-	//cubeModel = LWP::Resource::LoadModel("cube/cube.obj");
-	//cubeModel->transform.translation.y = -3.0f;
-	//cubeModel->transform.scale = { 5.0f,5.0f, 0.05f };
-	//cubeModel->isActive = true;
-	//cubeModel->material.enableLighting = true;
+	// 立方体
+	cube.texture = monsterBall;
+	cube.material.enableLighting = true;
+	cube.name = "Cube";
+
+	// カプセル
+	capsule.transform.translation = { 1.0f,-0.2f,-2.0f };
+	capsule.end = { 2.4f,1.2f,1.7f };
+	capsule.radius = 0.2f;
+	capsule.material.enableLighting = true;
+	capsule.name = "Capsule";
+
+
+	// 地面モデル
+	ground.LoadFile("cube/cube.obj");
+	ground.transform.translation.y = -1.5f;
+	ground.transform.scale = { 10.0f,0.1f, 10.0f };
+	ground.material.enableLighting = true;
+	ground.name = "Ground";
+
+	// 壁モデル
+	wall[0].LoadFile("cube/cube.obj");
+	wall[0].transform.translation = { 0.0f,-5.0f,3.0f };
+	wall[0].transform.scale = { 10.0f,10.0f, 0.05f };
+	wall[0].material.enableLighting = true;
+	wall[0].isActive = true;
+	wall[0].name = "Wall0";
+	// 左側に壁を置く
+	wall[1].LoadFile("cube/cube.obj");
+	wall[1].transform.translation = {-2.1f, -3.0f, -2.0f};
+	wall[1].transform.rotation.y = -1.54f;
+	wall[1].transform.scale = { 5.0f,5.0f, 0.05f };
+	wall[1].material.enableLighting = true;
+	wall[1].isActive = true;
+	wall[1].name = "Wall1";
+	// テストモデル
 	//stressTestModel = LWP::Resource::LoadModel("RGM-96XJesta_13_td.obj");
 	//stressTestModel->material.enableLighting = true;
 	//stressTestModel->isActive = true;
-	// 左側に壁を置く
-	//Primitive::Mesh* cube2 = LWP::Resource::LoadModel("cube/cube.obj");
-	//cube2->transform.translation = { -2.1f, -3.0f, -2.0f };
-	//cube2->transform.rotation.y = -1.54f;
-	//cube2->transform.scale = { 5.0f,5.0f, 0.05f };
-	//cube2->isActive = true;
 
 
 	// 平行光源
-	Object::DirectionLight* dirLight = Object::CreateInstance<Object::DirectionLight>();
-	dirLight->isActive = true;
-	dirLight->intensity = 0.3f;
+	//Object::DirectionLight* dirLight = Object::CreateInstance<Object::DirectionLight>();
+	//dirLight->isActive = true;
+	//dirLight->intensity = 0.3f;
 
 	// 点光源
-	Object::PointLight* pL1 = Object::CreateInstance<Object::PointLight>();
-	pL1->transform.translation = { 1.6f,0.0f,-0.1f };
-	pL1->intensity = 0.3f;
-	pL1->isActive = true;
-	Object::PointLight* pL2 = Object::CreateInstance<Object::PointLight>();
-	pL2->transform.translation = { -1.5f,-0.1f,-0.1f };
-	pL2->intensity = 0.3f;
-	pL2->isActive = true;
+	Object::PointLight* pL = Object::CreateInstance<Object::PointLight>();
+	pL->transform.translation = { -0.94f,0.0f,-2.7f };
+	pL->radius = 13.0f;
+	pL->intensity = 0.3f;
+	pL->isActive = true;
 
-	//// 複数画面描画の結果を張り付けるスプライト
-	////Sprite* s = LWP::Primitive::CreateInstance<Sprite>();
-	//s->texture = subCamera->GetRenderTexture();
-	//s->isUI = true;
-	////Sprite* s2 = LWP::Primitive::CreateInstance<Sprite>();
-	//s2->transform.translation.x = 640.0f;
-	//s2->texture = c->GetRenderTexture();
-	//s2->isUI = true;
+	// 複数画面描画の結果を張り付けるスプライト
+	sprite[0].texture = subCamera->GetRenderTexture();
+	sprite[0].isUI = true;
+	sprite[0].name = "Sprite0";
+	sprite[1].transform.translation.x = 640.0f;
+	sprite[1].texture = subCamera2->GetRenderTexture();
+	sprite[1].isUI = true;
+	sprite[1].name = "Sprite1";
 
 
 	// パーティクルテスト
@@ -151,11 +167,7 @@ void SampleTitle::Initialize() {
 	//	};
 	//particle->isActive = true;
 
-	mainCamera->isUsePostProcess = false;
-	subCamera->isUsePostProcess = false;
-	c->isUsePostProcess = false;
 
-	cube.texture = monsterBall;
 
 	Collider::AABB* aabbCol = LWP::Common::CreateInstance<Collider::AABB>();
 	aabbCol->CreateFromPrimitive(&cube);
