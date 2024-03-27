@@ -171,12 +171,7 @@ bool Manager::CheckCollision(AABB* c1, Capsule* c2) {
 	float dot = Vector3::Dot(d, e);
 
 	float t = dot / length;
-	if (t > 1) {
-		t = 1;
-	}
-	else if (t < 0) {
-		t = 0;
-	}
+	t = std::clamp<float>(t, 0.0f, 1.0f);
 	// 線形補間
 	Vector3 f;
 	f.x = (1.0f - t) * capsule.start.x + t * capsule.end.x;
