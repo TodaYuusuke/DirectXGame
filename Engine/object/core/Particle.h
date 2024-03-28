@@ -14,24 +14,28 @@ namespace LWP::Object {
 	/// パーティクル
 	/// </summary>
 	class Particle final : public IObject {
-	public: // ** パブリックなメンバ変数 ** //
-
-		// ワールドトランスフォームの配列
-
 	public: // ** メンバ関数 ** //
+		// デストラクタ
+		~Particle();
 
 		// 初期化
 		void Initialize() override;
 		// 更新
 		void Update(Base::CommandManager* manager) override;
 
+		// パーティクルの形状を指定
+		template<IsIPrimitive T>
+		void SetPrimitive() { 
+			if (primitive) { delete primitive; }
+			primitive = new T(); 
+		}
+		// トランスフォームをいじる
+		Object::WorldTransform* Transform() { return &primitive->transform; }
 		// パーティクルを追加
 		void Add(int value);
 		// デバッグ用GUI
 		void DebugGUI() override;
 
-		// パーティクルの形状を設定
-		LWP::Primitive::IPrimitive* primitive = nullptr;
 		// 初期化関数ポインタ（）
 		std::function<ParticleData(LWP::Primitive::IPrimitive*)> initFunction = nullptr;
 		// 更新ポインタ（返り値：このWTFを削除するかのフラグ）
@@ -40,6 +44,8 @@ namespace LWP::Object {
 
 	private: // ** メンバ変数 ** //
 
+		// パーティクルの形状
+		LWP::Primitive::IPrimitive* primitive = nullptr;
 		// パーティクルのトランスフォーム
 		std::vector<ParticleData> data;
 	};

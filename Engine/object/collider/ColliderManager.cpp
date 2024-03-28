@@ -17,6 +17,7 @@ void Manager::Initialize() {
 	//	delete c;
 	//}
 	//colliders_.clear();
+	colliderCount_ = 0;
 
 	// 関数ポインタをセット
 	checkCollisions_[0][0] = [this](ICollider* c1, ICollider* c2) { return CheckCollision(dynamic_cast<AABB*>(c1), dynamic_cast<AABB*>(c2)); };
@@ -117,13 +118,7 @@ void Manager::Update() {
 
 void Manager::SetPointer(ICollider* ptr) {
 	colliders_.SetPointer(ptr);
-
-	// カウントのマップから数を測定し、デフォルトの名前を登録
-	if (!colliderCountMap_.count(ptr->name)) {
-		// 存在しない場合のみ0で初期化
-		colliderCountMap_[ptr->name] = 0;
-	}
-	ptr->name += std::to_string(colliderCountMap_[ptr->name]++);
+	ptr->name += std::to_string(colliderCount_++);
 }
 void Manager::DeletePointer(ICollider* ptr) {
 	colliders_.DeletePointer(ptr);

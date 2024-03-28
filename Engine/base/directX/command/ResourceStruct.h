@@ -68,11 +68,13 @@ namespace LWP::Base {
 	// カメラ構造体
 	struct CameraStruct {
 		Math::Matrix4x4 viewProjection;
+		Math::Matrix4x4 rotate;
 		Math::Vector3 position;
 
 		// Materialクラスのデータを代入する演算子をオーバーロード
 		CameraStruct& operator=(const Object::Camera& value) {
 			viewProjection = value.GetViewProjection();
+			rotate = value.transform.GetRotateMatrix();
 			position = value.transform.GetWorldPosition();
 			return *this;
 		}
@@ -91,11 +93,17 @@ namespace LWP::Base {
 	// ワールドトランスフォーム構造体
 	struct WTFStruct {
 		Math::Matrix4x4 wtf;
+		Math::Matrix4x4 translate;
+		Math::Matrix4x4 rotate;
+		Math::Matrix4x4 scale;
 		Math::Matrix4x4 inverse;
 
 		// ワールドトランスフォームクラスのデータを代入する演算子をオーバーロード
 		WTFStruct& operator=(const Object::WorldTransform& value) {
 			wtf = value.GetWorldMatrix();
+			translate = value.GetTranslationMatrix();
+			rotate = value.GetRotateMatrix();
+			scale = value.GetScaleMatrix();
 			inverse = value.GetWorldMatrix().Inverse();
 			return *this;
 		}

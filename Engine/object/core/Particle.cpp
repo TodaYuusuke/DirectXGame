@@ -6,6 +6,10 @@ using namespace LWP::Math;
 using namespace LWP::Info;
 using namespace LWP::Resource;
 
+Particle::~Particle() {
+	if (primitive) { delete primitive; }
+}
+
 // 初期化
 void Particle::Initialize() {}
 // 更新

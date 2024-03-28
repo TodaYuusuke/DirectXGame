@@ -46,9 +46,8 @@ namespace LWP::Primitive {
 
 		// 形状のリスト
 		Utility::PtrManager<IPrimitive*> primitives_;
-
-		// インスタンスカウント用マップ
-		std::map<std::string, int> primitiveCountMap_;
+		// カウンター
+		int primitiveCount_ = 0;
 		
 #if DEMO
 		// ImGui用変数

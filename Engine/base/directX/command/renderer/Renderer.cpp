@@ -100,3 +100,9 @@ void Renderer::AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWir
 		}
 	}
 }
+void Renderer::AddRenderData2DBill(const IndexInfoStruct& indexInfo) {
+	mainRenderer_->AddRenderData2DBill(indexInfo);
+}
+void Renderer::AddRenderData3DBill(const IndexInfoStruct& indexInfo) {
+	mainRenderer_->AddRenderData3DBill(indexInfo);
+}

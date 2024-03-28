@@ -64,6 +64,8 @@ namespace LWP::Base {
 		void SetRenderTarget(LWP::Object::Camera* camera);
 		// レンダリングするためのデータをセットする関数
 		void AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWireFrame);
+		void AddRenderData2DBill(const IndexInfoStruct& indexInfo);
+		void AddRenderData3DBill(const IndexInfoStruct& indexInfo);
 
 		// サブレンダリングのためにRootSignatureを返す関数
 		RootSignature* GetRoot() { return root_.get(); }
@@ -82,12 +84,16 @@ namespace LWP::Base {
 		// レンダリングに使うデータ
 		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfoSolid_;
 		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfoWire_;
+		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfo2dBill_;
+		std::unique_ptr<IStructured<IndexInfoStruct>> indexInfo3dBill_;
 
 		// ルートシグネチャ
 		std::unique_ptr<RootSignature> root_;
 		// PSO
 		std::unique_ptr<PSO> psoSolid_;
 		std::unique_ptr<PSO> psoWire_;
+		std::unique_ptr<PSO> pso2dBill_;
+		std::unique_ptr<PSO> pso3dBill_;
 		// ディスクリプタヒープ管理クラスのポインタ
 		HeapManager* heaps_ = nullptr;
 		// レンダリングにつかうリソースのViewをまとめた構造体

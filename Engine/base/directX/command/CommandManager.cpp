@@ -404,6 +404,94 @@ void CommandManager::SetParticleData(Primitive::IPrimitive* primitive, std::vect
 	}
 }
 
+void CommandManager::SetDrawDataBill2D(Primitive::IPrimitive* primitive) {
+
+	uint32_t startIndexNum = vertexData_->GetCount();
+
+	// 頂点データを登録
+	for (int i = 0; i < primitive->GetVertexCount(); i++) {
+		VertexStruct ver;
+		ver = primitive->vertices[i];
+		if (primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
+			ver.color_ = primitive->commonColor->GetVector4();
+		vertexData_->AddData(ver);	// データを追加
+	}
+	// ワールドトランスフォームをデータに登録
+	uint32_t worldMatrix = transformData_->GetCount();
+	WTFStruct wtf;
+	wtf = primitive->transform;
+	transformData_->AddData(wtf);
+	// マテリアルをデータに登録
+	uint32_t material = materialData_->GetCount();
+	MaterialStruct m;
+	m = primitive->material;
+	materialData_->AddData(m);
+	// テクスチャのインデックスを貰う
+	uint32_t tex2d = defaultTexture_->GetIndex();
+	if (primitive->texture.t != nullptr) {
+		tex2d = primitive->texture.t->GetIndex();
+	}
+
+	// Indexの分だけIndexInfoを求める
+	for (int i = 0; i < primitive->GetIndexCount(); i++) {
+		IndexInfoStruct indexInfo = {
+			startIndexNum + primitive->indexes[i],
+			worldMatrix,
+			material,
+			tex2d,
+			primitive->isUI
+		};
+
+		// メインコマンドにデータをセット
+		//mainCommand_->SetDrawData(indexInfo);
+		renderer_->AddRenderData2DBill(indexInfo);
+	}
+}
+
+void CommandManager::SetDrawDataBill3D(Primitive::IPrimitive* primitive) {
+
+	uint32_t startIndexNum = vertexData_->GetCount();
+
+	// 頂点データを登録
+	for (int i = 0; i < primitive->GetVertexCount(); i++) {
+		VertexStruct ver;
+		ver = primitive->vertices[i];
+		if (primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
+			ver.color_ = primitive->commonColor->GetVector4();
+		vertexData_->AddData(ver);	// データを追加
+	}
+	// ワールドトランスフォームをデータに登録
+	uint32_t worldMatrix = transformData_->GetCount();
+	WTFStruct wtf;
+	wtf = primitive->transform;
+	transformData_->AddData(wtf);
+	// マテリアルをデータに登録
+	uint32_t material = materialData_->GetCount();
+	MaterialStruct m;
+	m = primitive->material;
+	materialData_->AddData(m);
+	// テクスチャのインデックスを貰う
+	uint32_t tex2d = defaultTexture_->GetIndex();
+	if (primitive->texture.t != nullptr) {
+		tex2d = primitive->texture.t->GetIndex();
+	}
+
+	// Indexの分だけIndexInfoを求める
+	for (int i = 0; i < primitive->GetIndexCount(); i++) {
+		IndexInfoStruct indexInfo = {
+			startIndexNum + primitive->indexes[i],
+			worldMatrix,
+			material,
+			tex2d,
+			primitive->isUI
+		};
+
+		// メインコマンドにデータをセット
+		//mainCommand_->SetDrawData(indexInfo);
+		renderer_->AddRenderData3DBill(indexInfo);
+	}
+}
+
 void CommandManager::InitializeDXC() {
 	HRESULT hr = S_FALSE;
 

@@ -46,6 +46,8 @@ namespace LWP::Object::Collider {
 		// マスク処理
 		Mask mask;
 
+		// 固有名詞
+		std::string name = "ICollider";
 		// 動くかのフラグ
 		bool isMove = true;
 		// アクティブ切り替え
@@ -53,7 +55,6 @@ namespace LWP::Object::Collider {
 #if DEMO
 		// ** デバッグ用の変数 ** //
 		bool isShowWireFrame = true;
-		std::string name = "ICollider";	// 固有名詞
 #endif
 
 

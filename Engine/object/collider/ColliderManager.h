@@ -38,14 +38,14 @@ namespace LWP::Object::Collider {
 
 		// コライダーのリスト
 		Utility::PtrManager<ICollider*> colliders_;
-
+		// カウンター
+		int colliderCount_ = 0;
+		
 		// 関数ポインタの型
 		using CollisionFunction = std::function<bool(ICollider*, ICollider*)>;
 		CollisionFunction checkCollisions_[4][4];	// Shape::Countの値がサイズだよ！
 
 #if DEMO
-		// インスタンスカウント用マップ
-		std::map<std::string, int> colliderCountMap_;
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;

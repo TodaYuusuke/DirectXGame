@@ -260,6 +260,12 @@
     <ClCompile Include="Engine\object\IObject.cpp">
       <Filter>Engine\object</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\2d\Billboard3D.cpp">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -577,6 +583,12 @@
     <ClInclude Include="Adapter\component\Primitive.h">
       <Filter>Adapter\component</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Billboard2D.h">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\2d\Billboard3D.h">
+      <Filter>Engine\primitive\2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -722,16 +734,25 @@
     <FxCompile Include="resources\system\shaders\postProcess\LensDistortion.PS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\PassThrough.VS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </FxCompile>
     <FxCompile Include="resources\system\shaders\postProcess\CCTV.PS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
     <FxCompile Include="resources\system\shaders\postProcess\SSAO.PS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
+    <FxCompile Include="resources\system\shaders\Billboard2D.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\Billboard3D.VS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\Billboard.PS.hlsl">
+      <Filter>Engine\resources\shaders</Filter>
+    </FxCompile>
     <FxCompile Include="resources\system\shaders\postProcess\PostProcess.PS.hlsl">
+      <Filter>Engine\resources\shaders\postProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\system\shaders\postProcess\PassThrough.VS.hlsl">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
   </ItemGroup>

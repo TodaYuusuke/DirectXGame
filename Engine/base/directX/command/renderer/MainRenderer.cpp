@@ -43,6 +43,16 @@ void MainRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 		.SetVertexShader("Object3d.VS.hlsl")
 		.SetPixelShader("Object3d.PS.hlsl")
 		.Build(device);
+	pso2dBill_ = std::make_unique<PSO>();
+	pso2dBill_->Init(root_->GetRoot(), dxc)
+		.SetVertexShader("Billboard2D.VS.hlsl")
+		.SetPixelShader("Billboard.PS.hlsl")
+		.Build(device);
+	pso3dBill_ = std::make_unique<PSO>();
+	pso3dBill_->Init(root_->GetRoot(), dxc)
+		.SetVertexShader("Billboard3D.VS.hlsl")
+		.SetPixelShader("Billboard.PS.hlsl")
+		.Build(device);
 	// ヒープ管理クラスをセット
 	heaps_ = heaps;
 
@@ -56,6 +66,8 @@ void MainRenderer::Init(ID3D12Device* device, DXC* dxc, HeapManager* heaps) {
 	// IndexInfoの実態作成
 	indexInfoSolid_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
 	indexInfoWire_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	indexInfo2dBill_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
+	indexInfo3dBill_ = std::make_unique<IStructured<IndexInfoStruct>>(device, heaps_->srv(), lwpC::Rendering::kMaxIndex);
 }
 void MainRenderer::SetViewStruct(ViewStruct viewStruct) {
 	viewStruct_ = viewStruct;
@@ -97,6 +109,15 @@ void MainRenderer::Draw(ID3D12GraphicsCommandList* list) {
 	list->SetPipelineState(psoWire_->GetState());
 	list->DrawInstanced(3, indexInfoWire_->GetCount() / 3, 0, 0);
 
+	// ビルボード2Dも描画する
+	list->SetGraphicsRootDescriptorTable(0, indexInfo2dBill_->GetView());
+	list->SetPipelineState(pso2dBill_->GetState());
+	list->DrawInstanced(3, indexInfo2dBill_->GetCount() / 3, 0, 0);
+	// ビルボード3Dも描画する
+	list->SetGraphicsRootDescriptorTable(0, indexInfo3dBill_->GetView());
+	list->SetPipelineState(pso3dBill_->GetState());
+	list->DrawInstanced(3, indexInfo3dBill_->GetCount() / 3, 0, 0);
+
 	if (renderData_->target->isUsePostProcess) {
 		PostDraw(list);
 	}
@@ -107,6 +128,8 @@ void MainRenderer::Draw(ID3D12GraphicsCommandList* list) {
 void MainRenderer::Reset() {
 	indexInfoSolid_->Reset();
 	indexInfoWire_->Reset();
+	indexInfo2dBill_->Reset();
+	indexInfo3dBill_->Reset();
 }
 
 void MainRenderer::SetRenderTarget(Camera* camera) {
@@ -121,6 +144,12 @@ void MainRenderer::AddRenderData(const IndexInfoStruct& indexInfo, const bool& i
 	else {
 		indexInfoSolid_->AddData(indexInfo);
 	}
+}
+void MainRenderer::AddRenderData2DBill(const IndexInfoStruct& indexInfo) {
+	indexInfo2dBill_->AddData(indexInfo);
+}
+void MainRenderer::AddRenderData3DBill(const IndexInfoStruct& indexInfo) {
+	indexInfo3dBill_->AddData(indexInfo);
 }
 
 void MainRenderer::PreDraw(ID3D12GraphicsCommandList* list) {

@@ -127,39 +127,38 @@ void SampleTitle::Initialize() {
 
 
 	// パーティクルテスト
-	//particle = Object::CreateInstance<Object::Particle>();
-	//particle->primitive = LWP::Resource::LoadModel("cube/cube.obj");
-	//particle->initFunction = [](Primitive::IPrimitive* primitive) {
-	//	Object::ParticleData newData{};
-	//	newData.wtf.translation = primitive->transform.GetWorldPosition();
-	//	newData.wtf.rotation = primitive->transform.rotation;
-	//	newData.wtf.scale = primitive->transform.scale;
+	particle.SetPrimitive<Primitive::Surface>();
+	particle.initFunction = [](Primitive::IPrimitive* primitive) {
+		Object::ParticleData newData{};
+		newData.wtf.translation = primitive->transform.GetWorldPosition();
+		newData.wtf.rotation = primitive->transform.rotation;
+		newData.wtf.scale = primitive->transform.scale;
 
-	//	// 速度ベクトルを生成
-	//	int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
-	//	int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
-	//	int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
-	//	// 発射のベクトル
-	//	Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
-	//	newData.velocity = dir.Normalize() * 0.2f;
+		// 速度ベクトルを生成
+		int dir1 = Utility::GenerateRandamNum<int>(-100, 100);
+		int dir2 = Utility::GenerateRandamNum<int>(-100, 100);
+		int dir3 = Utility::GenerateRandamNum<int>(-100, 100);
+		// 発射のベクトル
+		Math::Vector3 dir{ dir1 / 100.0f,dir2 / 100.0f, dir3 / 100.0f };
+		newData.velocity = dir.Normalize() * 0.2f;
 
-	//	// パーティクル追加
-	//	return newData;
-	//	};
-	//particle->updateFunction = [](Object::ParticleData* data) {
-	//	// 経過フレーム追加
-	//	data->elapsedFrame++;
+		// パーティクル追加
+		return newData;
+		};
+	particle.updateFunction = [](Object::ParticleData* data) {
+		// 経過フレーム追加
+		data->elapsedFrame++;
 
-	//	data->wtf.translation += data->velocity;	// 速度ベクトルを加算
-	//	data->wtf.rotation += data->velocity;	// ついでに回転させとく
-	//	data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
+		data->wtf.translation += data->velocity;	// 速度ベクトルを加算
+		data->wtf.rotation += data->velocity;	// ついでに回転させとく
+		data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
 
-	//	// 速度ベクトルを弱める
-	//	data->velocity *= 0.9f;
+		// 速度ベクトルを弱める
+		data->velocity *= 0.9f;
 
-	//	return data->elapsedFrame > 180 ? true : false;
-	//	};
-	//particle->isActive = true;
+		return data->elapsedFrame > 180 ? true : false;
+		};
+	particle.isActive = true;
 
 
 
@@ -224,7 +223,7 @@ void SampleTitle::Update() {
 	}
 	// パーティクル呼び出し
 	if (Keyboard::GetTrigger(DIK_P)) {
-		particle->Add(16);
+		particle.Add(16);
 	}
 	// プログラム終了
 	if (Keyboard::GetTrigger(DIK_O)) {

@@ -13,7 +13,7 @@ void Manager::Initialize() {
 	//	delete o;
 	//}
 	//objects_.clear();
-	objectCountMap_.clear();
+	objectCount_ = 0;
 }
 
 void Manager::Update(Base::CommandManager* manager) {
@@ -62,13 +62,7 @@ void Manager::Update(Base::CommandManager* manager) {
 
 void Manager::SetPointer(IObject* ptr) {
 	objects_.SetPointer(ptr);
-
-	// カウントのマップから数を測定し、デフォルトの名前を登録
-	if (!objectCountMap_.count(ptr->name)) {
-		// 存在しない場合のみ0で初期化
-		objectCountMap_[ptr->name] = 0;
-	}
-	ptr->name += std::to_string(objectCountMap_[ptr->name]++);
+	ptr->name += std::to_string(objectCount_++);
 }
 void Manager::DeletePointer(IObject* ptr) {
 	objects_.DeletePointer(ptr);

@@ -10,7 +10,8 @@ void Manager::Initialize() {
 	//	delete p;
 	//}
 	//primitives_.list.clear();
-	primitiveCountMap_.clear();
+	primitiveCount_ = 0;
+	
 #if DEMO
 	for (IPrimitive* p : debugPris) {
 		delete p;
@@ -24,6 +25,8 @@ void Manager::Update() {
 #if DEMO
 	// 生成用の関数ポインタ
 	static std::vector<std::function<void()>> functions = {
+		[this]() { debugPris.push_back(new Billboard2D()); },
+		[this]() { debugPris.push_back(new Billboard3D()); },
 		[this]() { debugPris.push_back(new Surface()); },
 		//[this]() { debugPris.push_back(new Sprite()); },
 		[this]() { debugPris.push_back(new Triangle()); },
@@ -34,7 +37,7 @@ void Manager::Update() {
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Surface",/*"Sprite",*/"Triangle", "Capsule", "Cube",/*"Mesh",*/ "Sphere"
+		"Billboard2D","Billboard3D","Surface",/*"Sprite",*/"Triangle", "Capsule", "Cube",/*"Mesh",*/ "Sphere"
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -77,13 +80,7 @@ void Manager::Draw(Base::CommandManager* manager) {
 // インスタンスのポインタをセット（ユーザー呼び出し不要）
 void Manager::SetPointer(IPrimitive* ptr) {
 	primitives_.SetPointer(ptr);
-
-	// カウントのマップから数を測定し、デフォルトの名前を登録
-	if (!primitiveCountMap_.count(ptr->name)) {
-		// 存在しない場合のみ0で初期化
-		primitiveCountMap_[ptr->name] = 0;
-	}
-	ptr->name += std::to_string(primitiveCountMap_[ptr->name]++);
+	ptr->name += std::to_string(primitiveCount_++);
 }
 // インスタンスのポインタを解放（ユーザー呼び出し不要）
 void Manager::DeletePointer(IPrimitive* ptr) {

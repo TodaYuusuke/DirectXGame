@@ -38,8 +38,8 @@ namespace LWP::Object {
 
 		// オブジェクトのリスト
 		Utility::PtrManager<IObject*> objects_;
-		// インスタンスカウント用マップ
-		std::map<std::string, int> objectCountMap_;
+		// カウンター
+		int objectCount_ = 0;
 
 #if DEMO
 		// ImGui用変数

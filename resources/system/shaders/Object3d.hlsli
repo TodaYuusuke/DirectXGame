@@ -7,11 +7,15 @@ struct Vertex {
 };
 struct WorldTransform {
     float32_t4x4 wtf;
+    float32_t4x4 translate;
+    float32_t4x4 rotate;
+    float32_t4x4 scale;
     float32_t4x4 inverse;
 };
 
 struct CameraData {
     float32_t4x4 m;  // !< ビュープロジェクション
+    float32_t4x4 rotate; // !< ビルボード用の回転行列
     float32_t3 position;
 };
 

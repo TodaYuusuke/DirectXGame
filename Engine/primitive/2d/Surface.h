@@ -5,7 +5,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 平面
 	/// </summary>
-	class Surface final
+	class Surface
 		: public IPrimitive {
 	public:
 		// ** 関数 ** //

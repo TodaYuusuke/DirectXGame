@@ -33,7 +33,8 @@ namespace LWP::Base {
 
 		// レンダリングに使うデータを追加する関数
 		void AddRenderData(const IndexInfoStruct& indexInfo, const bool& isWireFrame, const bool& isMain);
-
+		void AddRenderData2DBill(const IndexInfoStruct& indexInfo);
+		void AddRenderData3DBill(const IndexInfoStruct& indexInfo);
 
 	private: // ** メンバ変数 ** //
 

@@ -82,6 +82,8 @@ namespace LWP::Base {
 		/// </summary>
 		void SetDrawData(Primitive::IPrimitive* primitive);
 		void SetParticleData(Primitive::IPrimitive* primitive, std::vector<Object::ParticleData>& wtf);
+		void SetDrawDataBill2D(Primitive::IPrimitive* primitive);
+		void SetDrawDataBill3D(Primitive::IPrimitive* primitive);
 
 		/// <summary>
 		/// テクスチャのリソースを作成
