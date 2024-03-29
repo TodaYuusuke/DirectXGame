@@ -11,6 +11,10 @@ ICollider::ICollider() {
 }
 // デストラクタ
 ICollider::~ICollider() {
+	if (follow_.t) {
+		delete follow_.t;
+	}
+
 	DeletePointer(this);
 }
 
