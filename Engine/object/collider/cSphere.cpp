@@ -22,6 +22,14 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 #endif
 }
 
+Sphere::~Sphere() {
+#if DEMO
+	if (sphereModel) {
+		delete sphereModel;
+	}
+#endif
+}
+
 
 void Sphere::Create(const LWP::Math::Vector3& pos) { Create(pos, 1.0f); }
 void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {

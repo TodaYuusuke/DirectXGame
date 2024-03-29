@@ -26,6 +26,9 @@ namespace LWP::Object::Collider {
 		Sphere(const float& rad);
 		Sphere(const LWP::Math::Vector3& pos, const float& rad);
 
+		// デストラクタ
+		~Sphere();
+
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& pos);
 		void Create(const LWP::Math::Vector3& pos, const float& rad);
