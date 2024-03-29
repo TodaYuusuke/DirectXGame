@@ -23,6 +23,7 @@ namespace LWP::Object::Collider {
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
 
+
 		// 場所を指定して生成する関数
 		virtual void Create(const LWP::Math::Vector3& position);
 		virtual void Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size);

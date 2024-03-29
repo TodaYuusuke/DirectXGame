@@ -1,10 +1,9 @@
 #pragma once
 #include "ICollider.h"
 
-// 前方宣言
-namespace LWP::Primitive {
-	class Capsule;
-}
+#if DEMO
+#include "primitive/3d/Capsule.h"
+#endif
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -27,6 +26,7 @@ namespace LWP::Object::Collider {
 		Capsule(const LWP::Math::Vector3& start);
 		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
 		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
+		
 
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
@@ -47,7 +47,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Capsule* capsuleModel = nullptr;
+		LWP::Primitive::Capsule capsuleModel;
 	public:
 		// デバッグ用の描画関数
 		void ShowWireFrame() override;

@@ -1,8 +1,5 @@
 #include "cSphere.h"
 #include "base/ImGuiManager.h"
-#if DEMO
-#include "component/Primitive.h"
-#endif
 
 using namespace LWP::Object::Collider;
 using namespace LWP;
@@ -17,16 +14,7 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	sphereModel = new Primitive::Sphere();
-	sphereModel->CreateFromSphereCol(*this);
-#endif
-}
-
-Sphere::~Sphere() {
-#if DEMO
-	if (sphereModel) {
-		delete sphereModel;
-	}
+	sphereModel.CreateFromSphereCol(*this);
 #endif
 }
 
@@ -66,9 +54,9 @@ void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 #if DEMO
 void Sphere::ShowWireFrame() {
 	// isActive切り替え
-	sphereModel->isActive = isShowWireFrame && isActive;
+	sphereModel.isActive = isShowWireFrame && isActive;
 	// hitしているときは色を変える
-	sphereModel->commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+	sphereModel.commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 };
 #endif
 
@@ -78,7 +66,7 @@ void Sphere::UpdateShape() {
 		CreateFromPrimitive(follow_.t);
 	}
 #if DEMO
-	sphereModel->CreateFromSphereCol(*this);	// cube再生成
+	sphereModel.CreateFromSphereCol(*this);	// cube再生成
 #endif
 }
 

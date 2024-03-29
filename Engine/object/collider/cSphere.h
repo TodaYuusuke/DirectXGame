@@ -1,10 +1,9 @@
 #pragma once
 #include "ICollider.h"
 
-// 前方宣言
-namespace LWP::Primitive {
-	class Sphere;
-}
+#if DEMO
+#include "primitive/3d/Sphere.h"
+#endif
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -26,9 +25,6 @@ namespace LWP::Object::Collider {
 		Sphere(const float& rad);
 		Sphere(const LWP::Math::Vector3& pos, const float& rad);
 
-		// デストラクタ
-		~Sphere();
-
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& pos);
 		void Create(const LWP::Math::Vector3& pos, const float& rad);
@@ -48,7 +44,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Sphere* sphereModel = nullptr;
+		LWP::Primitive::Sphere sphereModel;
 	public:
 		// デバッグ用の描画関数
 		void ShowWireFrame() override;
