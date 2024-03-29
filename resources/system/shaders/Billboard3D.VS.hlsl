@@ -39,9 +39,12 @@ VertexShaderOutput main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : S
     
     output.worldPos = mul(gVertex[v].position, gWorldTransform[w].wtf).xyz;
     
-    float4x4 m = DirectionToDirection(output.worldPos, gCameraData.position);
-    //float4x4 mat = mul(mul(gWorldTransform[w].scale, m), gWorldTransform[w].translate);
-    output.position = mul(mul(gVertex[v].position, gWorldTransform[w].wtf), gCameraData.m);
+    // billboardの向いている方向
+    float3 from = normalize(float3(0.0f, 0.0f, -1.0f));
+    // ビルボードからカメラ方向のベクトル
+    float3 to = normalize(gCameraData.position - output.worldPos);
+    float4x4 m = DirectionToDirection(from, to);
+    output.position = mul(mul(mul(gVertex[v].position, m), gWorldTransform[w].wtf), gCameraData.m);
     
     //float4x4 m = DirectionToDirection(output.worldPos, gCameraData.position);
     //output.position = mul(mul(gVertex[v].position, gWorldTransform[w].wtf), gCameraData.m);
