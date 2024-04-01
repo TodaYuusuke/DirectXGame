@@ -44,14 +44,14 @@ namespace LWP::Math {
 		/// </summary>
 		/// <param name="v">... ベクトル</param>
 		/// <returns>ベクトルの長さ</returns>
-		float Length() const;
+		[[nodiscard]] float Length() const;
 
 		/// <summary>
 		/// 3次元ベクトルの正規化を求める
 		/// </summary>
 		/// <param name="v">... ベクトル</param>
 		/// <returns>正規化されたベクトル</returns>
-		Vector3 Normalize() const;
+		[[nodiscard]] Vector3 Normalize() const;
 
 
 		// *** 静的なメンバ関数 *** //
@@ -62,7 +62,7 @@ namespace LWP::Math {
 		/// <param name="v1">... ベクトル1</param>
 		/// <param name="v2">... ベクトル2</param>
 		/// <returns>内積</returns>
-		static float Dot(const Vector3& v1, const Vector3& v2);
+		[[nodiscard]] static float Dot(const Vector3& v1, const Vector3& v2);
 
 		/// <summary>
 		/// クロス積を求める
@@ -70,7 +70,7 @@ namespace LWP::Math {
 		/// <param name="v1">... ベクトル１</param>
 		/// <param name="v2">... ベクトル２</param>
 		/// <returns>クロス積</returns>
-		static Vector3 Cross(const Vector3& v1, const Vector3& v2);
+		[[nodiscard]] static Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
 
 		/// <summary>
@@ -79,11 +79,11 @@ namespace LWP::Math {
 		/// <param name="v1">... ベクトル１</param>
 		/// <param name="v2">... ベクトル２</param>
 		/// <returns></returns>
-		static float Distance(const Vector3& v1, const Vector3& v2);
+		[[nodiscard]] static float Distance(const Vector3& v1, const Vector3& v2);
 
 		// 線形補完
-		static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+		[[nodiscard]] static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 		// 球面線形補間
-		static Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+		[[nodiscard]] static Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
 	};
 }
