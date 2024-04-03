@@ -10,7 +10,6 @@
 
 #include <Config.h>
 namespace RenderingPara = LWP::Config::Rendering;
-namespace FPSPara = LWP::Config::FrameRate;
 
 #include <Adapter.h>
 
@@ -161,9 +160,6 @@ void CommandManager::DrawCall() {
 
 	// 実行
 	ExecuteLambda();
-
-	// GPUとOSに画面の交換を行うよう通知する
-	heaps_->rtv()->GetSwapChain()->Present(FPSPara::kVsync, 0);	// 垂直同期をする際は左の数字を1にする
 }
 
 void CommandManager::PostDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}

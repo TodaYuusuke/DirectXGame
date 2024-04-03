@@ -9,17 +9,30 @@ namespace DirectX {
 }
 
 namespace LWP::Base {
+	struct SRVInfo : public HeapInfo {
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc;
+	};
+
 	/// <summary>
 	/// RenderTargetView
 	/// </summary>
 	class SRV : public IDescriptorHeap {
-	public:
-		// ** メンバ関数 ** //
+	public:	// ** メンバ関数 ** //
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		SRV() = delete;
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		SRV(ID3D12Device* device);
+
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(ID3D12Device* device);
+		void Init(ID3D12Device* device);
 
 		/// <summary>
 		/// Viewを返す関数
@@ -33,7 +46,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// ShaderResourceViewを作成
 		/// </summary>
-		int CreateShaderResourceView(ID3D12Resource* resource, const int width, const int height);
+		SRVInfo CreateShaderResourceView(ID3D12Resource* resource, const int width, const int height);
 
 		/// <summary>
 		/// 深度マップをSRVに登録する関数
@@ -47,8 +60,9 @@ namespace LWP::Base {
 		// テクスチャを読み込んだ数
 		int loadedTextureCount = 0;
 
+
 	private: // ** プライベートなメンバ関数 ** //
 
-		void UploadTextureResource(ID3D12Resource* resource, D3D12_SHADER_RESOURCE_VIEW_DESC desc);
+		void UploadTextureResource(ID3D12Resource* resource, int index, D3D12_SHADER_RESOURCE_VIEW_DESC desc);
 	};
 }

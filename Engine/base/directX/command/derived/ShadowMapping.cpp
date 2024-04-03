@@ -1,7 +1,7 @@
 #include "ShadowMapping.h"
-#include "../../descriptorHeap/RTV.h"
-#include "../../descriptorHeap/DSV.h"
-#include "../../descriptorHeap/SRV.h"
+#include "../../utility/descriptorHeap/RTV.h"
+#include "../../utility/descriptorHeap/DSV.h"
+#include "../../utility/descriptorHeap/SRV.h"
 
 #include <Config.h>
 

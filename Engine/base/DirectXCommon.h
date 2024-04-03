@@ -1,7 +1,11 @@
 #pragma once
-#include "directX/GPUDevice.h"
-#include "directX/descriptorHeap/HeapManager.h"
+#include "directX/utility/GPUDevice.h"
+#include "directX/utility/HeapManager.h"
 #include "directX/command/CommandManager.h"
+
+#include "directX/utility/resource/rendering/BackBuffer.h"
+#include "directX/utility/resource/rendering/DepthStencil.h"
+
 
 #include <memory>
 #include <string>
@@ -47,7 +51,7 @@ namespace LWP::Base {
 		HeapManager* GetHeaps() const { return heaps_.get(); }
 		CommandManager* GetCommandManager() const { return commandManager_.get(); }
 		// ImGui用
-		UINT GetBufferCount() { return heaps_->rtv()->GetSwapChainDesc().BufferCount; }
+		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
 		DXGI_FORMAT GetFormat() { return heaps_->rtv()->GetDesc().Format; }
 		ID3D12DescriptorHeap* GetSRVHeap() { return heaps_->srv()->GetHeap(); }
 
@@ -63,6 +67,15 @@ namespace LWP::Base {
 
 		// RTV、SRV、DSVをまとめて管理するクラス
 		std::unique_ptr<HeapManager> heaps_;
+
+		// スワップチェーン
+		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
+		// Desc
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
+		// バッファー配列
+		std::vector<BackBuffer> backBuffers_;
+		// バックバッファの深度ステンシル
+		DepthStencil depthStencil_;
 
 		// コマンド管理
 		std::unique_ptr<CommandManager> commandManager_;

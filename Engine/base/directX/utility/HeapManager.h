@@ -1,7 +1,7 @@
 #pragma once
-#include "RTV.h"
-#include "SRV.h"
-#include "DSV.h"
+#include "descriptorHeap/RTV.h"
+#include "descriptorHeap/SRV.h"
+#include "descriptorHeap/DSV.h"
 
 #include <memory>
 

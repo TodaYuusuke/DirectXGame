@@ -1,5 +1,5 @@
 #pragma once
-#include "../GPUDevice.h"
+#include "GPUDevice.h"
 
 #include <string>
 #include <dxcapi.h>
@@ -7,6 +7,7 @@
 
 namespace LWP::Base {
 	//*** DirectXシェーダコンパイラ ***//
+	
 	// HLSLコードをバイナリ形式のGPUシェーダーに変換する
 	struct DXC {
 		Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_;				// dxcの汎用オブジェクト

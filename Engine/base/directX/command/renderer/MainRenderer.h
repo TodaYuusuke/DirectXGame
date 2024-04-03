@@ -2,9 +2,9 @@
 #include "resources/texture/RenderTexture.h"
 #include "base/directX/command/ResourceStruct.h"
 #include "base/directX/resource/structuredBuffer/IStructured.h"
-#include "base/directX/command/RootSignature.h"
-#include "base/directX/command/PSO.h"
-#include "base/directX/descriptorHeap/HeapManager.h"
+#include "base/directX/utility/RootSignature.h"
+#include "base/directX/utility/PSO.h"
+#include "base/directX/utility/HeapManager.h"
 #include "Config.h"
 
 // 前方宣言

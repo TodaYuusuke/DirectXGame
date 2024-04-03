@@ -4,17 +4,16 @@
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
-void SRV::Initialize(ID3D12Device* device) {
-	device_ = device;
-	size_ = 128;
-	// サイズを計算
-	kDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+SRV::SRV(ID3D12Device* device) :
+	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128) {}
 
+void SRV::Init(ID3D12Device* device) {
 	// SRV用のヒープでディスクリプタの数は128。SRVはShader内で触るものなので、ShaderVisibleはtrue
-	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, size_, true);
-
+	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSize, true);
+	
 	// 0番目はImGuiが使うので+1しておく
 	count_.Increment();
+	//indexManager_.UseEmpty();
 }
 
 int SRV::CreateShaderResourceView(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
@@ -47,8 +46,9 @@ int SRV::CreateShaderResourceView(ID3D12Resource* resource, const DirectX::Scrat
 	UploadTextureResource(resource, srvDesc);
 	return loadedTextureCount++;
 }
-int SRV::CreateShaderResourceView(ID3D12Resource* resource, const int width, const int height) {
+SRVInfo SRV::CreateShaderResourceView(ID3D12Resource* resource, const int width, const int height) {
 	HRESULT hr = S_FALSE;
+	SRVInfo info;
 
 	// 画素数
 	const UINT pixelCount = width * height;
@@ -68,14 +68,18 @@ int SRV::CreateShaderResourceView(ID3D12Resource* resource, const int width, con
 	assert(SUCCEEDED(hr));
 
 	// SRVの設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
+	info.desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	info.desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	info.desc.Texture2D.MipLevels = 1;
 
-	UploadTextureResource(resource, srvDesc);
-	return loadedTextureCount++;
+	// 空きを使用
+	info.index = indexManager_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	UploadTextureResource(resource, info.index, info.desc);
+	return info;
 }
 
 int SRV::UploadDepthMap(ID3D12Resource* resource) {
@@ -99,14 +103,13 @@ int SRV::UploadDepthMap(ID3D12Resource* resource) {
 }
 
 
-void SRV::UploadTextureResource(ID3D12Resource* resource, D3D12_SHADER_RESOURCE_VIEW_DESC desc) {
+void SRV::UploadTextureResource(ID3D12Resource* resource, int index, D3D12_SHADER_RESOURCE_VIEW_DESC desc) {
 	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので注意）
-	UINT srvIndex = GetAndIncrement();
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = GetCPUHandle(srvIndex);
-	// 初めてのテクスチャ生成ならviewを保存
-	if (loadedTextureCount == 0) {
-		texView_ = GetGPUHandle(srvIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuView = GetCPUHandle(index);
+	// 0番目のテクスチャ生成ならviewを保存
+	if (index == 0) {
+		texView_ = GetGPUHandle(index);
 	}
 	// SRVの生成
-	device_->CreateShaderResourceView(resource, &desc, textureSRVHandleCPU);
+	device_->CreateShaderResourceView(resource, &desc, cpuView);
 }

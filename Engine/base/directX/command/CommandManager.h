@@ -1,7 +1,7 @@
 #pragma once
 #include "Derived/ShadowMapping.h"
-#include "../descriptorHeap/HeapManager.h"
-#include "RootSignature.h"
+#include "../utility/HeapManager.h"
+#include "../utility/RootSignature.h"
 
 #include "renderer/Renderer.h"
 #include "postEffect/PostProcessManager.h"

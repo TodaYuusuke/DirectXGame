@@ -144,7 +144,7 @@ void SampleTitle::Initialize() {
 
 		// パーティクル追加
 		return newData;
-		};
+	};
 	particle.updateFunction = [](Object::ParticleData* data) {
 		// 経過フレーム追加
 		data->elapsedFrame++;
@@ -157,7 +157,7 @@ void SampleTitle::Initialize() {
 		data->velocity *= 0.9f;
 
 		return data->elapsedFrame > 180 ? true : false;
-		};
+	};
 	particle.isActive = true;
 
 

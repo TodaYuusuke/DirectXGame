@@ -1,7 +1,7 @@
 #pragma once
-#include "../GPUDevice.h"
+#include "../utility/GPUDevice.h"
 #include "ResourceStruct.h"
-#include "PSO.h"
+#include "../utility/PSO.h"
 
 #include "../resource/structuredBuffer/IStructured.h"
 

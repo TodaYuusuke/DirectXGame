@@ -1,6 +1,7 @@
 #pragma once
 #include "../IResource.h"
-#include "../../descriptorHeap/SRV.h"
+#
+#include "../../utility/descriptorHeap/SRV.h"
 
 namespace LWP::Base {
 

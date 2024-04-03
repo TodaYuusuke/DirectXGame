@@ -1,15 +1,37 @@
 #pragma once
 #include "../GPUDevice.h"
 
+#include "utility/IndexManager.h"
 #include "utility/Counter.h"
 
 namespace LWP::Base {
+	// Heap情報構造体
+	struct HeapInfo {
+		Utility::Index index;
+		D3D12_CPU_DESCRIPTOR_HANDLE cpuView;
+		D3D12_GPU_DESCRIPTOR_HANDLE gpuView;
+
+		void SetView(IDescriptorHeap* heap) {
+			cpuView = heap->GetCPUHandle(index);
+			gpuView = heap->GetGPUHandle(index);
+		}
+	};
+
 	/// <summary>
-	/// ディスクリプタヒープ
+	/// ディスクリプタヒープ基底クラス
 	/// </summary>
 	class IDescriptorHeap {
-	public:
-		// ** メンバ関数 ** //
+	public: // ** メンバ関数 ** //
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		IDescriptorHeap() = delete;
+		/// <summary>
+		/// コンストラクタ（IndexManagerの初期化値要求）
+		/// </summary>
+		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size);
+
 
 		/// <summary>
 		/// CPU上のDescriptorHandleを取得する関数
@@ -25,10 +47,12 @@ namespace LWP::Base {
 		// Heap
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heap_;
 		// ディスクリプタ1つ分のサイズ定数
-		uint32_t kDescriptorSize_;
+		const uint32_t kElementSize;
+		// ディスクリプタヒープの最大サイズ
+		const uint32_t kMaxSize;
 
-		// ディスクリプタヒープのサイズ
-		uint32_t size_;
+		// インデックス管理
+		Utility::IndexManager indexManager_;
 
 
 	public: // ** getter ** //
@@ -52,6 +76,7 @@ namespace LWP::Base {
 
 		// 使用済みカウンタ
 		LWP::Utility::Counter count_;
+
 
 	protected: // ** プライベートなメンバ関数 ** //
 

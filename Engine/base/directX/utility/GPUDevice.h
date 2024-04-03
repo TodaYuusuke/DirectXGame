@@ -6,7 +6,7 @@
 
 #include <wrl.h>
 
-#include "../WinApp.h"
+#include "base/WinApp.h"
 
 namespace LWP::Base {
 	/// <summary>
@@ -19,7 +19,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize();
+		void Init();
 
 	private: // ** プロパティ変数 ** //
 		// DXGIファクトリー

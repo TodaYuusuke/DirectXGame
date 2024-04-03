@@ -1,12 +1,12 @@
 #include "GPUDevice.h"
-#include "../../utility/MyUtility.h"
+#include "utility/MyUtility.h"
 #include <format>
 
 using namespace LWP::Base;
 using namespace LWP::Utility;
 using namespace Microsoft::WRL;
 
-void GPUDevice::Initialize() {
+void GPUDevice::Init() {
 	HRESULT hr = S_FALSE;
 
 #ifdef _DEBUG

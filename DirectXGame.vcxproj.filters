@@ -119,25 +119,7 @@
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\GPUDevice.cpp">
-      <Filter>Engine\base\directX</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\descriptorHeap\RTV.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\descriptorHeap\SRV.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\descriptorHeap\DSV.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\PSO.cpp">
       <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\ICommand.cpp">
@@ -184,12 +166,6 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\resource\RenderResource.cpp">
       <Filter>Engine\base\directX\resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\descriptorHeap\HeapManager.cpp">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\RootSignature.cpp">
-      <Filter>Engine\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\command\postEffect\PostProcessManager.cpp">
       <Filter>Engine\base\directX\command\postEffect</Filter>
@@ -265,6 +241,39 @@
     </ClCompile>
     <ClCompile Include="Engine\primitive\2d\Billboard3D.cpp">
       <Filter>Engine\primitive\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\HeapManager.cpp">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\PSO.cpp">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\RootSignature.cpp">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\descriptorHeap\DSV.cpp">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\descriptorHeap\IDescriptorHeap.cpp">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\descriptorHeap\RTV.cpp">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\descriptorHeap\SRV.cpp">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\resource\rendering\BackBuffer.cpp">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\resource\rendering\DepthStencil.cpp">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\resource\rendering\RenderResource.cpp">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -412,21 +421,6 @@
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\GPUDevice.h">
-      <Filter>Engine\base\directX</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\descriptorHeap\IDescriptorHeap.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\descriptorHeap\RTV.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\descriptorHeap\SRV.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\descriptorHeap\DSV.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\command\CommandManager.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
@@ -434,9 +428,6 @@
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\ICommand.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\PSO.h">
       <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\input\controller\DIController.h">
@@ -495,12 +486,6 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\resource\RenderResource.h">
       <Filter>Engine\base\directX\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\descriptorHeap\HeapManager.h">
-      <Filter>Engine\base\directX\descriptorHeap</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\RootSignature.h">
-      <Filter>Engine\base\directX\command</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\command\postEffect\PostProcessManager.h">
       <Filter>Engine\base\directX\command\postEffect</Filter>
@@ -589,6 +574,51 @@
     <ClInclude Include="Engine\primitive\2d\Billboard3D.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\GPUDevice.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\HeapManager.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\PSO.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\RootSignature.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\descriptorHeap\DSV.h">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\descriptorHeap\IDescriptorHeap.h">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\descriptorHeap\RTV.h">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\IndexManager.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\utility\Index.h">
+      <Filter>Engine\utilitiy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\IResource.h">
+      <Filter>Engine\base\directX\utility\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\DepthStencil.h">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\IRenderingResource.h">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\BackBuffer.h">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\RenderResource.h">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -675,9 +705,6 @@
     <Filter Include="Engine\base\directX">
       <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX\descriptorHeap">
-      <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\base\directX\command">
       <UniqueIdentifier>{60100a09-802c-4da4-904f-ccf44e31b290}</UniqueIdentifier>
     </Filter>
@@ -719,6 +746,18 @@
     </Filter>
     <Filter Include="Engine\utilitiy\motionEffects">
       <UniqueIdentifier>{c5321e51-94f6-4368-b6fd-3a13797ba681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\utility">
+      <UniqueIdentifier>{f2f38707-03d8-4a53-b191-e856e47ed429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\utility\descriptorHeap">
+      <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\utility\resource">
+      <UniqueIdentifier>{138e0ad5-5aca-45f7-b910-37d2ecfe7e6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\utility\resource\rendering">
+      <UniqueIdentifier>{4797fd37-2493-44c8-a9fb-ed7b79005707}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

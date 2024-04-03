@@ -2,6 +2,7 @@
 #include "CatmullRom.h"
 #include "Color.h"
 #include "Counter.h"
+#include "IndexManager.h"
 #include "motionEffects/Easing.h"
 #include "motionEffects/Interpolation.h"
 #include "observers/Observer.h"

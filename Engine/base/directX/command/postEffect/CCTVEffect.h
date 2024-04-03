@@ -2,9 +2,9 @@
 #include "math/vector/Vector2.h"
 #include "utility/Counter.h"
 #include "resources/texture/RenderTexture.h"
-#include "base/directX/command/RootSignature.h"
-#include "base/directX/command/PSO.h"
-#include "base/directX/descriptorHeap/HeapManager.h"
+#include "base/directX/utility/RootSignature.h"
+#include "base/directX/utility/PSO.h"
+#include "base/directX/utility/HeapManager.h"
 #include "Config.h"
 
 /// <summary>

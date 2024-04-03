@@ -1,5 +1,5 @@
 #pragma once
-#include "../GPUDevice.h"
+#include "../utility/GPUDevice.h"
 #include "utility/Counter.h"
 
 namespace LWP::Base {

@@ -1,18 +1,18 @@
 #pragma once
-#include "../GPUDevice.h"
-#include "../descriptorHeap/HeapManager.h"
+#include "../utility/GPUDevice.h"
+#include "../utility/HeapManager.h"
 #include "math/vector/Vector2.h"
 
 namespace LWP::Base {
 	/// <summary>
 	/// レンダリングに使うリソースクラス
 	/// </summary>
-	class RenderResource {
+	class RenderResourceRRR {
 	public: // ** メンバ関数 ** //
 
-		RenderResource() = delete;
-		RenderResource(ID3D12Device* device, HeapManager* heaps, const int width, const int height);
-		~RenderResource() = default;
+		RenderResourceRRR() = delete;
+		RenderResourceRRR(ID3D12Device* device, HeapManager* heaps, const int width, const int height);
+		~RenderResourceRRR() = default;
 
 		// 解像度をセットする関数
 		void SetResolution(const int width, const int height);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../GPUDevice.h"
+#include "GPUDevice.h"
 
 #include <vector>
 #include <list>
