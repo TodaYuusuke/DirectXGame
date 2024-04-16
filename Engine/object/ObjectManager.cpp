@@ -1,4 +1,5 @@
 #include "ObjectManager.h"
+#include "base/ImGuiManager.h"
 
 #include <vector>
 #include <functional>
@@ -16,7 +17,7 @@ void Manager::Initialize() {
 	objectCount_ = 0;
 }
 
-void Manager::Update(Base::CommandManager* manager) {
+void Manager::Update(Base::RendererManager* manager) {
 	// Debugビルド時のみImGuiを表示
 #if DEMO
 	// 生成用の関数ポインタ

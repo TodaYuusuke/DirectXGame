@@ -6,6 +6,9 @@
 #include "renderer/Renderer.h"
 #include "postEffect/PostProcessManager.h"
 
+#include "../utility/resource/data/ConstantBuffer.h"
+#include "../utility/resource/data/StructuredBuffer.h"
+
 #include <vector>
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
@@ -34,33 +37,12 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(ID3D12Device* device);
-
-		/// <summary>
-		/// ディスクリプタヒープのポインタをセットする関数
-		/// </summary>
-		void SetDescriptorHeap(HeapManager* manager);
-		/// <summary>
-		/// ディスクリプタヒープのポインタを返す関数
-		/// </summary>
-		//RTV* GetRTV() { return rtv_; }
-		//SRV* GetSRV() { return srv_; }
-		//DSV* GetDSV() { return dsv_; }
-
-		/// <summary>
-		/// 描画前処理
-		/// </summary>
-		void PreDraw();
+		void Init(ID3D12Device* device, HeapManager* manager);
 
 		/// <summary>
 		/// DrawCall
 		/// </summary>
 		void DrawCall();
-
-		/// <summary>
-		/// 描画語処理
-		/// </summary>
-		void PostDraw();
 
 		/// <summary>
 		/// 描画数リセット
@@ -157,22 +139,23 @@ namespace LWP::Base {
 		std::unique_ptr<RootSignature> rootSignature_;
 
 
+		// ** データは接頭語dをつける ** //
+
 		// 頂点データ
-		std::unique_ptr<IStructured<VertexStruct>> vertexData_;
+		std::unique_ptr<StructuredBuffer<VertexStruct>> dVertex_;
 		// WorldTransformデータ
-		std::unique_ptr<IStructured<WTFStruct>> transformData_;
+		std::unique_ptr<StructuredBuffer<WTFStruct>> dTransform;
 
 		// 全描画で共通のデータ
-		std::unique_ptr<CommonDataResourceBuffer> commonDataResourceBuffer_;
+		std::unique_ptr<ConstantBuffer<CommonStruct>> dCommonData;
 		// マテリアルデータ
-		std::unique_ptr<IStructured<MaterialStruct>> materialData_;
+		std::unique_ptr<StructuredBuffer<MaterialStruct>> dMaterial;
 		
 		// 平行光源
 		std::unique_ptr<DirectionLightResourceBuffer> directionLightResourceBuffer_;
 		// 点光源
 		std::unique_ptr<PointLightResourceBuffer> pointLightResourceBuffer_;
 
-		const UINT kMaxTexture = 128;
 		// テクスチャを適応しないとき用のデフォルトのテクスチャ
 		Resource::Texture* defaultTexture_;
 
@@ -199,7 +182,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// ストラクチャーバッファ用のリソースを作成
 		/// </summary>
-		void CreateStructuredBufferResources();
+		void CreateResources();
 
 		/// <summary>
 		/// 任意のサイズのResourceを作成

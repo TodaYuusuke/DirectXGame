@@ -1,16 +1,20 @@
 #pragma once
+#include "WinApp.h"
+
 #include "directX/utility/GPUDevice.h"
 #include "directX/utility/HeapManager.h"
-#include "directX/command/CommandManager.h"
+#include "directX/RendererManager.h"
 
 #include "directX/utility/resource/rendering/BackBuffer.h"
 #include "directX/utility/resource/rendering/DepthStencil.h"
 
 
 #include <memory>
-#include <string>
 
-#include "../../Externals/DirectXTex/DirectXTex.h"
+
+namespace LWP::Object {
+	class Camera;
+}
 
 namespace LWP::Base {
 	/// <summary>
@@ -29,31 +33,29 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
+		void Initialize(WinApp* winApp);
 
 		/// <summary>
-		/// 描画前処理
+		/// メイン描画につかうカメラをセットする
 		/// </summary>
-		void PreDraw();
+		/// <param name="camera"></param>
+		void SetMainCamera(Object::Camera* camera);
 
 		/// <summary>
 		/// DrawCall
 		/// </summary>
 		void DrawCall();
 
-		/// <summary>
-		/// 描画語処理
-		/// </summary>
-		void PostDraw();
-
 		// アクセサ
+		GPUDevice* GetGPUDevice() const { return gpuDevice_.get(); }
 		ID3D12Device* GetDevice() const { return device_; }
 		HeapManager* GetHeaps() const { return heaps_.get(); }
-		CommandManager* GetCommandManager() const { return commandManager_.get(); }
+		RendererManager* GetRendererManager() const { return renderer_.get(); }
+
 		// ImGui用
 		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
-		DXGI_FORMAT GetFormat() { return heaps_->rtv()->GetDesc().Format; }
-		ID3D12DescriptorHeap* GetSRVHeap() { return heaps_->srv()->GetHeap(); }
+		DXGI_FORMAT GetFormat() { return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; }
+		SRV* GetSRV() { return heaps_->srv(); }
 
 
 	private: // ** メンバ変数 ** //
@@ -78,11 +80,7 @@ namespace LWP::Base {
 		DepthStencil depthStencil_;
 
 		// コマンド管理
-		std::unique_ptr<CommandManager> commandManager_;
-
-		// Direct3D関連
-		int32_t backBufferWidth_ = 0;
-		int32_t backBufferHeight_ = 0;
+		std::unique_ptr<RendererManager> renderer_;
 
 
 	private: // 非公開のメンバ関数

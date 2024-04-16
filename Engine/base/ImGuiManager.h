@@ -9,7 +9,10 @@
 
 #include "../utility/Color.h"
 
+#include "base/directX/utility/descriptorHeap/SRV.h"
+
 namespace LWP::Base {
+
 	class ImGuiManager {
 	public:
 		ImGuiManager() = default;
@@ -21,18 +24,16 @@ namespace LWP::Base {
 		void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
 
 		/// <summary>
-		/// 終了
-		/// </summary>
-		void Finalize();
-
-		/// <summary>
 		/// ImGui受付開始
 		/// </summary>
 		void Begin();
 
+
 	private:
 		// DirectX基盤インスタンス（借りてくる）
 		DirectXCommon* dxCommon_ = nullptr;
+		// SRV上の登録情報
+		SRVInfo srvInfo;
 
 		ImGuiManager(const ImGuiManager&) = delete;
 		const ImGuiManager& operator=(const ImGuiManager&) = delete;

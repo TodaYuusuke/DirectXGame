@@ -10,10 +10,8 @@ void Sprite::Update() {
 	// 値が変化した場合にのみ再計算
 	if (!GetChanged()) { return; }
 	
-	// テクスチャがnullでなければサイズを取得
-	if (texture.t != nullptr) {
-		size.t = texture.t->GetTextureSize();
-	}
+	// テクスチャのサイズを取得
+	size.t = texture.t.GetSize();
 
 	// 頂点を再計算
 	CreateVertices();
@@ -50,5 +48,5 @@ void Sprite::DerivedDebugGUI(const std::string& label) {
 }
 
 bool Sprite::GetChanged() {
-	return size.GetChanged() + anchorPoint.GetChanged() + texture.GetChanged();
+	return texture.GetChanged();
 }

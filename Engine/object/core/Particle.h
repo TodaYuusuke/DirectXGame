@@ -2,6 +2,8 @@
 #include "../IObject.h"
 #include "primitive/IPrimitive.h"
 
+#include <functional>
+
 namespace LWP::Object {
 	// 構造体
 	struct ParticleData {
@@ -21,7 +23,7 @@ namespace LWP::Object {
 		// 初期化
 		void Initialize() override;
 		// 更新
-		void Update(Base::CommandManager* manager) override;
+		void Update(Base::RendererManager* manager) override;
 
 		// パーティクルの形状を指定
 		template<IsIPrimitive T>

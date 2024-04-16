@@ -1,10 +1,28 @@
 #pragma once
 #include "../IObject.h"
-#include "resources/texture/RenderTexture.h"
-#include "base/directX/command/postEffect/PostProcessManager.h"
-#include "base/directX//command/renderer/PostProcessRenderer.h"
+#include "base/directX/utility/resource/data/ConstantBuffer.h"
+#include "base/directX/utility/resource/rendering/RenderResource.h"
+#include "base/directX/utility/resource/rendering/DepthStencil.h"
+
+// こいつのためだけに前方宣言
+namespace LWP::Object {
+	class Camera;
+}
+// カメラ構造体
+namespace LWP::Base {
+	struct CameraStruct {
+		Math::Matrix4x4 viewProjection;
+		Math::Matrix4x4 rotate;
+		Math::Vector3 position;
+
+		CameraStruct& operator=(const Object::Camera& value);
+	};
+}
 
 namespace LWP::Object {
+	/// <summary>
+	/// カメラクラス
+	/// </summary>
 	class Camera final : public IObject {
 	public: // ** パブリックなメンバ変数 ** //
 
@@ -21,13 +39,15 @@ namespace LWP::Object {
 
 	public: // ** メンバ関数 ** //
 
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		Camera();
+
 		// 初期化
 		void Initialize() override;
 		// 更新
-		void Update(Base::CommandManager* manager) override;
-
-		// シェーダー作り直し関数
-		void ReCreateShader();
+		void Update(Base::RendererManager* manager) override;
 
 		// デバッグ用GUI
 		void DebugGUI() override;
@@ -35,26 +55,27 @@ namespace LWP::Object {
 		// ビュープロジェクションを返す関数
 		Math::Matrix4x4 GetViewProjection() const;
 
-		/// <summary>
-		/// このカメラからのサブ画面レンダリング用のテクスチャを生成する関数
-		/// </summary>
-		/// <param name="manager"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		void CreateRenderTexture(Base::DirectXCommon* directX, const int width, const int height);
 		// レンダリング結果のテクスチャのポインタを受け取る関数
-		Resource::RenderTexture* GetRenderTexture() { return renderTexture_; }
+		Resource::Texture GetTexture();
+		
+		/// <summary>
+		/// カメラのデータのViewを返す関数
+		/// </summary>
+		D3D12_GPU_VIRTUAL_ADDRESS GetBufferView() { return constantBuffer_.GetGPUView(); }
 
-		// レンダラーのポインタを返す関数
-		Base::PostProcessRenderer* GetPPRenderer() { return ppRenderer_; }
-		// レンダラーのポインタをセットする関数
-		void SetPPRenderer(Base::PostProcessRenderer* ppRenderer) { ppRenderer_ = ppRenderer; }
 
 	private: // ** メンバ変数 ** //
 
+		// このカメラでレンダリングするためのデータ
+		Base::ConstantBuffer<Base::CameraStruct> constantBuffer_;
+		// レンダリング結果のリソース
+		Base::RenderResource renderResource_;
+		// デプスステンシルのリソース
+		Base::DepthStencil depthStencil_;
+
 		// このカメラからのレンダリング結果を格納する変数
-		Resource::RenderTexture* renderTexture_ = nullptr;
+		//Resource::RenderTexture* renderTexture_ = nullptr;
 		// ポストプロセス用レンダラー
-		Base::PostProcessRenderer* ppRenderer_ = nullptr;
+		//Base::PostProcessRenderer* ppRenderer_ = nullptr;
 	};
 }

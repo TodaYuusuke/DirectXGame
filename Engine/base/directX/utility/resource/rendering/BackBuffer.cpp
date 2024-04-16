@@ -11,8 +11,6 @@ BackBuffer::BackBuffer(IDXGISwapChain4* swapChain, int index) {
 }
 
 void BackBuffer::Init(GPUDevice* device, HeapManager* heaps) {
-	HRESULT hr = S_FALSE;
-
 	// クリアカラー設定
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	clearValue.Color[0] = 0.1f;

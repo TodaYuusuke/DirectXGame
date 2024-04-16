@@ -1,23 +1,25 @@
 #include "SRV.h"
 #include "../Externals/DirectXTex/DirectXTex.h"
+#include "../Externals/DirectXTex/d3dx12.h"
 
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
 SRV::SRV(ID3D12Device* device) :
-	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128) {}
+	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 500, 500), texIndexManager_(500, 500) {}
 
-void SRV::Init(ID3D12Device* device) {
-	// SRV用のヒープでディスクリプタの数は128。SRVはShader内で触るものなので、ShaderVisibleはtrue
+void SRV::Init() {
+	// SRV用のヒープでディスクリプタの数は1000。SRVはShader内で触るものなので、ShaderVisibleはtrue
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSize, true);
 	
 	// 0番目はImGuiが使うので+1しておく
-	count_.Increment();
+	//count_.Increment();
 	//indexManager_.UseEmpty();
 }
 
-int SRV::CreateShaderResourceView(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
+SRVInfo SRV::CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
 	HRESULT hr = S_FALSE;
+	SRVInfo info;
 
 	// Meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
@@ -37,16 +39,21 @@ int SRV::CreateShaderResourceView(ID3D12Resource* resource, const DirectX::Scrat
 	}
 
 	// metaDataを元にSRVの設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = metadata.format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+	info.desc.Format = metadata.format;
+	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	info.desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	info.desc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
-	UploadTextureResource(resource, srvDesc);
-	return loadedTextureCount++;
+	// 空きを使用
+	info.index = indexManager_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに生成
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	return info;
 }
-SRVInfo SRV::CreateShaderResourceView(ID3D12Resource* resource, const int width, const int height) {
+SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource, const int width, const int height) {
 	HRESULT hr = S_FALSE;
 	SRVInfo info;
 
@@ -78,38 +85,102 @@ SRVInfo SRV::CreateShaderResourceView(ID3D12Resource* resource, const int width,
 	// viewも設定
 	info.SetView(this);
 
-	UploadTextureResource(resource, info.index, info.desc);
+	// SRVに生成
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 
-int SRV::UploadDepthMap(ID3D12Resource* resource) {
-	// SRVの設定
+SRVInfo SRV::CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER_RESOURCE_VIEW_DESC& desc) {
+	// SRVの登録情報
+	SRVInfo info;
+
+	// 設定をコピー
+	info.desc = desc;
+	// 空きを使用
+	info.index = indexManager_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに登録
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	return info;
+}
+
+
+SRVInfo SRV::CreateShadowMapDir(ID3D12Resource* resource) {
+	// SRVにテクスチャとして登録
+	SRVInfo info;	// SRVの登録情報
+
+	// 設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.PlaneSlice = 0;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0F;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	
-	// SRVを作成するDescriptorHeapの場所を決める
-	int srvIndex = GetAndIncrement();
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = GetCPUHandle(srvIndex);
-	// SRVの生成
-	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
-	loadedTextureCount++;
-	return srvIndex;
+	info.desc.Format = DXGI_FORMAT_R32_FLOAT;
+	info.desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	info.desc.Texture2D.MipLevels = 1;
+	info.desc.Texture2D.MostDetailedMip = 0;
+	info.desc.Texture2D.PlaneSlice = 0;
+	info.desc.Texture2D.ResourceMinLODClamp = 0.0F;
+	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	// 空きを使用
+	info.index = indexManager_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに登録
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	return info;
+}
+
+SRVInfo SRV::CreateShadowMapPoint(ID3D12Resource* resource) {
+	// SRVにテクスチャとして登録（キューブマップ）
+	SRVInfo info;	// SRVの登録情報
+
+	// metaDataを元にSRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	info.desc.Format = DXGI_FORMAT_R32_FLOAT;
+	info.desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	info.desc.TextureCube.MipLevels = 1;
+	info.desc.TextureCube.MostDetailedMip = 0;
+	info.desc.TextureCube.ResourceMinLODClamp = 0.0F;
+	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	// 空きを使用
+	info.index = indexManager_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに登録
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	return info;
 }
 
 
-void SRV::UploadTextureResource(ID3D12Resource* resource, int index, D3D12_SHADER_RESOURCE_VIEW_DESC desc) {
-	// SRVを作成するDescriptorHeapの場所を決める（ImGuiとStructuredBufferたちが先頭を使っているので注意）
-	D3D12_CPU_DESCRIPTOR_HANDLE cpuView = GetCPUHandle(index);
-	// 0番目のテクスチャ生成ならviewを保存
-	if (index == 0) {
-		texView_ = GetGPUHandle(index);
-	}
-	// SRVの生成
-	device_->CreateShaderResourceView(resource, &desc, cpuView);
+//int SRV::UploadDepthMap(ID3D12Resource* resource) {
+//	// SRVの設定
+//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+//	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+//	srvDesc.Texture2D.MipLevels = 1;
+//	srvDesc.Texture2D.MostDetailedMip = 0;
+//	srvDesc.Texture2D.PlaneSlice = 0;
+//	srvDesc.Texture2D.ResourceMinLODClamp = 0.0F;
+//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+//	
+//	// SRVを作成するDescriptorHeapの場所を決める
+//	int srvIndex = GetAndIncrement();
+//	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = GetCPUHandle(srvIndex);
+//	// SRVの生成
+//	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
+//
+//	loadedTextureCount++;
+//	return srvIndex;
+//}
+
+SRVInfo SRV::CreateImGuiSpace() {
+	SRVInfo info;
+	// インデックスを登録
+	info.index = texIndexManager_.UseEmpty();
+	info.SetView(this);
+	return info;
 }
+

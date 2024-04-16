@@ -3,12 +3,18 @@
 #include <wrl.h>
 
 #include "texture/Texture.h"
+#include "base/directX/utility/resource/rendering/TextureResource.h"
 #include "audio/Audio.h"
 #include "motion/Motion.h"
 //#include "model/Model.h"
 
+
 #include "utility/PtrManager.h"
 
+
+namespace LWP::Base {
+	class DirectXCommon;
+};
 namespace LWP::Primitive {
 	struct MeshData;
 };
@@ -35,8 +41,8 @@ namespace LWP::Resource {
 		/// <param name="manager">マテリアル等のリソース作成用</param>
 		/// <param name="filepath">"resources/texture/" より後のファイルパス</param>
 		/// <returns></returns>
-		Texture* LoadTexture(Base::DirectXCommon* directX, const std::string& filepath);
-		Texture* LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
+		Texture LoadTexture(Base::DirectXCommon* directX, const std::string& filepath);
+		Texture LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
 		Audio* LoadAudio(const std::string& filepath);
 		Audio* LoadAudioLongPath(const std::string& filepath);
 		const Primitive::MeshData& LoadMesh(const std::string& filepath);
@@ -54,8 +60,12 @@ namespace LWP::Resource {
 		IXAudio2MasteringVoice* masterVoice_;
 
 		// テクスチャの配列
+		struct TextureStruct {
+			Texture tex;
+			Base::TextureResource r;
+		};
 		const std::string textureDirectoryPath_ = "resources/texture/";
-		std::map<std::string, Texture*> textureMap_;
+		std::map<std::string, TextureStruct> textureMap_;
 		// オーディオの配列
 		const std::string audioDirectoryPath_ = "resources/audio/";
 		std::map<std::string, Audio*> audioMap_;

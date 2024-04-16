@@ -2,6 +2,7 @@
 #include "../math/vector/Vector4.h"
 #include <Adapter.h>
 
+#include "directX/utility/descriptorHeap/SRV.h"
 
 using namespace LWP::Base;
 using namespace LWP::Utility;
@@ -20,17 +21,15 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
 		ImGui::GetStyle().ScaleAllSizes(static_cast<float>(factor / 100.0f));
 	}
 	ImGui_ImplWin32_Init(winApp->GetHWND());
+	// SRV上に登録してもらう
+	srvInfo = dxCommon_->GetSRV()->CreateImGuiSpace();
 	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
 		dxCommon_->GetBufferCount(),
 		dxCommon_->GetFormat(),
-		dxCommon_->GetSRVHeap(),
-		dxCommon_->GetSRVHeap()->GetCPUDescriptorHandleForHeapStart(),
-		dxCommon_->GetSRVHeap()->GetGPUDescriptorHandleForHeapStart()
+		dxCommon_->GetSRV()->GetHeap(),
+		srvInfo.cpuView,
+		srvInfo.gpuView
 	);
-}
-
-void ImGuiManager::Finalize() {
-
 }
 
 void ImGuiManager::Begin() {

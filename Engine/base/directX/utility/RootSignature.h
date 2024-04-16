@@ -32,8 +32,11 @@ namespace LWP::Base {
 			);
 		void Build(ID3D12Device* device);
 
-		// RootSignatureを受け取る関数
-		ID3D12RootSignature* GetRoot() { return root_.Get(); }
+		// ID3D12RootSignature型への暗黙の変換演算子をオーバーロード
+		operator ID3D12RootSignature* () {
+			return root_.Get();
+		}
+
 
 	private: // ** メンバ変数 ** //
 		// ルートシグネチャ本体

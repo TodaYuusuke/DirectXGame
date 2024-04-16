@@ -18,14 +18,14 @@ namespace LWP::Utility {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		Index(std::function<void(int)> f, int value) { 
+		Index(std::function<void()> f, int value) { 
 			func = f;
 			i = value;
 		}
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~Index() { if (func) { func(i); }; }
+		~Index() { if (func) { func(); }; }
 
 		/// <summary>
 		/// インデックスを取得
@@ -38,7 +38,7 @@ namespace LWP::Utility {
 		// インデックス
 		int i = -1;
 		// 解放用関数ポインタ
-		std::function<void(int)> func = nullptr;
+		std::function<void()> func = nullptr;
 
 
 	public: // ** オペレーターオーバーロード ** //

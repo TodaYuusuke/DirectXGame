@@ -3,6 +3,9 @@
 #include "math/Math.h"
 #include "primitive/3d/Mesh.h"
 #include "utility/ErrorReporter.h"
+#include "base/DirectXCommon.h"
+
+#include "component/Resource.h"
 
 #include <fstream>
 #include <sstream>
@@ -36,16 +39,20 @@ void Manager::Update() {
 	}
 }
 
-Texture* Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
+Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
 	return LoadTextureLongPath(directX, textureDirectoryPath_ + filepath);
 }
-Texture* Manager::LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath) {
+Texture Manager::LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath) {
 	// 読み込み済みかをチェック
 	if (!textureMap_.count(filepath)) {
 		// 新しいテクスチャをロード
-		textureMap_[filepath] = new Texture(directX, filepath);
+		textureMap_[filepath] = TextureStruct();
+		// 読み込み
+		textureMap_[filepath].r.Init(directX->GetGPUDevice(), directX->GetHeaps(), filepath);
+		// インデックスを保持
+		textureMap_[filepath].tex = textureMap_[filepath].r;
 	}
-	return textureMap_[filepath];
+	return textureMap_[filepath].tex;
 }
 
 Audio* Manager::LoadAudio(const std::string& filepath) {
@@ -65,7 +72,7 @@ const Primitive::MeshData& Manager::LoadMesh(const std::string& filepath) {
 }
 const Primitive::MeshData& Manager::LoadMeshLongPath(const std::string& filepath) {
 	// 読み込み済みかをチェック
-	if (!audioMap_.count(filepath)) {
+	if (!meshDataMap_.count(filepath)) {
 		// 新しいテクスチャをロード
 		meshDataMap_[filepath];	// 要素は自動追加されるらしい
 		// 現在はobjのみ読み込み可

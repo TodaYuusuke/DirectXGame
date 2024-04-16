@@ -11,9 +11,11 @@
 #include <d3d12.h>
 #include <stdexcept>
 
+#include <vector>
+
 // 前方宣言
 namespace LWP::Base {
-	class CommandManager;
+	class RendererManager;
 }
 
 namespace LWP::Primitive {
@@ -49,7 +51,7 @@ namespace LWP::Primitive {
 		// マテリアル
 		Resource::Material material;
 		// テクスチャ
-		Utility::ObserverPtr<Resource::ITexture*> texture = nullptr;
+		Utility::Observer<Resource::Texture> texture;
 
 		// 頂点共通のカラー
 		// ・nullptrの場合は頂点ごとに色を参照する
@@ -110,7 +112,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		virtual void Draw(Base::CommandManager* manager);
+		virtual void Draw(Base::RendererManager* manager);
 		/// <summary>
 		/// ImGui
 		/// </summary>
@@ -150,7 +152,7 @@ namespace LWP::Primitive {
 		std::vector<uint32_t> indexes;
 		Object::WorldTransform transform;
 		Resource::Material material;
-		Resource::ITexture* texture = nullptr;
+		Resource::Texture texture;
 		Utility::Color* commonColor = nullptr;
 
 		IPrimitiveStruct& operator=(const IPrimitive& other) {
@@ -170,7 +172,7 @@ namespace LWP::Primitive {
 				indexes == other.indexes &&
 				transform == other.transform &&
 				material == other.material &&
-				texture == other.texture &&
+				texture == other.texture.t &&
 				commonColor == other.commonColor
 			};
 		}

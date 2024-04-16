@@ -1,4 +1,6 @@
 #include "Particle.h"
+#include "base/directX/RendererManager.h"
+
 #include "../../../Adapter/Adapter.h"
 
 using namespace LWP::Object;
@@ -13,7 +15,7 @@ Particle::~Particle() {
 // 初期化
 void Particle::Initialize() {}
 // 更新
-void Particle::Update(Base::CommandManager* manager) {
+void Particle::Update(Base::RendererManager* manager) {
 	if (!isActive || !primitive) { return; }
 	// 必須の設定だがいい感じに設定できるタイミングがないので無理やりここで設定
 	primitive->isActive = false;
@@ -28,7 +30,7 @@ void Particle::Update(Base::CommandManager* manager) {
 		}
 	}
 	// パーティクル用のデータ登録関数を呼び出す
-	manager->SetParticleData(primitive, data);
+	manager->AddParticleData(primitive, data);
 }
 
 void Particle::Add(int value) {

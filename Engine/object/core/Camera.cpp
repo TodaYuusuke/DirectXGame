@@ -1,25 +1,49 @@
 #include "Camera.h"
-#include "../../../Adapter/Adapter.h"
 
+#include "component/Information.h"
+#include "component/System.h"
+
+#include "resources/texture/Texture.h"
+
+using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Object;
 using namespace LWP::Math;
-using namespace LWP::Info;
 using namespace LWP::Resource;
+
+CameraStruct& CameraStruct::operator=(const Camera& value) {
+	viewProjection = value.GetViewProjection();
+	rotate = value.transform.GetRotateMatrix();
+	position = value.transform.GetWorldPosition();
+	return *this;
+}
+
+Camera::Camera() {
+	// ほんとはよくない設計なので代替案募集
+
+	// GPUデバイスのポインタ
+	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+	// HeapManagerのポインタ
+	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
+
+	// リソースの初期化
+	constantBuffer_.Init(dev);
+	renderResource_.Init(dev, heaps);
+	depthStencil_.Init(dev, heaps);
+}
 
 // 初期化
 void Camera::Initialize() {
 	
 }
 // 更新
-void Camera::Update(Base::CommandManager* manager) {
-	if (!isActive || !renderTexture_) { return; }
-	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
-	manager->SetSubRendering(this);
-}
+void Camera::Update(Base::RendererManager* manager) {
+	if (!isActive) { return; }
+	// リソースにデータをコピー
+	*constantBuffer_.data_ = *this;
 
-void Camera::ReCreateShader() {
-	if (!ppRenderer_) { return; }
-	ppRenderer_->ReCreateShader(shaderPath);
+	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
+	manager->AddTarget(constantBuffer_.GetGPUView(), &renderResource_, &depthStencil_);
 }
 
 void Camera::DebugGUI() {
@@ -32,11 +56,8 @@ void Camera::DebugGUI() {
 Matrix4x4 Camera::GetViewProjection() const {
 	Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
 	float fovF = fov / 100.0f / 2.0f;
-	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, LWP::Info::GetWindowWidthF() / LWP::Info::GetWindowHeightF(), 0.1f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 100.0f);
 	return viewMatrix * projectionMatrix;
 }
 
-void Camera::CreateRenderTexture(Base::DirectXCommon* directX, const int width, const int height) {
-	// レンダリング先のテクスチャを生成
-	renderTexture_ = new RenderTexture(directX, width, height);
-}
+Resource::Texture Camera::GetTexture() { return renderResource_; }

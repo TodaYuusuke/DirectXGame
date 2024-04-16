@@ -1,0 +1,80 @@
+#pragma once
+#include "ResourceStruct.h"
+#include "base/directX/utility/RootSignature.h"
+#include "base/directX/utility/resource/data/ConstantBuffer.h"
+#include "base/directX/utility/resource/data/StructuredBuffer.h"
+
+namespace LWP::Base {
+	/// <summary>
+	/// レンダラー用のリソースバッファーをまとめたクラス
+	/// </summary>
+	class BufferGroup {
+	public: // ** メンバ関数 ** //
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		BufferGroup() = default;
+		/// <summary>
+		/// デフォルトデストラクタ
+		/// </summary>
+		~BufferGroup() = default;
+
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Init(GPUDevice* device, SRV* srv);
+
+		/// <summary>
+		/// RootSignatureのポインタを返す
+		/// </summary>
+		RootSignature* GetRoot() { return root_.get(); }
+
+		/// <summary>
+		/// コマンドリストにviewをセットする
+		/// </summary>
+		void SetView(ID3D12GraphicsCommandList* list);
+
+		/// <summary>
+		/// 共通データのポインタをゲット
+		/// </summary>
+		CommonStruct* GetCommonData() { return common_->data_; }
+		/// <summary>
+		/// 頂点データの数を取得
+		/// </summary>
+		int GetVertexCount() { return vertex_->GetCount(); }
+
+		/// <summary>
+		/// データをセット
+		/// </summary>
+		int AddData(VertexStruct data) { return vertex_->Add(data); }
+		int AddData(WTFStruct data) { return transform_->Add(data); }
+		int AddData(MaterialStruct data) { return material_->Add(data); }
+		int AddData(DirectionalLightStruct data) { return directionLight_->Add(data); }
+		int AddData(PointLightStruct data) { return pointLight_->Add(data); }
+
+		// 各カウントリセット
+		void Reset();
+
+	private: // ** メンバ変数 ** //
+		// RootSignature
+		std::unique_ptr<RootSignature> root_;
+
+		// 全描画で共通のデータ
+		std::unique_ptr<ConstantBuffer<CommonStruct>> common_;
+		
+		// 頂点データ
+		std::unique_ptr<StructuredBuffer<VertexStruct>> vertex_;
+		// WorldTransformデータ
+		std::unique_ptr<StructuredBuffer<WTFStruct>> transform_;
+		// マテリアルデータ
+		std::unique_ptr<StructuredBuffer<MaterialStruct>> material_;
+
+		// 平行光源
+		std::unique_ptr<StructuredBuffer<DirectionalLightStruct>> directionLight_;
+		// 点光源
+		std::unique_ptr<StructuredBuffer<PointLightStruct>> pointLight_;
+
+	};
+}

@@ -2,21 +2,9 @@
 #include "../GPUDevice.h"
 
 #include "utility/IndexManager.h"
-#include "utility/Counter.h"
+#include <utility>
 
 namespace LWP::Base {
-	// Heap情報構造体
-	struct HeapInfo {
-		Utility::Index index;
-		D3D12_CPU_DESCRIPTOR_HANDLE cpuView;
-		D3D12_GPU_DESCRIPTOR_HANDLE gpuView;
-
-		void SetView(IDescriptorHeap* heap) {
-			cpuView = heap->GetCPUHandle(index);
-			gpuView = heap->GetGPUHandle(index);
-		}
-	};
-
 	/// <summary>
 	/// ディスクリプタヒープ基底クラス
 	/// </summary>
@@ -31,6 +19,10 @@ namespace LWP::Base {
 		/// コンストラクタ（IndexManagerの初期化値要求）
 		/// </summary>
 		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size);
+		/// <summary>
+		/// コンストラクタ（SRV用の特殊なコンストラクタ）
+		/// </summary>
+		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size, uint32_t size2);
 
 
 		/// <summary>
@@ -59,23 +51,12 @@ namespace LWP::Base {
 		// Heapを受け取る関数
 		ID3D12DescriptorHeap* GetHeap() const { return heap_.Get(); }
 		// ディスクリプタ1つ分のサイズを受け取る関数
-		uint32_t GetDescriptorSize() const { return kDescriptorSize_; }
+		uint32_t GetDescriptorSize() const { return kElementSize; }
 
-		/// <summary>
-		/// 使用数を+1増加
-		/// </summary>
-		int GetAndIncrement() { return count_.GetAndIncrement(); }
-		/// <summary>
-		/// 現在の使用数を取得
-		/// </summary>
-		int GetCount() { return count_.Get(); }
 
 	protected: // ** 外部変数 ** //
 		// デバイスのポインタ
 		ID3D12Device* device_ = nullptr;
-
-		// 使用済みカウンタ
-		LWP::Utility::Counter count_;
 
 
 	protected: // ** プライベートなメンバ関数 ** //
@@ -90,5 +71,39 @@ namespace LWP::Base {
 		/// </summary>
 		D3D12_CPU_DESCRIPTOR_HANDLE GetDescriptorHandleIncrementSize(const D3D12_CPU_DESCRIPTOR_HANDLE& other, int offsetInDescriptors, UINT descriptorIncrementSize) const;
 
+	};
+
+
+	// Heap情報構造体
+	struct HeapInfo {
+		Utility::Index index;
+		D3D12_CPU_DESCRIPTOR_HANDLE cpuView{};
+
+		// デフォルトコンストラクタ
+		HeapInfo() = default;
+
+		virtual void SetView(IDescriptorHeap* heap) {
+			cpuView = heap->GetCPUHandle(index);
+		}
+
+		// ムーブコンストラクタ
+		HeapInfo(HeapInfo&& other) noexcept {
+			index = std::exchange(other.index, Utility::Index());
+			cpuView = std::exchange(other.cpuView, {});
+		}
+
+		// ムーブ代入演算子
+		HeapInfo& operator=(HeapInfo&& other) noexcept {
+			if (this != &other) {
+				// ムーブ代入の実装
+				index = std::exchange(other.index, Utility::Index());
+				cpuView = std::exchange(other.cpuView, {});
+			}
+			return *this;
+		}
+
+		// コピー操作を禁止
+		HeapInfo(const HeapInfo&) = delete;
+		HeapInfo& operator=(const HeapInfo&) = delete;
 	};
 }

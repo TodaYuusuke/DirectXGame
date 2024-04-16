@@ -19,7 +19,7 @@ namespace LWP::Primitive {
 		// マテリアル
 		Resource::Material material;
 		// テクスチャ
-		Resource::ITexture* texture;
+		Resource::Texture texture;
 	};
 
 	/// <summary>

@@ -15,18 +15,11 @@ namespace LWP::Base {
 	};
 
 	// 全体で共通のデータ
-	struct CommonData {
+	struct CommonStruct {
 		Math::Matrix4x4 vp2D;		// 2D用のViewProjection
 		uint32_t directionLight;    // 平行光源の数
 		uint32_t pointLight;        // 点光源の数
 	};
-	// インデックスバッファー
-	struct CommonDataResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_VIRTUAL_ADDRESS view_;
-		CommonData* data_;
-	};
-
 
 #pragma region 頂点データ
 	// 頂点データの構造体
@@ -65,28 +58,7 @@ namespace LWP::Base {
 #pragma endregion
 
 #pragma region カメラ
-	// カメラ構造体
-	struct CameraStruct {
-		Math::Matrix4x4 viewProjection;
-		Math::Matrix4x4 rotate;
-		Math::Vector3 position;
 
-		// Materialクラスのデータを代入する演算子をオーバーロード
-		CameraStruct& operator=(const Object::Camera& value) {
-			viewProjection = value.GetViewProjection();
-			rotate = value.transform.GetRotateMatrix();
-			position = value.transform.GetWorldPosition();
-			return *this;
-		}
-	};
-
-	// カメラデータのバッファー
-	struct CameraResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_VIRTUAL_ADDRESS view_;
-		CameraStruct* data_;
-		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
-	};
 #pragma endregion
 
 #pragma region ワールドトランスフォーム
@@ -107,31 +79,6 @@ namespace LWP::Base {
 			inverse = value.GetWorldMatrix().Inverse();
 			return *this;
 		}
-	};
-#pragma endregion
-
-#pragma region 行列
-	// 行列データのバッファー
-	struct MatrixResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		D3D12_GPU_VIRTUAL_ADDRESS view_;
-		Math::Matrix4x4* data_;
-		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
-
-		// WorldTransformの行列を代入する演算子をオーバーロード
-		MatrixResourceBuffer& operator=(const Object::WorldTransform& value) {
-			*data_ = value.GetWorldMatrix();
-			return *this;
-		}
-	};
-#pragma endregion
-
-#pragma region テクスチャ
-	// テクスチャのバッファー
-	struct TextureResourceBuffer {
-		std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> resource_;
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビューは先頭のテクスチャのみ
-		UINT usedCount_ = 0;	// 使用済みのインデックスをカウント
 	};
 #pragma endregion
 

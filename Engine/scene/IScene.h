@@ -11,7 +11,7 @@ public:
 		// デフォルトのメインカメラを登録
 		mainCamera.transform.translation = { 0.0f,0.0f,-10.0f };
 		mainCamera.name = "MainCamera";
-		LWP::Object::CreateRenderTexture(&mainCamera, LWP::Info::GetWindowWidth(), LWP::Info::GetWindowHeight());
+		mainCamera.isActive = false;	// 複数画面描画のときのみtrueにすればいいのでfalse
 		SetMainRenderCamera(&mainCamera);
 	}
 

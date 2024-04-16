@@ -44,6 +44,14 @@ namespace LWP::Base {
 		void SetView(D3D12_GPU_DESCRIPTOR_HANDLE view) { view_ = view; }
 
 
+	protected: // ** メンバ定数 ** //
+
+		// データ1つ分のサイズ定数
+		const uint32_t kElementSize;
+		// データの最大数
+		const uint32_t kMaxSize;
+
+
 	protected: // ** メンバ変数 ** //
 
 		// 最大サイズ

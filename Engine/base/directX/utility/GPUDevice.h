@@ -6,8 +6,6 @@
 
 #include <wrl.h>
 
-#include "base/WinApp.h"
-
 namespace LWP::Base {
 	/// <summary>
 	/// RenderTargetView

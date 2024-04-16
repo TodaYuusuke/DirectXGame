@@ -1,20 +1,10 @@
 #pragma once
 #include "GPUDevice.h"
+#include "DXC.h"
 
 #include <string>
-#include <dxcapi.h>
-#pragma comment(lib,"dxcompiler.lib")
 
 namespace LWP::Base {
-	//*** DirectXシェーダコンパイラ ***//
-	
-	// HLSLコードをバイナリ形式のGPUシェーダーに変換する
-	struct DXC {
-		Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_;				// dxcの汎用オブジェクト
-		Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_;			// dxcのコンパイラオブジェクト
-		Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_;	// hlslファイル内でコンパイルするファイルの処理を行うハンドラ
-	};
-
 	/// <summary>
 	/// グラフィックスパイプライン
 	/// </summary>
@@ -45,7 +35,7 @@ namespace LWP::Base {
 		// グラフィックパイプラインの状態を定義
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> state_ = nullptr;
 		// PSOの詳細
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc_;
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc_{};
 		// DXCのポインタ
 		DXC* dxc_ = nullptr;
 
@@ -62,9 +52,5 @@ namespace LWP::Base {
 		//IDxcBlob* CreatePixelShader();
 		D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState();
 
-		/// <summary>
-		/// シェーダーのコンパイル関数
-		/// </summary>
-		IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler);
 	};
 }

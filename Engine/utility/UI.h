@@ -1,5 +1,8 @@
 #pragma once
-#include <Adapter.h>
+#include "math/vector/Vector2.h"
+#include "math/vector/Vector4.h"
+#include "primitive/2d/Sprite.h"
+#include "resources/texture/Texture.h"
 
 namespace LWP::Utility {
 	/// <summary>
@@ -11,7 +14,7 @@ namespace LWP::Utility {
 		/// <summary>
 		/// ビルダーデザインパターン
 		/// </summary>
-		UI& AddSprite(LWP::Resource::Texture* texture, LWP::Math::Vector2 position, LWP::Math::Vector2 anchor);
+		UI& AddSprite(LWP::Resource::Texture texture, LWP::Math::Vector2 position, LWP::Math::Vector2 anchor);
 
 		// 全部のisActiveを変更する関数
 		void SetIsActive(bool b);

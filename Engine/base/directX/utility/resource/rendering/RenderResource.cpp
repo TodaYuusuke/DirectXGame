@@ -1,5 +1,7 @@
 #include "RenderResource.h"
+#include "resources/texture/Texture.h"
 
+using namespace LWP;
 using namespace LWP::Base;
 
 void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
@@ -44,9 +46,11 @@ void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
 	// RTV上に登録
 	rtvInfo = heaps->rtv()->CreateRenderTargetView(resource_.Get());
 	// SRV上に登録
-	srvInfo = heaps->srv()->CreateShaderResourceView(resource_.Get(), width, height);
+	srvInfo = heaps->srv()->CreateRenderResource(resource_.Get(), width, height);
 }
 
 void RenderResource::Clear(ID3D12GraphicsCommandList* list) {
 	list->ClearRenderTargetView(rtvInfo.cpuView, clearValue.Color, 0, nullptr);
 };
+
+//RenderResource::operator Resource::Texture() { return *this; }

@@ -1,39 +1,51 @@
 #pragma once
-#include "ITexture.h"
-#include "../Externals/DirectXTex/DirectXTex.h"
-#include "object/WorldTransform.h"
-#include <string>
+#include "math/vector/Vector2.h"
 
-
+// 前方宣言
 namespace LWP::Base {
-	class DirectXCommon;
+	// テクスチャリソース
+	class TextureResource;
+	// レンダーテクスチャ
+	class RenderResource;
 }
 
 namespace LWP::Resource {
-	class Texture final
-		: public ITexture {
-	public:
-		// ** 共通の変数 ** //
-
-		// コンストラクタ
-		Texture(Base::DirectXCommon* directX, const std::string& filePath);
+	/// <summary>
+	/// テクスチャのインデックスを受け渡しする関数
+	/// </summary>
+	class Texture final {
+	public: // ** メンバ関数 ** //
+		// デフォルトコンストラクタ
+		Texture() = default;
 		// デストラクタ
 		~Texture() = default;
 
-		// サイズをVector2で受け取る
-		LWP::Math::Vector2 GetTextureSize() const override;
+		// サイズを取得する関数
+		Math::Vector2 GetSize() { return size_; }
+		// インデックスを取得
+		int GetIndex() { return index_; }
+
 
 	private: // ** メンバ変数 ** //
 
-		// ミップマップ付きテクスチャ
-		DirectX::ScratchImage mipImages;
+		// サイズ
+		Math::Vector2 size_;
+		// SRV上のインデックス
+		int index_ = -1;
 
 
-	private: // ** プライベートな関数 ** //
+	public: // ** オペレーターオーバーロード ** //
 
-		/// <summary>
-		/// テクスチャを読み込む
-		/// </summary>
-		void Load(const std::string& filePath);
+		// TextureResourceからの代入
+		Texture(const Base::TextureResource& r);
+		Texture& operator=(const Base::TextureResource& r);
+		// RenderResourceからの代入
+		Texture(const Base::RenderResource& r);
+		Texture& operator=(const Base::RenderResource& r);
+
+		// Observerクラス用
+		bool operator==(Texture& other) {
+			return index_ == other.index_;
+		}
 	};
 }

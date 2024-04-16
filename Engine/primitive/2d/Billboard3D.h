@@ -12,10 +12,5 @@ namespace LWP::Primitive {
 
 		// 初期化を呼び出す
 		Billboard3D() { Init(); }
-
-		/// <summary>
-		/// 描画
-		/// </summary>
-		void Draw(Base::CommandManager* manager) override;
 	};
 }

@@ -70,7 +70,7 @@ void Manager::Update() {
 	}
 }
 
-void Manager::Draw(Base::CommandManager* manager) {
+void Manager::Draw(Base::RendererManager* manager) {
 	// 描画
 	for (IPrimitive* p : primitives_.list) {
 		p->Draw(manager);

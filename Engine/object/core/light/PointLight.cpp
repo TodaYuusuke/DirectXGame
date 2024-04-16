@@ -1,7 +1,6 @@
 #include "PointLight.h"
 
 #include <base/ImGuiManager.h>
-#include <base/directX/command/CommandManager.h>
 
 using namespace LWP::Math;
 using namespace LWP::Object;
@@ -11,7 +10,7 @@ void PointLight::Initialize() {
 	transform.Initialize();
 }
 // 更新
-void PointLight::Update(Base::CommandManager* manager) {
+void PointLight::Update(Base::RendererManager* manager) {
 	if (!isActive) { return; }
 		
 	// 6方向のビュープロジェクション
@@ -33,7 +32,8 @@ void PointLight::Update(Base::CommandManager* manager) {
 	}
 
 	// CommandManagerにデータを登録
-	manager->SetPointLightData(this, viewProjections);
+	//manager->SetPointLightData(this, viewProjections);
+	manager;
 }
 
 // デバッグ用GUI

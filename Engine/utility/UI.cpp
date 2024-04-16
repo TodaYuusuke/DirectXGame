@@ -3,12 +3,12 @@
 using namespace LWP::Utility;
 using namespace LWP::Primitive;
 
-UI& UI::AddSprite(LWP::Resource::Texture* texture, LWP::Math::Vector2 position, LWP::Math::Vector2 anchor) {
+UI& UI::AddSprite(LWP::Resource::Texture texture, LWP::Math::Vector2 position, LWP::Math::Vector2 anchor) {
 	sprites_.push_back(Sprite());
 	sprites_.back().transform.translation.x = position.x;
 	sprites_.back().transform.translation.y = position.y;
 	sprites_.back().anchorPoint = anchor;
-	sprites_.back().texture = texture;
+	sprites_.back().texture.t = texture;
 	sprites_.back().isUI = true;
 	return *this;
 }

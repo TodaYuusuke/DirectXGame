@@ -10,9 +10,9 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
-		/// BackBufferはSwapChainと必要な処理があるのでデフォルトコンストラクタを削除
+		/// 継承のために宣言だけしておく
 		/// </summary>
-		BackBuffer() = delete;
+		BackBuffer() = default;
 
 		/// <summary>
 		/// コンストラクタ

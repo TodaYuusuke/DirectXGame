@@ -1,4 +1,5 @@
 #include "IObject.h"
+#include "base/directX/RendererManager.h"
 
 #include "component/Object.h"
 

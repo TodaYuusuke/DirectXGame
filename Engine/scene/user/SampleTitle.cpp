@@ -19,20 +19,18 @@ void SampleTitle::Initialize() {
 
 
 	// サブカメラを初期化
-	LWP::Object::CreateRenderTexture(&subCamera[0], 640, 360);
 	subCamera[0].transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera[0].transform.rotation = { 0.4f,-0.5f,0.0f };
 	// ポストプロセステスト
 	subCamera[0].isUsePostProcess = true;
-	subCamera[0].isActive = true;
+	subCamera[0].isActive = false;
 
 	// サブカメラ2を初期化
 	subCamera[1].shaderPath = "postProcess/SSAO.PS.hlsl";
-	LWP::Object::CreateRenderTexture(&subCamera[1], 640, 360);
 	subCamera[1].transform.translation = { -5.9f,4.5f,-10.0f };
 	subCamera[1].transform.rotation = { 0.4f,0.5f,0.0f };
 	subCamera[1].isUsePostProcess = true;
-	subCamera[1].isActive = true;
+	subCamera[1].isActive = false;
 	
 
 	// 三角形
@@ -117,11 +115,11 @@ void SampleTitle::Initialize() {
 	pl.isActive = true;
 
 	// 複数画面描画の結果を張り付けるスプライト
-	sprite[0].texture = subCamera[0].GetRenderTexture();
+	sprite[0].texture = subCamera[0].GetTexture();
 	sprite[0].isUI = true;
 	sprite[0].name = "Sprite0";
 	sprite[1].transform.translation.x = 640.0f;
-	sprite[1].texture = subCamera[1].GetRenderTexture();
+	sprite[1].texture = subCamera[1].GetTexture();
 	sprite[1].isUI = true;
 	sprite[1].name = "Sprite1";
 
@@ -217,7 +215,7 @@ void SampleTitle::Update() {
 
 	// シェーダー作り直し
 	if (Keyboard::GetTrigger(DIK_R)) {
-		mainCamera.ReCreateShader();
+		//mainCamera.ReCreateShader();
 	}
 	// パーティクル呼び出し
 	if (Keyboard::GetTrigger(DIK_P)) {

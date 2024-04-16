@@ -1,6 +1,7 @@
 #pragma once
 #include "../IResource.h"
-#include "utility/Index.h"
+
+#include "Config.h"
 
 namespace LWP::Base {
 	/// <summary>
@@ -15,8 +16,13 @@ namespace LWP::Base {
 		// 画面クリア
 		virtual void Clear(ID3D12GraphicsCommandList* list) = 0;
 
+		// 現在のバリアを取得
+		D3D12_RESOURCE_STATES GetBarrier() { return currentBarrierState; }
 		// リソースバリアを変更
 		void ChangeResourceBarrier(D3D12_RESOURCE_STATES state, ID3D12GraphicsCommandList* list) {
+			// 変更するバリアと今のバリアが同じ場合は何もしない
+			if (currentBarrierState == state) { return; }
+
 			// TransitionBarrierの設定
 			D3D12_RESOURCE_BARRIER barrier{};
 			// 今回のバリアはTransition
@@ -40,7 +46,7 @@ namespace LWP::Base {
 
 
 	public: // ** パブリックなメンバ変数 ** //
-				
+		
 		// 解像度
 		int width = Config::Window::kResolutionWidth;
 		int height = Config::Window::kResolutionHeight;

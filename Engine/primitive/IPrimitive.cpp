@@ -1,6 +1,5 @@
-#pragma once
 #include "IPrimitive.h"
-#include "base/directX/command/CommandManager.h"
+#include "base/directX/RendererManager.h"
 #include "base/ImGuiManager.h"
 #include "component/Primitive.h"
 
@@ -53,11 +52,11 @@ void IPrimitive::Update() {
 	// 特に何もしない
 }
 
-void IPrimitive::Draw(Base::CommandManager* manager) {
+void IPrimitive::Draw(Base::RendererManager* manager) {
 	// アクティブでなければ描画しない
 	if (!isActive) { return; }
 
-	manager->SetDrawData(this);
+	manager->AddPrimitiveData(this);
 }
 
 void IPrimitive::DebugGUI(const std::string& label) {

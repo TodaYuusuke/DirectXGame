@@ -36,10 +36,10 @@ namespace LWP::Resource {
 		int GetTexSRVIndex() { return srvIndex_; }
 
 		// 深度マップのSRV上のViewを返す関数
-		int GetDepthMapSRVIndex() { return renderResource_->GetDepthSRV(); }
+		//int GetDepthMapSRVIndex() { return renderResource_->GetSRVIndex(); }
 
 		// サイズをVector2で受け取る
-		Math::Vector2 GetTextureSize() const override { return renderResource_->GetResolution(); };
+		Math::Vector2 GetTextureSize() const override { return renderResource_->GetTextureSize(); };
 
 
 	private: // ** メンバ変数 ** //

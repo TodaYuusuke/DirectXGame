@@ -3,7 +3,7 @@
 
 // 前方宣言
 namespace LWP::Base {
-	class CommandManager;
+	class RendererManager;
 }
 
 namespace LWP::Object {
@@ -26,7 +26,7 @@ namespace LWP::Object {
 		// 初期化
 		virtual void Initialize() = 0;
 		// 更新
-		virtual void Update(Base::CommandManager* manager) = 0;
+		virtual void Update(Base::RendererManager* manager) = 0;
 
 		// デバッグ用GUI
 		virtual void DebugGUI() = 0;

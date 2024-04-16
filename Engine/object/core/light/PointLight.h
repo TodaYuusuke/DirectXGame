@@ -26,7 +26,7 @@ namespace LWP::Object {
 		// 初期化
 		void Initialize() override;
 		// 更新
-		void Update(Base::CommandManager* manager) override;
+		void Update(Base::RendererManager* manager) override;
 
 		// デバッグ用GUI
 		void DebugGUI() override;

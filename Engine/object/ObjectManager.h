@@ -26,7 +26,7 @@ namespace LWP::Object {
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update(Base::CommandManager* manager);
+		void Update(Base::RendererManager* manager);
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetPointer(IObject* ptr);

@@ -14,13 +14,13 @@ namespace LWP {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>テクスチャのインスタンス</returns>
-		Texture* LoadTexture(const std::string& filePath);
+		Texture LoadTexture(const std::string& filePath);
 		/// <summary>
 		/// テクスチャファイルの読み込み（exeからのパスで指定）
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>テクスチャのインスタンス</returns>
-		Texture* LoadTextureLongPath(const std::string& filePath);
+		Texture LoadTextureLongPath(const std::string& filePath);
 
 		/// <summary>
 		/// オーディオファイルの読み込み（resources/audio/を短縮ver）

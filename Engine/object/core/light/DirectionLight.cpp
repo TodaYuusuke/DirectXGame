@@ -1,7 +1,6 @@
 #include "DirectionLight.h"
 
 #include <base/ImGuiManager.h>
-#include <base/directX/command/CommandManager.h>
 
 #include <Config.h>
 
@@ -16,7 +15,7 @@ void DirectionLight::Initialize() {
 	name = "DirectionLight";
 }
 // 更新
-void DirectionLight::Update(Base::CommandManager* manager) {
+void DirectionLight::Update(Base::RendererManager* manager) {
 	if (!isActive) { return; }
 	
 	// viewProjectionを計算
@@ -38,7 +37,8 @@ void DirectionLight::Update(Base::CommandManager* manager) {
 	Matrix4x4 viewProjection = viewMatrix * projectionMatrix * viewportMatrix;
 
 	// CommandManagerにデータを登録
-	manager->SetDirectionLightData(this, viewProjection);
+	//manager->SetDirectionLightData(this, viewProjection);
+	manager;
 }
 
 // デバッグ用GUI

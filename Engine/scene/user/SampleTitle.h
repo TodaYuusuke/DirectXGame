@@ -28,8 +28,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Mesh wall[2];
 	//LWP::Primitive::Mesh stressTestModel;	// 描画負荷検証用モデル
 
-	LWP::Resource::Texture* uvTexture;
-	LWP::Resource::Texture* monsterBall;
+	LWP::Resource::Texture uvTexture;
+	LWP::Resource::Texture monsterBall;
 
 	// SEデータ
 	LWP::Resource::Audio* audio;

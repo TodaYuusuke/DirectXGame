@@ -32,15 +32,15 @@ void Engine::Run(IScene* firstScene) {
 		sceneManager_->Update();
 		// リソース更新（アニメーションの更新処理）
 		resourceManager_->Update();
-		objectManager_->Update(directXCommon_->GetCommandManager());	// 描画に必要なデータをCommandManagerに登録している
+		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをCommandManagerに登録している
 		primitiveManager_->Update();
 		colliderManager_->Update();	// 当たり判定検証
 
 		// カメラのビュープロジェクションをcommandManagerに
-		directXCommon_->GetCommandManager()->SetMainRendering(sceneManager_->GetMainCamera());
+		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());
 
 		// 描画処理
-		primitiveManager_->Draw(directXCommon_->GetCommandManager());
+		primitiveManager_->Draw(directXCommon_->GetRendererManager());
 
 		EndFrame();
 	}
@@ -83,7 +83,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	
 	// Base
 	winApp_->Initialize(title, width, height);
-	directXCommon_->Initialize(winApp_.get() , width, height);
+	directXCommon_->Initialize(winApp_.get());
 	imGuiManager_->Initialize(winApp_.get(), directXCommon_.get());
 	// Input
 	inputManager_->Initialize(winApp_.get());
@@ -107,7 +107,6 @@ void Engine::BeginFrame() {
 	// タイマー計測開始
 	debugTimer_.Start();
 
-	directXCommon_->PreDraw();
 	imGuiManager_->Begin();
 	inputManager_->Update();
 }
@@ -117,7 +116,6 @@ void Engine::EndFrame() {
 	if (isShowDebugInfo) { debugTimer_.DebugGUI(); }
 
 	directXCommon_->DrawCall();
-	directXCommon_->PostDraw();
 
 	// 計測終了
 	debugTimer_.End();

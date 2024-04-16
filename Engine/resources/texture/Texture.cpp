@@ -1,33 +1,25 @@
 #include "Texture.h"
-#include "../../base/DirectXCommon.h"
-#include "../../utility/MyUtility.h"
+#include "base/directX/utility/resource/rendering/TextureResource.h"
+#include "base/directX/utility/resource/rendering/RenderResource.h"
 
+using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Resource;
-using namespace LWP::Utility;
-using namespace std;
 
-Texture::Texture(Base::DirectXCommon* directX, const std::string& filePath) {
-	Load(filePath);
-	resource_ = directX->GetCommandManager()->CreateTextureResource(mipImages.GetMetadata());
-
-	// テクスチャのインデックス
-	index_ = directX->GetHeaps()->srv()->CreateShaderResourceView(resource_.Get(), mipImages);
+Texture::Texture(const Base::TextureResource& r) {
+	*this = r;
+}
+Texture& Texture::operator=(const TextureResource& r) {
+	index_ = r.GetSRVIndex();
+	size_ = r.GetTextureSize();
+	return *this;
 }
 
-LWP::Math::Vector2 Texture::GetTextureSize() const {
-	return LWP::Math::Vector2{ static_cast<float>(mipImages.GetImages()->width),static_cast<float>(mipImages.GetImages()->height) };
+Texture::Texture(const Base::RenderResource& r) {
+	*this = r;
 }
-
-
-void Texture::Load(const string& filePath) {
-	// テクスチャファイルを読み込んでプログラムで扱えるようにする
-	DirectX::ScratchImage image{};
-	wstring filePathW = ConvertString(filePath);
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-	assert(SUCCEEDED(hr));
-
-	// ミップマップの作成
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-	assert(SUCCEEDED(hr));
+Texture& Texture::operator=(const RenderResource& r) {
+	index_ = r.GetSRVIndex();
+	size_ = r.GetTextureSize();
+	return *this;
 }

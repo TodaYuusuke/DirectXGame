@@ -1,9 +1,10 @@
 #pragma once
+#include "descriptorHeap/SRV.h"	// なんか先にこっちをincludeしないとSRVInfoが正しく読み込まれない
 #include "descriptorHeap/RTV.h"
-#include "descriptorHeap/SRV.h"
 #include "descriptorHeap/DSV.h"
 
 #include <memory>
+
 
 namespace LWP::Base {
 	/// <summary>
@@ -14,7 +15,7 @@ namespace LWP::Base {
 
 		// コンストラクタ
 		HeapManager() = delete;
-		HeapManager(HWND hwnd, GPUDevice* gpuDevice, int32_t width, int32_t height, ID3D12CommandQueue* queue);
+		HeapManager(GPUDevice* gpuDevice);
 		~HeapManager() = default;
 
 	public: // ** ゲッター ** //
@@ -27,11 +28,11 @@ namespace LWP::Base {
 	private: // ** メンバ変数 ** //
 		
 		// RTV
-		std::unique_ptr<RTV> rtv_;
+		std::unique_ptr<RTV> rtv_ = nullptr;
 		// SRV
-		std::unique_ptr<SRV> srv_;
+		std::unique_ptr<SRV> srv_ = nullptr;
 		// DSV
-		std::unique_ptr<DSV> dsv_;
+		std::unique_ptr<DSV> dsv_ = nullptr;
 
 		
 	private: // ** 非公開のメンバ関数 ** //

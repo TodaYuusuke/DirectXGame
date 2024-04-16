@@ -21,9 +21,10 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
-void CommandManager::Initialize(ID3D12Device* device) {
+void CommandManager::Init(ID3D12Device* device, HeapManager* manager) {
 	HRESULT hr = S_FALSE;
 	device_ = device;
+	heaps_ = manager;
 
 	// コマンドキューを生成する
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
@@ -45,27 +46,10 @@ void CommandManager::Initialize(ID3D12Device* device) {
 	InitializeDXC();
 	// RootSignature生成
 	CreateRootSignature();
-}
 
-void CommandManager::SetDescriptorHeap(HeapManager* manager) {
-	heaps_ = manager;
-
-	// コマンド用クラス実態宣言
-	
+	// メインレンダリング生成
 	renderer_ = std::make_unique<Renderer>();
 	renderer_->Init(device_, dxc_.get(), heaps_);
-
-	// 本描画
-	//mainCommand_ = std::make_unique<MainCommand>();
-	//mainCommand_->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-	//mainCommand_->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
-	
-	// サブ描画
-	//for (int i = 0; i < lwpC::Rendering::kMaxMultiWindowRendering; i++) {
-	//	subCommands_.push_back(std::make_unique<SubRendering>());
-	//	subCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
-	//	subCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
-	//}
 
 	// シャドウマップコマンド用の実体
 	for (int i = 0; i < lwpC::Shadow::kMaxShadowMap; i++) {
@@ -73,13 +57,13 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 		shadowCommands_.back()->SetDescriptorHeap(heaps_->rtv(), heaps_->dsv(), heaps_->srv());
 		shadowCommands_.back()->Initialize(device_, dxc_.get(), rootSignature_->GetRoot());
 	}
-	
+
 	// ポストプロセスのコマンド実装
 	ppManager_ = std::make_unique<PostProcess::Manager>();
 	ppManager_->Init(device_, dxc_.get(), heaps_);
 
 	// グラフィックリソースを作成
-	CreateStructuredBufferResources();
+	CreateResources();
 
 	// SRVを登録してからでないとテクスチャが読み込めないので、
 	// ここでデフォルトテクスチャを読み込む
@@ -87,19 +71,17 @@ void CommandManager::SetDescriptorHeap(HeapManager* manager) {
 
 	// リソースのViewを登録
 	renderer_->SetViewStruct(ViewStruct{
-		commonDataResourceBuffer_->view_,
-		vertexData_->GetView(),
-		transformData_->GetView(),
-		materialData_->GetView(),
+		dCommonData->GetGPUView(),
+		dVertex_->GetGPUView(),
+		dTransform->GetGPUView(),
+		dMaterial->GetGPUView(),
 		directionLightResourceBuffer_->view_,
 		pointLightResourceBuffer_->view_,
-		heaps_->srv()->GetView(),
+		heaps_->srv()->GetFirstTexView(),
 		directionLightResourceBuffer_->shadowMap_[0].view_,
 		pointLightResourceBuffer_->shadowMap_[0].view_
 		});
 }
-
-void CommandManager::PreDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
 
 void CommandManager::DrawCall() {
 	HRESULT hr;
@@ -131,13 +113,13 @@ void CommandManager::DrawCall() {
 	// コマンドのDrawを呼び出すラムダ式（引数で渡すのは面倒なのでラムダで指定）
 	std::function<void(ICommand*)> DrawLambda = [&](ICommand* cmd) {
 		cmd->Draw(rootSignature_->GetRoot(), commandList_.Get(), {
-			commonDataResourceBuffer_->view_,
-			vertexData_->GetView(),
-			transformData_->GetView(),
-			materialData_->GetView(),
+			dCommonData->GetGPUView(),
+			dVertex_->GetGPUView(),
+			dTransform->GetGPUView(),
+			dMaterial->GetGPUView(),
 			directionLightResourceBuffer_->view_,
 			pointLightResourceBuffer_->view_,
-			heaps_->srv()->GetView(),
+			heaps_->srv()->GetFirstTexView(),
 			directionLightResourceBuffer_->shadowMap_[0].view_,
 			pointLightResourceBuffer_->shadowMap_[0].view_
 		});
@@ -162,8 +144,6 @@ void CommandManager::DrawCall() {
 	ExecuteLambda();
 }
 
-void CommandManager::PostDraw() {/* -- DrawCallを圧縮したのでそのうち削除 -- */}
-
 void CommandManager::Reset() {
 	// コマンドをリセット
 	for (int i = 0; i < shadowCount_; i++) {
@@ -180,11 +160,12 @@ void CommandManager::Reset() {
 	renderer_->Reset();
 
 	// 使用量をリセット
-	vertexData_->Reset();
-	transformData_->Reset();
-	commonDataResourceBuffer_->data_->directionLight = 0;
-	commonDataResourceBuffer_->data_->pointLight = 0;
-	materialData_->Reset();
+	dVertex_->Reset();
+	dTransform->Reset();
+	dCommonData->data_->directionLight = 0;
+	dCommonData->data_->pointLight = 0;
+	dMaterial->Reset();
+
 	directionLightResourceBuffer_->usedCount_ = 0;
 	pointLightResourceBuffer_->usedCount_ = 0;
 
@@ -218,7 +199,7 @@ void CommandManager::SetDirectionLightData(const Object::DirectionLight* light, 
 		directionLightResourceBuffer_->shadowMap_->dsvIndex_
 	);
 	// 使用カウント+1
-	commonDataResourceBuffer_->data_->directionLight++;
+	dCommonData->data_->directionLight++;
 }
 void CommandManager::SetPointLightData(const Object::PointLight* light, const Math::Matrix4x4* viewProjections) {
 	// 点光源のデータをリソースにコピー
@@ -242,7 +223,7 @@ void CommandManager::SetPointLightData(const Object::PointLight* light, const Ma
 	}
 	// 使用カウント+1
 	pointLightResourceBuffer_->usedCount_++;
-	commonDataResourceBuffer_->data_->pointLight++;
+	dCommonData->data_->pointLight++;
 }
 
 ID3D12Resource* CommandManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
@@ -493,16 +474,6 @@ void CommandManager::InitializeDXC() {
 
 	dxc_ = std::make_unique<DXC>();
 
-	// DxcUtilsを初期化
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxc_->dxcUtils_));
-	assert(SUCCEEDED(hr));
-	// DxcCompilerを初期化
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxc_->dxcCompiler_));
-	assert(SUCCEEDED(hr));
-
-	// 現時点でincludeはしないが、includeに対応するための設定を行っておく
-	hr = dxc_->dxcUtils_->CreateDefaultIncludeHandler(&dxc_->includeHandler_);
-	assert(SUCCEEDED(hr));
 }
 
 void CommandManager::CreateRootSignature() {
@@ -525,7 +496,7 @@ void CommandManager::CreateRootSignature() {
 		.Build(device_);
 }
 
-void CommandManager::CreateStructuredBufferResources() {
+void CommandManager::CreateResources() {
 	// 共通のSRV用Desc
 	D3D12_SHADER_RESOURCE_VIEW_DESC commonDesc{};
 	commonDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -536,19 +507,22 @@ void CommandManager::CreateStructuredBufferResources() {
 
 
 	// 頂点データ
-	vertexData_ = std::make_unique<IStructured<VertexStruct>>(device_, heaps_->srv(), RenderingPara::kMaxVertex);
+	dVertex_ = std::make_unique<StructuredBuffer<VertexStruct>>(device_, heaps_->srv(), RenderingPara::kMaxVertex);
 	// WorldTransformデータ
-	transformData_ = std::make_unique<IStructured<WTFStruct>>(device_, heaps_->srv(), RenderingPara::kMaxMatrix);
+	dTransform = std::make_unique<StructuredBuffer<WTFStruct>>(device_, heaps_->srv(), RenderingPara::kMaxMatrix);
+	// 共通データ
+	dCommonData = std::make_unique<ConstantBuffer<CommonStruct>>(device_);
+	// 2D用のViewProjectionを作成しておく
+	dCommonData->data_->vp2D = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
+	// マテリアル
+	dMaterial = std::make_unique<StructuredBuffer<MaterialStruct>>(device_, heaps_->srv(), RenderingPara::kMaxMaterial);
+
 
 	// 構造体のカウント
-	commonDataResourceBuffer_ = std::make_unique<CommonDataResourceBuffer>();
-	commonDataResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(CommonData));
-	commonDataResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&commonDataResourceBuffer_->data_));
-	commonDataResourceBuffer_->view_ = commonDataResourceBuffer_->resource_->GetGPUVirtualAddress();
-	// 2D用のViewProjectionを作成しておく
-	commonDataResourceBuffer_->data_->vp2D = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
-	// マテリアルデータ
-	materialData_ = std::make_unique<IStructured<MaterialStruct>>(device_, heaps_->srv(), RenderingPara::kMaxMaterial);
+	//commonDataResourceBuffer_ = std::make_unique<CommonDataResourceBuffer>();
+	//commonDataResourceBuffer_->resource_ = CreateBufferResourceStatic(device_, sizeof(CommonData));
+	//commonDataResourceBuffer_->resource_->Map(0, nullptr, reinterpret_cast<void**>(&commonDataResourceBuffer_->data_));
+	//commonDataResourceBuffer_->view_ = commonDataResourceBuffer_->resource_->GetGPUVirtualAddress();
 	
 	// 平行光源
 	directionLightResourceBuffer_ = std::make_unique<DirectionLightResourceBuffer>();

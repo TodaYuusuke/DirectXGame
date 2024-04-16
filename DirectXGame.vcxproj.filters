@@ -119,12 +119,6 @@
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\CommandManager.cpp">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\ICommand.cpp">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\input\controller\DIController.cpp">
       <Filter>Engine\input\controller</Filter>
     </ClCompile>
@@ -143,9 +137,6 @@
     <ClCompile Include="Engine\object\core\light\PointLight.cpp">
       <Filter>Engine\object\core\light</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\Derived\ShadowMapping.cpp">
-      <Filter>Engine\base\directX\command\derived</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp">
       <Filter>Engine\object\core\light</Filter>
     </ClCompile>
@@ -155,35 +146,8 @@
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\texture\RenderTexture.cpp">
-      <Filter>Engine\resources\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\postEffect\LensDistortion.cpp">
-      <Filter>Engine\base\directX\command\postEffect</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Window.cpp">
       <Filter>Adapter\component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\resource\RenderResource.cpp">
-      <Filter>Engine\base\directX\resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\postEffect\PostProcessManager.cpp">
-      <Filter>Engine\base\directX\command\postEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\postEffect\CCTVEffect.cpp">
-      <Filter>Engine\base\directX\command\postEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\renderer\MainRenderer.cpp">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\renderer\PostProcessRenderer.cpp">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\renderer\Renderer.cpp">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\command\renderer\SubRenderer.cpp">
-      <Filter>Engine\base\directX\command\renderer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\utility\CatmullRom.cpp">
       <Filter>Engine\utilitiy</Filter>
@@ -236,12 +200,6 @@
     <ClCompile Include="Engine\object\IObject.cpp">
       <Filter>Engine\object</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Billboard3D.cpp">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
@@ -274,6 +232,33 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\resource\rendering\RenderResource.cpp">
       <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\resource\rendering\TextureResource.cpp">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Direction.cpp">
+      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Point.cpp">
+      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\RendererManager.cpp">
+      <Filter>Engine\base\directX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\BufferGroup.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utility\IndexManager.cpp">
+      <Filter>Engine\utilitiy</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\DXC.cpp">
+      <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -421,15 +406,6 @@
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\CommandManager.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\ResourceStruct.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\ICommand.h">
-      <Filter>Engine\base\directX\command</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\input\controller\DIController.h">
       <Filter>Engine\input\controller</Filter>
     </ClInclude>
@@ -451,20 +427,11 @@
     <ClInclude Include="Engine\object\core\light\PointLight.h">
       <Filter>Engine\object\core\light</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\Derived\ShadowMapping.h">
-      <Filter>Engine\base\directX\command\derived</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\core\light\DirectionLight.h">
       <Filter>Engine\object\core\light</Filter>
     </ClInclude>
     <ClInclude Include="Engine\input\controller\XInputController.h">
       <Filter>Engine\input\controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\resource\IResource.h">
-      <Filter>Engine\base\directX\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\resource\structuredBuffer\IStructured.h">
-      <Filter>Engine\base\directX\resource\structuredBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\utility\Counter.h">
       <Filter>Engine\utilitiy</Filter>
@@ -472,41 +439,11 @@
     <ClInclude Include="Engine\primitive\2d\Sprite.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\texture\RenderTexture.h">
-      <Filter>Engine\resources\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\resources\texture\ITexture.h">
-      <Filter>Engine\resources\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\postEffect\LensDistortion.h">
-      <Filter>Engine\base\directX\command\postEffect</Filter>
-    </ClInclude>
     <ClInclude Include="Adapter\component\Window.h">
       <Filter>Adapter\component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\resource\RenderResource.h">
-      <Filter>Engine\base\directX\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\postEffect\PostProcessManager.h">
-      <Filter>Engine\base\directX\command\postEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\postEffect\CCTVEffect.h">
-      <Filter>Engine\base\directX\command\postEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\renderer\MainRenderer.h">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\renderer\PostProcessRenderer.h">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\renderer\Renderer.h">
-      <Filter>Engine\base\directX\command\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\utility\CatmullRom.h">
       <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\command\renderer\SubRenderer.h">
-      <Filter>Engine\base\directX\command\renderer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\Particle.h">
       <Filter>Engine\object\core</Filter>
@@ -595,9 +532,6 @@
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\RTV.h">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h">
-      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\utility\IndexManager.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
@@ -618,6 +552,54 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\resource\rendering\RenderResource.h">
       <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\data\IDataResource.h">
+      <Filter>Engine\base\directX\utility\resource\data</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\data\ConstantBuffer.h">
+      <Filter>Engine\base\directX\utility\resource\data</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\TextureResource.h">
+      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h">
+      <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\DXC.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\Command.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\shadow\IShadowMap.h">
+      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Direction.h">
+      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Point.h">
+      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\RendererManager.h">
+      <Filter>Engine\base\directX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\BufferGroup.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\IRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\resource\data\StructuredBuffer.h">
+      <Filter>Engine\base\directX\utility\resource\data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -705,9 +687,6 @@
     <Filter Include="Engine\base\directX">
       <UniqueIdentifier>{c179b36e-9877-47a2-ba8a-9b2a96ef3d2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX\command">
-      <UniqueIdentifier>{60100a09-802c-4da4-904f-ccf44e31b290}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\scene">
       <UniqueIdentifier>{093777cc-1db7-443d-b68b-e527690c6c7b}</UniqueIdentifier>
     </Filter>
@@ -717,23 +696,8 @@
     <Filter Include="Engine\object\core\light">
       <UniqueIdentifier>{d7b05c18-6249-4f61-8559-8af414e7835e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX\resource">
-      <UniqueIdentifier>{a126ceca-736d-4cd4-9f44-53c374866266}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\resource\structuredBuffer">
-      <UniqueIdentifier>{69b22e6e-c4cc-4bf9-915f-10b5f6cba812}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\command\postEffect">
-      <UniqueIdentifier>{c27c5525-1f90-479c-9243-f6d4e8d37e0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\command\derived">
-      <UniqueIdentifier>{5e93e1c4-b2c1-4c36-bae5-07b1bf3df8b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\resources\shaders\postProcess">
       <UniqueIdentifier>{3107d1da-6626-4c88-ad3e-86e371277c01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\command\renderer">
-      <UniqueIdentifier>{376f5f05-25f4-4b0f-aa2a-ac21f55e8270}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\object\collider">
       <UniqueIdentifier>{5c833c51-fe4d-4823-a931-9c1782e5bba2}</UniqueIdentifier>
@@ -758,6 +722,15 @@
     </Filter>
     <Filter Include="Engine\base\directX\utility\resource\rendering">
       <UniqueIdentifier>{4797fd37-2493-44c8-a9fb-ed7b79005707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\utility\resource\data">
+      <UniqueIdentifier>{51b3669d-2827-4fd0-9b5f-fc590c35c18e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\utility\resource\rendering\shadow">
+      <UniqueIdentifier>{8ba12d42-ee9f-4e0d-982c-d8c02b363a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\renderer">
+      <UniqueIdentifier>{32e8ada8-5989-4852-908a-eb156ab03353}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

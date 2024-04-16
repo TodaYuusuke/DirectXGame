@@ -67,8 +67,6 @@ namespace LWP::Base {
 		void AddRenderData2DBill(const IndexInfoStruct& indexInfo);
 		void AddRenderData3DBill(const IndexInfoStruct& indexInfo);
 
-		// サブレンダリングのためにRootSignatureを返す関数
-		RootSignature* GetRoot() { return root_.get(); }
 		// サブレンダリングのためにPSOを返す関数
 		PSO* GetPSOSolid() { return psoSolid_.get(); }
 		PSO* GetPSOWire() { return psoWire_.get(); }

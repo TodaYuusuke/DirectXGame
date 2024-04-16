@@ -1,14 +1,33 @@
 #pragma once
 #include "IDescriptorHeap.h"
 
-#include <vector>
+#include <array>
 
 namespace LWP::Base {
 	struct DSVInfo : public HeapInfo {
 		D3D12_DEPTH_STENCIL_VIEW_DESC desc;
-	};
 
-	class SRV;
+		// デフォルトコンストラクタ
+		DSVInfo() = default;
+		// ムーブコンストラクタ
+		DSVInfo(DSVInfo&& other) noexcept : HeapInfo(std::move(other)) {
+			desc = std::exchange(other.desc, {});
+		}
+
+		// ムーブ代入演算子
+		DSVInfo& operator=(DSVInfo&& other) noexcept {
+			if (this != &other) {
+				HeapInfo::operator=(std::move(other));
+				// ムーブ代入の実装
+				desc = std::exchange(other.desc, {});
+			}
+			return *this;
+		}
+
+		// コピー操作を禁止
+		DSVInfo(const DSVInfo&) = delete;
+		DSVInfo& operator=(const DSVInfo&) = delete;
+	};
 
 	/// <summary>
 	/// RenderTargetView
@@ -30,19 +49,6 @@ namespace LWP::Base {
 		/// </summary>
 		void Init();
 
-
-		/// <summary>
-		/// バックバッファ用の深度マップのリソースを受け取る関数
-		/// </summary>
-		ID3D12Resource* GetBackBuffersDepth() { return backBuffersDepthMap_.Get(); }
-		/// <summary>
-		/// バックバッファ用の深度マップのIndexを受け取る関数
-		/// </summary>
-		uint32_t GetBackBuffersDepthIndex() { return backBuffersDepthIndex_; }
-		/// <summary>
-		/// バックバッファ用の深度マップのViewを受け取る関数
-		/// </summary>
-		D3D12_CPU_DESCRIPTOR_HANDLE GetBackBuffersDepthView() { return backBuffersDepthView_; }
 		
 		/// <summary>
 		/// デプスステンシルビューを作成
@@ -52,12 +58,10 @@ namespace LWP::Base {
 		/// <summary>
 		/// 平行光源シャドウマップ用のリソースを作成
 		/// </summary>
-		ID3D12Resource* CreateDirectionShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view);
-		
+		DSVInfo CreateShadowMapDir(ID3D12Resource* resource);
 		/// <summary>
 		/// 点光源シャドウマップ用のリソースを作成
 		/// </summary>
-		ID3D12Resource* CreatePointShadowMap(uint32_t* dsvIndex, D3D12_GPU_DESCRIPTOR_HANDLE* view);
-
+		std::array<DSVInfo, 6> CreateShadowMapPoint(ID3D12Resource* resource);
 	};
 }
