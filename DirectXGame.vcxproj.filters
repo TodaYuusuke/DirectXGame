@@ -601,6 +601,9 @@
     <ClInclude Include="Engine\base\directX\utility\resource\data\StructuredBuffer.h">
       <Filter>Engine\base\directX\utility\resource\data</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\info\OutputLog.h">
+      <Filter>Engine\info</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

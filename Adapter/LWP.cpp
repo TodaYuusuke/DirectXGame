@@ -3,6 +3,7 @@
 
 using namespace LWP::System;
 
+using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Object;
@@ -13,17 +14,21 @@ using namespace LWP::Scene;
 namespace kWind = LWP::Config::Window;
 
 void Engine::StartUp(std::string str) {
+	LWP::Information::OutputLog::Output("2");
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 	Initialize(str.c_str(), kWind::kResolutionWidth, kWind::kResolutionHeight);
+	LWP::Information::OutputLog::Output("3");
 }
 
 void Engine::Run(IScene* firstScene) {
+	LWP::Information::OutputLog::Output("4");
 	// Sceneはここで生成
 	sceneManager_ = std::make_unique<Scene::Manager>();
 	// Scene初期化
 	sceneManager_->Initialize(firstScene);
 
+	LWP::Information::OutputLog::Output("5");
 	// ウィンドウの×ボタンが押されるまで もしくは　End関数が呼ばれるまでループ
 	while (ProcessMessage()) {
 		BeginFrame();

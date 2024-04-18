@@ -16,6 +16,7 @@
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
 #include "../Engine/info/FrameTracker.h"
+#include "../Engine/info/OutputLog.h"
 
 #include <dxgidebug.h>
 

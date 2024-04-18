@@ -82,7 +82,7 @@ IDxcBlob* DXC::CompileShader(const std::wstring& filePath, const wchar_t* profil
 	assert(SUCCEEDED(hr));
 	// 成功したログを出す
 	//Utility::Log(Utility::ConvertString(std::format(L"CompileSucceeded, path:{}, profile:{}\n", filePath, profile)));
-	Utility::Log(Utility::ConvertString(std::format(L"CompileSucceeded\n", filePath, profile)));
+	Utility::Log(Utility::ConvertString(std::format(L"CompileSucceeded\n")));
 	// もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();
