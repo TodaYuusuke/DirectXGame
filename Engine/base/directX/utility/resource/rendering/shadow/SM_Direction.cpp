@@ -12,7 +12,7 @@ void SM_Direction::Init(GPUDevice* device, HeapManager* heaps) {
 	// 1. Resourceの設定
 	desc.Width = width; // Textureの幅
 	desc.Height = height; // Textureの高さ
-	desc.MipLevels = 1; // mipmapの数
+	desc.MipLevels = 1; // mipmapの数	
 	desc.DepthOrArraySize = 1; // 奥行き or 配列Textureの配列数
 	desc.Format = DXGI_FORMAT_D32_FLOAT; // DepthStencilとして利用可能なフォーマット
 	desc.SampleDesc.Count = 1; // サンプリングカウント、1固定
@@ -41,10 +41,10 @@ void SM_Direction::Init(GPUDevice* device, HeapManager* heaps) {
 	);
 	assert(SUCCEEDED(hr));
 
-	// SRV上に登録
-	srvInfo = heaps->srv()->CreateShadowMapDir(resource_.Get());
 	// DSV上に登録
 	dsvInfo = heaps->dsv()->CreateShadowMapDir(resource_.Get());
+	// SRV上に登録
+	srvInfo = heaps->srv()->CreateShadowMapDir(resource_.Get());
 }
 
 void SM_Direction::Clear(ID3D12GraphicsCommandList* list) {

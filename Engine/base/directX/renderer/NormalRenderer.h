@@ -38,7 +38,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc);
+		void Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令

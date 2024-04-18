@@ -5,17 +5,30 @@
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
+// コンフィグデータの短縮形
+#define cBuf lwpC::Rendering::kMaxBuffer			// バッファーの数
+#define cTex lwpC::Rendering::kMaxTexture			// テクスチャの数
+#define cTexOffset cBuf
+#define cDirS lwpC::Shadow::Direction::kMaxCount	// 平行光源の数
+#define cDirSOffset cBuf+cTex
+#define cPointS lwpC::Shadow::Point::kMaxCount		// 点光源の数
+#define cPointSOffset cBuf+cTex+cDirS
+
 SRV::SRV(ID3D12Device* device) :
-	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 500, 500), texIndexManager_(500, 500) {}
+	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, cBuf + cTex + cDirS + cPointS, cBuf),
+	textureIM_(cTex, cTexOffset),
+	dirShadowMapIM_(cDirS, cDirSOffset),
+	pointShadowIM_(cPointS, cPointSOffset) {}
 
 void SRV::Init() {
 	// SRV用のヒープでディスクリプタの数は1000。SRVはShader内で触るものなので、ShaderVisibleはtrue
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSize, true);
-	
-	// 0番目はImGuiが使うので+1しておく
-	//count_.Increment();
-	//indexManager_.UseEmpty();
 }
+
+D3D12_GPU_DESCRIPTOR_HANDLE SRV::GetFirstTexView() { return GetGPUHandle(cTexOffset); }
+D3D12_GPU_DESCRIPTOR_HANDLE SRV::GetFirstDirShadowView() { return GetGPUHandle(cDirSOffset); }
+D3D12_GPU_DESCRIPTOR_HANDLE SRV::GetFirstPointShadowView() { return GetGPUHandle(cPointSOffset); }
+
 
 SRVInfo SRV::CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
 	HRESULT hr = S_FALSE;
@@ -45,7 +58,7 @@ SRVInfo SRV::CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage
 	info.desc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	// 空きを使用
-	info.index = indexManager_.UseEmpty();
+	info.index = textureIM_.UseEmpty();
 	// viewも設定
 	info.SetView(this);
 
@@ -81,7 +94,7 @@ SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource, const int width, con
 	info.desc.Texture2D.MipLevels = 1;
 
 	// 空きを使用
-	info.index = indexManager_.UseEmpty();
+	info.index = textureIM_.UseEmpty();
 	// viewも設定
 	info.SetView(this);
 
@@ -122,7 +135,7 @@ SRVInfo SRV::CreateShadowMapDir(ID3D12Resource* resource) {
 	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	// 空きを使用
-	info.index = indexManager_.UseEmpty();
+	info.index = dirShadowMapIM_.UseEmpty();
 	// viewも設定
 	info.SetView(this);
 
@@ -145,7 +158,7 @@ SRVInfo SRV::CreateShadowMapPoint(ID3D12Resource* resource) {
 	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	// 空きを使用
-	info.index = indexManager_.UseEmpty();
+	info.index = pointShadowIM_.UseEmpty();
 	// viewも設定
 	info.SetView(this);
 
@@ -179,7 +192,7 @@ SRVInfo SRV::CreateShadowMapPoint(ID3D12Resource* resource) {
 SRVInfo SRV::CreateImGuiSpace() {
 	SRVInfo info;
 	// インデックスを登録
-	info.index = texIndexManager_.UseEmpty();
+	info.index = indexManager_.UseEmpty();
 	info.SetView(this);
 	return info;
 }

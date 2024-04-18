@@ -54,7 +54,8 @@ float3 PointLightingShadow(VertexShaderOutput input, uint32_t n, float3 dir) {
 
 
 
-float32_t4 main(VertexShaderOutput input) : SV_TARGET {
+float32_t4 main(VertexShaderOutput input) : SV_TARGET
+{
     // インデックスを抽出
     uint32_t m = gIndex[input.id].material;
     uint32_t t = gIndex[input.id].tex2d;
@@ -66,7 +67,8 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
     float3 toEye = normalize(gCameraData.position - input.worldPos);
     
     
-    if (gMaterial[m].enableLighting != 0) { // Lightingの計算を行う
+    if (gMaterial[m].enableLighting != 0)
+    { // Lightingの計算を行う
         // -- テクスチャ -- //
         // uvTransform
         float4 transformUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial[m].uvTransform);
@@ -81,30 +83,39 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET {
         uint n = 0; // ループ用変数
 
         // -- 平行光源 -- //
-        for (n = 0; n < gCommonData.directionLightCount; n++) {
+        for (n = 0; n < gCommonData.directionLightCount; n++)
+        {
             diffuse += DirectionLightingDiffuse(input, n);
             specular += DirectionLightingSpecular(input, n, toEye, m);
-            shadow += DirectionLightingShadow(input, n);
+            //shadow += DirectionLightingShadow(input, n);
         }
         
         // -- 点光源 -- //
-        for (n = 0; n < gCommonData.pointLightCount; n++) {
+        for (n = 0; n < gCommonData.pointLightCount; n++)
+        {
             float3 dir = input.worldPos - gPointLight[n].position;
             diffuse += PointLightingDiffuse(input, n, dir);
             specular += PointLightingSpecular(input, n, dir, toEye, m);
             shadow += PointLightingShadow(input, n, dir);
         }
         
+        //output.rgb = ((input.color.rgb * diffuse) + specular) * shadow;
+        //output.w = input.color.a; // 透明度を保持
+    
         output.rgb = ((input.color.rgb * texColor.rgb * diffuse) + specular) * shadow;
-        output.w = input.color.a * texColor.a;   // 透明度を保持
+        output.w = input.color.a * texColor.a; // 透明度を保持
     }
-    else { // Lightingの計算を行わない
-        float4 transformUV = mul(float32_t4(input.texcoord,0.0f,1.0f), gMaterial[m].uvTransform);
+    else
+    { // Lightingの計算を行わない
+        float4 transformUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial[m].uvTransform);
         output = input.color * gTexture[t].Sample(gSampler, transformUV.xy);
     }
 
     // 透明なら消す
-    if (output.a <= 0.0f) { discard; }
+    if (output.a <= 0.0f)
+    {
+        discard;
+    }
 
     return output;
 }

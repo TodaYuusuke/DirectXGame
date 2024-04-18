@@ -11,7 +11,7 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-CameraStruct& CameraStruct::operator=(const Camera& value) {
+CameraStruct& CameraStruct::operator=(const Object::Camera& value) {
 	viewProjection = value.GetViewProjection();
 	rotate = value.transform.GetRotateMatrix();
 	position = value.transform.GetWorldPosition();
@@ -33,14 +33,12 @@ Camera::Camera() {
 }
 
 // 初期化
-void Camera::Initialize() {
-	
-}
+void Camera::Initialize() {}
 // 更新
 void Camera::Update(Base::RendererManager* manager) {
-	if (!isActive) { return; }
 	// リソースにデータをコピー
 	*constantBuffer_.data_ = *this;
+	if (!isActive) { return; }
 
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
 	manager->AddTarget(constantBuffer_.GetGPUView(), &renderResource_, &depthStencil_);

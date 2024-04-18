@@ -83,32 +83,32 @@ namespace LWP::Base {
 #pragma endregion
 
 #pragma region 光源
-	struct DirectionShadowMapStruct {
-		// シャドウマップ用テクスチャ
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		// DSVのインデックス
-		uint32_t dsvIndex_;
-		// シャドウマップのリソースへのビュー
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;
-	};
+	//struct DirectionShadowMapStruct {
+	//	// シャドウマップ用テクスチャ
+	//	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
+	//	// DSVのインデックス
+	//	uint32_t dsvIndex_;
+	//	// シャドウマップのリソースへのビュー
+	//	D3D12_GPU_DESCRIPTOR_HANDLE view_;
+	//};
 
-	// 平行光源の構造体
-	struct DirectionalLightStruct {
-		Math::Matrix4x4 vp;		// ViewProjectionをこっちにも登録
-		Math::Vector4 color;		// ライトの色
-		Math::Vector3 direction;	// ライトの向き
-		float intensity;	// 輝度
-	};
-	// 平行光源のバッファ
-	struct DirectionLightResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// リソース
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビュー
-		DirectionalLightStruct* data_ = nullptr;	// 実際のデータ
-		UINT usedCount_ = 0;
-		Math::Vector3 rotation_;	// 光源の回転向き
-		// シャドウマップのリソース
-		DirectionShadowMapStruct* shadowMap_ = nullptr;
-	};
+	//// 平行光源の構造体
+	//struct DirectionalLightStruct {
+	//	Math::Matrix4x4 vp;		// ViewProjectionをこっちにも登録
+	//	Math::Vector4 color;		// ライトの色
+	//	Math::Vector3 direction;	// ライトの向き
+	//	float intensity;	// 輝度
+	//};
+	//// 平行光源のバッファ
+	//struct DirectionLightResourceBuffer {
+	//	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// リソース
+	//	D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビュー
+	//	DirectionalLightStruct* data_ = nullptr;	// 実際のデータ
+	//	UINT usedCount_ = 0;
+	//	Math::Vector3 rotation_;	// 光源の回転向き
+	//	// シャドウマップのリソース
+	//	DirectionShadowMapStruct* shadowMap_ = nullptr;
+	//};
 
 
 	struct PointShadowMapStruct {

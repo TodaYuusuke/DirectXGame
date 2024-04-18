@@ -7,6 +7,11 @@
 #include "object/core/Particle.h"
 #include "resources/texture/Texture.h"
 
+// 前方宣言
+namespace LWP::Object {
+	class DirectionLight;
+}
+
 namespace LWP::Base {
 	/// <summary>
 	/// レンダラー管理クラス
@@ -42,6 +47,11 @@ namespace LWP::Base {
 		/// Particleのデータをセット
 		/// </summary>
 		void AddParticleData(Primitive::IPrimitive* primitive, std::vector<Object::ParticleData>& wtf);
+
+		/// <summary>
+		/// 平行光源のデータをセット
+		/// </summary>
+		void AddLightData(Object::DirectionLight* light);
 
 		/// <summary>
 		/// コマンドはそとで使いたいのでpointerを返す

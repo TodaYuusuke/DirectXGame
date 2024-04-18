@@ -22,7 +22,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// コンストラクタ（SRV用の特殊なコンストラクタ）
 		/// </summary>
-		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size, uint32_t size2);
+		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t DescSize, uint32_t indexSize);
 
 
 		/// <summary>

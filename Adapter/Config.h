@@ -69,9 +69,13 @@ namespace LWP::Config {
 		static const UINT kMaxMaterial = 12800;
 
 		/// <summary>
+		/// ストラクチャーバッファー当の最大数（※変更非推奨）
+		/// </summary>
+		static const UINT kMaxBuffer = 500;
+		/// <summary>
 		/// テクスチャの最大数
 		/// </summary>
-		static const UINT kMaxTexture = 128;
+		static const UINT kMaxTexture = 500;
 	};
 	/// <summary>
 	/// 影に関するパラメータ
@@ -101,7 +105,7 @@ namespace LWP::Config {
 		/// </summary>
 		namespace Point {
 			/// <summary>
-			/// 点光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+			/// 点光源のResourceの最大数（１つにつき6回のレンダリングが起きるので注意）
 			/// </summary>
 			static const UINT kMaxCount = 8;
 

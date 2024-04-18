@@ -12,7 +12,7 @@ NormalRenderer::NormalRenderer() :
 	billboard2D_(lwpC::Rendering::kMaxIndex),
 	billboard3D_(lwpC::Rendering::kMaxIndex) {}
 
-void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc) {
+void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func) {
 	// StructuredBufferを初期化
 	normal_.indexBuffer.Init(device, srv);
 	wireframe_.indexBuffer.Init(device, srv);
@@ -37,6 +37,9 @@ void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC*
 		.SetVertexShader("Billboard3D.VS.hlsl")
 		.SetPixelShader("Billboard.PS.hlsl")
 		.Build(device->GetDevice());
+
+	// 関数セット
+	setViewFunction_ = func;
 }
 
 void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
@@ -45,6 +48,9 @@ void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 
 	// ImGuiの読み込み終了
 	ImGui::EndFrame();
+
+	// Viewを先にセット
+	setViewFunction_();
 
 	// ターゲット分ループする
 	for (std::vector<Target>::iterator it = target_.begin(); it != target_.end(); ++it) {
@@ -80,7 +86,7 @@ void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		scissorRect.bottom = it->back->height;
 		// Scirssorを設定
 		list->RSSetScissorRects(1, &scissorRect);
-		
+
 		// Viewをセット
 		list->SetGraphicsRootConstantBufferView(1, it->view);
 

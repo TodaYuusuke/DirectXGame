@@ -104,9 +104,8 @@ void SampleTitle::Initialize() {
 
 
 	// 平行光源
-	//Object::DirectionLight* dirLight = Object::CreateInstance<Object::DirectionLight>();
-	//dirLight->isActive = true;
-	//dirLight->intensity = 0.3f;
+	dl.isActive = true;
+	dl.intensity = 0.3f;
 
 	// 点光源
 	pl.transform.translation = { -0.94f,0.0f,-2.7f };
@@ -117,10 +116,12 @@ void SampleTitle::Initialize() {
 	// 複数画面描画の結果を張り付けるスプライト
 	sprite[0].texture = subCamera[0].GetTexture();
 	sprite[0].isUI = true;
+	sprite[0].isActive = false;
 	sprite[0].name = "Sprite0";
 	sprite[1].transform.translation.x = 640.0f;
 	sprite[1].texture = subCamera[1].GetTexture();
 	sprite[1].isUI = true;
+	sprite[1].isActive = false;
 	sprite[1].name = "Sprite1";
 
 

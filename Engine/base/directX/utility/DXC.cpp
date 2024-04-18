@@ -81,7 +81,8 @@ IDxcBlob* DXC::CompileShader(const std::wstring& filePath, const wchar_t* profil
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	// 成功したログを出す
-	Utility::Log(Utility::ConvertString(std::format(L"CompileSucceeded, path:{}, profile:{}\n", filePath, profile)));
+	//Utility::Log(Utility::ConvertString(std::format(L"CompileSucceeded, path:{}, profile:{}\n", filePath, profile)));
+	Utility::Log(Utility::ConvertString(std::format(L"CompileSucceeded\n", filePath, profile)));
 	// もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();

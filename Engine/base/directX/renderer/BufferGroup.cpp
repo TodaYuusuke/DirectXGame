@@ -1,6 +1,10 @@
 #include "BufferGroup.h"
+#include "component/Information.h"
+
+#include "object/core/light/DirectionLight.h"
 
 using namespace LWP::Base;
+using namespace LWP::Math;
 
 void BufferGroup::Init(GPUDevice* device, SRV* srv) {
 	// RootSignature生成
@@ -22,9 +26,10 @@ void BufferGroup::Init(GPUDevice* device, SRV* srv) {
 			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build(device->GetDevice());
 
-	// StructedBuffer
 	common_ = std::make_unique<ConstantBuffer<CommonStruct>>();
 	common_->Init(device);
+	common_->data_->vp2D = Matrix4x4::CreateIdentity4x4() * Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
+	// StructedBuffer
 	vertex_ = std::make_unique<StructuredBuffer<VertexStruct>>(lwpC::Rendering::kMaxVertex);
 	vertex_->Init(device, srv);
 	transform_ = std::make_unique<StructuredBuffer<WTFStruct>>(lwpC::Rendering::kMaxMatrix);
@@ -37,13 +42,36 @@ void BufferGroup::Init(GPUDevice* device, SRV* srv) {
 	pointLight_->Init(device, srv);
 }
 
-void BufferGroup::SetView(ID3D12GraphicsCommandList* list) {
-	list->SetGraphicsRootConstantBufferView(2, common_->GetGPUView());
-	list->SetGraphicsRootDescriptorTable(3, vertex_->GetGPUView());
-	list->SetGraphicsRootDescriptorTable(4, transform_->GetGPUView());
-	list->SetGraphicsRootDescriptorTable(5, material_->GetGPUView());
-	list->SetGraphicsRootDescriptorTable(6, directionLight_->GetGPUView());
-	list->SetGraphicsRootDescriptorTable(7, pointLight_->GetGPUView());
+
+void BufferGroup::SetCommonView(int num, ID3D12GraphicsCommandList* list) {
+	list->SetGraphicsRootConstantBufferView(num, common_->GetGPUView());
+}
+void BufferGroup::SetVertexView(int num, ID3D12GraphicsCommandList* list) {
+	list->SetGraphicsRootDescriptorTable(num, vertex_->GetGPUView());
+}
+void BufferGroup::SetTransformView(int num, ID3D12GraphicsCommandList* list) {
+	list->SetGraphicsRootDescriptorTable(num, transform_->GetGPUView());
+}
+void BufferGroup::SetMaterialView(int num, ID3D12GraphicsCommandList* list) {
+	list->SetGraphicsRootDescriptorTable(num, material_->GetGPUView());
+}
+void BufferGroup::SetDirLightView(int num, ID3D12GraphicsCommandList* list) {
+	list->SetGraphicsRootDescriptorTable(num, directionLight_->GetGPUView());
+}
+void BufferGroup::SetPointLightView(int num, ID3D12GraphicsCommandList* list) {
+	list->SetGraphicsRootDescriptorTable(num, pointLight_->GetGPUView());
+}
+
+int BufferGroup::AddData(const VertexStruct& data) { return vertex_->Add(data); }
+int BufferGroup::AddData(const WTFStruct& data) { return transform_->Add(data); }
+int BufferGroup::AddData(const MaterialStruct& data) { return material_->Add(data); }
+int BufferGroup::AddData(const DirectionalLightStruct& data) {
+	common_->data_->directionLight++;
+	return directionLight_->Add(data);
+}
+int BufferGroup::AddData(const PointLightStruct& data) {
+	common_->data_->pointLight++;
+	return pointLight_->Add(data);
 }
 
 void BufferGroup::Reset() {
@@ -52,4 +80,7 @@ void BufferGroup::Reset() {
 	material_->Reset();
 	directionLight_->Reset();
 	pointLight_->Reset();
+
+	common_->data_->directionLight = 0;
+	common_->data_->pointLight = 0;
 }

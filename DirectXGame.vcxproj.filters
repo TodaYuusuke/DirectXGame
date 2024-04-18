@@ -610,6 +610,9 @@
     <None Include="resources\system\shaders\postProcess\PassThrough.hlsli">
       <Filter>Engine\resources\shaders\postProcess</Filter>
     </None>
+    <None Include="resources\system\shaders\Struct.hlsli">
+      <Filter>Engine\resources\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

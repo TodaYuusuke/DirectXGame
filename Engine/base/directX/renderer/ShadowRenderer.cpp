@@ -7,15 +7,25 @@ using namespace LWP::Base;
 // サイズをここで指定
 ShadowRenderer::ShadowRenderer() : indexBuffer_(lwpC::Rendering::kMaxIndex) {}
 
-void ShadowRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc) {
+void ShadowRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func) {
 	// StructuredBufferを初期化
 	indexBuffer_.Init(device, srv);
+	// RootSignatureを生成
+	root_.AddCBVParameter(0, SV_Vertex)	// インデックスのデータ
+		.AddTableParameter(0, SV_Vertex)	// 描画に使うViewprojection
+		.AddTableParameter(1, SV_Vertex)	// 頂点データ
+		.AddTableParameter(2, SV_Vertex)	// トランスフォーム]
+		.Build(device->GetDevice());
+
 	// PSOを生成
-	pso_.Init(*root, dxc)
+	pso_.Init(root_, dxc)
 		.SetVertexShader("ShadowMap.VS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
 		.Build(device->GetDevice());
+
+	// 関数セット
+	setViewFunction_ = func;
 }
 
 void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
@@ -24,11 +34,15 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		// PSOを設定
 		list->SetPipelineState(pso_.GetState());
 		// ディスクリプタテーブルを登録
-		list->SetGraphicsRootDescriptorTable(0, indexBuffer_.GetGPUView());
+		list->SetGraphicsRootDescriptorTable(1, indexBuffer_.GetGPUView());
 		// 全三角形を１つのDrawCallで描画
 		list->DrawInstanced(3, indexBuffer_.GetCount() / 3, 0, 0);
 	};
 
+	// RootSignatureを設定
+	list->SetGraphicsRootSignature(root_);
+	// Viewを先にセット
+	setViewFunction_();
 
 	// ターゲット分ループする（平行光源）
 	for (Target<SM_Direction>& t : targetDir_) {
@@ -62,8 +76,8 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		// Scirssorを設定
 		list->RSSetScissorRects(1, &scissorRect);
 
-		// Viewをセット
-		list->SetGraphicsRootConstantBufferView(1, t.view);
+		// ViewProjectionをセット
+		list->SetGraphicsRootConstantBufferView(0, t.view);
 
 		// 描画
 		draw(list);

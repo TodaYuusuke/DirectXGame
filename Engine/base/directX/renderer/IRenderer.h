@@ -22,5 +22,8 @@ namespace LWP::Base {
 
 
 	protected: // ** メンバ変数 ** //
+
+		// Viewをセットする関数ポインタ
+		std::function<void()> setViewFunction_;
 	};
 }

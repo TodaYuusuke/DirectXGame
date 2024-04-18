@@ -1,8 +1,10 @@
 #include "RendererManager.h"
 
+#include "component/Resource.h"
 #include "primitive/IPrimitive.h"
 #include "primitive/2d/Billboard2D.h"
 #include "primitive/2d/Billboard3D.h"
+#include "object/core/light/DirectionLight.h"
 
 using namespace LWP::Base;
 
@@ -15,13 +17,37 @@ void RendererManager::Init(GPUDevice* device, SRV* srv) {
 	buffers_.Init(device, srv_);
 	// DXCはデフォルトコンストラクタで初期化済み
 
+	// Viewをセットする関数を用意
+	std::function<void()> shadowFunc = [&]() {
+		ID3D12GraphicsCommandList* list = commander_.List();
+		buffers_.SetVertexView(2, list);
+		buffers_.SetTransformView(3, list);
+	};
+	std::function<void()> normalFunc = [&]() {
+		ID3D12GraphicsCommandList* list = commander_.List();
+		// RootSignatureを設定
+		list->SetGraphicsRootSignature(*buffers_.GetRoot());
+		// 各種Viewをセット
+		buffers_.SetCommonView(2, list);
+		buffers_.SetVertexView(3, list);
+		buffers_.SetTransformView(4, list);
+		buffers_.SetMaterialView(5, list);
+		buffers_.SetDirLightView(6, list);
+		buffers_.SetPointLightView(7, list);
+		// テクスチャのViewをセット
+		list->SetGraphicsRootDescriptorTable(8, srv_->GetFirstTexView());
+		// シャドウマップのViewをセット
+		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstDirShadowView());
+		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstPointShadowView());
+	};
+
 	// シャドウレンダラー初期化
-	shadowRender_.Init(device, srv_, buffers_.GetRoot(), &dxc_);
+	shadowRender_.Init(device, srv_, &dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
-	normalRender_.Init(device, srv_, buffers_.GetRoot(), &dxc_);
+	normalRender_.Init(device, srv_, buffers_.GetRoot(), &dxc_, normalFunc);
 
 	// テクスチャ読み込み
-	//defaultTexture_
+	defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
 }
 void RendererManager::DrawCall() {
 	// リストをポインタ化
@@ -29,26 +55,22 @@ void RendererManager::DrawCall() {
 
 	// ** 共通の設定を先にしておく ** //
 
-	// RootSignatureを設定。PSOに設定してるけど別途設定が必要
-	list->SetGraphicsRootSignature(*buffers_.GetRoot());
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// 描画用のSRVのDescriptorHeapを設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
 	list->SetDescriptorHeaps(1, descriptorHeaps);
 
-	// Buffer達のViewをセット
-	buffers_.SetView(list);
-
-	// シャドウ描画	
-	//shadowRender_.DrawCall(list);
+	// シャドウ描画
+	shadowRender_.DrawCall(list);
 	// 通常描画
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
 
+	// 実行
 	commander_.Execute();
 
-	// リセット
+	// 次のフレームのためにリセット
 	normalRender_.Reset();
 	shadowRender_.Reset();
 	// リソースも解放
@@ -97,6 +119,7 @@ void RendererManager::AddParticleData(Primitive::IPrimitive* primitive, std::vec
 	}
 }
 
+void RendererManager::AddLightData(Object::DirectionLight* light) { buffers_.AddData(*light); }
 
 
 IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primitive) {
@@ -128,6 +151,8 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 	result.tex2d = primitive->texture.t.GetIndex() != -1 ?
 		primitive->texture.t.GetIndex() :
 		defaultTexture_.GetIndex();
+	// SRV上のオフセット分戻して考える
+	result.tex2d -= lwpC::Rendering::kMaxBuffer;
 
 	// isUiセット
 	result.isUI = primitive->isUI;

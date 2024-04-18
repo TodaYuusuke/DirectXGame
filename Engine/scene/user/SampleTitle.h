@@ -36,6 +36,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// サブカメラ
 	LWP::Object::Camera subCamera[2];
+	// 平行光源
+	LWP::Object::DirectionLight dl;
 	// 点光源
 	LWP::Object::PointLight pl;
 	// パーティクル

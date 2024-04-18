@@ -7,7 +7,9 @@ VertexShaderOutput main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : S
     uint32_t isUI = gIndex[vertexID + (instanceID * 3)].isUI;
 
     VertexShaderOutput output;
+    //output.position = gVertex[v].position;
     output.position = mul(mul(gVertex[v].position, gWorldTransform[w].wtf), (isUI ? gCommonData.vp2D : gCameraData.m));
+    //output.position = mul(gVertex[v].position, gWorldTransform[w].wtf);
     output.worldPos = mul(gVertex[v].position, gWorldTransform[w].wtf).xyz;
     output.texcoord = gVertex[v].texcoord;
     output.normal = normalize(mul(gVertex[v].normal, (float32_t3x3)gWorldTransform[w].inverse));

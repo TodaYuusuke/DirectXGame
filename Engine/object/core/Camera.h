@@ -4,10 +4,8 @@
 #include "base/directX/utility/resource/rendering/RenderResource.h"
 #include "base/directX/utility/resource/rendering/DepthStencil.h"
 
-// こいつのためだけに前方宣言
-namespace LWP::Object {
-	class Camera;
-}
+// データ構造体のためだけに前方宣言しなきゃいけない
+namespace LWP::Object { class Camera; }
 // カメラ構造体
 namespace LWP::Base {
 	struct CameraStruct {

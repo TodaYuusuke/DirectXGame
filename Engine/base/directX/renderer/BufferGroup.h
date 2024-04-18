@@ -4,7 +4,12 @@
 #include "base/directX/utility/resource/data/ConstantBuffer.h"
 #include "base/directX/utility/resource/data/StructuredBuffer.h"
 
+
+
 namespace LWP::Base {
+	// 前方宣言
+	struct DirectionalLightStruct;
+
 	/// <summary>
 	/// レンダラー用のリソースバッファーをまとめたクラス
 	/// </summary>
@@ -31,10 +36,13 @@ namespace LWP::Base {
 		/// </summary>
 		RootSignature* GetRoot() { return root_.get(); }
 
-		/// <summary>
-		/// コマンドリストにviewをセットする
-		/// </summary>
-		void SetView(ID3D12GraphicsCommandList* list);
+		// コマンドリストにviewをセットする
+		void SetCommonView(int num, ID3D12GraphicsCommandList* list);
+		void SetVertexView(int num, ID3D12GraphicsCommandList* list);
+		void SetTransformView(int num, ID3D12GraphicsCommandList* list);
+		void SetMaterialView(int num, ID3D12GraphicsCommandList* list);
+		void SetDirLightView(int num, ID3D12GraphicsCommandList* list);
+		void SetPointLightView(int num, ID3D12GraphicsCommandList* list);
 
 		/// <summary>
 		/// 共通データのポインタをゲット
@@ -48,33 +56,33 @@ namespace LWP::Base {
 		/// <summary>
 		/// データをセット
 		/// </summary>
-		int AddData(VertexStruct data) { return vertex_->Add(data); }
-		int AddData(WTFStruct data) { return transform_->Add(data); }
-		int AddData(MaterialStruct data) { return material_->Add(data); }
-		int AddData(DirectionalLightStruct data) { return directionLight_->Add(data); }
-		int AddData(PointLightStruct data) { return pointLight_->Add(data); }
+		int AddData(const VertexStruct& data);
+		int AddData(const WTFStruct& data);
+		int AddData(const MaterialStruct& data);
+		int AddData(const DirectionalLightStruct& data);
+		int AddData(const PointLightStruct& data);
 
 		// 各カウントリセット
 		void Reset();
 
 	private: // ** メンバ変数 ** //
 		// RootSignature
-		std::unique_ptr<RootSignature> root_;
+		std::unique_ptr<RootSignature> root_ = nullptr;
 
 		// 全描画で共通のデータ
-		std::unique_ptr<ConstantBuffer<CommonStruct>> common_;
+		std::unique_ptr<ConstantBuffer<CommonStruct>> common_ = nullptr;
 		
 		// 頂点データ
-		std::unique_ptr<StructuredBuffer<VertexStruct>> vertex_;
+		std::unique_ptr<StructuredBuffer<VertexStruct>> vertex_ = nullptr;
 		// WorldTransformデータ
-		std::unique_ptr<StructuredBuffer<WTFStruct>> transform_;
+		std::unique_ptr<StructuredBuffer<WTFStruct>> transform_ = nullptr;
 		// マテリアルデータ
-		std::unique_ptr<StructuredBuffer<MaterialStruct>> material_;
+		std::unique_ptr<StructuredBuffer<MaterialStruct>> material_ = nullptr;
 
 		// 平行光源
-		std::unique_ptr<StructuredBuffer<DirectionalLightStruct>> directionLight_;
+		std::unique_ptr<StructuredBuffer<DirectionalLightStruct>> directionLight_ = nullptr;
 		// 点光源
-		std::unique_ptr<StructuredBuffer<PointLightStruct>> pointLight_;
+		std::unique_ptr<StructuredBuffer<PointLightStruct>> pointLight_ = nullptr;
 
 	};
 }

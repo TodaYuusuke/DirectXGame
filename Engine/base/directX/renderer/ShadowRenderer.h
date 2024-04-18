@@ -41,7 +41,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc);
+		void Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令（平行光源）
@@ -69,6 +69,8 @@ namespace LWP::Base {
 	private: // ** プライベートなメンバ変数 ** //
 			// インデックスバッファ
 		StructuredBuffer<IndexInfoStruct> indexBuffer_;
+		// RootSignature
+		RootSignature root_;
 		// PSO
 		PSO pso_;
 

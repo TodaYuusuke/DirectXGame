@@ -4,14 +4,13 @@ using namespace LWP::Base;
 
 
 IDescriptorHeap::IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size)
+	: IDescriptorHeap(device, type, size, size) {}
+
+IDescriptorHeap::IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t DescSize, uint32_t indexSize)
 	: device_(device),
 	kElementSize(device->GetDescriptorHandleIncrementSize(type)),
-	kMaxSize(size),
-	indexManager_(size) {}
-
-
-IDescriptorHeap::IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size, uint32_t size2)
-	: IDescriptorHeap(device, type, size + size2) {}
+	kMaxSize(DescSize),
+	indexManager_(indexSize) {}
 
 D3D12_CPU_DESCRIPTOR_HANDLE IDescriptorHeap::GetCPUHandle(uint32_t index) {
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = heap_->GetCPUDescriptorHandleForHeapStart();

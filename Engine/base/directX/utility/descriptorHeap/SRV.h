@@ -1,6 +1,8 @@
 #pragma once
 #include "IDescriptorHeap.h"
 
+#include "Config.h"
+
 // 前方宣言
 namespace DirectX {
 	class ScratchImage;
@@ -66,7 +68,15 @@ namespace LWP::Base {
 		/// <summary>
 		/// テクスチャの最初のViewを返す関数
 		/// </summary>
-		D3D12_GPU_DESCRIPTOR_HANDLE GetFirstTexView() { return GetGPUHandle(500); }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetFirstTexView();
+		/// <summary>
+		/// 平行光源のシャドウマップの最初のViewを返す関数
+		/// </summary>
+		D3D12_GPU_DESCRIPTOR_HANDLE GetFirstDirShadowView();
+		/// <summary>
+		/// 点光源のシャドウマップの最初のViewを返す関数
+		/// </summary>
+		D3D12_GPU_DESCRIPTOR_HANDLE GetFirstPointShadowView();
 
 		/// <summary>
 		/// TextureをSRVに登録
@@ -101,11 +111,16 @@ namespace LWP::Base {
 
 	private: // ** メンバ変数 ** //
 
-		// StructerdBufferなどのデータ系は0 ~ 499
-		// テクスチャ系などのデータは500 ~ 999に割り当てる（論理分割）
+		// インデックスの論理分割
+		// StructerdBuffer当のデータ系 : 500枠
+		// 基底クラスのindexManager_を使う
+		// テクスチャ系のデータ : 500枚
+		Utility::IndexManager textureIM_;
+		// 平行光源のシャドウマップ : 1つ分
+		Utility::IndexManager dirShadowMapIM_;
+		// 点光源のシャドウマップ : 8つ分
+		Utility::IndexManager pointShadowIM_;
 
-		// テクスチャ用のインデックス
-		Utility::IndexManager texIndexManager_;
 
 
 	private: // ** プライベートなメンバ関数 ** //
