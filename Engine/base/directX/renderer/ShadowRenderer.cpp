@@ -45,7 +45,7 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	setViewFunction_();
 
 	// ターゲット分ループする（平行光源）
-	for (Target<SM_Direction>& t : targetDir_) {
+	for (const TargetDir& t : targetDir_) {
 		// 描画先のDSVを設定する
 		list->OMSetRenderTargets(0, nullptr, false, &t.shadow->dsvInfo.cpuView);
 
@@ -77,7 +77,7 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		list->RSSetScissorRects(1, &scissorRect);
 
 		// ViewProjectionをセット
-		list->SetGraphicsRootConstantBufferView(0, t.view);
+		//list->SetGraphicsRootConstantBufferView(0, t.view);
 
 		// 描画
 		draw(list);
@@ -87,7 +87,7 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	}
 
 	// ターゲット分ループする（ポイントライト）
-	for (Target<SM_Point>& t : targetPoint_) {
+	for (const Target<SM_Point>& t : targetPoint_) {
 		// バリアを書き込み用に
 		t.shadow->ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 		// 画面全体をクリア

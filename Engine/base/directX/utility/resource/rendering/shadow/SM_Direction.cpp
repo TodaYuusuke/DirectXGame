@@ -41,10 +41,10 @@ void SM_Direction::Init(GPUDevice* device, HeapManager* heaps) {
 	);
 	assert(SUCCEEDED(hr));
 
-	// DSV上に登録
-	dsvInfo = heaps->dsv()->CreateShadowMapDir(resource_.Get());
 	// SRV上に登録
 	srvInfo = heaps->srv()->CreateShadowMapDir(resource_.Get());
+	// DSV上に登録
+	dsvInfo = heaps->dsv()->CreateShadowMapDir(resource_.Get());
 }
 
 void SM_Direction::Clear(ID3D12GraphicsCommandList* list) {

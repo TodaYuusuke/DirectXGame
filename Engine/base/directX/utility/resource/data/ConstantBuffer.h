@@ -1,6 +1,8 @@
 #pragma once
 #include "IDataResource.h"
 
+#include "info/OutputLog.h"
+
 namespace LWP::Base {
 	/// <summary>
 	/// コンスタントバッファー用のリソースクラス
@@ -24,6 +26,7 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="device"></param>
 		void Init(GPUDevice* device) {
+			LWP::Information::OutputLog::Output("Create ConstantBuffer\n");
 			// リソース作成
 			CreateResource(device, kElementSize);
 			// リソースをマップ
@@ -45,9 +48,9 @@ namespace LWP::Base {
 	private: // ** メンバ変数 ** //
 
 		// データ1つ分のサイズ定数
-		const uint32_t kElementSize;
+		const uint32_t kElementSize{};
 		// リソースへのGPUView
-		D3D12_GPU_VIRTUAL_ADDRESS view_;
+		D3D12_GPU_VIRTUAL_ADDRESS view_{};
 
 
 	public: // ** オペレーターオーバーロード ** //

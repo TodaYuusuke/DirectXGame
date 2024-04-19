@@ -3,7 +3,7 @@
 
 namespace LWP::Base {
 	struct RTVInfo : public HeapInfo {
-		D3D12_RENDER_TARGET_VIEW_DESC desc = D3D12_RENDER_TARGET_VIEW_DESC();
+		D3D12_RENDER_TARGET_VIEW_DESC desc{};
 
 		// デフォルトコンストラクタ
 		RTVInfo() = default;

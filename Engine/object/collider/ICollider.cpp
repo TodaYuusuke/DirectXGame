@@ -7,6 +7,7 @@ using namespace LWP::Object::Collider;
 
 // コンストラクタ
 ICollider::ICollider() {
+	LWP::Information::OutputLog::Output("Create ICollider\n");
 	SetPointer(this);
 }
 // デストラクタ

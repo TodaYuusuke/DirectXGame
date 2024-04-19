@@ -5,7 +5,7 @@
 
 namespace LWP::Base {
 	struct DSVInfo : public HeapInfo {
-		D3D12_DEPTH_STENCIL_VIEW_DESC desc;
+		D3D12_DEPTH_STENCIL_VIEW_DESC desc{};
 
 		// デフォルトコンストラクタ
 		DSVInfo() = default;

@@ -28,6 +28,11 @@ namespace LWP::Base {
 			const D3D12_GPU_VIRTUAL_ADDRESS& view;	// カメラデータのView
 			T* shadow;	// シャドウマップのリソース
 		};
+		struct TargetDir {
+			UINT v;
+			const D3D12_GPU_VIRTUAL_ADDRESS& view;	// カメラデータのView
+			SM_Direction* shadow;	// シャドウマップのリソース
+		};
 
 		/// <summary>
 		/// デフォルトコンストラクタ
@@ -57,7 +62,9 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画ターゲットセット
 		/// </summary>
-		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& v, SM_Direction* s) { targetDir_.push_back(Target<SM_Direction>{ v, s }); }
+		void AddTarget(const TargetDir& target) {
+			targetDir_.push_back(target);
+		}
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& v, SM_Point* s) { targetPoint_.push_back(Target<SM_Point>{ v, s }); }
 
 		/// <summary>
@@ -75,8 +82,8 @@ namespace LWP::Base {
 		PSO pso_;
 
 		// ターゲット（Direction）
-		std::vector<Target<SM_Direction>> targetDir_;
+		std::list<TargetDir> targetDir_;
 		// ターゲット（Point）
-		std::vector<Target<SM_Point>> targetPoint_;
+		std::list<Target<SM_Point>> targetPoint_;
 	};
 }

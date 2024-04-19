@@ -21,11 +21,8 @@ DirectionLight::DirectionLight() {
 	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
 	
 	// リソースの初期化
-	LWP::Information::OutputLog::Output("1\n");
 	viewBuffer_.Init(dev);
-	LWP::Information::OutputLog::Output("2\n");
 	shadowMap_.Init(dev, heaps);
-	LWP::Information::OutputLog::Output("3\n");
 }
 
 // 初期化
@@ -43,6 +40,7 @@ void DirectionLight::Update(Base::RendererManager* manager) {
 	manager->AddLightData(this);
 	*viewBuffer_.data_ = GetViewProjection();
 	manager->AddTarget(viewBuffer_.GetGPUView(), &shadowMap_);
+	manager;
 }
 
 // ビュープロジェクションを返す関数

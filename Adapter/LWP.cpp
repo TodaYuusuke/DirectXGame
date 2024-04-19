@@ -20,6 +20,7 @@ void Engine::StartUp(std::string str) {
 }
 
 void Engine::Run(IScene* firstScene) {
+	LWP::Information::OutputLog::Output("Run Start\n");
 	// Sceneはここで生成
 	sceneManager_ = std::make_unique<Scene::Manager>();
 	// Scene初期化
@@ -42,8 +43,10 @@ void Engine::Run(IScene* firstScene) {
 
 		// 描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
+		LWP::Information::OutputLog::Output("before\n");
 
 		EndFrame();
+		LWP::Information::OutputLog::Output("after\n");
 	}
 	Finalize();
 

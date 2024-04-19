@@ -11,7 +11,7 @@ namespace DirectX {
 namespace LWP::Base {
 	struct SRVInfo : public HeapInfo {
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuView{};
-		D3D12_SHADER_RESOURCE_VIEW_DESC desc = D3D12_SHADER_RESOURCE_VIEW_DESC();
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
 
 
 		// デフォルトコンストラクタ

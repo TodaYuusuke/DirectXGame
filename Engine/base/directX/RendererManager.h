@@ -112,7 +112,10 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="view">カメラデータのView</param>
 		/// <param name="sm">シャドウマップリソース</param>
-		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, SM_Direction* sm) { shadowRender_.AddTarget(view, sm); }
+		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, SM_Direction* sm) { 
+			ShadowRenderer::TargetDir d = { UINT(view), view, sm };
+			shadowRender_.AddTarget(d);
+		}
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, SM_Point* sm) { shadowRender_.AddTarget(view, sm); }
 
 #pragma endregion

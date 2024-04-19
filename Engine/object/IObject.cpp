@@ -5,5 +5,7 @@
 
 using namespace LWP::Object;
 
-IObject::IObject() { SetPointer(this); }
+IObject::IObject() { 
+	LWP::Information::OutputLog::Output("Create IObject\n");
+	SetPointer(this); }
 IObject::~IObject() { DeletePointer(this); }
