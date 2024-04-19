@@ -126,7 +126,7 @@ void SampleTitle::Initialize() {
 
 
 	// パーティクルテスト
-	particle.SetPrimitive<Primitive::Surface>();
+	particle.SetPrimitive<Primitive::Billboard2D>();
 	particle.initFunction = [](Primitive::IPrimitive* primitive) {
 		Object::ParticleData newData{};
 		newData.wtf.translation = primitive->transform.GetWorldPosition();

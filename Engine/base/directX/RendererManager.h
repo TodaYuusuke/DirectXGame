@@ -47,7 +47,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// Particleのデータをセット
 		/// </summary>
-		void AddParticleData(Primitive::IPrimitive* primitive, std::vector<Object::ParticleData>& wtf);
+		void AddParticleData(Primitive::IPrimitive* primitive, const std::vector<Object::ParticleData>& wtf);
 
 		/// <summary>
 		/// 平行光源のデータをセット

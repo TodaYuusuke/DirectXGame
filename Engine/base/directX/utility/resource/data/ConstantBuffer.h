@@ -1,8 +1,6 @@
 #pragma once
 #include "IDataResource.h"
 
-#include "info/OutputLog.h"
-
 namespace LWP::Base {
 	/// <summary>
 	/// コンスタントバッファー用のリソースクラス
@@ -26,7 +24,6 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="device"></param>
 		void Init(GPUDevice* device) {
-			LWP::Information::OutputLog::Output("Create ConstantBuffer\n");
 			// リソース作成
 			CreateResource(device, kElementSize);
 			// リソースをマップ

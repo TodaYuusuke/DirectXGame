@@ -31,6 +31,9 @@ namespace LWP::Object {
 			if (primitive) { delete primitive; }
 			primitive = new T(); 
 		}
+
+		// Primitiveのデータをいじる
+		Primitive::IPrimitive* P() { return primitive; }
 		// トランスフォームをいじる
 		Object::WorldTransform* Transform() { return &primitive->transform; }
 		// パーティクルを追加

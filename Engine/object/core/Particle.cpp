@@ -31,6 +31,7 @@ void Particle::Update(Base::RendererManager* manager) {
 	}
 	// パーティクル用のデータ登録関数を呼び出す
 	manager->AddParticleData(primitive, data);
+	//manager->AddPrimitiveData(primitive);
 }
 
 void Particle::Add(int value) {

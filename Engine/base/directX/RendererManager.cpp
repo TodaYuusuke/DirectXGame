@@ -96,7 +96,7 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 	}
 }
 
-void RendererManager::AddParticleData(Primitive::IPrimitive* primitive, std::vector<Object::ParticleData>& wtf) {
+void RendererManager::AddParticleData(Primitive::IPrimitive* primitive,const std::vector<Object::ParticleData>& wtf) {
 	// IndexInfo構造体に加工
 	IndexInfoStruct common = ProcessIndexInfo(primitive);
 	// データを書き込む先を設定
@@ -106,7 +106,7 @@ void RendererManager::AddParticleData(Primitive::IPrimitive* primitive, std::vec
 		IndexInfoStruct tfInfo = common;
 		// ワールドトランスフォームをデータに登録
 		WTFStruct wS;
-		wS = primitive->transform;
+		wS = wtf[w].wtf;
 		tfInfo.worldMatrix = buffers_.AddData(wS);
 		// Indexの分だけIndexInfoを求める
 		for (int i = 0; i < primitive->GetIndexCount(); i++) {
