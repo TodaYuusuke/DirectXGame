@@ -40,7 +40,6 @@ void DirectionLight::Update(Base::RendererManager* manager) {
 	manager->AddLightData(this);
 	*viewBuffer_.data_ = GetViewProjection();
 	manager->AddTarget(viewBuffer_.GetGPUView(), &shadowMap_);
-	manager;
 }
 
 // ビュープロジェクションを返す関数

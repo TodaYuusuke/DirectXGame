@@ -87,7 +87,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET
         {
             diffuse += DirectionLightingDiffuse(input, n);
             specular += DirectionLightingSpecular(input, n, toEye, m);
-            //shadow += DirectionLightingShadow(input, n);
+            shadow += DirectionLightingShadow(input, n);
         }
         
         // -- 点光源 -- //

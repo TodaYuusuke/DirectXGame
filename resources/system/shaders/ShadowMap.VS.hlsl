@@ -19,7 +19,7 @@ ShadowMapOutput main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_I
     uint32_t w = gIndex[vertexID + (instanceID * 3)].worldTransform;
 
     ShadowMapOutput output;
-    //output.position = mul(mul(gVertex[v].position, gWorldTransform[w].wtf), gViewProjection.m);
-    output.position = mul(gVertex[v].position, gWorldTransform[w].wtf);
+    output.position = mul(mul(gVertex[v].position, gWorldTransform[w].wtf), gViewProjection.m);
+    //output.position = mul(gVertex[v].position, gWorldTransform[w].wtf);
     return output;
 }
