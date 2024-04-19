@@ -735,6 +735,9 @@
     <Filter Include="Engine\base\directX\resource\data">
       <UniqueIdentifier>{7fa81050-974b-4904-b944-cb73557c7998}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\base\directX\postEffect">
+      <UniqueIdentifier>{a22509c4-b405-4685-9374-18ea4100d5e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">

@@ -20,7 +20,7 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 		// 通常描画のターゲット構造体
 		struct Target {
-			const D3D12_GPU_VIRTUAL_ADDRESS& view;	// カメラデータのView
+			D3D12_GPU_VIRTUAL_ADDRESS view;	// カメラデータのView
 			BackBuffer* back;	// BackBuffer（RenderRsource）
 			DepthStencil* depth;	// DepthStencil
 		};
