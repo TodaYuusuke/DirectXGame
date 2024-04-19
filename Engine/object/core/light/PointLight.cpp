@@ -1,13 +1,31 @@
 #include "PointLight.h"
 
-#include <base/ImGuiManager.h>
+#include "component/System.h"
+#include "base/ImGuiManager.h"
 
+using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Object;
+
+PointLight::PointLight() {
+	// ほんとはよくない設計なので代替案募集
+	// GPUデバイスのポインタ
+	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+	// HeapManagerのポインタ
+	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
+
+	// リソースの初期化
+	for (int i = 0; i < 6; i++) {
+		viewBuffers_[i].Init(dev);
+	}
+	shadowMap_.Init(dev, heaps);
+}
 
 // 初期化
 void PointLight::Initialize() {
 	transform.Initialize();
+	name = "PointLight";
 }
 // 更新
 void PointLight::Update(Base::RendererManager* manager) {
@@ -23,17 +41,23 @@ void PointLight::Update(Base::RendererManager* manager) {
 		{0.0f,-3.14f,0.0f},
 	};
 
-	Matrix4x4 viewProjections[6];
 	for (int i = 0; i < 6; i++) {
 		Vector3 worldPosition = transform.GetWorldPosition();
 		Matrix4x4 viewMatrix = (Matrix4x4::CreateRotateXYZMatrix(rotation[i]) * Matrix4x4::CreateTranslateMatrix(worldPosition)).Inverse();
 		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(1.571f, 1.0f, 0.01f, 100.0f);
-		viewProjections[i] = viewMatrix * projectionMatrix;
+		*viewBuffers_[i].data_ = viewMatrix * projectionMatrix;
 	}
 
 	// CommandManagerにデータを登録
-	//manager->SetPointLightData(this, viewProjections);
-	manager;
+	manager->AddLightData(this);
+	manager->AddTarget({
+		viewBuffers_[0].GetGPUView(),
+		viewBuffers_[1].GetGPUView(),
+		viewBuffers_[2].GetGPUView(),
+		viewBuffers_[3].GetGPUView(),
+		viewBuffers_[4].GetGPUView(),
+		viewBuffers_[5].GetGPUView()
+		}, &shadowMap_);
 }
 
 // デバッグ用GUI

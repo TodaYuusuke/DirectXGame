@@ -7,8 +7,8 @@ struct ViewProjection {
     float32_t4x4 m;
 };
 
-ConstantBuffer<ViewProjection> gViewProjection : register(b0);
 StructuredBuffer<IndexInfo> gIndex : register(t0);
+ConstantBuffer<ViewProjection> gViewProjection : register(b0);
 StructuredBuffer<Vertex> gVertex : register(t1);
 StructuredBuffer<WorldTransform> gWorldTransform : register(t2);
 

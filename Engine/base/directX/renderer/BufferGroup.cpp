@@ -2,6 +2,7 @@
 #include "component/Information.h"
 
 #include "object/core/light/DirectionLight.h"
+#include "object/core/light/PointLight.h"
 
 using namespace LWP::Base;
 using namespace LWP::Math;

@@ -111,30 +111,30 @@ namespace LWP::Base {
 	//};
 
 
-	struct PointShadowMapStruct {
-		// シャドウマップ用テクスチャ
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-		// DSVのインデックス
-		uint32_t dsvIndex_[6];
-		// シャドウマップのリソースへのビュー
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;
-	};
-	// 点光源の構造体
-	struct PointLightStruct {
-		Math::Vector4 color;	// ライトの色
-		Math::Vector3 position;	// ライトのワールド座標
-		float intensity;		// 輝度
-		float radius;			// ライトの届く最大距離
-		float decay;			// 減衰率
-	};
-	// 点光源のバッファ
-	struct PointLightResourceBuffer {
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// リソース
-		D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビュー
-		PointLightStruct* data_ = nullptr;	// 実際のデータ
-		UINT usedCount_ = 0;
-		// シャドウマップのリソース
-		PointShadowMapStruct* shadowMap_;
-	};
+	//struct PointShadowMapStruct {
+	//	// シャドウマップ用テクスチャ
+	//	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
+	//	// DSVのインデックス
+	//	uint32_t dsvIndex_[6];
+	//	// シャドウマップのリソースへのビュー
+	//	D3D12_GPU_DESCRIPTOR_HANDLE view_;
+	//};
+	//// 点光源の構造体
+	//struct PointLightStruct {
+	//	Math::Vector4 color;	// ライトの色
+	//	Math::Vector3 position;	// ライトのワールド座標
+	//	float intensity;		// 輝度
+	//	float radius;			// ライトの届く最大距離
+	//	float decay;			// 減衰率
+	//};
+	//// 点光源のバッファ
+	//struct PointLightResourceBuffer {
+	//	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;	// リソース
+	//	D3D12_GPU_DESCRIPTOR_HANDLE view_;	// ビュー
+	//	PointLightStruct* data_ = nullptr;	// 実際のデータ
+	//	UINT usedCount_ = 0;
+	//	// シャドウマップのリソース
+	//	PointShadowMapStruct* shadowMap_;
+	//};
 #pragma endregion
 }

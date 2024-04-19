@@ -5,6 +5,7 @@
 #include "primitive/2d/Billboard2D.h"
 #include "primitive/2d/Billboard3D.h"
 #include "object/core/light/DirectionLight.h"
+#include "object/core/light/PointLight.h"
 
 using namespace LWP::Base;
 
@@ -121,6 +122,7 @@ void RendererManager::AddParticleData(Primitive::IPrimitive* primitive, std::vec
 
 void RendererManager::AddLightData(Object::DirectionLight* light) { buffers_.AddData(*light); }
 
+void RendererManager::AddLightData(Object::PointLight* light) { buffers_.AddData(*light); }
 
 IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primitive) {
 	IndexInfoStruct result;

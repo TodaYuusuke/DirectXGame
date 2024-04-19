@@ -12,9 +12,6 @@ using namespace LWP::Object;
 
 DirectionLight::DirectionLight() {
 	// ほんとはよくない設計なので代替案募集
-
-	LWP::Information::OutputLog::Output("Create DirectionLight\n");
-
 	// GPUデバイスのポインタ
 	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
 	// HeapManagerのポインタ

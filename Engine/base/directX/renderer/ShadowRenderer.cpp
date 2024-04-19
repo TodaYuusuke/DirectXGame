@@ -11,8 +11,8 @@ void ShadowRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<v
 	// StructuredBufferを初期化
 	indexBuffer_.Init(device, srv);
 	// RootSignatureを生成
-	root_.AddCBVParameter(0, SV_Vertex)	// インデックスのデータ
-		.AddTableParameter(0, SV_Vertex)	// 描画に使うViewprojection
+	root_.AddTableParameter(0, SV_Vertex)	// インデックスのデータ
+		.AddCBVParameter(0, SV_Vertex)		// 描画に使うViewprojection
 		.AddTableParameter(1, SV_Vertex)	// 頂点データ
 		.AddTableParameter(2, SV_Vertex)	// トランスフォーム]
 		.Build(device->GetDevice());
@@ -34,7 +34,7 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		// PSOを設定
 		list->SetPipelineState(pso_.GetState());
 		// ディスクリプタテーブルを登録
-		list->SetGraphicsRootDescriptorTable(1, indexBuffer_.GetGPUView());
+		list->SetGraphicsRootDescriptorTable(0, indexBuffer_.GetGPUView());
 		// 全三角形を１つのDrawCallで描画
 		list->DrawInstanced(3, indexBuffer_.GetCount() / 3, 0, 0);
 	};
@@ -48,6 +48,9 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	for (const Target<SM_Direction>& t : targetDir_) {
 		// 描画先のDSVを設定する
 		list->OMSetRenderTargets(0, nullptr, false, &t.shadow->dsvInfo.cpuView);
+
+		// ViewProjectionをセット
+		list->SetGraphicsRootConstantBufferView(1, t.view);
 
 		// バリアを書き込み用に
 		t.shadow->ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
@@ -76,9 +79,6 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		// Scirssorを設定
 		list->RSSetScissorRects(1, &scissorRect);
 
-		// ViewProjectionをセット
-		list->SetGraphicsRootConstantBufferView(0, t.view);
-
 		// 描画
 		draw(list);
 
@@ -87,14 +87,11 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	}
 
 	// ターゲット分ループする（ポイントライト）
-	for (const Target<SM_Point>& t : targetPoint_) {
+	for (const TargetPoint& t : targetPoint_) {
 		// バリアを書き込み用に
 		t.shadow->ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 		// 画面全体をクリア
 		t.shadow->Clear(list);
-
-		// Viewをセット
-		list->SetGraphicsRootConstantBufferView(1, t.view);
 
 		// ビューポート
 		D3D12_VIEWPORT viewport = {};
@@ -126,6 +123,9 @@ void ShadowRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		for (int i = 0; i < 6; i++) {
 			// 描画先のDSVを設定する
 			list->OMSetRenderTargets(0, nullptr, false, &dsvHandle[i]);
+
+			// Viewをセット
+			list->SetGraphicsRootConstantBufferView(1, t.views[i]);
 
 			// viewportを設定
 			list->RSSetViewports(1, &viewport);

@@ -9,6 +9,7 @@
 namespace LWP::Base {
 	// 前方宣言
 	struct DirectionalLightStruct;
+	struct PointLightStruct;
 
 	/// <summary>
 	/// レンダラー用のリソースバッファーをまとめたクラス

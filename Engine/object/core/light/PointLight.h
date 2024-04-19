@@ -1,8 +1,22 @@
 #pragma once
-#include <math/vector/Vector3.h>
-#include <utility/Color.h>
-
 #include "../../IObject.h"
+
+#include "math/vector/Vector3.h"
+#include "utility/Color.h"
+
+#include "base/directX/utility/resource/data/ConstantBuffer.h"
+#include "base/directX/utility/resource/rendering/shadow/SM_Point.h"
+
+// 点光源の構造体
+namespace LWP::Base {
+	struct PointLightStruct {
+		Math::Vector4 color;	// ライトの色
+		Math::Vector3 position;	// ライトのワールド座標
+		float intensity;		// 輝度
+		float radius;			// ライトの届く最大距離
+		float decay;			// 減衰率
+	};
+}
 
 namespace LWP::Object {
 	/// <summary>
@@ -22,7 +36,13 @@ namespace LWP::Object {
 
 
 	public: // ** メンバ関数 ** //
-		
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		PointLight();
+
+
 		// 初期化
 		void Initialize() override;
 		// 更新
@@ -30,5 +50,25 @@ namespace LWP::Object {
 
 		// デバッグ用GUI
 		void DebugGUI() override;
+
+
+		// 構造体への暗黙変換
+		operator Base::PointLightStruct() {
+			Base::PointLightStruct result;
+			Math::Vector4 c = color.GetVector4();
+			result.color = { c.x,c.y,c.z };
+			result.position = transform.GetWorldPosition();
+			result.intensity = intensity;
+			result.radius = radius;
+			result.decay = decay;
+			return result;
+		}
+
+	private: // ** プライベートなメンバ変数 ** //
+
+		// ViewProjection
+		std::array<Base::ConstantBuffer<Math::Matrix4x4>, 6> viewBuffers_;
+		// シャドウマップ
+		Base::SM_Point shadowMap_;
 	};
 }
