@@ -5,8 +5,8 @@
 #include "directX/utility/HeapManager.h"
 #include "directX/RendererManager.h"
 
-#include "directX/utility/resource/rendering/BackBuffer.h"
-#include "directX/utility/resource/rendering/DepthStencil.h"
+#include "directX/resource/rendering/BackBuffer.h"
+#include "directX/resource/rendering/DepthStencil.h"
 
 
 #include <memory>

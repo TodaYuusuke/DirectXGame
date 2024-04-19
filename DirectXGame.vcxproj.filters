@@ -224,24 +224,6 @@
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\SRV.cpp">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\resource\rendering\BackBuffer.cpp">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\resource\rendering\DepthStencil.cpp">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\resource\rendering\RenderResource.cpp">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\resource\rendering\TextureResource.cpp">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Direction.cpp">
-      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Point.cpp">
-      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\RendererManager.cpp">
       <Filter>Engine\base\directX</Filter>
     </ClCompile>
@@ -259,6 +241,24 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\DXC.cpp">
       <Filter>Engine\base\directX\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\DepthStencil.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Point.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\TextureResource.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -538,30 +538,6 @@
     <ClInclude Include="Engine\utility\Index.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\IResource.h">
-      <Filter>Engine\base\directX\utility\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\DepthStencil.h">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\IRenderingResource.h">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\BackBuffer.h">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\RenderResource.h">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\data\IDataResource.h">
-      <Filter>Engine\base\directX\utility\resource\data</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\data\ConstantBuffer.h">
-      <Filter>Engine\base\directX\utility\resource\data</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\TextureResource.h">
-      <Filter>Engine\base\directX\utility\resource\rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
     </ClInclude>
@@ -570,15 +546,6 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\Command.h">
       <Filter>Engine\base\directX\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\shadow\IShadowMap.h">
-      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Direction.h">
-      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\rendering\shadow\SM_Point.h">
-      <Filter>Engine\base\directX\utility\resource\rendering\shadow</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\RendererManager.h">
       <Filter>Engine\base\directX</Filter>
@@ -598,11 +565,44 @@
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h">
       <Filter>Engine\base\directX\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\resource\data\StructuredBuffer.h">
-      <Filter>Engine\base\directX\utility\resource\data</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\info\OutputLog.h">
       <Filter>Engine\info</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\IResource.h">
+      <Filter>Engine\base\directX\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\BackBuffer.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\DepthStencil.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\IRenderingResource.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\RenderResource.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\IShadowMap.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Point.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\TextureResource.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h">
+      <Filter>Engine\base\directX\resource\data</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\data\IDataResource.h">
+      <Filter>Engine\base\directX\resource\data</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h">
+      <Filter>Engine\base\directX\resource\data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -723,20 +723,17 @@
     <Filter Include="Engine\base\directX\utility\descriptorHeap">
       <UniqueIdentifier>{89f131fc-3cd1-4d6d-b6a7-a88f69bf7b16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX\utility\resource">
-      <UniqueIdentifier>{138e0ad5-5aca-45f7-b910-37d2ecfe7e6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\utility\resource\rendering">
-      <UniqueIdentifier>{4797fd37-2493-44c8-a9fb-ed7b79005707}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\utility\resource\data">
-      <UniqueIdentifier>{51b3669d-2827-4fd0-9b5f-fc590c35c18e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\base\directX\utility\resource\rendering\shadow">
-      <UniqueIdentifier>{8ba12d42-ee9f-4e0d-982c-d8c02b363a25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\base\directX\renderer">
       <UniqueIdentifier>{32e8ada8-5989-4852-908a-eb156ab03353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\resource">
+      <UniqueIdentifier>{bc6e147b-ce09-4129-bd8b-963ae86109bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\resource\rendering">
+      <UniqueIdentifier>{0488ef0b-6538-4e95-8ffa-1c0f08d8cf41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\resource\data">
+      <UniqueIdentifier>{7fa81050-974b-4904-b944-cb73557c7998}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

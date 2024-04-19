@@ -1,7 +1,7 @@
 #pragma once
 #include "IRenderer.h"
-#include "base/directX/utility/resource/rendering/shadow/SM_Direction.h"
-#include "base/directX/utility/resource/rendering/shadow/SM_Point.h"
+#include "base/directX/resource/rendering/shadow/SM_Direction.h"
+#include "base/directX/resource/rendering/shadow/SM_Point.h"
 #include "base/directX/utility/DXC.h"
 
 #include <vector>

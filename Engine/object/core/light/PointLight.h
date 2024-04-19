@@ -4,8 +4,8 @@
 #include "math/vector/Vector3.h"
 #include "utility/Color.h"
 
-#include "base/directX/utility/resource/data/ConstantBuffer.h"
-#include "base/directX/utility/resource/rendering/shadow/SM_Point.h"
+#include "base/directX/resource/data/ConstantBuffer.h"
+#include "base/directX/resource/rendering/shadow/SM_Point.h"
 
 // 点光源の構造体
 namespace LWP::Base {

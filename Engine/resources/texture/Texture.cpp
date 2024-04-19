@@ -1,6 +1,6 @@
 #include "Texture.h"
-#include "base/directX/utility/resource/rendering/TextureResource.h"
-#include "base/directX/utility/resource/rendering/RenderResource.h"
+#include "base/directX/resource/rendering/TextureResource.h"
+#include "base/directX/resource/rendering/RenderResource.h"
 
 using namespace LWP;
 using namespace LWP::Base;

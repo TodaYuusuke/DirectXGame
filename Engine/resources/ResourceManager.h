@@ -3,7 +3,7 @@
 #include <wrl.h>
 
 #include "texture/Texture.h"
-#include "base/directX/utility/resource/rendering/TextureResource.h"
+#include "base/directX/resource/rendering/TextureResource.h"
 #include "audio/Audio.h"
 #include "motion/Motion.h"
 //#include "model/Model.h"

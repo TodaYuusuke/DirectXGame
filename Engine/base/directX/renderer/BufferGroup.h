@@ -1,8 +1,8 @@
 #pragma once
 #include "ResourceStruct.h"
 #include "base/directX/utility/RootSignature.h"
-#include "base/directX/utility/resource/data/ConstantBuffer.h"
-#include "base/directX/utility/resource/data/StructuredBuffer.h"
+#include "base/directX/resource/data/ConstantBuffer.h"
+#include "base/directX/resource/data/StructuredBuffer.h"
 
 
 

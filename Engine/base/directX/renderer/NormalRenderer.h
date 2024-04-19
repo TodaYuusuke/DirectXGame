@@ -1,8 +1,8 @@
 #pragma once
 #include "IRenderer.h"
-#include "base/directX/utility/resource/rendering/BackBuffer.h"
-#include "base/directX/utility/resource/rendering/RenderResource.h"
-#include "base/directX/utility/resource/rendering/DepthStencil.h"
+#include "base/directX/resource/rendering/BackBuffer.h"
+#include "base/directX/resource/rendering/RenderResource.h"
+#include "base/directX/resource/rendering/DepthStencil.h"
 #include "base/directX/utility/DXC.h"
 
 // 前方宣言

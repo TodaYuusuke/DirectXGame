@@ -1,8 +1,8 @@
 #pragma once
 #include "../IObject.h"
-#include "base/directX/utility/resource/data/ConstantBuffer.h"
-#include "base/directX/utility/resource/rendering/RenderResource.h"
-#include "base/directX/utility/resource/rendering/DepthStencil.h"
+#include "base/directX/resource/data/ConstantBuffer.h"
+#include "base/directX/resource/rendering/RenderResource.h"
+#include "base/directX/resource/rendering/DepthStencil.h"
 
 // データ構造体のためだけに前方宣言しなきゃいけない
 namespace LWP::Object { class Camera; }
