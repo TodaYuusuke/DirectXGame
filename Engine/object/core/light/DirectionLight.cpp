@@ -13,14 +13,19 @@ using namespace LWP::Object;
 DirectionLight::DirectionLight() {
 	// ほんとはよくない設計なので代替案募集
 
+	LWP::Information::OutputLog::Output("Create DirectionLight\n");
+
 	// GPUデバイスのポインタ
 	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
 	// HeapManagerのポインタ
 	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
 	
 	// リソースの初期化
+	LWP::Information::OutputLog::Output("1\n");
 	viewBuffer_.Init(dev);
+	LWP::Information::OutputLog::Output("2\n");
 	shadowMap_.Init(dev, heaps);
+	LWP::Information::OutputLog::Output("3\n");
 }
 
 // 初期化

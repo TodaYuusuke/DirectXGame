@@ -6,6 +6,6 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	LWP::Information::OutputLog::Output("1");
 	LWP::System::StartUp("Window Title");
-	LWP::System::Run(new SampleGameScene);
+	LWP::System::Run(new SampleTitle);
 	return 0;
 }
