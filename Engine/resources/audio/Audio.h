@@ -1,29 +1,41 @@
 #pragma once
-#include <xaudio2.h>
-#pragma comment(lib, "xaudio2.lib")
-
-#include <string>
+#include "AudioData.h"
 
 namespace LWP::Resource {
+	/// <summary>
+	/// オーディオクラス
+	/// <para>実体はリソースマネージャーが持っているのでこれはアクセス用のクラス</para>
+	/// </summary>
 	class Audio final {
-	public: // ** パブリックなメンバ変数 ** //
-
-		// ループ回数
-		// 255で無限ループ
-		UINT loopCount_ = 1;
-		
 	public: // ** メンバ関数 ** //
 
 		// コンストラクタ
-		Audio(IXAudio2* xAudio, const std::string& filePath);
+		Audio() = default;
 		// デストラクタ
-		~Audio();
+		~Audio() = default;
 
-
+		/// <summary>
+		/// ファイル読み込み
+		/// </summary>
+		/// <param name="path">resources/直下からのパス</param>
+		void Load(const std::string& path);
+		/// <summary>
+		/// ファイル読み込み
+		/// </summary>
+		/// <param name="path">exeからのパス</param>
+		void LoadLongPath(const std::string& path);
+		
 		/// <summary>
 		/// 再生
 		/// </summary>
-		void Play();
+		/// <param name="loopCount">ループ回数（255で無限ループ）</param>
+		void Play(const UINT& loopCount = 0);
+		/// <summary>
+		/// 再生
+		/// </summary>
+		/// <param name="volume">音量</param>
+		/// <param name="loopCount">ループ回数（255で無限ループ）</param>
+		void Play(const float& volume, const UINT& loopCount = 0);
 		/// <summary>
 		/// 停止
 		/// </summary>
@@ -33,55 +45,22 @@ namespace LWP::Resource {
 		/// </summary>
 		//void Pause();
 
-
 		/// <summary>
-		/// ループ回数を指定する 255ならば無限ループ
+		/// 音量を取得する
 		/// </summary>
-		void SetLoopCount(UINT value) { loopCount_ = value; }
-
+		float GetVolume();
 		/// <summary>
 		/// 音量を設定する
 		/// </summary>
-		void SetVolume(float value) { pSourceVoice->SetVolume(value); }
+		void SetVolume(float value);
+
 
 	private: // ** メンバ変数 ** //
-		// XAudio2のポインタ
-		IXAudio2* xAudio_ = nullptr;
+		// オーディオデータへのポインタ
+		AudioData* ptr_ = nullptr;
 
-		// 波形フォーマット
-		WAVEFORMATEX wfex_;
-		// バッファの先頭アドレス
-		BYTE* pBuffer_;
-		// バッファのサイズ
-		unsigned int bufferSize_;
+		// ボリューム
+		float volume_ = 1.0f;
 
-		// オーディオソース
-		IXAudio2SourceVoice* pSourceVoice = nullptr;
-
-
-	private: // ** プライベートな関数 ** //
-
-		struct WAV {
-			// チャンクヘッダ
-			struct ChunkHeader {
-				char id[4];		// チャンク毎のID
-				int32_t size;	// チャンクサイズ
-			};
-			// RIFFヘッダチャンク
-			struct RiffHeader {
-				ChunkHeader chunk;	// "RIFF"
-				char type[4];		// "WAVE"
-			};
-			// Formatチャンク
-			struct FormatChunk {
-				ChunkHeader chunk;	// "fmt"
-				WAVEFORMATEX fmt;	// 波形フォーマット
-			};
-		};
-
-		/// <summary>
-		/// waveファイルを読み込む
-		/// </summary>
-		void LoadWAV(const std::string& filePath);
 	};
 }

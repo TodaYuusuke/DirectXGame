@@ -43,8 +43,8 @@ namespace LWP::Resource {
 		/// <returns></returns>
 		Texture LoadTexture(Base::DirectXCommon* directX, const std::string& filepath);
 		Texture LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
-		Audio* LoadAudio(const std::string& filepath);
-		Audio* LoadAudioLongPath(const std::string& filepath);
+		AudioData* LoadAudio(const std::string& filepath);
+		AudioData* LoadAudioLongPath(const std::string& filepath);
 		const Primitive::MeshData& LoadMesh(const std::string& filepath);
 		const Primitive::MeshData& LoadMeshLongPath(const std::string& filepath);
 
@@ -58,7 +58,7 @@ namespace LWP::Resource {
 		// オーディオ用のオブジェクト
 		Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
 		IXAudio2MasteringVoice* masterVoice_;
-
+		
 		// テクスチャの配列
 		struct TextureStruct {
 			Texture tex;
@@ -68,7 +68,7 @@ namespace LWP::Resource {
 		std::map<std::string, TextureStruct> textureMap_;
 		// オーディオの配列
 		const std::string audioDirectoryPath_ = "resources/audio/";
-		std::map<std::string, Audio*> audioMap_;
+		std::map<std::string, AudioData> audioMap_;
 		// 3Dモデルの配列
 		const std::string meshDirectoryPath_ = "resources/obj/";
 		std::map<std::string, Primitive::MeshData> meshDataMap_;

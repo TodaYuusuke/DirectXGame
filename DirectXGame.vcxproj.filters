@@ -260,6 +260,9 @@
     <ClCompile Include="Engine\base\directX\resource\rendering\TextureResource.cpp">
       <Filter>Engine\base\directX\resource\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\resources\audio\AudioData.cpp">
+      <Filter>Engine\resources\audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -603,6 +606,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h">
       <Filter>Engine\base\directX\resource\data</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\audio\AudioData.h">
+      <Filter>Engine\resources\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

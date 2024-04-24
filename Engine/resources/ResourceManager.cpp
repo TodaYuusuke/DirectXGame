@@ -17,6 +17,8 @@ using namespace LWP::Resource;
 Manager::~Manager() {
 	// XAudio2解放
 	xAudio2_.Reset();
+	// Media Foundation
+	MFShutdown();
 	// テクスチャ解放
 	textureMap_.clear();
 	// オーディオ解放
@@ -27,11 +29,17 @@ Manager::~Manager() {
 
 void Manager::Initialize() {
 	HRESULT hr;
+
+	// XAudio2初期化
 	hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 	assert(SUCCEEDED(hr));
 	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
 	assert(SUCCEEDED(hr));
+
+	// MediaFoundationの初期化
+	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 }
+
 void Manager::Update() {
 	// モーション更新
 	for (Motion* m : motions_.list) {
@@ -55,16 +63,16 @@ Texture Manager::LoadTextureLongPath(Base::DirectXCommon* directX, const std::st
 	return textureMap_[filepath].tex;
 }
 
-Audio* Manager::LoadAudio(const std::string& filepath) {
+AudioData* Manager::LoadAudio(const std::string& filepath) {
 	return LoadAudioLongPath(audioDirectoryPath_ + filepath);
 }
-Audio* Manager::LoadAudioLongPath(const std::string& filepath) {
+AudioData* Manager::LoadAudioLongPath(const std::string& filepath) {
 	// 読み込み済みかをチェック
 	if (!audioMap_.count(filepath)) {
 		// 新しいテクスチャをロード
-		audioMap_[filepath] = new Audio(xAudio2_.Get(), filepath);
+		audioMap_[filepath] = AudioData(xAudio2_.Get(), filepath);
 	}
-	return audioMap_[filepath];
+	return &audioMap_[filepath];
 }
 
 const Primitive::MeshData& Manager::LoadMesh(const std::string& filepath) {

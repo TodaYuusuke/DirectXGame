@@ -17,4 +17,5 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Sphere sphere;
 	LWP::Resource::Motion motion;
 	LWP::Object::Particle particle;
+	LWP::Resource::Audio se;
 };

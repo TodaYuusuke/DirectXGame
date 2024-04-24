@@ -27,13 +27,13 @@ namespace LWP {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>オーディオのインスタンス</returns>
-		Audio* LoadAudio(const std::string& filePath);
+		AudioData* LoadAudio(const std::string& filePath);
 		/// <summary>
 		/// オーディオファイルの読み込み（exeからのパスで指定）
 		/// </summary>
 		/// <param name="filePath">読み込むファイルパス</param>
 		/// <returns>オーディオのインスタンス</returns>
-		Audio* LoadAudioLongPath(const std::string& filePath);
+		AudioData* LoadAudioLongPath(const std::string& filePath);
 
 		/// <summary>
 		/// 3Dモデルの読み込み（resources/audio/を短縮ver）（ユーザー呼び出し不要）

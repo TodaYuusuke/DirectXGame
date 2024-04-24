@@ -56,6 +56,7 @@ void SampleGameScene::Initialize() {
 	particle.P()->texture = Resource::LoadTexture("AlphaTest.png");
 	particle.isActive = true;
 
+	se.Load("powerup01.mp3");
 }
 // 更新
 void SampleGameScene::Update() {
@@ -65,6 +66,7 @@ void SampleGameScene::Update() {
 	}
 
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
+		se.Play(0.5f);
 		particle.Add(16);
 	}
 	// Rキーを押すとシーン再読み込み

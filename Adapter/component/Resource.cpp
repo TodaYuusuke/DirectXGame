@@ -11,10 +11,10 @@ Resource::Texture Resource::LoadTextureLongPath(const std::string& filePath) {
 }
 
 
-Resource::Audio* Resource::LoadAudio(const std::string& filePath) {
+Resource::AudioData* Resource::LoadAudio(const std::string& filePath) {
 	return engine->resourceManager_->LoadAudio(filePath);
 }
-Resource::Audio* Resource::LoadAudioLongPath(const std::string& filePath) {
+Resource::AudioData* Resource::LoadAudioLongPath(const std::string& filePath) {
 	return engine->resourceManager_->LoadAudioLongPath(filePath);
 }
 
