@@ -27,6 +27,9 @@ MSBuild "DirectXGame.sln" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Co
 REM Releaseでビルド
 MSBuild "DirectXGame.sln" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Release;MultiProcessorCompilation=true
 
+REM 一時ファイルを削除
+rmdir "DirectXGame" /s /q
+
 REM システムのリソースをコピー
 xcopy "resources/system" "../resources/system\" /e /y
 
