@@ -79,12 +79,6 @@ namespace LWP::Resource {
 
 	private: // ** プライベートなメンバ変数 ** //
 
-		// 3Dモデルの形式別読み込み処理
-		void LoadObj(Primitive::MeshData* mesh, const std::string& filepath);
-
-		// マテリアルの読み込み
-		void LoadMtl(Primitive::MeshData* mesh, const std::string& filepath);
-
 		// assimpによる読み込み
 		Primitive::MeshData LoadAssimp(const std::string& filepath);
 	};
