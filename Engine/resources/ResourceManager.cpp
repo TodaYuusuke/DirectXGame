@@ -10,6 +10,11 @@
 #include <fstream>
 #include <sstream>
 
+// assimpの読み込み
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Resource;
@@ -82,9 +87,10 @@ const Primitive::MeshData& Manager::LoadMeshLongPath(const std::string& filepath
 	// 読み込み済みかをチェック
 	if (!meshDataMap_.count(filepath)) {
 		// 新しいテクスチャをロード
-		meshDataMap_[filepath];	// 要素は自動追加されるらしい
+		//meshDataMap_[filepath];	// 要素は自動追加されるらしい
 		// 現在はobjのみ読み込み可
-		LoadObj(&meshDataMap_[filepath], filepath);
+		//LoadObj(&meshDataMap_[filepath], filepath);
+		meshDataMap_[filepath] = LoadAssimp(filepath);
 	}
 	return meshDataMap_[filepath];
 }
@@ -187,7 +193,6 @@ void Manager::LoadObj(Primitive::MeshData* mesh, const std::string& filepath) {
 
 }
 
-
 // マテリアルの読み込み
 void Manager::LoadMtl(Primitive::MeshData* mesh, const std::string& filepath) {
 	std::ifstream file(filepath);
@@ -210,4 +215,62 @@ void Manager::LoadMtl(Primitive::MeshData* mesh, const std::string& filepath) {
 			mesh->texture = LWP::Resource::LoadTextureLongPath(Utility::ConvertToParentDirectory(filepath) + textureFilename);
 		}
 	}
+}
+
+// assimpによる読み込み
+Primitive::MeshData Manager::LoadAssimp(const std::string& filepath) {
+	Primitive::MeshData result{};	// 結果
+
+	Assimp::Importer importer;
+	// ファイル読み込み（三角形の並び順を逆にする | UVをフリップする | 四角形以上のポリゴンを三角形に自動分割）
+	const aiScene* scene = importer.ReadFile(filepath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
+	assert(scene->HasMeshes());	// メッシュがないのは対応しない
+
+	// Meshの解析
+	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
+		aiMesh* mesh = scene->mMeshes[meshIndex];
+		assert(mesh->HasNormals()); // 法線がないMeshは今回は非対応
+		assert(mesh->HasTextureCoords(0)); // TexcoordがないMeshは今回は非対応
+
+		// Vertexの解析
+		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++) {
+			// インデックス情報を元に情報を取得する
+			aiVector3D& position = mesh->mVertices[vertexIndex];		 // 頂点座標取得
+			aiVector3D& normal = mesh->mNormals[vertexIndex];			 // 法線取得
+			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex]; // テクスチャ座標取得
+
+			Primitive::Vertex newVertex;
+			newVertex.position = { -position.x, position.y, position.z }; // 頂点座標追加
+			newVertex.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
+			newVertex.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
+
+			// 頂点データを追加
+			result.vertices.push_back(newVertex);
+		}
+
+		// Face(Meshの中身)の解析
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++) {
+			aiFace& face = mesh->mFaces[faceIndex];
+			assert(face.mNumIndices == 3);	// 三角形のみサポート
+
+			// インデックス解析
+			for (uint32_t element = 0; element < face.mNumIndices; element++) {
+				uint32_t vertexIndex = face.mIndices[element];
+				// インデックス情報を追加
+				result.indexes.push_back(vertexIndex);
+			}
+		}
+
+		// マテリアルの解析
+		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; materialIndex++) {
+			aiMaterial* material = scene->mMaterials[materialIndex];
+			if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+				aiString textureFilePath;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+				result.texture = LWP::Resource::LoadTextureLongPath(Utility::ConvertToParentDirectory(filepath) + textureFilePath.C_Str());
+			}
+		}
+	}
+	
+	return result;
 }
