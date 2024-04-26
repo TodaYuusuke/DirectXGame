@@ -59,6 +59,7 @@ namespace LWP::Math {
 
 		// 3次元アフィン変換行列
 		static Matrix4x4 CreateAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+		static Matrix4x4 CreateAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 #pragma endregion
 

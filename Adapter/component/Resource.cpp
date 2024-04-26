@@ -26,10 +26,8 @@ const Primitive::MeshData& Resource::LoadMeshLongPath(const std::string& filePat
 	return engine->resourceManager_->LoadMeshLongPath(filePath);
 }
 
-void Resource::SetInstance(Resource::Motion* ptr) {
-	engine->resourceManager_->SetMotionPointer(ptr);
-}
-void Resource::DeleteInstance(Resource::Motion* ptr) {
-	engine->resourceManager_->DeleteMotionPointer(ptr);
-}
+void Resource::SetInstance(Resource::Animation* ptr) { engine->resourceManager_->SetPointer(ptr); }
+void Resource::SetInstance(Resource::Motion* ptr) { engine->resourceManager_->SetPointer(ptr); }
+void Resource::DeleteInstance(Resource::Animation* ptr) { engine->resourceManager_->DeletePointer(ptr); }
+void Resource::DeleteInstance(Resource::Motion* ptr) { engine->resourceManager_->DeletePointer(ptr); }
 

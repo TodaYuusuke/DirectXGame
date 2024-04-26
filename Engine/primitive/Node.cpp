@@ -1,6 +1,8 @@
 #include "Node.h"
 #include <assimp/scene.h>
 
+#include "base/ImGuiManager.h"
+
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 

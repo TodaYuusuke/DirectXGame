@@ -1,5 +1,6 @@
 #pragma once
 #include "math/vector/Vector3.h"
+#include "math/Quaternion.h"
 #include <vector>
 
 namespace LWP::Utility::Interpolation {
@@ -14,6 +15,7 @@ namespace LWP::Utility::Interpolation {
 	// 球面線形補間
 	//float Slerp(const float& start, const float& end, const float& t);
 	Math::Vector3 Slerp(const Math::Vector3& start, const Math::Vector3& end, const float& t);
+	Math::Quaternion SlerpQuaternion(const Math::Quaternion& start, const Math::Quaternion& end, const float& t);
 	// Cat-mullRom曲線
 	//Math::Vector3 CatmullRomSpline(const std::vector<Math::Vector3>& controlPoints, const float& t);
 };

@@ -257,6 +257,7 @@
       <Filter>Engine\resources\audio</Filter>
     </ClCompile>
     <ClCompile Include="Engine\primitive\Node.cpp" />
+    <ClCompile Include="Engine\resources\motion\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -599,6 +600,7 @@
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\Node.h" />
+    <ClInclude Include="Engine\resources\motion\Animation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

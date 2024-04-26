@@ -59,8 +59,10 @@ void GameScene::Initialize() {
 	//se.Load("powerup01.mp3");
 
 	//ground.LoadFile("untitled.gltf");
-	ground.LoadFile("plane.gltf");
+	ground.LoadFile("glTFBox.gltf");
+	anim.LoadAnimationLongPath("resources/model/glTFBox.gltf", &ground);
 
+	anim.Start();
 }
 // 更新
 void GameScene::Update() {

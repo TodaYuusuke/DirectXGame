@@ -46,10 +46,10 @@ void Manager::Initialize() {
 }
 
 void Manager::Update() {
+	// アニメーション更新
+	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
-	for (Motion* m : motions_.list) {
-		m->Update();
-	}
+	for (Motion* m : motions_.list) { m->Update(); }
 }
 
 Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {

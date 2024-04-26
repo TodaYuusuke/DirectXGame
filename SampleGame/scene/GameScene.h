@@ -27,6 +27,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	//LWP::Primitive::Sprite sprite[2];
 
 	LWP::Primitive::Mesh ground;
+	LWP::Resource::Animation anim;
 	//LWP::Primitive::Mesh wall[2];
 
 	//LWP::Resource::Texture uvTexture;

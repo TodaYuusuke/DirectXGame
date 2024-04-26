@@ -27,3 +27,38 @@ Vector3 Interpolation::Slerp(const Vector3& start, const Vector3& end, const flo
 
 	return weightStart* start + weightEnd * end;
 }
+Quaternion Interpolation::SlerpQuaternion(const Quaternion& start, const Quaternion& end, const float& t) {
+	// 結果格納用
+	Quaternion result{};
+
+	// クォータニオンの内積で求める
+	float dot = Quaternion::Dot(start, end);
+
+	Quaternion s = start;
+	Quaternion e = end;
+	if (dot < 0) {
+		// 逆の回転を使う
+		s = s.Inverse();
+		// 内積も逆
+		dot = -dot;
+	}
+
+	// クォータニオンが成す角を求める
+	float theta = std::acos(dot);
+	// sin角も求める
+	float sinTheta = 1.0f / std::sin(theta);
+
+	// 0.0により近いか
+	if (dot <= -1.0f || 1.0f <= dot || sinTheta == 0.0f) {
+		result = s * (1.0f - t) + (e * t);
+	}
+	// 近いほうで補完する
+	else if (dot < 0.0f) {
+		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end.Inverse() * (std::sin(theta * t) * sinTheta));
+	}
+	else {
+		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end * (std::sin(theta * t) * sinTheta));
+	}
+	// 結果を返す
+	return result;
+}
