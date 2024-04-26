@@ -37,6 +37,10 @@ void Animation::Update() {
 	// 最後までいったらリピート再生。リピートしなくても別に良い
 	time_ = std::fmod(time_, duration_);
 	
+	ImGui::Begin("Test");
+	ImGui::Text("%f", time_);
+	ImGui::End();
+
 	// LocalMatrixを生成し、Nodeに適応（現在はrootNodeのみ適応）
 	Primitive::Node& node = meshPtr_->node;
 	

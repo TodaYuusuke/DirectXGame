@@ -4,10 +4,11 @@
 #include <vector>
 #include <string>
 
-// assimp用の前方宣言
+// 前方宣言
 struct aiNode;
 
 namespace LWP::Primitive {
+
 	/// <summary>
 	/// ノード情報を格納するクラス
 	/// </summary>

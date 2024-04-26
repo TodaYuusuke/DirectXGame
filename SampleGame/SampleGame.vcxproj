@@ -132,6 +132,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,11 +144,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class\player\Player.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\Title.h" />
   </ItemGroup>
