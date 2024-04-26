@@ -19,14 +19,16 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 6; i++) {
 		buildings[i].transform.translation.x += i * 2.0f;
 		buildings[i].transform.translation.z = 2.0f;
-		buildings[i].transform.rotation.y = 3.14;
+		//buildings[i].transform.rotation.y = 3.14f;
 		buildings[i].material.enableLighting = true;
 	}
 
 	skydome.LoadFile("skydome/skydome.obj");
-	skydome.transform.scale = { 20.0f,20.0f, 20.0f };
+	skydome.transform.scale = { 100.0f,100.0f, 100.0f };
 	ground.LoadFile("ground/Ground.gltf");
-	ground.transform.scale = { 100.0f,100.0f, 100.0f };
+	//ground.transform.translation.y = -10.0f;
+	ground.transform.scale = { 100.0f,1.0f, 100.0f };
+	ground.material.enableLighting = true;
 
 	// プレイヤー初期化
 	player.Init(&mainCamera);

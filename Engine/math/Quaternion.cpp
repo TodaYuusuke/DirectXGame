@@ -3,12 +3,22 @@
 
 using namespace LWP::Math;
 
+
+
+Quaternion::Quaternion(float x, float y, float z, float w) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->w = w;
+}
+
 void Quaternion::Init() {
 	x = 0.0f;
 	y = 0.0f;
 	z = 0.0f;
 	w = 1.0f;
 }
+
 Quaternion Quaternion::Normalize() const {
 	Quaternion result{};
 	float norm = std::sqrt(x * x + y * y + z * z + w * w);
@@ -49,6 +59,7 @@ Quaternion Quaternion::Inverse() const {
 }
 
 
+
 Quaternion Quaternion::CreateRotationX(const Vector3& start, const Vector3& end) {
 	return CreateRotation(start, end, { 0.0f,1.0f,1.0f });
 }
@@ -82,6 +93,41 @@ Quaternion Quaternion::CreateRotation(const Vector3& start, const Vector3& end, 
 float Quaternion::Dot(const Quaternion& v1, const Quaternion& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 }
+Quaternion Quaternion::ConvertDirectionVector(const Vector3& dir) {
+	// 向きベクトルを正規化する
+	Vector3 normalizedDir = dir.Normalize();
+
+	// ベクトルと(0, 0, 1)のなす角の半分を計算する
+	float angle = std::acos(Vector3::Dot(Vector3(0.0f, 0.0f, 1.0f), normalizedDir)) / 2.0f;
+	// 回転軸を計算する
+	Vector3 axis = Vector3::Cross(Vector3(0.0f, 0.0f, 1.0f), normalizedDir);
+
+	// 回転軸と角度からクォータニオンを生成する
+	Quaternion result;
+
+	float sin = std::sin(angle);
+
+	result.x = axis.x * sin;
+	result.y = axis.y * sin;
+	result.z = axis.z * sin;
+	result.w = std::cos(angle);
+
+	return result.Normalize();
+}
+Quaternion Quaternion::ConvertEuler(const Vector3& eulerAngle) {
+	float cx = std::cos(0.5f * eulerAngle.x);
+	float sx = std::sin(0.5f * eulerAngle.x);
+	float cy = std::cos(0.5f * eulerAngle.y);
+	float sy = std::sin(0.5f * eulerAngle.y);
+	float cz = std::cos(0.5f * eulerAngle.z);
+	float sz = std::sin(0.5f * eulerAngle.z);
+	return Quaternion(
+		cx * sy * sz + sx * cy * cz,
+		-sx * cy * sz + cx * sy * cz,
+		cx * cy * sz + sx * sy * cz,
+		-sx * sy * sz + cx * cy * cz
+	);
+}
 
 Quaternion Quaternion::operator+ (const Quaternion other) const {
 	Quaternion result;
@@ -102,6 +148,13 @@ Quaternion Quaternion::operator*(const Quaternion& other) const {
 	return result;
 }
 Quaternion& Quaternion::operator*=(const Quaternion& other) { return *this = *this * other; }
+
+Quaternion Quaternion::operator*(const Vector3& other) const {
+	Quaternion vec;
+	vec = other;
+	return Quaternion(x,y,z,w) * vec * Inverse();
+}
+Quaternion& Quaternion::operator*=(const Vector3& other) { return *this = *this * other; }
 
 Quaternion Quaternion::operator* (const float& other) const {
 	Quaternion result;
@@ -128,4 +181,10 @@ Quaternion Quaternion::operator=(const Vector3& other) {
 	this->y = other.y;
 	this->z = other.z;
 	return *this;
+}
+bool Quaternion::operator==(const Quaternion& other) const {
+	return {x == other.x &&
+		y == other.y &&
+		z == other.z &&
+		w == other.w };
 }

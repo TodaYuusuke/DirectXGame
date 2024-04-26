@@ -14,7 +14,7 @@ namespace LWP::Object {
 		// ローカル座標
 		Math::Vector3 translation;
 		// X,Y,Z軸回りのローカル回転角
-		Math::Vector3 rotation;
+		Math::Quaternion rotation;
 		// ローカルスケール
 		Math::Vector3 scale;
 
@@ -34,7 +34,9 @@ namespace LWP::Object {
 		// コンストラクタ
 		WorldTransform();
 		WorldTransform(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s);
+		WorldTransform(Math::Vector3 t, Math::Quaternion r, Math::Vector3 s);
 		WorldTransform(Math::Vector3 t, Math::Vector3 r);
+		WorldTransform(Math::Vector3 t, Math::Quaternion r);
 		WorldTransform(Math::Vector3 t);
 		~WorldTransform() = default;
 
@@ -83,7 +85,7 @@ namespace LWP::Object {
 		// イージングの簡略化のため実装
 		WorldTransform operator+(const WorldTransform& other) const;
 		WorldTransform& operator+=(const WorldTransform& other);
-		WorldTransform operator/(const float &other) const;
+		//WorldTransform operator/(const float &other) const;
 
 		// Observerクラス用のオペレーターオーバーロード
 		bool operator==(const WorldTransform& other) const = delete;

@@ -16,7 +16,8 @@ private:
 	// 3Dモデル
 	LWP::Primitive::Mesh meshes[4];
 	// アニメーション
-	LWP::Resource::Animation anim[4];
+	LWP::Resource::Animation idleAnim[4];
+	LWP::Resource::Animation runAnim[4];
 
 	// 光源
 	LWP::Object::PointLight pl;

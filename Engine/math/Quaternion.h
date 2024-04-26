@@ -1,9 +1,8 @@
 #pragma once
+#include "vector/Vector3.h"
 #include <cmath>
 
 namespace LWP::Math {
-	// 前方宣言
-	class Vector3;
 
 	/// <summary>
 	/// クォータニオンクラス
@@ -21,6 +20,12 @@ namespace LWP::Math {
 
 
 	public: // ** メンバ関数 ** //
+
+		Quaternion() = default;
+		// Vector3からのコンストラクタ
+		//Quaternion(const Vector3& other);
+		Quaternion(float x, float y, float z, float w);
+
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -44,6 +49,7 @@ namespace LWP::Math {
 		/// </summary>
 		Quaternion Inverse() const;
 
+
 	public: // ** 生成系関数 ** //
 		/// <summary>
 		/// 二点からクォータニオンを求める
@@ -62,6 +68,15 @@ namespace LWP::Math {
 		/// </summary>
 		static float Dot(const Quaternion& v1, const Quaternion& v2);
 
+		/// <summary>
+		/// 方向ベクトルからクォータニオン
+		/// </summary>
+		static Quaternion ConvertDirectionVector(const Vector3& dir);
+		/// <summary>
+		/// オイラー角からクォータニオン
+		/// </summary>
+		static Quaternion ConvertEuler(const Vector3& eulerAngle);
+
 	public: // ** オペレータオーバーロード ** //
 
 		// Quaternion Add(+) Quaternion
@@ -70,6 +85,9 @@ namespace LWP::Math {
 		// Quaternion Multiply(*) Quaternion
 		Quaternion operator*(const Quaternion& other) const;
 		Quaternion& operator*=(const Quaternion& other);
+		// Quaternion Multiply(*) Vector3
+		Quaternion operator*(const Vector3& other) const;
+		Quaternion& operator*=(const Vector3& other);
 		/// Quaternion Multiply(*) float
 		Quaternion operator* (const float& other) const;
 		Quaternion& operator*=(const float& other);
@@ -79,5 +97,9 @@ namespace LWP::Math {
 
 		// Quaternion Equal(=) Vector3
 		Quaternion operator=(const Vector3& other);
+
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(const Quaternion& other) const;
 	};
 }

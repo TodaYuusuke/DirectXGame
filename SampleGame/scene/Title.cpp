@@ -149,7 +149,7 @@ void Title::Initialize() {
 		data->elapsedFrame++;
 
 		data->wtf.translation += data->velocity;	// 速度ベクトルを加算
-		data->wtf.rotation += data->velocity;	// ついでに回転させとく
+		data->wtf.rotation += Quaternion::ConvertEuler(data->velocity);	// ついでに回転させとく
 		data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
 
 		// 速度ベクトルを弱める

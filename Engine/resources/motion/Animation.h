@@ -53,6 +53,11 @@ namespace LWP::Resource {
 		void Start(float startSec);
 
 		/// <summary>
+		/// モーション停止
+		/// </summary>
+		void Stop();
+
+		/// <summary>
 		/// 更新（ユーザー呼び出し不要）
 		/// </summary>
 		void Update();
