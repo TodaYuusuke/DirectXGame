@@ -76,7 +76,6 @@ namespace LWP::Resource {
 		Utility::PtrManager<Motion*> motions_;
 
 
-
 	private: // ** プライベートなメンバ変数 ** //
 
 		// assimpによる読み込み

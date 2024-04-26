@@ -147,6 +147,11 @@ Primitive::MeshData Manager::LoadAssimp(const std::string& filepath) {
 				result.texture = LWP::Resource::LoadTextureLongPath(Utility::ConvertToParentDirectory(filepath) + textureFilePath.C_Str());
 			}
 		}
+
+		// ノード情報を格納
+		if (scene->mRootNode) {
+			result.node.ReadNode(scene->mRootNode);
+		}
 	}
 	
 	return result;

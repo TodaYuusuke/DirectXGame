@@ -256,6 +256,7 @@
     <ClCompile Include="Engine\resources\audio\AudioData.cpp">
       <Filter>Engine\resources\audio</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -597,6 +598,7 @@
     <ClInclude Include="Engine\resources\audio\AudioData.h">
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\primitive\Node.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

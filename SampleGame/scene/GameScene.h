@@ -15,10 +15,10 @@ public:
 	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
 
 private: //*** これより先に必要な処理や変数を記述 ***//
-	LWP::Primitive::Sphere sphere;
-	LWP::Resource::Motion motion;
-	LWP::Object::Particle particle;
-	LWP::Resource::Audio se;
+	//LWP::Primitive::Sphere sphere;
+	//LWP::Resource::Motion motion;
+	//LWP::Object::Particle particle;
+	//LWP::Resource::Audio se;
 
 	//LWP::Primitive::Triangle tri;
 	//LWP::Primitive::Surface surface;
@@ -26,7 +26,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	//LWP::Primitive::Capsule capsule;
 	//LWP::Primitive::Sprite sprite[2];
 
-	//LWP::Primitive::Mesh ground;
+	LWP::Primitive::Mesh ground;
 	//LWP::Primitive::Mesh wall[2];
 
 	//LWP::Resource::Texture uvTexture;
@@ -40,5 +40,5 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	//LWP::Object::PointLight pl;	// 平気だった
 
 	// コライダー
-	LWP::Object::Collider::AABB aabbCol;
+	//LWP::Object::Collider::AABB aabbCol;
 };

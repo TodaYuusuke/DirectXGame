@@ -1,4 +1,5 @@
 #include "WorldTransform.h"
+#include "primitive/Node.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Object;
@@ -29,14 +30,18 @@ void WorldTransform::Initialize() {
 
 Matrix4x4 WorldTransform::GetWorldMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
-
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
 		result = result * parent_->t->GetWorldMatrix();
 	}
-	//if (parent_) {
-	//	result = result * parent_->GetWorldMatrix();
-	//}
+	return result;
+}
+Matrix4x4 WorldTransform::GetWorldMatrix(Primitive::Node* node) const {
+	Math::Matrix4x4 result = node->localMatrix * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+	// 親があれば親のワールド行列を掛ける
+	if (parent_) {
+		result = result * parent_->t->GetWorldMatrix();
+	}
 	return result;
 }
 

@@ -3,6 +3,11 @@
 #include <string>
 #include "utility/observers/Observer.h"
 
+// 前方宣言
+namespace LWP::Primitive {
+	class Node;
+}
+
 namespace LWP::Object {
 	class WorldTransform {
 	public: // ** パブリックな変数 ** //
@@ -42,6 +47,10 @@ namespace LWP::Object {
 		/// ワールド行列を返す
 		/// </summary>
 		Math::Matrix4x4 GetWorldMatrix() const;
+		/// <summary>
+		/// ワールド行列を返す（Nodeを考慮）
+		/// </summary>
+		Math::Matrix4x4 GetWorldMatrix(Primitive::Node* node) const;
 
 		// 移動だけのワールド行列を返す
 		Math::Matrix4x4 GetTranslationMatrix() const;

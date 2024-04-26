@@ -83,7 +83,7 @@ void Title::Initialize() {
 	ground.name = "Ground";
 
 	// 壁モデル
-	wall[0].LoadFile("cube/cube.obj");
+	wall[0].LoadFile("untitled.gltf");
 	wall[0].transform.translation = { 0.0f,-5.0f,3.0f };
 	wall[0].transform.scale = { 10.0f,10.0f, 0.05f };
 	wall[0].material.enableLighting = true;

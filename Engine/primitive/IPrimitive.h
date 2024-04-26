@@ -7,6 +7,8 @@
 #include "../utility/Color.h"
 #include "../utility/observers/Observer.h"
 #include "../utility/observers/ObserverPtr.h"
+
+#include "Node.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include <stdexcept>
@@ -57,6 +59,8 @@ namespace LWP::Primitive {
 		// ・nullptrの場合は頂点ごとに色を参照する
 		// ・そうでない場合は全ての頂点の色がこれになる
 		Utility::Color* commonColor = nullptr;
+		// ノード情報
+		Node node;
 		
 		// UIとして描画するか
 		bool isUI = false;
