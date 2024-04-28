@@ -19,7 +19,7 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 6; i++) {
 		buildings[i].transform.translation.x += i * 2.0f;
 		buildings[i].transform.translation.z = 2.0f;
-		//buildings[i].transform.rotation.y = 3.14f;
+		buildings[i].transform.rotation *= Quaternion::ConvertEuler({ 0.0f,3.14f,0.0f });
 		buildings[i].material.enableLighting = true;
 	}
 
@@ -36,4 +36,9 @@ void GameScene::Initialize() {
 // 更新
 void GameScene::Update() {
 	player.Update();
+
+	// シーン再読み込み
+	if (Input::Keyboard::GetTrigger(DIK_R)) {
+		nextSceneFunction = []() { return new GameScene(); };
+	}
 }

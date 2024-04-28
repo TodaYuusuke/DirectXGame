@@ -1,5 +1,6 @@
 #pragma once
 #include "vector/Vector3.h"
+#include "matrix/Matrix4x4.h"
 #include <cmath>
 
 namespace LWP::Math {
@@ -22,8 +23,8 @@ namespace LWP::Math {
 	public: // ** メンバ関数 ** //
 
 		Quaternion() = default;
-		// Vector3からのコンストラクタ
-		//Quaternion(const Vector3& other);
+		// Vector3のコンストラクタ
+		Quaternion(const Vector3& other);
 		Quaternion(float x, float y, float z, float w);
 
 		/// <summary>
@@ -45,37 +46,46 @@ namespace LWP::Math {
 		/// </summary>
 		float Length() const;
 		/// <summary>
-		/// 
+		/// 逆クォータニオン
 		/// </summary>
 		Quaternion Inverse() const;
 
 
 	public: // ** 生成系関数 ** //
-		/// <summary>
-		/// 二点からクォータニオンを求める
-		/// <param name="start">... 始点</param>
-		/// <param name="end">... 終点</param>
-		/// <returns>二点の回転を表すクォータニオン</returns>
-		static Quaternion CreateRotationX(const Vector3& start, const Vector3& end);
-		static Quaternion CreateRotationY(const Vector3& start, const Vector3& end);
-		static Quaternion CreateRotationZ(const Vector3& start, const Vector3& end);
 
-	//private:
-		static Quaternion CreateRotation(const Vector3& start, const Vector3& end, const Vector3& axis);
+		/// <summary>
+		/// 指定された軸周りの指定された角度に基づいてクォータニオンを生成する
+		/// </summary>
+		/// <param name="axis">軸周り</param>
+		/// <param name="radian">角度(ラジアン)</param>
+		/// <returns></returns>
+		static Quaternion CreateFromAxisAngle(const Vector3& axis, float radian);
 
 		/// <summary>
 		/// 内積を求める
 		/// </summary>
 		static float Dot(const Quaternion& v1, const Quaternion& v2);
-
+			
 		/// <summary>
-		/// 方向ベクトルからクォータニオン
+		/// ある方向ベクトルのほうを向くクォータニオンを生成する
 		/// </summary>
-		static Quaternion ConvertDirectionVector(const Vector3& dir);
+		static Quaternion ConvertDirection(const Vector3& dir);
+		/// <summary>
+		/// 方向ベクトルのfromからtoへのクォータニオン（動作未確認）
+		/// </summary>
+		static Quaternion ConvertFromTo(const Vector3& from, const Vector3& to);
+		/// <summary>
+		/// 回転行列からクォータニオン
+		/// </summary>
+		static Quaternion ConvertRotateMatrix(const Matrix4x4& rotateMatrix);
 		/// <summary>
 		/// オイラー角からクォータニオン
 		/// </summary>
 		static Quaternion ConvertEuler(const Vector3& eulerAngle);
+		/// <summary>
+		/// クォータニオンからオイラー角
+		/// </summary>
+		static Vector3 ConvertQuaternion(const Quaternion& qua);
 
 	public: // ** オペレータオーバーロード ** //
 
@@ -85,9 +95,6 @@ namespace LWP::Math {
 		// Quaternion Multiply(*) Quaternion
 		Quaternion operator*(const Quaternion& other) const;
 		Quaternion& operator*=(const Quaternion& other);
-		// Quaternion Multiply(*) Vector3
-		Quaternion operator*(const Vector3& other) const;
-		Quaternion& operator*=(const Vector3& other);
 		/// Quaternion Multiply(*) float
 		Quaternion operator* (const float& other) const;
 		Quaternion& operator*=(const float& other);

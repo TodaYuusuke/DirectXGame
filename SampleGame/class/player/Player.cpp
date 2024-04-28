@@ -10,6 +10,8 @@ using namespace LWP::Object;
 void Player::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
 	meshes[0].LoadFile("Player/C_Body.gltf");
+	//meshes[0].transform.rotation = Quaternion::ConvertEuler({ 0.0f,-1.57,0.0f });
+	meshes[0].transform.rotation = Quaternion({0.0f,-1.0f,0.0f}).Normalize();
 	meshes[0].transform.scale = { 0.3f,0.3f,0.3f };
 	meshes[1].LoadFile("Player/C_Head.gltf");
 	meshes[2].LoadFile("Player/C_LHand.gltf");
@@ -38,10 +40,12 @@ void Player::Init(LWP::Object::Camera* ptr) {
 
 	// カメラのポインタをセット
 	camera_ = ptr;
+	//camera_->transform.Parent(&meshes[0].transform);
+	camera_->transform.translation = cameraOffset_;
+	//camera_->transform.rotation = Quaternion::CreateFromAxisAngle(Vector3{ 0.0f,1.0f,0.0f }, 1.54f);
+	//camera_->transform.rotation *= Quaternion::ConvertEuler(Vector3{ 0.0f, -1.54f, 0.0f });
 	//camera_->transform.rotation.x = 0.65f;
 	//cameraGoalRotation_ = camera_->transform.rotation;
-	camera_->transform.translation = meshes[0].transform.translation + (cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(cameraGoalRotation_));
-	cameraGoalTranslation_ = camera_->transform.translation;
 
 	// 点光源
 	pl.transform.Parent(&meshes[0].transform);
@@ -60,32 +64,90 @@ void Player::Init(LWP::Object::Camera* ptr) {
 
 // 更新
 void Player::Update() {
-	// 移動
-	Math::Vector2 dir = { 0.0f,0.0f };
+	// 移動処理
+	Move();
+	// カメラの計算
+	FollowCameraUpdate();
+}
+
+void Player::Move() {
+	// 移動する向き
+	Vector3 dir = { 0.0f,0.0f,0.0f };
+
+	// キーボードでの移動
 	if (Keyboard::GetPress(DIK_W)) {
-		dir.y += 1.0f;
+		dir.z += 1.0f;
 	}
 	if (Keyboard::GetPress(DIK_S)) {
-		dir.y -= 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_A)) {
-		dir.x -= 1.0f;
+		dir.z -= 1.0f;
 	}
 	if (Keyboard::GetPress(DIK_D)) {
 		dir.x += 1.0f;
 	}
+	if (Keyboard::GetPress(DIK_A)) {
+		dir.x -= 1.0f;
+	}
 
-	dir = dir.Normalize();
-	Matrix4x4 cameraRotationMatrix = Matrix4x4::CreateRotateXYZMatrix(Vector3{0.0f, camera_->transform.rotation.y, 0.0f});
-	meshes[0].transform.translation += Math::Vector3{ dir.x, 0.0f, dir.y } * kPlayerSpeed * cameraRotationMatrix;
+	// コントローラーでの移動
+	dir.x += Pad::GetLStick(0).x;
+	dir.z += Pad::GetLStick(0).y;
+
+	dir = Vector3(dir * camera_->transform.rotation).Normalize();
+	meshes[0].transform.translation += dir * kPlayerSpeed;
+
+
+	if (dir.Length() > 0.0f) {
+		// 目的の角度
+		Vector3 goalEuler = { 0.0f, 0.0f, 0.0f };
+		// Y軸周りの角度
+		goalEuler.y = std::atan2f(dir.x, dir.z);
+		// X軸周りの角度
+		goalEuler.x = std::atan2f(-dir.y, Vector3{ dir.x, 0.0f, dir.z }.Length());
+
+		// 現在の角度と目標の角度を比較し、逆回転の場合に調整
+		if (std::abs(euler.y - goalEuler.y) > M_PI) {
+			if (euler.y > goalEuler.y) {
+				euler.y -= static_cast<float>(2.0f * M_PI);
+			}
+			else {
+				euler.y += static_cast<float>(2.0f * M_PI);
+			}
+		}
+
+		// 角度を適応
+		meshes[0].transform.rotation = Quaternion::ConvertEuler(Utility::Interp::Slerp(euler, goalEuler, 0.2f));
+
+	}
+
+	ImGui::Begin("Test");
+	Vector3 f = Vector3{ 1.0f,0.0f,0.0f } * Matrix4x4::CreateRotateXYZMatrix(meshes[0].transform.rotation);
+	ImGui::DragFloat3("f", &f.x);
+	ImGui::End();
+
+	// 今の方向
+	//Vector3 startDir = Vector3{ 0.0f,0.0f,1.0f } *Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
+	// 今の方向を向きたい方向にする回転行列を出す
+	//Matrix4x4 rot = Matrix4x4::DirectionToDirection(startDir.Normalize(), dir3);
+	// 回転行列をクォータニオンに変換
+	//meshes[0].transform.rotation *= dir3;
+	//meshes[0].transform.rotation = meshes[0].transform.rotation.Normalize();
+	//meshes[0].transform.rotation = Utility::Interp::SlerpQuaternion(
+	//	meshes[0].transform.rotation,
+	//	Quaternion(dir3),
+	//	0.8f
+	//).Normalize();
+
 	// 向きを設定
 	if (dir.Length() > 0.0f) {
+		//meshes[0].transform.rotation = Quaternion(dir3);
 		// 現在の方向ベクトル
 		//Math::Vector3 cuurentDir;
 		//cuurentDir = Vector3{ 1.0f,0.0f,0.0f } * Matrix4x4::CreateRotateXYZMatrix(meshes[0].transform.rotation);
 		//Vector3 temp = meshes[0].
 		//
 		//meshes->transform.rotation = meshes->transform.rotation * Matrix4x4::DirectionToDirection(cuurentDir,{ dir.x, 0.0f, dir.y });
+
+		//prePos - meshes[0].transform.GetWorldPosition();
 
 		// Runアニメーション
 		for (int i = 0; i < 4; i++) {
@@ -100,11 +162,8 @@ void Player::Update() {
 			//runAnim[i].Stop();
 		}
 	}
-
-
-	// カメラの計算
-	FollowCameraUpdate();
 }
+
 
 void Player::FollowCameraUpdate() {
 	// 回転する向き
@@ -128,20 +187,15 @@ void Player::FollowCameraUpdate() {
 	dir.x += Pad::GetRStick(0).y;
 	dir.y += Pad::GetRStick(0).x;
 
-	// 長さが1を超えている場合 -> 正規化してから使用
-	dir = dir.Length() > 1.0f ? dir.Normalize() : dir;
-	// 次の目標回転角を計算
-	cameraGoalRotation_ += Vector3{ dir.x * kFollowCameraSpeed, dir.y * kFollowCameraSpeed, 0.0f };
-	// 角度制限
-	cameraGoalRotation_.x = std::clamp<float>(cameraGoalRotation_.x, 0.1f, 1.3f);
+	// 正規化してから使用
+	dir = dir.Normalize();
 
+	// 移動量のクォータニオン
+	Quaternion quat = Quaternion::ConvertEuler(Vector3{ 0.0f,dir.y, 0.0f } *kFollowCameraSpeed);
+	// カメラを回転させる
+	camera_->transform.rotation *= quat;
+	// カメラの座標を決定
+	camera_->transform.translation = meshes[0].transform.GetWorldPosition() + cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
 	// カメラから追従対象に対する角度を求める
-	cameraGoalTranslation_ = meshes[0].transform.translation + (cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(cameraGoalRotation_));
-
-	// 徐々に追従するように適応
-	camera_->transform.translation = Utility::Interp::Lerp(camera_->transform.translation, cameraGoalTranslation_, 0.07f);
-	//camera_->transform.rotation = Utility::Interp::Lerp(camera_->transform.rotation, cameraGoalRotation_, 0.06f);
-	// 方向ベクトルを求める
-	//Vector3 direction = camera_->transform.translation - meshes[0].transform.translation;
-	//camera_->transform.rotation = Quaternion::ConvertDirectionVector(direction.Normalize());
+	//camera_->transform.translation = meshes[0].transform.GetWorldPosition() + (cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation));
 }
