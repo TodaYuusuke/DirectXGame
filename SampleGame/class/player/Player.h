@@ -17,7 +17,6 @@ private:
 	LWP::Primitive::Mesh meshes[4];
 	// アニメーション
 	LWP::Resource::Animation idleAnim[4];
-	LWP::Resource::Animation runAnim[4];
 
 	// クォータニオンの使い方がわからなかったので臨時でオイラー角で対応
 	LWP::Math::Vector3 euler;

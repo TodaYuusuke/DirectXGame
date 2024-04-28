@@ -23,20 +23,10 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	idleAnim[1].LoadAnimationLongPath("resources/model/Player/C_Head.gltf", &meshes[1]);
 	idleAnim[2].LoadAnimationLongPath("resources/model/Player/C_LHand.gltf", &meshes[2]);
 	idleAnim[3].LoadAnimationLongPath("resources/model/Player/C_RHand.gltf", &meshes[3]);
-	// アニメーション用意
-	runAnim[0].LoadAnimation("Player/C_Body_Run.gltf", &meshes[0]);
-	runAnim[1].LoadAnimation("Player/C_Head_Run.gltf", &meshes[1]);
-	runAnim[2].LoadAnimation("Player/C_LHand_Run.gltf", &meshes[2]);
-	runAnim[3].LoadAnimation("Player/C_RHand_Run.gltf", &meshes[3]);
 
 	meshes[1].transform.Parent(&meshes[0].transform);
 	meshes[2].transform.Parent(&meshes[0].transform);
 	meshes[3].transform.Parent(&meshes[0].transform);
-
-	runAnim[0].Start();
-	runAnim[1].Start();
-	runAnim[2].Start();
-	runAnim[3].Start();
 
 	// カメラのポインタをセット
 	camera_ = ptr;
@@ -56,9 +46,10 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	pl.isActive = true;
 
 
-	// Runアニメーション
+	// まとめて行う処理
 	for (int i = 0; i < 4; i++) {
 		meshes[i].material.enableLighting = true;
+		idleAnim[i].Start();
 	}
 }
 
@@ -95,33 +86,14 @@ void Player::Move() {
 	dir = Vector3(dir * camera_->transform.rotation).Normalize();
 	meshes[0].transform.translation += dir * kPlayerSpeed;
 
+	static Vector3 vec = Vector3{ 0.0f,-1.57f,0.0f };
 
 	if (dir.Length() > 0.0f) {
-		// 目的の角度
-		Vector3 goalEuler = { 0.0f, 0.0f, 0.0f };
-		// Y軸周りの角度
-		goalEuler.y = std::atan2f(dir.x, dir.z);
-		// X軸周りの角度
-		goalEuler.x = std::atan2f(-dir.y, Vector3{ dir.x, 0.0f, dir.z }.Length());
-
-		// 現在の角度と目標の角度を比較し、逆回転の場合に調整
-		if (std::abs(euler.y - goalEuler.y) > M_PI) {
-			if (euler.y > goalEuler.y) {
-				euler.y -= static_cast<float>(2.0f * M_PI);
-			}
-			else {
-				euler.y += static_cast<float>(2.0f * M_PI);
-			}
-		}
-
-		// 角度を適応
-		meshes[0].transform.rotation = Quaternion::ConvertEuler(Utility::Interp::Slerp(euler, goalEuler, 0.2f));
-
+		meshes[0].transform.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), std::atan2f(dir.z, dir.x)).Inverse();
 	}
 
 	ImGui::Begin("Test");
-	Vector3 f = Vector3{ 1.0f,0.0f,0.0f } * Matrix4x4::CreateRotateXYZMatrix(meshes[0].transform.rotation);
-	ImGui::DragFloat3("f", &f.x);
+	ImGui::DragFloat3("vec", &vec.x);
 	ImGui::End();
 
 	// 今の方向
