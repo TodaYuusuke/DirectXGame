@@ -15,7 +15,7 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Mesh mesh;
+	LWP::Primitive::Mesh mesh[10];
 	// アニメーション
 	LWP::Resource::Animation idleAnim[4];
 	// 光源

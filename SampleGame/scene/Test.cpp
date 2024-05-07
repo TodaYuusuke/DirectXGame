@@ -13,12 +13,14 @@ void Test::Initialize() {
 	// デバッグ情報表示
 	Info::ChangeShowDebugGUI();
 
-	mesh.LoadFile("skydome/skydome.obj");
+	for (int i = 0; i < 10; i++) {
+		mesh[i].LoadFile("skydome/skydome.obj");
+	}
 	// アニメーション用意
-	idleAnim[0].LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &mesh);
-	idleAnim[1].LoadAnimationLongPath("resources/model/Player/C_Head.gltf", &mesh);
-	idleAnim[2].LoadAnimationLongPath("resources/model/Player/C_LHand.gltf", &mesh);
-	idleAnim[3].LoadAnimationLongPath("resources/model/Player/C_RHand.gltf", &mesh);
+	idleAnim[0].LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &mesh[0]);
+	idleAnim[1].LoadAnimationLongPath("resources/model/Player/C_Head.gltf", &mesh[0]);
+	idleAnim[2].LoadAnimationLongPath("resources/model/Player/C_LHand.gltf", &mesh[0]);
+	idleAnim[3].LoadAnimationLongPath("resources/model/Player/C_RHand.gltf", &mesh[0]);
 }
 
 // 更新
