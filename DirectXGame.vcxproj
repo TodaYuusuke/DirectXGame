@@ -210,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\RendererManager.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\BufferGroup.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
@@ -321,6 +322,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\directX\RendererManager.h" />
     <ClInclude Include="Engine\base\directX\renderer\BufferGroup.h" />
+    <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\IRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />

@@ -258,6 +258,7 @@
     </ClCompile>
     <ClCompile Include="Engine\primitive\Node.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -601,6 +602,7 @@
     </ClInclude>
     <ClInclude Include="Engine\primitive\Node.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
+    <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -29,6 +29,7 @@ Camera::Camera() {
 	// リソースの初期化
 	constantBuffer_.Init(dev);
 	renderResource_.Init(dev, heaps);
+	textureResource_.Init(dev, heaps);
 	depthStencil_.Init(dev, heaps);
 }
 
@@ -42,12 +43,13 @@ void Camera::Update(Base::RendererManager* manager) {
 
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
 	manager->AddTarget(constantBuffer_.GetGPUView(), &renderResource_, &depthStencil_);
+	// レンダリング結果をテクスチャ用にコピーする
+	manager->AddCopyTask(&renderResource_, &textureResource_);
 }
 
 void Camera::DebugGUI() {
 	transform.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
-	ImGui::Checkbox("isUsePostProcess", &isUsePostProcess);
 	ImGui::Checkbox("isActive", &isActive);
 }
 
@@ -58,4 +60,4 @@ Matrix4x4 Camera::GetViewProjection() const {
 	return viewMatrix * projectionMatrix;
 }
 
-Resource::Texture Camera::GetTexture() { return renderResource_; }
+Resource::Texture Camera::GetTexture() { return textureResource_; }

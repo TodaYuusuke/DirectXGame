@@ -26,11 +26,9 @@ namespace LWP::Object {
 
 		// FOV
 		float fov = 90.0f;
-
+		// ポストプロセス
 		// -- ポストエフェクトフラグ -- //
 
-		// ポストプロセスを行うかのフラグ
-		bool isUsePostProcess = false;
 		// シェーダー用のパス（作成後は意味をなくすのでいつか再設計）
 		std::string shaderPath = "postProcess/CCTV.PS.hlsl";
 
@@ -39,8 +37,6 @@ namespace LWP::Object {
 
 		// デフォルトコンストラクタ
 		Camera();
-		// デフォルトデストラクタ
-		~Camera() = default;
 
 		// 初期化
 		void Initialize() override;
@@ -64,12 +60,19 @@ namespace LWP::Object {
 
 	private: // ** メンバ変数 ** //
 
-		//// このカメラでレンダリングするためのデータ
+		// レンダリング先のリソースと参照するリソースを別で分け、レンダリング中に参照する場合に備える。
+
+		// このカメラでレンダリングするためのデータ
 		Base::ConstantBuffer<Base::CameraStruct> constantBuffer_;
-		//// レンダリング結果のリソース
+		// レンダリングするリソース
 		Base::RenderResource renderResource_;
-		//// デプスステンシルのリソース
+		// レンダリング結果の画像
+		Base::RenderResource textureResource_;
+		// デプスステンシルのリソース
 		Base::DepthStencil depthStencil_;
+
+		// この
+
 
 		// このカメラからのレンダリング結果を格納する変数
 		//Resource::RenderTexture* renderTexture_ = nullptr;

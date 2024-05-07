@@ -4,6 +4,7 @@
 #include "primitive/IPrimitive.h"
 #include "primitive/2d/Billboard2D.h"
 #include "primitive/2d/Billboard3D.h"
+#include "primitive/2d/Sprite.h"
 #include "object/core/light/DirectionLight.h"
 #include "object/core/light/PointLight.h"
 
@@ -46,6 +47,8 @@ void RendererManager::Init(GPUDevice* device, SRV* srv) {
 	shadowRender_.Init(device, srv_, &dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), &dxc_, normalFunc);
+	// コピーレンダラー初期化
+	copyRenderer_.Init();
 
 	// テクスチャ読み込み
 	defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
@@ -68,13 +71,17 @@ void RendererManager::DrawCall() {
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
 
+	// リソースをコピー
+	copyRenderer_.Execute(list);
+
 	// 実行
 	commander_.Execute();
 
 	// 次のフレームのためにリセット
 	normalRender_.Reset();
 	shadowRender_.Reset();
-	// リソースも解放
+	copyRenderer_.Reset();
+	// リソースもリセット
 	buffers_.Reset();
 }
 
@@ -163,6 +170,10 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 }
 
 std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(Primitive::IPrimitive* primitive) {
+	// Spriteのとき
+	if (dynamic_cast<Primitive::Sprite*>(primitive)) {
+		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataSprite(index); };
+	}
 	// ビルボード2Dのとき
 	if (dynamic_cast<Primitive::Billboard2D*>(primitive)) {
 		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataBillboard2D(index); };

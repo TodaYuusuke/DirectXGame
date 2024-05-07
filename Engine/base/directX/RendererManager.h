@@ -2,6 +2,7 @@
 #include "base/directX/utility/Command.h"
 #include "renderer/NormalRenderer.h"
 #include "renderer/ShadowRenderer.h"
+#include "renderer/CopyRenderer.h"
 #include "renderer/BufferGroup.h"
 
 #include "object/core/Particle.h"
@@ -121,5 +122,17 @@ namespace LWP::Base {
 		void AddTarget(const std::array<D3D12_GPU_VIRTUAL_ADDRESS, 6>& views, SM_Point* sm) { shadowRender_.AddTarget({ views, sm }); }
 #pragma endregion
 
+#pragma region コピー
+	private:
+		// レンダラー
+		CopyRenderer copyRenderer_;
+	public:
+		/// <summary>
+		/// リソースのコピー処理をセット
+		/// </summary>
+		/// <param name="src">コピー元のリソース</param>
+		/// <param name="dst">コピー先のリソース</param>
+		void AddCopyTask(RenderResource* src, RenderResource* dst) { copyRenderer_.AddTarget({src, dst}); }
+#pragma endregion
 	};
 }
