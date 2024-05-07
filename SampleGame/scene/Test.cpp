@@ -14,6 +14,11 @@ void Test::Initialize() {
 	Info::ChangeShowDebugGUI();
 
 	mesh.LoadFile("skydome/skydome.obj");
+	// アニメーション用意
+	idleAnim[0].LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &mesh);
+	idleAnim[1].LoadAnimationLongPath("resources/model/Player/C_Head.gltf", &mesh);
+	idleAnim[2].LoadAnimationLongPath("resources/model/Player/C_LHand.gltf", &mesh);
+	idleAnim[3].LoadAnimationLongPath("resources/model/Player/C_RHand.gltf", &mesh);
 }
 
 // 更新
