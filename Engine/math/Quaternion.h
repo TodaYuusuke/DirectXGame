@@ -1,9 +1,9 @@
 #pragma once
+#include "vector/Vector3.h"
+#include "matrix/Matrix4x4.h"
 #include <cmath>
 
 namespace LWP::Math {
-	// 前方宣言
-	class Vector3;
 
 	/// <summary>
 	/// クォータニオンクラス
@@ -15,18 +15,18 @@ namespace LWP::Math {
 		float z = 0.0f;
 		float w = 1.0f;
 
-
-	public: // ** オペーレーターオーバーロード ** //
-
-		// Quaternion Multiply(*) Quaternion
-		Quaternion operator*(const Quaternion& other) const;
-		Quaternion& operator*=(const Quaternion& other);
-
-		// Quaternion Equal(=) Vector3
-		Quaternion operator=(const Vector3& other);
+		// vectorと同じように扱うための処理
+		inline Vector3& vec() { return *reinterpret_cast<Vector3*>(&x); }
+		inline const Vector3& vec() const { return *reinterpret_cast<const Vector3*>(&x); }
 
 
 	public: // ** メンバ関数 ** //
+
+		Quaternion() = default;
+		// Vector3のコンストラクタ
+		Quaternion(const Vector3& other);
+		Quaternion(float x, float y, float z, float w);
+
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -35,21 +35,78 @@ namespace LWP::Math {
 		/// <summary>
 		/// 正規化されたクォータニオンを求める
 		/// </summary>
-		/// <param name="v">... クォータニオン</param>
 		/// <returns>正規化されたクォータニオン</returns>
-		Quaternion Normalize();
-		
-	public: // ** 生成系関数 ** //
+		Quaternion Normalize() const;
 		/// <summary>
-		/// 二点からクォータニオンを求める
-		/// <param name="start">... 始点</param>
-		/// <param name="end">... 終点</param>
-		/// <returns>二点の回転を表すクォータニオン</returns>
-		static Quaternion CreateRotationX(const Vector3& start, const Vector3& end);
-		static Quaternion CreateRotationY(const Vector3& start, const Vector3& end);
-		static Quaternion CreateRotationZ(const Vector3& start, const Vector3& end);
+		/// 
+		/// </summary>
+		Quaternion Conjugate() const;
+		/// <summary>
+		/// 長さ
+		/// </summary>
+		float Length() const;
+		/// <summary>
+		/// 逆クォータニオン
+		/// </summary>
+		Quaternion Inverse() const;
 
-	//private:
-		static Quaternion CreateRotation(const Vector3& start, const Vector3& end, const Vector3& axis);
+
+	public: // ** 生成系関数 ** //
+
+		/// <summary>
+		/// 指定された軸周りの指定された角度に基づいてクォータニオンを生成する
+		/// </summary>
+		/// <param name="axis">軸周り</param>
+		/// <param name="radian">角度(ラジアン)</param>
+		/// <returns></returns>
+		static Quaternion CreateFromAxisAngle(const Vector3& axis, float radian);
+
+		/// <summary>
+		/// 内積を求める
+		/// </summary>
+		static float Dot(const Quaternion& v1, const Quaternion& v2);
+			
+		/// <summary>
+		/// ある方向ベクトルのほうを向くクォータニオンを生成する
+		/// </summary>
+		static Quaternion ConvertDirection(const Vector3& dir);
+		/// <summary>
+		/// 方向ベクトルのfromからtoへのクォータニオン（動作未確認）
+		/// </summary>
+		static Quaternion ConvertFromTo(const Vector3& from, const Vector3& to);
+		/// <summary>
+		/// 回転行列からクォータニオン
+		/// </summary>
+		static Quaternion ConvertRotateMatrix(const Matrix4x4& rotateMatrix);
+		/// <summary>
+		/// オイラー角からクォータニオン
+		/// </summary>
+		static Quaternion ConvertEuler(const Vector3& eulerAngle);
+		/// <summary>
+		/// クォータニオンからオイラー角
+		/// </summary>
+		static Vector3 ConvertQuaternion(const Quaternion& qua);
+
+	public: // ** オペレータオーバーロード ** //
+
+		// Quaternion Add(+) Quaternion
+		Quaternion operator+ (const Quaternion other) const;
+		Quaternion operator+= (const Quaternion other);
+		// Quaternion Multiply(*) Quaternion
+		Quaternion operator*(const Quaternion& other) const;
+		Quaternion& operator*=(const Quaternion& other);
+		/// Quaternion Multiply(*) float
+		Quaternion operator* (const float& other) const;
+		Quaternion& operator*=(const float& other);
+		// Quaternion Division(/) Quaternion
+		Quaternion operator/ (const Quaternion& other) const;
+		Quaternion operator/= (const Quaternion& other);
+
+		// Quaternion Equal(=) Vector3
+		Quaternion operator=(const Vector3& other);
+
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(const Quaternion& other) const;
 	};
 }

@@ -10,6 +10,7 @@ namespace DirectX {
 
 namespace LWP::Base {
 	struct SRVInfo : public HeapInfo {
+	public:
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuView{};
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
 
@@ -64,6 +65,10 @@ namespace LWP::Base {
 		/// 初期化
 		/// </summary>
 		void Init();
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI() override;
 
 		/// <summary>
 		/// テクスチャの最初のViewを返す関数

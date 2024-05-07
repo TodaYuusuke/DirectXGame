@@ -1,6 +1,7 @@
 #include "RTV.h"
 
 #include <Config.h>
+#include "base/ImGuiManager.h"
 
 using namespace LWP::Utility;
 using namespace LWP::Base;
@@ -12,6 +13,14 @@ RTV::RTV(ID3D12Device* device) :
 void RTV::Init() {
 	// RTV用のヒープでディスクリプタの数は2。RTVはShader内で触るものではないので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kMaxSize, false);
+}
+void RTV::DebugGUI() {
+	if (ImGui::CollapsingHeader("RTV")) {
+		if (ImGui::TreeNode("Index")) {
+			indexManager_.DebugGUI();
+			ImGui::TreePop();
+		}
+	}
 }
 
 RTVInfo RTV::CreateRenderTargetView(ID3D12Resource* resource) {

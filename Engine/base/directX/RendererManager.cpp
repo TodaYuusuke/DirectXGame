@@ -139,9 +139,9 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 		buffers_.AddData(ver);	// データを追加
 	}
 
-	// ワールドトランスフォームをデータに登録
+	// ワールドトランスフォームをデータに登録（Nodeを考慮するために少し処理を変更）
 	WTFStruct wtf;
-	wtf = primitive->transform;
+	wtf = *primitive;
 	result.worldMatrix = buffers_.AddData(wtf);
 
 	// マテリアルをデータに登録

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Adapter\LWP.cpp">
       <Filter>Adapter</Filter>
     </ClCompile>
@@ -124,12 +123,6 @@
     </ClCompile>
     <ClCompile Include="Engine\resources\audio\Audio.cpp">
       <Filter>Engine\resources\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\scene\user\SampleGameScene.cpp">
-      <Filter>Engine\scene\user</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\scene\user\SampleTitle.cpp">
-      <Filter>Engine\scene\user</Filter>
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui_stdlib.cpp">
       <Filter>Externals\imgui</Filter>
@@ -263,6 +256,8 @@
     <ClCompile Include="Engine\resources\audio\AudioData.cpp">
       <Filter>Engine\resources\audio</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\primitive\Node.cpp" />
+    <ClCompile Include="Engine\resources\motion\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -417,12 +412,6 @@
     </ClInclude>
     <ClInclude Include="Adapter\Config.h">
       <Filter>Adapter</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\user\SampleTitle.h">
-      <Filter>Engine\scene\user</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\scene\user\SampleGameScene.h">
-      <Filter>Engine\scene\user</Filter>
     </ClInclude>
     <ClInclude Include="Externals\imgui\imgui_stdlib.h">
       <Filter>Externals\imgui</Filter>
@@ -610,6 +599,8 @@
     <ClInclude Include="Engine\resources\audio\AudioData.h">
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\primitive\Node.h" />
+    <ClInclude Include="Engine\resources\motion\Animation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

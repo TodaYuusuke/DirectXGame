@@ -34,6 +34,11 @@ namespace LWP::Base {
 		/// </summary>
 		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUHandle(uint32_t index);
 
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		virtual void DebugGUI() = 0;
+
 
 	protected: // ** メンバ変数 ** //
 		// Heap
@@ -76,11 +81,13 @@ namespace LWP::Base {
 
 	// Heap情報構造体
 	struct HeapInfo {
+	public:
 		Utility::Index index;
 		D3D12_CPU_DESCRIPTOR_HANDLE cpuView{};
 
 		// デフォルトコンストラクタ
 		HeapInfo() = default;
+		~HeapInfo() = default;
 
 		virtual void SetView(IDescriptorHeap* heap) {
 			cpuView = heap->GetCPUHandle(index);

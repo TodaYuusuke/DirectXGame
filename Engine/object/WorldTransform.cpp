@@ -1,4 +1,5 @@
 #include "WorldTransform.h"
+#include "primitive/Node.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Object;
@@ -8,10 +9,21 @@ WorldTransform::WorldTransform() { Initialize(); }
 WorldTransform::WorldTransform(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s) {
 	Initialize();
 	translation = t;
+	rotation = Math::Quaternion::ConvertEuler(r);
+	scale = s;
+}
+WorldTransform::WorldTransform(Math::Vector3 t, Math::Quaternion r, Math::Vector3 s) {
+	Initialize();
+	translation = t;
 	rotation = r;
 	scale = s;
 }
 WorldTransform::WorldTransform(Math::Vector3 t, Math::Vector3 r) {
+	Initialize();
+	translation = t;
+	rotation = Math::Quaternion::ConvertEuler(r);
+}
+WorldTransform::WorldTransform(Math::Vector3 t, Math::Quaternion r) {
 	Initialize();
 	translation = t;
 	rotation = r;
@@ -29,14 +41,18 @@ void WorldTransform::Initialize() {
 
 Matrix4x4 WorldTransform::GetWorldMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
-
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
 		result = result * parent_->t->GetWorldMatrix();
 	}
-	//if (parent_) {
-	//	result = result * parent_->GetWorldMatrix();
-	//}
+	return result;
+}
+Matrix4x4 WorldTransform::GetWorldMatrix(Primitive::Node* node) const {
+	Math::Matrix4x4 result = node->localMatrix * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+	// 親があれば親のワールド行列を掛ける
+	if (parent_) {
+		result = result * parent_->t->GetWorldMatrix();
+	}
 	return result;
 }
 
@@ -76,7 +92,11 @@ Vector3 WorldTransform::GetFinalScale() const {
 void WorldTransform::DebugGUI(const std::string& label) {
 	if (ImGui::TreeNode(label.c_str())) {
 		ImGui::DragFloat3("Translation", &translation.x, 0.01f);
-		ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
+		Vector3 rot = { 0.0f,0.0f,0.0f };
+		ImGui::DragFloat3("Rotation", &rot.x, 0.01f);
+		rotation *= Quaternion::ConvertEuler(rot);
+		ImGui::DragFloat4("Quaternion", &rotation.x, 0.01f);
+		if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
 		ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		ImGui::TreePop();
 	}
@@ -109,10 +129,10 @@ WorldTransform& WorldTransform::operator+=(const WorldTransform& other) {
 	return *this = *this + other;
 }
 
-WorldTransform WorldTransform::operator/(const float& other) const {
-	return {
-		translation / other,
-		rotation / other,
-		scale / other
-	};
-}
+//WorldTransform WorldTransform::operator/(const float& other) const {
+//	return {
+//		translation / other,
+//		rotation / other,
+//		scale / other
+//	};
+//}

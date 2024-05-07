@@ -31,6 +31,8 @@ bld/
 [Ll]ogs/
 !/Externals/DirectXTex/lib/Debug/
 !/Externals/DirectXTex/lib/Release/
+!/Externals/assimp/lib/Debug/
+!/Externals/assimp/lib/Release/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

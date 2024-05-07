@@ -48,15 +48,11 @@ namespace LWP {
 		/// <returns>オーディオのインスタンス</returns>
 		const Primitive::MeshData& LoadMeshLongPath(const std::string& filePath);
 
-		/// <summary>
-		/// <para>モーションクラスのインスタンスをエンジンにセットする関数</para>
-		/// <para>※ ユーザー呼び出し禁止</para>
-		/// </summary>
+		// クラスのインスタンスをエンジンにセットする関数群
+		void SetInstance(Animation* ptr);
 		void SetInstance(Motion* ptr);
-		/// <summary>
-		/// <para>モーションクラスのインスタンスをエンジンから解放する関数</para>
-		/// <para>※ ユーザー呼び出し禁止</para>
-		/// </summary>
+		// クラスのインスタンスをエンジンから解放する関数群
+		void DeleteInstance(Animation* ptr);
 		void DeleteInstance(Motion* ptr);
 	};
 };

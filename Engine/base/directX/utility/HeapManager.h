@@ -18,6 +18,12 @@ namespace LWP::Base {
 		HeapManager(GPUDevice* gpuDevice);
 		~HeapManager() = default;
 
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI();
+
+
 	public: // ** ゲッター ** //
 
 		RTV* rtv() { return rtv_.get(); }

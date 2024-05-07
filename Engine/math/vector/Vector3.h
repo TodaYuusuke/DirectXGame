@@ -6,6 +6,7 @@
 /// </summary>
 namespace LWP::Math {
 	class Matrix4x4;
+	class Quaternion;
 
 	class Vector3 final {
 	public:
@@ -33,6 +34,10 @@ namespace LWP::Math {
 		// Vector3 Multiply(*) Matrix4x4
 		Vector3 operator*(const Matrix4x4& other) const;
 		//friend Vector3 operator*(Matrix4x4 scalar, const Vector3& vec) { return vec * scalar; }
+
+		// Vector3 Multiply(*) Quaternion
+		Vector3 operator*(const Quaternion& other) const;
+		Vector3 operator*=(const Quaternion& other);
 
 		// Vector3 == Vector3
 		bool operator==(const Vector3& other) const {
@@ -63,6 +68,13 @@ namespace LWP::Math {
 		/// <param name="v2">... ベクトル2</param>
 		/// <returns>内積</returns>
 		[[nodiscard]] static float Dot(const Vector3& v1, const Vector3& v2);
+		/// <summary>
+		/// 二つのベクトルの間の角度を求める関数（radian）
+		/// </summary>
+		/// <param name="v1">... ベクトル１</param>
+		/// <param name="v2">... ベクトル２</param>
+		/// <returns>角度（ラジアン）</returns>
+		[[nodiscard]] static float Radian(const Vector3& v1, const Vector3& v2);
 
 		/// <summary>
 		/// クロス積を求める
@@ -85,5 +97,10 @@ namespace LWP::Math {
 		[[nodiscard]] static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 		// 球面線形補間
 		[[nodiscard]] static Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+
+		// 方向ベクトル
+		static const Vector3 UnitX() { return Vector3(1.0f, 0.0f, 0.0f); }
+		static const Vector3 UnitY() { return Vector3(0.0f, 1.0f, 0.0f); }
+		static const Vector3 UnitZ() { return Vector3(0.0f, 0.0f, 1.0f); }
 	};
 }

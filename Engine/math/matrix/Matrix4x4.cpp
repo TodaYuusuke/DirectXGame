@@ -201,26 +201,44 @@ Matrix4x4 Matrix4x4::CreateRotateXYZMatrix(const Vector3& rotate) {
 	return x * y * z;
 }
 Matrix4x4 Matrix4x4::CreateRotateXYZMatrix(const Quaternion& q) {
-	Matrix4x4 result;
-	result.m[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
-	result.m[0][1] = 2.0f * ((q.x * q.y) + (q.w * q.z));
-	result.m[0][2] = 2.0f * ((q.x * q.z) - (q.w * q.y));
-	result.m[0][3] = 0.0f;
+	//Matrix4x4 result;
+	//result.m[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
+	//result.m[0][1] = 2.0f * ((q.x * q.y) + (q.w * q.z));
+	//result.m[0][2] = 2.0f * ((q.x * q.z) - (q.w * q.y));
+	//result.m[0][3] = 0.0f;
 
-	result.m[1][0] = 2.0f * ((q.x * q.y) - (q.w * q.z));
-	result.m[1][1] = (q.w * q.w) - (q.x * q.x) + (q.y * q.y) - (q.z * q.z);
-	result.m[1][2] = 2.0f * ((q.y * q.z) + (q.w * q.x));
-	result.m[1][3] = 0.0f;
+	//result.m[1][0] = 2.0f * ((q.x * q.y) - (q.w * q.z));
+	//result.m[1][1] = (q.w * q.w) - (q.x * q.x) + (q.y * q.y) - (q.z * q.z);
+	//result.m[1][2] = 2.0f * ((q.y * q.z) + (q.w * q.x));
+	//result.m[1][3] = 0.0f;
 
-	result.m[2][0] = 2.0f * ((q.x * q.z) + (q.w * q.y));
-	result.m[2][1] = 2.0f * ((q.y * q.z) - (q.w * q.x));
-	result.m[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
-	result.m[2][3] = 0.0f;
+	//result.m[2][0] = 2.0f * ((q.x * q.z) + (q.w * q.y));
+	//result.m[2][1] = 2.0f * ((q.y * q.z) - (q.w * q.x));
+	//result.m[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
+	//result.m[2][3] = 0.0f;
 
-	result.m[3][0] = 0.0f;
-	result.m[3][1] = 0.0f;
-	result.m[3][2] = 0.0f;
-	result.m[3][3] = 1.0f;
+	//result.m[3][0] = 0.0f;
+	//result.m[3][1] = 0.0f;
+	//result.m[3][2] = 0.0f;
+	//result.m[3][3] = 1.0f;
+
+	//return result;
+
+	// 結果格納用
+	Matrix4x4 result = Matrix4x4::CreateIdentity4x4();
+
+	// 計算処理
+	result.m[0][0] = powf(q.w, 2) + powf(q.x, 2) - powf(q.y, 2) - powf(q.z, 2);
+	result.m[0][1] = 2.0f * (q.x * q.y + q.w * q.z);
+	result.m[0][2] = 2.0f * (q.x * q.z - q.w * q.y);
+
+	result.m[1][0] = 2.0f * (q.x * q.y - q.w * q.z);
+	result.m[1][1] = powf(q.w, 2) - powf(q.x, 2) + powf(q.y, 2) - powf(q.z, 2);
+	result.m[1][2] = 2.0f * (q.y * q.z + q.w * q.x);
+
+	result.m[2][0] = 2.0f * (q.x * q.z + q.w * q.y);
+	result.m[2][1] = 2.0f * (q.y * q.z - q.w * q.x);
+	result.m[2][2] = powf(q.w, 2) - powf(q.x, 2) - powf(q.y, 2) + powf(q.z, 2);
 
 	return result;
 }
@@ -236,6 +254,12 @@ Matrix4x4 Matrix4x4::CreateScaleMatrix(const Vector3& scale) {
 
 // 3次元アフィン変換行列
 Matrix4x4 Matrix4x4::CreateAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+	Matrix4x4 s = CreateScaleMatrix(scale);
+	Matrix4x4 r = CreateRotateXYZMatrix(rotate);
+	Matrix4x4 t = CreateTranslateMatrix(translate);
+	return s * r * t;
+}
+Matrix4x4 Matrix4x4::CreateAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
 	Matrix4x4 s = CreateScaleMatrix(scale);
 	Matrix4x4 r = CreateRotateXYZMatrix(rotate);
 	Matrix4x4 t = CreateTranslateMatrix(translate);

@@ -1,8 +1,6 @@
 #pragma once
 #include "../IPrimitive.h"
 
-#include "resources/material/Material.h"
-
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -20,6 +18,9 @@ namespace LWP::Primitive {
 		Resource::Material material;
 		// テクスチャ
 		Resource::Texture texture;
+
+		// ノード情報
+		Node node;
 	};
 
 	/// <summary>
@@ -27,8 +28,7 @@ namespace LWP::Primitive {
 	/// </summary>
 	class Mesh final
 		: public IPrimitive {
-
-	public: // ** 関数 ** //
+	public: // ** メンバ関数 ** //
 
 		// 初期化を呼び出す
 		Mesh() { Init(); }
@@ -70,6 +70,8 @@ namespace LWP::Primitive {
 			material = other.material;
 			// テクスチャ
 			texture = other.texture;
+			// ノード
+			node = other.node;
 
 			return this;
 		};

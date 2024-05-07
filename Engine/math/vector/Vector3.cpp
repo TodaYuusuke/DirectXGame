@@ -1,5 +1,6 @@
 #include "Vector3.h"
 #include "../matrix/Matrix4x4.h"
+#include "../Quaternion.h"
 
 using namespace LWP::Math;
 
@@ -41,7 +42,10 @@ Vector3 Vector3::operator*(const Matrix4x4& other) const {
 	result.z = x * other.m[0][2] + y * other.m[1][2] + z * other.m[2][2] + other.m[3][2];
 	return result;
 }
-
+Vector3 Vector3::operator*(const Quaternion& other) const {
+	return (other * Quaternion(*this) * other.Inverse()).vec();
+}
+Vector3 Vector3::operator*=(const Quaternion& other) { return *this = *this * other; }
 /// 3次元ベクトルの長さを求める
 float Vector3::Length() const {
 	return sqrtf(x * x + y * y + z * z);
@@ -60,11 +64,13 @@ Vector3 Vector3::Normalize() const {
 
 // *** 静的なメンバ関数 *** //
 
-/// 3次元ベクトルの内積を求める
 float Vector3::Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
-/// クロス積を求める関数
+float Vector3::Radian(const Vector3& v1, const Vector3& v2) {
+	return std::acosf(Dot(v1, v2) / (v1.Length() * v2.Length()));
+}
+
 Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) {
 	Vector3 result{};
 

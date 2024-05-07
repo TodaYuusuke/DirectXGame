@@ -3,6 +3,7 @@
 
 namespace LWP::Base {
 	struct RTVInfo : public HeapInfo {
+	public:
 		D3D12_RENDER_TARGET_VIEW_DESC desc{};
 
 		// デフォルトコンストラクタ
@@ -47,6 +48,10 @@ namespace LWP::Base {
 		/// 初期化
 		/// </summary>
 		void Init();
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI() override;
 
 		/// <summary>
 		/// RenderTargetViewを作成する関数

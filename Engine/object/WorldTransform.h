@@ -3,13 +3,18 @@
 #include <string>
 #include "utility/observers/Observer.h"
 
+// 前方宣言
+namespace LWP::Primitive {
+	class Node;
+}
+
 namespace LWP::Object {
 	class WorldTransform {
 	public: // ** パブリックな変数 ** //
 		// ローカル座標
 		Math::Vector3 translation;
 		// X,Y,Z軸回りのローカル回転角
-		Math::Vector3 rotation;
+		Math::Quaternion rotation;
 		// ローカルスケール
 		Math::Vector3 scale;
 
@@ -29,7 +34,9 @@ namespace LWP::Object {
 		// コンストラクタ
 		WorldTransform();
 		WorldTransform(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s);
+		WorldTransform(Math::Vector3 t, Math::Quaternion r, Math::Vector3 s);
 		WorldTransform(Math::Vector3 t, Math::Vector3 r);
+		WorldTransform(Math::Vector3 t, Math::Quaternion r);
 		WorldTransform(Math::Vector3 t);
 		~WorldTransform() = default;
 
@@ -42,6 +49,10 @@ namespace LWP::Object {
 		/// ワールド行列を返す
 		/// </summary>
 		Math::Matrix4x4 GetWorldMatrix() const;
+		/// <summary>
+		/// ワールド行列を返す（Nodeを考慮）
+		/// </summary>
+		Math::Matrix4x4 GetWorldMatrix(Primitive::Node* node) const;
 
 		// 移動だけのワールド行列を返す
 		Math::Matrix4x4 GetTranslationMatrix() const;
@@ -74,7 +85,7 @@ namespace LWP::Object {
 		// イージングの簡略化のため実装
 		WorldTransform operator+(const WorldTransform& other) const;
 		WorldTransform& operator+=(const WorldTransform& other);
-		WorldTransform operator/(const float &other) const;
+		//WorldTransform operator/(const float &other) const;
 
 		// Observerクラス用のオペレーターオーバーロード
 		bool operator==(const WorldTransform& other) const = delete;
