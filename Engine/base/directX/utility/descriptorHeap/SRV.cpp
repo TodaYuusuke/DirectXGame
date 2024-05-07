@@ -2,6 +2,8 @@
 #include "../Externals/DirectXTex/DirectXTex.h"
 #include "../Externals/DirectXTex/d3dx12.h"
 
+#include "base/ImGuiManager.h"
+
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
@@ -23,6 +25,26 @@ SRV::SRV(ID3D12Device* device) :
 void SRV::Init() {
 	// SRV用のヒープでディスクリプタの数は1000。SRVはShader内で触るものなので、ShaderVisibleはtrue
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSize, true);
+}
+void SRV::DebugGUI() {
+	if (ImGui::CollapsingHeader("SRV")) {
+		if (ImGui::TreeNode("StructerdBuffer Index")) {
+			indexManager_.DebugGUI();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Texture Index")) {
+			textureIM_.DebugGUI();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("DirShadowMap Index")) {
+			dirShadowMapIM_.DebugGUI();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("PointShadowMap Index")) {
+			pointShadowIM_.DebugGUI();
+			ImGui::TreePop();
+		}
+	}
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE SRV::GetFirstTexView() { return GetGPUHandle(cTexOffset); }

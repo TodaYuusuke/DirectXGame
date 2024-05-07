@@ -37,7 +37,7 @@ Index IndexManager::UseEmpty() {
 			array[i] = true;
 			// 自動解放機能付きのIndexクラスを返す
 			return Index(
-				[&]() { UnUse(i); },
+				[this, i]() { UnUse(i); },
 				i + offset_
 			);
 		}
@@ -68,12 +68,13 @@ void IndexManager::DebugGUI() {
 }
 
 void IndexManager::UnUse(int index) {
-	try {
-		// 例外が発生する可能性のあるコード
-		array.at(index) = false;
-		// 例外が発生した場合、このブロック内で捕捉されます
-	}
-	catch (...) {
-		// 何もしないで例外をスルーする
-	}
+	//try {
+	//	// 例外が発生する可能性のあるコード
+	//	array.at(index) = false;
+	//	// 例外が発生した場合、このブロック内で捕捉されます
+	//}
+	//catch (...) {
+	//	// 何もしないで例外をスルーする
+	//}
+	array.at(index) = false;
 }

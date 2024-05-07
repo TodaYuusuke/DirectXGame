@@ -1,5 +1,5 @@
 #include "GameScene.h"
-#include "Title.h"
+#include "Test.h"
 
 using namespace LWP;
 using namespace LWP::Resource;
@@ -40,5 +40,8 @@ void GameScene::Update() {
 	// シーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {
 		nextSceneFunction = []() { return new GameScene(); };
+	}
+	if (Input::Keyboard::GetTrigger(DIK_N)) {
+		nextSceneFunction = []() { return new Test(); };
 	}
 }

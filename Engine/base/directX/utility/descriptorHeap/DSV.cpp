@@ -2,6 +2,7 @@
 #include "SRV.h"
 
 #include <Config.h>
+#include "base/ImGuiManager.h"
 
 using namespace LWP::Base;
 using namespace LWP::Utility;
@@ -13,6 +14,15 @@ DSV::DSV(ID3D12Device* device) :
 void DSV::Init() {
 	// DSV用のヒープでディスクリプタの数はシャドウマップ用などで増加する。DSVはShader内で触らないものなので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kMaxSize, false);
+}
+
+void DSV::DebugGUI() {
+	if (ImGui::CollapsingHeader("DSV")) {
+		if (ImGui::TreeNode("Index")) {
+			indexManager_.DebugGUI();
+			ImGui::TreePop();
+		}
+	}
 }
 
 DSVInfo DSV::CreateDepthStencilView(ID3D12Resource* resource) {

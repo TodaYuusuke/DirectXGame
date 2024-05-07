@@ -29,7 +29,7 @@ namespace LWP::Resource {
 	private: // ** メンバ変数 ** //
 
 		// サイズ
-		Math::Vector2 size_;
+		Math::Vector2 size_{};
 		// SRV上のインデックス
 		int index_ = -1;
 

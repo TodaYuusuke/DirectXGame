@@ -37,10 +37,10 @@ namespace LWP::Object {
 
 	public: // ** メンバ関数 ** //
 
-		/// <summary>
-		/// デフォルトコンストラクタ
-		/// </summary>
+		// デフォルトコンストラクタ
 		Camera();
+		// デフォルトデストラクタ
+		~Camera() = default;
 
 		// 初期化
 		void Initialize() override;
@@ -64,11 +64,11 @@ namespace LWP::Object {
 
 	private: // ** メンバ変数 ** //
 
-		// このカメラでレンダリングするためのデータ
+		//// このカメラでレンダリングするためのデータ
 		Base::ConstantBuffer<Base::CameraStruct> constantBuffer_;
-		// レンダリング結果のリソース
+		//// レンダリング結果のリソース
 		Base::RenderResource renderResource_;
-		// デプスステンシルのリソース
+		//// デプスステンシルのリソース
 		Base::DepthStencil depthStencil_;
 
 		// このカメラからのレンダリング結果を格納する変数
