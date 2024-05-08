@@ -615,9 +615,6 @@
     <None Include="resources\system\shaders\Object3d.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
-    <None Include="resources\system\shaders\postProcess\PassThrough.hlsli">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </None>
     <None Include="resources\system\shaders\Struct.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
@@ -754,15 +751,6 @@
     <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\LensDistortion.PS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\CCTV.PS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\SSAO.PS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </FxCompile>
     <FxCompile Include="resources\system\shaders\Billboard2D.VS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
     </FxCompile>
@@ -771,15 +759,6 @@
     </FxCompile>
     <FxCompile Include="resources\system\shaders\Billboard.PS.hlsl">
       <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\PostProcess.PS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\PassThrough.VS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\postProcess\Bloom.PS.hlsl">
-      <Filter>Engine\resources\shaders\postProcess</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
