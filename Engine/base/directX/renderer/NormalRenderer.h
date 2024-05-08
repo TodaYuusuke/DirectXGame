@@ -10,6 +10,7 @@ namespace LWP::Primitive {
 	class IPrimitive;
 	class Billboard2D;
 	class Billboard3D;
+	class Sprite;
 }
 
 namespace LWP::Base {
@@ -54,6 +55,7 @@ namespace LWP::Base {
 		void AddIndexDataWire(const IndexInfoStruct& data) { wireframe_.indexBuffer.Add(data); }
 		void AddIndexDataBillboard2D(const IndexInfoStruct& data) { billboard2D_.indexBuffer.Add(data); }
 		void AddIndexDataBillboard3D(const IndexInfoStruct& data) { billboard3D_.indexBuffer.Add(data); }
+		void AddIndexDataSprite(const IndexInfoStruct& data) { sprite_.indexBuffer.Add(data); }
 
 		/// <summary>
 		/// 描画ターゲットセット
@@ -90,6 +92,7 @@ namespace LWP::Base {
 		RenderData billboard2D_;
 		// ビルボード3D
 		RenderData billboard3D_;
-
+		// スプライト
+		RenderData sprite_;
 	};
 }

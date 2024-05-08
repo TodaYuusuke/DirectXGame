@@ -88,6 +88,28 @@ SRVInfo SRV::CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage
 	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
+SRVInfo SRV::CreateDepthTexture(ID3D12Resource* resource) {
+	SRVInfo info;
+
+	// SRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.PlaneSlice = 0;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0F;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	// 空きを使用
+	info.index = dirShadowMapIM_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに登録
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	return info;
+}
 SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource, const int width, const int height) {
 	HRESULT hr = S_FALSE;
 	SRVInfo info;

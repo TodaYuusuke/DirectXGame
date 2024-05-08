@@ -32,8 +32,6 @@ namespace LWP::Information {
 			std::stringstream temp;
 			temp << std::put_time(&tm, "%Y-%m-%d_%H-%M-%S");
 			filePath = "log/" + temp.str() + "_Log.txt";
-			//std::string fileName = "log/Log.txt";
-			
 		}
 		~OutputLog() {}
 

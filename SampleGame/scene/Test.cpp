@@ -13,14 +13,9 @@ void Test::Initialize() {
 	// デバッグ情報表示
 	Info::ChangeShowDebugGUI();
 
-	for (int i = 0; i < 10; i++) {
-		mesh[i].LoadFile("skydome/skydome.obj");
-	}
-	// アニメーション用意
-	idleAnim[0].LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &mesh[0]);
-	idleAnim[1].LoadAnimationLongPath("resources/model/Player/C_Head.gltf", &mesh[0]);
-	idleAnim[2].LoadAnimationLongPath("resources/model/Player/C_LHand.gltf", &mesh[0]);
-	idleAnim[3].LoadAnimationLongPath("resources/model/Player/C_RHand.gltf", &mesh[0]);
+	mesh.LoadFile("skydome/skydome.obj");
+
+	sprite.texture = subCamera.GetTexture();
 }
 
 // 更新
@@ -31,5 +26,10 @@ void Test::Update() {
 	}
 	if (Input::Keyboard::GetTrigger(DIK_N)) {
 		nextSceneFunction = []() { return new GameScene(); };
+	}
+
+	// ポストプロセス用のシェーダー更新
+	if (Input::Keyboard::GetTrigger(DIK_P)) {
+		//mainCamera.pp.CreatePSO();
 	}
 }

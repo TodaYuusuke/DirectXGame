@@ -28,5 +28,7 @@ namespace LWP {
 		/// プログラム終了
 		/// </summary>
 		void End();
+
+		
 	};
 };

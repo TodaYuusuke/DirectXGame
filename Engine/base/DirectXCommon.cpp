@@ -24,10 +24,12 @@ void DirectXCommon::Initialize(WinApp* winApp) {
 
 	// HeapManager作成
 	heaps_ = std::make_unique<HeapManager>(gpuDevice_.get());
+	// DirectXコンパイラ作成
+	dxc_ = std::make_unique<DXC>();
 
 	// レンダラー初期化
 	renderer_ = std::make_unique<RendererManager>();
-	renderer_->Init(gpuDevice_.get(), heaps_->srv());
+	renderer_->Init(gpuDevice_.get(), dxc_.get(), heaps_->srv());
 
 	// スワップチェーンを生成する
 	swapChainDesc_.Width = Config::Window::kResolutionWidth;		// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
@@ -52,11 +54,12 @@ void DirectXCommon::Initialize(WinApp* winApp) {
 	}
 	// 深度マップ生成
 	depthStencil_.Init(gpuDevice_.get(), heaps_.get());
-
 }
 
 void DirectXCommon::SetMainCamera(Object::Camera* camera) {
-	renderer_->AddTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
+	renderer_->AddTarget(camera->GetBufferView(), camera->GetRenderResource(), &depthStencil_);
+	// ポストプロセス用のターゲットセット
+	renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], camera->GetDepthStencil(), &camera->pp);
 }
 
 void DirectXCommon::DrawCall() {

@@ -22,14 +22,14 @@ void Title::Initialize() {
 	subCamera[0].transform.translation = { 5.9f,4.5f,-10.0f };
 	subCamera[0].transform.rotation = { 0.4f,-0.5f,0.0f };
 	// ポストプロセステスト
-	subCamera[0].isUsePostProcess = true;
+	//subCamera[0].isUsePostProcess = true;
 	subCamera[0].isActive = true;
 
 	// サブカメラ2を初期化
 	subCamera[1].shaderPath = "postProcess/SSAO.PS.hlsl";
 	subCamera[1].transform.translation = { -5.9f,4.5f,-10.0f };
 	subCamera[1].transform.rotation = { 0.4f,0.5f,0.0f };
-	subCamera[1].isUsePostProcess = true;
+	//subCamera[1].isUsePostProcess = true;
 	subCamera[1].isActive = false;
 	
 
@@ -149,7 +149,7 @@ void Title::Initialize() {
 		data->elapsedFrame++;
 
 		data->wtf.translation += data->velocity;	// 速度ベクトルを加算
-		data->wtf.rotation += Quaternion::ConvertEuler(data->velocity);	// ついでに回転させとく
+		//data->wtf.rotation += Quaternion::ConvertEuler(data->velocity);	// ついでに回転させとく
 		data->wtf.translation.y += -9.8f / 100.0f;	// 重力を加算
 
 		// 速度ベクトルを弱める
@@ -189,7 +189,7 @@ void Title::Initialize() {
 void Title::Update() {
 	// ポストプロセスの切り替え
 	if (Keyboard::GetTrigger(DIK_SPACE)) {
-		mainCamera.isUsePostProcess = !mainCamera.isUsePostProcess;
+		//mainCamera.isUsePostProcess = !mainCamera.isUsePostProcess;
 	}
 
 	// Tキーを押すとテクスチャ切り替え

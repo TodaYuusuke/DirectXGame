@@ -4,6 +4,9 @@
 #include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
 
+#include "base/directX/postProcess/PostProcessor.h"
+
+
 // データ構造体のためだけに前方宣言しなきゃいけない
 namespace LWP::Object { class Camera; }
 // カメラ構造体
@@ -26,11 +29,11 @@ namespace LWP::Object {
 
 		// FOV
 		float fov = 90.0f;
+		// ポストプロセス
+		Base::PostProcessor pp;
 
 		// -- ポストエフェクトフラグ -- //
 
-		// ポストプロセスを行うかのフラグ
-		bool isUsePostProcess = false;
 		// シェーダー用のパス（作成後は意味をなくすのでいつか再設計）
 		std::string shaderPath = "postProcess/CCTV.PS.hlsl";
 
@@ -39,8 +42,6 @@ namespace LWP::Object {
 
 		// デフォルトコンストラクタ
 		Camera();
-		// デフォルトデストラクタ
-		~Camera() = default;
 
 		// 初期化
 		void Initialize() override;
@@ -56,6 +57,10 @@ namespace LWP::Object {
 		// レンダリング結果のテクスチャのポインタを受け取る関数
 		Resource::Texture GetTexture();
 		
+		// 書き込みようのリソースを返す関数
+		Base::RenderResource* GetRenderResource() { return &renderResource_; }
+		// 深度マップを返す関数
+		Base::DepthStencil* GetDepthStencil() { return &depthStencil_; }
 		/// <summary>
 		/// カメラのデータのViewを返す関数
 		/// </summary>
@@ -64,12 +69,19 @@ namespace LWP::Object {
 
 	private: // ** メンバ変数 ** //
 
-		//// このカメラでレンダリングするためのデータ
+		// レンダリング先のリソースと参照するリソースを別で分け、レンダリング中に参照する場合に備える。
+
+		// このカメラでレンダリングするためのデータ
 		Base::ConstantBuffer<Base::CameraStruct> constantBuffer_;
-		//// レンダリング結果のリソース
+		// レンダリングするリソース
 		Base::RenderResource renderResource_;
-		//// デプスステンシルのリソース
+		// レンダリング結果の画像
+		Base::RenderResource textureResource_;
+		// デプスステンシルのリソース
 		Base::DepthStencil depthStencil_;
+
+		// この
+
 
 		// このカメラからのレンダリング結果を格納する変数
 		//Resource::RenderTexture* renderTexture_ = nullptr;
