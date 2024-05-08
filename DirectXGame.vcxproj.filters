@@ -261,6 +261,7 @@
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
+    <ClCompile Include="Engine\primitive\model\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -609,6 +610,7 @@
     <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h" />
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
+    <ClInclude Include="Engine\primitive\model\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
