@@ -106,20 +106,34 @@ Primitive::MeshData Manager::LoadAssimp(const std::string& filepath) {
 	// Meshの解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];
-		assert(mesh->HasNormals()); // 法線がないMeshは今回は非対応
-		assert(mesh->HasTextureCoords(0)); // TexcoordがないMeshは今回は非対応
+		bool hasNormal = mesh->HasNormals();
+		bool hasTexcoord = mesh->HasTextureCoords(0);
 
 		// Vertexの解析
 		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++) {
+			Primitive::Vertex newVertex;
+
 			// インデックス情報を元に情報を取得する
 			aiVector3D& position = mesh->mVertices[vertexIndex];		 // 頂点座標取得
-			aiVector3D& normal = mesh->mNormals[vertexIndex];			 // 法線取得
-			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex]; // テクスチャ座標取得
-
-			Primitive::Vertex newVertex;
 			newVertex.position = { -position.x, position.y, position.z }; // 頂点座標追加
-			newVertex.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
-			newVertex.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
+
+			// uv座標チェック
+			if(hasTexcoord) {
+				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex]; // テクスチャ座標取得
+				newVertex.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
+			}
+			else {
+				newVertex.texCoord = { 0.0f,0.0f };
+			}
+
+			// 法線チェック
+			if (hasNormal) {
+				aiVector3D& normal = mesh->mNormals[vertexIndex];			 // 法線取得
+				newVertex.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
+			}
+			else {
+				newVertex.normal = newVertex.position;
+			}
 
 			// 頂点データを追加
 			result.vertices.push_back(newVertex);
