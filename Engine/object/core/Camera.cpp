@@ -43,8 +43,10 @@ void Camera::Update(Base::RendererManager* manager) {
 
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
 	manager->AddTarget(constantBuffer_.GetGPUView(), &renderResource_, &depthStencil_);
+	// ポストプロセス用のターゲットセット
+	manager->AddTarget(&renderResource_, &textureResource_, &depthStencil_, &pp);
 	// レンダリング結果をテクスチャ用にコピーする
-	manager->AddCopyTask(&renderResource_, &textureResource_);
+	//manager->AddCopyTask(&renderResource_, &textureResource_);
 }
 
 void Camera::DebugGUI() {

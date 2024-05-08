@@ -259,6 +259,8 @@
     <ClCompile Include="Engine\primitive\Node.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -603,6 +605,10 @@
     <ClInclude Include="Engine\primitive\Node.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
     <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
+    <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

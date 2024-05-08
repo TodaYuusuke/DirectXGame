@@ -27,4 +27,9 @@ void Test::Update() {
 	if (Input::Keyboard::GetTrigger(DIK_N)) {
 		nextSceneFunction = []() { return new GameScene(); };
 	}
+
+	// ポストプロセス用のシェーダー更新
+	if (Input::Keyboard::GetTrigger(DIK_P)) {
+		//mainCamera.pp.CreatePSO();
+	}
 }

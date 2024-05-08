@@ -88,6 +88,10 @@ namespace LWP::Base {
 		/// </summary>
 		SRVInfo CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages);
 		/// <summary>
+		/// DepthStencilをSRVに登録
+		/// </summary>
+		SRVInfo CreateDepthTexture(ID3D12Resource* resource);
+		/// <summary>
 		/// RenderResourceをSRVに登録
 		/// </summary>
 		SRVInfo CreateRenderResource(ID3D12Resource* resource, const int width, const int height);

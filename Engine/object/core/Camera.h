@@ -4,6 +4,9 @@
 #include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
 
+#include "base/directX/postProcess/PostProcessor.h"
+
+
 // データ構造体のためだけに前方宣言しなきゃいけない
 namespace LWP::Object { class Camera; }
 // カメラ構造体
@@ -27,6 +30,8 @@ namespace LWP::Object {
 		// FOV
 		float fov = 90.0f;
 		// ポストプロセス
+		Base::PostProcessor pp;
+
 		// -- ポストエフェクトフラグ -- //
 
 		// シェーダー用のパス（作成後は意味をなくすのでいつか再設計）
@@ -52,6 +57,10 @@ namespace LWP::Object {
 		// レンダリング結果のテクスチャのポインタを受け取る関数
 		Resource::Texture GetTexture();
 		
+		// 書き込みようのリソースを返す関数
+		Base::RenderResource* GetRenderResource() { return &renderResource_; }
+		// 深度マップを返す関数
+		Base::DepthStencil* GetDepthStencil() { return &depthStencil_; }
 		/// <summary>
 		/// カメラのデータのViewを返す関数
 		/// </summary>

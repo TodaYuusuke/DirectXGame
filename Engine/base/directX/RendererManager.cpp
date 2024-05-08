@@ -10,7 +10,8 @@
 
 using namespace LWP::Base;
 
-void RendererManager::Init(GPUDevice* device, SRV* srv) {
+void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
+	dxc_ = dxc;
 	srv_ = srv;
 
 	// コマンド初期化
@@ -44,9 +45,11 @@ void RendererManager::Init(GPUDevice* device, SRV* srv) {
 	};
 
 	// シャドウレンダラー初期化
-	shadowRender_.Init(device, srv_, &dxc_, shadowFunc);
+	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
-	normalRender_.Init(device, srv_, buffers_.GetRoot(), &dxc_, normalFunc);
+	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
+	// ポストプロセスレンダラー初期化
+	ppRender_.Init();
 	// コピーレンダラー初期化
 	copyRenderer_.Init();
 
@@ -70,7 +73,7 @@ void RendererManager::DrawCall() {
 	// 通常描画
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
-
+	ppRender_.DrawCall(list);
 	// リソースをコピー
 	copyRenderer_.Execute(list);
 
@@ -80,6 +83,7 @@ void RendererManager::DrawCall() {
 	// 次のフレームのためにリセット
 	normalRender_.Reset();
 	shadowRender_.Reset();
+	ppRender_.Reset();
 	copyRenderer_.Reset();
 	// リソースもリセット
 	buffers_.Reset();

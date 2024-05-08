@@ -2,6 +2,7 @@
 #include "base/directX/utility/Command.h"
 #include "renderer/NormalRenderer.h"
 #include "renderer/ShadowRenderer.h"
+#include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
 #include "renderer/BufferGroup.h"
 
@@ -34,7 +35,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv);
+		void Init(GPUDevice* device, DXC* dxc, SRV* srv);
 
 		/// <summary>
 		/// レンダリング開始
@@ -71,8 +72,8 @@ namespace LWP::Base {
 		Command commander_;
 		// バッファーまとめクラス
 		BufferGroup buffers_;
-		// DirectXコンパイラ
-		DXC dxc_;
+		// DirectXコンパイラのポインタ
+		DXC* dxc_;
 		// SRVポインタ
 		SRV* srv_;
 
@@ -120,6 +121,21 @@ namespace LWP::Base {
 		/// <param name="sm">シャドウマップリソース</param>
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, SM_Direction* sm) { shadowRender_.AddTarget({ view, sm }); }
 		void AddTarget(const std::array<D3D12_GPU_VIRTUAL_ADDRESS, 6>& views, SM_Point* sm) { shadowRender_.AddTarget({ views, sm }); }
+#pragma endregion
+
+#pragma region ポストプロセス描画
+	private:
+		// レンダラー
+		PPRenderer ppRender_;
+	public:
+		/// <summary>
+		/// ターゲットセット
+		/// </summary>
+		/// <param name="render"></param>
+		/// <param name="texture"></param>
+		/// <param name="depth"></param>
+		/// <param name="pp">PostProcessor</param>
+		void AddTarget(RenderResource* render, BackBuffer* texture, DepthStencil* depth ,PostProcessor* pp) { ppRender_.AddTarget({render, texture, depth, pp}); }
 #pragma endregion
 
 #pragma region コピー
