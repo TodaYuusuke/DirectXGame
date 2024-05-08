@@ -51,6 +51,7 @@ namespace LWP::Base {
 		ID3D12Device* GetDevice() const { return device_; }
 		HeapManager* GetHeaps() const { return heaps_.get(); }
 		RendererManager* GetRendererManager() const { return renderer_.get(); }
+		DXC* GetDXC() const { return dxc_.get(); }
 
 		// ImGui用
 		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
@@ -69,6 +70,8 @@ namespace LWP::Base {
 
 		// RTV、SRV、DSVをまとめて管理するクラス
 		std::unique_ptr<HeapManager> heaps_;
+		// DirectXコンパイラ
+		std::unique_ptr<DXC> dxc_;
 
 		// スワップチェーン
 		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;

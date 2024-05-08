@@ -10,7 +10,8 @@ NormalRenderer::NormalRenderer() :
 	normal_(lwpC::Rendering::kMaxIndex),
 	wireframe_(lwpC::Rendering::kMaxIndex),
 	billboard2D_(lwpC::Rendering::kMaxIndex),
-	billboard3D_(lwpC::Rendering::kMaxIndex) {}
+	billboard3D_(lwpC::Rendering::kMaxIndex),
+	sprite_(lwpC::Rendering::kMaxIndex) {}
 
 void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func) {
 	// StructuredBufferを初期化
@@ -18,6 +19,7 @@ void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC*
 	wireframe_.indexBuffer.Init(device, srv);
 	billboard2D_.indexBuffer.Init(device, srv);
 	billboard3D_.indexBuffer.Init(device, srv);
+	sprite_.indexBuffer.Init(device, srv);
 
 	// PSOを生成
 	normal_.pso.Init(*root, dxc)
@@ -36,6 +38,10 @@ void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC*
 	billboard3D_.pso.Init(*root, dxc)
 		.SetVertexShader("Billboard3D.VS.hlsl")
 		.SetPixelShader("Billboard.PS.hlsl")
+		.Build(device->GetDevice());
+	sprite_.pso.Init(*root, dxc)
+		.SetVertexShader("Object3d.VS.hlsl")
+		.SetPixelShader("Object3d.PS.hlsl")
 		.Build(device->GetDevice());
 
 	// 関数セット
@@ -100,8 +106,13 @@ void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 			list->DrawInstanced(3, data->indexBuffer.GetCount() / 3, 0, 0);
 		}
 
-		// 最後はImGuiをDraw
+		// 最後専用処理
 		if (it == std::prev(target_.end())) {
+			// Spriteは最後のみレンダリングする（フィードバックループ対策）
+			list->SetPipelineState(sprite_.pso.GetState());	// PSOを設定
+			list->SetGraphicsRootDescriptorTable(0, sprite_.indexBuffer.GetGPUView());	// ディスクリプタテーブルを登録
+			list->DrawInstanced(3, sprite_.indexBuffer.GetCount() / 3, 0, 0);	// 全三角形を１つのDrawCallで描画
+			// ImGuiをDraw
 			ImGui::Render();
 			ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), list);
 		}
@@ -118,5 +129,6 @@ void NormalRenderer::Reset() {
 	wireframe_.indexBuffer.Reset();
 	billboard2D_.indexBuffer.Reset();
 	billboard3D_.indexBuffer.Reset();
+	sprite_.indexBuffer.Reset();
 }
 

@@ -4,12 +4,14 @@
 #include "primitive/IPrimitive.h"
 #include "primitive/2d/Billboard2D.h"
 #include "primitive/2d/Billboard3D.h"
+#include "primitive/2d/Sprite.h"
 #include "object/core/light/DirectionLight.h"
 #include "object/core/light/PointLight.h"
 
 using namespace LWP::Base;
 
-void RendererManager::Init(GPUDevice* device, SRV* srv) {
+void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
+	dxc_ = dxc;
 	srv_ = srv;
 
 	// コマンド初期化
@@ -43,9 +45,13 @@ void RendererManager::Init(GPUDevice* device, SRV* srv) {
 	};
 
 	// シャドウレンダラー初期化
-	shadowRender_.Init(device, srv_, &dxc_, shadowFunc);
+	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
-	normalRender_.Init(device, srv_, buffers_.GetRoot(), &dxc_, normalFunc);
+	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
+	// ポストプロセスレンダラー初期化
+	ppRender_.Init();
+	// コピーレンダラー初期化
+	copyRenderer_.Init();
 
 	// テクスチャ読み込み
 	defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
@@ -67,6 +73,9 @@ void RendererManager::DrawCall() {
 	// 通常描画
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
+	ppRender_.DrawCall(list);
+	// リソースをコピー
+	copyRenderer_.Execute(list);
 
 	// 実行
 	commander_.Execute();
@@ -74,7 +83,9 @@ void RendererManager::DrawCall() {
 	// 次のフレームのためにリセット
 	normalRender_.Reset();
 	shadowRender_.Reset();
-	// リソースも解放
+	ppRender_.Reset();
+	copyRenderer_.Reset();
+	// リソースもリセット
 	buffers_.Reset();
 }
 
@@ -163,6 +174,10 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 }
 
 std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(Primitive::IPrimitive* primitive) {
+	// Spriteのとき
+	if (dynamic_cast<Primitive::Sprite*>(primitive)) {
+		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataSprite(index); };
+	}
 	// ビルボード2Dのとき
 	if (dynamic_cast<Primitive::Billboard2D*>(primitive)) {
 		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataBillboard2D(index); };
