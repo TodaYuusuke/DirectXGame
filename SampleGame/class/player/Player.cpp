@@ -11,7 +11,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
 	meshes[0].LoadFile("Player/C_Body.gltf");
 	//meshes[0].transform.rotation = Quaternion::ConvertEuler({ 0.0f,-1.57,0.0f });
-	//meshes[0].transform.rotation = Quaternion({0.0f,-1.0f,0.0f}).Normalize();
+	meshes[0].transform.rotation = Quaternion({0.0f,-1.0f,0.0f}).Normalize();
 	meshes[0].transform.scale = { 0.3f,0.3f,0.3f };
 	meshes[1].LoadFile("Player/C_Head.gltf");
 	meshes[2].LoadFile("Player/C_LHand.gltf");
@@ -89,7 +89,7 @@ void Player::Move() {
 	static Vector3 vec = Vector3{ 0.0f,-1.57f,0.0f };
 
 	if (dir.Length() > 0.0f) {
-		//meshes[0].transform.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), std::atan2f(dir.z, dir.x)).Inverse();
+		meshes[0].transform.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), std::atan2f(dir.z, dir.x)).Inverse();
 	}
 
 	ImGui::Begin("Test");

@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class\field\Field.cpp" />
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class\field\Field.h" />
     <ClInclude Include="class\player\Player.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\Test.h" />

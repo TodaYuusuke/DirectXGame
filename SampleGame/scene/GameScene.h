@@ -1,5 +1,6 @@
 #pragma once
 #include "../class/player/Player.h"
+#include "../class/field/Field.h"
 #include "scene/IScene.h" 
 
 class GameScene final
@@ -16,12 +17,8 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	// ビル群
-	LWP::Primitive::Mesh buildings[6];
-	// スカイドーム
-	LWP::Primitive::Mesh skydome;
-	// 地面
-	LWP::Primitive::Mesh ground;
+	// 地形をまとめたクラス
+	Field field;
 
 
 	// プレイヤー
