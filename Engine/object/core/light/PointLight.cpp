@@ -24,7 +24,6 @@ PointLight::PointLight() {
 
 // 初期化
 void PointLight::Initialize() {
-	transform.Initialize();
 	name = "PointLight";
 }
 // 更新

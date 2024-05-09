@@ -256,7 +256,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\Particle.cpp" />
     <ClCompile Include="Engine\object\IObject.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
-    <ClCompile Include="Engine\object\WorldTransform.cpp" />
+    <ClCompile Include="Engine\object\TransformEuler.cpp" />
+    <ClCompile Include="Engine\object\TransformQuat.cpp" />
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp" />
     <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
@@ -380,7 +381,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\Particle.h" />
     <ClInclude Include="Engine\object\IObject.h" />
     <ClInclude Include="Engine\object\ObjectManager.h" />
-    <ClInclude Include="Engine\object\WorldTransform.h" />
+    <ClInclude Include="Engine\object\TransformEuler.h" />
+    <ClInclude Include="Engine\object\TransformQuat.h" />
     <ClInclude Include="Engine\primitive\2d\2dList.h" />
     <ClInclude Include="Engine\primitive\2d\Billboard2D.h" />
     <ClInclude Include="Engine\primitive\2d\Billboard3D.h" />

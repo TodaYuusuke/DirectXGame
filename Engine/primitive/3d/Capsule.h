@@ -57,7 +57,7 @@ namespace LWP::Primitive {
 		void DerivedDebugGUI(const std::string& label = "Derived") override;
 
 		// 始点が変わっているかを監視するための変数
-		Utility::Observer<LWP::Object::WorldTransform*> obsTransform = &transform;
+		Utility::Observer<LWP::Object::TransformEuler*> obsTransform = &transform;
 
 		/// <summary>
 		/// パラメータが変わっているかを検証
