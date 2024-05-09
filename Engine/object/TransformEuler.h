@@ -9,7 +9,7 @@ namespace LWP::Primitive {
 }
 
 namespace LWP::Object {
-	class WorldTransform {
+	class TransformEuler {
 	public: // ** パブリックな変数 ** //
 		// ローカル座標
 		Math::Vector3 translation;
@@ -21,27 +21,27 @@ namespace LWP::Object {
 
 	private: // ** プロパティ変数 ** //
 		// 親となるワールド変換へのポインタ（読み取り専用）
-		Utility::Observer<WorldTransform*>* parent_ = nullptr;
+		Utility::Observer<TransformEuler*>* parent_ = nullptr;
 		//WorldTransform* parent_ = nullptr;
 	public: // アクセッサ
 		// 親関係を登録
-		void Parent(WorldTransform* parent);
+		void Parent(TransformEuler* parent);
 		// 親のポインタを受け取る（実装禁止）
 		//WorldTransform* Parent();
 		
 
 	public: // ** パブリックなメンバ関数 ** //
 		// コンストラクタ
-		WorldTransform();
-		WorldTransform(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s);
-		WorldTransform(Math::Vector3 t, Math::Vector3 r);
-		WorldTransform(Math::Vector3 t);
-		~WorldTransform() = default;
+		TransformEuler();
+		TransformEuler(Math::Vector3 t, Math::Vector3 r, Math::Vector3 s);
+		TransformEuler(Math::Vector3 t, Math::Vector3 r);
+		TransformEuler(Math::Vector3 t);
+		~TransformEuler() = default;
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize();
+		void Init();
 
 		/// <summary>
 		/// ワールド行列を返す
@@ -81,13 +81,13 @@ namespace LWP::Object {
 	public: // ** オペレーターオーバーロード ** //
 
 		// イージングの簡略化のため実装
-		WorldTransform operator+(const WorldTransform& other) const;
-		WorldTransform& operator+=(const WorldTransform& other);
+		TransformEuler operator+(const TransformEuler& other) const;
+		TransformEuler& operator+=(const TransformEuler& other);
 		//WorldTransform operator/(const float &other) const;
 
 		// Observerクラス用のオペレーターオーバーロード
-		bool operator==(const WorldTransform& other) const = delete;
-		bool operator==(WorldTransform& other) {
+		bool operator==(const TransformEuler& other) const = delete;
+		bool operator==(TransformEuler& other) {
 			return {
 				translation == other.translation &&
 				rotation == other.rotation &&

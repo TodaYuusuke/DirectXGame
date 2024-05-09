@@ -3,10 +3,7 @@
 
 using namespace LWP::Resource;
 
-Material::Material() {
-	// ワールドトランスフォームを初期化
-	uvTransform.Initialize();
-}
+Material::Material() {}
 
 void Material::DebugGUI(const std::string& label) {
 	if (ImGui::TreeNode(label.c_str())) {

@@ -1,12 +1,12 @@
 #pragma once
-#include "../object/WorldTransform.h"
-#include "../math/vector/Vector3.h"
-#include "../math/vector/Vector2.h"
-#include "../resources/texture/Texture.h"
-#include "../resources/material/Material.h"
-#include "../utility/Color.h"
-#include "../utility/observers/Observer.h"
-#include "../utility/observers/ObserverPtr.h"
+#include "object/TransformEuler.h"
+#include "math/vector/Vector3.h"
+#include "math/vector/Vector2.h"
+#include "resources/texture/Texture.h"
+#include "resources/material/Material.h"
+#include "utility/Color.h"
+#include "utility/observers/Observer.h"
+#include "utility/observers/ObserverPtr.h"
 
 #include "Node.h"
 #include <wrl.h>
@@ -48,7 +48,7 @@ namespace LWP::Primitive {
 		std::vector<uint32_t> indexes;	// インデックス
 
 		// ワールドトランスフォーム
-		Object::WorldTransform transform;
+		Object::TransformEuler transform;
 
 		// マテリアル
 		Resource::Material material;
@@ -154,7 +154,7 @@ namespace LWP::Primitive {
 		std::string name;
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indexes;
-		Object::WorldTransform transform;
+		Object::TransformEuler transform;
 		Resource::Material material;
 		Resource::Texture texture;
 		Utility::Color* commonColor = nullptr;
