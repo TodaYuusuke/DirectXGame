@@ -11,8 +11,8 @@ namespace LWP::Resource {
 	class Model final {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// トランスフォーム
-		Object::WorldTransform transform{};
+		// ワールドトランスフォーム
+		Object::TransformEuler worldTF{};
 		// 有効フラグ
 		bool isActive = true;
 

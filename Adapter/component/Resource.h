@@ -36,17 +36,11 @@ namespace LWP {
 		AudioData* LoadAudioLongPath(const std::string& filePath);
 
 		/// <summary>
-		/// 3Dモデルの読み込み（resources/audio/を短縮ver）（ユーザー呼び出し不要）
+		/// 3Dモデルの読み込み（exeからのフルパス指定）（ユーザー呼び出し不要）
 		/// </summary>
-		/// <param name="filePath">読み込むファイルパス</param>
-		/// <returns>オーディオのインスタンス</returns>
-		const Primitive::MeshData& LoadMesh(const std::string& filePath);
-		/// <summary>
-		/// 3Dモデルの読み込み（exeからのパスで指定）（ユーザー呼び出し不要）
-		/// </summary>
-		/// <param name="filePath">読み込むファイルパス</param>
-		/// <returns>オーディオのインスタンス</returns>
-		const Primitive::MeshData& LoadMeshLongPath(const std::string& filePath);
+		/// <param name="filePath">読み込むファイルのフルパス</param>
+		void LoadModel(const std::string& filePath);
+
 
 		// クラスのインスタンスをエンジンにセットする関数群
 		void SetInstance(Animation* ptr);

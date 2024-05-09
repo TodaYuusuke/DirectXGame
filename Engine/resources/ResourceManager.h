@@ -7,7 +7,7 @@
 #include "audio/Audio.h"
 #include "motion/Animation.h"
 #include "motion/Motion.h"
-//#include "model/Model.h"
+#include "primitive/model/ModelData.h"
 
 
 #include "utility/PtrManager.h"
@@ -15,9 +15,6 @@
 
 namespace LWP::Base {
 	class DirectXCommon;
-};
-namespace LWP::Primitive {
-	struct MeshData;
 };
 
 namespace LWP::Resource {
@@ -46,8 +43,8 @@ namespace LWP::Resource {
 		Texture LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
 		AudioData* LoadAudio(const std::string& filepath);
 		AudioData* LoadAudioLongPath(const std::string& filepath);
-		const Primitive::MeshData& LoadMesh(const std::string& filepath);
-		const Primitive::MeshData& LoadMeshLongPath(const std::string& filepath);
+		// モデルのデータを読み込む関数
+		void LoadModelData(const std::string& filePath);
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
@@ -73,17 +70,10 @@ namespace LWP::Resource {
 		const std::string audioDirectoryPath_ = "resources/audio/";
 		std::map<std::string, AudioData> audioMap_;
 		// 3Dモデルの配列
-		const std::string meshDirectoryPath_ = "resources/model/";
-		std::map<std::string, Primitive::MeshData> meshDataMap_;
+		std::map<std::string, Primitive::ModelData> modelDataMap_;
 		// アニメーションの配列
 		Utility::PtrManager<Animation*> animations_;
 		// モーションの配列
 		Utility::PtrManager<Motion*> motions_;
-
-
-	private: // ** プライベートなメンバ変数 ** //
-
-		// assimpによる読み込み
-		Primitive::MeshData LoadAssimp(const std::string& filepath);
 	};
 }

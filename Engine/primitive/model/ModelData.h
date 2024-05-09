@@ -11,11 +11,6 @@ namespace LWP::Primitive {
 	/// </summary>
 	class ModelData final {
 	public: // ** メンバ関数 ** //
-		
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Init();
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む
