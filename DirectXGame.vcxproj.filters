@@ -70,7 +70,7 @@
     <ClCompile Include="Engine\object\ObjectManager.cpp">
       <Filter>Engine\object</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\WorldTransform.cpp">
+    <ClCompile Include="Engine\object\TransformEuler.cpp">
       <Filter>Engine\object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\Camera.cpp">
@@ -261,6 +261,7 @@
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
+    <ClCompile Include="Engine\object\TransformQuat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -332,7 +333,7 @@
     <ClInclude Include="Engine\object\ObjectManager.h">
       <Filter>Engine\object</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\WorldTransform.h">
+    <ClInclude Include="Engine\object\TransformEuler.h">
       <Filter>Engine\object</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\CoreList.h">
@@ -609,6 +610,7 @@
     <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h" />
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
+    <ClInclude Include="Engine\object\TransformQuat.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
