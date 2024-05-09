@@ -265,7 +265,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
     <ClCompile Include="Engine\primitive\3d\Mesh.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
-    <ClCompile Include="Engine\primitive\model\Model.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\primitive\Node.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -394,7 +393,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\3d\Cube.h" />
     <ClInclude Include="Engine\primitive\3d\Mesh.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
-    <ClInclude Include="Engine\primitive\model\Model.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\Node.h" />
     <ClInclude Include="Engine\primitive\PrimitiveManager.h" />
