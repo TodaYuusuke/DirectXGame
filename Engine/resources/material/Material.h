@@ -1,6 +1,6 @@
 #pragma once
-#include "../../math/matrix/Matrix4x4.h"
-#include "../../Object/WorldTransform.h"
+#include "math/matrix/Matrix4x4.h"
+#include "object/TransformEuler.h"
 
 /// <summary>
 /// マテリアル
@@ -14,7 +14,7 @@ namespace LWP::Resource {
 	class Material final {
 	public:
 		// uvTransform
-		Object::WorldTransform uvTransform;
+		Object::TransformEuler uvTransform;
 		// ライティングを行うかどうか
 		bool enableLighting = false;
 		// 光沢度

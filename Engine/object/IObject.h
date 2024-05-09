@@ -1,5 +1,5 @@
 #pragma once
-#include "WorldTransform.h"
+#include "TransformEuler.h"
 
 // 前方宣言
 namespace LWP::Base {
@@ -19,7 +19,7 @@ namespace LWP::Object {
 		// アクティブ切り替え
 		bool isActive = true;
 		// ワールドトランスフォーム
-		WorldTransform transform;
+		TransformEuler transform;
 
 	public: // ** 純粋仮想関数 ** //
 

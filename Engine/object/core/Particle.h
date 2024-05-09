@@ -7,7 +7,7 @@
 namespace LWP::Object {
 	// 構造体
 	struct ParticleData {
-		LWP::Object::WorldTransform wtf;
+		LWP::Object::TransformEuler wtf;
 		LWP::Math::Vector3 velocity;
 		int elapsedFrame = 0;
 	};
@@ -35,7 +35,7 @@ namespace LWP::Object {
 		// Primitiveのデータをいじる
 		Primitive::IPrimitive* P() { return primitive; }
 		// トランスフォームをいじる
-		Object::WorldTransform* Transform() { return &primitive->transform; }
+		Object::TransformEuler* Transform() { return &primitive->transform; }
 		// パーティクルを追加
 		void Add(int value);
 		// デバッグ用GUI

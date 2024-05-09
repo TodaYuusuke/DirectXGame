@@ -71,7 +71,7 @@ namespace LWP::Base {
 		Math::Matrix4x4 inverse;
 
 		// ワールドトランスフォームクラスのデータを代入する演算子をオーバーロード
-		WTFStruct& operator=(const Object::WorldTransform& value) {
+		WTFStruct& operator=(const Object::TransformEuler& value) {
 			wtf = value.GetWorldMatrix();
 			wtf = value.GetWorldMatrix(new Primitive::Node);
 			translate = value.GetTranslationMatrix();

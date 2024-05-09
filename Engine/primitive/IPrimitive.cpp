@@ -8,9 +8,6 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 
 IPrimitive::IPrimitive() {
-	// トランスフォーム初期化
-	transform.Initialize();
-
 	// 派生クラスでoverrideした関数を基底クラスのコンストラクタで呼び出すことはできないので、
 	// 派生クラスに初期化処理を呼び出してもらう
 
