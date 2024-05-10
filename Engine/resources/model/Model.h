@@ -24,7 +24,7 @@ namespace LWP::Resource {
 		// ライティングを行うかどうか
 		bool enableLighting = false;
 		// ワイヤーフレームで描画する
-		bool isWireFrame = false;
+		//bool isWireFrame = false;
 		// アクティブ切り替え
 		bool isActive = true;
 
@@ -60,6 +60,11 @@ namespace LWP::Resource {
 		/// 描画（ユーザー呼び出し禁止）
 		/// </summary>
 		void Draw(Base::RendererManager* render, Resource::Manager* resource);
+
+		/// <summary>
+		/// デバッグ用ImGui
+		/// </summary>
+		void DebugGUI();
 
 
 	private: // ** メンバ変数 ** //

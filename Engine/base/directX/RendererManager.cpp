@@ -191,6 +191,7 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 	// マテリアルをデータに登録
 	MaterialStruct m;
 	m = primitive->material;
+	m.enableLighting = primitive->enableLighting;
 	result.material = buffers_.AddData(m);
 	
 	// テクスチャのインデックスを貰う
@@ -226,6 +227,7 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Resource::ModelData* data, con
 	// マテリアルを登録
 	for (int i = 0; i < data->GetMaterialCount(); i++) {
 		MaterialStruct m;
+		m = data->material_[i];
 		m.enableLighting = modelIndex.enableLighting;
 		buffers_.AddData(m);	// データを追加
 	}

@@ -39,6 +39,12 @@ void Model::LoadFullPath(const std::string& fp) {
 void Model::Draw(Base::RendererManager* render, Resource::Manager* resource) {
 	render->AddModelData(resource->GetModelData(filePath), *this);
 }
+void Model::DebugGUI() {
+	worldTF.DebugGUI();
+	ImGui::Checkbox("enableLighting", &enableLighting);
+	//ImGui::Checkbox("isWireFrame", &isWireFrame);
+	ImGui::Checkbox("isActive", &isActive);
+}
 
 // 短縮用パス
 const std::string Model::kDirectoryPath = "resources/model/";

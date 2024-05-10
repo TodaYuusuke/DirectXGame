@@ -90,5 +90,10 @@ namespace LWP::Resource {
 		Utility::PtrManager<Animation*> animations_;
 		// モーションの配列
 		Utility::PtrManager<Motion*> motions_;
+
+#if DEMO
+		// ImGui用変数
+		int currentItem = 0;
+#endif
 	};
 }

@@ -16,7 +16,7 @@ void Test::Initialize() {
 	// デバッグ情報表示
 	Info::ChangeShowDebugGUI();
 
-	mesh.LoadShortPath("human/Rogue.gltf");
+	mesh.LoadShortPath("human/walk.gltf");
 
 	sprite.texture = subCamera.GetTexture();
 }

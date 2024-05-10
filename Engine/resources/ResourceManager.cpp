@@ -45,6 +45,28 @@ void Manager::Update() {
 	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
 	for (Motion* m : motions_.list) { m->Update(); }
+
+#if DEMO
+	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+	if (ImGui::BeginTabBar("LWP")) {
+		if (ImGui::BeginTabItem("Resource")) {
+			// 形状一覧
+			if (!models_.list.empty()) {
+				std::vector<const char*> itemText;
+				for (int i = 0; i < models_.list.size(); i++) {
+					std::string str = "Model_" + std::to_string(i);
+					itemText.push_back(str.c_str());
+				}
+				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+				(*Utility::GetIteratorAtIndex<Model*>(models_.list, currentItem))->DebugGUI();
+			}
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+#endif
 }
 // 描画
 void Manager::Draw(Base::RendererManager* render) {
