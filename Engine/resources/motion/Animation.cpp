@@ -4,7 +4,7 @@
 #include "component/Information.h"
 #include "utility/motionEffects/Interpolation.h"
 
-#include "primitive/Node.h"
+#include "primitive/model/Node.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

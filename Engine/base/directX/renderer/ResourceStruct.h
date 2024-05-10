@@ -3,7 +3,7 @@
 #include "primitive/model/Material.h"
 
 #include "../Engine/primitive/IPrimitive.h"
-#include "../Engine/primitive/Node.h"
+#include "../Engine/primitive/model/Node.h"
 
 #include <memory>
 
@@ -37,21 +37,21 @@ namespace LWP::Base {
 
 		// ワールドトランスフォームクラスのデータを代入する演算子をオーバーロード
 		WTFStruct& operator=(const Object::TransformEuler& value) {
-			wtf = value.GetWorldMatrix();
-			wtf = value.GetWorldMatrix(new Primitive::Node);
+			wtf = value.GetAffineMatrix();
+			wtf = value.GetAffineMatrix(new Primitive::Node);
 			translate = value.GetTranslationMatrix();
 			rotate = value.GetRotateMatrix();
 			scale = value.GetScaleMatrix();
-			inverse = value.GetWorldMatrix().Inverse();
+			inverse = value.GetAffineMatrix().Inverse();
 			return *this;
 		}
 		// ワールドトランスフォームのデータを代入する演算子をオーバーロード
 		WTFStruct& operator=(Primitive::IPrimitive& value) {
-			wtf = value.transform.GetWorldMatrix(&value.node);
+			wtf = value.transform.GetAffineMatrix(&value.node);
 			translate = value.transform.GetTranslationMatrix();
 			rotate = value.transform.GetRotateMatrix();
 			scale = value.transform.GetScaleMatrix();
-			inverse = value.transform.GetWorldMatrix().Inverse();
+			inverse = value.transform.GetAffineMatrix().Inverse();
 			return *this;
 		}
 	};

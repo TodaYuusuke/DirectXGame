@@ -65,7 +65,7 @@ namespace LWP::Base {
 
 		// Materialクラスのデータを代入する演算子をオーバーロード
 		MaterialStruct& operator=(const Primitive::Material& value) {
-			uvMatrix = value.uvTransform.GetWorldMatrix();
+			uvMatrix = value.uvTransform.GetAffineMatrix();
 			shininess = value.shininess;
 			return *this;
 		}

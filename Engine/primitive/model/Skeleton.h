@@ -22,7 +22,6 @@ namespace LWP::Primitive {
 		// 子供のNode
 		std::vector<Node> children;
 
-
 	public: // ** メンバ関数 ** //
 
 		/// <summary>

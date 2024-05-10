@@ -261,7 +261,9 @@
     <ClCompile Include="Engine\primitive\model\Mesh.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\resources\model\Model.cpp" />
-    <ClCompile Include="Engine\primitive\Node.cpp" />
+    <ClCompile Include="Engine\primitive\model\Node.cpp" />
+    <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
+    <ClCompile Include="Engine\primitive\model\Joint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -611,7 +613,9 @@
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\resources\model\Model.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
-    <ClInclude Include="Engine\primitive\Node.h" />
+    <ClInclude Include="Engine\primitive\model\Node.h" />
+    <ClInclude Include="Engine\primitive\model\Skeleton.h" />
+    <ClInclude Include="Engine\primitive\model\Joint.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

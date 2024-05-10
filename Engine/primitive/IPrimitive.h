@@ -6,7 +6,7 @@
 #include "utility/observers/Observer.h"
 #include "utility/observers/ObserverPtr.h"
 
-#include "Node.h"
+#include "model/Node.h"
 #include <wrl.h>
 #include <d3d12.h>
 #include <stdexcept>

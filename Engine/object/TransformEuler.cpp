@@ -1,5 +1,5 @@
 #include "TransformEuler.h"
-#include "primitive/Node.h"
+#include "primitive/model/Node.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Object;
@@ -28,19 +28,19 @@ void TransformEuler::Init() {
 	scale = { 1.0f, 1.0f, 1.0f };
 }
 
-Matrix4x4 TransformEuler::GetWorldMatrix() const {
+Matrix4x4 TransformEuler::GetAffineMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
-		result = result * parent_->t->GetWorldMatrix();
+		result = result * parent_->t->GetAffineMatrix();
 	}
 	return result;
 }
-Matrix4x4 TransformEuler::GetWorldMatrix(Primitive::Node* node) const {
-	Math::Matrix4x4 result = node->localMatrix * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+Matrix4x4 TransformEuler::GetAffineMatrix(Primitive::Node* node) const {
+	Math::Matrix4x4 result = node->GetLocalMatrix() * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
-		result = result * parent_->t->GetWorldMatrix();
+		result = result * parent_->t->GetAffineMatrix();
 	}
 	return result;
 }
@@ -54,7 +54,7 @@ Matrix4x4 TransformEuler::GetTranslationMatrix() const {
 	return result;
 }
 Vector3 TransformEuler::GetWorldPosition() const {
-	Math::Matrix4x4 worldMatrix = GetWorldMatrix();
+	Math::Matrix4x4 worldMatrix = GetAffineMatrix();
 	return { worldMatrix.m[3][0],worldMatrix.m[3][1],worldMatrix.m[3][2] };
 }
 Matrix4x4 TransformEuler::GetRotateMatrix() const {

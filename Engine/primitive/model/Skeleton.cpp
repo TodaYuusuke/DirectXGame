@@ -24,6 +24,5 @@ void Node::Load(aiNode* node) {
 		children[childIndex].Load(node->mChildren[childIndex]);
 	}
 }
-
 Math::Matrix4x4 Node::GetLocalMatrix() const { return transform.GetAffineMatrix(); }
 
