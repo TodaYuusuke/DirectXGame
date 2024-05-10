@@ -5,14 +5,6 @@
 #include "base/directX/resource/rendering/DepthStencil.h"
 #include "base/directX/utility/DXC.h"
 
-// 前方宣言
-namespace LWP::Primitive {
-	class IPrimitive;
-	class Billboard2D;
-	class Billboard3D;
-	class Sprite;
-}
-
 namespace LWP::Base {
 	/// <summary>
 	/// 通常描画のレンダラー
@@ -52,6 +44,7 @@ namespace LWP::Base {
 		/// インデックスデータを追加
 		/// </summary>
 		void AddIndexData(const IndexInfoStruct& data) { normal_.indexBuffer.Add(data); }
+		void AddIndexDataModel(const IndexInfoStruct& data) { model_.indexBuffer.Add(data); }
 		void AddIndexDataWire(const IndexInfoStruct& data) { wireframe_.indexBuffer.Add(data); }
 		void AddIndexDataBillboard2D(const IndexInfoStruct& data) { billboard2D_.indexBuffer.Add(data); }
 		void AddIndexDataBillboard3D(const IndexInfoStruct& data) { billboard3D_.indexBuffer.Add(data); }
@@ -86,6 +79,8 @@ namespace LWP::Base {
 
 		// 通常
 		RenderData normal_;
+		// 3dモデル
+		RenderData model_;
 		// ワイヤーフレーム
 		RenderData wireframe_;
 		// ビルボード2D

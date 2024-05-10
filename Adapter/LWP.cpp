@@ -42,6 +42,7 @@ void Engine::Run(IScene* firstScene) {
 
 		// 描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
+		resourceManager_->Draw(directXCommon_->GetRendererManager());
 
 		EndFrame();
 	}

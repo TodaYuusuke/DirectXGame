@@ -1,8 +1,15 @@
 #pragma once
-#include "object/WorldTransform.h"
-
+#include "object/TransformEuler.h"
 
 #include <string>
+
+// 前方宣言
+namespace LWP::Base {
+	class RendererManager;
+}
+namespace LWP::Resource {
+	class Manager;
+}
 
 namespace LWP::Resource {
 	/// <summary>
@@ -13,16 +20,25 @@ namespace LWP::Resource {
 
 		// ワールドトランスフォーム
 		Object::TransformEuler worldTF{};
-		// 有効フラグ
+
+		// ライティングを行うかどうか
+		bool enableLighting = false;
+		// ワイヤーフレームで描画する
+		bool isWireFrame = false;
+		// アクティブ切り替え
 		bool isActive = true;
 
 
 	public: // ** メンバ関数 ** //
-		
+
 		/// <summary>
-		/// 初期化
+		/// デフォルトコンストラクタ
 		/// </summary>
-		void Init();
+		Model();
+		/// <summary>
+		/// デフォルトデストラクタ
+		/// </summary>
+		~Model();
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む
@@ -39,14 +55,19 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath);
-		
+
+		/// <summary>
+		/// 描画（ユーザー呼び出し禁止）
+		/// </summary>
+		void Draw(Base::RendererManager* render, Resource::Manager* resource);
+
 
 	private: // ** メンバ変数 ** //
 
 		// 短縮用パス
 		const static std::string kDirectoryPath;
 		// リソースマネージャー上のモデルを指す為の変数（パスの予定）
-		std::string fileName = "";
+		std::string filePath = "";
 
 	};
 }

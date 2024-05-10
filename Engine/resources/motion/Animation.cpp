@@ -19,7 +19,7 @@ Animation::Animation() {
 	SetInstance(this);
 }
 Animation::~Animation() {
-	// ここでどうにかしてエンジン上のポインタを破棄させたい！
+	// エンジン上のポインタを破棄
 	DeleteInstance(this);
 }
 
@@ -39,16 +39,16 @@ void Animation::Update() {
 	time_ = std::fmod(time_, duration_);
 
 	// LocalMatrixを生成し、Nodeに適応（現在はrootNodeのみ適応）
-	Primitive::Node& node = meshPtr_->node;
+	//Primitive::Node& node = meshPtr_->node;
 	
 	// Nodeのアニメーションを取得
-	NodeAnimation& nodeAnimation = nodeAnimations[node.name];
-	node.localMatrix = Matrix4x4::CreateAffineMatrix(
-		CalculateValue(nodeAnimation.scale.keyframes, time_),
-		//Vector3{0.0f,0.0f,0.0f},
-		CalculateValue(nodeAnimation.rotate.keyframes, time_),
-		CalculateValue(nodeAnimation.translate.keyframes, time_)
-	);
+	//NodeAnimation& nodeAnimation = nodeAnimations[node.name];
+	//node.localMatrix = Matrix4x4::CreateAffineMatrix(
+	//	CalculateValue(nodeAnimation.scale.keyframes, time_),
+	//	//Vector3{0.0f,0.0f,0.0f},
+	//	CalculateValue(nodeAnimation.rotate.keyframes, time_),
+	//	CalculateValue(nodeAnimation.translate.keyframes, time_)
+	//);
 
 }
 
@@ -95,7 +95,8 @@ void Animation::LoadAnimationLongPath(std::string filepath, Primitive::Mesh* ptr
 	}
 
 	// 追従セット
-	meshPtr_ = ptr;
+	ptr;
+	//meshPtr_ = ptr;
 }
 
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {

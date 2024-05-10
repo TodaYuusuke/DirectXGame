@@ -1,10 +1,8 @@
 #pragma once
 #include "object/TransformEuler.h"
-#include "math/vector/Vector3.h"
-#include "math/vector/Vector2.h"
-#include "resources/texture/Texture.h"
-#include "resources/material/Material.h"
-#include "utility/Color.h"
+
+#include "model/Vertex.h"
+#include "model/Material.h"
 #include "utility/observers/Observer.h"
 #include "utility/observers/ObserverPtr.h"
 
@@ -21,21 +19,6 @@ namespace LWP::Base {
 }
 
 namespace LWP::Primitive {
-	struct Vertex {
-		Math::Vector3 position = { 0.0f,0.0f,0.0f };// 座標
-		Math::Vector2 texCoord = { 0.0f,0.0f };		// UV座標
-		Math::Vector3 normal = { 0.0f,0.0f,0.0f };	// 法線
-		Utility::Color color = { 255,255,255,255 };	// 色
-
-		/// <summary>
-		/// Observerクラス用のオペレーターオーバーロード
-		/// </summary>
-		bool operator==(const Vertex& other) const {
-			return { position == other.position && texCoord == other.texCoord && normal == other.normal };
-		}
-	};
-
-
 	class IPrimitive {
 	public:
 		// ** 共通の変数 ** //
@@ -51,7 +34,7 @@ namespace LWP::Primitive {
 		Object::TransformEuler transform;
 
 		// マテリアル
-		Resource::Material material;
+		Material material;
 		// テクスチャ
 		Utility::Observer<Resource::Texture> texture;
 
@@ -61,7 +44,9 @@ namespace LWP::Primitive {
 		Utility::Color* commonColor = nullptr;
 		// ノード情報
 		Node node;
-		
+
+		// ライティングを行うかどうか
+		bool enableLighting = false;
 		// UIとして描画するか
 		bool isUI = false;
 		// ワイヤーフレームで描画する
@@ -155,7 +140,7 @@ namespace LWP::Primitive {
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indexes;
 		Object::TransformEuler transform;
-		Resource::Material material;
+		Material material;
 		Resource::Texture texture;
 		Utility::Color* commonColor = nullptr;
 

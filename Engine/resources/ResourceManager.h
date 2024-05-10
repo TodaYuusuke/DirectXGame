@@ -7,7 +7,10 @@
 #include "audio/Audio.h"
 #include "motion/Animation.h"
 #include "motion/Motion.h"
-#include "primitive/model/ModelData.h"
+
+// 3Dモデル
+#include "model/Model.h"
+#include "model/ModelData.h"
 
 
 #include "utility/PtrManager.h"
@@ -30,6 +33,8 @@ namespace LWP::Resource {
 		void Initialize();
 		// 更新
 		void Update();
+		// 描画
+		void Draw(Base::RendererManager* render);
 
 		// 読み込み
 
@@ -43,13 +48,19 @@ namespace LWP::Resource {
 		Texture LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
 		AudioData* LoadAudio(const std::string& filepath);
 		AudioData* LoadAudioLongPath(const std::string& filepath);
+
 		// モデルのデータを読み込む関数
 		void LoadModelData(const std::string& filePath);
+		// モデルデータの実体を受け取る関数
+		ModelData* GetModelData(const std::string& filePath);
+
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
+		void SetPointer(Model* ptr) { models_.SetPointer(ptr); }
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
 		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
+		void DeletePointer(Model* ptr) { models_.DeletePointer(ptr); }
 		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
 		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 
@@ -69,8 +80,12 @@ namespace LWP::Resource {
 		// オーディオの配列
 		const std::string audioDirectoryPath_ = "resources/audio/";
 		std::map<std::string, AudioData> audioMap_;
+		
 		// 3Dモデルの配列
-		std::map<std::string, Primitive::ModelData> modelDataMap_;
+		std::map<std::string, ModelData> modelDataMap_;
+		// 3Dモデルのアダプター
+		Utility::PtrManager<Model*> models_;
+
 		// アニメーションの配列
 		Utility::PtrManager<Animation*> animations_;
 		// モーションの配列

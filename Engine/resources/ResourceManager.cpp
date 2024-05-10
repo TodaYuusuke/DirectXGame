@@ -1,7 +1,6 @@
 #include "ResourceManager.h"
 
 #include "math/Math.h"
-#include "primitive/3d/Mesh.h"
 #include "utility/ErrorReporter.h"
 #include "base/DirectXCommon.h"
 
@@ -25,7 +24,7 @@ Manager::~Manager() {
 	// オーディオ解放
 	audioMap_.clear();
 	// モデル解放
-	meshDataMap_.clear();
+	modelDataMap_.clear();
 }
 
 void Manager::Initialize() {
@@ -46,6 +45,16 @@ void Manager::Update() {
 	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
 	for (Motion* m : motions_.list) { m->Update(); }
+}
+// 描画
+void Manager::Draw(Base::RendererManager* render) {
+	//// StructerdBufferにデータをセット済みかを保持するフラグを初期化
+	//for (std::map<std::string, ModelData>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+	//	it->second.isLoadedRenderer = false;
+	//}
+
+	// 必要な分モデルを描画
+	for (Model* m : models_.list) { m->Draw(render, this); }
 }
 
 Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
@@ -83,4 +92,15 @@ void Manager::LoadModelData(const std::string& filePath) {
 		// 読み込んだことのない3Dモデルなので読み込む
 		modelDataMap_[filePath].Load(filePath);	// 要素は自動追加されるらしい;
 	}
+}
+ModelData* Manager::GetModelData(const std::string& filePath) {
+	// 読み込み済みかをチェック
+	if (modelDataMap_.count(filePath)) {
+		// 読み込み済みだったので返す
+		return &modelDataMap_[filePath];
+	}
+
+	// 読み込めていないモデルなのでエラー
+	assert(false);
+	return nullptr;
 }

@@ -1,21 +1,43 @@
 #pragma once
-#include <string>
+#include "Vertex.h"
+
+#include <vector>
 
 namespace LWP::Primitive {
 	/// <summary>
 	/// 3Dモデルのノードクラス
 	/// </summary>
 	class Mesh final {
+	public: // ** パブリックなメンバ関数 ** //
+
+		// 名前
+		std::string name = "primitive";
+
+		// 描画する頂点
+		std::vector<Vertex> vertices;
+		// インデックス
+		std::vector<uint32_t> indexes;
+		
+		//　マテリアルのインデックス
+		int materialIndex;
+
+
 	public: // ** メンバ関数 ** //
 		
 		/// <summary>
-		/// データからNode情報を読み込む
+		/// Assimpのmeshデータから情報を読み込む
 		/// </summary>
-		/// <param name="filename">読み込むファイルの名前</param>
-		void Load();
+		/// <param name="aiMesh"></param>
+		void Load(aiMesh* mesh);
 
+		/// <summary>
+		/// 頂点数を返す関数
+		/// </summary>
+		int GetVertexCount() { return static_cast<int>(vertices.size()); }
+		/// <summary>
+		/// インデックス数を返す関数
+		/// </summary>
+		int GetIndexCount() { return static_cast<int>(indexes.size()); }
 
-	public: // ** オペレーターオーバーロード ** //
-		
 	};
 }

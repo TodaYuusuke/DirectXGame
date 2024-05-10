@@ -5,6 +5,8 @@
 #include "primitive/2d/Billboard2D.h"
 #include "primitive/2d/Billboard3D.h"
 #include "primitive/2d/Sprite.h"
+#include "resources/model/ModelData.h"
+#include "resources/model/Model.h"
 #include "object/core/light/DirectionLight.h"
 #include "object/core/light/PointLight.h"
 
@@ -106,6 +108,37 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 		sendTo(indexInfo);
 	}
 }
+void RendererManager::AddModelData(Resource::ModelData* data, const Resource::Model& modelIndex) {
+	// IndexInfo構造体に加工
+	IndexInfoStruct info = ProcessIndexInfo(data, modelIndex);
+	// データを書き込む先を設定
+	std::function<void(const IndexInfoStruct&)> sendTo = ProcessSendFunction(modelIndex);
+
+	// 全メッシュに行う
+	for (int m = 0; m < data->GetMeshCount(); m++) {
+		// Indexの分だけIndexInfoを求める
+		for (int i = 0; i < data->meshes_[m].GetIndexCount(); i++) {
+			IndexInfoStruct indexInfo = info;
+			// インデックス分ずらす
+			indexInfo.vertex += data->meshes_[m].indexes[i];
+			indexInfo.material += data->meshes_[m].materialIndex;
+
+			// テクスチャのインデックスを貰う
+			if (data->material_[data->meshes_[m].materialIndex].texture.t.GetIndex() != -1) {
+				indexInfo.tex2d = data->material_[data->meshes_[m].materialIndex].texture.t.GetIndex();
+			}
+			else {
+				indexInfo.tex2d = defaultTexture_.GetIndex();
+			}
+			// SRV上のオフセット分戻して考える
+			indexInfo.tex2d -= lwpC::Rendering::kMaxBuffer;
+
+			// 送信
+			sendTo(indexInfo);
+		}
+	}
+}
+
 
 void RendererManager::AddParticleData(Primitive::IPrimitive* primitive,const std::vector<Object::ParticleData>& wtf) {
 	// IndexInfo構造体に加工
@@ -173,6 +206,42 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 	return result;
 }
 
+IndexInfoStruct RendererManager::ProcessIndexInfo(Resource::ModelData* data, const Resource::Model& modelIndex) {
+	IndexInfoStruct result;
+
+	// あとでインデックス分ずらすので初期値
+	result.vertex = buffers_.GetVertexCount();
+	result.material = buffers_.GetMaterialCount();
+
+	// 全メッシュに行う
+	for (int m = 0; m < data->GetMeshCount(); m++) {
+		// 頂点データを登録
+		for (int i = 0; i < data->meshes_[m].GetVertexCount(); i++) {
+			VertexStruct ver;
+			ver = data->meshes_[m].vertices[i];
+			buffers_.AddData(ver);	// データを追加
+		}
+	}
+
+	// マテリアルを登録
+	for (int i = 0; i < data->GetMaterialCount(); i++) {
+		MaterialStruct m;
+		m.enableLighting = modelIndex.enableLighting;
+		buffers_.AddData(m);	// データを追加
+	}
+
+	// ワールドトランスフォームをデータに登録
+	WTFStruct wtf;
+	wtf = modelIndex.worldTF;
+	result.worldMatrix = buffers_.AddData(wtf);
+
+	
+	// isUiセット
+	result.isUI = false;
+
+	return result;
+}
+
 std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(Primitive::IPrimitive* primitive) {
 	// Spriteのとき
 	if (dynamic_cast<Primitive::Sprite*>(primitive)) {
@@ -193,7 +262,7 @@ std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction
 	// どれでもないとき
 	else {
 		// シャドウマップにも描画するか確認
-		if (primitive->material.enableLighting) {
+		if (primitive->enableLighting) {
 			return [this](const IndexInfoStruct& index) { 
 				normalRender_.AddIndexData(index); 
 				shadowRender_.AddIndexData(index);
@@ -202,4 +271,16 @@ std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction
 
 		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexData(index); };
 	}
+}
+
+std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(const Resource::Model& model) {
+	// シャドウマップにも描画するか確認
+	if (model.enableLighting) {
+		return [this](const IndexInfoStruct& index) {
+			normalRender_.AddIndexData(index);
+			shadowRender_.AddIndexData(index);
+		};
+	}
+
+	return [this](const IndexInfoStruct& index) { normalRender_.AddIndexData(index); };
 }

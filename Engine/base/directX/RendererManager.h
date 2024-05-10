@@ -14,6 +14,17 @@ namespace LWP::Object {
 	class DirectionLight;
 	class PointLight;
 }
+namespace LWP::Primitive {
+	class IPrimitive;
+	class Billboard2D;
+	class Billboard3D;
+	class Sprite;
+}
+namespace LWP::Resource {
+	class ModelData;
+	class Model;
+}
+
 
 namespace LWP::Base {
 	/// <summary>
@@ -46,6 +57,10 @@ namespace LWP::Base {
 		/// Primitiveのデータをセット
 		/// </summary>
 		void AddPrimitiveData(Primitive::IPrimitive* primitive);
+		/// <summary>
+		/// ModelDataのデータをセット
+		/// </summary>
+		void AddModelData(Resource::ModelData* data, const Resource::Model& modelIndex);
 		/// <summary>
 		/// Particleのデータをセット
 		/// </summary>
@@ -89,10 +104,20 @@ namespace LWP::Base {
 		/// <returns></returns>
 		IndexInfoStruct ProcessIndexInfo(Primitive::IPrimitive* primitive);
 		/// <summary>
+		/// ModelDataからIndexInfoStructに加工する関数
+		/// </summary>
+		/// <returns></returns>
+		IndexInfoStruct ProcessIndexInfo(Resource::ModelData* data, const Resource::Model& modelIndex);
+		/// <summary>
 		/// PrimitiveからIndexInfoStructに加工する関数
 		/// </summary>
 		/// <returns></returns>
 		std::function<void(const IndexInfoStruct&)> ProcessSendFunction(Primitive::IPrimitive* primitive);
+		/// <summary>
+		/// PrimitiveからIndexInfoStructに加工する関数
+		/// </summary>
+		/// <returns></returns>
+		std::function<void(const IndexInfoStruct&)> ProcessSendFunction(const Resource::Model& model);
 
 
 #pragma region 通常描画

@@ -89,7 +89,7 @@ namespace LWP::Resource {
 		bool useDeltaTimeMultiply_ = true;
 
 		// 適応するNodeのポインタ
-		Primitive::Mesh* meshPtr_ = nullptr;
+		//Primitive::Mesh* meshPtr_ = nullptr;
 
 		// アニメーションファイルの位置
 		const static std::string kDirectoryPath;

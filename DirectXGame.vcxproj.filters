@@ -82,9 +82,6 @@
     <ClCompile Include="Engine\primitive\IPrimitive.cpp">
       <Filter>Engine\primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Mesh.cpp">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
       <Filter>Engine\primitive\3d</Filter>
     </ClCompile>
@@ -97,7 +94,7 @@
     <ClCompile Include="Engine\resources\ResourceManager.cpp">
       <Filter>Engine\resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\material\Material.cpp">
+    <ClCompile Include="Engine\primitive\model\Material.cpp">
       <Filter>Engine\resources\material</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\texture\Texture.cpp">
@@ -256,16 +253,15 @@
     <ClCompile Include="Engine\resources\audio\AudioData.cpp">
       <Filter>Engine\resources\audio</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\Node.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
     <ClCompile Include="Engine\primitive\model\Mesh.cpp" />
-    <ClCompile Include="Engine\primitive\model\ModelData.cpp" />
-    <ClCompile Include="Engine\primitive\model\Node.cpp" />
+    <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\resources\model\Model.cpp" />
+    <ClCompile Include="Engine\primitive\Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -355,9 +351,6 @@
     <ClInclude Include="Engine\primitive\3d\3dList.h">
       <Filter>Engine\primitive\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Mesh.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\primitive\3d\Sphere.h">
       <Filter>Engine\primitive\3d</Filter>
     </ClInclude>
@@ -373,7 +366,7 @@
     <ClInclude Include="Engine\resources\ResourceManager.h">
       <Filter>Engine\resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\material\Material.h">
+    <ClInclude Include="Engine\primitive\model\Material.h">
       <Filter>Engine\resources\material</Filter>
     </ClInclude>
     <ClInclude Include="Engine\resources\texture\Texture.h">
@@ -607,7 +600,6 @@
     <ClInclude Include="Engine\resources\audio\AudioData.h">
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\Node.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
     <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
     <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
@@ -616,9 +608,10 @@
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\object\TransformQuat.h" />
     <ClInclude Include="Engine\primitive\model\Mesh.h" />
-    <ClInclude Include="Engine\primitive\model\ModelData.h" />
-    <ClInclude Include="Engine\primitive\model\Node.h" />
+    <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\resources\model\Model.h" />
+    <ClInclude Include="Engine\primitive\model\Vertex.h" />
+    <ClInclude Include="Engine\primitive\Node.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

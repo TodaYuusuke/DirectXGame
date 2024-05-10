@@ -1,4 +1,7 @@
 #pragma once
+#include "primitive/model/Vertex.h"
+#include "primitive/model/Material.h"
+
 #include "../Engine/primitive/IPrimitive.h"
 #include "../Engine/primitive/Node.h"
 
@@ -21,45 +24,7 @@ namespace LWP::Base {
 		uint32_t pointLight;        // 点光源の数
 	};
 
-#pragma region 頂点データ
-	// 頂点データの構造体
-	struct VertexStruct {
-		Math::Vector4 position_;	// 座標
-		Math::Vector2 texCoord_;	// UV座標
-		Math::Vector3 normal_;		// 法線
-		Math::Vector4 color_;	// 色
 
-		// IPrimitiveのVertexを代入する演算子をオーバーロード
-		VertexStruct& operator=(const Primitive::Vertex& value) {
-			position_ = { value.position.x,value.position.y,value.position.z,1.0f };
-			texCoord_ = value.texCoord;
-			normal_ = value.normal;
-			color_ = value.color.GetVector4();
-			return *this;
-		}
-	};
-#pragma endregion
-
-#pragma region マテリアル
-	// マテリアル構造体
-	struct MaterialStruct {
-		Math::Matrix4x4 uvMatrix;
-		int32_t enableLighting;
-		float shininess;
-
-		// Materialクラスのデータを代入する演算子をオーバーロード
-		MaterialStruct& operator=(const Resource::Material& value) {
-			uvMatrix = value.uvTransform.GetWorldMatrix();
-			enableLighting = static_cast<int32_t>(value.enableLighting);
-			shininess = value.shininess;
-			return *this;
-		}
-	};
-#pragma endregion
-
-#pragma region カメラ
-
-#pragma endregion
 
 #pragma region ワールドトランスフォーム
 	// ワールドトランスフォーム構造体
