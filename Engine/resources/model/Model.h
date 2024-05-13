@@ -1,14 +1,12 @@
 #pragma once
 #include "object/TransformEuler.h"
 
-#include <string>
+#include "primitive/model/Skeleton.h"
+#include "primitive/model/SkinCluster.h"
 
 // 前方宣言
 namespace LWP::Base {
 	class RendererManager;
-}
-namespace LWP::Resource {
-	class Manager;
 }
 
 namespace LWP::Resource {
@@ -20,6 +18,10 @@ namespace LWP::Resource {
 
 		// ワールドトランスフォーム
 		Object::TransformEuler worldTF{};
+		// スケルトン
+		std::optional<Primitive::Skeleton> skeleton{};
+		// スキンクラスター（そのうちModelDataに移植）
+		std::optional<Primitive::SkinCluster> skinCluster{};
 
 		// ライティングを行うかどうか
 		bool enableLighting = false;
@@ -57,9 +59,13 @@ namespace LWP::Resource {
 		void LoadFullPath(const std::string& filePath);
 
 		/// <summary>
+		/// 更新（ユーザー呼び出し禁止）
+		/// </summary>
+		void Update();
+		/// <summary>
 		/// 描画（ユーザー呼び出し禁止）
 		/// </summary>
-		void Draw(Base::RendererManager* render, Resource::Manager* resource);
+		void Draw(Base::RendererManager* render);
 
 		/// <summary>
 		/// デバッグ用ImGui

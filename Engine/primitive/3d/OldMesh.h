@@ -9,13 +9,13 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 3Dモデルのデータ構造体
 	/// </summary>
-	struct MeshData {
+	struct OldMeshData {
 		// 描画する頂点
 		std::vector<Vertex> vertices;
 		// インデックス
 		std::vector<uint32_t> indexes;
 		// マテリアル
-		Resource::Material material;
+		Primitive::Material material;
 		// テクスチャ
 		Resource::Texture texture;
 
@@ -26,12 +26,12 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 3Dモデル
 	/// </summary>
-	class Mesh final
+	class OldMesh final
 		: public IPrimitive {
 	public: // ** メンバ関数 ** //
 
 		// 初期化を呼び出す
-		Mesh() { Init(); }
+		OldMesh() { Init(); }
 		
 		/// <summary>
 		/// 頂点を生成する関数
@@ -61,7 +61,7 @@ namespace LWP::Primitive {
 	public: // ** オペレーターオーバーロード ** //
 		
 		// コピー演算
-		bool operator=(const MeshData& other) {
+		bool operator=(const OldMeshData& other) {
 			// 描画する頂点
 			vertices = other.vertices;
 			// インデックス

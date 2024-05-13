@@ -1,48 +1,44 @@
 #pragma once
-#include "object/TransformQuat.h"
+#include "Joint.h"
 
-#include <vector>
-#include <string>
-
-// 前方宣言
-struct aiNode;
+#include <map>
 
 namespace LWP::Primitive {
 
 	/// <summary>
-	/// ノード情報を格納するクラス
+	/// Jointの階層構造を管理する機構
 	/// </summary>
-	class Node {
+	class Skeleton {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// トランスフォーム（クォータニオン）
-		Object::TransformQuat transform;
-		// Nodeの名前
-		std::string name = "";
-		// 子供のNode
-		std::vector<Node> children;
+		// RootJointのIndex
+		int32_t root{};
+		// Joint名とIndexとの辞書
+		std::map<std::string, int32_t> jointMap{};
+		// 所属しているJoint
+		std::vector<Joint> joints{};
+
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
-		/// コンストラクタ
+		/// デフォルトコンストラクタ
 		/// </summary>
-		Node() = default;
+		Skeleton() = default;
 		/// <summary>
-		/// デストラクタ
+		/// デフォルトデストラクタ
 		/// </summary>
-		~Node() = default;
+		~Skeleton() = default;
 
 		/// <summary>
-		/// AssimpのNodeデータから情報を読み込む
+		/// 更新
+		/// </summary>
+		void Update();
+
+		/// <summary>
+		/// Nodeクラスからスケルトンを作り出す関数
 		/// </summary>
 		/// <param name="material"></param>
-		void Load(aiNode* node);
-
-		/// <summary>
-		/// LocalMatrixを求める関数
-		/// </summary>
-		/// <returns></returns>
-		Math::Matrix4x4 GetLocalMatrix() const ;
+		void Create(const Node& node);
 	};
 }

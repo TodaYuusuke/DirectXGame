@@ -45,10 +45,25 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstDirShadowView());
 		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstPointShadowView());
 	};
+	std::function<void()> skinningFunc = [&]() {
+		ID3D12GraphicsCommandList* list = commander_.List();
+		// 各種Viewをセット
+		buffers_.SetCommonView(2, list);
+		buffers_.SetTransformView(5, list);
+		buffers_.SetMaterialView(6, list);
+		buffers_.SetDirLightView(7, list);
+		buffers_.SetPointLightView(8, list);
+		// テクスチャのViewをセット
+		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstTexView());
+		// シャドウマップのViewをセット
+		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstDirShadowView());
+		list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstPointShadowView());
+	};
 
 	// シャドウレンダラー初期化
 	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
+	skinningRender_.Init(device, srv_, dxc_, skinningFunc);
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
 	// ポストプロセスレンダラー初期化
 	ppRender_.Init();
@@ -73,6 +88,7 @@ void RendererManager::DrawCall() {
 	// シャドウ描画
 	shadowRender_.DrawCall(list);
 	// 通常描画
+	skinningRender_.DrawCall(list);
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
 	ppRender_.DrawCall(list);
@@ -83,6 +99,7 @@ void RendererManager::DrawCall() {
 	commander_.Execute();
 
 	// 次のフレームのためにリセット
+	skinningRender_.Reset();
 	normalRender_.Reset();
 	shadowRender_.Reset();
 	ppRender_.Reset();
@@ -137,8 +154,16 @@ void RendererManager::AddModelData(Resource::ModelData* data, const Resource::Mo
 			sendTo(indexInfo);
 		}
 	}
-}
 
+	// インフルエンスを追加
+	//for (int i = 0; i < modelIndex.skinCluster->mappedInfluence.size(); i++) {
+	//	skinningRender_.AddInfluenceData(modelIndex.skinCluster->mappedInfluence[i]);
+	//}
+	// MatrixPalette
+	for (int i = 0; i < modelIndex.skinCluster->mappedPalette.size(); i++) {
+		skinningRender_.AddMatrixPaletteData(modelIndex.skinCluster->mappedPalette[i]);
+	}
+}
 
 void RendererManager::AddParticleData(Primitive::IPrimitive* primitive,const std::vector<Object::ParticleData>& wtf) {
 	// IndexInfo構造体に加工
@@ -163,6 +188,7 @@ void RendererManager::AddParticleData(Primitive::IPrimitive* primitive,const std
 		}
 	}
 }
+
 
 void RendererManager::AddLightData(Object::DirectionLight* light) { buffers_.AddData(*light); }
 
@@ -211,16 +237,16 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Resource::ModelData* data, con
 	IndexInfoStruct result;
 
 	// あとでインデックス分ずらすので初期値
-	result.vertex = buffers_.GetVertexCount();
+	result.vertex = skinningRender_.vertexBuffer.GetCount();
 	result.material = buffers_.GetMaterialCount();
 
 	// 全メッシュに行う
 	for (int m = 0; m < data->GetMeshCount(); m++) {
 		// 頂点データを登録
 		for (int i = 0; i < data->meshes_[m].GetVertexCount(); i++) {
-			VertexStruct ver;
+			Primitive::SkinningVertexStruct ver;
 			ver = data->meshes_[m].vertices[i];
-			buffers_.AddData(ver);	// データを追加
+			skinningRender_.vertexBuffer.Add(ver);	// データを追加
 		}
 	}
 
@@ -279,10 +305,10 @@ std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction
 	// シャドウマップにも描画するか確認
 	if (model.enableLighting) {
 		return [this](const IndexInfoStruct& index) {
-			normalRender_.AddIndexData(index);
+			skinningRender_.AddIndexData(index);
 			shadowRender_.AddIndexData(index);
 		};
 	}
 
-	return [this](const IndexInfoStruct& index) { normalRender_.AddIndexData(index); };
+	return [this](const IndexInfoStruct& index) { skinningRender_.AddIndexData(index); };
 }

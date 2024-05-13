@@ -144,10 +144,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\Test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class\player\Player.h" />
+    <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\Test.h" />
   </ItemGroup>
   <ItemGroup>

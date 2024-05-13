@@ -1,9 +1,32 @@
 #pragma once
 #include "Vertex.h"
+#include "JointWeight.h"
+#include "Skeleton.h"
+#include "SkinCluster.h"
 
 #include <vector>
+#include <map>
 
 namespace LWP::Primitive {
+	struct SkinningVertex {
+		Vertex v;
+		std::array<float, kNumMaxInfluence> weight{};
+		std::array<int32_t, kNumMaxInfluence> jointIndices{};
+	};
+	struct SkinningVertexStruct {
+		Base::VertexStruct v;
+		std::array<float, kNumMaxInfluence> weight{};
+		std::array<int32_t, kNumMaxInfluence> jointIndices{};
+
+		// IPrimitiveのVertexを代入する演算子をオーバーロード
+		SkinningVertexStruct& operator=(const SkinningVertex& value) {
+			v = value.v;
+			weight = value.weight;
+			jointIndices = value.jointIndices;
+			return *this;
+		}
+	};
+
 	/// <summary>
 	/// 3Dモデルのノードクラス
 	/// </summary>
@@ -11,12 +34,14 @@ namespace LWP::Primitive {
 	public: // ** パブリックなメンバ関数 ** //
 
 		// 名前
-		std::string name = "primitive";
+		std::string name = "mesh";
 
 		// 描画する頂点
-		std::vector<Vertex> vertices;
+		std::vector<SkinningVertex> vertices;
 		// インデックス
 		std::vector<uint32_t> indexes;
+		// Jointの重さデータ
+		std::map<std::string, Primitive::JointWeight> skinClusterData_;
 		
 		//　マテリアルのインデックス
 		int materialIndex;

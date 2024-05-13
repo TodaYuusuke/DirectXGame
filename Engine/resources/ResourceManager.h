@@ -9,6 +9,7 @@
 #include "motion/Motion.h"
 
 // 3Dモデル
+#include "primitive/3d/OldMesh.h"
 #include "model/Model.h"
 #include "model/ModelData.h"
 
@@ -48,6 +49,8 @@ namespace LWP::Resource {
 		Texture LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
 		AudioData* LoadAudio(const std::string& filepath);
 		AudioData* LoadAudioLongPath(const std::string& filepath);
+		Primitive::OldMeshData* LoadOldMesh(const std::string& filepath);
+		Primitive::OldMeshData* LoadOldMeshLongPath(const std::string& filepath);
 
 		// モデルのデータを読み込む関数
 		void LoadModelData(const std::string& filePath);
@@ -69,7 +72,7 @@ namespace LWP::Resource {
 		// オーディオ用のオブジェクト
 		Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
 		IXAudio2MasteringVoice* masterVoice_;
-		
+
 		// テクスチャの配列
 		struct TextureStruct {
 			Texture tex;
@@ -80,7 +83,10 @@ namespace LWP::Resource {
 		// オーディオの配列
 		const std::string audioDirectoryPath_ = "resources/audio/";
 		std::map<std::string, AudioData> audioMap_;
-		
+		// 古いmeshの配列
+		const std::string oldMeshDirectoryPath_ = "resources/model/";
+		std::map<std::string, Primitive::OldMeshData> oldMeshMap_;
+
 		// 3Dモデルの配列
 		std::map<std::string, ModelData> modelDataMap_;
 		// 3Dモデルのアダプター
@@ -95,5 +101,8 @@ namespace LWP::Resource {
 		// ImGui用変数
 		int currentItem = 0;
 #endif
+
+	private:
+		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
 	};
 }

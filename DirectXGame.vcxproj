@@ -215,6 +215,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\SkinningRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthStencil.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp" />
@@ -263,12 +264,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
     <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
     <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
+    <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\model\Joint.cpp" />
+    <ClCompile Include="Engine\primitive\model\JointWeight.cpp" />
     <ClCompile Include="Engine\primitive\model\Mesh.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\primitive\model\Node.cpp" />
     <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
+    <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
     <ClCompile Include="Engine\resources\audio\Audio.cpp" />
@@ -332,6 +336,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderer\SkinningRenderer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\IDataResource.h" />
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h" />
@@ -395,12 +400,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\3d\3dList.h" />
     <ClInclude Include="Engine\primitive\3d\Capsule.h" />
     <ClInclude Include="Engine\primitive\3d\Cube.h" />
+    <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\model\Joint.h" />
+    <ClInclude Include="Engine\primitive\model\JointWeight.h" />
     <ClInclude Include="Engine\primitive\model\Mesh.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\primitive\model\Node.h" />
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
+    <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
     <ClInclude Include="Engine\primitive\PrimitiveManager.h" />

@@ -4,13 +4,14 @@
 #include "component/Information.h"
 #include "utility/motionEffects/Interpolation.h"
 
-#include "primitive/model/Node.h"
+#include "resources/model/Model.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 using namespace LWP::Resource;
+using namespace LWP::Primitive;
 using namespace LWP::Utility;
 using namespace LWP::Math;
 
@@ -38,26 +39,24 @@ void Animation::Update() {
 	// 最後までいったらリピート再生。リピートしなくても別に良い
 	time_ = std::fmod(time_, duration_);
 
-	// LocalMatrixを生成し、Nodeに適応（現在はrootNodeのみ適応）
-	//Primitive::Node& node = meshPtr_->node;
-	
-	// Nodeのアニメーションを取得
-	//NodeAnimation& nodeAnimation = nodeAnimations[node.name];
-	//node.localMatrix = Matrix4x4::CreateAffineMatrix(
-	//	CalculateValue(nodeAnimation.scale.keyframes, time_),
-	//	//Vector3{0.0f,0.0f,0.0f},
-	//	CalculateValue(nodeAnimation.rotate.keyframes, time_),
-	//	CalculateValue(nodeAnimation.translate.keyframes, time_)
-	//);
 
+	for (Joint& joint : modelPtr_->skeleton->joints) {
+		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+			joint.transform.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
+			joint.transform.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_);
+			joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
+		}
+	}
 }
 
 bool Animation::isEnd() { return !isStart_; }
 
-void Animation::LoadAnimation(std::string filepath, Primitive::Mesh* ptr) {
+void Animation::LoadAnimation(std::string filepath, Resource::Model* ptr) {
 	return LoadAnimationLongPath(kDirectoryPath + filepath, ptr);
 }
-void Animation::LoadAnimationLongPath(std::string filepath, Primitive::Mesh* ptr) {
+void Animation::LoadAnimationLongPath(std::string filepath, Resource::Model* ptr) {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filepath.c_str(), 0);
 	assert(scene->mAnimations != 0); // アニメーションがない
@@ -95,8 +94,7 @@ void Animation::LoadAnimationLongPath(std::string filepath, Primitive::Mesh* ptr
 	}
 
 	// 追従セット
-	ptr;
-	//meshPtr_ = ptr;
+	modelPtr_ = ptr;
 }
 
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {

@@ -5,16 +5,19 @@
 #include "base/directX/resource/rendering/DepthStencil.h"
 #include "base/directX/utility/DXC.h"
 
+#include "primitive/model/SkinCluster.h"
+#include "primitive/model/Mesh.h"
+
 namespace LWP::Base {
 	/// <summary>
-	/// 通常描画のレンダラー
+	/// スキニング描画のレンダラー
 	/// </summary>
-	class NormalRenderer : public IRenderer {
+	class SkinningRenderer : public IRenderer {
 	public: // ** メンバ関数 ** //
 		// 通常描画のターゲット構造体
 		struct Target {
 			D3D12_GPU_VIRTUAL_ADDRESS view;	// カメラデータのView
-			BackBuffer* back;	// BackBuffer（RenderRsource）
+			BackBuffer* back;	// BackBuffer（RenderResource）
 			DepthStencil* depth;	// DepthStencil
 		};
 
@@ -22,16 +25,16 @@ namespace LWP::Base {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		NormalRenderer();
+		SkinningRenderer();
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~NormalRenderer() = default;
+		~SkinningRenderer() = default;
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func);
+		void Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令
@@ -43,11 +46,9 @@ namespace LWP::Base {
 		/// <summary>
 		/// インデックスデータを追加
 		/// </summary>
-		void AddIndexData(const IndexInfoStruct& data) { normal_.indexBuffer.Add(data); }
-		void AddIndexDataWire(const IndexInfoStruct& data) { wireframe_.indexBuffer.Add(data); }
-		void AddIndexDataBillboard2D(const IndexInfoStruct& data) { billboard2D_.indexBuffer.Add(data); }
-		void AddIndexDataBillboard3D(const IndexInfoStruct& data) { billboard3D_.indexBuffer.Add(data); }
-		void AddIndexDataSprite(const IndexInfoStruct& data) { sprite_.indexBuffer.Add(data); }
+		void AddIndexData(const IndexInfoStruct& data) { indexBuffer.Add(data); }
+		//void AddInfluenceData(const Primitive::VertexInfluence& data) { mappedInfluence.Add(data); }
+		void AddMatrixPaletteData(const Primitive::WellForGPU& data) { mappedPalette.Add(data); }
 
 		/// <summary>
 		/// 描画ターゲットセット
@@ -60,31 +61,22 @@ namespace LWP::Base {
 		/// </summary>
 		void Reset();
 
+		// 頂点バッファ
+		StructuredBuffer<Primitive::SkinningVertexStruct> vertexBuffer;
 
 	private: // ** プライベートなメンバ変数 ** //
 		// ターゲット配列
 		std::vector<Target> target_;
-		
-		// 書き込むデータの種類
-		struct RenderData {
-			// インデックスバッファ
-			StructuredBuffer<IndexInfoStruct> indexBuffer;
-			// PSO
-			PSO pso;
 
-			RenderData() = delete;
-			RenderData(uint32_t size) : indexBuffer(size) {};
-		};
-
-		// 通常
-		RenderData normal_;
-		// ワイヤーフレーム
-		RenderData wireframe_;
-		// ビルボード2D
-		RenderData billboard2D_;
-		// ビルボード3D
-		RenderData billboard3D_;
-		// スプライト
-		RenderData sprite_;
+		// インデックスバッファ
+		StructuredBuffer<IndexInfoStruct> indexBuffer;
+		// インフルエンス
+		//StructuredBuffer<Primitive::VertexInfluence> mappedInfluence;
+		// MatrixPalette
+		StructuredBuffer<Primitive::WellForGPU> mappedPalette;
+		// RootSignature
+		RootSignature root;
+		// PSO
+		PSO pso;
 	};
 }

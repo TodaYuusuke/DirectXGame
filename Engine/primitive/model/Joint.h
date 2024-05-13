@@ -1,48 +1,58 @@
 #pragma once
 #include "object/TransformQuat.h"
+#include "Node.h"
 
 #include <vector>
+#include <optional>
 #include <string>
 
-// 前方宣言
-struct aiNode;
 
 namespace LWP::Primitive {
-
 	/// <summary>
-	/// ノード情報を格納するクラス
+	/// Animationを行うNode
 	/// </summary>
-	class Node {
+	class Joint {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// トランスフォーム（クォータニオン）
 		Object::TransformQuat transform;
-		// Nodeの名前
+		// skeletonSpaceでの変換行列
+		Math::Matrix4x4 skeletonSpaceMatrix;
+		// 名前
 		std::string name = "";
-		// 子供のNode
-		std::vector<Node> children;
+		// 子JointのIndexリスト、いなければ空
+		std::vector<int32_t> children;
+		// 自分のIndex
+		int32_t index;
+		// 親JointのIndex,いなければnull
+		std::optional<int32_t> parent;
+
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
-		/// コンストラクタ
+		/// デフォルトコンストラクタ
 		/// </summary>
-		Node() = default;
+		Joint() = default;
 		/// <summary>
-		/// デストラクタ
+		/// デフォルトデストラクタ
 		/// </summary>
-		~Node() = default;
-
-		/// <summary>
-		/// AssimpのNodeデータから情報を読み込む
-		/// </summary>
-		/// <param name="material"></param>
-		void Load(aiNode* node);
+		~Joint() = default;
 
 		/// <summary>
 		/// LocalMatrixを求める関数
 		/// </summary>
 		/// <returns></returns>
-		Math::Matrix4x4 GetLocalMatrix() const ;
+		Math::Matrix4x4 GetLocalMatrix() const;
+
+		/// <summary>
+		/// NodeクラスからJointを作り出す関数
+		/// </summary>
+		static int32_t Create(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+
+		/// <summary>
+		/// NodeクラスからJointを作り出す関数
+		/// </summary>
+		//void Load(aiBone* bone);
 	};
 }

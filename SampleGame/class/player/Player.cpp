@@ -9,25 +9,11 @@ using namespace LWP::Object;
 // 初期化
 void Player::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
-	meshes[0].LoadFile("Player/C_Body.gltf");
-	//meshes[0].transform.rotation = Quaternion::ConvertEuler({ 0.0f,-1.57,0.0f });
-	//meshes[0].transform.rotation = Quaternion({0.0f,-1.0f,0.0f}).Normalize();
-	meshes[0].transform.scale = { 0.3f,0.3f,0.3f };
-	meshes[1].LoadFile("Player/C_Head.gltf");
-	meshes[2].LoadFile("Player/C_LHand.gltf");
-	meshes[2].transform.translation.z = -1.0f;
-	meshes[3].LoadFile("Player/C_RHand.gltf");
-	meshes[3].transform.translation.z = 1.0f;
+	model.LoadShortPath("human/walk.gltf");
+	model.worldTF.scale = { 0.3f,0.3f,0.3f };
 	// アニメーション用意
-	idleAnim[0].LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &meshes[0]);
-	idleAnim[1].LoadAnimationLongPath("resources/model/Player/C_Head.gltf", &meshes[1]);
-	idleAnim[2].LoadAnimationLongPath("resources/model/Player/C_LHand.gltf", &meshes[2]);
-	idleAnim[3].LoadAnimationLongPath("resources/model/Player/C_RHand.gltf", &meshes[3]);
-
-	meshes[1].transform.Parent(&meshes[0].transform);
-	meshes[2].transform.Parent(&meshes[0].transform);
-	meshes[3].transform.Parent(&meshes[0].transform);
-
+	walkAnim.LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &model);
+	
 	// カメラのポインタをセット
 	camera_ = ptr;
 	//camera_->transform.Parent(&meshes[0].transform);
@@ -38,19 +24,19 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	//cameraGoalRotation_ = camera_->transform.rotation;
 
 	// 点光源
-	pl.transform.Parent(&meshes[0].transform);
-	pl.transform.translation.x = 0.75f;
-	pl.transform.translation.y = 1.0f;
-	pl.radius = 13.0f;
-	pl.intensity = 0.4f;
-	pl.isActive = true;
+	//pl.transform.Parent(&model.worldTF);
+	//pl.transform.translation.x = 0.75f;
+	//pl.transform.translation.y = 1.0f;
+	//pl.radius = 13.0f;
+	//pl.intensity = 0.4f;
+	//pl.isActive = true;
 
 
 	// まとめて行う処理
-	for (int i = 0; i < 4; i++) {
-		meshes[i].material.enableLighting = true;
-		idleAnim[i].Start();
-	}
+	//for (int i = 0; i < 4; i++) {
+	//	meshes[i].material.enableLighting = true;
+	walkAnim.Start();
+	//}
 }
 
 // 更新
@@ -83,13 +69,23 @@ void Player::Move() {
 	dir.x += Pad::GetLStick(0).x;
 	dir.z += Pad::GetLStick(0).y;
 
-	dir = Vector3(dir * camera_->transform.rotation).Normalize();
-	meshes[0].transform.translation += dir * kPlayerSpeed;
+	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
+	model.worldTF.translation += dir * kPlayerSpeed;
 
 	static Vector3 vec = Vector3{ 0.0f,-1.57f,0.0f };
 
 	if (dir.Length() > 0.0f) {
+		// アニメーションしていないならば始める
+		if (walkAnim.isEnd()) {
+			//walkAnim.Start();
+		}
 		//meshes[0].transform.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), std::atan2f(dir.z, dir.x)).Inverse();
+	}
+	else {
+		// アニメーションしているならば止める
+		if (!walkAnim.isEnd()) {
+			//walkAnim.Stop();
+		}
 	}
 
 	ImGui::Begin("Test");
@@ -120,19 +116,6 @@ void Player::Move() {
 		//meshes->transform.rotation = meshes->transform.rotation * Matrix4x4::DirectionToDirection(cuurentDir,{ dir.x, 0.0f, dir.y });
 
 		//prePos - meshes[0].transform.GetWorldPosition();
-
-		// Runアニメーション
-		for (int i = 0; i < 4; i++) {
-			//idleAnim[i].Stop();
-			//if (runAnim[i].isEnd()) { runAnim[i].Start(); }
-		}
-	}
-	else {
-		// 歩いていないのでIdleアニメーション
-		for (int i = 0; i < 4; i++) {
-			//if (idleAnim[i].isEnd()) { idleAnim[i].Start(); }
-			//runAnim[i].Stop();
-		}
 	}
 }
 
@@ -167,7 +150,7 @@ void Player::FollowCameraUpdate() {
 	// カメラを回転させる
 	camera_->transform.rotation *= quat;
 	// カメラの座標を決定
-	camera_->transform.translation = meshes[0].transform.GetWorldPosition() + cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
+	camera_->transform.translation = model.worldTF.GetWorldPosition() + cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
 	// カメラから追従対象に対する角度を求める
 	//camera_->transform.translation = meshes[0].transform.GetWorldPosition() + (cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation));
 }

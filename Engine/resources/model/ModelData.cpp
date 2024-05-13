@@ -16,25 +16,23 @@ void ModelData::Load(const std::string& filePath) {
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
 	assert(scene->HasMeshes());	// メッシュがないのは対応しない
 
-	// 埋め込まれた画像があるかを検出
-	//for (uint32_t texIndex = 0; meshIndex < scene->tex; meshIndex++) {
-	//	if (scene->GetEmbeddedTexture()) {
-
-	//}
-
-
 	// Meshの解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
+		aiMesh* mesh = scene->mMeshes[meshIndex];
+
 		// 新しいメッシュを生成
 		meshes_.emplace_back();
 		// 読み込む
-		meshes_.back().Load(scene->mMeshes[meshIndex]);
+		meshes_.back().Load(mesh);
 	}
 
 	// ノード情報を格納
-	//if (scene->mRootNode) {
-	//	result.node.ReadNode(scene->mRootNode);
-	//}
+	if (scene->mRootNode) {
+		// 新しいノードを生成
+		nodes_.emplace_back();
+		// 読み込む
+		nodes_.back().Load(scene->mRootNode);
+	}
 
 	// マテリアルの解析
 	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; materialIndex++) {

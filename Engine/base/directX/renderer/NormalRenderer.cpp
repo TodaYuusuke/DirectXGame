@@ -8,7 +8,6 @@ using namespace LWP::Base;
 // サイズをここで指定
 NormalRenderer::NormalRenderer() :
 	normal_(lwpC::Rendering::kMaxIndex),
-	model_(lwpC::Rendering::kMaxIndex),
 	wireframe_(lwpC::Rendering::kMaxIndex),
 	billboard2D_(lwpC::Rendering::kMaxIndex),
 	billboard3D_(lwpC::Rendering::kMaxIndex),
@@ -17,7 +16,6 @@ NormalRenderer::NormalRenderer() :
 void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func) {
 	// StructuredBufferを初期化
 	normal_.indexBuffer.Init(device, srv);
-	model_.indexBuffer.Init(device, srv);
 	wireframe_.indexBuffer.Init(device, srv);
 	billboard2D_.indexBuffer.Init(device, srv);
 	billboard3D_.indexBuffer.Init(device, srv);
@@ -25,10 +23,6 @@ void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC*
 
 	// PSOを生成
 	normal_.pso.Init(*root, dxc)
-		.SetVertexShader("Object3d.VS.hlsl")
-		.SetPixelShader("Object3d.PS.hlsl")
-		.Build(device->GetDevice());
-	model_.pso.Init(*root, dxc)
 		.SetVertexShader("Object3d.VS.hlsl")
 		.SetPixelShader("Object3d.PS.hlsl")
 		.Build(device->GetDevice());
@@ -56,7 +50,7 @@ void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC*
 
 void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	// 配列化
-	RenderData* ary[5] = { &normal_, &model_, &wireframe_, &billboard2D_, &billboard3D_ };
+	RenderData* ary[4] = { &normal_, &wireframe_, &billboard2D_, &billboard3D_ };
 
 	// ImGuiの読み込み終了
 	ImGui::EndFrame();
@@ -73,9 +67,9 @@ void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		D3D12_RESOURCE_STATES beforeBarrier = it->back->GetBarrier();
 		it->back->ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 		// 全画面クリア
-		it->back->Clear(list);
+		//it->back->Clear(list);
 		// 指定した深度で画面全体をクリアする
-		it->depth->Clear(list);
+		//it->depth->Clear(list);
 
 		// ビューポート
 		D3D12_VIEWPORT viewport = {};
@@ -132,7 +126,6 @@ void NormalRenderer::Reset() {
 	target_.clear();
 
 	normal_.indexBuffer.Reset();
-	model_.indexBuffer.Reset();
 	wireframe_.indexBuffer.Reset();
 	billboard2D_.indexBuffer.Reset();
 	billboard3D_.indexBuffer.Reset();

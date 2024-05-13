@@ -1,5 +1,5 @@
 #include "Test.h"
-//#include "GameScene.h"
+#include "GameScene.h"
 
 using namespace LWP;
 using namespace LWP::Input;
@@ -17,6 +17,8 @@ void Test::Initialize() {
 	Info::ChangeShowDebugGUI();
 
 	mesh.LoadShortPath("human/walk.gltf");
+	anim.LoadAnimationLongPath("resources/model/human/walk.gltf", &mesh);
+	anim.Start();
 
 	sprite.texture = subCamera.GetTexture();
 }
@@ -28,7 +30,7 @@ void Test::Update() {
 		nextSceneFunction = []() { return new Test(); };
 	}
 	if (Input::Keyboard::GetTrigger(DIK_N)) {
-		//nextSceneFunction = []() { return new GameScene(); };
+		nextSceneFunction = []() { return new GameScene(); };
 	}
 
 	// ポストプロセス用のシェーダー更新
