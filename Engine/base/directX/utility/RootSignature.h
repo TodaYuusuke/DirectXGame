@@ -18,6 +18,9 @@ namespace LWP::Base {
 	class RootSignature final {
 	public: // **　メンバ関数 ** //
 
+		// 初期化
+		void Init();
+
 		/// <summary>
 		/// ビルダーデザインパターン
 		/// </summary>
