@@ -3,18 +3,20 @@
 
 namespace LWP::Base::PostProcess {
 	/// <summary>
-	/// グレースケール
+	/// ビネット
 	/// </summary>
-	class GrayScale final
+	class Vignetting final
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// 強度
+		// 強度（現在機能しない）
 		float intensity;
 
 
 	private: // ** メンバ変数 ** //
-
+		struct Data {
+			float i;
+		};
 		Base::ConstantBuffer<float> buffer_;
 
 	public: // ** メンバ関数 ** //

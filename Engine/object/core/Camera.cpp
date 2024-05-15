@@ -31,6 +31,8 @@ Camera::Camera() {
 	renderResource_.Init(dev, heaps);
 	textureResource_.Init(dev, heaps);
 	depthStencil_.Init(dev, heaps);
+
+	pp.Init();
 }
 
 // 初期化
@@ -43,14 +45,23 @@ void Camera::Update(Base::RendererManager* manager) {
 
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
 	manager->AddTarget(constantBuffer_.GetGPUView(), &renderResource_, &depthStencil_);
-	// ポストプロセス用のターゲットセット
-	manager->AddTarget(&renderResource_, &textureResource_, &depthStencil_, &pp);
+	// ポストプロセスを行うか確認
+	if (pp.use) {
+		// データ更新
+		pp.Update();
+		// ポストプロセス用のターゲットセット
+		manager->AddTarget(&renderResource_, &textureResource_, &depthStencil_, &pp);
+	}
+	// しないならば
+	else {
 	// レンダリング結果をテクスチャ用にコピーする
-	//manager->AddCopyTask(&renderResource_, &textureResource_);
+		manager->AddCopyTask(&renderResource_, &textureResource_);
+	}
 }
 
 void Camera::DebugGUI() {
 	transform.DebugGUI();
+	pp.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
 	ImGui::Checkbox("isActive", &isActive);
 }

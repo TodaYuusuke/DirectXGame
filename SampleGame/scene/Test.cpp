@@ -21,6 +21,10 @@ void Test::Initialize() {
 	anim.Start();
 
 	sprite.texture = subCamera.GetTexture();
+
+	mainCamera.isActive = true;
+	mainCamera.pp.use = true;
+	mainCamera.pp.vignetting.use = true;
 }
 
 // 更新

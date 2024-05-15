@@ -32,9 +32,6 @@ void GameScene::Initialize() {
 
 	// プレイヤー初期化
 	player.Init(&mainCamera);
-
-	// カメラにポストプロセス用の設定
-	mainCamera.pp.CreatePSO("postProcess/PostProcess.PS.hlsl");
 }
 // 更新
 void GameScene::Update() {

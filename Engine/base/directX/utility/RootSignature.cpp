@@ -3,6 +3,20 @@
 
 using namespace LWP::Base;
 
+void RootSignature::Init() {
+	desc_ = D3D12_ROOT_SIGNATURE_DESC();
+	parameters_.clear();
+	parametersDesc_.clear();
+	samplers_.clear();
+	defaultTableDesc_ = {
+		D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// TableなのでSRVを使う
+		1,	// 数は1つ
+		0,	// ここは可変
+		0,	// スペースは基本0
+		D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND	// Offsetを自動計算
+	};
+}
+
 RootSignature& RootSignature::AddCBVParameter(int registerNum, ShaderVisibility visibility) {
 	// 新しく登録するデータ
 	D3D12_ROOT_PARAMETER newPara{};

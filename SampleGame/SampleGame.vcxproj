@@ -142,6 +142,9 @@
       <AdditionalLibraryDirectories>../Externals/DirectXTex/lib/Release;../Externals/assimp/lib/Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DirectXTex.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>resources/system/manifest/DpiAwarenessPerMonitorV2.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="class\player\Player.cpp" />

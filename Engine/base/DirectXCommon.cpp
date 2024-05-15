@@ -57,9 +57,18 @@ void DirectXCommon::Initialize(WinApp* winApp) {
 }
 
 void DirectXCommon::SetMainCamera(Object::Camera* camera) {
-	renderer_->AddTarget(camera->GetBufferView(), camera->GetRenderResource(), &depthStencil_);
-	// ポストプロセス用のターゲットセット
-	renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], camera->GetDepthStencil(), &camera->pp);
+	// ポストプロセスを行うか確認
+	if (camera->pp.use) {
+		// カメラのリソースに書き込み
+		renderer_->AddTarget(camera->GetBufferView(), camera->GetRenderResource(), &depthStencil_);
+		// ポストプロセス用のターゲットセット
+		renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], camera->GetDepthStencil(), &camera->pp);
+	}
+	// しないならば
+	else {
+		// 直接BackBufferに書き込み
+		renderer_->AddTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
+	}
 }
 
 void DirectXCommon::DrawCall() {
