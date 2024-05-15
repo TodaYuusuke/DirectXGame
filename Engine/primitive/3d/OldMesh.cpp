@@ -1,15 +1,20 @@
-#include "Mesh.h"
+#include "OldMesh.h"
 
 #include "component/Resource.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Math;
 
-void Mesh::LoadFile(const std::string& filename) {
+void OldMesh::LoadFile(const std::string& filename) {
 	// 頂点とインデックスは先にclearしておく
 	vertices.clear();
 	indexes.clear();
 
 	// アダプタからリソースマネージャーにアクセスし、読み込んだ結果を受け取る
-	*this = Resource::LoadMesh(filename);
+	OldMeshData* data = Resource::LoadMesh(filename);
+	vertices = data->vertices;
+	indexes = data->indexes;
+	material = data->material;
+	texture = data->texture;
+	node = data->node;
 }

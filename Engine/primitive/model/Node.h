@@ -1,5 +1,5 @@
 #pragma once
-#include "../math/matrix/Matrix4x4.h"
+#include "object/TransformQuat.h"
 
 #include <vector>
 #include <string>
@@ -15,23 +15,35 @@ namespace LWP::Primitive {
 	class Node {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// NodeのLocalMatrix
-		Math::Matrix4x4 localMatrix{};
+		// トランスフォーム（クォータニオン）
+		Object::TransformQuat transform;
 		// Nodeの名前
 		std::string name = "";
 		// 子供のNode
 		std::vector<Node> children;
+
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		Node();
+		Node() = default;
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Node() = default;
 
 		/// <summary>
-		/// assimpのNodeを読み取る関数
+		/// AssimpのNodeデータから情報を読み込む
 		/// </summary>
-		void ReadNode(aiNode* node);
+		/// <param name="material"></param>
+		void Load(aiNode* node);
+
+		/// <summary>
+		/// LocalMatrixを求める関数
+		/// </summary>
+		/// <returns></returns>
+		Math::Matrix4x4 GetLocalMatrix() const ;
 	};
 }

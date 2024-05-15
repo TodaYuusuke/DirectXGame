@@ -31,7 +31,7 @@ void AABB::CreateFromPrimitive(IPrimitive* primitive) {
 	// ワールドトランスフォームのペアレントもしておく
 	follow_ = primitive;
 	// アフィン変換行列
-	Matrix4x4 matrix = primitive->transform.GetWorldMatrix();
+	Matrix4x4 matrix = primitive->transform.GetAffineMatrix();
 	// 初期化
 	min = primitive->vertices[0].position * matrix;
 	max = min;

@@ -44,13 +44,13 @@ namespace LWP::Object {
 		void Init();
 
 		/// <summary>
-		/// ワールド行列を返す
+		/// アフィン行列を返す
 		/// </summary>
-		Math::Matrix4x4 GetWorldMatrix() const;
+		Math::Matrix4x4 GetAffineMatrix() const;
 		/// <summary>
-		/// ワールド行列を返す（Nodeを考慮）
+		/// アフィン行列を返す（Nodeを考慮）
 		/// </summary>
-		Math::Matrix4x4 GetWorldMatrix(Primitive::Node* node) const;
+		Math::Matrix4x4 GetAffineMatrix(Primitive::Node* node) const;
 
 		// 移動だけのワールド行列を返す
 		Math::Matrix4x4 GetTranslationMatrix() const;

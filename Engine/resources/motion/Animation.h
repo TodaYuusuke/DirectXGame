@@ -6,8 +6,8 @@
 #include <map>
 
 // 前方宣言
-namespace LWP::Primitive {
-	class Mesh;
+namespace LWP::Resource {
+	class Model;
 }
 
 namespace LWP::Resource {
@@ -71,8 +71,8 @@ namespace LWP::Resource {
 		/// <summary>
 		/// アニメーション読み込み
 		/// </summary>
-		void LoadAnimation(std::string filepath, Primitive::Mesh* ptr);
-		void LoadAnimationLongPath(std::string filepath, Primitive::Mesh* ptr);
+		void LoadAnimation(std::string filepath, Resource::Model* ptr);
+		void LoadAnimationLongPath(std::string filepath, Resource::Model* ptr);
 
 	private: // ** メンバ変数 ** //
 
@@ -88,8 +88,8 @@ namespace LWP::Resource {
 		// deltaTimeの係数の影響OnOff
 		bool useDeltaTimeMultiply_ = true;
 
-		// 適応するNodeのポインタ
-		Primitive::Mesh* meshPtr_ = nullptr;
+		// 適応するModelのポインタ
+		Resource::Model* modelPtr_ = nullptr;
 
 		// アニメーションファイルの位置
 		const static std::string kDirectoryPath;

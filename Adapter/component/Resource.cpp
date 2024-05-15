@@ -18,13 +18,20 @@ Resource::AudioData* Resource::LoadAudioLongPath(const std::string& filePath) {
 	return engine->resourceManager_->LoadAudioLongPath(filePath);
 }
 
+Primitive::OldMeshData* Resource::LoadMesh(const std::string& filePath) {
+	return engine->resourceManager_->LoadOldMesh(filePath);
+}
+Primitive::OldMeshData* Resource::LoadMeshLongPath(const std::string& filePath) {
+	return engine->resourceManager_->LoadOldMeshLongPath(filePath);
+}
 
-const Primitive::MeshData& Resource::LoadMesh(const std::string& filePath) {
-	return engine->resourceManager_->LoadMesh(filePath);
+void Resource::LoadModel(const std::string& filePath) {
+	engine->resourceManager_->LoadModelData(filePath);
 }
-const Primitive::MeshData& Resource::LoadMeshLongPath(const std::string& filePath) {
-	return engine->resourceManager_->LoadMeshLongPath(filePath);
+Resource::ModelData* Resource::GetModel(const std::string& filePath) {
+	return engine->resourceManager_->GetModelData(filePath);
 }
+
 
 void Resource::SetInstance(Resource::Animation* ptr) { engine->resourceManager_->SetPointer(ptr); }
 void Resource::SetInstance(Resource::Motion* ptr) { engine->resourceManager_->SetPointer(ptr); }
