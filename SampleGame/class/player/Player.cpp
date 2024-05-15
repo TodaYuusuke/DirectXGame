@@ -83,56 +83,35 @@ void Player::Move() {
 	dir.x += Pad::GetLStick(0).x;
 	dir.z += Pad::GetLStick(0).y;
 
-	dir = Vector3(dir * camera_->transform.rotation).Normalize();
+	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
 	meshes[0].transform.translation += dir * kPlayerSpeed;
 
-	static Vector3 vec = Vector3{ 0.0f,-1.57f,0.0f };
-
 	if (dir.Length() > 0.0f) {
-		//meshes[0].transform.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), std::atan2f(dir.z, dir.x)).Inverse();
-	}
+		// オイラー角
+		Vector3& rotation = meshes[0].transform.rotation;
 
-	ImGui::Begin("Test");
-	ImGui::DragFloat3("vec", &vec.x);
-	ImGui::End();
+		// 目的の角度
+		Vector3 goalRotation = { 0.0f, 0.0f, 0.0f };
+		// Y軸周りの角度
+		goalRotation.y = std::atan2f(dir.x, dir.z);
+		// モデルの回転分補正
+		goalRotation.y -= 1.57f;
+		// X軸周りの角度
+		//goalRotation.x = std::atan2f(-dir.y, Vector3{ dir.x, 0.0f, dir.z }.Length());
 
-	// 今の方向
-	//Vector3 startDir = Vector3{ 0.0f,0.0f,1.0f } *Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
-	// 今の方向を向きたい方向にする回転行列を出す
-	//Matrix4x4 rot = Matrix4x4::DirectionToDirection(startDir.Normalize(), dir3);
-	// 回転行列をクォータニオンに変換
-	//meshes[0].transform.rotation *= dir3;
-	//meshes[0].transform.rotation = meshes[0].transform.rotation.Normalize();
-	//meshes[0].transform.rotation = Utility::Interp::SlerpQuaternion(
-	//	meshes[0].transform.rotation,
-	//	Quaternion(dir3),
-	//	0.8f
-	//).Normalize();
-
-	// 向きを設定
-	if (dir.Length() > 0.0f) {
-		//meshes[0].transform.rotation = Quaternion(dir3);
-		// 現在の方向ベクトル
-		//Math::Vector3 cuurentDir;
-		//cuurentDir = Vector3{ 1.0f,0.0f,0.0f } * Matrix4x4::CreateRotateXYZMatrix(meshes[0].transform.rotation);
-		//Vector3 temp = meshes[0].
-		//
-		//meshes->transform.rotation = meshes->transform.rotation * Matrix4x4::DirectionToDirection(cuurentDir,{ dir.x, 0.0f, dir.y });
-
-		//prePos - meshes[0].transform.GetWorldPosition();
-
-		// Runアニメーション
-		for (int i = 0; i < 4; i++) {
-			//idleAnim[i].Stop();
-			//if (runAnim[i].isEnd()) { runAnim[i].Start(); }
+		// 現在の角度と目標の角度を比較し、逆回転の場合に調整
+		if (std::abs(rotation.y - goalRotation.y) > M_PI) {
+			if (rotation.y > goalRotation.y) {
+				rotation.y -= static_cast<float>(2.0f * M_PI);
+			}
+			else {
+				rotation.y += static_cast<float>(2.0f * M_PI);
+			}
 		}
-	}
-	else {
-		// 歩いていないのでIdleアニメーション
-		for (int i = 0; i < 4; i++) {
-			//if (idleAnim[i].isEnd()) { idleAnim[i].Start(); }
-			//runAnim[i].Stop();
-		}
+
+		// 回転適応
+		rotation.y = goalRotation.y;
+		//rotation = Utility::Interp::Slerp(rotation, goalRotation, 0.2f);
 	}
 }
 
