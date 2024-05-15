@@ -32,6 +32,13 @@ void GameScene::Initialize() {
 
 	// プレイヤー初期化
 	player.Init(&mainCamera);
+
+	// ポストプロセス適応
+	mainCamera.isActive = true;
+	mainCamera.pp.use = true;
+	mainCamera.pp.grayScale.use = true;
+	mainCamera.pp.vignetting.use = true;
+	mainCamera.pp.CreateShaderFile();
 }
 // 更新
 void GameScene::Update() {
