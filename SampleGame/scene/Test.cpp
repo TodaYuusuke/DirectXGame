@@ -16,6 +16,10 @@ void Test::Initialize() {
 	mesh.LoadFile("skydome/skydome.obj");
 
 	sprite.texture = subCamera.GetTexture();
+
+	mainCamera.isActive = true;
+	mainCamera.pp.use = true;
+	mainCamera.pp.vignetting.use = true;
 }
 
 // 更新
