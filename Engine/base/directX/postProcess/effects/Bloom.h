@@ -1,11 +1,14 @@
 #pragma once
 #include "../IPostProcess.h"
 
+#include "base/directX/utility/RootSignature.h"
+#include "base/directX/utility/PSO.h"
+
 namespace LWP::Base::PostProcess {
 	/// <summary>
-	/// グレースケール
+	/// ブルーム
 	/// </summary>
-	class GrayScale final
+	class Bloom final
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
 
@@ -16,6 +19,13 @@ namespace LWP::Base::PostProcess {
 	private: // ** メンバ変数 ** //
 
 		Base::ConstantBuffer<float> buffer_;
+		// ブルームをかけるのに一時的に必要なデータ
+		struct TempData {
+			Base::RenderResource rr;
+			Base::RootSignature root;
+			Base::PSO pso;
+		};
+		TempData resource[2];
 
 	public: // ** メンバ関数 ** //
 
@@ -30,6 +40,8 @@ namespace LWP::Base::PostProcess {
 		void WriteProcess(std::ofstream* stream) override;
 		// commandListにBind情報を指示
 		void BindCommand(ID3D12GraphicsCommandList* list, int* offset) override;
+		// 事前に行わなければいけない処理をここにまとめる
+		void PreCommand(ID3D12GraphicsCommandList* list, Base::RenderResource* target) override;
 		// ImGui
 		void DebugGUI() override;
 

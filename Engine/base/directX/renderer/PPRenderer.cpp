@@ -10,13 +10,15 @@ void PPRenderer::Init() {/* 何もない！ */}
 void PPRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	// ターゲット分ループする
 	for (std::vector<Target>::iterator it = target_.begin(); it != target_.end(); ++it) {
+		// 事前に行わなければならない処理を行う
+		it->pp->PreCommands(list, it->render);
+		
 		// textureの方に書き込む
 		list->OMSetRenderTargets(1, &it->texture->rtvInfo.cpuView, false, nullptr);
-		// RootSignatureとPSOをセット
-		list->SetGraphicsRootSignature(*it->pp->GetRoot());
-		list->SetPipelineState(it->pp->GetPSO()->GetState());
 
 		// データを登録
+		it->pp->SetCommands(list);
+		// 既定値のViewをバインド
 		//list->SetGraphicsRootConstantBufferView(0, );
 		list->SetGraphicsRootDescriptorTable(1, it->render->srvInfo.gpuView);
 		//list->SetGraphicsRootDescriptorTable(2, it->depth->srvInfo.gpuView);

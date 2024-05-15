@@ -262,6 +262,9 @@
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -611,13 +614,12 @@
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\object\TransformQuat.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="resources\system\shaders\Object3d.hlsli">
-      <Filter>Engine\resources\shaders</Filter>
-    </None>
-    <None Include="resources\system\shaders\Struct.hlsli">
       <Filter>Engine\resources\shaders</Filter>
     </None>
   </ItemGroup>

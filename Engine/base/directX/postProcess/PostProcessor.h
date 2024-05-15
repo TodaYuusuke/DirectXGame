@@ -2,8 +2,9 @@
 #include "../utility/RootSignature.h"
 #include "../utility/PSO.h"
 
-
+#include "effects/Bloom.h"
 #include "effects/GrayScale.h"
+#include "effects/Vignetting.h"
 
 #include <fstream>
 
@@ -15,21 +16,39 @@ namespace LWP::Base {
 	class PostProcessor final {
 	public: // ** パブリックなメンバ変数 ** //
 
+		// そもそも行うかフラグ
+		bool use = false;
+
+		//PostProcess::Bloom bloom;	// ブルーム
 		PostProcess::GrayScale grayScale;	// グレースケール
+		PostProcess::Vignetting vignetting;	// ビネット
 		// ここにどんどん種類を増やしていく
 
 
 	public: // ** メンバ関数 ** //
 
-		// シェーダーファイルを生成する関数
-		//void CreateShaderFile();
+		// 初期化
+		void Init();
+		// 更新
+		void Update();
+
+		// パラメーターからシェーダーファイルを生成しPSOを生成する関数
+		void CreateShaderFile();
 		// 既存のシェーダーファイルからPSOを生成する関数
 		void CreatePSO(std::string filePath);
 
-		// RootSignatureを返す関数
-		RootSignature* GetRoot() { return &root_; }
-		// PSOを返す関数
-		PSO* GetPSO() { return &pso_; }
+		// 描画する前に行わなければならない処理
+		void PreCommands(ID3D12GraphicsCommandList* list, Base::RenderResource* target);
+		// コマンドリストにView当をセットする関数
+		void SetCommands(ID3D12GraphicsCommandList* list);
+
+		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI();
+
+		// 共通化した可変長配列を返す関数
+		std::vector<PostProcess::IPostProcess*> GetAllProcess();
 
 
 	private: // ** メンバ変数 ** //
@@ -38,5 +57,8 @@ namespace LWP::Base {
 		RootSignature root_;
 		// PSO
 		PSO pso_;
+
+		// 処理を行うポストプロセスたち
+		std::vector<PostProcess::IPostProcess*> processes_;
 	};
 }
