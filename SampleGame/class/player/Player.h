@@ -24,7 +24,7 @@ private:
 	void Move();
 
 	// 光源
-	//LWP::Object::PointLight pl;
+	LWP::Object::PointLight pl;
 
 
 private: // ** カメラ系処理 ** // 

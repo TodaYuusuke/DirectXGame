@@ -5,6 +5,9 @@
 #include "utility/MyUtility.h"
 #include <string>
 
+#include "Config.h"
+
+using namespace LWP::Base;
 using namespace LWP::Primitive;
 
 
@@ -37,4 +40,18 @@ void Material::DebugGUI() {
 		}*/
 		ImGui::TreePop();
 	}
+}
+
+MaterialStruct& MaterialStruct::operator=(const Primitive::Material& value) {
+	uvMatrix = value.uvTransform.GetAffineMatrix();
+	shininess = value.shininess;
+	//enableLighting = false;
+	// テクスチャのインデックスを貰う
+	textureIndex = value.texture.t.GetIndex() != -1 ?
+		value.texture.t.GetIndex() :
+		lwpC::Rendering::kMaxBuffer;	// テクスチャの配列の一番最初のインデックス
+	// SRV上のオフセット分戻して考える
+	textureIndex -= lwpC::Rendering::kMaxBuffer;
+
+	return *this;
 }

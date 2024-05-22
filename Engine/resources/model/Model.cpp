@@ -6,12 +6,24 @@
 #include "component/System.h"
 
 using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Resource;
+
+ModelStruct::ModelStruct(const Resource::Model& value) {
+	*this = value;
+}
+ModelStruct& ModelStruct::operator=(const Resource::Model& value) {
+	wtf = value.worldTF;
+	enableLighting = value.enableLighting;
+	return *this;
+}
 
 Model::Model() {
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
 	System::engine->resourceManager_->SetPointer(this);
+
+	buffer.Init(System::engine->directXCommon_->GetGPUDevice());
 }
 Model::~Model() {
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
@@ -80,10 +92,13 @@ void Model::Update() {
 				skeSpaceMatrix.Inverse().Transpose();
 		}
 	}
+
+	*buffer.data_ = *this;
 }
 void Model::Draw(Base::RendererManager* render) {
 	if (!isActive) { return; }
-	render->AddModelData(GetModel(filePath), *this);
+	render;
+	//render->AddModelData(GetModel(filePath), *this);
 }
 void Model::DebugGUI() {
 	worldTF.DebugGUI();

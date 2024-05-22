@@ -5,6 +5,7 @@
 #include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
 #include "renderer/SkinningRenderer.h"
+#include "renderer/MeshRenderer.h"
 #include "renderer/BufferGroup.h"
 
 #include "object/core/Particle.h"
@@ -59,10 +60,6 @@ namespace LWP::Base {
 		/// </summary>
 		void AddPrimitiveData(Primitive::IPrimitive* primitive);
 		/// <summary>
-		/// ModelDataのデータをセット
-		/// </summary>
-		void AddModelData(Resource::ModelData* data, const Resource::Model& modelIndex);
-		/// <summary>
 		/// Particleのデータをセット
 		/// </summary>
 		void AddParticleData(Primitive::IPrimitive* primitive, const std::vector<Object::ParticleData>& wtf);
@@ -105,20 +102,10 @@ namespace LWP::Base {
 		/// <returns></returns>
 		IndexInfoStruct ProcessIndexInfo(Primitive::IPrimitive* primitive);
 		/// <summary>
-		/// ModelDataからIndexInfoStructに加工する関数
-		/// </summary>
-		/// <returns></returns>
-		IndexInfoStruct ProcessIndexInfo(Resource::ModelData* data, const Resource::Model& modelIndex);
-		/// <summary>
 		/// PrimitiveからIndexInfoStructに加工する関数
 		/// </summary>
 		/// <returns></returns>
 		std::function<void(const IndexInfoStruct&)> ProcessSendFunction(Primitive::IPrimitive* primitive);
-		/// <summary>
-		/// PrimitiveからIndexInfoStructに加工する関数
-		/// </summary>
-		/// <returns></returns>
-		std::function<void(const IndexInfoStruct&)> ProcessSendFunction(const Resource::Model& model);
 
 
 #pragma region 通常描画
@@ -127,6 +114,8 @@ namespace LWP::Base {
 		NormalRenderer normalRender_;
 		// スキニング
 		SkinningRenderer skinningRender_;
+		// メッシュシェーダー
+		MeshRenderer meshRenderer_;
 	public:
 		/// <summary>
 		/// ターゲットセット
@@ -137,6 +126,7 @@ namespace LWP::Base {
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { 
 			normalRender_.AddTarget({ view, back, depth });
 			skinningRender_.AddTarget({ view, back, depth });
+			meshRenderer_.AddTarget({ view, back, depth });
 		}
 #pragma endregion
 

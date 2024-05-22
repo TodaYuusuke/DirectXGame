@@ -56,7 +56,8 @@ namespace LWP::Resource {
 		void LoadModelData(const std::string& filePath);
 		// モデルデータの実体を受け取る関数
 		ModelData* GetModelData(const std::string& filePath);
-
+		// モデルアダプターの配列を受け取る関数
+		std::list<Model*>& GetModels();
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
 		void SetPointer(Model* ptr) { models_.SetPointer(ptr); }

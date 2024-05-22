@@ -1,4 +1,6 @@
 #pragma once
+#include <DirectXMesh/DirectXMesh.h>
+#include "base/directX/resource/data/StructuredBuffer.h"
 
 #include "primitive/model/Mesh.h"
 #include "primitive/model/Node.h"
@@ -16,10 +18,35 @@ namespace LWP::Resource {
 		// ノード
 		std::vector<Primitive::Node> nodes_;
 		// マテリアル
-		std::vector<Primitive::Material> material_;
+		std::vector<Primitive::Material> materials_;
+
+		// データバッファ群
+		struct Buffers {
+			//Base::ConstantBuffer<Math::Matrix4x4> transform;		// ワールドトランスフォーム
+			std::unique_ptr<Base::StructuredBuffer<DirectX::Meshlet>> meshlet;	// メッシュレット
+			std::unique_ptr<Base::StructuredBuffer<Base::VertexStruct>> vertex;	// 頂点
+			std::unique_ptr<Base::StructuredBuffer<uint32_t>> uniqueVertexIndices;// 固有頂点インデックス
+			std::unique_ptr<Base::StructuredBuffer<uint32_t>> primitiveIndices;	// プリミティブインデックス
+			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> materials;	// プリミティブインデックス
+		}buffers_;
+
+	private: // ** メンバ変数 ** //
+
+		// メッシュレットの数を保持
+		int meshletCount_ = 0;
 
 
 	public: // ** メンバ関数 ** //
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		ModelData() = default;
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~ModelData() = default;
+
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む
@@ -42,8 +69,8 @@ namespace LWP::Resource {
 		/// </summary>
 		int GetMeshCount() { return static_cast<int>(meshes_.size()); }
 		/// <summary>
-		/// マテリアル数を返す関数
+		/// メッシュレット数を返す関数
 		/// </summary>
-		int GetMaterialCount() { return static_cast<int>(material_.size()); }
+		int GetMeshletCount() { return meshletCount_; }
 	};
 }

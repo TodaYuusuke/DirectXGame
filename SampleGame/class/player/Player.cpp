@@ -12,7 +12,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	model.LoadShortPath("human/walk.gltf");
 	model.worldTF.scale = { 0.3f,0.3f,0.3f };
 	// アニメーション用意
-	walkAnim.LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &model);
+	//walkAnim.LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &model);
 	
 	// カメラのポインタをセット
 	camera_ = ptr;
@@ -24,18 +24,18 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	//cameraGoalRotation_ = camera_->transform.rotation;
 
 	// 点光源
-	//pl.transform.Parent(&model.worldTF);
-	//pl.transform.translation.x = 0.75f;
-	//pl.transform.translation.y = 1.0f;
-	//pl.radius = 13.0f;
-	//pl.intensity = 0.4f;
-	//pl.isActive = true;
+	pl.transform.Parent(&model.worldTF);
+	pl.transform.translation.x = 0.75f;
+	pl.transform.translation.y = 1.0f;
+	pl.radius = 13.0f;
+	pl.intensity = 0.4f;
+	pl.isActive = true;
 
 
 	// まとめて行う処理
 	//for (int i = 0; i < 4; i++) {
 	//	meshes[i].material.enableLighting = true;
-	walkAnim.Start();
+	//walkAnim.Start();
 	//}
 }
 
@@ -70,11 +70,11 @@ void Player::Move() {
 	dir.z += Pad::GetLStick(0).y;
 
 	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
-	meshes[0].transform.translation += dir * kPlayerSpeed;
+	model.worldTF.translation += dir * kPlayerSpeed;
 
 	if (dir.Length() > 0.0f) {
 		// オイラー角
-		Vector3& rotation = meshes[0].transform.rotation;
+		Vector3& rotation = model.worldTF.rotation;
 
 		// 目的の角度
 		Vector3 goalRotation = { 0.0f, 0.0f, 0.0f };

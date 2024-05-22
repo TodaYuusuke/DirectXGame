@@ -28,9 +28,9 @@ namespace LWP::Base {
 
 	private:
 		// DXGIデバイス
-		Microsoft::WRL::ComPtr<ID3D12Device> device_;
+		Microsoft::WRL::ComPtr<ID3D12Device2> device_;
 	public:
-		// DXGIデバイスを受け取る関数
-		ID3D12Device* GetDevice() const { return device_.Get(); }
+		// DXGIデバイス受け取る関数
+		ID3D12Device2* GetDevice() const { return device_.Get(); }
 	};
 }

@@ -196,9 +196,6 @@
     <ClCompile Include="Engine\base\directX\utility\HeapManager.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\PSO.cpp">
-      <Filter>Engine\base\directX\utility</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\RootSignature.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
@@ -271,6 +268,8 @@
     <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -519,9 +518,6 @@
     <ClInclude Include="Engine\base\directX\utility\HeapManager.h">
       <Filter>Engine\base\directX\utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\PSO.h">
-      <Filter>Engine\base\directX\utility</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\RootSignature.h">
       <Filter>Engine\base\directX\utility</Filter>
     </ClInclude>
@@ -629,6 +625,9 @@
     <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h" />
+    <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
+    <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
+    <ClInclude Include="Engine\base\directX\utility\PSO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

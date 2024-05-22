@@ -4,9 +4,28 @@
 #include "primitive/model/Skeleton.h"
 #include "primitive/model/SkinCluster.h"
 
+#include "base/directX/resource/data/ConstantBuffer.h"
+#include "base/directX/renderer/ResourceStruct.h"
+
 // 前方宣言
 namespace LWP::Base {
 	class RendererManager;
+}
+namespace LWP::Resource {
+	class Model;
+}
+
+// モデル別のデータの構造体
+namespace LWP::Base {
+	struct ModelStruct {
+		Base::WTFStruct wtf;
+		int32_t enableLighting;
+
+		ModelStruct() = default;
+		ModelStruct(const Resource::Model& value);
+		// Materialクラスのデータを代入する演算子をオーバーロード
+		ModelStruct& operator=(const Resource::Model& value);
+	};
 }
 
 namespace LWP::Resource {
@@ -30,6 +49,7 @@ namespace LWP::Resource {
 		// アクティブ切り替え
 		bool isActive = true;
 
+		Base::ConstantBuffer<Base::ModelStruct> buffer;
 
 	public: // ** メンバ関数 ** //
 
@@ -72,6 +92,10 @@ namespace LWP::Resource {
 		/// </summary>
 		void DebugGUI();
 
+		/// <summary>
+		/// 読み込み済みのパスを取得
+		/// </summary>
+		std::string LoadedFilePath() { return filePath; }
 
 	private: // ** メンバ変数 ** //
 

@@ -80,7 +80,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include;externals</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -89,7 +89,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <AdditionalDependencies>DirectXTex.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Externals\DirectXTex\lib\Debug;$(SolutionDir)Externals\assimp\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -110,7 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include;Externals</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -143,7 +144,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include;Externals</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -215,6 +216,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\RendererManager.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\BufferGroup.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
@@ -334,6 +336,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\BufferGroup.h" />
     <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\IRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
@@ -438,6 +441,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h" />
     <ClInclude Include="Engine\utility\PtrManager.h" />
     <ClInclude Include="Engine\utility\UI.h" />
+    <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx12.h" />

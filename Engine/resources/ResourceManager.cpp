@@ -139,6 +139,10 @@ ModelData* Manager::GetModelData(const std::string& filePath) {
 	assert(false);
 	return nullptr;
 }
+std::list<Model*>& Manager::GetModels() {
+	return models_.list;
+}
+
 
 Primitive::OldMeshData Manager::LoadAssimp(const std::string& filepath) {
 	Primitive::OldMeshData result{};	// 結果

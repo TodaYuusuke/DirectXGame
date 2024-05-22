@@ -59,12 +59,20 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstDirShadowView());
 		list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstPointShadowView());
 	};
+	std::function<void()> meshFunc = [&]() {
+		ID3D12GraphicsCommandList* list = commander_.List();
+		// 各種Viewをセット
+		buffers_.SetCommonView(2, list);
+		buffers_.SetDirLightView(8, list);
+		buffers_.SetPointLightView(9, list);
+	};
 
 	// シャドウレンダラー初期化
 	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
 	skinningRender_.Init(device, srv_, dxc_, skinningFunc);
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
+	meshRenderer_.Init(device, srv_, dxc_, meshFunc);
 	// ポストプロセスレンダラー初期化
 	ppRender_.Init();
 	// コピーレンダラー初期化
@@ -75,7 +83,7 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 }
 void RendererManager::DrawCall() {
 	// リストをポインタ化
-	ID3D12GraphicsCommandList* list = commander_.List();
+	ID3D12GraphicsCommandList6* list = commander_.List();
 
 	// ** 共通の設定を先にしておく ** //
 
@@ -89,6 +97,7 @@ void RendererManager::DrawCall() {
 	shadowRender_.DrawCall(list);
 	// 通常描画
 	skinningRender_.DrawCall(list);
+	meshRenderer_.DrawCall(list);
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
 	ppRender_.DrawCall(list);
@@ -101,6 +110,7 @@ void RendererManager::DrawCall() {
 	// 次のフレームのためにリセット
 	skinningRender_.Reset();
 	normalRender_.Reset();
+	meshRenderer_.Reset();
 	shadowRender_.Reset();
 	ppRender_.Reset();
 	copyRenderer_.Reset();
@@ -123,45 +133,6 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 
 		// 送信
 		sendTo(indexInfo);
-	}
-}
-void RendererManager::AddModelData(Resource::ModelData* data, const Resource::Model& modelIndex) {
-	// IndexInfo構造体に加工
-	IndexInfoStruct info = ProcessIndexInfo(data, modelIndex);
-	// データを書き込む先を設定
-	std::function<void(const IndexInfoStruct&)> sendTo = ProcessSendFunction(modelIndex);
-
-	// 全メッシュに行う
-	for (int m = 0; m < data->GetMeshCount(); m++) {
-		// Indexの分だけIndexInfoを求める
-		for (int i = 0; i < data->meshes_[m].GetIndexCount(); i++) {
-			IndexInfoStruct indexInfo = info;
-			// インデックス分ずらす
-			indexInfo.vertex += data->meshes_[m].indexes[i];
-			indexInfo.material += data->meshes_[m].materialIndex;
-
-			// テクスチャのインデックスを貰う
-			if (data->material_[data->meshes_[m].materialIndex].texture.t.GetIndex() != -1) {
-				indexInfo.tex2d = data->material_[data->meshes_[m].materialIndex].texture.t.GetIndex();
-			}
-			else {
-				indexInfo.tex2d = defaultTexture_.GetIndex();
-			}
-			// SRV上のオフセット分戻して考える
-			indexInfo.tex2d -= lwpC::Rendering::kMaxBuffer;
-
-			// 送信
-			sendTo(indexInfo);
-		}
-	}
-
-	// インフルエンスを追加
-	//for (int i = 0; i < modelIndex.skinCluster->mappedInfluence.size(); i++) {
-	//	skinningRender_.AddInfluenceData(modelIndex.skinCluster->mappedInfluence[i]);
-	//}
-	// MatrixPalette
-	for (int i = 0; i < modelIndex.skinCluster->mappedPalette.size(); i++) {
-		skinningRender_.AddMatrixPaletteData(modelIndex.skinCluster->mappedPalette[i]);
 	}
 }
 
@@ -233,43 +204,6 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 	return result;
 }
 
-IndexInfoStruct RendererManager::ProcessIndexInfo(Resource::ModelData* data, const Resource::Model& modelIndex) {
-	IndexInfoStruct result;
-
-	// あとでインデックス分ずらすので初期値
-	result.vertex = skinningRender_.vertexBuffer.GetCount();
-	result.material = buffers_.GetMaterialCount();
-
-	// 全メッシュに行う
-	for (int m = 0; m < data->GetMeshCount(); m++) {
-		// 頂点データを登録
-		for (int i = 0; i < data->meshes_[m].GetVertexCount(); i++) {
-			Primitive::SkinningVertexStruct ver;
-			ver = data->meshes_[m].vertices[i];
-			skinningRender_.vertexBuffer.Add(ver);	// データを追加
-		}
-	}
-
-	// マテリアルを登録
-	for (int i = 0; i < data->GetMaterialCount(); i++) {
-		MaterialStruct m;
-		m = data->material_[i];
-		m.enableLighting = modelIndex.enableLighting;
-		buffers_.AddData(m);	// データを追加
-	}
-
-	// ワールドトランスフォームをデータに登録
-	WTFStruct wtf;
-	wtf = modelIndex.worldTF;
-	result.worldMatrix = buffers_.AddData(wtf);
-
-	
-	// isUiセット
-	result.isUI = false;
-
-	return result;
-}
-
 std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(Primitive::IPrimitive* primitive) {
 	// Spriteのとき
 	if (dynamic_cast<Primitive::Sprite*>(primitive)) {
@@ -299,16 +233,4 @@ std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction
 
 		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexData(index); };
 	}
-}
-
-std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(const Resource::Model& model) {
-	// シャドウマップにも描画するか確認
-	if (model.enableLighting) {
-		return [this](const IndexInfoStruct& index) {
-			skinningRender_.AddIndexData(index);
-			shadowRender_.AddIndexData(index);
-		};
-	}
-
-	return [this](const IndexInfoStruct& index) { skinningRender_.AddIndexData(index); };
 }

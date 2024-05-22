@@ -15,6 +15,9 @@ void Mesh::Load(aiMesh* mesh) {
 	// 法線を持っているか取得
 	bool hasNormal = mesh->HasNormals();
 
+	// マテリアルインデックス取得
+	materialIndex = mesh->mMaterialIndex;
+
 	// Vertexの解析
 	for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++) {
 		SkinningVertex newVertex;
@@ -40,6 +43,9 @@ void Mesh::Load(aiMesh* mesh) {
 		else {
 			newVertex.v.normal = newVertex.v.position;
 		}
+
+		// マテリアル番号を頂点に保持
+		newVertex.v.materialIndex = materialIndex;
 
 		// 頂点データを追加
 		vertices.push_back(newVertex);
@@ -106,7 +112,4 @@ void Mesh::Load(aiMesh* mesh) {
 	//		}
 	//	}
 	//}
-
-	// マテリアルインデックス取得
-	materialIndex = mesh->mMaterialIndex;
 }

@@ -19,7 +19,7 @@ namespace LWP::Primitive {
 		Math::Vector2 texCoord = { 0.0f,0.0f };		// UV座標
 		Math::Vector3 normal = { 0.0f,0.0f,0.0f };	// 法線
 		Utility::Color color = { 255,255,255,255 };	// 色
-
+		uint32_t materialIndex = 0;
 
 	public: // ** メンバ関数 ** //
 
@@ -45,13 +45,19 @@ namespace LWP::Base {
 		Math::Vector2 texCoord_;	// UV座標
 		Math::Vector3 normal_;		// 法線
 		Math::Vector4 color_;	// 色
+		uint32_t materialIndex_;	// 適応されるマテリアルの番号
 
+		VertexStruct() = default;
+		VertexStruct(const Primitive::Vertex& value) {
+			*this = value;
+		}
 		// IPrimitiveのVertexを代入する演算子をオーバーロード
 		VertexStruct& operator=(const Primitive::Vertex& value) {
 			position_ = { value.position.x,value.position.y,value.position.z,1.0f };
 			texCoord_ = value.texCoord;
 			normal_ = value.normal;
 			color_ = value.color.GetVector4();
+			materialIndex_ = value.materialIndex;
 			return *this;
 		}
 	};

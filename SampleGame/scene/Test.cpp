@@ -10,15 +10,13 @@ using namespace LWP::Object;
 
 // 初期化
 void Test::Initialize() {
-	// カメラにポストプロセス用の設定
-	mainCamera.pp.CreatePSO("postProcess/PostProcess.PS.hlsl");
-	subCamera.pp.CreatePSO("postProcess/PostProcess.PS.hlsl");
 	// デバッグ情報表示
 	Info::ChangeShowDebugGUI();
 
+	//mesh.LoadShortPath("cube/cube.obj");
 	mesh.LoadShortPath("human/walk.gltf");
-	anim.LoadAnimationLongPath("resources/model/human/walk.gltf", &mesh);
-	anim.Start();
+	//anim.LoadAnimationLongPath("resources/model/human/walk.gltf", &mesh);
+	//anim.Start();
 
 	sprite.texture = subCamera.GetTexture();
 

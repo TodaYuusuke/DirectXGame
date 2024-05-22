@@ -77,7 +77,7 @@ namespace LWP::Base {
 		// dxcのコンパイラオブジェクト
 		ID3D12CommandAllocator* Allocator() { return allocator_.Get(); }
 		// hlslファイル内でコンパイルするファイルの処理を行うハンドラ
-		ID3D12GraphicsCommandList* List() { return list_.Get(); }
+		ID3D12GraphicsCommandList6* List() { return list_.Get(); }
 
 
 	private: // ** メンバ変数 ** //
@@ -87,7 +87,7 @@ namespace LWP::Base {
 		// アロケーター
 		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator_;
 		// リスト
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> list_;
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList6> list_;
 
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;

@@ -52,7 +52,7 @@ namespace LWP::Base {
 		/// 描画命令（平行光源）
 		/// </summary>
 		/// <param name="list">コマンドリストのポインタ/param>
-		void DrawCall(ID3D12GraphicsCommandList* list);
+		void DrawCall(ID3D12GraphicsCommandList6* list);
 
 		/// <summary>
 		/// インデックスデータを追加
@@ -79,9 +79,21 @@ namespace LWP::Base {
 		// PSO
 		PSO pso_;
 
+		// MeshShader用
+		RootSignature MSroot_;	// RootSignature
+		PSO MSpso_;	// PSO
+
 		// ターゲット（Direction）
 		std::list<Target<SM_Direction>> targetDir_;
 		// ターゲット（Point）
 		std::list<TargetPoint> targetPoint_;
+
+
+	private: // ** プライベートなメンバ関数 ** //
+
+		/// <summary>
+		/// 全てのモデルをターゲットに描画する関数
+		/// </summary>
+		void DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS view);
 	};
 }

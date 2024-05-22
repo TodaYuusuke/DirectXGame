@@ -14,6 +14,8 @@ namespace LWP::Primitive {
 	class Material final {
 	public: // ** パブリックなメンバ変数 ** //
 
+		// ライテイングを行うか
+		bool enableLighting = true;
 		// uvTransform
 		Object::TransformEuler uvTransform;
 		// 光沢度
@@ -62,12 +64,13 @@ namespace LWP::Base {
 		Math::Matrix4x4 uvMatrix;
 		int32_t enableLighting;
 		float shininess;
+		int32_t textureIndex;
 
-		// Materialクラスのデータを代入する演算子をオーバーロード
-		MaterialStruct& operator=(const Primitive::Material& value) {
-			uvMatrix = value.uvTransform.GetAffineMatrix();
-			shininess = value.shininess;
-			return *this;
+		MaterialStruct() = default;
+		MaterialStruct(const Primitive::Material& value) {
+			*this = value;
 		}
+		// Materialクラスのデータを代入する演算子をオーバーロード
+		MaterialStruct& operator=(const Primitive::Material& value);
 	};
 }

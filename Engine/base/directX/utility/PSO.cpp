@@ -5,49 +5,82 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc) {
-	// ルートシグネチャをセットする
-	desc_.pRootSignature = root;
-	// DXCもセットしておく
+PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc, Type type) {
+	// タイプによって使用するdescを変更
+	type_ = type;
+	if (type_ == Type::Vertex) {
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC& d = desc_.vertex;
+		// ルートシグネチャをセットする
+		d.pRootSignature = root;
+
+		// -- デフォルトのパラメータセットをしておく -- //
+
+		d.pRootSignature = root;	// RootSignature
+		d.InputLayout = CreateInputLayout();		// InputLayout
+		d.BlendState = CreateBlendState();			// BlendState
+		d.RasterizerState = CreateRasterizerState();	// RasterizerState
+		// VertexShaderとPixelShaderはデフォルトで空にしておく
+		d.DepthStencilState = CreateDepthStencilState();
+		d.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		// 書き込むRTVの情報
+		d.NumRenderTargets = 1;
+		d.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		// 利用するトポロジ（形状）のタイプ。三角形
+		d.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		// どのように画面に色を打ち込むかの設定（気にしなくて良い）	
+		d.SampleDesc.Count = 1;
+		d.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	}
+	else if(type_ == Type::Mesh){
+		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC& d = desc_.mesh;
+		// ルートシグネチャをセットする
+		d.pRootSignature = root;
+
+		// -- デフォルトのパラメータセットをしておく -- //
+
+		d.pRootSignature = root;	// RootSignature
+		d.BlendState = CreateBlendState();			// BlendState
+		d.RasterizerState = CreateRasterizerState();	// RasterizerState
+		// VertexShaderとPixelShaderはデフォルトで空にしておく
+		d.DepthStencilState = CreateDepthStencilState();
+		d.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		// 書き込むRTVの情報
+		d.NumRenderTargets = 1;
+		d.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		// 利用するトポロジ（形状）のタイプ。三角形
+		d.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		// どのように画面に色を打ち込むかの設定（気にしなくて良い）	
+		d.SampleDesc.Count = 1;
+		d.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	}
+	// DXCをセットしておく
 	dxc_ = dxc;
-
-	// -- デフォルトのパラメータセットをしておく -- //
-
-	desc_.pRootSignature = root;	// RootSignature
-	desc_.InputLayout = CreateInputLayout();		// InputLayout
-	desc_.BlendState = CreateBlendState();			// BlendState
-	desc_.RasterizerState = CreateRasterizerState();	// RasterizerState
-	// VertexShaderとPixelShaderはデフォルトで空にしておく
-	desc_.DepthStencilState = CreateDepthStencilState();
-	desc_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	// 書き込むRTVの情報
-	desc_.NumRenderTargets = 1;
-	desc_.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	// 利用するトポロジ（形状）のタイプ。三角形
-	desc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	// どのように画面に色を打ち込むかの設定（気にしなくて良い）	
-	desc_.SampleDesc.Count = 1;
-	desc_.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 	return *this;
 }
 PSO& PSO::SetInputLayout() {
-	/* 頂点はバッファーで送信するので、InputLayoutは不要
-	// 頂点レイアウト
-	static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
+	if (type_ == Type::Vertex) {
+		/* 頂点はバッファーで送信するので、InputLayoutは不要
+		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		};
+		
+		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
+		inputLayoutDesc.pInputElementDescs = inputElementDescs;
+		inputLayoutDesc.NumElements = _countof(inputElementDescs);
+		*/
 
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
-	*/
+		// 虚無をセットしておく
+		desc_.vertex.InputLayout = D3D12_INPUT_LAYOUT_DESC();
+	}
+	else {
+		// Meshのときは使わないのでエラー
+		assert(type_ == Type::Mesh);
+	}
 
-	// 虚無をセットしておく
-	desc_.InputLayout = D3D12_INPUT_LAYOUT_DESC();
 	return *this;
 }
 PSO& PSO::SetBlendState() {
@@ -64,7 +97,13 @@ PSO& PSO::SetBlendState() {
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	// セット
-	desc_.BlendState = blendDesc;
+	if (type_ == Type::Vertex) {
+		desc_.vertex.BlendState = blendDesc;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.vertex.BlendState = blendDesc;
+	}
+
 	return *this;
 }
 PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {
@@ -75,10 +114,32 @@ PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode)
 	rasterizerDesc.FillMode = fillMode;
 
 	// セット
-	desc_.RasterizerState = rasterizerDesc;
+	if (type_ == Type::Vertex) {
+		desc_.vertex.RasterizerState = rasterizerDesc;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.vertex.RasterizerState = rasterizerDesc;
+	}
+	return *this;
+}
+PSO& PSO::SetMeshShader(std::string filePath) {
+	// Mesh以外ならセットしないのでエラー
+	assert(type_ == Type::Mesh);
+	// 空ならコンパイルしない
+	if (filePath.empty()) { return *this; }
+
+	// シェーダーをコンパイルする
+	IDxcBlob* blob = nullptr;
+	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ms_6_5");
+	assert(blob != nullptr);
+
+	// セット
+	desc_.mesh.MS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
 PSO& PSO::SetVertexShader(std::string filePath) {
+	// Vertex以外ならセットしないのでエラー
+	assert(type_ == Type::Vertex);
 	// 空ならコンパイルしない
 	if (filePath.empty()) { return *this; }
 	
@@ -88,7 +149,7 @@ PSO& PSO::SetVertexShader(std::string filePath) {
 	assert(blob != nullptr);
 
 	// セット
-	desc_.VS = { blob->GetBufferPointer(),blob->GetBufferSize() };
+	desc_.vertex.VS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
 PSO& PSO::SetPixelShader(std::string filePath) {
@@ -97,11 +158,17 @@ PSO& PSO::SetPixelShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ps_6_0");
+	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ps_6_5");
 	assert(blob != nullptr);
 
 	// セット
-	desc_.PS = { blob->GetBufferPointer(),blob->GetBufferSize() };
+	if (type_ == Type::Vertex) {
+		desc_.vertex.PS = { blob->GetBufferPointer(),blob->GetBufferSize() };
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.PS = { blob->GetBufferPointer(),blob->GetBufferSize() };
+	}
+
 	return *this;
 }
 PSO& PSO::SetDepthStencilState(bool enable) {
@@ -111,23 +178,53 @@ PSO& PSO::SetDepthStencilState(bool enable) {
 	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
 	
 	// セット
-	desc_.DepthStencilState = depthStencilDesc;
+	if (type_ == Type::Vertex) {
+		desc_.vertex.DepthStencilState = depthStencilDesc;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.DepthStencilState = depthStencilDesc;
+	}
 	return *this;
 }
 PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
 	// セット
-	desc_.DSVFormat = format;
+	if (type_ == Type::Vertex) {
+		desc_.vertex.DSVFormat = format;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.DSVFormat = format;
+	}
+
 	return *this;
 }
 PSO& PSO::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
 	// セット
-	desc_.PrimitiveTopologyType = type;
+	if (type_ == Type::Vertex) {
+		desc_.vertex.PrimitiveTopologyType = type;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.PrimitiveTopologyType = type;
+	}
+
 	return *this;
 }
-void PSO::Build(ID3D12Device* device) {
+void PSO::Build(ID3D12Device2* device) {
 	HRESULT hr = S_FALSE;
 	// 実際に生成
-	hr = device->CreateGraphicsPipelineState(&desc_, IID_PPV_ARGS(&state_));
+	if (type_ == Type::Vertex) {
+		hr = device->CreateGraphicsPipelineState(&desc_.vertex, IID_PPV_ARGS(&state_));
+	}
+	else if (type_ == Type::Mesh) {
+		// PSOの型を指定形式に変換
+		auto stream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc_.mesh);
+		// PSOの設定を対応したものに変換する
+		D3D12_PIPELINE_STATE_STREAM_DESC streamDesc;
+		streamDesc.pPipelineStateSubobjectStream = &stream;
+		streamDesc.SizeInBytes = sizeof(stream);
+
+		// 設定を元に実際に生成を行う
+		hr = device->CreatePipelineState(&streamDesc, IID_PPV_ARGS(&state_));
+	}
 	assert(SUCCEEDED(hr));
 }
 

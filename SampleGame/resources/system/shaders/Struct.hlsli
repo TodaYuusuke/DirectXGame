@@ -3,6 +3,7 @@ struct Vertex {
     float32_t2 texcoord;
     float32_t3 normal;
     float32_t4 color;
+    int32_t mIndex; // !< MaterialIndex
 };
 struct WorldTransform {
     float32_t4x4 wtf;
@@ -22,6 +23,7 @@ struct Material {
     float32_t4x4 uvTransform;
     int32_t enableLighting;
     float32_t shinines;
+    int32_t tIndex; // !< TextureIndex
 };
 
 struct DirectionalLight {
