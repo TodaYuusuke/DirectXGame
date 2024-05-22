@@ -21,9 +21,9 @@ namespace LWP::Resource {
 		~Texture() = default;
 
 		// サイズを取得する関数
-		Math::Vector2 GetSize() { return size_; }
+		Math::Vector2 GetSize() const { return size_; }
 		// インデックスを取得
-		int GetIndex() { return index_; }
+		int GetIndex() const { return index_; }
 
 
 	private: // ** メンバ変数 ** //

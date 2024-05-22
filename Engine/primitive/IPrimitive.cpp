@@ -95,6 +95,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 			if (name.empty()) { name = "noName"; }
 		}
 		ImGui::Checkbox("isUI", &isUI);			// 2D描画
+		ImGui::Checkbox("enableLighting", &enableLighting);
 		ImGui::Checkbox("isWireFrame", &isWireFrame);	// アクティブ切り替え
 		ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
 		ImGui::Text("- Below this are unique variables - ");

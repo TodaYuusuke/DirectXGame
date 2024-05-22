@@ -17,11 +17,11 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// ビル群
-	LWP::Primitive::Mesh buildings[6];
+	LWP::Resource::Model buildings[6];
 	// スカイドーム
-	LWP::Primitive::Mesh skydome;
+	LWP::Resource::Model skydome;
 	// 地面
-	LWP::Primitive::Mesh ground;
+	LWP::Resource::Model ground;
 
 
 	// プレイヤー

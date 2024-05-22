@@ -17,8 +17,6 @@ HeapManager::HeapManager(GPUDevice* gpuDevice) {
 }
 
 void HeapManager::DebugGUI() {
-	ImGui::ShowDemoWindow();
-
 #if DEMO
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 

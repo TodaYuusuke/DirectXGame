@@ -1,5 +1,5 @@
 #include "TransformQuat.h"
-#include "primitive/Node.h"
+#include "primitive/model/Node.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Object;
@@ -28,19 +28,19 @@ void TransformQuat::Init() {
 	scale = { 1.0f, 1.0f, 1.0f };
 }
 
-Matrix4x4 TransformQuat::GetWorldMatrix() const {
+Matrix4x4 TransformQuat::GetAffineMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
-		result = result * parent_->t->GetWorldMatrix();
+		result = result * parent_->t->GetAffineMatrix();
 	}
 	return result;
 }
-Matrix4x4 TransformQuat::GetWorldMatrix(Primitive::Node* node) const {
-	Math::Matrix4x4 result = node->localMatrix * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+Matrix4x4 TransformQuat::GetAffineMatrix(Primitive::Node* node) const {
+	Math::Matrix4x4 result = node->GetLocalMatrix() * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
 	if (parent_) {
-		result = result * parent_->t->GetWorldMatrix();
+		result = result * parent_->t->GetAffineMatrix();
 	}
 	return result;
 }
@@ -54,7 +54,7 @@ Matrix4x4 TransformQuat::GetTranslationMatrix() const {
 	return result;
 }
 Vector3 TransformQuat::GetWorldPosition() const {
-	Math::Matrix4x4 worldMatrix = GetWorldMatrix();
+	Math::Matrix4x4 worldMatrix = GetAffineMatrix();
 	return { worldMatrix.m[3][0],worldMatrix.m[3][1],worldMatrix.m[3][2] };
 }
 Matrix4x4 TransformQuat::GetRotateMatrix() const {

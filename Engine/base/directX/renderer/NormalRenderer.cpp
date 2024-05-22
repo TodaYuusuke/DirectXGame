@@ -50,7 +50,7 @@ void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC*
 
 void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	// 配列化
-	RenderData* ary[4] = { &normal_ ,&wireframe_, &billboard2D_, &billboard3D_ };
+	RenderData* ary[4] = { &normal_, &wireframe_, &billboard2D_, &billboard3D_ };
 
 	// ImGuiの読み込み終了
 	ImGui::EndFrame();
@@ -67,9 +67,9 @@ void NormalRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		D3D12_RESOURCE_STATES beforeBarrier = it->back->GetBarrier();
 		it->back->ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 		// 全画面クリア
-		it->back->Clear(list);
+		//it->back->Clear(list);
 		// 指定した深度で画面全体をクリアする
-		it->depth->Clear(list);
+		//it->depth->Clear(list);
 
 		// ビューポート
 		D3D12_VIEWPORT viewport = {};

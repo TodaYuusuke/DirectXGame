@@ -53,6 +53,10 @@ namespace LWP::Base {
 		/// 頂点データの数を取得
 		/// </summary>
 		int GetVertexCount() { return vertex_->GetCount(); }
+		/// <summary>
+		/// マテリアルデータの数を取得
+		/// </summary>
+		int GetMaterialCount() { return material_->GetCount(); }
 
 		/// <summary>
 		/// データをセット

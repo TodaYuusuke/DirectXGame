@@ -14,7 +14,9 @@ namespace LWP::Base::PostProcess {
 
 
 	private: // ** メンバ変数 ** //
-
+		struct Data {
+			float i;
+		};
 		Base::ConstantBuffer<float> buffer_;
 
 	public: // ** メンバ関数 ** //

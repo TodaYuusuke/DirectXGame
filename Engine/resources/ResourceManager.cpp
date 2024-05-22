@@ -1,7 +1,6 @@
 #include "ResourceManager.h"
 
 #include "math/Math.h"
-#include "primitive/3d/Mesh.h"
 #include "utility/ErrorReporter.h"
 #include "base/DirectXCommon.h"
 
@@ -10,10 +9,6 @@
 #include <fstream>
 #include <sstream>
 
-// assimpの読み込み
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -29,7 +24,7 @@ Manager::~Manager() {
 	// オーディオ解放
 	audioMap_.clear();
 	// モデル解放
-	meshDataMap_.clear();
+	modelDataMap_.clear();
 }
 
 void Manager::Initialize() {
@@ -50,6 +45,40 @@ void Manager::Update() {
 	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
 	for (Motion* m : motions_.list) { m->Update(); }
+	// モデルアダプター更新
+	for (Model* m : models_.list) { m->Update(); }
+
+#if DEMO
+	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+	if (ImGui::BeginTabBar("LWP")) {
+		if (ImGui::BeginTabItem("Resource")) {
+			// 形状一覧
+			if (!models_.list.empty()) {
+				std::vector<const char*> itemText;
+				for (int i = 0; i < models_.list.size(); i++) {
+					std::string str = "Model_" + std::to_string(i);
+					itemText.push_back(str.c_str());
+				}
+				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+				(*Utility::GetIteratorAtIndex<Model*>(models_.list, currentItem))->DebugGUI();
+			}
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+#endif
+}
+// 描画
+void Manager::Draw(Base::RendererManager* render) {
+	//// StructerdBufferにデータをセット済みかを保持するフラグを初期化
+	//for (std::map<std::string, ModelData>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+	//	it->second.isLoadedRenderer = false;
+	//}
+
+	// 必要な分モデルを描画
+	for (Model* m : models_.list) { m->Draw(render); }
 }
 
 Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
@@ -79,24 +108,44 @@ AudioData* Manager::LoadAudioLongPath(const std::string& filepath) {
 	}
 	return &audioMap_[filepath];
 }
-
-const Primitive::MeshData& Manager::LoadMesh(const std::string& filepath) {
-	return LoadMeshLongPath(meshDirectoryPath_ + filepath);
+Primitive::OldMeshData* Manager::LoadOldMesh(const std::string& filepath) {
+	return LoadOldMeshLongPath(oldMeshDirectoryPath_ + filepath);
 }
-const Primitive::MeshData& Manager::LoadMeshLongPath(const std::string& filepath) {
+Primitive::OldMeshData* Manager::LoadOldMeshLongPath(const std::string& filepath) {
 	// 読み込み済みかをチェック
-	if (!meshDataMap_.count(filepath)) {
+	if (!oldMeshMap_.count(filepath)) {
 		// 新しいテクスチャをロード
-		//meshDataMap_[filepath];	// 要素は自動追加されるらしい
-		// 現在はobjのみ読み込み可
-		//LoadObj(&meshDataMap_[filepath], filepath);
-		meshDataMap_[filepath] = LoadAssimp(filepath);
+		oldMeshMap_[filepath] = LoadAssimp(filepath);
 	}
-	return meshDataMap_[filepath];
+	return &oldMeshMap_[filepath];
 }
 
-Primitive::MeshData Manager::LoadAssimp(const std::string& filepath) {
-	Primitive::MeshData result{};	// 結果
+// モデルのデータを読み込む関数
+void Manager::LoadModelData(const std::string& filePath) {
+	// 読み込み済みかをチェック
+	if (!modelDataMap_.count(filePath)) {
+		// 読み込んだことのない3Dモデルなので読み込む
+		modelDataMap_[filePath].Load(filePath);	// 要素は自動追加されるらしい;
+	}
+}
+ModelData* Manager::GetModelData(const std::string& filePath) {
+	// 読み込み済みかをチェック
+	if (modelDataMap_.count(filePath)) {
+		// 読み込み済みだったので返す
+		return &modelDataMap_[filePath];
+	}
+
+	// 読み込めていないモデルなのでエラー
+	assert(false);
+	return nullptr;
+}
+std::list<Model*>& Manager::GetModels() {
+	return models_.list;
+}
+
+
+Primitive::OldMeshData Manager::LoadAssimp(const std::string& filepath) {
+	Primitive::OldMeshData result{};	// 結果
 
 	Assimp::Importer importer;
 	// ファイル読み込み（三角形の並び順を逆にする | UVをフリップする | 四角形以上のポリゴンを三角形に自動分割）
@@ -118,7 +167,7 @@ Primitive::MeshData Manager::LoadAssimp(const std::string& filepath) {
 			newVertex.position = { -position.x, position.y, position.z }; // 頂点座標追加
 
 			// uv座標チェック
-			if(hasTexcoord) {
+			if (hasTexcoord) {
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex]; // テクスチャ座標取得
 				newVertex.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
 			}
@@ -163,10 +212,10 @@ Primitive::MeshData Manager::LoadAssimp(const std::string& filepath) {
 		}
 
 		// ノード情報を格納
-		if (scene->mRootNode) {
-			result.node.ReadNode(scene->mRootNode);
-		}
+		//if (scene->mRootNode) {
+		//	result.node.ReadNode(scene->mRootNode);
+		//}
 	}
-	
+
 	return result;
 }

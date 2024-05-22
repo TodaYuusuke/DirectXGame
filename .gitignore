@@ -29,6 +29,8 @@ bld/
 #[Oo]bj/
 [Ll]og/
 [Ll]ogs/
+!/Externals/DirectXMesh/lib/Debug/
+!/Externals/DirectXMesh/lib/Release/
 !/Externals/DirectXTex/lib/Debug/
 !/Externals/DirectXTex/lib/Release/
 !/Externals/assimp/lib/Debug/

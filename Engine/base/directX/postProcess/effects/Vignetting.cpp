@@ -23,12 +23,11 @@ struct VignettingData {
 ConstantBuffer<VignettingData> vData : register(b${v});
 
 float32_t3 Vignetting(float32_t2 uv, float32_t3 color) {
-	float32_t2 correct = uv * (1.0f - uv.yx);
+	float32_t2 correct = uv * (1.0f - uv.xy);
 	float vignette = correct.x * correct.y * 16.0f;
 	vignette = saturate(pow(vignette, 0.8f));
 	return color * vignette;
-}
-)";
+})";
 	// 変数で値を書き換え
 	size_t pos;
 	while ((pos = str.find("${v}")) != std::string::npos) {

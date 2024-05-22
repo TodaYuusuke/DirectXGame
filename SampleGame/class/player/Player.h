@@ -14,9 +14,10 @@ private:
 	// プレイヤーの速度
 	const float kPlayerSpeed = 0.1f;
 	// 3Dモデル
-	LWP::Primitive::Mesh meshes[4];
+	LWP::Resource::Model model;
 	// アニメーション
-	LWP::Resource::Animation idleAnim[4];
+	LWP::Resource::Animation walkAnim;
+	
 
 	// クォータニオンの使い方がわからなかったので臨時でオイラー角で対応
 	LWP::Math::Vector3 euler;

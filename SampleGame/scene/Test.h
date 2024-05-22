@@ -15,7 +15,8 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Mesh mesh;
+	LWP::Resource::Model mesh;
+	//LWP::Resource::Animation anim;
 	LWP::Primitive::Sprite sprite;
 	LWP::Object::Camera subCamera;
 

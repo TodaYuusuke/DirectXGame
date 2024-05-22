@@ -5,14 +5,6 @@
 #include "base/directX/resource/rendering/DepthStencil.h"
 #include "base/directX/utility/DXC.h"
 
-// 前方宣言
-namespace LWP::Primitive {
-	class IPrimitive;
-	class Billboard2D;
-	class Billboard3D;
-	class Sprite;
-}
-
 namespace LWP::Base {
 	/// <summary>
 	/// 通常描画のレンダラー

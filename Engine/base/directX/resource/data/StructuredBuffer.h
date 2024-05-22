@@ -85,10 +85,12 @@ namespace LWP::Base {
 		// データの最大数
 		const uint32_t kMaxSize;
 
+	public: // ** パブリックなメンバ変数 ** //
 
-	private: // ** メンバ変数 ** //
 		// 実際のデータ
 		T* data_ = nullptr;
+
+	private: // ** メンバ変数 ** //
 		// SRV上の登録データ
 		SRVInfo info;
 

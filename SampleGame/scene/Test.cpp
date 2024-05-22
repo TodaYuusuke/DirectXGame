@@ -13,9 +13,16 @@ void Test::Initialize() {
 	// デバッグ情報表示
 	Info::ChangeShowDebugGUI();
 
-	mesh.LoadFile("skydome/skydome.obj");
+	//mesh.LoadShortPath("cube/cube.obj");
+	mesh.LoadShortPath("human/walk.gltf");
+	//anim.LoadAnimationLongPath("resources/model/human/walk.gltf", &mesh);
+	//anim.Start();
 
 	sprite.texture = subCamera.GetTexture();
+
+	mainCamera.isActive = true;
+	mainCamera.pp.use = true;
+	mainCamera.pp.vignetting.use = true;
 }
 
 // 更新

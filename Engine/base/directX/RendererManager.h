@@ -4,6 +4,8 @@
 #include "renderer/ShadowRenderer.h"
 #include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
+#include "renderer/SkinningRenderer.h"
+#include "renderer/MeshRenderer.h"
 #include "renderer/BufferGroup.h"
 
 #include "object/core/Particle.h"
@@ -14,6 +16,17 @@ namespace LWP::Object {
 	class DirectionLight;
 	class PointLight;
 }
+namespace LWP::Primitive {
+	class IPrimitive;
+	class Billboard2D;
+	class Billboard3D;
+	class Sprite;
+}
+namespace LWP::Resource {
+	class ModelData;
+	class Model;
+}
+
 
 namespace LWP::Base {
 	/// <summary>
@@ -23,7 +36,7 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
-		/// デフォルトコンストラクタ
+		/// デフォルトコンストラクタ 
 		/// </summary>
 		RendererManager() = default;
 		/// <summary>
@@ -99,6 +112,10 @@ namespace LWP::Base {
 	private:
 		// レンダラー
 		NormalRenderer normalRender_;
+		// スキニング
+		SkinningRenderer skinningRender_;
+		// メッシュシェーダー
+		MeshRenderer meshRenderer_;
 	public:
 		/// <summary>
 		/// ターゲットセット
@@ -106,7 +123,11 @@ namespace LWP::Base {
 		/// <param name="view">カメラデータのView</param>
 		/// <param name="back">BackBuffer（RenderRsource）</param>
 		/// <param name="depth">DepthStencil</param>
-		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { normalRender_.AddTarget({ view, back, depth }); }
+		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { 
+			normalRender_.AddTarget({ view, back, depth });
+			skinningRender_.AddTarget({ view, back, depth });
+			meshRenderer_.AddTarget({ view, back, depth });
+		}
 #pragma endregion
 
 #pragma region シャドウマッピング
