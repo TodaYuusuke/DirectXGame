@@ -26,7 +26,7 @@ float3 DirectionLightingShadow(VertexOutPut input, uint32_t n)
     posSM.x = (1.0f + posSM.x) / 2.0f;
     posSM.y = (1.0f - posSM.y) / 2.0f;
     float depth = gDirectionShadowMap[0].Sample(gDirectionShadowMapSampler, posSM.xy);
-    return (posSM.z - 0.00000075f < depth) ? 1.0f : kShadowDensity;
+    return (posSM.z - 0.00005f < depth) ? 1.0f : kShadowDensity;
 }
 
 
