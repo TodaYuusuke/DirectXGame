@@ -13,13 +13,14 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 	setViewFunction_ = func;	// 関数セット
 
 	// RootSignatureを生成
-	rigid_.root.AddCBVParameter(0, SV_All)	// カメラのView
-		.AddCBVParameter(1, SV_All)	// トランスフォーム
-		.AddCBVParameter(2, SV_All)	// 共通データ
+	rigid_.root
 		.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
 		.AddTableParameter(3, SV_All)	// プリミティブインデックス
+		.AddCBVParameter(2, SV_All)	// トランスフォーム
+		.AddCBVParameter(0, SV_All)	// 共通データ
+		.AddCBVParameter(1, SV_All)	// カメラのView
 		.AddTableParameter(4, SV_Pixel)	// マテリアル
 		.AddTableParameter(5, SV_Pixel)	// 平行光源
 		.AddTableParameter(6, SV_Pixel)	// 点光源
@@ -80,7 +81,7 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		list->RSSetScissorRects(1, &scissorRect);
 
 		// Viewをセット
-		list->SetGraphicsRootConstantBufferView(0, it->view);	// カメラ
+		list->SetGraphicsRootConstantBufferView(6, it->view);	// カメラ
 		setViewFunction_();
 		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstTexView());	// テクスチャ
 		list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstDirShadowView());		// 平行光源シャドウ
@@ -107,12 +108,12 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list) {
 		ModelData* data = GetModel(m->LoadedFilePath());
 
 		// ConstantBufferのViewをセット
-		list->SetGraphicsRootConstantBufferView(1, m->buffer.GetGPUView());
+		list->SetGraphicsRootConstantBufferView(4, m->buffer.GetGPUView());
 		// ModelのStructerdBufferのViewをセット
-		list->SetGraphicsRootDescriptorTable(3, data->buffers_.meshlet->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(4, data->buffers_.vertex->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(5, data->buffers_.uniqueVertexIndices->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(6, data->buffers_.primitiveIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(0, data->buffers_.meshlet->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(1, data->buffers_.vertex->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(2, data->buffers_.uniqueVertexIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(3, data->buffers_.primitiveIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(7, data->buffers_.materials->GetGPUView());
 
 		// メッシュレットのプリミティブ数分メッシュシェーダーを実行

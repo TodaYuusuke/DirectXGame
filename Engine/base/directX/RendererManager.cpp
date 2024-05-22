@@ -62,7 +62,7 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 	std::function<void()> meshFunc = [&]() {
 		ID3D12GraphicsCommandList* list = commander_.List();
 		// 各種Viewをセット
-		buffers_.SetCommonView(2, list);
+		buffers_.SetCommonView(5, list);
 		buffers_.SetDirLightView(8, list);
 		buffers_.SetPointLightView(9, list);
 	};

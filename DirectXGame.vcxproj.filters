@@ -757,24 +757,4 @@
       <UniqueIdentifier>{a22509c4-b405-4685-9374-18ea4100d5e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard2D.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard3D.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
 </Project>

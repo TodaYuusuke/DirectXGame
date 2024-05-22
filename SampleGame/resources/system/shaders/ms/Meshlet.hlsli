@@ -1,27 +1,44 @@
 #include "MSStruct.hlsli"
 
-//ConstantBuffer<ConstantData>     ConstantData : register(b0);
-//ConstantBuffer<WorldTransform>   Transform    : register(b2);
-//ConstantBuffer<Material>         material     : register(b3);
+// ModelData
+StructuredBuffer<Meshlet>    mMeshlets            : register(t0);
+StructuredBuffer<Vertex> mVertices            : register(t1);
+ByteAddressBuffer            mUniqueVertexIndices : register(t2);
+StructuredBuffer<uint32_t>   mPrimitiveIndices    : register(t3);
 
-ConstantBuffer<CameraData> gCameraData : register(b0);
-ConstantBuffer<ModelData> gModelData : register(b1);
-ConstantBuffer<CommonData> gCommonData : register(b2);
+// InstanceData
+ConstantBuffer<InstanceData> InstanceData : register(b2);
 
-// Required
-StructuredBuffer<Meshlet>    Meshlets            : register(t0);
-StructuredBuffer<Vertex> Vertices            : register(t1);
-ByteAddressBuffer            UniqueVertexIndices : register(t2);
-StructuredBuffer<uint32_t>   PrimitiveIndices    : register(t3);
+// CommonBuffers
+ConstantBuffer<CommonData> cCommonData : register(b0);
+ConstantBuffer<Camera> cCamera : register(b1);
+StructuredBuffer<Material> cMaterials : register(t4);
+StructuredBuffer<DirectionalLight> cDLights : register(t5);
+StructuredBuffer<PointLight> cPLights : register(t6);
 
-// more
-StructuredBuffer<Material> Materials : register(t4);
-StructuredBuffer<DirectionalLight> DLight : register(t5);
-StructuredBuffer<PointLight> PLight : register(t6);
+Texture2D<float32_t4> tTexture[500] : register(t7);
+Texture2D<float> tDLightSM[1] : register(t507);
+TextureCube<float> tPLightSM[8] : register(t508);
 
-Texture2D<float32_t4> gTexture[500] : register(t7);
-SamplerState gSampler : register(s0);
-Texture2D<float> gDirectionShadowMap[1] : register(t507);
-SamplerState gDirectionShadowMapSampler : register(s1);
-TextureCube<float> gPointShadowMap[8] : register(t508);
-SamplerState gPointShadowMapSampler : register(s2);
+SamplerState sTexSmp : register(s0);
+SamplerState sDLightSMSmp : register(s1);
+SamplerState sPLightSMSmp : register(s2);
+
+// ** Functions ** //
+
+uint32_t3 UnpackPrimitive(uint primitive) {
+    // Read the index of the primitive every 10 bits
+    return uint32_t3(primitive & 0x3FF, (primitive >> 10) & 0x3FF, (primitive >> 20) & 0x3FF);
+}
+
+uint32_t3 GetPrimitive(Meshlet m, uint index) {
+    // Get surface information
+    return UnpackPrimitive(mPrimitiveIndices[m.PrimOffset + index]);
+}
+
+uint32_t GetVertexIndex(Meshlet m, uint localIndex) {
+    // Find the index of the vertex
+    localIndex = m.VertOffset + localIndex;
+    // Read 4 bytes at a time
+    return mUniqueVertexIndices.Load(localIndex * 4);
+}

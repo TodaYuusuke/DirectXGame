@@ -9,7 +9,7 @@ struct ViewProjection
     float32_t4x4 m;
 };
 
-ConstantBuffer<ModelData> gModelData : register(b0);
+ConstantBuffer<InstanceData> InstanceData : register(b0);
 ConstantBuffer<ViewProjection> gViewProjection : register(b1);
 
 // Required
@@ -59,7 +59,7 @@ void main(
         Vertex vertex = Vertices[vertexIndex];
         
         // 出力する頂点座標を求める
-        outVerts[gtid].position = mul(mul(vertex.position, gModelData.wtf.wtf), gViewProjection.m);
+        outVerts[gtid].position = mul(mul(vertex.position, InstanceData.wtf.m), gViewProjection.m);
     }
     if (gtid < meshlet.PrimCount)
     {
