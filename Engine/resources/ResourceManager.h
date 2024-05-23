@@ -10,7 +10,8 @@
 
 // 3Dモデル
 #include "primitive/3d/OldMesh.h"
-#include "model/Model.h"
+#include "model/RigidModel.h"
+#include "model/SkinningModel.h"
 #include "model/ModelData.h"
 
 
@@ -22,6 +23,15 @@ namespace LWP::Base {
 };
 
 namespace LWP::Resource {
+	// ** 使用する構造体を先に宣言しておく ** //
+	
+	// モデルデータ本体とアダプタークラスのポインタマネージャー
+	struct Models {
+		ModelData data;
+		Utility::PtrManager<RigidModel*> rigid;
+		Utility::PtrManager<SkinningModel*> skin;
+	};
+
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
 	/// </summary>
@@ -34,8 +44,6 @@ namespace LWP::Resource {
 		void Initialize();
 		// 更新
 		void Update();
-		// 描画
-		void Draw(Base::RendererManager* render);
 
 		// 読み込み
 
@@ -56,15 +64,17 @@ namespace LWP::Resource {
 		void LoadModelData(const std::string& filePath);
 		// モデルデータの実体を受け取る関数
 		ModelData* GetModelData(const std::string& filePath);
-		// モデルアダプターの配列を受け取る関数
-		std::list<Model*>& GetModels();
+		// モデルデータ達の配列を受け取る関数
+		std::vector<std::reference_wrapper<Models>> GetModels();
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
-		void SetPointer(Model* ptr) { models_.SetPointer(ptr); }
+		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.SetPointer(ptr); }
+		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.SetPointer(ptr); }
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
 		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
-		void DeletePointer(Model* ptr) { models_.DeletePointer(ptr); }
+		void DeletePointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.DeletePointer(ptr); }
+		void DeletePointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.DeletePointer(ptr); }
 		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
 		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 
@@ -89,9 +99,7 @@ namespace LWP::Resource {
 		std::map<std::string, Primitive::OldMeshData> oldMeshMap_;
 
 		// 3Dモデルの配列
-		std::map<std::string, ModelData> modelDataMap_;
-		// 3Dモデルのアダプター
-		Utility::PtrManager<Model*> models_;
+		std::map<std::string, Models> modelDataMap_;
 
 		// アニメーションの配列
 		Utility::PtrManager<Animation*> animations_;

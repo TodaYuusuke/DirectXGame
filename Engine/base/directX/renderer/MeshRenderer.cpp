@@ -101,22 +101,26 @@ void MeshRenderer::Reset() {
 
 void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list) {
 	// 全モデル分ループ
-	for (Model* m : System::engine->resourceManager_->GetModels()) {
-		// isActiveがfalseなら描画しない
-		if (!m->isActive) { continue; }
-
-		ModelData* data = GetModel(m->LoadedFilePath());
-
-		// ConstantBufferのViewをセット
-		list->SetGraphicsRootConstantBufferView(4, m->buffer.GetGPUView());
+	auto models = System::engine->resourceManager_->GetModels();
+	for (Models& m : models) {
+		ModelData& d = m.data;
 		// ModelのStructerdBufferのViewをセット
-		list->SetGraphicsRootDescriptorTable(0, data->buffers_.meshlet->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(1, data->buffers_.vertex->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(2, data->buffers_.uniqueVertexIndices->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(3, data->buffers_.primitiveIndices->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(7, data->buffers_.materials->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(0, d.buffers_.meshlet->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(7, d.buffers_.materials->GetGPUView());
 
-		// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		list->DispatchMesh(data->GetMeshletCount(), 1, 1);
+		// リキッドモデルを描画
+		for (RigidModel* rm : m.rigid.list) {
+			// isActiveがfalseなら描画しない
+			if (!rm->isActive) { continue; }
+
+			// ConstantBufferのViewをセット
+			list->SetGraphicsRootConstantBufferView(4, rm->buffer.GetGPUView());
+
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
 	}
 }

@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "SkinningModel.h"
 
 #include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
@@ -10,38 +10,40 @@ using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-InstanceData::InstanceData(const Resource::Model& value) {
+InstanceSkinData::InstanceSkinData(const Resource::SkinningModel& value) {
 	*this = value;
 }
-InstanceData& InstanceData::operator=(const Resource::Model& value) {
+InstanceSkinData& InstanceSkinData::operator=(const Resource::SkinningModel& value) {
 	wtf = value.worldTF;
 	enableLighting = value.enableLighting;
 	return *this;
 }
 
-Model::Model() {
-	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
-	System::engine->resourceManager_->SetPointer(this);
-
+SkinningModel::SkinningModel() {
+	// バッファ作成
 	buffer.Init(System::engine->directXCommon_->GetGPUDevice());
 }
-Model::~Model() {
+SkinningModel::~SkinningModel() {
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
-	System::engine->resourceManager_->DeletePointer(this);
+
+	// パスが空じゃなかったら消しに行く
+	if (!filePath.empty()) {
+		System::engine->resourceManager_->DeletePointer(this, filePath);
+	}
 }
 
-void Model::Load(const std::string& fileName) {
+void SkinningModel::Load(const std::string& fileName) {
 	// resourcesフォルダ内から検索して読み込む処理を作る
 	assert(false);	// 未実装のためassert
 	fileName;
 	// フルパスを作って読み込む
 	//LoadFullPath();
 }
-void Model::LoadShortPath(const std::string& fp) {
+void SkinningModel::LoadShortPath(const std::string& fp) {
 	// フルパスにして読み込む
 	LoadFullPath(kDirectoryPath + fp);
 }
-void Model::LoadFullPath(const std::string& fp) {
+void SkinningModel::LoadFullPath(const std::string& fp) {
 	// 名前を保持
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
@@ -75,7 +77,7 @@ void Model::LoadFullPath(const std::string& fp) {
 	}
 }
 
-void Model::Update() {
+void SkinningModel::Update() {
 	if (!isActive) { return; }
 
 	// スケルトンがあるなら更新
@@ -95,12 +97,7 @@ void Model::Update() {
 
 	*buffer.data_ = *this;
 }
-void Model::Draw(Base::RendererManager* render) {
-	if (!isActive) { return; }
-	render;
-	//render->AddModelData(GetModel(filePath), *this);
-}
-void Model::DebugGUI() {
+void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();
 	ImGui::Checkbox("enableLighting", &enableLighting);
 	//ImGui::Checkbox("isWireFrame", &isWireFrame);
@@ -108,4 +105,4 @@ void Model::DebugGUI() {
 }
 
 // 短縮用パス
-const std::string Model::kDirectoryPath = "resources/model/";
+const std::string SkinningModel::kDirectoryPath = "resources/model/";

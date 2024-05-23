@@ -5,7 +5,7 @@
 #include "base/directX/resource/rendering/DepthStencil.h"
 #include "base/directX/utility/DXC.h"
 
-#include "resources/model/Model.h"
+#include "resources/model/RigidModel.h"
 
 namespace LWP::Base {
 	/// <summary>

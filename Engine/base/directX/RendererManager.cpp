@@ -6,7 +6,6 @@
 #include "primitive/2d/Billboard3D.h"
 #include "primitive/2d/Sprite.h"
 #include "resources/model/ModelData.h"
-#include "resources/model/Model.h"
 #include "object/core/light/DirectionLight.h"
 #include "object/core/light/PointLight.h"
 

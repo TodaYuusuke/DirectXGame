@@ -283,7 +283,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\resources\audio\Audio.cpp" />
     <ClCompile Include="Engine\resources\audio\AudioData.cpp" />
     <ClCompile Include="Engine\primitive\model\Material.cpp" />
-    <ClCompile Include="Engine\resources\model\Model.cpp" />
+    <ClCompile Include="Engine\resources\model\RigidModel.cpp" />
+    <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
     <ClCompile Include="Engine\resources\motion\Motion.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
@@ -420,7 +421,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\audio\Audio.h" />
     <ClInclude Include="Engine\resources\audio\AudioData.h" />
     <ClInclude Include="Engine\primitive\model\Material.h" />
-    <ClInclude Include="Engine\resources\model\Model.h" />
+    <ClInclude Include="Engine\resources\model\RigidModel.h" />
+    <ClInclude Include="Engine\resources\model\SkinningModel.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
     <ClInclude Include="Engine\resources\motion\Motion.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />

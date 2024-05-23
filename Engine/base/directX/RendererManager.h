@@ -24,7 +24,7 @@ namespace LWP::Primitive {
 }
 namespace LWP::Resource {
 	class ModelData;
-	class Model;
+	class RigidModel;
 }
 
 

@@ -4,7 +4,7 @@
 #include "component/Information.h"
 #include "utility/motionEffects/Interpolation.h"
 
-#include "resources/model/Model.h"
+#include "resources/model/SkinningModel.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -53,10 +53,10 @@ void Animation::Update() {
 
 bool Animation::isEnd() { return !isStart_; }
 
-void Animation::LoadAnimation(std::string filepath, Resource::Model* ptr) {
+void Animation::LoadAnimation(std::string filepath, Resource::SkinningModel* ptr) {
 	return LoadAnimationLongPath(kDirectoryPath + filepath, ptr);
 }
-void Animation::LoadAnimationLongPath(std::string filepath, Resource::Model* ptr) {
+void Animation::LoadAnimationLongPath(std::string filepath, Resource::SkinningModel* ptr) {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filepath.c_str(), 0);
 	assert(scene->mAnimations != 0); // アニメーションがない

@@ -12,19 +12,19 @@ namespace LWP::Base {
 	class RendererManager;
 }
 namespace LWP::Resource {
-	class Model;
+	class RigidModel;
 }
 
 // モデル別のデータの構造体（AS実装のときに役立つ予定）
 namespace LWP::Base {
-	struct InstanceData {
+	struct InstanceRigidData {
 		Base::WTFStruct wtf;
 		int32_t enableLighting;
 
-		InstanceData() = default;
-		InstanceData(const Resource::Model& value);
+		InstanceRigidData() = default;
+		InstanceRigidData(const Resource::RigidModel& value);
 		// Materialクラスのデータを代入する演算子をオーバーロード
-		InstanceData& operator=(const Resource::Model& value);
+		InstanceRigidData& operator=(const Resource::RigidModel& value);
 	};
 }
 
@@ -32,15 +32,11 @@ namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
 	/// </summary>
-	class Model final {
+	class RigidModel final {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// ワールドトランスフォーム
 		Object::TransformEuler worldTF{};
-		// スケルトン
-		std::optional<Primitive::Skeleton> skeleton{};
-		// スキンクラスター（そのうちModelDataに移植）
-		std::optional<Primitive::SkinCluster> skinCluster{};
 
 		// ライティングを行うかどうか
 		bool enableLighting = false;
@@ -49,18 +45,18 @@ namespace LWP::Resource {
 		// アクティブ切り替え
 		bool isActive = true;
 
-		Base::ConstantBuffer<Base::InstanceData> buffer;
+		Base::ConstantBuffer<Base::InstanceRigidData> buffer;
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		Model();
+		RigidModel();
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~Model();
+		~RigidModel();
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む
@@ -82,10 +78,6 @@ namespace LWP::Resource {
 		/// 更新（ユーザー呼び出し禁止）
 		/// </summary>
 		void Update();
-		/// <summary>
-		/// 描画（ユーザー呼び出し禁止）
-		/// </summary>
-		void Draw(Base::RendererManager* render);
 
 		/// <summary>
 		/// デバッグ用ImGui
@@ -104,5 +96,15 @@ namespace LWP::Resource {
 		// リソースマネージャー上のモデルを指す為の変数（パスの予定）
 		std::string filePath = "";
 
+
+	public: // ** 標準的な形状を使いたいとき用のデータ ** //
+		/// <summary>
+		/// 標準形状一覧
+		/// </summary>
+		enum class Standard {
+			Cube,	// 立方体
+			Sphere,	// スフィア
+		};
+	private: // **  ** //
 	};
 }

@@ -46,7 +46,14 @@ void Manager::Update() {
 	// モーション更新
 	for (Motion* m : motions_.list) { m->Update(); }
 	// モデルアダプター更新
-	for (Model* m : models_.list) { m->Update(); }
+	for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+		for (RigidModel* m : it->second.rigid.list) {
+			m->Update();
+		}
+		for (SkinningModel* m : it->second.skin.list) {
+			m->Update();
+		}
+	}
 
 #if DEMO
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -54,31 +61,21 @@ void Manager::Update() {
 	if (ImGui::BeginTabBar("LWP")) {
 		if (ImGui::BeginTabItem("Resource")) {
 			// 形状一覧
-			if (!models_.list.empty()) {
-				std::vector<const char*> itemText;
-				for (int i = 0; i < models_.list.size(); i++) {
-					std::string str = "Model_" + std::to_string(i);
-					itemText.push_back(str.c_str());
-				}
-				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-				(*Utility::GetIteratorAtIndex<Model*>(models_.list, currentItem))->DebugGUI();
-			}
+			//if (!models_.list.empty()) {
+			//	std::vector<const char*> itemText;
+			//	for (int i = 0; i < models_.list.size(); i++) {
+			//		std::string str = "Model_" + std::to_string(i);
+			//		itemText.push_back(str.c_str());
+			//	}
+			//	ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+			//	(*Utility::GetIteratorAtIndex<RigidModel*>(models_.list, currentItem))->DebugGUI();
+			//}
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
 	}
 	ImGui::End();
 #endif
-}
-// 描画
-void Manager::Draw(Base::RendererManager* render) {
-	//// StructerdBufferにデータをセット済みかを保持するフラグを初期化
-	//for (std::map<std::string, ModelData>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
-	//	it->second.isLoadedRenderer = false;
-	//}
-
-	// 必要な分モデルを描画
-	for (Model* m : models_.list) { m->Draw(render); }
 }
 
 Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
@@ -125,22 +122,27 @@ void Manager::LoadModelData(const std::string& filePath) {
 	// 読み込み済みかをチェック
 	if (!modelDataMap_.count(filePath)) {
 		// 読み込んだことのない3Dモデルなので読み込む
-		modelDataMap_[filePath].Load(filePath);	// 要素は自動追加されるらしい;
+		modelDataMap_[filePath].data.Load(filePath);	// 要素は自動追加されるらしい;
 	}
 }
 ModelData* Manager::GetModelData(const std::string& filePath) {
 	// 読み込み済みかをチェック
 	if (modelDataMap_.count(filePath)) {
 		// 読み込み済みだったので返す
-		return &modelDataMap_[filePath];
+		return &modelDataMap_[filePath].data;
 	}
 
 	// 読み込めていないモデルなのでエラー
 	assert(false);
 	return nullptr;
 }
-std::list<Model*>& Manager::GetModels() {
-	return models_.list;
+std::vector<std::reference_wrapper<Models>> Manager::GetModels() {
+	// ファイルパスのkeyはいらないのでデータだけ渡す
+	std::vector<std::reference_wrapper<Models>> models;
+	for (auto& pair : modelDataMap_) {
+		models.push_back(std::ref(pair.second));
+	}
+	return models;
 }
 
 

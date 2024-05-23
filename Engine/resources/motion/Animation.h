@@ -7,7 +7,7 @@
 
 // 前方宣言
 namespace LWP::Resource {
-	class Model;
+	class SkinningModel;
 }
 
 namespace LWP::Resource {
@@ -71,8 +71,8 @@ namespace LWP::Resource {
 		/// <summary>
 		/// アニメーション読み込み
 		/// </summary>
-		void LoadAnimation(std::string filepath, Resource::Model* ptr);
-		void LoadAnimationLongPath(std::string filepath, Resource::Model* ptr);
+		void LoadAnimation(std::string filepath, Resource::SkinningModel* ptr);
+		void LoadAnimationLongPath(std::string filepath, Resource::SkinningModel* ptr);
 
 	private: // ** メンバ変数 ** //
 
@@ -89,7 +89,7 @@ namespace LWP::Resource {
 		bool useDeltaTimeMultiply_ = true;
 
 		// 適応するModelのポインタ
-		Resource::Model* modelPtr_ = nullptr;
+		Resource::SkinningModel* modelPtr_ = nullptr;
 
 		// アニメーションファイルの位置
 		const static std::string kDirectoryPath;

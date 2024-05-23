@@ -12,19 +12,19 @@ namespace LWP::Base {
 	class RendererManager;
 }
 namespace LWP::Resource {
-	class Model;
+	class SkinningModel;
 }
 
 // モデル別のデータの構造体（AS実装のときに役立つ予定）
 namespace LWP::Base {
-	struct InstanceData {
+	struct InstanceSkinData {
 		Base::WTFStruct wtf;
 		int32_t enableLighting;
 
-		InstanceData() = default;
-		InstanceData(const Resource::Model& value);
+		InstanceSkinData() = default;
+		InstanceSkinData(const Resource::SkinningModel& value);
 		// Materialクラスのデータを代入する演算子をオーバーロード
-		InstanceData& operator=(const Resource::Model& value);
+		InstanceSkinData& operator=(const Resource::SkinningModel& value);
 	};
 }
 
@@ -32,11 +32,11 @@ namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
 	/// </summary>
-	class Model final {
+	class SkinningModel final {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// ワールドトランスフォーム
 		Object::TransformEuler worldTF{};
+		// ワールドトランスフォーム
 		// スケルトン
 		std::optional<Primitive::Skeleton> skeleton{};
 		// スキンクラスター（そのうちModelDataに移植）
@@ -49,18 +49,18 @@ namespace LWP::Resource {
 		// アクティブ切り替え
 		bool isActive = true;
 
-		Base::ConstantBuffer<Base::InstanceData> buffer;
+		Base::ConstantBuffer<Base::InstanceSkinData> buffer;
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		Model();
+		SkinningModel();
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~Model();
+		~SkinningModel();
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む
@@ -82,10 +82,6 @@ namespace LWP::Resource {
 		/// 更新（ユーザー呼び出し禁止）
 		/// </summary>
 		void Update();
-		/// <summary>
-		/// 描画（ユーザー呼び出し禁止）
-		/// </summary>
-		void Draw(Base::RendererManager* render);
 
 		/// <summary>
 		/// デバッグ用ImGui
@@ -104,5 +100,15 @@ namespace LWP::Resource {
 		// リソースマネージャー上のモデルを指す為の変数（パスの予定）
 		std::string filePath = "";
 
+
+	public: // ** 標準的な形状を使いたいとき用のデータ ** //
+		/// <summary>
+		/// 標準形状一覧
+		/// </summary>
+		enum class Standard {
+			Cube,	// 立方体
+			Sphere,	// スフィア
+		};
+	private: // **  ** //
 	};
 }
