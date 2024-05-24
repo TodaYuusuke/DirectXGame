@@ -146,7 +146,7 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(7, d.buffers_.materials->GetGPUView());
+		//list->SetGraphicsRootDescriptorTable(7, d.buffers_.materials->GetGPUView());
 
 		// リキッドモデルを描画
 		for (RigidModel* rm : m.rigid.list) {
@@ -155,6 +155,9 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 
 			// ConstantBufferのViewをセット
 			list->SetGraphicsRootConstantBufferView(4, rm->buffer.GetGPUView());
+			// MaterialsのViewをセット
+			//list->SetGraphicsRootDescriptorTable(7, d.buffers_.materials->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(7, rm->mBuffers->GetGPUView());
 
 			// ワイヤーフレームか確認
 			if (rm->isWireFrame) {

@@ -26,8 +26,13 @@ namespace LWP::Resource {
 	class RigidModel final : public IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
+		// マテリアル
+		std::vector<Primitive::Material> materials;
+
 		// トランスフォームのバッファー
 		Base::ConstantBuffer<Base::InstanceRigidData> buffer;
+		// マテリアルバッファー
+		std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> mBuffers;
 
 	public: // ** メンバ関数 ** //
 

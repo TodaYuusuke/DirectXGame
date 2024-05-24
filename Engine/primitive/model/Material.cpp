@@ -19,8 +19,10 @@ void Material::Load(aiMaterial* material, const aiScene* scene, const std::strin
 		// テクスチャがファイルに埋め込まれているので処理をやめる
 		return;
 	}
+
 	// 埋め込まれていないので通常通り処理を続行
 
+	// テクスチャを取得
 	if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 		aiString textureFilePath;
 		material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
@@ -35,9 +37,10 @@ void Material::Load(aiMaterial* material, const aiScene* scene, const std::strin
 	}
 }
 
-void Material::DebugGUI() {
-	if (ImGui::TreeNode("Material")) {
+void Material::DebugGUI(const std::string& label) {
+	if (ImGui::TreeNode(label.c_str())) {
 		uvTransform.DebugGUI("uvTransform");
+		LWP::Base::ImGuiManager::ColorEdit4("color", color);
 		ImGui::DragFloat("shinines", &shininess);
 		/* 文字列を変更する処理
 		if (ImGui::InputText("Name", &name)) {

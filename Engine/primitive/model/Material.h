@@ -45,7 +45,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// ImGui
 		/// </summary>
-		void DebugGUI();
+		void DebugGUI(const std::string& label = "Material");
 
 
 	public: // ** オペレーターオーバーロード ** //
