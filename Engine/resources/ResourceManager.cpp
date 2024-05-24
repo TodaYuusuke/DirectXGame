@@ -265,11 +265,17 @@ Primitive::OldMeshData Manager::LoadAssimp(const std::string& filepath) {
 
 void Manager::RigidGUI(Models& m) {
 	static int selectedNum = 0;	// 選択された番号
+	int size = static_cast<int>(m.rigid.list.size());
 
 	// Rigidの一覧を表示
 	if (!m.rigid.list.empty()) {
+		// 最大値以上にならないように修正
+		if (selectedNum >= size) {
+			selectedNum = size - 1;
+		}
+
 		std::string text = "";
-		for (int i = 0; i < m.rigid.list.size(); i++) {
+		for (int i = 0; i < size; i++) {
 			text += std::to_string(i);
 			text += '\0';
 		}
@@ -282,11 +288,17 @@ void Manager::RigidGUI(Models& m) {
 }
 void Manager::SkinningGUI(Models& m) {
 	static int selectedNum = 0;	// 選択された番号
+	int size = static_cast<int>(m.skin.list.size());
 
-	// Rigidの一覧を表示
+	// Skinningの一覧を表示
 	if (!m.skin.list.empty()) {
+		// 最大値以上にならないように修正
+		if (selectedNum >= size) {
+			selectedNum = size - 1;
+		}
+
 		std::string text = "";
-		for (int i = 0; i < m.skin.list.size(); i++) {
+		for (int i = 0; i < size; i++) {
 			text += std::to_string(i);
 			text += '\0';
 		}
