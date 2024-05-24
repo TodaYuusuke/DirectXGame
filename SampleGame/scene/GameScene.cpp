@@ -10,6 +10,8 @@ using namespace LWP::Utility;
 
 // 初期化
 void GameScene::Initialize() {
+	LWP::Info::ChangeShowDebugGUI();
+
 	buildings[0].LoadShortPath("buildings/1Story_Mat.gltf");
 	buildings[1].LoadShortPath("buildings/1Story_GableRoof_Mat.gltf");
 	buildings[2].LoadShortPath("buildings/1Story_RoundRoof_Mat.gltf");

@@ -41,14 +41,18 @@ void Camera::Initialize() {}
 void Camera::Update(Base::RendererManager* manager) {
 	// リソースにデータをコピー
 	*constantBuffer_.data_ = *this;
+	if (pp.use) {
+		// データ更新
+		pp.Update();
+	}
+
+	// isActiveがfalseならレンダリングはしない
 	if (!isActive) { return; }
 
 	// カメラがアクティブかつ、レンダリングテクスチャが用意されている場合にViewProjectionをセット
 	manager->AddTarget(constantBuffer_.GetGPUView(), &renderResource_, &depthStencil_);
 	// ポストプロセスを行うか確認
 	if (pp.use) {
-		// データ更新
-		pp.Update();
 		// ポストプロセス用のターゲットセット
 		manager->AddTarget(&renderResource_, &textureResource_, &depthStencil_, &pp);
 	}
