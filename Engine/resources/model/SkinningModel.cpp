@@ -32,17 +32,6 @@ SkinningModel::~SkinningModel() {
 	}
 }
 
-void SkinningModel::Load(const std::string& fileName) {
-	// resourcesフォルダ内から検索して読み込む処理を作る
-	assert(false);	// 未実装のためassert
-	fileName;
-	// フルパスを作って読み込む
-	//LoadFullPath();
-}
-void SkinningModel::LoadShortPath(const std::string& fp) {
-	// フルパスにして読み込む
-	LoadFullPath(kDirectoryPath + fp);
-}
 void SkinningModel::LoadFullPath(const std::string& fp) {
 	// 名前を保持
 	filePath = fp;
@@ -110,9 +99,6 @@ void SkinningModel::Update() {
 void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();
 	ImGui::Checkbox("enableLighting", &enableLighting);
-	//ImGui::Checkbox("isWireFrame", &isWireFrame);
+	ImGui::Checkbox("isWireFrame", &isWireFrame);
 	ImGui::Checkbox("isActive", &isActive);
 }
-
-// 短縮用パス
-const std::string SkinningModel::kDirectoryPath = "resources/model/";

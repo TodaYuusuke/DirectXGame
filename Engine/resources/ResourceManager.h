@@ -108,10 +108,17 @@ namespace LWP::Resource {
 
 #if DEMO
 		// ImGui用変数
+		int selectedClass = 0;
+		int radioValue = 0;
 		int currentItem = 0;
+		// デバッグ用の生成したインスンタンスを格納しておく配列
+		std::vector<IModel*> debugModels;
 #endif
 
 	private:
 		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
+
+		void RigidGUI(Models& m);
+		void SkinningGUI(Models& m);
 	};
 }

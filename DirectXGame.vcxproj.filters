@@ -270,6 +270,7 @@
     <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
+    <ClCompile Include="Engine\resources\model\IModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -628,6 +629,7 @@
     <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\utility\PSO.h" />
     <ClInclude Include="Engine\resources\model\SkinningModel.h" />
+    <ClInclude Include="Engine\resources\model\IModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -32,17 +32,6 @@ RigidModel::~RigidModel() {
 	}
 }
 
-void RigidModel::Load(const std::string& fileName) {
-	// resourcesフォルダ内から検索して読み込む処理を作る
-	assert(false);	// 未実装のためassert
-	fileName;
-	// フルパスを作って読み込む
-	//LoadFullPath();
-}
-void RigidModel::LoadShortPath(const std::string& fp) {
-	// フルパスにして読み込む
-	LoadFullPath(kDirectoryPath + fp);
-}
 void RigidModel::LoadFullPath(const std::string& fp) {
 	// 名前を保持
 	filePath = fp;
@@ -59,9 +48,6 @@ void RigidModel::Update() {
 void RigidModel::DebugGUI() {
 	worldTF.DebugGUI();
 	ImGui::Checkbox("enableLighting", &enableLighting);
-	//ImGui::Checkbox("isWireFrame", &isWireFrame);
+	ImGui::Checkbox("isWireFrame", &isWireFrame);
 	ImGui::Checkbox("isActive", &isActive);
 }
-
-// 短縮用パス
-const std::string RigidModel::kDirectoryPath = "resources/model/";

@@ -14,6 +14,7 @@
 #include <string>
 #include <random>
 #include <list>
+#include <map>
 
 namespace LWP::Utility {
 
@@ -98,6 +99,13 @@ namespace LWP::Utility {
 	template<typename T>
 	typename std::list<T>::iterator GetIteratorAtIndex(std::list<T>& lst, size_t index) {
 		typename std::list<T>::iterator iter = lst.begin();
+		std::advance(iter, index); // イテレーターをindex分進める
+		return iter;
+	}
+	// インデックスを指定してstd::mapのイテレーターを取得する関数
+	template<typename Key, typename Value>
+	typename std::map<Key, Value>::iterator GetIteratorAtIndex(std::map<Key, Value>& mp, size_t index) {
+		typename std::map<Key, Value>::iterator iter = mp.begin();
 		std::advance(iter, index); // イテレーターをindex分進める
 		return iter;
 	}
