@@ -24,10 +24,9 @@ RigidModel::RigidModel() {
 	buffer.Init(System::engine->directXCommon_->GetGPUDevice());
 }
 RigidModel::~RigidModel() {
-	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
-
 	// パスが空じゃなかったら消しに行く
 	if (!filePath.empty()) {
+		// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
 		System::engine->resourceManager_->DeletePointer(this, filePath);
 	}
 }
