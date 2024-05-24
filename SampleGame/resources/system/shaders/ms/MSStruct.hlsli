@@ -26,11 +26,15 @@ struct Vertex {
     int32_t mIndex; // !< MaterialIndex
 };
 
-
 // ** InstanceData ** //
 struct InstanceData {
     WorldTransform wtf;
     int32_t enableLighting; // !< Flag(bool)
+};
+struct Well
+{ // !< Used during skinning
+    float32_t4x4 skeletonSpaceMatrix;
+    float32_t4x4 skeletonSpaceInverseTransposeMatrix;
 };
 
 

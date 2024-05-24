@@ -39,7 +39,7 @@ namespace LWP::Resource {
 		// ワールドトランスフォーム
 		// スケルトン
 		std::optional<Primitive::Skeleton> skeleton{};
-		// スキンクラスター（そのうちModelDataに移植）
+		// スキンクラスター
 		std::optional<Primitive::SkinCluster> skinCluster{};
 
 		// ライティングを行うかどうか
@@ -50,6 +50,7 @@ namespace LWP::Resource {
 		bool isActive = true;
 
 		Base::ConstantBuffer<Base::InstanceSkinData> buffer;
+		std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> wellBuffer;
 
 	public: // ** メンバ関数 ** //
 

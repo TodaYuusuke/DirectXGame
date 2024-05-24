@@ -77,6 +77,10 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 			}
 		}
 	}
+
+	// Wellを初期化
+	wellBuffer = std::make_unique< Base::StructuredBuffer<Primitive::WellForGPU>>(static_cast<int32_t>(skeleton->joints.size()));
+	wellBuffer->Init(System::engine->directXCommon_->GetGPUDevice(), System::engine->directXCommon_->GetSRV());
 }
 
 void SkinningModel::Update() {
@@ -94,10 +98,14 @@ void SkinningModel::Update() {
 				skeSpaceMatrix;
 			skinCluster->mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix = 
 				skeSpaceMatrix.Inverse().Transpose();
+			// Bufferのデータ更新
+			*wellBuffer->data_ = skinCluster->mappedPalette[jointIndex];
 		}
 	}
 
 	*buffer.data_ = *this;
+	// データのコピー
+	//std::memcpy(wellBuffer->data_, skinCluster->mappedPalette.data(), sizeof(Primitive::WellForGPU) * skinCluster->mappedPalette.size());
 }
 void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();

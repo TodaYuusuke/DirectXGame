@@ -35,7 +35,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	// まとめて行う処理
 	//for (int i = 0; i < 4; i++) {
 	//	meshes[i].material.enableLighting = true;
-	walkAnim.Start();
+	//walkAnim.Start();
 	//}
 }
 

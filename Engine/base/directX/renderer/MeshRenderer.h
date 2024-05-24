@@ -80,6 +80,6 @@ namespace LWP::Base {
 		/// <summary>
 		/// 全てのモデルをターゲットに描画する関数
 		/// </summary>
-		void DispatchAllModel(ID3D12GraphicsCommandList6* list);
+		void DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
 	};
 }

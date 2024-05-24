@@ -1,4 +1,29 @@
 #include "Meshlet.hlsli"
+struct Skinned {
+    float32_t4 position;
+    float32_t3 normal;
+};
+
+StructuredBuffer<Well> Wells : register(t516);
+
+Skinned Skinning(Vertex v)
+{
+    Skinned skinned;
+    
+    skinned.position = mul(v.position, Wells[v.jIndex.x].skeletonSpaceMatrix) * v.weight.x;
+    skinned.position += mul(v.position, Wells[v.jIndex.y].skeletonSpaceMatrix) * v.weight.y;
+    skinned.position += mul(v.position, Wells[v.jIndex.z].skeletonSpaceMatrix) * v.weight.z;
+    skinned.position += mul(v.position, Wells[v.jIndex.w].skeletonSpaceMatrix) * v.weight.w;
+    skinned.position.w = 1.0f;
+    
+    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.x].skeletonSpaceInverseTransposeMatrix) * v.weight.x;
+    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.y].skeletonSpaceInverseTransposeMatrix) * v.weight.y;
+    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.z].skeletonSpaceInverseTransposeMatrix) * v.weight.z;
+    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.w].skeletonSpaceInverseTransposeMatrix) * v.weight.w;
+    skinned.normal = normalize(skinned.normal);
+    
+    return skinned;
+}
 
 [NumThreads(128, 1, 1)]      // スレッド数最大128
 [OutputTopology("triangle")] // 出力形状は三角形
@@ -23,10 +48,14 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点のデータを求める
-        outVerts[gtid].pos = mul(mul(vertex.position, InstanceData.wtf.m), cCamera.viewProjection);
-        outVerts[gtid].worldPos = mul(vertex.position, InstanceData.wtf.m).xyz;
+        Skinned skinned = Skinning(vertex);
+        //outVerts[gtid].pos = mul(mul(vertex.position, InstanceData.wtf.m), cCamera.viewProjection);
+        outVerts[gtid].pos = mul(mul(skinned.position, InstanceData.wtf.m), cCamera.viewProjection);
+        //outVerts[gtid].worldPos = mul(vertex.position, InstanceData.wtf.m).xyz;
+        outVerts[gtid].worldPos = mul(skinned.position, InstanceData.wtf.m).xyz;
         outVerts[gtid].texcoord = vertex.texcoord;
-        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstanceData.wtf.inverse)));
+        //outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstanceData.wtf.inverse)));
+        outVerts[gtid].normal = normalize(mul(skinned.normal, transpose((float32_t3x3) InstanceData.wtf.inverse)));
         outVerts[gtid].color = vertex.color;
         outVerts[gtid].mIndex = vertex.mIndex;
     }
@@ -38,5 +67,4 @@ void main(
         // 出力するプリミティブを求める
         outIndices[gtid] = packedIndices;
     }
-
 }
