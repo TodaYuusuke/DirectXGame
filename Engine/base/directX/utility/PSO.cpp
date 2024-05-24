@@ -101,7 +101,7 @@ PSO& PSO::SetBlendState() {
 		desc_.vertex.BlendState = blendDesc;
 	}
 	else if (type_ == Type::Mesh) {
-		desc_.vertex.BlendState = blendDesc;
+		desc_.mesh.BlendState = blendDesc;
 	}
 
 	return *this;
@@ -118,7 +118,7 @@ PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode)
 		desc_.vertex.RasterizerState = rasterizerDesc;
 	}
 	else if (type_ == Type::Mesh) {
-		desc_.vertex.RasterizerState = rasterizerDesc;
+		desc_.mesh.RasterizerState = rasterizerDesc;
 	}
 	return *this;
 }

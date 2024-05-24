@@ -61,12 +61,20 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 #endif
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
 		.Build(device->GetDevice());
+	rigid_.wirePso.Init(rigid_.root, dxc, PSO::Type::Mesh)
+		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
+		.SetMeshShader("ms/Meshlet.MS.hlsl")
+		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.Build(device->GetDevice());
 	skinning_.pso.Init(skinning_.root, dxc, PSO::Type::Mesh)
 		.SetMeshShader("ms/Skinning.MS.hlsl")
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
 		.Build(device->GetDevice());
-
-
+	skinning_.wirePso.Init(skinning_.root, dxc, PSO::Type::Mesh)
+		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
+		.SetMeshShader("ms/Skinning.MS.hlsl")
+		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.Build(device->GetDevice());
 }
 
 void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -124,7 +132,6 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 
 	// RigidModelをDispatch
 	list->SetGraphicsRootSignature(rigid_.root);	// Rootセット
-	list->SetPipelineState(rigid_.pso.GetState());	// PSOセット
 	for (Models& m : models) {
 		// Viewをセット
 		list->SetGraphicsRootConstantBufferView(6, cameraView);	// カメラ
@@ -148,6 +155,14 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 
 			// ConstantBufferのViewをセット
 			list->SetGraphicsRootConstantBufferView(4, rm->buffer.GetGPUView());
+
+			// ワイヤーフレームか確認
+			if (rm->isWireFrame) {
+				list->SetPipelineState(rigid_.wirePso.GetState());	// PSOセット
+			}
+			else {
+				list->SetPipelineState(rigid_.pso.GetState());	// PSOセット
+			}
 
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
@@ -182,6 +197,14 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			list->SetGraphicsRootConstantBufferView(4, sm->buffer.GetGPUView());
 			// Wellをセット
 			list->SetGraphicsRootDescriptorTable(13, sm->wellBuffer->GetGPUView());
+
+			// ワイヤーフレームか確認
+			if (sm->isWireFrame) {
+				list->SetPipelineState(skinning_.wirePso.GetState());	// PSOセット
+			}
+			else {
+				list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
+			}
 
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);

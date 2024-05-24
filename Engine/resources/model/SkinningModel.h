@@ -45,7 +45,7 @@ namespace LWP::Resource {
 		// ライティングを行うかどうか
 		bool enableLighting = false;
 		// ワイヤーフレームで描画する
-		//bool isWireFrame = false;
+		bool isWireFrame = false;
 		// アクティブ切り替え
 		bool isActive = true;
 

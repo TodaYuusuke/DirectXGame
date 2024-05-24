@@ -67,6 +67,8 @@ namespace LWP::Base {
 			RootSignature root;
 			// PSO
 			PSO pso;
+			// PSO（WireFrame）
+			PSO wirePso;
 		};
 
 		// 固体モデル
