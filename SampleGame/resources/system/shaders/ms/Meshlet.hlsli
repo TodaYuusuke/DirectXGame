@@ -1,11 +1,5 @@
 #include "MSStruct.hlsli"
 
-// ModelData
-StructuredBuffer<Meshlet>    mMeshlets            : register(t0);
-StructuredBuffer<Vertex> mVertices            : register(t1);
-ByteAddressBuffer            mUniqueVertexIndices : register(t2);
-StructuredBuffer<uint32_t>   mPrimitiveIndices    : register(t3);
-
 // InstanceData
 ConstantBuffer<InstanceData> InstanceData : register(b2);
 
@@ -23,22 +17,3 @@ TextureCube<float> tPLightSM[8] : register(t508);
 SamplerState sTexSmp : register(s0);
 SamplerState sDLightSMSmp : register(s1);
 SamplerState sPLightSMSmp : register(s2);
-
-// ** Functions ** //
-
-uint32_t3 UnpackPrimitive(uint primitive) {
-    // Read the index of the primitive every 10 bits
-    return uint32_t3(primitive & 0x3FF, (primitive >> 10) & 0x3FF, (primitive >> 20) & 0x3FF);
-}
-
-uint32_t3 GetPrimitive(Meshlet m, uint index) {
-    // Get surface information
-    return UnpackPrimitive(mPrimitiveIndices[m.PrimOffset + index]);
-}
-
-uint32_t GetVertexIndex(Meshlet m, uint localIndex) {
-    // Find the index of the vertex
-    localIndex = m.VertOffset + localIndex;
-    // Read 4 bytes at a time
-    return mUniqueVertexIndices.Load(localIndex * 4);
-}

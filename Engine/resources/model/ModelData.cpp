@@ -35,13 +35,15 @@ void ModelData::Load(const std::string& filePath) {
 		Mesh& m = meshes_.back();
 		m.Load(mesh);
 
+		// 今読み込み済みの頂点数を保持
+		int vertexCount = static_cast<int>(vertices.size());
 		// 頂点をひとまとめに
 		for (int i = 0; i < m.vertices.size(); i++) {
-			vertices.push_back(m.vertices[i].v);
+			vertices.push_back(m.vertices[i]);
 		}
 		// インデックスもひとまとめに
 		for (int i = 0; i < m.indexes.size(); i++) {
-			indexes.push_back(m.indexes[i]);
+			indexes.push_back(m.indexes[i] + vertexCount);
 		}
 	}
 

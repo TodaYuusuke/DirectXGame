@@ -262,7 +262,6 @@
     <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
     <ClCompile Include="Engine\primitive\model\Joint.cpp" />
     <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\SkinningRenderer.cpp" />
     <ClCompile Include="Engine\primitive\model\JointWeight.cpp" />
     <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
@@ -621,7 +620,6 @@
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
     <ClInclude Include="Engine\primitive\model\Joint.h" />
     <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
-    <ClInclude Include="Engine\base\directX\renderer\SkinningRenderer.h" />
     <ClInclude Include="Engine\primitive\model\JointWeight.h" />
     <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />

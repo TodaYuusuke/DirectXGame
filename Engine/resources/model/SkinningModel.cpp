@@ -66,7 +66,7 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 		skinCluster->inverseBindPoseMatrices[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
 		for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
 			auto& currentInfluence = data->meshes_[0].vertices[vertexWeight.vertexIndex];
-			for (uint32_t index = 0; index < Primitive::kNumMaxInfluence; ++index) {
+			for (uint32_t index = 0; index < Primitive::Vertex::kNumMaxInfluence; ++index) {
 				if (currentInfluence.weight[index] == 0.0f) {
 					currentInfluence.weight[index] = vertexWeight.weight;
 					currentInfluence.jointIndices[index] = (*it).second;

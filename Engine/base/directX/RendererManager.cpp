@@ -44,20 +44,20 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstDirShadowView());
 		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstPointShadowView());
 	};
-	std::function<void()> skinningFunc = [&]() {
-		ID3D12GraphicsCommandList* list = commander_.List();
-		// 各種Viewをセット
-		buffers_.SetCommonView(2, list);
-		buffers_.SetTransformView(5, list);
-		buffers_.SetMaterialView(6, list);
-		buffers_.SetDirLightView(7, list);
-		buffers_.SetPointLightView(8, list);
-		// テクスチャのViewをセット
-		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstTexView());
-		// シャドウマップのViewをセット
-		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstDirShadowView());
-		list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstPointShadowView());
-	};
+	//std::function<void()> skinningFunc = [&]() {
+	//	ID3D12GraphicsCommandList* list = commander_.List();
+	//	// 各種Viewをセット
+	//	buffers_.SetCommonView(2, list);
+	//	buffers_.SetTransformView(5, list);
+	//	buffers_.SetMaterialView(6, list);
+	//	buffers_.SetDirLightView(7, list);
+	//	buffers_.SetPointLightView(8, list);
+	//	// テクスチャのViewをセット
+	//	list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstTexView());
+	//	// シャドウマップのViewをセット
+	//	list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstDirShadowView());
+	//	list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstPointShadowView());
+	//};
 	std::function<void()> meshFunc = [&]() {
 		ID3D12GraphicsCommandList* list = commander_.List();
 		// 各種Viewをセット
@@ -69,7 +69,6 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 	// シャドウレンダラー初期化
 	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
 	// ノーマルレンダラー初期化
-	skinningRender_.Init(device, srv_, dxc_, skinningFunc);
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
 	meshRenderer_.Init(device, srv_, dxc_, meshFunc);
 	// ポストプロセスレンダラー初期化
@@ -95,7 +94,6 @@ void RendererManager::DrawCall() {
 	// シャドウ描画
 	shadowRender_.DrawCall(list);
 	// 通常描画
-	skinningRender_.DrawCall(list);
 	meshRenderer_.DrawCall(list);
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
@@ -107,7 +105,6 @@ void RendererManager::DrawCall() {
 	commander_.Execute();
 
 	// 次のフレームのためにリセット
-	skinningRender_.Reset();
 	normalRender_.Reset();
 	meshRenderer_.Reset();
 	shadowRender_.Reset();

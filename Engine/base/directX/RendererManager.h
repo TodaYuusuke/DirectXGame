@@ -4,7 +4,6 @@
 #include "renderer/ShadowRenderer.h"
 #include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
-#include "renderer/SkinningRenderer.h"
 #include "renderer/MeshRenderer.h"
 #include "renderer/BufferGroup.h"
 
@@ -112,8 +111,6 @@ namespace LWP::Base {
 	private:
 		// レンダラー
 		NormalRenderer normalRender_;
-		// スキニング
-		SkinningRenderer skinningRender_;
 		// メッシュシェーダー
 		MeshRenderer meshRenderer_;
 	public:
@@ -125,7 +122,6 @@ namespace LWP::Base {
 		/// <param name="depth">DepthStencil</param>
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { 
 			normalRender_.AddTarget({ view, back, depth });
-			skinningRender_.AddTarget({ view, back, depth });
 			meshRenderer_.AddTarget({ view, back, depth });
 		}
 #pragma endregion

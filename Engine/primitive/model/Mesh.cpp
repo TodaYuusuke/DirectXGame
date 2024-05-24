@@ -20,32 +20,32 @@ void Mesh::Load(aiMesh* mesh) {
 
 	// Vertexの解析
 	for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++) {
-		SkinningVertex newVertex;
+		Vertex newVertex;
 
 		// インデックス情報を元に情報を取得する
 		aiVector3D& position = mesh->mVertices[vertexIndex];		 // 頂点座標取得
-		newVertex.v.position = { -position.x, position.y, position.z }; // 頂点座標追加
+		newVertex.position = { -position.x, position.y, position.z }; // 頂点座標追加
 
 		// uv座標チェック
 		if (hasTexcoord) {
 			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex]; // テクスチャ座標取得
-			newVertex.v.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
+			newVertex.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
 		}
 		else {
-			newVertex.v.texCoord = { 0.0f,0.0f };
+			newVertex.texCoord = { 0.0f,0.0f };
 		}
 
 		// 法線チェック
 		if (hasNormal) {
 			aiVector3D& normal = mesh->mNormals[vertexIndex];			 // 法線取得
-			newVertex.v.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
+			newVertex.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
 		}
 		else {
-			newVertex.v.normal = newVertex.v.position;
+			newVertex.normal = newVertex.position;
 		}
 
 		// マテリアル番号を頂点に保持
-		newVertex.v.materialIndex = materialIndex;
+		newVertex.materialIndex = materialIndex;
 
 		// 頂点データを追加
 		vertices.push_back(newVertex);

@@ -93,6 +93,7 @@ namespace LWP::Resource {
 		/// </summary>
 		std::string LoadedFilePath() { return filePath; }
 
+
 	private: // ** メンバ変数 ** //
 
 		// 短縮用パス

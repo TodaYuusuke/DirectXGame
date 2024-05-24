@@ -21,6 +21,8 @@ struct Vertex {
     float32_t2 texcoord;
     float32_t3 normal;
     float32_t4 color;
+    float32_t4 weight;
+    int32_t4 jIndex; // !< JointIndex
     int32_t mIndex; // !< MaterialIndex
 };
 
@@ -46,6 +48,7 @@ struct Camera {
 };
 struct Material {
     float32_t4x4 uvTransform;
+    float32_t4 color;
     int32_t enableLighting; // !< Not Using(But it's being used in Object3d.PS.hlsl, And will be deleted when Primitive is reworked)
     float32_t shinines;
     int32_t tIndex; // !< TextureIndex
@@ -75,3 +78,32 @@ struct VSOutput {
     float32_t4 color    : COLOR0;
     int32_t mIndex : INDEX0;
 };
+
+
+// ** Define common binding information here  ** //
+
+// ModelData
+StructuredBuffer<Meshlet> mMeshlets : register(t0);
+StructuredBuffer<Vertex> mVertices : register(t1);
+ByteAddressBuffer mUniqueVertexIndices : register(t2);
+StructuredBuffer<uint32_t> mPrimitiveIndices : register(t3);
+
+
+// ** Functions ** //
+
+uint32_t3 UnpackPrimitive(uint primitive) {
+    // Read the index of the primitive every 10 bits
+    return uint32_t3(primitive & 0x3FF, (primitive >> 10) & 0x3FF, (primitive >> 20) & 0x3FF);
+}
+
+uint32_t3 GetPrimitive(Meshlet m, uint index) {
+    // Get surface information
+    return UnpackPrimitive(mPrimitiveIndices[m.PrimOffset + index]);
+}
+
+uint32_t GetVertexIndex(Meshlet m, uint localIndex) {
+    // Find the index of the vertex
+    localIndex = m.VertOffset + localIndex;
+    // Read 4 bytes at a time
+    return mUniqueVertexIndices.Load(localIndex * 4);
+}

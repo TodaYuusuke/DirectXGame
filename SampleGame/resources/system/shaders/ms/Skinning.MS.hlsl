@@ -1,23 +1,11 @@
-#include "MSStruct.hlsli"
-
-struct ShadowMapOutput
-{
-    float4 position : SV_POSITION;
-};
-struct ViewProjection
-{
-    float32_t4x4 m;
-};
-
-ConstantBuffer<InstanceData> InstanceData : register(b0);
-ConstantBuffer<ViewProjection> gViewProjection : register(b1);
+#include "Meshlet.hlsli"
 
 [NumThreads(128, 1, 1)]      // スレッド数最大128
 [OutputTopology("triangle")] // 出力形状は三角形
 void main(
     in uint32_t gid  : SV_GroupID,
     in uint32_t gtid : SV_GroupThreadID,
-    out vertices ShadowMapOutput outVerts[128],
+    out vertices VSOutput outVerts[128],
     out indices uint32_t3     outIndices[128]
 )
 {
@@ -34,8 +22,13 @@ void main(
         // 取得したインデックスから頂点座標を求める
         Vertex vertex = mVertices[vertexIndex];
         
-        // 出力する頂点座標を求める
-        outVerts[gtid].position = mul(mul(vertex.position, InstanceData.wtf.m), gViewProjection.m);
+        // 出力する頂点のデータを求める
+        outVerts[gtid].pos = mul(mul(vertex.position, InstanceData.wtf.m), cCamera.viewProjection);
+        outVerts[gtid].worldPos = mul(vertex.position, InstanceData.wtf.m).xyz;
+        outVerts[gtid].texcoord = vertex.texcoord;
+        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstanceData.wtf.inverse)));
+        outVerts[gtid].color = vertex.color;
+        outVerts[gtid].mIndex = vertex.mIndex;
     }
     if (gtid < meshlet.PrimCount)
     {

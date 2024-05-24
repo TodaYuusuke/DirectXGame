@@ -7,13 +7,13 @@ using namespace LWP::Base;
 
 // サイズをここで指定
 SkinningRenderer::SkinningRenderer() :
-	vertexBuffer(lwpC::Rendering::kMaxVertex),
+	//vertexBuffer(lwpC::Rendering::kMaxVertex),
 	indexBuffer(lwpC::Rendering::kMaxIndex),
 	mappedPalette(lwpC::Rendering::kMaxIndex) {}
 
 void SkinningRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func) {
 	// StructuredBufferを初期化
-	vertexBuffer.Init(device, srv);
+	//vertexBuffer.Init(device, srv);
 	indexBuffer.Init(device, srv);
 	mappedPalette.Init(device, srv);
 	// RootSignatureを生成
@@ -51,7 +51,7 @@ void SkinningRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 	// Viewを先にセット
 	setViewFunction_();
 	// インフルエンスたちのViewもセット
-	list->SetGraphicsRootDescriptorTable(3, vertexBuffer.GetGPUView());
+	//list->SetGraphicsRootDescriptorTable(3, vertexBuffer.GetGPUView());
 	//list->SetGraphicsRootDescriptorTable(4, mappedInfluence.GetGPUView());
 	list->SetGraphicsRootDescriptorTable(4, mappedPalette.GetGPUView());
 
@@ -108,7 +108,7 @@ void SkinningRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 void SkinningRenderer::Reset() {
 	target_.clear();
 
-	vertexBuffer.Reset();
+	//vertexBuffer.Reset();
 	indexBuffer.Reset();
 	//mappedInfluence.Reset();
 	mappedPalette.Reset();

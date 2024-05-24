@@ -27,6 +27,12 @@ void Material::Load(aiMaterial* material, const aiScene* scene, const std::strin
 
 		texture = LWP::Resource::LoadTextureLongPath(Utility::ConvertToParentDirectory(filePath) + textureFilePath.C_Str());
 	}
+
+	// マテリアルカラーを取得
+	aiColor4D diffuse;
+	if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
+		color = Utility::Color(float(diffuse.r), float(diffuse.g), float(diffuse.b), float(diffuse.a));
+	}
 }
 
 void Material::DebugGUI() {
@@ -44,6 +50,7 @@ void Material::DebugGUI() {
 
 MaterialStruct& MaterialStruct::operator=(const Primitive::Material& value) {
 	uvMatrix = value.uvTransform.GetAffineMatrix();
+	color = value.color.GetVector4();
 	shininess = value.shininess;
 	//enableLighting = false;
 	// テクスチャのインデックスを貰う

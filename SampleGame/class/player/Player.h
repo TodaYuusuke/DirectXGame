@@ -14,7 +14,7 @@ private:
 	// プレイヤーの速度
 	const float kPlayerSpeed = 0.1f;
 	// 3Dモデル
-	LWP::Resource::RigidModel model;
+	LWP::Resource::SkinningModel model;
 	// アニメーション
 	LWP::Resource::Animation walkAnim;
 	

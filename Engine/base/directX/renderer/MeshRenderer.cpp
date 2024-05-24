@@ -57,6 +57,10 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		// リソースバリアをセット
 		D3D12_RESOURCE_STATES beforeBarrier = it->back->GetBarrier();
 		it->back->ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
+		// 全画面クリア
+		it->back->Clear(list);
+		// 指定した深度で画面全体をクリアする
+		it->depth->Clear(list);
 
 		// ビューポート
 		D3D12_VIEWPORT viewport = {};

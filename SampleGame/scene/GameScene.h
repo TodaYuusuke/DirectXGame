@@ -17,7 +17,7 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// ビル群
-	LWP::Resource::RigidModel buildings[6];
+	LWP::Resource::RigidModel buildings[8];
 	// スカイドーム
 	LWP::Resource::RigidModel skydome;
 	// 地面

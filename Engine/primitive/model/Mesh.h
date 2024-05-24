@@ -8,25 +8,6 @@
 #include <map>
 
 namespace LWP::Primitive {
-	struct SkinningVertex {
-		Vertex v;
-		std::array<float, kNumMaxInfluence> weight{};
-		std::array<int32_t, kNumMaxInfluence> jointIndices{};
-	};
-	struct SkinningVertexStruct {
-		Base::VertexStruct v;
-		std::array<float, kNumMaxInfluence> weight{};
-		std::array<int32_t, kNumMaxInfluence> jointIndices{};
-
-		// IPrimitiveのVertexを代入する演算子をオーバーロード
-		SkinningVertexStruct& operator=(const SkinningVertex& value) {
-			v = value.v;
-			weight = value.weight;
-			jointIndices = value.jointIndices;
-			return *this;
-		}
-	};
-
 	/// <summary>
 	/// 3Dモデルのノードクラス
 	/// </summary>
@@ -37,7 +18,7 @@ namespace LWP::Primitive {
 		std::string name = "mesh";
 
 		// 描画する頂点
-		std::vector<SkinningVertex> vertices;
+		std::vector<Vertex> vertices;
 		// インデックス
 		std::vector<uint32_t> indexes;
 		// Jointの重さデータ
