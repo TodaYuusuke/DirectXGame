@@ -12,7 +12,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	model.LoadShortPath("human/walk.gltf");
 	model.worldTF.scale = { 0.3f,0.3f,0.3f };
 	// アニメーション用意
-	//walkAnim.LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &model);
+	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
 	
 	// カメラのポインタをセット
 	camera_ = ptr;
@@ -35,7 +35,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	// まとめて行う処理
 	//for (int i = 0; i < 4; i++) {
 	//	meshes[i].material.enableLighting = true;
-	//walkAnim.Start();
+	walkAnim.Start();
 	//}
 }
 

@@ -98,12 +98,12 @@ void Mesh::Load(aiMesh* mesh) {
 		}
 	}
 
-	//for(const auto& JointWeight : )
+	//for(const auto& JointWeight : jointWeightData.)
 	//for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
 	//	aiBone* bone = mesh->mBones[boneIndex];
 	//	for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
 	//		auto& SkinningVertex = vertices[bone->mWeights[weightIndex].mVertexId];
-	//		for (uint32_t index = 0; index < Primitive::kNumMaxInfluence; ++index) {
+	//		for (uint32_t index = 0; index < Vertex::kNumMaxInfluence; ++index) {
 	//			if (SkinningVertex.weight[index] == 0.0f) {
 	//				SkinningVertex.weight[index] = bone->mWeights[weightIndex].mWeight;
 	//				SkinningVertex.jointIndices[index] = bone->mWeights[weightIndex].

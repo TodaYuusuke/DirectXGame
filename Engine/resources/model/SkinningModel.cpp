@@ -48,6 +48,8 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
 	LoadModel(filePath);
+	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
+	System::engine->resourceManager_->SetPointer(this, filePath);
 	ModelData* data = GetModel(filePath);
 
 	// スケルトン生成

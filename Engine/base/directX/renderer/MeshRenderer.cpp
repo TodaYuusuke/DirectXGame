@@ -13,8 +13,25 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 	setViewFunction_ = func;	// 関数セット
 
 	// RootSignatureを生成
-	rigid_.root
-		.AddTableParameter(0, SV_All)	// メッシュレット
+	rigid_.root.AddTableParameter(0, SV_All)	// メッシュレット
+		.AddTableParameter(1, SV_All)	// 頂点
+		.AddTableParameter(2, SV_All)	// ユニークポインタ
+		.AddTableParameter(3, SV_All)	// プリミティブインデックス
+		.AddCBVParameter(2, SV_All)	// トランスフォーム
+		.AddCBVParameter(0, SV_All)	// 共通データ
+		.AddCBVParameter(1, SV_All)	// カメラのView
+		.AddTableParameter(4, SV_Pixel)	// マテリアル
+		.AddTableParameter(5, SV_Pixel)	// 平行光源
+		.AddTableParameter(6, SV_Pixel)	// 点光源
+		.AddTableParameter(7, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
+		.AddTableParameter(507, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
+		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
+			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
+		.Build(device->GetDevice());
+	skinning_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
 		.AddTableParameter(3, SV_All)	// プリミティブインデックス
@@ -43,6 +60,12 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 #endif
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
 		.Build(device->GetDevice());
+	skinning_.pso.Init(rigid_.root, dxc, PSO::Type::Mesh)
+		.SetMeshShader("ms/Meshlet.MS.hlsl")
+		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.Build(device->GetDevice());
+
+
 }
 
 void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -122,6 +145,17 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list) {
 
 			// ConstantBufferのViewをセット
 			list->SetGraphicsRootConstantBufferView(4, rm->buffer.GetGPUView());
+
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
+		// スキニングモデルを描画
+		for (SkinningModel* sm : m.skin.list) {
+			// isActiveがfalseなら描画しない
+			if (!sm->isActive) { continue; }
+
+			// ConstantBufferのViewをセット
+			list->SetGraphicsRootConstantBufferView(4, sm->buffer.GetGPUView());
 
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
