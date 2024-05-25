@@ -13,6 +13,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	//model.LoadShortPath("human/simpleSkin.gltf");
 	model.worldTF.translation.y = 0.4f;
 	model.worldTF.scale = { 0.4f,0.4f,0.4f };
+	model.enableLighting = true;
 	// アニメーション用意
 	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
 	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);
@@ -28,8 +29,8 @@ void Player::Init(LWP::Object::Camera* ptr) {
 
 	// 点光源
 	pl.transform.Parent(&model.worldTF);
-	pl.transform.translation.z = 0.75f;
-	pl.transform.translation.y = 1.0f;
+	pl.transform.translation.z = 2.0f;
+	pl.transform.translation.y = 1.75f;
 	pl.radius = 13.0f;
 	pl.intensity = 0.4f;
 	pl.isActive = true;

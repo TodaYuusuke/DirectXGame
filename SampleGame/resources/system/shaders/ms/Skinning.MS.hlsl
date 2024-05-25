@@ -17,9 +17,9 @@ Skinned Skinning(Vertex v)
     skinned.position.w = 1.0f;
     
     skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.x].skeletonSpaceInverseTransposeMatrix) * v.weight.x;
-    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.y].skeletonSpaceInverseTransposeMatrix) * v.weight.y;
-    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.z].skeletonSpaceInverseTransposeMatrix) * v.weight.z;
-    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.w].skeletonSpaceInverseTransposeMatrix) * v.weight.w;
+    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.y].skeletonSpaceInverseTransposeMatrix) * v.weight.y;
+    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.z].skeletonSpaceInverseTransposeMatrix) * v.weight.z;
+    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.w].skeletonSpaceInverseTransposeMatrix) * v.weight.w;
     skinned.normal = normalize(skinned.normal);
     
     return skinned;
