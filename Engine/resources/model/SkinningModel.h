@@ -27,7 +27,7 @@ namespace LWP::Resource {
 	public: // ** パブリックなメンバ変数 ** //
 		
 		// スケルトン
-		std::optional<Primitive::Skeleton> skeleton{};
+		Primitive::Skeleton skeleton{};
 		// スキンクラスター
 		std::optional<Primitive::SkinCluster> skinCluster{};
 		

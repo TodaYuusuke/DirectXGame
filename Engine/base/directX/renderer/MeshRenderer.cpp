@@ -213,6 +213,4 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
 	}
-
-
 }

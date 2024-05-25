@@ -40,7 +40,7 @@ void Animation::Update() {
 	time_ = std::fmod(time_, duration_);
 
 
-	for (Joint& joint : modelPtr_->skeleton->joints) {
+	for (Joint& joint : modelPtr_->skeleton.joints) {
 		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
 		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
 			const NodeAnimation& rootNodeAnimation = (*it).second;

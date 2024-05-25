@@ -35,6 +35,11 @@ namespace LWP::Primitive {
 		/// </summary>
 		/// <param name="aiMesh"></param>
 		void Load(aiMesh* mesh);
+		/// <summary>
+		/// Assimpのmeshデータから情報を読み込む
+		/// </summary>
+		/// <param name="aiMesh"></param>
+		void Load(aiMesh* mesh, Skeleton& skeleton, SkinCluster& cluster);
 
 		/// <summary>
 		/// 頂点数を返す関数

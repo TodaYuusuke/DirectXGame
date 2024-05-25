@@ -25,6 +25,20 @@ void ModelData::Load(const std::string& filePath) {
 	std::vector<uint32_t> indexes;
 	std::vector<Base::MaterialStruct> materials;
 
+	// ノード情報を格納
+	if (scene->mRootNode) {
+		// 新しいノードを生成
+		nodes_.emplace_back();
+		// 読み込む
+		nodes_.back().Load(scene->mRootNode);
+		// スケルトンを作成
+		skeleton_.emplace();
+		skeleton_->Create(nodes_[0]);
+		// skeletonからSkinClusterを生成
+		skinCluster_.emplace(static_cast<uint32_t>(skeleton_->joints.size()));
+	}
+
+
 	// Meshの解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];
@@ -33,7 +47,13 @@ void ModelData::Load(const std::string& filePath) {
 		meshes_.emplace_back();
 		// 読み込む
 		Mesh& m = meshes_.back();
-		m.Load(mesh);
+		// もしskeletonが作られているなら
+		if (skeleton_.has_value()) {
+			m.Load(mesh, skeleton_.value(), skinCluster_.value());
+		}
+		else {
+			m.Load(mesh);
+		}
 
 		// 今読み込み済みの頂点数を保持
 		int vertexCount = static_cast<int>(vertices.size());
@@ -45,14 +65,6 @@ void ModelData::Load(const std::string& filePath) {
 		for (int i = 0; i < m.indexes.size(); i++) {
 			indexes.push_back(m.indexes[i] + vertexCount);
 		}
-	}
-
-	// ノード情報を格納
-	if (scene->mRootNode) {
-		// 新しいノードを生成
-		nodes_.emplace_back();
-		// 読み込む
-		nodes_.back().Load(scene->mRootNode);
 	}
 
 	// マテリアルの解析

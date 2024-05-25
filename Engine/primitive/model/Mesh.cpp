@@ -95,21 +95,33 @@ void Mesh::Load(aiMesh* mesh) {
 		for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; weightIndex++) {
 			// ウェイト情報を追加
 			jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
+			//vertices[bone->mWeights[weightIndex].mVertexId].weight = bone->mWeights[weightIndex].mWeight;
+			//jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 		}
 	}
 
-	//for(const auto& JointWeight : jointWeightData.)
-	//for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
-	//	aiBone* bone = mesh->mBones[boneIndex];
-	//	for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
-	//		auto& SkinningVertex = vertices[bone->mWeights[weightIndex].mVertexId];
-	//		for (uint32_t index = 0; index < Vertex::kNumMaxInfluence; ++index) {
-	//			if (SkinningVertex.weight[index] == 0.0f) {
-	//				SkinningVertex.weight[index] = bone->mWeights[weightIndex].mWeight;
-	//				SkinningVertex.jointIndices[index] = bone->mWeights[weightIndex].
-	//				break;
-	//			}
-	//		}
-	//	}
-	//}
+}
+
+void Mesh::Load(aiMesh* mesh, Skeleton& skeleton, SkinCluster& cluster) {
+	Load(mesh);
+
+	// Influenceを埋める
+	for (const auto& jointWeight : skinClusterData_) {
+		auto it = skeleton.jointMap.find(jointWeight.first);
+		if (it == skeleton.jointMap.end()) {
+			continue;
+		}
+		// (*it).secondにはJointのIndexが入っているので、該当のIndexのInverseBindPoseMatrixを代入
+		cluster.inverseBindPoseMatrices[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
+		for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
+			auto& currentInfluence = vertices[vertexWeight.vertexIndex];
+			for (uint32_t index = 0; index < Primitive::Vertex::kNumMaxInfluence; ++index) {
+				if (currentInfluence.weight[index] == 0.0f) {
+					currentInfluence.weight[index] = vertexWeight.weight;
+					currentInfluence.jointIndices[index] = (*it).second;
+					break;
+				}
+			}
+		}
+	}
 }

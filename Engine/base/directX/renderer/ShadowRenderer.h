@@ -72,16 +72,24 @@ namespace LWP::Base {
 
 
 	private: // ** プライベートなメンバ変数 ** //
-			// インデックスバッファ
+		// インデックスバッファ
 		StructuredBuffer<IndexInfoStruct> indexBuffer_;
-		// RootSignature
-		RootSignature root_;
-		// PSO
-		PSO pso_;
 
-		// MeshShader用
-		RootSignature MSroot_;	// RootSignature
-		PSO MSpso_;	// PSO
+		// 書き込むデータの種類
+		struct RenderData {
+			// RootSignature
+			RootSignature root;
+			// PSO
+			PSO pso;
+		};
+
+		// 通常
+		RenderData normal_;
+		// 固体モデル
+		RenderData rigid_;
+		// スキニングモデル
+		RenderData skinning_;
+
 
 		// ターゲット（Direction）
 		std::list<Target<SM_Direction>> targetDir_;
