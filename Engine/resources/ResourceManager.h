@@ -11,6 +11,10 @@
 // 3Dモデル
 #include "primitive/3d/OldMesh.h"
 #include "model/RigidModel.h"
+#pragma region Standard
+#include "model/standard/Cube.h"
+#pragma endregion
+
 #include "model/SkinningModel.h"
 #include "model/ModelData.h"
 

@@ -13,7 +13,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 立方体
 	/// </summary>
-	class Cube final
+	class oldCube final
 		: public IPrimitive {
 	public: // ** 関数 ** //
 

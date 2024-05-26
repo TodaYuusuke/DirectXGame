@@ -154,9 +154,6 @@
     <ClCompile Include="Engine\object\collider\ICollider.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Cube.cpp">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\collider\cSphere.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
@@ -271,6 +268,7 @@
     <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
+    <ClCompile Include="Engine\resources\model\standard\Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -462,9 +460,6 @@
     <ClInclude Include="Engine\object\collider\ColliderManager.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Cube.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\collider\cSphere.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
@@ -630,6 +625,7 @@
     <ClInclude Include="Engine\base\directX\utility\PSO.h" />
     <ClInclude Include="Engine\resources\model\SkinningModel.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />
+    <ClInclude Include="Engine\resources\model\standard\Cube.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

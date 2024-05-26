@@ -23,7 +23,7 @@ namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
 	/// </summary>
-	class RigidModel final : public IModel {
+	class RigidModel : public IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// マテリアル
