@@ -32,7 +32,7 @@ namespace LWP::Resource {
 		std::optional<Primitive::SkinCluster> skinCluster{};
 		
 		// バッファー
-		Base::ConstantBuffer<Base::InstanceSkinData> buffer;
+		//Base::ConstantBuffer<Base::InstanceSkinData> buffer;
 		std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> wellBuffer;
 
 	public: // ** メンバ関数 ** //

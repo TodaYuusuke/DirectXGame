@@ -9,10 +9,9 @@ struct ViewProjection
     float32_t4x4 m;
 };
 
-ConstantBuffer<InstanceData> InstanceData : register(b0);
 ConstantBuffer<ViewProjection> gViewProjection : register(b1);
 
-StructuredBuffer<Well> Wells : register(t4);
+StructuredBuffer<Well> Wells : register(t5);
 
 float32_t4 Skinning(Vertex v) {
     float32_t4 result;
@@ -31,12 +30,13 @@ float32_t4 Skinning(Vertex v) {
 void main(
     in uint32_t gid  : SV_GroupID,
     in uint32_t gtid : SV_GroupThreadID,
+    in payload PayLoad meshPayload,
     out vertices ShadowMapOutput outVerts[128],
     out indices uint32_t3     outIndices[128]
 )
 {
     // Meshlet取得
-    Meshlet meshlet = mMeshlets[gid];
+    Meshlet meshlet = mMeshlets[meshPayload.groupID];
 
     // メッシュレット出力数を求める
     SetMeshOutputCounts(meshlet.VertCount, meshlet.PrimCount);
@@ -49,7 +49,7 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点座標を求める
-        outVerts[gtid].position = mul(mul(Skinning(vertex), InstanceData.wtf.m), gViewProjection.m);
+        outVerts[gtid].position = mul(mul(Skinning(vertex), InstData[gid].wtf.m), gViewProjection.m);
     }
     if (gtid < meshlet.PrimCount)
     {

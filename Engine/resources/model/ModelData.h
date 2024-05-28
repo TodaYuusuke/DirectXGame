@@ -24,6 +24,7 @@ namespace LWP::Resource {
 		// スキンクラスター
 		std::optional<Primitive::SkinCluster> skinCluster_{};
 
+
 		// データバッファ群
 		struct Buffers {
 			//Base::ConstantBuffer<Math::Matrix4x4> transform;		// ワールドトランスフォーム

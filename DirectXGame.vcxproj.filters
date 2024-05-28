@@ -142,9 +142,6 @@
     <ClCompile Include="Engine\utility\CatmullRom.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\core\Particle.cpp">
-      <Filter>Engine\object\core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\utility\UI.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
@@ -269,6 +266,7 @@
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
     <ClCompile Include="Engine\resources\model\standard\Cube.cpp" />
+    <ClCompile Include="Engine\object\core\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">

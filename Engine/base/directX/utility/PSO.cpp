@@ -122,6 +122,21 @@ PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode)
 	}
 	return *this;
 }
+PSO& PSO::SetAmpShader(std::string filePath) {
+	// Mesh以外ならセットしないのでエラー
+	assert(type_ == Type::Mesh);
+	// 空ならコンパイルしない
+	if (filePath.empty()) { return *this; }
+
+	// シェーダーをコンパイルする
+	IDxcBlob* blob = nullptr;
+	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"as_6_5");
+	assert(blob != nullptr);
+
+	// セット
+	desc_.mesh.AS = { blob->GetBufferPointer(),blob->GetBufferSize() };
+	return *this;
+}
 PSO& PSO::SetMeshShader(std::string filePath) {
 	// Mesh以外ならセットしないのでエラー
 	assert(type_ == Type::Mesh);

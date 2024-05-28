@@ -25,15 +25,45 @@
 namespace LWP::Base {
 	class DirectXCommon;
 };
+// モデル別のデータの構造体（AS実装のときに役立つ予定）
+namespace LWP::Base {
+	struct InstanceData {
+		Base::WTFStruct wtf;
+		int32_t enableLighting;
+
+		InstanceData() = default;
+		InstanceData(const Resource::RigidModel& value);
+		InstanceData(const Resource::SkinningModel& value);
+		// Materialクラスのデータを代入する演算子をオーバーロード
+		InstanceData& operator=(const Resource::RigidModel& value);
+		InstanceData& operator=(const Resource::SkinningModel& value);
+	};
+}
+
 
 namespace LWP::Resource {
 	// ** 使用する構造体を先に宣言しておく ** //
 	
 	// モデルデータ本体とアダプタークラスのポインタマネージャー
 	struct Models {
+		struct Common {
+			uint32_t instanceCount = 0;
+			uint32_t materialCount = 0;
+		};
+		struct Buffer {
+			// トランスフォームのバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::InstanceData>> inst;
+			// マテリアルバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> material;
+			// モデル別共通データ
+			Base::ConstantBuffer<Common> common;
+		};
+
 		ModelData data;
 		Utility::PtrManager<RigidModel*> rigid;
+		Buffer rigidBuffer;
 		Utility::PtrManager<SkinningModel*> skin;
+		Buffer skinBuffer;
 	};
 
 	/// <summary>

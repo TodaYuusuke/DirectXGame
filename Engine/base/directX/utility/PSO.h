@@ -29,6 +29,7 @@ namespace LWP::Base {
 		PSO& SetRasterizerState(
 			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
 			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
+		PSO& SetAmpShader(std::string filePath);
 		PSO& SetMeshShader(std::string filePath);
 		PSO& SetVertexShader(std::string filePath);
 		PSO& SetPixelShader(std::string filePath);

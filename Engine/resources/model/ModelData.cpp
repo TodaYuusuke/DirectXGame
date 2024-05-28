@@ -112,7 +112,7 @@ void ModelData::Load(const std::string& filePath) {
 	buffers_.vertex = std::make_unique<StructuredBuffer<Base::VertexStruct>>(static_cast<int32_t>(vertices.size()));	// 頂点
 	buffers_.uniqueVertexIndices = std::make_unique<StructuredBuffer<uint32_t>>(static_cast<int32_t>(uniqueVertices.size()));	// 固有頂点
 	buffers_.primitiveIndices = std::make_unique<StructuredBuffer<uint32_t>>(static_cast<int32_t>(primitiveIndices.size()));		// 形状プリミティブ
-	buffers_.materials = std::make_unique<StructuredBuffer<Base::MaterialStruct>>(static_cast<int32_t>(materials.size()));		// 形状プリミティブ
+	buffers_.materials = std::make_unique<StructuredBuffer<Base::MaterialStruct>>(static_cast<int32_t>(materials.size()));		// マテリアル
 	// バッファの初期化
 	buffers_.meshlet->Init(device, srv);
 	buffers_.vertex->Init(device, srv);

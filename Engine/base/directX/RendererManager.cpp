@@ -61,9 +61,9 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 	std::function<void()> meshFunc = [&]() {
 		ID3D12GraphicsCommandList* list = commander_.List();
 		// 各種Viewをセット
-		buffers_.SetCommonView(5, list);
-		buffers_.SetDirLightView(8, list);
-		buffers_.SetPointLightView(9, list);
+		buffers_.SetCommonView(6, list);
+		buffers_.SetDirLightView(9, list);
+		buffers_.SetPointLightView(10, list);
 	};
 
 	// シャドウレンダラー初期化
@@ -129,30 +129,6 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 
 		// 送信
 		sendTo(indexInfo);
-	}
-}
-
-void RendererManager::AddParticleData(Primitive::IPrimitive* primitive,const std::vector<Object::ParticleData>& wtf) {
-	// IndexInfo構造体に加工
-	IndexInfoStruct common = ProcessIndexInfo(primitive);
-	// データを書き込む先を設定
-	std::function<void(const IndexInfoStruct&)> sendTo = ProcessSendFunction(primitive);
-
-	for (int w = 0; w < wtf.size(); w++) {
-		IndexInfoStruct tfInfo = common;
-		// ワールドトランスフォームをデータに登録
-		WTFStruct wS;
-		wS = wtf[w].wtf;
-		tfInfo.worldMatrix = buffers_.AddData(wS);
-		// Indexの分だけIndexInfoを求める
-		for (int i = 0; i < primitive->GetIndexCount(); i++) {
-			IndexInfoStruct indexInfo = tfInfo;
-			// インデックス分ずらす
-			indexInfo.vertex += primitive->indexes[i];
-
-			// 送信
-			sendTo(indexInfo);
-		}
 	}
 }
 

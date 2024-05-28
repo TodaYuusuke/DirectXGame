@@ -10,19 +10,9 @@ using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-InstanceSkinData::InstanceSkinData(const Resource::SkinningModel& value) {
-	*this = value;
-}
-InstanceSkinData& InstanceSkinData::operator=(const Resource::SkinningModel& value) {
-	wtf = value.worldTF;
-	enableLighting = value.enableLighting;
-	return *this;
-}
 
-SkinningModel::SkinningModel() {
-	// バッファ作成
-	buffer.Init(System::engine->directXCommon_->GetGPUDevice());
-}
+
+SkinningModel::SkinningModel() {}
 SkinningModel::~SkinningModel() {
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
 
@@ -71,7 +61,6 @@ void SkinningModel::Update() {
 		wellBuffer->data_[jointIndex] = skinCluster->mappedPalette[jointIndex];
 	}
 
-	*buffer.data_ = *this;
 	// データのコピー
 	//std::memcpy(wellBuffer->data_, skinCluster->mappedPalette.data(), sizeof(Primitive::WellForGPU) * skinCluster->mappedPalette.size());
 }

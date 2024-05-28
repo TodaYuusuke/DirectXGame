@@ -12,6 +12,10 @@ namespace LWP::Resource {
 		/// デフォルトコンストラクタ
 		/// </summary>
 		Cube();
+		/// <summary>
+		/// コピーコンストラクタ
+		/// </summary>
+		Cube(const Cube& other);
 
 		/// <summary>
 		/// デストラクタは基底クラスのものを使用
@@ -22,6 +26,16 @@ namespace LWP::Resource {
 		/// </summary>
 		void DebugGUI() override;
 
+
+		// コピー演算子
+		Cube& operator=(const Cube& other) {
+			if (this != &other) {
+				worldTF = other.worldTF;
+				enableLighting = other.enableLighting;
+				isActive = other.isActive;
+			}
+			return *this;
+		}
 
 	private: // ** 読み込み系関数は秘匿 ** //
 

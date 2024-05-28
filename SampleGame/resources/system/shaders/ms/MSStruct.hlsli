@@ -37,6 +37,15 @@ struct Well
     float32_t4x4 skeletonSpaceInverseTransposeMatrix;
 };
 
+// **  ** //
+struct PayLoad {
+    uint32_t groupID;
+};
+struct ModelCommon {
+    uint32_t instanceSize; // !< Instance Size
+    uint32_t mSize; // !< Material Size
+};
+
 
 // ** CommonData ** //
 struct CommonData {
@@ -91,7 +100,9 @@ StructuredBuffer<Meshlet> mMeshlets : register(t0);
 StructuredBuffer<Vertex> mVertices : register(t1);
 ByteAddressBuffer mUniqueVertexIndices : register(t2);
 StructuredBuffer<uint32_t> mPrimitiveIndices : register(t3);
-
+ConstantBuffer<ModelCommon> mCommonData : register(b0);
+// InstanceData
+StructuredBuffer<InstanceData> InstData : register(t4);
 
 // ** Functions ** //
 

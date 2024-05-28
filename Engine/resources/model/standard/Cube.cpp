@@ -14,6 +14,12 @@ using namespace LWP::Resource;
 Cube::Cube() : RigidModel::RigidModel() {
 	LoadFullPath("resources/system/model/standard/cube.gltf");
 }
+Cube::Cube(const Cube& other) : Cube() {
+	worldTF = other.worldTF;
+	enableLighting = other.enableLighting;
+	isActive = other.isActive;
+}
+
 
 void Cube::DebugGUI() {
 	worldTF.DebugGUI();

@@ -175,7 +175,7 @@ SRVInfo SRV::CreateShadowMapDir(ID3D12Resource* resource) {
 	info.desc.Texture2D.MipLevels = 1;
 	info.desc.Texture2D.MostDetailedMip = 0;
 	info.desc.Texture2D.PlaneSlice = 0;
-	info.desc.Texture2D.ResourceMinLODClamp = 0.0F;
+	info.desc.Texture2D.ResourceMinLODClamp = 0.0f;
 	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	// 空きを使用

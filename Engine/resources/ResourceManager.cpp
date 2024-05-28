@@ -11,8 +11,28 @@
 
 
 using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Resource;
+
+InstanceData::InstanceData(const Resource::RigidModel& value) {
+	*this = value;
+}
+InstanceData& InstanceData::operator=(const Resource::RigidModel& value) {
+	wtf = value.worldTF;
+	enableLighting = value.enableLighting;
+	return *this;
+}
+InstanceData::InstanceData(const Resource::SkinningModel& value) {
+	*this = value;
+}
+InstanceData& InstanceData::operator=(const Resource::SkinningModel& value) {
+	wtf = value.worldTF;
+	enableLighting = value.enableLighting;
+	return *this;
+}
+
+
 
 Manager::~Manager() {
 	// XAudio2解放
@@ -48,17 +68,45 @@ void Manager::Initialize() {
 }
 
 void Manager::Update() {
+	// リセット
+
 	// アニメーション更新
 	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
 	for (Motion* m : motions_.list) { m->Update(); }
 	// モデルアダプター更新
 	for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+		// リソースリセット
+		it->second.rigidBuffer.inst->Reset();
+		it->second.rigidBuffer.material->Reset();
+		it->second.rigidBuffer.common.data_->materialCount = static_cast<uint32_t>(it->second.data.materials_.size());
+		it->second.rigidBuffer.common.data_->instanceCount = 0;
+		it->second.skinBuffer.inst->Reset();
+		it->second.skinBuffer.material->Reset();
+		it->second.skinBuffer.common.data_->materialCount = static_cast<uint32_t>(it->second.data.materials_.size());
+		it->second.skinBuffer.common.data_->instanceCount = 0;
+
 		for (RigidModel* m : it->second.rigid.list) {
 			m->Update();
+			// バッファーにデータ登録
+			if (m->isActive) {
+				it->second.rigidBuffer.inst->Add(*m);
+				for (const Primitive::Material& mat : m->materials) {
+					it->second.rigidBuffer.material->Add(mat);
+				}
+				it->second.rigidBuffer.common.data_->instanceCount += 1;
+			}
 		}
 		for (SkinningModel* m : it->second.skin.list) {
 			m->Update();
+			// バッファーにデータ登録
+			if (m->isActive) {
+				it->second.skinBuffer.inst->Add(*m);
+				//for (const Primitive::Material& mat : m->materials) {
+				//	it->second.skinBuffer.material->Add(mat);
+				//}
+				it->second.skinBuffer.common.data_->instanceCount += 1;
+			}
 		}
 	}
 
@@ -163,6 +211,21 @@ void Manager::LoadModelData(const std::string& filePath) {
 	if (!modelDataMap_.count(filePath)) {
 		// 読み込んだことのない3Dモデルなので読み込む
 		modelDataMap_[filePath].data.Load(filePath);	// 要素は自動追加されるらしい;
+
+		GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+		SRV* srv = System::engine->directXCommon_->GetSRV();
+
+		// リソース作成
+		modelDataMap_[filePath].rigidBuffer.inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
+		modelDataMap_[filePath].rigidBuffer.inst->Init(dev, srv);
+		modelDataMap_[filePath].rigidBuffer.material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
+		modelDataMap_[filePath].rigidBuffer.material->Init(dev, srv);
+		modelDataMap_[filePath].rigidBuffer.common.Init(dev);
+		modelDataMap_[filePath].skinBuffer.inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
+		modelDataMap_[filePath].skinBuffer.inst->Init(dev, srv);
+		modelDataMap_[filePath].skinBuffer.common.Init(dev);
+		modelDataMap_[filePath].skinBuffer.material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
+		modelDataMap_[filePath].skinBuffer.material->Init(dev, srv);
 	}
 }
 ModelData* Manager::GetModelData(const std::string& filePath) {

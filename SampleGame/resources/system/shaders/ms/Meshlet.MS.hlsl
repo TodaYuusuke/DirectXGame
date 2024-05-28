@@ -5,12 +5,13 @@
 void main(
     in uint32_t gid  : SV_GroupID,
     in uint32_t gtid : SV_GroupThreadID,
+    in payload PayLoad meshPayload,
     out vertices VSOutput outVerts[128],
     out indices uint32_t3     outIndices[128]
 )
 {
     // Meshlet取得
-    Meshlet meshlet = mMeshlets[gid];
+    Meshlet meshlet = mMeshlets[meshPayload.groupID];
 
     // メッシュレット出力数を求める
     SetMeshOutputCounts(meshlet.VertCount, meshlet.PrimCount);
@@ -23,12 +24,12 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点のデータを求める
-        outVerts[gtid].pos = mul(mul(vertex.position, InstanceData.wtf.m), cCamera.viewProjection);
-        outVerts[gtid].worldPos = mul(vertex.position, InstanceData.wtf.m).xyz;
+        outVerts[gtid].pos = mul(mul(vertex.position, InstData[gid].wtf.m), cCamera.viewProjection);
+        outVerts[gtid].worldPos = mul(vertex.position, InstData[gid].wtf.m).xyz;
         outVerts[gtid].texcoord = vertex.texcoord;
-        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstanceData.wtf.inverse)));
+        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstData[gid].wtf.inverse)));
         outVerts[gtid].color = vertex.color;
-        outVerts[gtid].mIndex = vertex.mIndex;
+        outVerts[gtid].mIndex = vertex.mIndex + (gid * mCommonData.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }
     if (gtid < meshlet.PrimCount)
     {

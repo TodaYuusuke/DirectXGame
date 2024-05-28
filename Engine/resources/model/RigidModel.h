@@ -6,19 +6,6 @@ namespace LWP::Resource {
 	class RigidModel;
 }
 
-// モデル別のデータの構造体（AS実装のときに役立つ予定）
-namespace LWP::Base {
-	struct InstanceRigidData {
-		Base::WTFStruct wtf;
-		int32_t enableLighting;
-
-		InstanceRigidData() = default;
-		InstanceRigidData(const Resource::RigidModel& value);
-		// Materialクラスのデータを代入する演算子をオーバーロード
-		InstanceRigidData& operator=(const Resource::RigidModel& value);
-	};
-}
-
 namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
@@ -30,9 +17,9 @@ namespace LWP::Resource {
 		std::vector<Primitive::Material> materials;
 
 		// トランスフォームのバッファー
-		Base::ConstantBuffer<Base::InstanceRigidData> buffer;
+		//Base::ConstantBuffer<Base::InstanceRigidData> buffer;
 		// マテリアルバッファー
-		std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> mBuffers;
+		//std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> mBuffers;
 
 	public: // ** メンバ関数 ** //
 
@@ -40,6 +27,7 @@ namespace LWP::Resource {
 		/// デフォルトコンストラクタ
 		/// </summary>
 		RigidModel();
+		RigidModel(const RigidModel& other);
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
@@ -62,14 +50,23 @@ namespace LWP::Resource {
 		void DebugGUI() override;
 
 
-	public: // ** 標準的な形状を使いたいとき用のデータ ** //
-		/// <summary>
-		/// 標準形状一覧
-		/// </summary>
-		enum class Standard {
-			Cube,	// 立方体
-			Sphere,	// スフィア
-		};
-	private: // **  ** //
+		public:	// ** オペレータオーバーロード ** //
+		
+		// コピー演算子
+		RigidModel& operator=(const Resource::RigidModel& other) {
+			if (this != &other) {
+				this->LoadFullPath(other.filePath);
+				worldTF = other.worldTF;
+				enableLighting = other.enableLighting;
+				isActive = other.isActive;
+			}
+			return *this;
+		}
 	};
 }
+
+/// <summary>
+/// RigidModelを継承したクラスのみを選択できるテンプレート
+/// </summary>
+template<class RigidModelT>
+concept IsRigidModel = std::is_base_of<LWP::Resource::RigidModel, RigidModelT>::value;

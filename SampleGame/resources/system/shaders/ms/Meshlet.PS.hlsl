@@ -74,7 +74,7 @@ float32_t4 main(VSOutput input) : SV_TARGET
     // カメラへの視点
     float3 toEye = normalize(cCamera.position - input.worldPos);
     
-    if (InstanceData.enableLighting != 0)
+    if (InstData[0].enableLighting != 0)
     { // Lightingの計算を行う
         // -- テクスチャ -- //
         // uvTransform
