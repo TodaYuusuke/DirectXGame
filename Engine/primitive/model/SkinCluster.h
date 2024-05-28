@@ -3,11 +3,9 @@
 #include "object/TransformQuat.h"
 #include "Node.h"
 
-#include <array>
 #include <vector>
 
 namespace LWP::Primitive {
-	const uint32_t kNumMaxInfluence = 4;
 	struct WellForGPU {
 		Math::Matrix4x4 skeletonSpaceMatrix;	// 位置用
 		Math::Matrix4x4 skeletonSpaceInverseTransposeMatrix;	// 法線用

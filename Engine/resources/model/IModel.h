@@ -7,60 +7,33 @@
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/renderer/ResourceStruct.h"
 
-// 前方宣言
-namespace LWP::Base {
-	class RendererManager;
-}
-namespace LWP::Resource {
-	class Model;
-}
-
-// モデル別のデータの構造体
-namespace LWP::Base {
-	struct ModelStruct {
-		Base::WTFStruct wtf;
-		int32_t enableLighting;
-
-		ModelStruct() = default;
-		ModelStruct(const Resource::Model& value);
-		// Materialクラスのデータを代入する演算子をオーバーロード
-		ModelStruct& operator=(const Resource::Model& value);
-	};
-}
-
 namespace LWP::Resource {
 	/// <summary>
-	/// 3Dモデルを扱うアダプタークラス
+	/// 3Dモデルを扱うアダプターの基底クラス
 	/// </summary>
-	class Model final {
+	class IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// ワールドトランスフォーム
 		Object::TransformEuler worldTF{};
-		// スケルトン
-		std::optional<Primitive::Skeleton> skeleton{};
-		// スキンクラスター（そのうちModelDataに移植）
-		std::optional<Primitive::SkinCluster> skinCluster{};
 
 		// ライティングを行うかどうか
 		bool enableLighting = false;
 		// ワイヤーフレームで描画する
-		//bool isWireFrame = false;
+		bool isWireFrame = false;
 		// アクティブ切り替え
 		bool isActive = true;
-
-		Base::ConstantBuffer<Base::ModelStruct> buffer;
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		Model();
+		IModel() = default;
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~Model();
+		virtual ~IModel() = default;
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む
@@ -76,33 +49,28 @@ namespace LWP::Resource {
 		/// 3Dモデルのデータを読み込む（exeからのパス指定）
 		/// </summary>
 		/// <param name="filePath">読み込むファイルの名前</param>
-		void LoadFullPath(const std::string& filePath);
+		virtual void LoadFullPath(const std::string& filePath) = 0;
 
 		/// <summary>
 		/// 更新（ユーザー呼び出し禁止）
 		/// </summary>
-		void Update();
-		/// <summary>
-		/// 描画（ユーザー呼び出し禁止）
-		/// </summary>
-		void Draw(Base::RendererManager* render);
+		virtual void Update() = 0;
 
 		/// <summary>
 		/// デバッグ用ImGui
 		/// </summary>
-		void DebugGUI();
+		virtual void DebugGUI() = 0;
 
 		/// <summary>
 		/// 読み込み済みのパスを取得
 		/// </summary>
 		std::string LoadedFilePath() { return filePath; }
 
-	private: // ** メンバ変数 ** //
+	protected: // ** メンバ変数 ** //
 
 		// 短縮用パス
 		const static std::string kDirectoryPath;
 		// リソースマネージャー上のモデルを指す為の変数（パスの予定）
 		std::string filePath = "";
-
 	};
 }

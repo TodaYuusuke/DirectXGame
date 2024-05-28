@@ -2,6 +2,8 @@
 #include "object/TransformEuler.h"
 #include "resources/texture/Texture.h"
 
+#include "utility/Color.h"
+
 // assimpの読み込み
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -16,6 +18,8 @@ namespace LWP::Primitive {
 
 		// ライテイングを行うか
 		bool enableLighting = true;
+		// カラー
+		Utility::Color color = { 255,255,255,255 };
 		// uvTransform
 		Object::TransformEuler uvTransform;
 		// 光沢度
@@ -41,7 +45,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// ImGui
 		/// </summary>
-		void DebugGUI();
+		void DebugGUI(const std::string& label = "Material");
 
 
 	public: // ** オペレーターオーバーロード ** //
@@ -62,6 +66,7 @@ namespace LWP::Primitive {
 namespace LWP::Base {
 	struct MaterialStruct {
 		Math::Matrix4x4 uvMatrix;
+		Math::Vector4 color;
 		int32_t enableLighting;
 		float shininess;
 		int32_t textureIndex;

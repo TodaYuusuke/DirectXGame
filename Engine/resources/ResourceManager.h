@@ -10,7 +10,12 @@
 
 // 3Dモデル
 #include "primitive/3d/OldMesh.h"
-#include "model/Model.h"
+#include "model/RigidModel.h"
+#pragma region Standard
+#include "model/standard/Cube.h"
+#pragma endregion
+
+#include "model/SkinningModel.h"
 #include "model/ModelData.h"
 
 
@@ -20,8 +25,47 @@
 namespace LWP::Base {
 	class DirectXCommon;
 };
+// モデル別のデータの構造体（AS実装のときに役立つ予定）
+namespace LWP::Base {
+	struct InstanceData {
+		Base::WTFStruct wtf;
+		int32_t enableLighting;
+
+		InstanceData() = default;
+		InstanceData(const Resource::RigidModel& value);
+		InstanceData(const Resource::SkinningModel& value);
+		// Materialクラスのデータを代入する演算子をオーバーロード
+		InstanceData& operator=(const Resource::RigidModel& value);
+		InstanceData& operator=(const Resource::SkinningModel& value);
+	};
+}
+
 
 namespace LWP::Resource {
+	// ** 使用する構造体を先に宣言しておく ** //
+	
+	// モデルデータ本体とアダプタークラスのポインタマネージャー
+	struct Models {
+		struct Common {
+			uint32_t instanceCount = 0;
+			uint32_t materialCount = 0;
+		};
+		struct Buffer {
+			// トランスフォームのバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::InstanceData>> inst;
+			// マテリアルバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> material;
+			// モデル別共通データ
+			Base::ConstantBuffer<Common> common;
+		};
+
+		ModelData data;
+		Utility::PtrManager<RigidModel*> rigid;
+		Buffer rigidBuffer;
+		Utility::PtrManager<SkinningModel*> skin;
+		Buffer skinBuffer;
+	};
+
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
 	/// </summary>
@@ -34,8 +78,6 @@ namespace LWP::Resource {
 		void Initialize();
 		// 更新
 		void Update();
-		// 描画
-		void Draw(Base::RendererManager* render);
 
 		// 読み込み
 
@@ -56,15 +98,17 @@ namespace LWP::Resource {
 		void LoadModelData(const std::string& filePath);
 		// モデルデータの実体を受け取る関数
 		ModelData* GetModelData(const std::string& filePath);
-		// モデルアダプターの配列を受け取る関数
-		std::list<Model*>& GetModels();
+		// モデルデータ達の配列を受け取る関数
+		std::vector<std::reference_wrapper<Models>> GetModels();
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
-		void SetPointer(Model* ptr) { models_.SetPointer(ptr); }
+		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.SetPointer(ptr); }
+		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.SetPointer(ptr); }
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
 		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
-		void DeletePointer(Model* ptr) { models_.DeletePointer(ptr); }
+		void DeletePointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.DeletePointer(ptr); }
+		void DeletePointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.DeletePointer(ptr); }
 		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
 		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 
@@ -89,9 +133,7 @@ namespace LWP::Resource {
 		std::map<std::string, Primitive::OldMeshData> oldMeshMap_;
 
 		// 3Dモデルの配列
-		std::map<std::string, ModelData> modelDataMap_;
-		// 3Dモデルのアダプター
-		Utility::PtrManager<Model*> models_;
+		std::map<std::string, Models> modelDataMap_;
 
 		// アニメーションの配列
 		Utility::PtrManager<Animation*> animations_;
@@ -100,10 +142,17 @@ namespace LWP::Resource {
 
 #if DEMO
 		// ImGui用変数
+		int selectedClass = 0;
+		int radioValue = 0;
 		int currentItem = 0;
+		// デバッグ用の生成したインスンタンスを格納しておく配列
+		std::vector<IModel*> debugModels;
 #endif
 
 	private:
 		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
+
+		void RigidGUI(Models& m);
+		void SkinningGUI(Models& m);
 	};
 }

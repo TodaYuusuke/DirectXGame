@@ -4,7 +4,6 @@
 #include "renderer/ShadowRenderer.h"
 #include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
-#include "renderer/SkinningRenderer.h"
 #include "renderer/MeshRenderer.h"
 #include "renderer/BufferGroup.h"
 
@@ -24,7 +23,7 @@ namespace LWP::Primitive {
 }
 namespace LWP::Resource {
 	class ModelData;
-	class Model;
+	class RigidModel;
 }
 
 
@@ -59,11 +58,7 @@ namespace LWP::Base {
 		/// Primitiveのデータをセット
 		/// </summary>
 		void AddPrimitiveData(Primitive::IPrimitive* primitive);
-		/// <summary>
-		/// Particleのデータをセット
-		/// </summary>
-		void AddParticleData(Primitive::IPrimitive* primitive, const std::vector<Object::ParticleData>& wtf);
-
+		
 		/// <summary>
 		/// 平行光源のデータをセット
 		/// </summary>
@@ -112,8 +107,6 @@ namespace LWP::Base {
 	private:
 		// レンダラー
 		NormalRenderer normalRender_;
-		// スキニング
-		SkinningRenderer skinningRender_;
 		// メッシュシェーダー
 		MeshRenderer meshRenderer_;
 	public:
@@ -125,7 +118,6 @@ namespace LWP::Base {
 		/// <param name="depth">DepthStencil</param>
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { 
 			normalRender_.AddTarget({ view, back, depth });
-			skinningRender_.AddTarget({ view, back, depth });
 			meshRenderer_.AddTarget({ view, back, depth });
 		}
 #pragma endregion

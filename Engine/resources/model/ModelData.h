@@ -19,6 +19,11 @@ namespace LWP::Resource {
 		std::vector<Primitive::Node> nodes_;
 		// マテリアル
 		std::vector<Primitive::Material> materials_;
+		// スケルトン
+		std::optional<Primitive::Skeleton> skeleton_{};
+		// スキンクラスター
+		std::optional<Primitive::SkinCluster> skinCluster_{};
+
 
 		// データバッファ群
 		struct Buffers {
@@ -27,7 +32,7 @@ namespace LWP::Resource {
 			std::unique_ptr<Base::StructuredBuffer<Base::VertexStruct>> vertex;	// 頂点
 			std::unique_ptr<Base::StructuredBuffer<uint32_t>> uniqueVertexIndices;// 固有頂点インデックス
 			std::unique_ptr<Base::StructuredBuffer<uint32_t>> primitiveIndices;	// プリミティブインデックス
-			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> materials;	// プリミティブインデックス
+			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> materials;	// マテリアル
 		}buffers_;
 
 	private: // ** メンバ変数 ** //

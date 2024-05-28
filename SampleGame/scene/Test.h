@@ -2,6 +2,8 @@
 #include <Adapter.h>
 #include "scene/IScene.h"
 
+#include "../class/particle/DamageParticle.h"
+
 class Test final
 	: public IScene {
 public:
@@ -15,10 +17,15 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Resource::Model mesh;
+	LWP::Resource::RigidModel mesh;
 	//LWP::Resource::Animation anim;
 	LWP::Primitive::Sprite sprite;
 	LWP::Object::Camera subCamera;
 
+	LWP::Resource::Cube cube;
+	LWP::Resource::RigidModel cube2;
+
 	LWP::Object::PointLight pl;
+
+	DamageParticle damageParticle_;
 };

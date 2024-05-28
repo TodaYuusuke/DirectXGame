@@ -20,32 +20,32 @@ void Mesh::Load(aiMesh* mesh) {
 
 	// Vertexの解析
 	for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; vertexIndex++) {
-		SkinningVertex newVertex;
+		Vertex newVertex;
 
 		// インデックス情報を元に情報を取得する
 		aiVector3D& position = mesh->mVertices[vertexIndex];		 // 頂点座標取得
-		newVertex.v.position = { -position.x, position.y, position.z }; // 頂点座標追加
+		newVertex.position = { -position.x, position.y, position.z }; // 頂点座標追加
 
 		// uv座標チェック
 		if (hasTexcoord) {
 			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex]; // テクスチャ座標取得
-			newVertex.v.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
+			newVertex.texCoord = { texcoord.x, texcoord.y };			  // テクスチャ座標追加
 		}
 		else {
-			newVertex.v.texCoord = { 0.0f,0.0f };
+			newVertex.texCoord = { 0.0f,0.0f };
 		}
 
 		// 法線チェック
 		if (hasNormal) {
 			aiVector3D& normal = mesh->mNormals[vertexIndex];			 // 法線取得
-			newVertex.v.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
+			newVertex.normal = { -normal.x, normal.y, normal.z };		  // 法線追加
 		}
 		else {
-			newVertex.v.normal = newVertex.v.position;
+			newVertex.normal = newVertex.position;
 		}
 
 		// マテリアル番号を頂点に保持
-		newVertex.v.materialIndex = materialIndex;
+		newVertex.materialIndex = materialIndex;
 
 		// 頂点データを追加
 		vertices.push_back(newVertex);
@@ -95,21 +95,33 @@ void Mesh::Load(aiMesh* mesh) {
 		for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; weightIndex++) {
 			// ウェイト情報を追加
 			jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
+			//vertices[bone->mWeights[weightIndex].mVertexId].weight = bone->mWeights[weightIndex].mWeight;
+			//jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 		}
 	}
 
-	//for(const auto& JointWeight : )
-	//for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
-	//	aiBone* bone = mesh->mBones[boneIndex];
-	//	for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
-	//		auto& SkinningVertex = vertices[bone->mWeights[weightIndex].mVertexId];
-	//		for (uint32_t index = 0; index < Primitive::kNumMaxInfluence; ++index) {
-	//			if (SkinningVertex.weight[index] == 0.0f) {
-	//				SkinningVertex.weight[index] = bone->mWeights[weightIndex].mWeight;
-	//				SkinningVertex.jointIndices[index] = bone->mWeights[weightIndex].
-	//				break;
-	//			}
-	//		}
-	//	}
-	//}
+}
+
+void Mesh::Load(aiMesh* mesh, Skeleton& skeleton, SkinCluster& cluster) {
+	Load(mesh);
+
+	// Influenceを埋める
+	for (const auto& jointWeight : skinClusterData_) {
+		auto it = skeleton.jointMap.find(jointWeight.first);
+		if (it == skeleton.jointMap.end()) {
+			continue;
+		}
+		// (*it).secondにはJointのIndexが入っているので、該当のIndexのInverseBindPoseMatrixを代入
+		cluster.inverseBindPoseMatrices[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
+		for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
+			auto& currentInfluence = vertices[vertexWeight.vertexIndex];
+			for (uint32_t index = 0; index < Primitive::Vertex::kNumMaxInfluence; ++index) {
+				if (currentInfluence.weight[index] == 0.0f) {
+					currentInfluence.weight[index] = vertexWeight.weight;
+					currentInfluence.jointIndices[index] = (*it).second;
+					break;
+				}
+			}
+		}
+	}
 }

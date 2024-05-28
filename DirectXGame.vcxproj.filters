@@ -142,9 +142,6 @@
     <ClCompile Include="Engine\utility\CatmullRom.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\core\Particle.cpp">
-      <Filter>Engine\object\core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\utility\UI.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
@@ -153,9 +150,6 @@
     </ClCompile>
     <ClCompile Include="Engine\object\collider\ICollider.cpp">
       <Filter>Engine\object\collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Cube.cpp">
-      <Filter>Engine\primitive\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\collider\cSphere.cpp">
       <Filter>Engine\object\collider</Filter>
@@ -257,12 +251,11 @@
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
     <ClCompile Include="Engine\primitive\model\Mesh.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
-    <ClCompile Include="Engine\resources\model\Model.cpp" />
+    <ClCompile Include="Engine\resources\model\RigidModel.cpp" />
     <ClCompile Include="Engine\primitive\model\Node.cpp" />
     <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
     <ClCompile Include="Engine\primitive\model\Joint.cpp" />
     <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\SkinningRenderer.cpp" />
     <ClCompile Include="Engine\primitive\model\JointWeight.cpp" />
     <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
@@ -270,6 +263,10 @@
     <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
+    <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
+    <ClCompile Include="Engine\resources\model\IModel.cpp" />
+    <ClCompile Include="Engine\resources\model\standard\Cube.cpp" />
+    <ClCompile Include="Engine\object\core\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -461,9 +458,6 @@
     <ClInclude Include="Engine\object\collider\ColliderManager.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Cube.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\collider\cSphere.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
@@ -614,13 +608,12 @@
     <ClInclude Include="Engine\object\TransformQuat.h" />
     <ClInclude Include="Engine\primitive\model\Mesh.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
-    <ClInclude Include="Engine\resources\model\Model.h" />
+    <ClInclude Include="Engine\resources\model\RigidModel.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
     <ClInclude Include="Engine\primitive\model\Node.h" />
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
     <ClInclude Include="Engine\primitive\model\Joint.h" />
     <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
-    <ClInclude Include="Engine\base\directX\renderer\SkinningRenderer.h" />
     <ClInclude Include="Engine\primitive\model\JointWeight.h" />
     <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
@@ -628,6 +621,9 @@
     <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
     <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\utility\PSO.h" />
+    <ClInclude Include="Engine\resources\model\SkinningModel.h" />
+    <ClInclude Include="Engine\resources\model\IModel.h" />
+    <ClInclude Include="Engine\resources\model\standard\Cube.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -756,25 +752,5 @@
     <Filter Include="Engine\base\directX\postEffect">
       <UniqueIdentifier>{a22509c4-b405-4685-9374-18ea4100d5e7}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard2D.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard3D.VS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard.PS.hlsl">
-      <Filter>Engine\resources\shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

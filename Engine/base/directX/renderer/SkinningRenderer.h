@@ -62,7 +62,7 @@ namespace LWP::Base {
 		void Reset();
 
 		// 頂点バッファ
-		StructuredBuffer<Primitive::SkinningVertexStruct> vertexBuffer;
+		//StructuredBuffer<Primitive::SkinningVertexStruct> vertexBuffer;
 
 	private: // ** プライベートなメンバ変数 ** //
 		// ターゲット配列

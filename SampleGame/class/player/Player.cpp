@@ -10,9 +10,13 @@ using namespace LWP::Object;
 void Player::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
 	model.LoadShortPath("human/walk.gltf");
-	model.worldTF.scale = { 0.3f,0.3f,0.3f };
+	//model.LoadShortPath("human/simpleSkin.gltf");
+	model.worldTF.translation.y = 0.4f;
+	model.worldTF.scale = { 0.4f,0.4f,0.4f };
+	model.enableLighting = true;
 	// アニメーション用意
-	//walkAnim.LoadAnimationLongPath("resources/model/Player/C_Body.gltf", &model);
+	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
+	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);
 	
 	// カメラのポインタをセット
 	camera_ = ptr;
@@ -25,18 +29,13 @@ void Player::Init(LWP::Object::Camera* ptr) {
 
 	// 点光源
 	pl.transform.Parent(&model.worldTF);
-	pl.transform.translation.x = 0.75f;
-	pl.transform.translation.y = 1.0f;
+	pl.transform.translation.z = 2.0f;
+	pl.transform.translation.y = 1.75f;
 	pl.radius = 13.0f;
 	pl.intensity = 0.4f;
 	pl.isActive = true;
 
 
-	// まとめて行う処理
-	//for (int i = 0; i < 4; i++) {
-	//	meshes[i].material.enableLighting = true;
-	//walkAnim.Start();
-	//}
 }
 
 // 更新
@@ -81,7 +80,7 @@ void Player::Move() {
 		// Y軸周りの角度
 		goalRotation.y = std::atan2f(dir.x, dir.z);
 		// モデルの回転分補正
-		goalRotation.y -= 1.57f;
+		//goalRotation.y -= 1.57f;
 		// X軸周りの角度
 		//goalRotation.x = std::atan2f(-dir.y, Vector3{ dir.x, 0.0f, dir.z }.Length());
 
@@ -98,6 +97,15 @@ void Player::Move() {
 		// 回転適応
 		rotation.y = goalRotation.y;
 		//rotation = Utility::Interp::Slerp(rotation, goalRotation, 0.2f);
+
+		// 歩いているのでアニメーション起動
+		if (walkAnim.isEnd()) {
+			walkAnim.Start();
+		}
+	}
+	else {
+		// 歩いていないでアニメーションストップ（無理やり0秒地点に固定している）
+		walkAnim.Start();
 	}
 }
 

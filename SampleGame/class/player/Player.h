@@ -14,7 +14,7 @@ private:
 	// プレイヤーの速度
 	const float kPlayerSpeed = 0.1f;
 	// 3Dモデル
-	LWP::Resource::Model model;
+	LWP::Resource::SkinningModel model;
 	// アニメーション
 	LWP::Resource::Animation walkAnim;
 	
@@ -35,8 +35,7 @@ private: // ** カメラ系処理 ** //
 	// 追従させるカメラのポインタ
 	LWP::Object::Camera* camera_ = nullptr;
 	// カメラのオフセット
-	//const LWP::Math::Vector3 cameraOffset_ = { -20.0f, 3.0f, 0.0f };
-	const LWP::Math::Vector3 cameraOffset_ = { 0.0f, 3.0f, -20.0f };
+	const LWP::Math::Vector3 cameraOffset_ = { 0.0f, 2.5f, -20.0f };
 
 	void FollowCameraUpdate();
 };

@@ -23,6 +23,13 @@ void Test::Initialize() {
 	mainCamera.isActive = true;
 	mainCamera.pp.use = true;
 	mainCamera.pp.vignetting.use = true;
+
+	damageParticle_.model.worldTF.scale = { 0.0001f,0.001f, 0.0001f };
+	damageParticle_.model.materials[0].enableLighting = true;
+	damageParticle_.model.materials[0].color = Utility::Color(Utility::ColorPattern::RED);
+	damageParticle_.isActive = true;
+
+	cube2 = cube;
 }
 
 // 更新
@@ -37,6 +44,6 @@ void Test::Update() {
 
 	// ポストプロセス用のシェーダー更新
 	if (Input::Keyboard::GetTrigger(DIK_P)) {
-		//mainCamera.pp.CreatePSO();
+		damageParticle_.Add(32);
 	}
 }

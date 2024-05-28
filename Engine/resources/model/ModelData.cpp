@@ -25,6 +25,20 @@ void ModelData::Load(const std::string& filePath) {
 	std::vector<uint32_t> indexes;
 	std::vector<Base::MaterialStruct> materials;
 
+	// ノード情報を格納
+	if (scene->mRootNode) {
+		// 新しいノードを生成
+		nodes_.emplace_back();
+		// 読み込む
+		nodes_.back().Load(scene->mRootNode);
+		// スケルトンを作成
+		skeleton_.emplace();
+		skeleton_->Create(nodes_[0]);
+		// skeletonからSkinClusterを生成
+		skinCluster_.emplace(static_cast<uint32_t>(skeleton_->joints.size()));
+	}
+
+
 	// Meshの解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
 		aiMesh* mesh = scene->mMeshes[meshIndex];
@@ -33,24 +47,24 @@ void ModelData::Load(const std::string& filePath) {
 		meshes_.emplace_back();
 		// 読み込む
 		Mesh& m = meshes_.back();
-		m.Load(mesh);
+		// もしskeletonが作られているなら
+		if (skeleton_.has_value()) {
+			m.Load(mesh, skeleton_.value(), skinCluster_.value());
+		}
+		else {
+			m.Load(mesh);
+		}
 
+		// 今読み込み済みの頂点数を保持
+		int vertexCount = static_cast<int>(vertices.size());
 		// 頂点をひとまとめに
 		for (int i = 0; i < m.vertices.size(); i++) {
-			vertices.push_back(m.vertices[i].v);
+			vertices.push_back(m.vertices[i]);
 		}
 		// インデックスもひとまとめに
 		for (int i = 0; i < m.indexes.size(); i++) {
-			indexes.push_back(m.indexes[i]);
+			indexes.push_back(m.indexes[i] + vertexCount);
 		}
-	}
-
-	// ノード情報を格納
-	if (scene->mRootNode) {
-		// 新しいノードを生成
-		nodes_.emplace_back();
-		// 読み込む
-		nodes_.back().Load(scene->mRootNode);
 	}
 
 	// マテリアルの解析
@@ -98,7 +112,7 @@ void ModelData::Load(const std::string& filePath) {
 	buffers_.vertex = std::make_unique<StructuredBuffer<Base::VertexStruct>>(static_cast<int32_t>(vertices.size()));	// 頂点
 	buffers_.uniqueVertexIndices = std::make_unique<StructuredBuffer<uint32_t>>(static_cast<int32_t>(uniqueVertices.size()));	// 固有頂点
 	buffers_.primitiveIndices = std::make_unique<StructuredBuffer<uint32_t>>(static_cast<int32_t>(primitiveIndices.size()));		// 形状プリミティブ
-	buffers_.materials = std::make_unique<StructuredBuffer<Base::MaterialStruct>>(static_cast<int32_t>(materials.size()));		// 形状プリミティブ
+	buffers_.materials = std::make_unique<StructuredBuffer<Base::MaterialStruct>>(static_cast<int32_t>(materials.size()));		// マテリアル
 	// バッファの初期化
 	buffers_.meshlet->Init(device, srv);
 	buffers_.vertex->Init(device, srv);

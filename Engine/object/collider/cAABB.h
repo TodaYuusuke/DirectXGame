@@ -2,7 +2,7 @@
 #include "ICollider.h"
 
 #if DEMO
-#include "primitive/3d/Cube.h"
+//#include "primitive/3d/Cube.h"
 #endif
 
 namespace LWP::Object::Collider {
@@ -44,7 +44,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	protected:
 		// デバッグ用モデル
-		LWP::Primitive::Cube cube;
+		//LWP::Primitive::Cube cube;
 	public:
 		// デバッグ用の描画関数
 		void ShowWireFrame() override;

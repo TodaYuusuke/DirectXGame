@@ -31,13 +31,13 @@ void Manager::Update() {
 		//[this]() { debugPris.push_back(new Sprite()); },
 		[this]() { debugPris.push_back(new Triangle()); },
 		[this]() { debugPris.push_back(new Capsule()); },
-		[this]() { debugPris.push_back(new Cube()); },
+		//[this]() { debugPris.push_back(new Cube()); },
 		//[this]() { debugPris.push_back(new Mesh()); },
 		[this]() { debugPris.push_back(new Sphere()); }
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Billboard2D","Billboard3D","Surface",/*"Sprite",*/"Triangle", "Capsule", "Cube",/*"Mesh",*/ "Sphere"
+		"Billboard2D","Billboard3D","Surface",/*"Sprite",*/"Triangle", "Capsule", /*"Cube",*//*"Mesh",*/ "Sphere"
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);

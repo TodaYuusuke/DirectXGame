@@ -67,6 +67,10 @@ namespace LWP::Config {
 		/// マテリアルの最大数
 		/// </summary>
 		static const UINT kMaxMaterial = 12800;
+		/// <summary>
+		/// 同一モデルの最大同時描画数
+		/// </summary>
+		static const UINT kMaxModelInstance = 1000;
 
 		/// <summary>
 		/// ストラクチャーバッファー当の最大数（※変更非推奨）

@@ -4,7 +4,7 @@
 #include "component/Information.h"
 #include "utility/motionEffects/Interpolation.h"
 
-#include "resources/model/Model.h"
+#include "resources/model/SkinningModel.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -40,7 +40,7 @@ void Animation::Update() {
 	time_ = std::fmod(time_, duration_);
 
 
-	for (Joint& joint : modelPtr_->skeleton->joints) {
+	for (Joint& joint : modelPtr_->skeleton.joints) {
 		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
 		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
 			const NodeAnimation& rootNodeAnimation = (*it).second;
@@ -53,10 +53,10 @@ void Animation::Update() {
 
 bool Animation::isEnd() { return !isStart_; }
 
-void Animation::LoadAnimation(std::string filepath, Resource::Model* ptr) {
+void Animation::LoadAnimation(std::string filepath, Resource::SkinningModel* ptr) {
 	return LoadAnimationLongPath(kDirectoryPath + filepath, ptr);
 }
-void Animation::LoadAnimationLongPath(std::string filepath, Resource::Model* ptr) {
+void Animation::LoadAnimationLongPath(std::string filepath, Resource::SkinningModel* ptr) {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filepath.c_str(), 0);
 	assert(scene->mAnimations != 0); // アニメーションがない

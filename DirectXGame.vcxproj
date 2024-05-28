@@ -220,7 +220,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\SkinningRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthStencil.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp" />
@@ -268,7 +267,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
     <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
-    <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
     <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\model\Joint.cpp" />
@@ -278,12 +276,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\model\Node.cpp" />
     <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
     <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
+    <ClCompile Include="Engine\resources\model\IModel.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
     <ClCompile Include="Engine\resources\audio\Audio.cpp" />
     <ClCompile Include="Engine\resources\audio\AudioData.cpp" />
     <ClCompile Include="Engine\primitive\model\Material.cpp" />
-    <ClCompile Include="Engine\resources\model\Model.cpp" />
+    <ClCompile Include="Engine\resources\model\RigidModel.cpp" />
+    <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
+    <ClCompile Include="Engine\resources\model\standard\Cube.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
     <ClCompile Include="Engine\resources\motion\Motion.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
@@ -341,7 +342,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
-    <ClInclude Include="Engine\base\directX\renderer\SkinningRenderer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\IDataResource.h" />
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h" />
@@ -404,7 +404,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\2d\Triangle.h" />
     <ClInclude Include="Engine\primitive\3d\3dList.h" />
     <ClInclude Include="Engine\primitive\3d\Capsule.h" />
-    <ClInclude Include="Engine\primitive\3d\Cube.h" />
     <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\model\Joint.h" />
@@ -414,13 +413,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\model\Node.h" />
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
     <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
+    <ClInclude Include="Engine\resources\model\IModel.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
     <ClInclude Include="Engine\primitive\PrimitiveManager.h" />
     <ClInclude Include="Engine\resources\audio\Audio.h" />
     <ClInclude Include="Engine\resources\audio\AudioData.h" />
     <ClInclude Include="Engine\primitive\model\Material.h" />
-    <ClInclude Include="Engine\resources\model\Model.h" />
+    <ClInclude Include="Engine\resources\model\RigidModel.h" />
+    <ClInclude Include="Engine\resources\model\SkinningModel.h" />
+    <ClInclude Include="Engine\resources\model\standard\Cube.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
     <ClInclude Include="Engine\resources\motion\Motion.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />
@@ -451,44 +453,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\system\shaders\Billboard.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard2D.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Billboard3D.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Object3d.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\Object3d.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="resources\system\shaders\ShadowMap.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

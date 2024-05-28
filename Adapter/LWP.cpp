@@ -16,6 +16,7 @@ namespace kWind = LWP::Config::Window;
 void Engine::StartUp(std::string str) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
+	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
 	Initialize(str.c_str(), kWind::kResolutionWidth, kWind::kResolutionHeight);
 }
 
@@ -42,7 +43,6 @@ void Engine::Run(IScene* firstScene) {
 
 		// 描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
-		resourceManager_->Draw(directXCommon_->GetRendererManager());
 
 		EndFrame();
 	}
@@ -64,8 +64,8 @@ void Engine::InitializeForScene() {
 }
 
 void Engine::Initialize(const char* title, int width, int height) {
-	// インスタンスを受け取る
-	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
+	// インスタンスを受け取る //
+	
 	// Base
 	winApp_ = std::make_unique<WinApp>();
 	directXCommon_ = std::make_unique<DirectXCommon>();

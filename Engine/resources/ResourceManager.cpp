@@ -11,8 +11,28 @@
 
 
 using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Resource;
+
+InstanceData::InstanceData(const Resource::RigidModel& value) {
+	*this = value;
+}
+InstanceData& InstanceData::operator=(const Resource::RigidModel& value) {
+	wtf = value.worldTF;
+	enableLighting = value.enableLighting;
+	return *this;
+}
+InstanceData::InstanceData(const Resource::SkinningModel& value) {
+	*this = value;
+}
+InstanceData& InstanceData::operator=(const Resource::SkinningModel& value) {
+	wtf = value.worldTF;
+	enableLighting = value.enableLighting;
+	return *this;
+}
+
+
 
 Manager::~Manager() {
 	// XAudio2解放
@@ -38,30 +58,105 @@ void Manager::Initialize() {
 
 	// MediaFoundationの初期化
 	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
+
+#if DEMO
+	for (IModel* m : debugModels) {
+		delete m;
+	}
+	debugModels.clear();
+#endif
 }
 
 void Manager::Update() {
+	// リセット
+
 	// アニメーション更新
 	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
 	for (Motion* m : motions_.list) { m->Update(); }
 	// モデルアダプター更新
-	for (Model* m : models_.list) { m->Update(); }
+	for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+		// リソースリセット
+		it->second.rigidBuffer.inst->Reset();
+		it->second.rigidBuffer.material->Reset();
+		it->second.rigidBuffer.common.data_->materialCount = static_cast<uint32_t>(it->second.data.materials_.size());
+		it->second.rigidBuffer.common.data_->instanceCount = 0;
+		it->second.skinBuffer.inst->Reset();
+		it->second.skinBuffer.material->Reset();
+		it->second.skinBuffer.common.data_->materialCount = static_cast<uint32_t>(it->second.data.materials_.size());
+		it->second.skinBuffer.common.data_->instanceCount = 0;
 
+		for (RigidModel* m : it->second.rigid.list) {
+			m->Update();
+			// バッファーにデータ登録
+			if (m->isActive) {
+				it->second.rigidBuffer.inst->Add(*m);
+				for (const Primitive::Material& mat : m->materials) {
+					it->second.rigidBuffer.material->Add(mat);
+				}
+				it->second.rigidBuffer.common.data_->instanceCount += 1;
+			}
+		}
+		for (SkinningModel* m : it->second.skin.list) {
+			m->Update();
+			// バッファーにデータ登録
+			if (m->isActive) {
+				it->second.skinBuffer.inst->Add(*m);
+				//for (const Primitive::Material& mat : m->materials) {
+				//	it->second.skinBuffer.material->Add(mat);
+				//}
+				it->second.skinBuffer.common.data_->instanceCount += 1;
+			}
+		}
+	}
+
+	// Debugビルド時のみImGuiを表示
 #if DEMO
+	// 生成用の関数ポインタ
+	static std::vector<std::function<void(std::string)>> functions = {
+		[this](std::string str) {
+			debugModels.push_back(new RigidModel());
+			debugModels.back()->LoadFullPath(str);
+		},
+		[this](std::string str) {
+			debugModels.push_back(new SkinningModel());
+			debugModels.back()->LoadFullPath(str);
+		},
+	};
+
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 	if (ImGui::BeginTabBar("LWP")) {
 		if (ImGui::BeginTabItem("Resource")) {
-			// 形状一覧
-			if (!models_.list.empty()) {
+			// 読み込み済みのモデル一覧
+			if (!modelDataMap_.empty()) {
 				std::vector<const char*> itemText;
-				for (int i = 0; i < models_.list.size(); i++) {
-					std::string str = "Model_" + std::to_string(i);
-					itemText.push_back(str.c_str());
+				float maxSize = 0;	// Textの中で一番長いサイズを保持する
+				// 一覧のパス取得
+				for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+					itemText.push_back(it->first.c_str());
+					maxSize = std::max<float>(maxSize, static_cast<float>(it->first.size()));	// 現在の長さより大きければ更新
 				}
+				ImGui::PushItemWidth(maxSize * 7.5f);	// 最大サイズにUIを合わせる
 				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-				(*Utility::GetIteratorAtIndex<Model*>(models_.list, currentItem))->DebugGUI();
+				// 現在選択中のModelの参照を取得
+				auto m = Utility::GetIteratorAtIndex<std::string, Models>(modelDataMap_, currentItem);
+
+				// どっち（rigid,skinning）を表示するか選択
+				ImGui::RadioButton("Rigid", &radioValue, 0);
+				ImGui::RadioButton("Skinning", &radioValue, 1);
+				
+				// 変更されて渡される値は添え字
+				if (ImGui::Button("Create")) { functions[radioValue](m->first); }
+
+				// 0ならRigidを表示
+				if (radioValue == 0) {
+					RigidGUI(m->second);
+				}
+				// 1ならSkinningのほうを表示
+				else if (radioValue == 1) {
+					SkinningGUI(m->second);
+				}
 			}
 			ImGui::EndTabItem();
 		}
@@ -69,16 +164,6 @@ void Manager::Update() {
 	}
 	ImGui::End();
 #endif
-}
-// 描画
-void Manager::Draw(Base::RendererManager* render) {
-	//// StructerdBufferにデータをセット済みかを保持するフラグを初期化
-	//for (std::map<std::string, ModelData>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
-	//	it->second.isLoadedRenderer = false;
-	//}
-
-	// 必要な分モデルを描画
-	for (Model* m : models_.list) { m->Draw(render); }
 }
 
 Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
@@ -125,22 +210,42 @@ void Manager::LoadModelData(const std::string& filePath) {
 	// 読み込み済みかをチェック
 	if (!modelDataMap_.count(filePath)) {
 		// 読み込んだことのない3Dモデルなので読み込む
-		modelDataMap_[filePath].Load(filePath);	// 要素は自動追加されるらしい;
+		modelDataMap_[filePath].data.Load(filePath);	// 要素は自動追加されるらしい;
+
+		GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+		SRV* srv = System::engine->directXCommon_->GetSRV();
+
+		// リソース作成
+		modelDataMap_[filePath].rigidBuffer.inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
+		modelDataMap_[filePath].rigidBuffer.inst->Init(dev, srv);
+		modelDataMap_[filePath].rigidBuffer.material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
+		modelDataMap_[filePath].rigidBuffer.material->Init(dev, srv);
+		modelDataMap_[filePath].rigidBuffer.common.Init(dev);
+		modelDataMap_[filePath].skinBuffer.inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
+		modelDataMap_[filePath].skinBuffer.inst->Init(dev, srv);
+		modelDataMap_[filePath].skinBuffer.common.Init(dev);
+		modelDataMap_[filePath].skinBuffer.material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
+		modelDataMap_[filePath].skinBuffer.material->Init(dev, srv);
 	}
 }
 ModelData* Manager::GetModelData(const std::string& filePath) {
 	// 読み込み済みかをチェック
 	if (modelDataMap_.count(filePath)) {
 		// 読み込み済みだったので返す
-		return &modelDataMap_[filePath];
+		return &modelDataMap_[filePath].data;
 	}
 
 	// 読み込めていないモデルなのでエラー
 	assert(false);
 	return nullptr;
 }
-std::list<Model*>& Manager::GetModels() {
-	return models_.list;
+std::vector<std::reference_wrapper<Models>> Manager::GetModels() {
+	// ファイルパスのkeyはいらないのでデータだけ渡す
+	std::vector<std::reference_wrapper<Models>> models;
+	for (auto& pair : modelDataMap_) {
+		models.push_back(std::ref(pair.second));
+	}
+	return models;
 }
 
 
@@ -218,4 +323,52 @@ Primitive::OldMeshData Manager::LoadAssimp(const std::string& filepath) {
 	}
 
 	return result;
+}
+
+
+void Manager::RigidGUI(Models& m) {
+	static int selectedNum = 0;	// 選択された番号
+	int size = static_cast<int>(m.rigid.list.size());
+
+	// Rigidの一覧を表示
+	if (!m.rigid.list.empty()) {
+		// 最大値以上にならないように修正
+		if (selectedNum >= size) {
+			selectedNum = size - 1;
+		}
+
+		std::string text = "";
+		for (int i = 0; i < size; i++) {
+			text += std::to_string(i);
+			text += '\0';
+		}
+		text += '\0';	// 最後は二個必要なので追加
+		ImGui::Combo("List", &selectedNum, text.c_str());
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<RigidModel*>(m.rigid.list, selectedNum))->DebugGUI();
+	}
+}
+void Manager::SkinningGUI(Models& m) {
+	static int selectedNum = 0;	// 選択された番号
+	int size = static_cast<int>(m.skin.list.size());
+
+	// Skinningの一覧を表示
+	if (!m.skin.list.empty()) {
+		// 最大値以上にならないように修正
+		if (selectedNum >= size) {
+			selectedNum = size - 1;
+		}
+
+		std::string text = "";
+		for (int i = 0; i < size; i++) {
+			text += std::to_string(i);
+			text += '\0';
+		}
+		text += '\0';	// 最後は二個必要なので追加
+		ImGui::Combo("List", &selectedNum, text.c_str());
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<SkinningModel*>(m.skin.list, selectedNum))->DebugGUI();
+	}
 }

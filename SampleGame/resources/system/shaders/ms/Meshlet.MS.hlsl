@@ -1,33 +1,17 @@
 #include "Meshlet.hlsli"
 
-uint32_t3 UnpackPrimitive(uint primitive) {
-    // 10ビットごとにプリミティブのインデックスを読み取る
-    return uint32_t3(primitive & 0x3FF, (primitive >> 10) & 0x3FF, (primitive >> 20) & 0x3FF);
-}
-
-uint32_t3 GetPrimitive(Meshlet m, uint index) {
-    // 面情報取得
-    return UnpackPrimitive(PrimitiveIndices[m.PrimOffset + index]);
-}
-
-uint32_t GetVertexIndex(Meshlet m, uint localIndex) {
-    // 頂点のインデックスを求める
-    localIndex = m.VertOffset + localIndex;
-    // 4バイトずつで読み込む
-    return UniqueVertexIndices.Load(localIndex * 4);
-}
-
 [NumThreads(128, 1, 1)]      // スレッド数最大128
 [OutputTopology("triangle")] // 出力形状は三角形
 void main(
     in uint32_t gid  : SV_GroupID,
     in uint32_t gtid : SV_GroupThreadID,
-    out vertices VertexOutPut outVerts[128],
+    in payload PayLoad meshPayload,
+    out vertices VSOutput outVerts[128],
     out indices uint32_t3     outIndices[128]
 )
 {
     // Meshlet取得
-    Meshlet meshlet = Meshlets[gid];
+    Meshlet meshlet = mMeshlets[meshPayload.groupID];
 
     // メッシュレット出力数を求める
     SetMeshOutputCounts(meshlet.VertCount, meshlet.PrimCount);
@@ -37,33 +21,15 @@ void main(
         uint32_t vertexIndex = GetVertexIndex(meshlet, gtid);
         
         // 取得したインデックスから頂点座標を求める
-        Vertex vertex = Vertices[vertexIndex];
+        Vertex vertex = mVertices[vertexIndex];
         
-        // 出力する頂点座標を求める
-        //outVerts[gtid].pos      = vertex.position;
-        outVerts[gtid].pos = mul(mul(vertex.position, gModelData.wtf.wtf), gCameraData.m);
-        outVerts[gtid].worldPos = mul(vertex.position, gModelData.wtf.wtf).xyz;
-        outVerts[gtid].texCoord = vertex.texcoord;
-        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) gModelData.wtf.inverse)));
+        // 出力する頂点のデータを求める
+        outVerts[gtid].pos = mul(mul(vertex.position, InstData[gid].wtf.m), cCamera.viewProjection);
+        outVerts[gtid].worldPos = mul(vertex.position, InstData[gid].wtf.m).xyz;
+        outVerts[gtid].texcoord = vertex.texcoord;
+        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstData[gid].wtf.inverse)));
         outVerts[gtid].color = vertex.color;
-        outVerts[gtid].mIndex = vertex.mIndex;
-        
-        
-        //// 出力する頂点色を求める
-        //if (ConstantData.DrawMeshlets == true)
-        //{
-        //   // 出力する頂点色を求める
-        //    outVerts[gtid].color = float4(
-        //    float(gid & 1),
-        //    float(gid & 3) / 4,
-        //    float(gid & 7) / 8,
-        //    1.0f);
-        //}
-        //else
-        //{
-        //    // 頂点色はマテリアルから取得
-        //    outVerts[gtid].color = material.color;
-        //}
+        outVerts[gtid].mIndex = vertex.mIndex + (gid * mCommonData.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }
     if (gtid < meshlet.PrimCount)
     {

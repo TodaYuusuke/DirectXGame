@@ -25,11 +25,11 @@ void Manager::Update(Base::RendererManager* manager) {
 		[this]() { debugPris.push_back(new Camera()); },
 		[this]() { debugPris.push_back(new DirectionLight()); },
 		[this]() { debugPris.push_back(new PointLight()); },
-		[this]() { debugPris.push_back(new Particle()); },
+		//[this]() { debugPris.push_back(new Particle()); },
 	};
 	// 選択肢の変数
 	static std::vector<const char*> classText = {
-		"Camera","DirectionLight","PointLight","Particle"
+		"Camera","DirectionLight","PointLight"/*,"Particle"*/
 	};
 
 	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);

@@ -19,19 +19,28 @@ void Material::Load(aiMaterial* material, const aiScene* scene, const std::strin
 		// テクスチャがファイルに埋め込まれているので処理をやめる
 		return;
 	}
+
 	// 埋め込まれていないので通常通り処理を続行
 
+	// テクスチャを取得
 	if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 		aiString textureFilePath;
 		material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 
 		texture = LWP::Resource::LoadTextureLongPath(Utility::ConvertToParentDirectory(filePath) + textureFilePath.C_Str());
 	}
+
+	// マテリアルカラーを取得
+	aiColor4D diffuse;
+	if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
+		color = Utility::Color(float(diffuse.r), float(diffuse.g), float(diffuse.b), float(diffuse.a));
+	}
 }
 
-void Material::DebugGUI() {
-	if (ImGui::TreeNode("Material")) {
+void Material::DebugGUI(const std::string& label) {
+	if (ImGui::TreeNode(label.c_str())) {
 		uvTransform.DebugGUI("uvTransform");
+		LWP::Base::ImGuiManager::ColorEdit4("color", color);
 		ImGui::DragFloat("shinines", &shininess);
 		/* 文字列を変更する処理
 		if (ImGui::InputText("Name", &name)) {
@@ -44,6 +53,7 @@ void Material::DebugGUI() {
 
 MaterialStruct& MaterialStruct::operator=(const Primitive::Material& value) {
 	uvMatrix = value.uvTransform.GetAffineMatrix();
+	color = value.color.GetVector4();
 	shininess = value.shininess;
 	//enableLighting = false;
 	// テクスチャのインデックスを貰う

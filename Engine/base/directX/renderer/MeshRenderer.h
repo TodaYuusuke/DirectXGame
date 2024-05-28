@@ -5,7 +5,7 @@
 #include "base/directX/resource/rendering/DepthStencil.h"
 #include "base/directX/utility/DXC.h"
 
-#include "resources/model/Model.h"
+#include "resources/model/RigidModel.h"
 
 namespace LWP::Base {
 	/// <summary>
@@ -67,12 +67,14 @@ namespace LWP::Base {
 			RootSignature root;
 			// PSO
 			PSO pso;
+			// PSO（WireFrame）
+			PSO wirePso;
 		};
 
 		// 固体モデル
 		RenderData rigid_;
 		// スキニングモデル
-		//RenderData skinning_;
+		RenderData skinning_;
 
 
 	private: // ** プライベートなメンバ関数 ** //
@@ -80,6 +82,6 @@ namespace LWP::Base {
 		/// <summary>
 		/// 全てのモデルをターゲットに描画する関数
 		/// </summary>
-		void DispatchAllModel(ID3D12GraphicsCommandList6* list);
+		void DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
 	};
 }

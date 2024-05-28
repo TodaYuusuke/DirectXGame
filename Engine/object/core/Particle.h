@@ -1,57 +1,108 @@
 #pragma once
 #include "../IObject.h"
-#include "primitive/IPrimitive.h"
 
 #include <functional>
 
-namespace LWP::Object {
-	// 構造体
-	struct ParticleData {
-		LWP::Object::TransformEuler wtf;
-		LWP::Math::Vector3 velocity;
-		int elapsedFrame = 0;
-	};
+#include "resources/model/RigidModel.h"
+//#include "base/ImGuiManager.h"
 
+namespace LWP::Object {
 	/// <summary>
 	/// パーティクル
 	/// </summary>
-	class Particle final : public IObject {
+	template<IsRigidModel T>
+	class Particle : public IObject {
+	public: // ** パブリックなメンバ変数 ** //
+		// 構造体
+		struct Data {
+			T m;
+			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
+			int elapsedFrame = 0;
+
+			// デフォルトコンストラクタ
+			Data() = default;
+			Data(const Data& other) {
+				m = other.m;
+				velocity = other.velocity;
+				elapsedFrame = other.elapsedFrame;
+			}
+
+			// デストラクタ
+			~Data() = default;
+
+
+			Data& operator=(const Data& other) {
+				if (this != &other) {
+					m = other.m;
+					velocity = other.velocity;
+					elapsedFrame = other.elapsedFrame;
+				}
+				return *this;
+			}
+		};
+
+		// 基準となるモデルクラス
+		T model;
+
 	public: // ** メンバ関数 ** //
 		// デストラクタ
-		~Particle();
+		~Particle() = default;
 
 		// 初期化
-		void Initialize() override;
+		void Initialize() override final {};
 		// 更新
-		void Update(Base::RendererManager* manager) override;
+		void Update(Base::RendererManager* manager) override final {
+			if (!isActive) { return; }
+			// 必須の設定だがいい感じに設定できるタイミングがないので無理やりここで設定
+			model.isActive = false;
 
-		// パーティクルの形状を指定
-		template<IsIPrimitive T>
-		void SetPrimitive() { 
-			if (primitive) { delete primitive; }
-			primitive = new T(); 
+			// 関数ポインタがあるなら実行
+			for (int i = 0; i < data_.size(); i++) {
+				if (UpdateParticle(data_[i])) {
+					data_.erase(data_.begin() + i);
+					i--;
+				}
+			}
+			// パーティクル用のデータ登録関数を呼び出す
+			//manager->AddParticleData(primitive, data);
+			manager;
 		}
 
-		// Primitiveのデータをいじる
-		Primitive::IPrimitive* P() { return primitive; }
-		// トランスフォームをいじる
-		Object::TransformEuler* Transform() { return &primitive->transform; }
 		// パーティクルを追加
-		void Add(int value);
+		void Add(int value) {
+			for (int i = 0; i < value; i++) {
+				data_.emplace_back();
+				data_.back().m = model;
+				data_.back().m.isActive = true;
+				Generate(data_.back());
+			}
+		}
 		// デバッグ用GUI
-		void DebugGUI() override;
+		void DebugGUI() override final {
+			model.DebugGUI();
+			//ImGui::Checkbox("isActive", &isActive);
+		}
 
-		// 初期化関数ポインタ（）
-		std::function<ParticleData(LWP::Primitive::IPrimitive*)> initFunction = nullptr;
-		// 更新ポインタ（返り値：このWTFを削除するかのフラグ）
-		std::function<bool(ParticleData*)> updateFunction = nullptr;
+	protected: // ** 派生先で定義してもらう関数 ** //
+		// コンストラクタとデストラクタの定義は禁止
+		
+		/// <summary>
+		/// パーティクルを１つ生成する度に呼ばれる関数
+		/// </summary>
+		/// <param name="newData">生成された実体の参照（mに基準となるmodelは既に代入されている）</param>
+		/// <returns></returns>
+		virtual void Generate(Data& newData) = 0;
+		/// <summary>
+		/// パーティクルの更新処理
+		/// </summary>
+		/// <param name="data">更新する実態の参照</param>
+		/// <returns></returns>
+		virtual bool UpdateParticle(Data& data) = 0;
 
 
 	private: // ** メンバ変数 ** //
 
-		// パーティクルの形状
-		LWP::Primitive::IPrimitive* primitive = nullptr;
 		// パーティクルのトランスフォーム
-		std::vector<ParticleData> data;
+		std::vector<Data> data_;
 	};
 }
