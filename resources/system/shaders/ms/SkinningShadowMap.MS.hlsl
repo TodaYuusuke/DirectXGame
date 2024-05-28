@@ -11,6 +11,20 @@ struct ViewProjection
 
 ConstantBuffer<ViewProjection> gViewProjection : register(b1);
 
+StructuredBuffer<Well> Wells : register(t5);
+
+float32_t4 Skinning(Vertex v) {
+    float32_t4 result;
+    
+    result = mul(v.position, Wells[v.jIndex.x].skeletonSpaceMatrix) * v.weight.x;
+    result += mul(v.position, Wells[v.jIndex.y].skeletonSpaceMatrix) * v.weight.y;
+    result += mul(v.position, Wells[v.jIndex.z].skeletonSpaceMatrix) * v.weight.z;
+    result += mul(v.position, Wells[v.jIndex.w].skeletonSpaceMatrix) * v.weight.w;
+    result.w = 1.0f;
+    
+    return result;
+}
+
 [NumThreads(128, 1, 1)]      // スレッド数最大128
 [OutputTopology("triangle")] // 出力形状は三角形
 void main(
@@ -35,7 +49,7 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点座標を求める
-        outVerts[gtid].position = mul(mul(vertex.position, InstData[gid].wtf.m), gViewProjection.m);
+        outVerts[gtid].position = mul(mul(Skinning(vertex), InstData[gid].wtf.m), gViewProjection.m);
     }
     if (gtid < meshlet.PrimCount)
     {

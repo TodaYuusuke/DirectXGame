@@ -1,27 +1,17 @@
 #include "MSStruct.hlsli"
 
-//ConstantBuffer<ConstantData>     ConstantData : register(b0);
-//ConstantBuffer<WorldTransform>   Transform    : register(b2);
-//ConstantBuffer<Material>         material     : register(b3);
 
-ConstantBuffer<CameraData> gCameraData : register(b0);
-ConstantBuffer<ModelData> gModelData : register(b1);
-ConstantBuffer<CommonData> gCommonData : register(b2);
+// CommonBuffers
+ConstantBuffer<CommonData> cCommonData : register(b1);
+ConstantBuffer<Camera> cCamera : register(b2);
+StructuredBuffer<Material> cMaterials : register(t5);
+StructuredBuffer<DirectionalLight> cDLights : register(t6);
+StructuredBuffer<PointLight> cPLights : register(t7);
 
-// Required
-StructuredBuffer<Meshlet>    Meshlets            : register(t0);
-StructuredBuffer<Vertex> Vertices            : register(t1);
-ByteAddressBuffer            UniqueVertexIndices : register(t2);
-StructuredBuffer<uint32_t>   PrimitiveIndices    : register(t3);
+Texture2D<float32_t4> tTexture[500] : register(t8);
+Texture2D<float> tDLightSM[1] : register(t508);
+TextureCube<float> tPLightSM[8] : register(t509);
 
-// more
-StructuredBuffer<Material> Materials : register(t4);
-StructuredBuffer<DirectionalLight> DLight : register(t5);
-StructuredBuffer<PointLight> PLight : register(t6);
-
-Texture2D<float32_t4> gTexture[500] : register(t7);
-SamplerState gSampler : register(s0);
-Texture2D<float> gDirectionShadowMap[1] : register(t507);
-SamplerState gDirectionShadowMapSampler : register(s1);
-TextureCube<float> gPointShadowMap[8] : register(t508);
-SamplerState gPointShadowMapSampler : register(s2);
+SamplerState sTexSmp : register(s0);
+SamplerState sDLightSMSmp : register(s1);
+SamplerState sPLightSMSmp : register(s2);
