@@ -35,44 +35,49 @@ void Bloom::Update() {
 }
 
 void Bloom::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
-	// Bindする番号を保持
-	bindIndex = *i;
-	std::string str = R"(
-struct BloomData {
-	float32_t intensity;
-};
-ConstantBuffer<BloomData> blmData : register(b${v});
-
-float32_t3 Bloom(float32_t3 color) {
-
-}
-)";
-	// 変数で値を書き換え
-	size_t pos;
-	while ((pos = str.find("${v}")) != std::string::npos) {
-		str.replace(pos, 4, std::to_string(bindIndex));
-	}
-	*stream << str;	// 書き込み
-	// rootSignatureを宣言
-	*root = root->AddCBVParameter(bindIndex, SV_Pixel);
-	// iを加算
-	*i += 1;
+	stream; root; i;
+//	// Bindする番号を保持
+//	bindIndex = *i;
+//	std::string str = R"(
+//struct BloomData {
+//	float32_t intensity;
+//};
+//ConstantBuffer<BloomData> blmData : register(b${v});
+//
+//float32_t3 Bloom(float32_t3 color) {
+//
+//}
+//)";
+//	// 変数で値を書き換え
+//	size_t pos;
+//	while ((pos = str.find("${v}")) != std::string::npos) {
+//		str.replace(pos, 4, std::to_string(bindIndex));
+//	}
+//	*stream << str;	// 書き込み
+//	// rootSignatureを宣言
+//	*root = root->AddCBVParameter(bindIndex, SV_Pixel);
+//	// iを加算
+//	*i += 1;
 }
 		// シェーダー内の処理を書き込む
 void Bloom::WriteProcess(std::ofstream* stream) {
-	*stream << R"(
+	stream;
+/*	*stream << R"(
 	output.rgb = GrayScale(output.rgb);
-)";
+)";*/
 }
 		
 void Bloom::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
-	list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
-	*offset += 1;
-	list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
+	list; offset;
+	//list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
+	//*offset += 1;
+	//list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
 }
 void Bloom::PreCommand(ID3D12GraphicsCommandList* list, RenderResource* target) {
 	// 処理1個目
 	list->OMSetRenderTargets(1, &resource[0].rr.rtvInfo.cpuView, false, nullptr);	// 書き込み先のリソースを指定
+	list->SetGraphicsRootSignature(resource[0].root);
+	list->SetPipelineState(resource[0].pso.GetState());
 	// テクスチャのバインド
 	//list->SetGraphicsRootConstantBufferView(0, );
 	list->SetGraphicsRootDescriptorTable(1, target->srvInfo.gpuView);

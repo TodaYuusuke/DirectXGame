@@ -9,13 +9,13 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void PostProcessor::Init() {
-	//bloom.Init();
+	bloom.Init();
 	grayScale.Init();
 	vignetting.Init();
 	CreateShaderFile();
 }
 void PostProcessor::Update() {
-	//bloom.Update();
+	bloom.Update();
 	grayScale.Update();
 	vignetting.Update();
 }
@@ -153,7 +153,7 @@ void PostProcessor::SetCommands(ID3D12GraphicsCommandList* list) {
 
 void PostProcessor::DebugGUI() {
 	if (ImGui::TreeNode("PostProcess")) {
-		//bloom.DebugGUI();
+		bloom.DebugGUI();
 		grayScale.DebugGUI();
 		vignetting.DebugGUI();
 		ImGui::Text("----------");
