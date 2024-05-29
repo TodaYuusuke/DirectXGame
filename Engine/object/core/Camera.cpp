@@ -71,7 +71,7 @@ void Camera::DebugGUI() {
 Matrix4x4 Camera::GetViewProjection() const {
 	Matrix4x4 viewMatrix = transform.GetWorldMatrix().Inverse();
 	float fovF = fov / 100.0f / 2.0f;
-	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 300.0f);
 	return viewMatrix * projectionMatrix;
 }
 
