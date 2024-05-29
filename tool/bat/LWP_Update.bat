@@ -9,7 +9,7 @@ cd "../../"
 REM 変更をすべて取り消す
 git reset --hard
 REM Gitで最新のコードを取得
-git pull origin master
+git pull origin TD3_Branch
 if ERRORLEVEL 1 (
     REM ここにエラー発生時の処理を記述します
     echo.
