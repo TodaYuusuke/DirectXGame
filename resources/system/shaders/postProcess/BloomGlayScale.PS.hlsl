@@ -22,8 +22,10 @@ float32_t4 main(PSInput input) : SV_TARGET {
     float brightness = output.r + output.g + output.b;
     brightness = brightness / 3.0f;
     
-    // ある程度の輝度以下ならば描画しない
-    if (brightness <= 0.5f) { discard; }
+    // ある程度の輝度以下ならば真っ暗を返す
+    if (brightness <= 0.5f) {
+        return float32_t4(0.0f, 0.0, 0.0f, 1.0f);
+    }
 
 	return output;
 }
