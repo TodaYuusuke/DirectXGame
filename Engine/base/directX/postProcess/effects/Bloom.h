@@ -25,7 +25,9 @@ namespace LWP::Base::PostProcess {
 			Base::RootSignature root;
 			Base::PSO pso;
 		};
-		TempData resource[2];
+		TempData brightnessFilter;	// 輝度抽出
+		TempData gaussX;	// Xガウス
+		PSO gaussY;	// Yガウス
 
 	public: // ** メンバ関数 ** //
 
