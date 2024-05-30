@@ -19,7 +19,7 @@ namespace LWP::Base {
 		// そもそも行うかフラグ
 		bool use = false;
 
-		//PostProcess::Bloom bloom;	// ブルーム
+		PostProcess::Bloom bloom;	// ブルーム
 		PostProcess::GrayScale grayScale;	// グレースケール
 		PostProcess::Vignetting vignetting;	// ビネット
 		// ここにどんどん種類を増やしていく
