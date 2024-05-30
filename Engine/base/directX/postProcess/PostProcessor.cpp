@@ -166,7 +166,7 @@ void PostProcessor::DebugGUI() {
 std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	// 共通化してまとめて処理
 	std::vector<IPostProcess*> result;
-	//result.push_back(&bloom);
+	result.push_back(&bloom);
 	result.push_back(&grayScale);
 	result.push_back(&vignetting);
 

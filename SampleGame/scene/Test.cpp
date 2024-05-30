@@ -16,6 +16,10 @@ void Test::Initialize() {
 	mesh.LoadFile("skydome/skydome.obj");
 
 	sprite.texture = subCamera.GetTexture();
+
+	mainCamera.pp.bloom.use = true;
+	mainCamera.pp.use = true;
+	mainCamera.pp.CreateShaderFile();
 }
 
 // 更新

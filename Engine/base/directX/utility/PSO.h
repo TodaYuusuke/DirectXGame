@@ -9,6 +9,16 @@ namespace LWP::Base {
 	/// グラフィックスパイプライン
 	/// </summary>
 	class PSO final {
+	public: // ** 設定用の列挙子 ** //
+		enum class BlendMode {
+			Normal,
+			Add,
+			Subtract,
+			Multiply,
+			Screen
+		};
+
+
 	public: // **　メンバ関数 ** //
 
 		/// <summary>
@@ -16,7 +26,7 @@ namespace LWP::Base {
 		/// </summary>
 		PSO& Init(ID3D12RootSignature* root, DXC* dxc);
 		PSO& SetInputLayout();
-		PSO& SetBlendState();
+		PSO& SetBlendState(BlendMode mode = BlendMode::Normal);
 		PSO& SetRasterizerState(
 			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
 			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);

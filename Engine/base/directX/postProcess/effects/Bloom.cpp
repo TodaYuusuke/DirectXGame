@@ -16,19 +16,28 @@ void Bloom::Init() {
 
 	buffer_.Init(dev);
 
-	for (int i = 0; i < 2; i++) {
-		resource[i].rr.Init(dev, heaps);
 
-		resource[i].root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
-			.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
-			.Build(dev->GetDevice());
+	resource[0].rr.Init(dev, heaps);
+	resource[1].rr.Init(dev, heaps);
 
-		resource[i].pso.Init(resource[i].root, dxc)
-			.SetDepthStencilState(false)
-			.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-			.SetPixelShader("postProcess/BloomGlayScale.PS.hlsl")
-			.Build(dev->GetDevice());
-	}
+	resource[0].root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
+		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
+		.Build(dev->GetDevice());
+	resource[0].pso.Init(resource[0].root, dxc)
+		.SetDepthStencilState(false)
+		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
+		.SetPixelShader("postProcess/BloomGlayScale.PS.hlsl")
+		.Build(dev->GetDevice());
+
+	resource[1].root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
+		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
+		.Build(dev->GetDevice());
+	resource[1].pso.Init(resource[1].root, dxc)
+		.SetDepthStencilState(false)
+		.SetBlendState(PSO::BlendMode::Add)
+		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
+		.SetPixelShader("postProcess/BloomGaussianBlur.PS.hlsl")
+		.Build(dev->GetDevice());
 }
 void Bloom::Update() {
 	*buffer_.data_ = intensity;
@@ -74,14 +83,30 @@ void Bloom::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 	//list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
 }
 void Bloom::PreCommand(ID3D12GraphicsCommandList* list, RenderResource* target) {
-	// 処理1個目
+	// ビューポート
+	D3D12_VIEWPORT viewport = {};
+	// クライアント領域のサイズと一緒にして画面全体に表示
+	viewport.Width = static_cast<float>(target->width);
+	viewport.Height = static_cast<float>(target->height);
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	// シザー矩形
+	D3D12_RECT scissorRect = {};
+	// 基本的にビューポートと同じ矩形が構成されるようにする
+	scissorRect.left = 0;
+	scissorRect.right = target->width;
+	scissorRect.top = 0;
+	scissorRect.bottom = target->height;
+
+
+// ******** 1．輝度を抽出 ******** //
 	list->OMSetRenderTargets(1, &resource[0].rr.rtvInfo.cpuView, false, nullptr);	// 書き込み先のリソースを指定
 	list->SetGraphicsRootSignature(resource[0].root);
 	list->SetPipelineState(resource[0].pso.GetState());
 	// テクスチャのバインド
-	//list->SetGraphicsRootConstantBufferView(0, );
-	list->SetGraphicsRootDescriptorTable(1, target->srvInfo.gpuView);
-	//list->SetGraphicsRootDescriptorTable(2, it->depth->srvInfo.gpuView);
+	list->SetGraphicsRootDescriptorTable(0, target->srvInfo.gpuView);
 
 	// リソースバリアをセット
 	target->ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);	// 加工する画像
@@ -89,33 +114,33 @@ void Bloom::PreCommand(ID3D12GraphicsCommandList* list, RenderResource* target) 
 	// 全画面クリア
 	resource[0].rr.Clear(list);
 
-	// ビューポート
-	D3D12_VIEWPORT viewport = {};
-	// クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = static_cast<float>(resource[0].rr.width);
-	viewport.Height = static_cast<float>(resource[0].rr.height);
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
 	// viewportを設定
 	list->RSSetViewports(1, &viewport);
-
-	// シザー矩形
-	D3D12_RECT scissorRect = {};
-	// 基本的にビューポートと同じ矩形が構成されるようにする
-	scissorRect.left = 0;
-	scissorRect.right = resource[0].rr.width;
-	scissorRect.top = 0;
-	scissorRect.bottom = resource[0].rr.height;
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 
 	// 描画!
 	list->DrawInstanced(3, 1, 0, 0);
-
 	// バリアを元に戻す
 	resource[0].rr.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);	// 書き込み対象
+
+
+// ******** 2．輝度をぼかしてAddブレンド ******** //
+	list->OMSetRenderTargets(1, &target->rtvInfo.cpuView, false, nullptr);	// 書き込み先のリソースを指定
+	list->SetGraphicsRootSignature(resource[1].root);
+	list->SetPipelineState(resource[1].pso.GetState());
+	// リソースバリアをセット
+	target->ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
+	//target->Clear(list);
+	// テクスチャのバインド
+	list->SetGraphicsRootDescriptorTable(0, resource[0].rr.srvInfo.gpuView);
+	// viewportを設定
+	list->RSSetViewports(1, &viewport);
+	// Scirssorを設定
+	list->RSSetScissorRects(1, &scissorRect);
+
+	// 描画!
+	list->DrawInstanced(3, 1, 0, 0);
 }
 
 void Bloom::DebugGUI() {
