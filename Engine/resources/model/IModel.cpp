@@ -22,5 +22,14 @@ void IModel::LoadShortPath(const std::string& fp) {
 	LoadFullPath(kDirectoryPath + fp);
 }
 
+ModelData* IModel::GetModelData() {
+	// パスが空じゃなかったら返す
+	if (!filePath.empty()) {
+		return GetModel(filePath);
+	}
+	return nullptr;
+}
+
+
 // 短縮用パス
 const std::string IModel::kDirectoryPath = "resources/model/";

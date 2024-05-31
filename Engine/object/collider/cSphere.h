@@ -25,6 +25,11 @@ namespace LWP::Object::Collider {
 		Sphere(const float& rad);
 		Sphere(const LWP::Math::Vector3& pos, const float& rad);
 
+		// 更新時に形状を追従するための処理
+		void Update() override;
+		// ImGuiの派生クラス
+		void DebugGUI() override;
+
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& pos);
 		void Create(const LWP::Math::Vector3& pos, const float& rad);
@@ -36,7 +41,7 @@ namespace LWP::Object::Collider {
 		// Observer用（==）
 		bool operator==(const Sphere& other) {
 			return {
-				follow_.GetChanged() &&
+				worldTF.GetChanged() &&
 				radius == other.radius
 			};
 		}
@@ -45,16 +50,7 @@ namespace LWP::Object::Collider {
 	private:
 		// デバッグ用モデル
 		LWP::Primitive::Sphere sphereModel;
-	public:
-		// デバッグ用の描画関数
-		void ShowWireFrame() override;
 #endif
-
-	private: // ** プライベートな関数 ** //
-		// 更新時に形状を追従するための処理
-		void UpdateShape() override;
-		// ImGuiの派生クラス
-		void DerivedDebugGUI() override;
 	};
 
 

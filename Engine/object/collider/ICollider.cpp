@@ -19,19 +19,39 @@ void ICollider::Update() {
 	preHit = hit;
 	hit = false;	// この後にヒット判定をするのでとりまfalse
 
-	// アクティブがOffのとき
-	if (!isActive) { return; }
-	// 派生先の更新
-	UpdateShape();
+	// アクティブがOff or ワールドトランスフォームが変更されていない -> 早期リターン
+	if (!isActive || !worldTF.GetChanged()) { return; }
+}
+
+// ヒット時に関数を呼び出す関数（※ユーザー呼び出し禁止）
+void ICollider::ExecuteLambda(ICollider* hitCollision) {
+	switch (static_cast<OnCollisionState>((preHit << 1) + hit))
+	{
+		case LWP::Object::Collider::OnCollisionState::NoHit:
+			noHitLambda({ this, hitCollision });
+			break;
+		case LWP::Object::Collider::OnCollisionState::Enter:
+			enterLambda({ this, hitCollision });
+			break;
+		case LWP::Object::Collider::OnCollisionState::Stay:
+			stayLambda({ this, hitCollision });
+			break;
+		case LWP::Object::Collider::OnCollisionState::Exit:
+			exitLambda({ this, hitCollision });
+			break;
+		default:
+			break;
+	}
 }
 
 void ICollider::DebugGUI() {
 	// 派生クラス用
-	DerivedDebugGUI();
+	//DerivedDebugGUI();
 	ImGui::Text("- Below this are common variables - ");
+	worldTF.t.DebugGUI();
 	// 追従先のワールドトランスフォーム
-	if (follow_.t && ImGui::TreeNode("FollowTarget Info")) {
-		follow_.t->DebugGUI();
+	if (followModel_ && ImGui::TreeNode("FollowTarget Info")) {
+		followModel_->DebugGUI();
 		ImGui::TreePop();
 	}
 	

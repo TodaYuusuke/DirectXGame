@@ -18,6 +18,21 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 #endif
 }
 
+void Sphere::Update() {
+	// データが変わったら再生成
+	//if (follow_.t && follow_.GetChanged()) {
+	//	CreateFromPrimitive(follow_.t);
+	//}
+#if DEMO
+	sphereModel.CreateFromSphereCol(*this);	// cube再生成
+#endif
+}
+
+void Sphere::DebugGUI() {
+	ImGui::DragFloat3("position", &position.x, 0.01f);
+	ImGui::DragFloat("radius", &radius, 0.01f);
+}
+
 
 void Sphere::Create(const LWP::Math::Vector3& pos) { Create(pos, 1.0f); }
 void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
@@ -27,7 +42,7 @@ void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
 // 形状から包み込む最小のAABBを生成する関数
 void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	// ワールドトランスフォームのペアレントもしておく
-	follow_ = primitive;
+	//follow_ = primitive;
 	//transform.Parent(&primitive->transform);
 	// アフィン変換行列
 	Matrix4x4 matrix = primitive->transform.GetAffineMatrix();
@@ -49,28 +64,4 @@ void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	position = (max + min) / 2.0f;
 	// 半径を割り出す
 	radius = (max - position).Length();
-}
-
-#if DEMO
-void Sphere::ShowWireFrame() {
-	// isActive切り替え
-	sphereModel.isActive = isShowWireFrame && isActive;
-	// hitしているときは色を変える
-	sphereModel.commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-};
-#endif
-
-void Sphere::UpdateShape() {
-	// データが変わったら再生成
-	if (follow_.t && follow_.GetChanged()) {
-		CreateFromPrimitive(follow_.t);
-	}
-#if DEMO
-	sphereModel.CreateFromSphereCol(*this);	// cube再生成
-#endif
-}
-
-void Sphere::DerivedDebugGUI() {
-	ImGui::DragFloat3("position", &position.x, 0.01f);
-	ImGui::DragFloat("radius", &radius, 0.01f);
 }

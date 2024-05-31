@@ -84,10 +84,6 @@ void Manager::Update() {
 	// 全体を更新
 	for (ICollider* c : colliders_.list) {
 		c->Update();
-		// デバッグしやすいようにワイヤーフレームを描画
-		#if DEMO
-		c->ShowWireFrame();
-		#endif
 	}
 
 	// 当たり判定チェック

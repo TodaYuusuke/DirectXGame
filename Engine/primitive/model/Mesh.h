@@ -44,11 +44,11 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 頂点数を返す関数
 		/// </summary>
-		int GetVertexCount() { return static_cast<int>(vertices.size()); }
+		int GetVertexCount() const { return static_cast<int>(vertices.size()); }
 		/// <summary>
 		/// インデックス数を返す関数
 		/// </summary>
-		int GetIndexCount() { return static_cast<int>(indexes.size()); }
+		int GetIndexCount() const { return static_cast<int>(indexes.size()); }
 
 	};
 }

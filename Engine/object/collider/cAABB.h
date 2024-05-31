@@ -2,7 +2,7 @@
 #include "ICollider.h"
 
 #if DEMO
-//#include "primitive/3d/Cube.h"
+#include "resources/model/standard/Cube.h"
 #endif
 
 namespace LWP::Object::Collider {
@@ -17,44 +17,40 @@ namespace LWP::Object::Collider {
 		// 最大
 		LWP::Math::Vector3 max = { 0.5f,0.5f,0.5f };
 
-
+#if DEMO
+	protected:
+		// デバッグ用モデル
+		LWP::Resource::Cube cube;
+#endif
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
 
+		// 固有の更新処理
+		void Update() override;
+		// ImGuiの派生クラス
+		void DebugGUI() override;
 
 		// 場所を指定して生成する関数
 		virtual void Create(const LWP::Math::Vector3& position);
 		virtual void Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size);
 		// 形状から包み込む最小のAABBを生成する関数
-		virtual void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
+		virtual void Create(LWP::Resource::RigidModel* model);
 		// 形状を返す
 		Shape GetShape() override { return Shape::AABB; }
 
 		// Observer用（==）
-		bool operator==(const AABB& other) {
+		bool operator==(AABB& other) {
 			return { 
-				follow_.GetChanged() &&
+				worldTF.GetChanged() &&
 				min == other.min &&
 				max == other.max
 			};
 		}
 
-#if DEMO
-	protected:
-		// デバッグ用モデル
-		//LWP::Primitive::Cube cube;
-	public:
-		// デバッグ用の描画関数
-		void ShowWireFrame() override;
-#endif
 
 	protected: // ** プライベートな関数 ** //
-		// 更新時に形状を追従するための処理
-		void UpdateShape() override;
-		// ImGuiの派生クラス
-		void DerivedDebugGUI() override;
 	};
 
 

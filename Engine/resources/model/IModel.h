@@ -7,7 +7,10 @@
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/renderer/ResourceStruct.h"
 
+#include "ModelData.h"
+
 namespace LWP::Resource {
+
 	/// <summary>
 	/// 3Dモデルを扱うアダプターの基底クラス
 	/// </summary>
@@ -65,6 +68,10 @@ namespace LWP::Resource {
 		/// 読み込み済みのパスを取得
 		/// </summary>
 		std::string LoadedFilePath() { return filePath; }
+		/// <summary>
+		/// 自分の読み込んだモデルデータを返す
+		/// </summary>
+		ModelData* GetModelData();
 
 	protected: // ** メンバ変数 ** //
 
