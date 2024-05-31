@@ -18,9 +18,6 @@ void ICollider::Update() {
 	// preHit更新
 	preHit = hit;
 	hit = false;	// この後にヒット判定をするのでとりまfalse
-
-	// アクティブがOff or ワールドトランスフォームが変更されていない -> 早期リターン
-	if (!isActive || !worldTF.GetChanged()) { return; }
 }
 
 // ヒット時に関数を呼び出す関数（※ユーザー呼び出し禁止）
@@ -48,10 +45,9 @@ void ICollider::DebugGUI() {
 	// 派生クラス用
 	//DerivedDebugGUI();
 	ImGui::Text("- Below this are common variables - ");
-	worldTF.t.DebugGUI();
 	// 追従先のワールドトランスフォーム
-	if (followModel_ && ImGui::TreeNode("FollowTarget Info")) {
-		followModel_->DebugGUI();
+	if (followModel_.t && ImGui::TreeNode("FollowTarget Info")) {
+		followModel_.t->DebugGUI();
 		ImGui::TreePop();
 	}
 	

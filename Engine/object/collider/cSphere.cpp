@@ -15,20 +15,31 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 #if DEMO
 	// 立方体のインスタンスを作成
 	sphereModel.CreateFromSphereCol(*this);
+	sphereModel.material.enableLighting = false;
+	sphereModel.isWireFrame = true;
 #endif
 }
 
 void Sphere::Update() {
+	ICollider::Update();
+	// アクティブがOff -> 早期リターン
+	if (!isActive) { return; }
+
 	// データが変わったら再生成
-	//if (follow_.t && follow_.GetChanged()) {
-	//	CreateFromPrimitive(follow_.t);
-	//}
+	if (followModel_.t && followModel_.GetChanged()) {
+		Create(followModel_.t);
+	}
 #if DEMO
 	sphereModel.CreateFromSphereCol(*this);	// cube再生成
+	// isActive切り替え
+	sphereModel.isActive = isShowWireFrame && isActive;
+	// hitしているときは色を変える
+	sphereModel.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 #endif
 }
 
 void Sphere::DebugGUI() {
+	ICollider::DebugGUI();
 	ImGui::DragFloat3("position", &position.x, 0.01f);
 	ImGui::DragFloat("radius", &radius, 0.01f);
 }
@@ -39,19 +50,16 @@ void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
 	position = pos;
 	radius = rad;
 }
-// 形状から包み込む最小のAABBを生成する関数
-void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
-	// ワールドトランスフォームのペアレントもしておく
-	//follow_ = primitive;
-	//transform.Parent(&primitive->transform);
-	// アフィン変換行列
-	Matrix4x4 matrix = primitive->worldTF.GetAffineMatrix();
+void Sphere::Create(LWP::Resource::RigidModel* model) {
+	// 必要なデータを集める
+	Matrix4x4 matrix = model->worldTF.GetAffineMatrix();	// アフィン変換行列
+	std::vector<Primitive::Vertex> vertices = model->GetModelData()->GetVertices();
 	// 初期化
-	Vector3 min = primitive->vertices[0].position * matrix;
+	Vector3 min = vertices[0].position * matrix;
 	Vector3 max = min;
 
 	// 最小の値と最大の値を求める
-	for (const Primitive::Vertex& vertex : primitive->vertices) {
+	for (const Primitive::Vertex& vertex : vertices) {
 		Vector3&& v = vertex.position * matrix;
 		min.x = min.x > v.x ? v.x : min.x;
 		min.y = min.y > v.y ? v.y : min.y;

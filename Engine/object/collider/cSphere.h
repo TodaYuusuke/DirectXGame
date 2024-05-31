@@ -34,14 +34,14 @@ namespace LWP::Object::Collider {
 		void Create(const LWP::Math::Vector3& pos);
 		void Create(const LWP::Math::Vector3& pos, const float& rad);
 		// 形状から包み込む最小のAABBを生成する関数
-		void CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive);
+		void Create(LWP::Resource::RigidModel* model);
 		// 形状を返す
 		Shape GetShape() override { return Shape::Sphere; }
 
 		// Observer用（==）
 		bool operator==(const Sphere& other) {
 			return {
-				worldTF.GetChanged() &&
+				followModel_.GetChanged() &&
 				radius == other.radius
 			};
 		}

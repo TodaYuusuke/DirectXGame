@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resources/model/RigidModel.h"
-#include "utility/observers/Observer.h"
+#include "utility/observers/Observer2.h"
 #include "Mask.h"
 
 #include <functional>
@@ -42,8 +42,6 @@ namespace LWP::Object::Collider {
 	public: // ** パブリックなメンバ変数 ** //
 		// マスク処理
 		Mask mask;
-		// ワールドトランスフォーム
-		Utility::Observer<Object::TransformEuler> worldTF;
 
 		// 固有名詞
 		std::string name = "ICollider";
@@ -84,7 +82,7 @@ namespace LWP::Object::Collider {
 		// 追従するプリミティブのポインタをセットする関数
 		void SetFollowTarget(LWP::Resource::RigidModel* ptr) { followModel_ = ptr; }
 		// ヒット時に正常な位置に修正するベクトルを加算
-		void AdjustPosition(const LWP::Math::Vector3& fixVector) { followModel_->worldTF += fixVector; }
+		void AdjustPosition(const LWP::Math::Vector3& fixVector) { followModel_.t->worldTF += fixVector; }
 
 		// ヒット時に関数を呼び出す関数（※ユーザー呼び出し禁止）
 		void ExecuteLambda(ICollider* hitCollision);
@@ -92,15 +90,14 @@ namespace LWP::Object::Collider {
 		// 自身の形状を返す純粋仮想関数関数
 		virtual Shape GetShape() = 0;
 		// ワールド座標を取得
-		LWP::Math::Vector3 GetWorldPosition() { return worldTF.t.GetWorldPosition(); }
+		LWP::Math::Vector3 GetWorldPosition() { return followModel_.t->worldTF.GetWorldPosition(); }
 		// ImGui
 		virtual void DebugGUI();
 
 
 	protected: // ** 派生クラス用の関数と変数 ** //
-		// 追従する形状
-		Resource::RigidModel* followModel_ = nullptr;
-		//Utility::ObserverStruct<Primitive::IPrimitive*, Primitive::IPrimitiveStruct> follow_ = nullptr;
+		// 追従するモデル
+		Utility::ObserverStruct<Resource::RigidModel*, Resource::RigidModelStruct> followModel_ = nullptr;
 
 		// 前フレーム当たっていたかのフラグ
 		bool hit = false;

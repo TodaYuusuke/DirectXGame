@@ -6,6 +6,7 @@ using namespace LWP::Primitive;
 using namespace LWP::Resource;
 using namespace LWP::Math;
 
+
 // 移譲コンストラクタ
 AABB::AABB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {}
 
@@ -14,16 +15,18 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 	max = max_;
 
 #if DEMO
-	// デバッグ用の立方体の設定
-	//cube.ChangeFillMode();	// ワイヤーフレームで描画
+	// 立方体のインスタンスを作成
+	cube.CreateFromAABB(*this);
+	cube.material.enableLighting = false;
+	cube.isWireFrame = true;
 #endif
 }
 
 void AABB::Update() {
 	ICollider::Update();
+	// アクティブがOff -> 早期リターン
+	if (!isActive) { return; }
 
-	min = min * worldTF.t.GetAffineMatrix();
-	max = max * worldTF.t.GetAffineMatrix();
 
 	// MinよりMaxのほうが小さくならないように修正
 	min.x = std::min<float>(min.x, max.x);
@@ -33,12 +36,27 @@ void AABB::Update() {
 	max.x = std::max<float>(min.x, max.x);
 	max.y = std::max<float>(min.y, max.y);
 	max.z = std::max<float>(min.z, max.z);
+
+
+	// データが変わったら再生成
+	if (followModel_.t && followModel_.GetChanged()) {
+		// 再生成
+		Create(followModel_.t);
+	}
+
+#if DEMO
+	cube.CreateFromAABB(*this);	// cube再生成
+	// isActive切り替え
+	cube.isActive = isShowWireFrame && isActive;
+	// hitしているときは色を変える
+	cube.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+#endif
 }
 
 void AABB::DebugGUI() {
 	ICollider::DebugGUI();
-	//ImGui::DragFloat3("min", &min.x, 0.01f);
-	//ImGui::DragFloat3("max", &max.x, 0.01f);
+	ImGui::DragFloat3("min", &min.x, 0.01f);
+	ImGui::DragFloat3("max", &max.x, 0.01f);
 }
 
 void AABB::Create(const LWP::Math::Vector3& position) { Create(position, { 1.0f,1.0f,1.0 }); }
@@ -50,8 +68,6 @@ void AABB::Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& 
 }
 
 void AABB::Create(LWP::Resource::RigidModel* model) { 
-	// ワールドトランスフォームのペアレントもしておく
-	followModel_ = model;
 	// 必要なデータを集める
 	Matrix4x4 matrix = model->worldTF.GetAffineMatrix();	// アフィン変換行列
 	std::vector<Vertex> vertices = model->GetModelData()->GetVertices();

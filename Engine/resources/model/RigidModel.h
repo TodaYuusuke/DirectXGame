@@ -59,7 +59,7 @@ namespace LWP::Resource {
 		/// デバッグ用ImGui
 		/// </summary>
 		void DebugGUI() override;
-		
+
 		/// <summary>
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
@@ -67,6 +67,15 @@ namespace LWP::Resource {
 
 
 	public:	// ** オペレータオーバーロード ** //
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(const RigidModel& other) const = delete;
+		bool operator==(RigidModel& other) {
+			return worldTF == other.worldTF &&
+				enableLighting == other.enableLighting &&
+				isActive == other.isActive;
+		}
+
 		// コピー演算子
 		RigidModel& operator=(const Resource::RigidModel& other) {
 			if (this != &other) {
@@ -76,6 +85,26 @@ namespace LWP::Resource {
 				isActive = other.isActive;
 			}
 			return *this;
+		}
+	};
+	
+
+	// RigidModelのデータのみ（Observerクラス用）
+	struct RigidModelStruct {
+		Object::TransformEuler worldTF;
+		//bool enableLighting;
+		//bool isActive;
+		//std::vector<Primitive::Material> materials;
+
+		RigidModelStruct& operator=(const RigidModel& other) {
+			worldTF = other.worldTF;
+			//enableLighting = other.enableLighting;
+			//isActive = other.isActive;
+			//materials = other.materials;
+			return *this;
+		}
+		bool operator==(RigidModel& other) {
+			return worldTF == other.worldTF;
 		}
 	};
 }

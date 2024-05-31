@@ -2,7 +2,7 @@
 #include "ICollider.h"
 
 #if DEMO
-//#include "resources/model/standard/Cube.h"
+#include "primitive/3d/Cube.h"
 #endif
 
 namespace LWP::Object::Collider {
@@ -17,11 +17,7 @@ namespace LWP::Object::Collider {
 		// 最大
 		LWP::Math::Vector3 max = { 0.5f,0.5f,0.5f };
 
-#if DEMO
-	protected:
-		// デバッグ用モデル
-		//LWP::Resource::Cube cube;
-#endif
+
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
 		AABB();
@@ -43,11 +39,17 @@ namespace LWP::Object::Collider {
 		// Observer用（==）
 		bool operator==(AABB& other) {
 			return { 
-				worldTF.GetChanged() &&
+				followModel_.GetChanged() &&
 				min == other.min &&
 				max == other.max
 			};
 		}
+
+#if DEMO
+	protected:
+		// デバッグ用モデル
+		LWP::Primitive::Cube cube;
+#endif
 
 
 	protected: // ** プライベートな関数 ** //

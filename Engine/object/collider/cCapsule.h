@@ -41,7 +41,7 @@ namespace LWP::Object::Collider {
 		// Observer用（==）
 		bool operator==(const Capsule& other) {
 			return {
-				worldTF.GetChanged() &&
+				followModel_.GetChanged() &&
 				start == other.start &&
 				end == other.end &&
 				radius == other.radius
