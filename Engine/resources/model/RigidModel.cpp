@@ -40,6 +40,7 @@ void RigidModel::LoadFullPath(const std::string& fp) {
 	System::engine->resourceManager_->SetPointer(this, filePath);
 }
 
+
 void RigidModel::Update() {
 	if (!isActive) { return; }
 }

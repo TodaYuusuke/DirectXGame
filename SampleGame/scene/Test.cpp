@@ -15,6 +15,7 @@ void Test::Initialize() {
 
 	//mesh.LoadShortPath("cube/cube.obj");
 	mesh.LoadShortPath("human/walk.gltf");
+	cube.LoadCube();
 	//anim.LoadAnimationLongPath("resources/model/human/walk.gltf", &mesh);
 	//anim.Start();
 

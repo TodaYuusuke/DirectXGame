@@ -22,7 +22,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Sprite sprite;
 	LWP::Object::Camera subCamera;
 
-	LWP::Resource::Cube cube;
+	LWP::Resource::RigidModel cube;
 	LWP::Resource::RigidModel cube2;
 
 	LWP::Object::PointLight pl;

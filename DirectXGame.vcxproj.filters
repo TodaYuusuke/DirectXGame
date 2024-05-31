@@ -82,9 +82,6 @@
     <ClCompile Include="Engine\primitive\IPrimitive.cpp">
       <Filter>Engine\primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
@@ -159,9 +156,6 @@
     </ClCompile>
     <ClCompile Include="Engine\object\collider\ColliderManager.cpp">
       <Filter>Engine\object\collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Capsule.cpp">
-      <Filter>Engine\primitive\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\math</Filter>
@@ -265,8 +259,9 @@
     <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
-    <ClCompile Include="Engine\resources\model\standard\Cube.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -354,9 +349,6 @@
       <Filter>Engine\primitive</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\3d\3dList.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Sphere.h">
       <Filter>Engine\primitive\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\primitive\2d\2dList.h">
@@ -475,9 +467,6 @@
     </ClInclude>
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h">
       <Filter>Engine\utilitiy\observers</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Capsule.h">
-      <Filter>Engine\primitive\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Quaternion.h">
       <Filter>Engine\math</Filter>
@@ -623,7 +612,8 @@
     <ClInclude Include="Engine\base\directX\utility\PSO.h" />
     <ClInclude Include="Engine\resources\model\SkinningModel.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />
-    <ClInclude Include="Engine\resources\model\standard\Cube.h" />
+    <ClInclude Include="Engine\primitive\3d\Capsule.h" />
+    <ClInclude Include="Engine\primitive\3d\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

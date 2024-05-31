@@ -4,7 +4,7 @@
 /// <summary>
 /// パーティクル
 /// </summary>
-class DamageParticle : public LWP::Object::Particle<LWP::Resource::Cube> {
+class DamageParticle : public LWP::Object::Particle<LWP::Resource::RigidModel> {
 private: // ** 純粋仮想関数のオーバーライド ** //
 
 	/// <summary>

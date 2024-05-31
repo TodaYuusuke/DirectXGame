@@ -16,6 +16,17 @@ namespace LWP::Resource {
 		// マテリアルバッファー
 		//std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> mBuffers;
 
+
+	public:	// ** 列挙子 ** //
+		/// <summary>
+		/// 標準の形
+		/// </summary>
+		enum class Standard {
+			Cube,
+			Sphere
+		};
+
+
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
@@ -33,6 +44,11 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath) override;
+		/// <summary>
+		/// 標準モデルのデータを読み込む
+		/// </summary>
+		void LoadCube() { LoadFullPath("resources/system/model/standard/cube.gltf"); }
+		void LoadSphere() { LoadFullPath("resources/system/model/standard/sphere.gltf"); }
 
 		/// <summary>
 		/// 更新（ユーザー呼び出し禁止）
@@ -50,8 +66,7 @@ namespace LWP::Resource {
 		void ChangeFillMode();
 
 
-		public:	// ** オペレータオーバーロード ** //
-		
+	public:	// ** オペレータオーバーロード ** //
 		// コピー演算子
 		RigidModel& operator=(const Resource::RigidModel& other) {
 			if (this != &other) {

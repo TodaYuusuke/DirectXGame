@@ -16,10 +16,13 @@ void ColliderTest::Initialize() {
 
 	// モデル読み込み
 	mesh.LoadShortPath("human/walk.gltf");
+	sphere.LoadSphere();
 
 	// 追従
-	aabb.SetFollowTarget(&mesh);
+	sphere.worldTF.scale = { 2.0f,2.0f,2.0f };
+	aabb.SetFollowTarget(&sphere);
 	aabb.enterLambda = [](HitData data) {
+		data;
 		Info::ChangeShowDebugGUI();
 	};
 }

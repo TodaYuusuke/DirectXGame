@@ -2,7 +2,7 @@
 #include "ICollider.h"
 
 #if DEMO
-#include "resources/model/standard/Cube.h"
+//#include "resources/model/standard/Cube.h"
 #endif
 
 namespace LWP::Object::Collider {
@@ -20,7 +20,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	protected:
 		// デバッグ用モデル
-		LWP::Resource::Cube cube;
+		//LWP::Resource::Cube cube;
 #endif
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
