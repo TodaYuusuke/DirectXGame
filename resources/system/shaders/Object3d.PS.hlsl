@@ -58,7 +58,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET
 {
     // インデックスを抽出
     uint32_t m = gIndex[input.id].material;
-    uint32_t t = gIndex[input.id].tex2d;
+    uint32_t t = gMaterial[m].tIndex;
 
     // 最終的な結果
     float32_t4 output;
@@ -102,13 +102,13 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET
         //output.rgb = ((input.color.rgb * diffuse) + specular) * shadow;
         //output.w = input.color.a; // 透明度を保持
     
-        output.rgb = ((input.color.rgb * texColor.rgb * diffuse) + specular) * shadow;
-        output.w = input.color.a * texColor.a; // 透明度を保持
+        output.rgb = ((input.color.rgb * texColor.rgb * gMaterial[m].color.rgb * diffuse) + specular) * shadow;
+        output.w = input.color.a * texColor.a * gMaterial[m].color.a; // 透明度を保持
     }
     else
     { // Lightingの計算を行わない
         float4 transformUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial[m].uvTransform);
-        output = input.color * gTexture[t].Sample(gSampler, transformUV.xy);
+        output = input.color * gTexture[t].Sample(gSampler, transformUV.xy) * gMaterial[m].color;
     }
 
     // 透明なら消す

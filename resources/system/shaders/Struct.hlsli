@@ -3,6 +3,8 @@ struct Vertex {
     float32_t2 texcoord;
     float32_t3 normal;
     float32_t4 color;
+    float32_t4 weight;
+    int32_t4 jIndex; // !< JointIndex
     int32_t mIndex; // !< MaterialIndex
 };
 struct WorldTransform {
@@ -45,7 +47,6 @@ struct IndexInfo {
     uint32_t vertex;
     uint32_t worldTransform;
     uint32_t material;
-    uint32_t tex2d;
     uint32_t isUI;
 };
 struct CommonData {
