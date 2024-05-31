@@ -18,20 +18,36 @@ void ICollider::Update() {
 	// preHit更新
 	preHit = hit;
 	hit = false;	// この後にヒット判定をするのでとりまfalse
+}
 
-	// アクティブがOffのとき
-	if (!isActive) { return; }
-	// 派生先の更新
-	UpdateShape();
+// ヒット時に関数を呼び出す関数（※ユーザー呼び出し禁止）
+void ICollider::ExecuteLambda(ICollider* hitCollision) {
+	switch (static_cast<OnCollisionState>((preHit << 1) + hit))
+	{
+		case LWP::Object::Collider::OnCollisionState::NoHit:
+			noHitLambda({ this, hitCollision });
+			break;
+		case LWP::Object::Collider::OnCollisionState::Enter:
+			enterLambda({ this, hitCollision });
+			break;
+		case LWP::Object::Collider::OnCollisionState::Stay:
+			stayLambda({ this, hitCollision });
+			break;
+		case LWP::Object::Collider::OnCollisionState::Exit:
+			exitLambda({ this, hitCollision });
+			break;
+		default:
+			break;
+	}
 }
 
 void ICollider::DebugGUI() {
 	// 派生クラス用
-	DerivedDebugGUI();
+	//DerivedDebugGUI();
 	ImGui::Text("- Below this are common variables - ");
 	// 追従先のワールドトランスフォーム
-	if (follow_.t && ImGui::TreeNode("FollowTarget Info")) {
-		follow_.t->DebugGUI();
+	if (followModel_.t && ImGui::TreeNode("FollowTarget Info")) {
+		followModel_.t->DebugGUI();
 		ImGui::TreePop();
 	}
 	

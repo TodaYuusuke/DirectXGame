@@ -152,33 +152,31 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
-		// 追加のViewをセット
-		list->SetGraphicsRootConstantBufferView(4, m.rigidBuffer.common.GetGPUView());
-		list->SetGraphicsRootDescriptorTable(5, m.rigidBuffer.inst->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(8, m.rigidBuffer.material->GetGPUView());
+		
 
-		list->SetPipelineState(rigid_.pso.GetState());	// PSOセット
-		// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		if (!m.rigid.list.empty()) {
+		Models::FillMode<RigidModel>& f = m.rigid;
+		// Solidの描画処理
+		if (!f.solid.ptrs.list.empty()) {
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, f.solid.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(8, f.solid.buffer.material->GetGPUView());
+
+			list->SetPipelineState(rigid_.pso.GetState());	// PSOセット
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
+		// WireFrameの描画処理
+		if (!f.wireFrame.ptrs.list.empty()) {
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, f.wireFrame.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, f.wireFrame.buffer.inst->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(8, f.wireFrame.buffer.material->GetGPUView());
 
-		//// リキッドモデルを描画
-		//for (RigidModel* rm : m.rigid.list) {
-		//	// isActiveがfalseなら描画しない
-		//	if (!rm->isActive) { continue; }
-
-		//	// ワイヤーフレームか確認
-		//	if (rm->isWireFrame) {
-		//		list->SetPipelineState(rigid_.wirePso.GetState());	// PSOセット
-		//	}
-		//	else {
-		//		list->SetPipelineState(rigid_.pso.GetState());	// PSOセット
-		//	}
-
-		//	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		//	list->DispatchMesh(d.GetMeshletCount(), 1, 1);
-		//}
+			list->SetPipelineState(rigid_.wirePso.GetState());	// PSOセット
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
 	}
 
 	// SkinningModelをDispatch
@@ -198,14 +196,29 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
-		// 追加のViewをセット
-		list->SetGraphicsRootConstantBufferView(4, m.skinBuffer.common.GetGPUView());
-		list->SetGraphicsRootDescriptorTable(5, m.skinBuffer.inst->GetGPUView());
-		list->SetGraphicsRootDescriptorTable(8, m.skinBuffer.material->GetGPUView());
 
-		// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
-		if (!m.skin.list.empty()) {
+
+		Models::FillMode<SkinningModel>& f = m.skin;
+		// Solidの描画処理
+		if (!f.solid.ptrs.list.empty()) {
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, f.solid.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(8, f.solid.buffer.material->GetGPUView());
+
+			list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
+		// WireFrameの描画処理
+		if (!f.wireFrame.ptrs.list.empty()) {
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, f.wireFrame.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, f.wireFrame.buffer.inst->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(8, f.wireFrame.buffer.material->GetGPUView());
+
+			list->SetPipelineState(skinning_.wirePso.GetState());	// PSOセット
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
 		

@@ -11,7 +11,7 @@ void Sprite::Update() {
 	if (!GetChanged()) { return; }
 	
 	// テクスチャのサイズを取得
-	size.t = texture.t.GetSize();
+	size.t = material.texture.t.GetSize();
 
 	// 頂点を再計算
 	CreateVertices();
@@ -48,5 +48,5 @@ void Sprite::DerivedDebugGUI(const std::string& label) {
 }
 
 bool Sprite::GetChanged() {
-	return texture.GetChanged();
+	return material.texture.GetChanged();
 }

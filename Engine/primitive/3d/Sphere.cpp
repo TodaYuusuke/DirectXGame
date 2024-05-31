@@ -86,7 +86,7 @@ int Sphere::GetVertexCount() const { return (subdivision + 1u) * (subdivision + 
 int Sphere::GetIndexCount() const { return subdivision * (subdivision - 1u) * 2u * 3u; }
 
 void Sphere::CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere) {
-	transform.translation = sphere.position;
+	worldTF.translation = sphere.position;
 	radius = sphere.radius;
 	subdivision = 16;
 	isWireFrame = true;

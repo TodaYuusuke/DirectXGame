@@ -88,13 +88,10 @@ namespace LWP::Object {
 		// Observerクラス用のオペレーターオーバーロード
 		bool operator==(const TransformQuat& other) const = delete;
 		bool operator==(TransformQuat& other) {
-			return {
-				translation == other.translation &&
+			return translation == other.translation &&
 				rotation == other.rotation &&
 				scale == other.scale &&
-				// ペアレントがある場合はペアレント先が変更されていないかも検知
-				(parent_ && !parent_->GetChanged())
-			};
+				(!parent_ || !parent_->GetChanged());
 		}
 	};
 }

@@ -15,6 +15,5 @@ void OldMesh::LoadFile(const std::string& filename) {
 	vertices = data->vertices;
 	indexes = data->indexes;
 	material = data->material;
-	texture = data->texture;
-	node = data->node;
+	material.texture = data->texture;
 }

@@ -31,22 +31,12 @@ namespace LWP::Primitive {
 		std::vector<uint32_t> indexes;	// インデックス
 
 		// ワールドトランスフォーム
-		Object::TransformEuler transform;
+		Object::TransformEuler worldTF;
 
 		// マテリアル
 		Material material;
-		// テクスチャ
-		Utility::Observer<Resource::Texture> texture;
 
-		// 頂点共通のカラー
-		// ・nullptrの場合は頂点ごとに色を参照する
-		// ・そうでない場合は全ての頂点の色がこれになる
-		Utility::Color* commonColor = nullptr;
-		// ノード情報
-		Node node;
 
-		// ライティングを行うかどうか
-		bool enableLighting = false;
 		// UIとして描画するか
 		bool isUI = false;
 		// ワイヤーフレームで描画する
@@ -76,7 +66,7 @@ namespace LWP::Primitive {
 		/// </summary>
 		bool operator==(const IPrimitive& other) const = delete;
 		bool operator==(IPrimitive& other) {
-			return { vertices == other.vertices && indexes == other.indexes && transform == other.transform };
+			return { vertices == other.vertices && indexes == other.indexes && worldTF == other.worldTF };
 		}
 
 		/// <summary>
@@ -139,19 +129,15 @@ namespace LWP::Primitive {
 		std::string name;
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indexes;
-		Object::TransformEuler transform;
+		Object::TransformEuler worldTF;
 		Material material;
-		Resource::Texture texture;
-		Utility::Color* commonColor = nullptr;
 
 		IPrimitiveStruct& operator=(const IPrimitive& other) {
 			name = other.name;
 			vertices = other.vertices;
 			indexes = other.indexes;
-			transform = other.transform;
+			worldTF = other.worldTF;
 			material = other.material;
-			texture = other.texture;
-			commonColor = other.commonColor;
 			return *this;
 		}
 		bool operator==(IPrimitive& other) {
@@ -159,10 +145,8 @@ namespace LWP::Primitive {
 				name == other.name &&
 				vertices == other.vertices &&
 				indexes == other.indexes &&
-				transform == other.transform &&
-				material == other.material &&
-				texture == other.texture.t &&
-				commonColor == other.commonColor
+				worldTF == other.worldTF &&
+				material == other.material
 			};
 		}
 	};

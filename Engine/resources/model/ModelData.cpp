@@ -126,3 +126,21 @@ void ModelData::Load(const std::string& filePath) {
 	std::memcpy(buffers_.primitiveIndices->data_, primitiveIndices.data(), sizeof(DirectX::MeshletTriangle) * primitiveIndices.size());
 	std::memcpy(buffers_.materials->data_, materials.data(), sizeof(Base::MaterialStruct) * materials.size());
 }
+
+
+std::vector<Vertex> ModelData::GetVertices() const {
+	std::vector<Vertex> result;
+	result.resize(GetVertexCount());
+	for (const Mesh& m : meshes_) {
+		result.insert(result.end(), m.vertices.begin(), m.vertices.end());
+	}
+	return result;
+}
+
+int ModelData::GetVertexCount() const {
+	int size = 0;
+	for (const Mesh& m : meshes_) {
+		size += m.GetVertexCount();
+	}
+	return size;
+}

@@ -109,5 +109,14 @@ namespace LWP::Utility {
 		std::advance(iter, index); // イテレーターをindex分進める
 		return iter;
 	}
+
+	// 二つのリストをマージする関数
+	template<typename T>
+	std::list<T> MergeLists(const std::list<T>& list1, const std::list<T>& list2) {
+		std::list<T> mergedList;
+		mergedList.insert(mergedList.end(), list1.begin(), list1.end());
+		mergedList.insert(mergedList.end(), list2.begin(), list2.end());
+		return mergedList;
+	}
 };
 

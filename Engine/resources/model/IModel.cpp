@@ -2,6 +2,7 @@
 
 #include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
+
 #include "component/Resource.h"
 #include "component/System.h"
 
@@ -20,6 +21,14 @@ void IModel::Load(const std::string& fileName) {
 void IModel::LoadShortPath(const std::string& fp) {
 	// フルパスにして読み込む
 	LoadFullPath(kDirectoryPath + fp);
+}
+
+ModelData* IModel::GetModelData() {
+	// パスが空じゃなかったら返す
+	if (!filePath.empty()) {
+		return GetModel(filePath);
+	}
+	return nullptr;
 }
 
 // 短縮用パス

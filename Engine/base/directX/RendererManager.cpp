@@ -147,8 +147,6 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 	for (int i = 0; i < primitive->GetVertexCount(); i++) {
 		VertexStruct ver;
 		ver = primitive->vertices[i];
-		if (primitive->commonColor != nullptr)	// 共通の色があるときはcommonColorを適応
-			ver.color_ = primitive->commonColor->GetVector4();
 		buffers_.AddData(ver);	// データを追加
 	}
 
@@ -160,15 +158,7 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 	// マテリアルをデータに登録
 	MaterialStruct m;
 	m = primitive->material;
-	m.enableLighting = primitive->enableLighting;
 	result.material = buffers_.AddData(m);
-	
-	// テクスチャのインデックスを貰う
-	result.tex2d = primitive->texture.t.GetIndex() != -1 ?
-		primitive->texture.t.GetIndex() :
-		defaultTexture_.GetIndex();
-	// SRV上のオフセット分戻して考える
-	result.tex2d -= lwpC::Rendering::kMaxBuffer;
 
 	// isUiセット
 	result.isUI = primitive->isUI;
@@ -196,7 +186,7 @@ std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction
 	// どれでもないとき
 	else {
 		// シャドウマップにも描画するか確認
-		if (primitive->enableLighting) {
+		if (primitive->material.enableLighting) {
 			return [this](const IndexInfoStruct& index) { 
 				normalRender_.AddIndexData(index); 
 				shadowRender_.AddIndexData(index);

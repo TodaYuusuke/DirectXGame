@@ -1,11 +1,6 @@
 #pragma once
 #include "IModel.h"
 
-// 前方宣言
-namespace LWP::Resource {
-	class RigidModel;
-}
-
 namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
@@ -20,6 +15,17 @@ namespace LWP::Resource {
 		//Base::ConstantBuffer<Base::InstanceRigidData> buffer;
 		// マテリアルバッファー
 		//std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> mBuffers;
+
+
+	public:	// ** 列挙子 ** //
+		/// <summary>
+		/// 標準の形
+		/// </summary>
+		enum class Standard {
+			Cube,
+			Sphere
+		};
+
 
 	public: // ** メンバ関数 ** //
 
@@ -38,6 +44,11 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath) override;
+		/// <summary>
+		/// 標準モデルのデータを読み込む
+		/// </summary>
+		void LoadCube() { LoadFullPath("resources/system/model/standard/cube.gltf"); }
+		void LoadSphere() { LoadFullPath("resources/system/model/standard/sphere.gltf"); }
 
 		/// <summary>
 		/// 更新（ユーザー呼び出し禁止）
@@ -49,9 +60,22 @@ namespace LWP::Resource {
 		/// </summary>
 		void DebugGUI() override;
 
+		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		void ChangeFillMode();
 
-		public:	// ** オペレータオーバーロード ** //
-		
+
+	public:	// ** オペレータオーバーロード ** //
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(const RigidModel& other) const = delete;
+		bool operator==(RigidModel& other) {
+			return worldTF == other.worldTF &&
+				enableLighting == other.enableLighting &&
+				isActive == other.isActive;
+		}
+
 		// コピー演算子
 		RigidModel& operator=(const Resource::RigidModel& other) {
 			if (this != &other) {
@@ -61,6 +85,26 @@ namespace LWP::Resource {
 				isActive = other.isActive;
 			}
 			return *this;
+		}
+	};
+	
+
+	// RigidModelのデータのみ（Observerクラス用）
+	struct RigidModelStruct {
+		Object::TransformEuler worldTF;
+		//bool enableLighting;
+		//bool isActive;
+		//std::vector<Primitive::Material> materials;
+
+		RigidModelStruct& operator=(const RigidModel& other) {
+			worldTF = other.worldTF;
+			//enableLighting = other.enableLighting;
+			//isActive = other.isActive;
+			//materials = other.materials;
+			return *this;
+		}
+		bool operator==(RigidModel& other) {
+			return worldTF == other.worldTF;
 		}
 	};
 }

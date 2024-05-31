@@ -7,7 +7,10 @@
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/renderer/ResourceStruct.h"
 
+#include "ModelData.h"
+
 namespace LWP::Resource {
+
 	/// <summary>
 	/// 3Dモデルを扱うアダプターの基底クラス
 	/// </summary>
@@ -19,8 +22,6 @@ namespace LWP::Resource {
 
 		// ライティングを行うかどうか
 		bool enableLighting = false;
-		// ワイヤーフレームで描画する
-		bool isWireFrame = false;
 		// アクティブ切り替え
 		bool isActive = true;
 
@@ -62,9 +63,17 @@ namespace LWP::Resource {
 		virtual void DebugGUI() = 0;
 
 		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		virtual void ChangeFillMode() = 0;
+		/// <summary>
 		/// 読み込み済みのパスを取得
 		/// </summary>
 		std::string LoadedFilePath() { return filePath; }
+		/// <summary>
+		/// 自分の読み込んだモデルデータを返す
+		/// </summary>
+		ModelData* GetModelData();
 
 	protected: // ** メンバ変数 ** //
 

@@ -16,8 +16,35 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 #if DEMO
 	// カプセルモデルを生成
 	capsuleModel.CreateFromCapsuleCol(*this);
+	capsuleModel.material.enableLighting = false;
+	capsuleModel.isWireFrame = true;
 #endif
 };
+
+
+void Capsule::Update() {
+	ICollider::Update();
+	// アクティブがOff -> 早期リターン
+	if (!isActive) { return; }
+
+#if DEMO
+	capsuleModel.CreateFromCapsuleCol(*this);	// Capsule再生成
+	// isActive切り替え
+	capsuleModel.isActive = isShowWireFrame && isActive;
+	// hitしているときは色を変える
+	capsuleModel.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+#endif
+
+}
+
+void Capsule::DebugGUI() {
+	ICollider::DebugGUI();
+
+	ImGui::DragFloat3("start", &start.x, 0.01f);
+	ImGui::DragFloat3("end", &end.x, 0.01f);
+	ImGui::DragFloat("radius", &radius, 0.01f);
+}
+
 
 
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_) { Create(start_, end_, 1.0f); }
@@ -25,25 +52,4 @@ void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3&
 	start = start_;
 	end = end_;
 	radius = rad_;
-}
-
-#if DEMO
-void Capsule::ShowWireFrame() {
-	// isActive切り替え
-	capsuleModel.isActive = isShowWireFrame && isActive;
-	// hitしているときは色を変える
-	capsuleModel.commonColor = new Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-};
-#endif
-
-void Capsule::UpdateShape() {
-#if DEMO
-	capsuleModel.CreateFromCapsuleCol(*this);	// Capsule再生成
-#endif
-}
-
-void Capsule::DerivedDebugGUI() {
-	ImGui::DragFloat3("start", &start.x, 0.01f);
-	ImGui::DragFloat3("end", &end.x, 0.01f);
-	ImGui::DragFloat("radius", &radius, 0.01f);
 }

@@ -67,24 +67,8 @@ void IPrimitive::DebugGUI(const std::string& label) {
 		LWP::Base::ImGuiManager::ColorEdit4("color", vertices[vertexNum_].color);
 		ImGui::TreePop();
 	}
-	isUI ? transform.DebugGUI2D() : transform.DebugGUI();
+	isUI ? worldTF.DebugGUI2D() : worldTF.DebugGUI();
 	material.DebugGUI();
-
-	// 共通カラーがあるとき -> ColorEdit4を呼び出す
-	if (ImGui::TreeNode("CommonColor")) {
-		if (commonColor != nullptr) {
-			LWP::Base::ImGuiManager::ColorEdit4("color", *commonColor);
-			if (ImGui::Button("Delete CommonColor")) {
-				delete commonColor;
-				commonColor = nullptr;
-			}
-		}
-		// 共通カラーがないとき -> 共通カラーを作る
-		else if (ImGui::Button("Create CommonColor")) {
-			commonColor = new Utility::Color(Utility::ColorPattern::WHITE);
-		}
-		ImGui::TreePop();
-	}
 
 	// その他
 	// 名前が変更されたとき、ツリーノードを開きっぱなしにするための処理
@@ -95,7 +79,6 @@ void IPrimitive::DebugGUI(const std::string& label) {
 			if (name.empty()) { name = "noName"; }
 		}
 		ImGui::Checkbox("isUI", &isUI);			// 2D描画
-		ImGui::Checkbox("enableLighting", &enableLighting);
 		ImGui::Checkbox("isWireFrame", &isWireFrame);	// アクティブ切り替え
 		ImGui::Checkbox("isActive", &isActive);	// アクティブ切り替え
 		ImGui::Text("- Below this are unique variables - ");

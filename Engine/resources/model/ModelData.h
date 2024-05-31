@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DirectXMesh/DirectXMesh.h>
 #include "base/directX/resource/data/StructuredBuffer.h"
 
@@ -59,23 +60,22 @@ namespace LWP::Resource {
 		/// <param name="filename">読み込むファイルのパス</param>
 		void Load(const std::string& filePath);
 
+
+		/// <summary>
+		/// 全頂点を返す関数
+		/// </summary>
+		std::vector<Primitive::Vertex> GetVertices() const;
 		/// <summary>
 		/// 頂点数の合計を返す関数
 		/// </summary>
-		int GetVertexCount() {
-			int size = 0;
-			for (int i = 0; i < meshes_.size(); i++) {
-				size += meshes_[i].GetVertexCount();
-			}
-			return size;
-		}
+		int GetVertexCount() const;
 		/// <summary>
 		/// メッシュ数を返す関数
 		/// </summary>
-		int GetMeshCount() { return static_cast<int>(meshes_.size()); }
+		int GetMeshCount() const { return static_cast<int>(meshes_.size()); }
 		/// <summary>
 		/// メッシュレット数を返す関数
 		/// </summary>
-		int GetMeshletCount() { return meshletCount_; }
+		int GetMeshletCount() const { return meshletCount_; }
 	};
 }

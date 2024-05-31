@@ -68,10 +68,6 @@ namespace LWP::Primitive {
 			indexes = other.indexes;
 			// マテリアル
 			material = other.material;
-			// テクスチャ
-			texture = other.texture;
-			// ノード
-			node = other.node;
 
 			return this;
 		};

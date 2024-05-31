@@ -1,24 +1,6 @@
 #pragma once
 #include "IModel.h"
 
-// 前方宣言
-namespace LWP::Resource {
-	class SkinningModel;
-}
-
-// モデル別のデータの構造体（AS実装のときに役立つ予定）
-namespace LWP::Base {
-	struct InstanceSkinData {
-		Base::WTFStruct wtf;
-		int32_t enableLighting;
-
-		InstanceSkinData() = default;
-		InstanceSkinData(const Resource::SkinningModel& value);
-		// Materialクラスのデータを代入する演算子をオーバーロード
-		InstanceSkinData& operator=(const Resource::SkinningModel& value);
-	};
-}
-
 namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
@@ -61,5 +43,10 @@ namespace LWP::Resource {
 		/// デバッグ用ImGui
 		/// </summary>
 		void DebugGUI() override;
+
+		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		void ChangeFillMode();
 	};
 }

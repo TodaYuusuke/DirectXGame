@@ -40,6 +40,7 @@ void RigidModel::LoadFullPath(const std::string& fp) {
 	System::engine->resourceManager_->SetPointer(this, filePath);
 }
 
+
 void RigidModel::Update() {
 	if (!isActive) { return; }
 }
@@ -52,6 +53,10 @@ void RigidModel::DebugGUI() {
 		ImGui::TreePop();
 	}
 	ImGui::Checkbox("enableLighting", &enableLighting);
-	ImGui::Checkbox("isWireFrame", &isWireFrame);
 	ImGui::Checkbox("isActive", &isActive);
+	if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
+}
+
+void RigidModel::ChangeFillMode() {
+	System::engine->resourceManager_->ChangeFillMode(this, filePath);
 }

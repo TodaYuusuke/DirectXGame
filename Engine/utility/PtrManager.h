@@ -25,6 +25,15 @@ namespace LWP::Utility {
 		~PtrManager() = default;
 
 		/// <summary>
+		/// ポインタが存在するか検索
+		/// </summary>
+		/// <returns>存在するならばtrue</returns>
+		bool Find(T ptr) {
+			auto ite = std::find(list.begin(), list.end(), ptr);
+			return ite != list.end();
+		}
+
+		/// <summary>
 		/// ポインタをセットする
 		/// </summary>
 		void SetPointer(T ptr) {

@@ -14,7 +14,7 @@ namespace LWP::Primitive {
 		: public Sphere {
 	public: // ** パブリックなメンバ変数 ** //
 		// 始点
-		LWP::Math::Vector3 start() const { return transform.GetWorldPosition(); }
+		LWP::Math::Vector3 start() const { return worldTF.GetWorldPosition(); }
 		// 終点
 		Utility::Observer<LWP::Math::Vector3> end = LWP::Math::Vector3{ 0.0f,0.0f, 0.0f };
 		
@@ -57,7 +57,7 @@ namespace LWP::Primitive {
 		void DerivedDebugGUI(const std::string& label = "Derived") override;
 
 		// 始点が変わっているかを監視するための変数
-		Utility::Observer<LWP::Object::TransformEuler*> obsTransform = &transform;
+		Utility::Observer<LWP::Object::TransformEuler*> obsTransform = &worldTF;
 
 		/// <summary>
 		/// パラメータが変わっているかを検証

@@ -26,7 +26,11 @@ namespace LWP::Object::Collider {
 		Capsule(const LWP::Math::Vector3& start);
 		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
 		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
-		
+
+		// 固有の更新処理
+		void Update() override;
+		// ImGuiの派生クラス
+		void DebugGUI() override;
 
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
@@ -37,7 +41,7 @@ namespace LWP::Object::Collider {
 		// Observer用（==）
 		bool operator==(const Capsule& other) {
 			return {
-				follow_.GetChanged() &&
+				followModel_.GetChanged() &&
 				start == other.start &&
 				end == other.end &&
 				radius == other.radius
@@ -48,16 +52,7 @@ namespace LWP::Object::Collider {
 	private:
 		// デバッグ用モデル
 		LWP::Primitive::Capsule capsuleModel;
-	public:
-		// デバッグ用の描画関数
-		void ShowWireFrame() override;
 #endif
-
-	private: // ** プライベートな関数 ** //
-		// 更新時に形状を追従するための処理
-		void UpdateShape() override;
-		// ImGuiの派生クラス
-		void DerivedDebugGUI() override;
 	};
 
 
