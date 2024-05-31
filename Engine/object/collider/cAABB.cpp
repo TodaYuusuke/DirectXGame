@@ -15,7 +15,7 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 
 #if DEMO
 	// デバッグ用の立方体の設定
-	cube.isWireFrame = true;
+	cube.ChangeFillMode();	// ワイヤーフレームで描画
 #endif
 }
 

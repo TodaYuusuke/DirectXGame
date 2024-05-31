@@ -52,6 +52,10 @@ void RigidModel::DebugGUI() {
 		ImGui::TreePop();
 	}
 	ImGui::Checkbox("enableLighting", &enableLighting);
-	ImGui::Checkbox("isWireFrame", &isWireFrame);
 	ImGui::Checkbox("isActive", &isActive);
+	if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
+}
+
+void RigidModel::ChangeFillMode() {
+	System::engine->resourceManager_->ChangeFillMode(this, filePath);
 }

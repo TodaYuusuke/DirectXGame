@@ -2,6 +2,7 @@
 
 #include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
+
 #include "component/Resource.h"
 #include "component/System.h"
 
@@ -29,7 +30,6 @@ ModelData* IModel::GetModelData() {
 	}
 	return nullptr;
 }
-
 
 // 短縮用パス
 const std::string IModel::kDirectoryPath = "resources/model/";

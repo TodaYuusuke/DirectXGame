@@ -197,21 +197,18 @@ void ShadowRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GP
 		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
-		list->SetGraphicsRootConstantBufferView(4, m.rigidBuffer.common.GetGPUView());
-		list->SetGraphicsRootDescriptorTable(5, m.rigidBuffer.inst->GetGPUView());
 
-		// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		if (!m.rigid.list.empty()) {
+
+		Models::FillMode<RigidModel>& f = m.rigid;
+		// Solidの描画処理
+		if (!f.solid.ptrs.list.empty()) {
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, f.solid.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
+
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
-		
-		// リキッドモデルを描画
-		//for (RigidModel* rm : m.rigid.list) {
-		//	// isActiveがfalseもしくはLightingがfalseなら描画しない
-		//	if (!rm->isActive || !rm->enableLighting) { continue; }
-		//	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		//	list->DispatchMesh(d.GetMeshletCount(), 1, 1);
-		//}
 	}
 
 	// SkinModelをDispatch
@@ -229,14 +226,19 @@ void ShadowRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GP
 		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
-		list->SetGraphicsRootConstantBufferView(4, m.skinBuffer.common.GetGPUView());
-		list->SetGraphicsRootDescriptorTable(5, m.skinBuffer.inst->GetGPUView());
-
 		// WellのBufferをセット
 		//list->SetGraphicsRootDescriptorTable(6, sm->wellBuffer->GetGPUView());
 
-		// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-		if (!m.skin.list.empty()) {
+
+		Models::FillMode<SkinningModel>& f = m.skin;
+		// Solidの描画処理
+		if (!f.solid.ptrs.list.empty()) {
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, f.solid.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
+
+			list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
+			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
 		

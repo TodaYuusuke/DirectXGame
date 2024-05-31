@@ -67,6 +67,10 @@ void SkinningModel::Update() {
 void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();
 	ImGui::Checkbox("enableLighting", &enableLighting);
-	ImGui::Checkbox("isWireFrame", &isWireFrame);
 	ImGui::Checkbox("isActive", &isActive);
+	if (ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
+}
+
+void SkinningModel::ChangeFillMode() {
+	System::engine->resourceManager_->ChangeFillMode(this, filePath);
 }

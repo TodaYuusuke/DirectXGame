@@ -1,11 +1,6 @@
 #pragma once
 #include "IModel.h"
 
-// 前方宣言
-namespace LWP::Resource {
-	class RigidModel;
-}
-
 namespace LWP::Resource {
 	/// <summary>
 	/// 3Dモデルを扱うアダプタークラス
@@ -48,6 +43,11 @@ namespace LWP::Resource {
 		/// デバッグ用ImGui
 		/// </summary>
 		void DebugGUI() override;
+		
+		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		void ChangeFillMode();
 
 
 		public:	// ** オペレータオーバーロード ** //

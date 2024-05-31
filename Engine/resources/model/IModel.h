@@ -22,8 +22,6 @@ namespace LWP::Resource {
 
 		// ライティングを行うかどうか
 		bool enableLighting = false;
-		// ワイヤーフレームで描画する
-		bool isWireFrame = false;
 		// アクティブ切り替え
 		bool isActive = true;
 
@@ -64,6 +62,10 @@ namespace LWP::Resource {
 		/// </summary>
 		virtual void DebugGUI() = 0;
 
+		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		virtual void ChangeFillMode() = 0;
 		/// <summary>
 		/// 読み込み済みのパスを取得
 		/// </summary>

@@ -33,6 +33,23 @@ InstanceData& InstanceData::operator=(const Resource::SkinningModel& value) {
 }
 
 
+void Models::Buffer::Init() {
+	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+	SRV* srv = System::engine->directXCommon_->GetSRV();
+
+	inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
+	inst->Init(dev, srv);
+	material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
+	material->Init(dev, srv);
+	common.Init(dev);
+}
+void Models::Buffer::Reset(uint32_t mSize) {
+	inst->Reset();
+	material->Reset();
+	common.data_->materialCount = mSize;
+	common.data_->instanceCount = 0;
+}
+
 
 Manager::~Manager() {
 	// XAudio2解放
@@ -77,35 +94,33 @@ void Manager::Update() {
 	// モデルアダプター更新
 	for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
 		// リソースリセット
-		it->second.rigidBuffer.inst->Reset();
-		it->second.rigidBuffer.material->Reset();
-		it->second.rigidBuffer.common.data_->materialCount = static_cast<uint32_t>(it->second.data.materials_.size());
-		it->second.rigidBuffer.common.data_->instanceCount = 0;
-		it->second.skinBuffer.inst->Reset();
-		it->second.skinBuffer.material->Reset();
-		it->second.skinBuffer.common.data_->materialCount = static_cast<uint32_t>(it->second.data.materials_.size());
-		it->second.skinBuffer.common.data_->instanceCount = 0;
+		it->second.rigid.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
+		it->second.skin.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
 
-		for (RigidModel* m : it->second.rigid.list) {
-			m->Update();
-			// バッファーにデータ登録
-			if (m->isActive) {
-				it->second.rigidBuffer.inst->Add(*m);
-				for (const Primitive::Material& mat : m->materials) {
-					it->second.rigidBuffer.material->Add(mat);
+		Models::Pointers<RigidModel>* rigid[2] = { &it->second.rigid.solid, &it->second.rigid.wireFrame };
+		Models::Pointers<SkinningModel>* skin[2] = { &it->second.skin.solid, &it->second.skin.wireFrame };
+		for (int i = 0; i < 2; i++) {
+			for (RigidModel* m : rigid[i]->ptrs.list) {
+				m->Update();
+				// バッファーにデータ登録
+				if (m->isActive) {
+					rigid[i]->buffer.inst->Add(*m);
+					for (const Primitive::Material& mat : m->materials) {
+						rigid[i]->buffer.material->Add(mat);
+					}
+					rigid[i]->buffer.common.data_->instanceCount += 1;
 				}
-				it->second.rigidBuffer.common.data_->instanceCount += 1;
 			}
-		}
-		for (SkinningModel* m : it->second.skin.list) {
-			m->Update();
-			// バッファーにデータ登録
-			if (m->isActive) {
-				it->second.skinBuffer.inst->Add(*m);
-				//for (const Primitive::Material& mat : m->materials) {
-				//	it->second.skinBuffer.material->Add(mat);
-				//}
-				it->second.skinBuffer.common.data_->instanceCount += 1;
+			for (SkinningModel* m : skin[i]->ptrs.list) {
+				m->Update();
+				// バッファーにデータ登録
+				if (m->isActive) {
+					skin[i]->buffer.inst->Add(*m);
+					//for (const Primitive::Material& mat : m->materials) {
+					//	it->second.skinBuffer.material->Add(mat);
+					//}
+					skin[i]->buffer.common.data_->instanceCount += 1;
+				}
 			}
 		}
 	}
@@ -210,22 +225,11 @@ void Manager::LoadModelData(const std::string& filePath) {
 	// 読み込み済みかをチェック
 	if (!modelDataMap_.count(filePath)) {
 		// 読み込んだことのない3Dモデルなので読み込む
-		modelDataMap_[filePath].data.Load(filePath);	// 要素は自動追加されるらしい;
+ 		modelDataMap_[filePath].data.Load(filePath);	// 要素は自動追加されるらしい;
 
-		GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-		SRV* srv = System::engine->directXCommon_->GetSRV();
-
-		// リソース作成
-		modelDataMap_[filePath].rigidBuffer.inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
-		modelDataMap_[filePath].rigidBuffer.inst->Init(dev, srv);
-		modelDataMap_[filePath].rigidBuffer.material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
-		modelDataMap_[filePath].rigidBuffer.material->Init(dev, srv);
-		modelDataMap_[filePath].rigidBuffer.common.Init(dev);
-		modelDataMap_[filePath].skinBuffer.inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
-		modelDataMap_[filePath].skinBuffer.inst->Init(dev, srv);
-		modelDataMap_[filePath].skinBuffer.common.Init(dev);
-		modelDataMap_[filePath].skinBuffer.material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
-		modelDataMap_[filePath].skinBuffer.material->Init(dev, srv);
+		// 初期化
+		modelDataMap_[filePath].rigid.Init();
+		modelDataMap_[filePath].skin.Init();
 	}
 }
 ModelData* Manager::GetModelData(const std::string& filePath) {
@@ -248,6 +252,34 @@ std::vector<std::reference_wrapper<Models>> Manager::GetModels() {
 	return models;
 }
 
+void Manager::ChangeFillMode(RigidModel* ptr, const std::string& filePath) {
+	Models::FillMode<RigidModel>& f = modelDataMap_[filePath].rigid;
+
+	// solidの方にあればwireframeに
+	if (f.solid.ptrs.Find(ptr)) {
+		f.solid.ptrs.DeletePointer(ptr);
+		f.wireFrame.ptrs.SetPointer(ptr);
+	}
+	// wireframeの方にあればsolidに
+	else {
+		f.wireFrame.ptrs.DeletePointer(ptr);
+		f.solid.ptrs.SetPointer(ptr);
+	}
+}
+void Manager::ChangeFillMode(SkinningModel* ptr, const std::string& filePath) {
+	Models::FillMode<SkinningModel>& f = modelDataMap_[filePath].skin;
+
+	// solidの方にあればwireframeに
+	if (f.solid.ptrs.Find(ptr)) {
+		f.solid.ptrs.DeletePointer(ptr);
+		f.wireFrame.ptrs.SetPointer(ptr);
+	}
+	// wireframeの方にあればsolidに
+	else {
+		f.wireFrame.ptrs.DeletePointer(ptr);
+		f.solid.ptrs.SetPointer(ptr);
+	}
+}
 
 Primitive::OldMeshData Manager::LoadAssimp(const std::string& filepath) {
 	Primitive::OldMeshData result{};	// 結果
@@ -328,10 +360,12 @@ Primitive::OldMeshData Manager::LoadAssimp(const std::string& filepath) {
 
 void Manager::RigidGUI(Models& m) {
 	static int selectedNum = 0;	// 選択された番号
-	int size = static_cast<int>(m.rigid.list.size());
+	// solidとwireFrameをまとめたリスト
+	std::list<RigidModel*> lists = Utility::MergeLists<RigidModel*>(m.rigid.solid.ptrs.list, m.rigid.wireFrame.ptrs.list);
+	int size = static_cast<int>(lists.size());
 
 	// Rigidの一覧を表示
-	if (!m.rigid.list.empty()) {
+	if (!lists.empty()) {
 		// 最大値以上にならないように修正
 		if (selectedNum >= size) {
 			selectedNum = size - 1;
@@ -346,15 +380,17 @@ void Manager::RigidGUI(Models& m) {
 		ImGui::Combo("List", &selectedNum, text.c_str());
 
 		// 選択された番号のDebugGUIを呼び出す
-		(*Utility::GetIteratorAtIndex<RigidModel*>(m.rigid.list, selectedNum))->DebugGUI();
+		(*Utility::GetIteratorAtIndex<RigidModel*>(lists, selectedNum))->DebugGUI();
 	}
 }
 void Manager::SkinningGUI(Models& m) {
 	static int selectedNum = 0;	// 選択された番号
-	int size = static_cast<int>(m.skin.list.size());
+	// solidとwireFrameをまとめたリスト
+	std::list<SkinningModel*> lists = Utility::MergeLists<SkinningModel*>(m.skin.solid.ptrs.list, m.skin.wireFrame.ptrs.list);
+	int size = static_cast<int>(lists.size());
 
 	// Skinningの一覧を表示
-	if (!m.skin.list.empty()) {
+	if (!lists.empty()) {
 		// 最大値以上にならないように修正
 		if (selectedNum >= size) {
 			selectedNum = size - 1;
@@ -369,6 +405,6 @@ void Manager::SkinningGUI(Models& m) {
 		ImGui::Combo("List", &selectedNum, text.c_str());
 
 		// 選択された番号のDebugGUIを呼び出す
-		(*Utility::GetIteratorAtIndex<SkinningModel*>(m.skin.list, selectedNum))->DebugGUI();
+		(*Utility::GetIteratorAtIndex<SkinningModel*>(lists, selectedNum))->DebugGUI();
 	}
 }

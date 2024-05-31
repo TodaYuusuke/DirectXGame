@@ -21,15 +21,4 @@ Cube::Cube(const Cube& other) : Cube() {
 }
 
 
-void Cube::DebugGUI() {
-	worldTF.DebugGUI();
-	if (ImGui::TreeNode("Materials")) {
-		for (int i = 0; i < materials.size(); i++) {
-			materials[i].DebugGUI(std::to_string(i));
-		}
-		ImGui::TreePop();
-	}
-	ImGui::Checkbox("enableLighting", &enableLighting);
-	ImGui::Checkbox("isWireFrame", &isWireFrame);
-	ImGui::Checkbox("isActive", &isActive);
-}
+void Cube::DebugGUI() { RigidModel::DebugGUI(); }
