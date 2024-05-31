@@ -58,7 +58,7 @@ float32_t4 main(VertexShaderOutput input) : SV_TARGET
 {
     // インデックスを抽出
     uint32_t m = gIndex[input.id].material;
-    uint32_t t = gIndex[input.id].tex2d;
+    uint32_t t = gMaterial[m].tIndex;
 
     // 最終的な結果
     float32_t4 output;

@@ -13,7 +13,6 @@ namespace LWP::Base {
 		uint32_t vertex;		// 実質頂点インデックスの役割
 		uint32_t worldMatrix;	// ワールドトランスフォーム
 		uint32_t material;		// マテリアル
-		uint32_t tex2d;			// テクスチャ
 		uint32_t isUI;			// UIとして表示するかのフラグ
 	};
 
@@ -47,11 +46,11 @@ namespace LWP::Base {
 		}
 		// ワールドトランスフォームのデータを代入する演算子をオーバーロード
 		WTFStruct& operator=(Primitive::IPrimitive& value) {
-			wtf = value.transform.GetAffineMatrix(&value.node);
-			translate = value.transform.GetTranslationMatrix();
-			rotate = value.transform.GetRotateMatrix();
-			scale = value.transform.GetScaleMatrix();
-			inverse = value.transform.GetAffineMatrix().Inverse();
+			wtf = value.worldTF.GetAffineMatrix();
+			translate = value.worldTF.GetTranslationMatrix();
+			rotate = value.worldTF.GetRotateMatrix();
+			scale = value.worldTF.GetScaleMatrix();
+			inverse = value.worldTF.GetAffineMatrix().Inverse();
 			return *this;
 		}
 	};

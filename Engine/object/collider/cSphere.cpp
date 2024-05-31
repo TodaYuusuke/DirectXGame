@@ -45,7 +45,7 @@ void Sphere::CreateFromPrimitive(LWP::Primitive::IPrimitive* primitive) {
 	//follow_ = primitive;
 	//transform.Parent(&primitive->transform);
 	// アフィン変換行列
-	Matrix4x4 matrix = primitive->transform.GetAffineMatrix();
+	Matrix4x4 matrix = primitive->worldTF.GetAffineMatrix();
 	// 初期化
 	Vector3 min = primitive->vertices[0].position * matrix;
 	Vector3 max = min;

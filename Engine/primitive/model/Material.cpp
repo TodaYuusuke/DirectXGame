@@ -42,11 +42,7 @@ void Material::DebugGUI(const std::string& label) {
 		uvTransform.DebugGUI("uvTransform");
 		LWP::Base::ImGuiManager::ColorEdit4("color", color);
 		ImGui::DragFloat("shinines", &shininess);
-		/* 文字列を変更する処理
-		if (ImGui::InputText("Name", &name)) {
-			// 名前無しは禁止
-			if (name.empty()) { name = "noName"; }
-		}*/
+		ImGui::Checkbox("enableLighting", &enableLighting);
 		ImGui::TreePop();
 	}
 }
@@ -55,7 +51,7 @@ MaterialStruct& MaterialStruct::operator=(const Primitive::Material& value) {
 	uvMatrix = value.uvTransform.GetAffineMatrix();
 	color = value.color.GetVector4();
 	shininess = value.shininess;
-	//enableLighting = false;
+	enableLighting = value.enableLighting;
 	// テクスチャのインデックスを貰う
 	textureIndex = value.texture.t.GetIndex() != -1 ?
 		value.texture.t.GetIndex() :

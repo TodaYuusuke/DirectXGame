@@ -19,7 +19,7 @@ void Test::Initialize() {
 	//anim.LoadAnimationLongPath("resources/model/human/walk.gltf", &mesh);
 	//anim.Start();
 
-	sprite.texture = subCamera.GetTexture();
+	sprite.material.texture = subCamera.GetTexture();
 
 	mainCamera.isActive = true;
 	mainCamera.pp.use = true;

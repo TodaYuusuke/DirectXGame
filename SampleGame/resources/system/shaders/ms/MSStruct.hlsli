@@ -66,6 +66,7 @@ struct Material {
     float32_t shinines;
     int32_t tIndex; // !< TextureIndex
 };
+
 // ** Lights ** //
 struct DirectionalLight {
     float32_t4x4 viewProjection;
