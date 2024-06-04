@@ -24,9 +24,6 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 
 void Capsule::Update() {
 	ICollider::Update();
-	// アクティブがOff -> 早期リターン
-	if (!isActive) { return; }
-
 #if DEMO
 	capsuleModel.CreateFromCapsuleCol(*this);	// Capsule再生成
 	// isActive切り替え
@@ -35,6 +32,8 @@ void Capsule::Update() {
 	capsuleModel.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 #endif
 
+	// アクティブがOff -> 早期リターン
+	//if (!isActive) { return; }
 }
 
 void Capsule::DebugGUI() {

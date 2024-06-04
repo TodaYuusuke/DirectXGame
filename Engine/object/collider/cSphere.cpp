@@ -22,13 +22,6 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 
 void Sphere::Update() {
 	ICollider::Update();
-	// アクティブがOff -> 早期リターン
-	if (!isActive) { return; }
-
-	// データが変わったら再生成
-	if (followModel_.t && followModel_.GetChanged()) {
-		Create(followModel_.t);
-	}
 #if DEMO
 	sphereModel.CreateFromSphereCol(*this);	// cube再生成
 	// isActive切り替え
@@ -36,6 +29,14 @@ void Sphere::Update() {
 	// hitしているときは色を変える
 	sphereModel.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
 #endif
+
+	// アクティブがOff -> 早期リターン
+	if (!isActive) { return; }
+
+	// データが変わったら再生成
+	if (followModel_.t && followModel_.GetChanged()) {
+		Create(followModel_.t);
+	}
 }
 
 void Sphere::DebugGUI() {

@@ -44,7 +44,7 @@ void ICollider::ExecuteLambda(ICollider* hitCollision) {
 void ICollider::DebugGUI() {
 	// 派生クラス用
 	//DerivedDebugGUI();
-	ImGui::Text("- Below this are common variables - ");
+	//ImGui::Text("- Below this are common variables - ");
 	// 追従先のワールドトランスフォーム
 	if (followModel_.t && ImGui::TreeNode("FollowTarget Info")) {
 		followModel_.t->DebugGUI();

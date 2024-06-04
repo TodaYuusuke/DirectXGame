@@ -24,6 +24,14 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 
 void AABB::Update() {
 	ICollider::Update();
+#if DEMO
+	cube.CreateFromAABB(*this);	// cube再生成
+	// isActive切り替え
+	cube.isActive = isShowWireFrame && isActive;
+	// hitしているときは色を変える
+	cube.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+#endif
+
 	// アクティブがOff -> 早期リターン
 	if (!isActive) { return; }
 
@@ -37,20 +45,11 @@ void AABB::Update() {
 	max.y = std::max<float>(min.y, max.y);
 	max.z = std::max<float>(min.z, max.z);
 
-
 	// データが変わったら再生成
 	if (followModel_.t && followModel_.GetChanged()) {
 		// 再生成
 		Create(followModel_.t);
 	}
-
-#if DEMO
-	cube.CreateFromAABB(*this);	// cube再生成
-	// isActive切り替え
-	cube.isActive = isShowWireFrame && isActive;
-	// hitしているときは色を変える
-	cube.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
-#endif
 }
 
 void AABB::DebugGUI() {
