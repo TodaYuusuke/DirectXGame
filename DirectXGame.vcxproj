@@ -277,6 +277,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\model\Node.cpp" />
     <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
     <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
+    <ClCompile Include="Engine\resources\level\LevelData.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -414,6 +415,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\model\Node.h" />
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
     <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
+    <ClInclude Include="Engine\resources\level\LevelData.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
@@ -453,6 +455,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Externals\nlohmann\json.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

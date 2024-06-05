@@ -87,12 +87,12 @@ namespace LWP::Utility {
 	/// <summary>
 	/// radian から degreeへ
 	/// </summary>
-	int RadianToDegree(float radian);
+	float RadianToDegree(float radian);
 
 	/// <summary>
 	/// degree から radian へ
 	/// </summary>
-	float DegreeToRadian(int degree);
+	float DegreeToRadian(float degree);
 
 
 	// インデックスを指定してstd::listのイテレーターを取得する関数

@@ -263,6 +263,7 @@
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
     <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
+    <ClCompile Include="Engine\resources\level\LevelData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -616,6 +617,8 @@
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\3d\Cube.h" />
     <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
+    <ClInclude Include="Engine\resources\level\LevelData.h" />
+    <ClInclude Include="Externals\nlohmann\json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

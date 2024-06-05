@@ -1,5 +1,5 @@
 #include "GameScene.h"
-#include "Test.h"
+#include "Test/Test.h"
 
 using namespace LWP;
 using namespace LWP::Resource;

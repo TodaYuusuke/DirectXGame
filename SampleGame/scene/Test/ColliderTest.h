@@ -2,7 +2,7 @@
 #include <Adapter.h>
 #include "scene/IScene.h"
 
-#include "../class/particle/DamageParticle.h"
+#include "../../class/particle/DamageParticle.h"
 
 class ColliderTest final
 	: public IScene {

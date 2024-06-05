@@ -1,5 +1,5 @@
 #include "ColliderTest.h"
-#include "GameScene.h"
+#include "../GameScene.h"
 
 using namespace LWP;
 using namespace LWP::Input;

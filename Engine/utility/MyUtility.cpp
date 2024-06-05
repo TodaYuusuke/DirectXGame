@@ -77,10 +77,10 @@ std::string LWP::Utility::GetClassNameShort(const std::type_info& type) {
 	return result;
 }
 
-int LWP::Utility::RadianToDegree(float radian) {
-	return static_cast<int>(radian * (180.0f / M_PI));
+float LWP::Utility::RadianToDegree(float radian) {
+	return radian * (180.0f / static_cast<float>(M_PI));
 }
 
-float LWP::Utility::DegreeToRadian(int degree) {
-	return static_cast<float>(degree * (M_PI / 180.0f));
+float LWP::Utility::DegreeToRadian(float degree) {
+	return degree * (static_cast<float>(M_PI) / 180.0f);
 }

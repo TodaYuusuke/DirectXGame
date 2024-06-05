@@ -15,6 +15,7 @@
 #include "model/SkinningModel.h"
 #include "model/ModelData.h"
 
+#include "level/LevelData.h"
 
 #include "utility/PtrManager.h"
 
