@@ -97,7 +97,7 @@ void LevelData::DebugGUI() {
 
 }
 
-void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformEuler* target) {
+void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target) {
 	// 平行移動（Blenderの座標系からここで変換）
 	target->translation = {
 		static_cast<float>(data["translation"][0]),
@@ -105,11 +105,11 @@ void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformEuler* t
 		static_cast<float>(data["translation"][1]),
 	};
 	// 回転角
-	target->rotation = {
-		DegreeToRadian(-static_cast<float>(data["rotation"][0])),
-		DegreeToRadian(-static_cast<float>(data["rotation"][2])),
-		DegreeToRadian(-static_cast<float>(data["rotation"][1])),
-	};
+	//target->rotation = {
+	//	DegreeToRadian(-static_cast<float>(data["rotation"][0])),
+	//	DegreeToRadian(-static_cast<float>(data["rotation"][2])),
+	//	DegreeToRadian(-static_cast<float>(data["rotation"][1])),
+	//};
 	// 平行移動
 	target->scale = {
 		static_cast<float>(data["scaling"][0]),

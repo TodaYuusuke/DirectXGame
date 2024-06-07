@@ -60,5 +60,5 @@ Quaternion Interpolation::SlerpQuaternion(const Quaternion& start, const Quatern
 		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end * (std::sin(theta * t) * sinTheta));
 	}
 	// 結果を返す
-	return result;
+	return result.Normalize();
 }

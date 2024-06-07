@@ -34,10 +34,20 @@ namespace LWP::Base {
 		Math::Matrix4x4 scale;
 		Math::Matrix4x4 inverse;
 
-		// ワールドトランスフォームクラスのデータを代入する演算子をオーバーロード
+		// TransformEulerクラスのデータを代入する演算子をオーバーロード
 		WTFStruct& operator=(const Object::TransformEuler& value) {
 			wtf = value.GetAffineMatrix();
-			wtf = value.GetAffineMatrix(new Primitive::Node);
+			//wtf = value.GetAffineMatrix(new Primitive::Node);
+			translate = value.GetTranslationMatrix();
+			rotate = value.GetRotateMatrix();
+			scale = value.GetScaleMatrix();
+			inverse = value.GetAffineMatrix().Inverse();
+			return *this;
+		}
+		// TransformQuatクラスのデータを代入する演算子をオーバーロード
+		WTFStruct& operator=(const Object::TransformQuat& value) {
+			wtf = value.GetAffineMatrix();
+			//wtf = value.GetAffineMatrix(new Primitive::Node);
 			translate = value.GetTranslationMatrix();
 			rotate = value.GetRotateMatrix();
 			scale = value.GetScaleMatrix();
@@ -54,5 +64,6 @@ namespace LWP::Base {
 			return *this;
 		}
 	};
+
 #pragma endregion
-}
+};

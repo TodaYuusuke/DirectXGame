@@ -1,6 +1,10 @@
 #include "Quaternion.h"
 #include "vector/Vector3.h"
 
+#include <numbers>
+#include <cmath>
+
+
 using namespace LWP::Math;
 
 
@@ -82,6 +86,33 @@ Quaternion Quaternion::CreateFromAxisAngle(const Vector3& axis, float radian) {
 
 	return result.Normalize();
 }
+Quaternion Quaternion::DirectionToDirection(const Vector3& from, const Vector3& to) {
+	// 回転軸をクロス積から求める
+	Vector3 axis = Vector3::Cross(from, to);
+	// 内積
+	float dot = Vector3::Dot(from, to);
+	// 完全に平行な場合、単位クォータニオンを返す
+    if (dot > 0.9999f) {
+        return {0.0f, 0.0f, 0.0f, 1.0f};
+    }
+
+	// 完全に逆方向の場合、任意の直交するベクトルを回転軸として180度回転クォータニオンを返す
+	//if (dot < -0.9999f) {
+	//	Vector3 orthogonalAxis = { 1.0f, 0.0f, 0.0f };
+	//	if (std::abs(from.x) > 0.9f) {
+	//		orthogonalAxis = { 0.0f, 1.0f, 0.0f };
+	//	}
+	//	Vector3 axis = Vector3::Cross(from, orthogonalAxis);
+	//	axis.Normalize();
+	//	return Quaternion::CreateFromAxisAngle(axis, std::numbers::pi_v<float>); // 180度回転
+	//}
+
+	// θを求める
+	float theta = std::acos(Vector3::Dot(from, to) / (from.Length() * to.Length()));
+
+	return CreateFromAxisAngle(axis, theta);
+}
+
 
 float Quaternion::Dot(const Quaternion& v1, const Quaternion& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
@@ -234,7 +265,7 @@ Quaternion Quaternion::operator* (const float& other) const {
 	result.y = this->y * other;
 	result.z = this->z * other;
 	result.w = this->w * other;
-	return result;
+	return result.Normalize();
 }
 Quaternion& Quaternion::operator*=(const float& other) { return *this = *this * other; }
 

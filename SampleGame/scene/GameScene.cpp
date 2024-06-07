@@ -23,7 +23,7 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 8; i++) {
 		buildings[i].worldTF.translation.x += i * 2.0f;
 		buildings[i].worldTF.translation.z = 2.0f;
-		buildings[i].worldTF.rotation.y = 3.14f;
+		//buildings[i].worldTF.rotation.y = 3.14f;
 		buildings[i].enableLighting = true;
 	}
 	buildings[6].worldTF.translation.x = 3.0f;

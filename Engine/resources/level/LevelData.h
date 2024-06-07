@@ -88,6 +88,6 @@ namespace LWP::Resource {
 
 	private: // ** プライベートなメンバ関数 ** //
 
-		void SetWorldTF(const nlohmann::json& data, Object::TransformEuler* target);
+		void SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target);
 	};
 }

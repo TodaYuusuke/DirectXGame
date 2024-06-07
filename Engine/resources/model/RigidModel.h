@@ -91,7 +91,7 @@ namespace LWP::Resource {
 
 	// RigidModelのデータのみ（Observerクラス用）
 	struct RigidModelStruct {
-		Object::TransformEuler worldTF;
+		Object::TransformQuat worldTF;
 		//bool enableLighting;
 		//bool isActive;
 		//std::vector<Primitive::Material> materials;

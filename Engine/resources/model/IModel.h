@@ -18,7 +18,7 @@ namespace LWP::Resource {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// ワールドトランスフォーム
-		Object::TransformEuler worldTF{};
+		Object::TransformQuat worldTF{};
 
 		// ライティングを行うかどうか
 		bool enableLighting = false;

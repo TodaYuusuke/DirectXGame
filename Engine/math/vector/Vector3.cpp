@@ -42,10 +42,12 @@ Vector3 Vector3::operator*(const Matrix4x4& other) const {
 	result.z = x * other.m[0][2] + y * other.m[1][2] + z * other.m[2][2] + other.m[3][2];
 	return result;
 }
+
 Vector3 Vector3::operator*(const Quaternion& other) const {
 	return (other * Quaternion(*this) * other.Inverse()).vec();
 }
 Vector3 Vector3::operator*=(const Quaternion& other) { return *this = *this * other; }
+
 /// 3次元ベクトルの長さを求める
 float Vector3::Length() const {
 	return sqrtf(x * x + y * y + z * z);
