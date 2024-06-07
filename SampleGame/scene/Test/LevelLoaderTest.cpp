@@ -4,8 +4,8 @@ using namespace LWP::Math;
 
 // 初期化
 void LevelLoaderTest::Initialize() {
-	// いったんmainCameraへのデータ適応を行わない
 	levelData.LoadShortPath("Scene.json");
+	levelData.rigidModels["Cube"].enableLighting = true;
 }
 
 // 更新

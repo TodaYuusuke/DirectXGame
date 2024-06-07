@@ -11,6 +11,8 @@ using namespace LWP::Utility;
 // 初期化
 void GameScene::Initialize() {
 	LWP::Info::ChangeShowDebugGUI();
+	// いったんmainCameraへのデータ適応を行わない
+	levelData.LoadShortPath("Scene.json");
 
 	buildings[0].LoadShortPath("buildings/1Story_Mat.gltf");
 	buildings[1].LoadShortPath("buildings/1Story_GableRoof_Mat.gltf");
@@ -39,7 +41,7 @@ void GameScene::Initialize() {
 	ground.enableLighting = true;
 
 	// プレイヤー初期化
-	player.Init(&mainCamera);
+	player.Init(new Object::Camera());
 }
 // 更新
 void GameScene::Update() {
@@ -47,7 +49,8 @@ void GameScene::Update() {
 
 	// シーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {
-		nextSceneFunction = []() { return new GameScene(); };
+		levelData.HotReload();
+		//nextSceneFunction = []() { return new GameScene(); };
 	}
 	if (Input::Keyboard::GetTrigger(DIK_N)) {
 		nextSceneFunction = []() { return new Test(); };

@@ -83,7 +83,7 @@ void TransformQuat::DebugGUI(const std::string& label) {
 		ImGui::DragFloat3("Translation", &translation.x, 0.01f);
 		Vector3 rot = { 0.0f,0.0f,0.0f };
 		ImGui::DragFloat3("Rotation", &rot.x, 0.01f);
-		rotation *= Quaternion::ConvertEuler(rot);
+		rotation = Quaternion::ConvertEuler(rot) * rotation;
 		ImGui::DragFloat4("Quaternion", &rotation.x, 0.01f);
 		if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
 		ImGui::DragFloat3("Scale", &scale.x, 0.01f);

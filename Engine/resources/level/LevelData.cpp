@@ -105,14 +105,15 @@ void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* ta
 		static_cast<float>(data["translation"][1]),
 	};
 	// 回転角
-	target->rotation = 
-	Quaternion::CreateFromAxisAngle({ 1.0f,0.0f,0.0f }, -static_cast<float>(M_PI) / 2.0f) *
-	Quaternion{
-		data["rotation"][0],
-		data["rotation"][2],
-		data["rotation"][1],
-		data["rotation"][3],
-	};
+	target->rotation =
+		/*Quaternion::CreateFromAxisAngle({1.0f,0.0f,0.0f}, -static_cast<float>(M_PI) / 2.0f) **/
+		Quaternion{
+			data["rotation"][0],
+			data["rotation"][2],
+			data["rotation"][1],
+			data["rotation"][3],
+	}.Inverse();
+	
 	// 平行移動
 	target->scale = {
 		static_cast<float>(data["scaling"][0]),
