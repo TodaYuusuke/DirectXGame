@@ -71,10 +71,10 @@ void LevelData::HotReload() {
 		std::string objName = object["name"].get<std::string>();	// 名前を受け取る
 		
 		// CAMERA（適応対象のカメラの実体がなければ検証しない）
-		if (cameraPtr && type.compare("CAMERA") == 0) {
-			// トランスフォームのパラメータ読み込み
-			SetWorldTF(object["transform"], &cameraPtr->transform);
-		}
+		//if (cameraPtr && type.compare("CAMERA") == 0) {
+		//	// トランスフォームのパラメータ読み込み
+		//	SetWorldTF(object["transform"], &cameraPtr->transform);
+		//}
 
 		// MESH
 		if (type.compare("MESH") == 0) {

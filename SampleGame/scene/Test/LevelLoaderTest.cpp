@@ -5,7 +5,6 @@ using namespace LWP::Math;
 // 初期化
 void LevelLoaderTest::Initialize() {
 	// いったんmainCameraへのデータ適応を行わない
-	levelData.SetCameraPtr(nullptr);
 	levelData.LoadShortPath("Scene.json");
 }
 
