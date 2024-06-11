@@ -71,54 +71,14 @@ void Player::Move() {
 	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
 	model.worldTF.translation += dir * kPlayerSpeed;
 
-	// 現在プレイヤーの向いている角度
-	Vector3 currentDir = Vector3{ 0.0f,0.0f,1.0f } * model.worldTF.rotation;
-	ImGui::Begin("Test");
-	ImGui::DragFloat3("currentDir", &currentDir.x);
-	ImGui::DragFloat3("dir", &dir.x);
-	ImGui::End();
-
 	if (dir.Length() > 0.0f) {
+		// 現在プレイヤーの向いている角度
+		Vector3 currentDir = Vector3{ 0.0f,0.0f,1.0f } *model.worldTF.rotation;
 		// 回転
-		model.worldTF.rotation = 
+		model.worldTF.rotation =
 			Utility::Interp::SlerpQuaternion(
 				model.worldTF.rotation,
 				model.worldTF.rotation * Quaternion::DirectionToDirection(currentDir, dir), 0.8f);
-		
-		//// オイラー角
-		//Vector3& rotation = model.worldTF.rotation;
-
-		// 目的の角度
-		//Vector3 goalRotation = { 0.0f, 0.0f, 0.0f };
-		// Y軸周りの角度
-		//goalRotation.y = std::atan2f(dir.x, dir.z);
-		// モデルの回転分補正
-		//goalRotation.y -= 1.57f;
-		// X軸周りの角度
-		//goalRotation.x = std::atan2f(-dir.y, Vector3{ dir.x, 0.0f, dir.z }.Length());
-
-		// 現在の角度と目標の角度を比較し、逆回転の場合に調整
-		//if (std::abs(rotation.y - goalRotation.y) > M_PI) {
-		//	if (rotation.y > goalRotation.y) {
-		//		rotation.y -= static_cast<float>(2.0f * M_PI);
-		//	}
-		//	else {
-		//		rotation.y += static_cast<float>(2.0f * M_PI);
-		//	}
-		//}
-
-		//// 回転適応
-		//rotation.y = goalRotation.y;
-		//rotation = Utility::Interp::Slerp(rotation, goalRotation, 0.2f);
-
-		// 歩いているのでアニメーション起動
-		if (walkAnim.isEnd()) {
-			//walkAnim.Start();
-		}
-	}
-	else {
-		// 歩いていないでアニメーションストップ（無理やり0秒地点に固定している）
-		//walkAnim.Start();
 	}
 }
 

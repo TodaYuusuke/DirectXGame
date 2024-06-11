@@ -11,8 +11,12 @@ using namespace LWP::Utility;
 // 初期化
 void GameScene::Initialize() {
 	LWP::Info::ChangeShowDebugGUI();
-	// いったんmainCameraへのデータ適応を行わない
-	levelData.LoadShortPath("Scene.json");
+	//levelData.LoadShortPath("Scene.json");
+	// bloomをON
+	mainCamera.pp.use = true;
+	mainCamera.pp.bloom.use = true;
+	mainCamera.pp.bloom.threshold;
+	mainCamera.pp.CreateShaderFile();
 
 	buildings[0].LoadShortPath("buildings/1Story_Mat.gltf");
 	buildings[1].LoadShortPath("buildings/1Story_GableRoof_Mat.gltf");
@@ -36,12 +40,32 @@ void GameScene::Initialize() {
 
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { 100.0f,100.0f, 100.0f };
+	skydome.materials[1].color = Color(5, 5, 16, 255);
+	for (int i = 0; i < kStarCount; i++) {
+		stars[i].LoadCube();
+		stars[i].worldTF.translation = Vector3{
+			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
+			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
+			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
+		}.Normalize() * 99.0f;
+		stars[i].worldTF.rotation = Quaternion{ 
+			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
+			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
+			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
+			1.0f
+		}.Normalize();
+		float scale = LWP::Utility::GenerateRandamNum<int>(10, 30) / 100.0f;
+		stars[i].worldTF.scale = { scale,scale,scale };
+
+		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
+		stars[i].enableLighting = false;
+	}
 	ground.LoadShortPath("ground/Ground.gltf");
 	ground.worldTF.scale = { 100.0f,1.0f, 100.0f };
 	ground.enableLighting = true;
 
 	// プレイヤー初期化
-	player.Init(new Object::Camera());
+	player.Init(&mainCamera);
 }
 // 更新
 void GameScene::Update() {

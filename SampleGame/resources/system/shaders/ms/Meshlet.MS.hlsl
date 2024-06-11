@@ -38,6 +38,10 @@ void main(
         
         // 出力するプリミティブを求める
         outIndices[gtid] = packedIndices;
+        
+        //outVerts[packedIndices.x];
+        //outVerts[packedIndices.y];
+        //outVerts[packedIndices.z];
     }
 
 }
