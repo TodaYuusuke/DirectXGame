@@ -35,7 +35,7 @@ private: // ** カメラ系処理 ** //
 	// 追従させるカメラのポインタ
 	LWP::Object::Camera* camera_ = nullptr;
 	// カメラのオフセット
-	const LWP::Math::Vector3 cameraOffset_ = { 0.0f, 0.0f, -20.0f };
+	const LWP::Math::Vector3 cameraOffset_ = { 0.0f, 2.0f, -20.0f };
 
 	void FollowCameraUpdate();
 };

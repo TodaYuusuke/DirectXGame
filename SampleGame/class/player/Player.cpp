@@ -11,9 +11,9 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
 	model.LoadShortPath("human/walk.gltf");
 	//model.LoadShortPath("human/simpleSkin.gltf");
-	model.worldTF.translation.y = 3.4f;
-	model.worldTF.scale = { 3.0f,3.0f,3.0f };
-	//model.worldTF.scale = { 0.4f,0.4f,0.4f };
+	model.worldTF.translation.y = 0.4f;
+	//model.worldTF.scale = { 3.0f,3.0f,3.0f };
+	model.worldTF.scale = { 0.4f,0.4f,0.4f };
 	model.enableLighting = true;
 	// アニメーション用意
 	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
@@ -32,8 +32,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	pl.transform.Parent(&model.worldTF);
 	pl.transform.translation.z = 2.0f;
 	pl.transform.translation.y = 1.75f;
-	//pl.radius = 13.0f;
-	pl.radius = 20.0f;
+	pl.radius = 13.0f;
 	pl.intensity = 0.7f;
 	pl.isActive = true;
 
@@ -82,6 +81,15 @@ void Player::Move() {
 			Utility::Interp::SlerpQuaternion(
 				model.worldTF.rotation,
 				model.worldTF.rotation * Quaternion::DirectionToDirection(currentDir, dir), 0.8f);
+		// 歩いているのでアニメーション
+		if (walkAnim.isEnd()) {
+			walkAnim.Start();
+		}
+	}
+	else {
+		// 止まってるのでアニメーションストップ
+		walkAnim.Stop();
+		walkAnim.Init();
 	}
 }
 

@@ -47,11 +47,15 @@ namespace LWP::Resource {
 		void ToggleDeltaTimeMultiply() { useDeltaTimeMultiply_ = !useDeltaTimeMultiply_; }
 
 		/// <summary>
+		/// モーション経過時間の初期化
+		/// </summary>
+		void Init();
+
+		/// <summary>
 		/// モーション開始
 		/// </summary>
 		void Start();
 		void Start(float startSec);
-
 		/// <summary>
 		/// モーション停止
 		/// </summary>

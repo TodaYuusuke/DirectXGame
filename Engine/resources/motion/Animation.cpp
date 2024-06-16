@@ -24,6 +24,22 @@ Animation::~Animation() {
 	DeleteInstance(this);
 }
 
+void Animation::Init() {
+	time_ = 0.0f;
+	for (Joint& joint : modelPtr_->skeleton.joints) {
+		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
+			if (joint.name == "mixamorig:RightUpLeg") {
+				printf("");
+			}
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_).Normalize();
+			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
+		}
+	}
+}
+
 void Animation::Start() { Start(0.0f); }
 void Animation::Start(float startSec) {
 	isStart_ = true;
@@ -35,9 +51,9 @@ void Animation::Update() {
 	if (!isStart_) { return; }	// 早期リターン
 
 	// 時間を更新
-	//time_ += useDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF();
+	time_ += useDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF();
 	// 最後までいったらリピート再生。リピートしなくても別に良い
-	//time_ = std::fmod(time_, duration_);
+	time_ = std::fmod(time_, duration_);
 
 
 	for (Joint& joint : modelPtr_->skeleton.joints) {
