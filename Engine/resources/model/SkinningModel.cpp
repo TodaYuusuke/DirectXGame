@@ -1,9 +1,7 @@
 #include "SkinningModel.h"
 
-#include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
 #include "component/Resource.h"
-#include "component/System.h"
 
 using namespace LWP;
 using namespace LWP::Base;
@@ -30,17 +28,21 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
 	System::engine->resourceManager_->SetPointer(this, filePath);
 	ModelData* data = GetModel(filePath);
+	// マテリアルをコピー
+	materials.resize(data->materials_.size());
+	std::copy(data->materials_.begin(), data->materials_.end(), materials.begin());
 
 	// なければおかしいのでassert
 	assert(data->skeleton_.has_value());
 
 	// スケルトンをコピー
 	skeleton = data->skeleton_.value();
-	skinCluster = data->skinCluster_.value();
+	// スキンクラスターの参照を保持
+	skinCluster = &data->skinCluster_.value();
 
 	// Wellを初期化
-	wellBuffer = std::make_unique<Base::StructuredBuffer<Primitive::WellForGPU>>(static_cast<int32_t>(skeleton.joints.size()));
-	wellBuffer->Init(System::engine->directXCommon_->GetGPUDevice(), System::engine->directXCommon_->GetSRV());
+	//wellBuffer = std::make_unique<Base::StructuredBuffer<Primitive::WellForGPU>>(static_cast<int32_t>(skeleton.joints.size()));
+	//wellBuffer->Init(System::engine->directXCommon_->GetGPUDevice(), System::engine->directXCommon_->GetSRV());
 }
 
 void SkinningModel::Update() {
@@ -49,23 +51,31 @@ void SkinningModel::Update() {
 	// スケルトンがあるなら更新
 	skeleton.Update();
 
-	// SkinClusterの更新
-	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); jointIndex++) {
-		assert(jointIndex < skinCluster->inverseBindPoseMatrices.size());
-		Math::Matrix4x4 skeSpaceMatrix = skinCluster->inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
-		skinCluster->mappedPalette[jointIndex].skeletonSpaceMatrix =
-			skeSpaceMatrix;
-		skinCluster->mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
-			skeSpaceMatrix.Inverse().Transpose();
-		// Bufferのデータ更新
-		wellBuffer->data_[jointIndex] = skinCluster->mappedPalette[jointIndex];
-	}
+	
+
+	//// SkinClusterの更新
+	//for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); jointIndex++) {
+	//	assert(jointIndex < skinCluster->inverseBindPoseMatrices.size());
+	//	Math::Matrix4x4 skeSpaceMatrix = skinCluster->inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
+	//	skinCluster->mappedPalette[jointIndex].skeletonSpaceMatrix =
+	//		skeSpaceMatrix;
+	//	skinCluster->mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
+	//		skeSpaceMatrix.Inverse().Transpose();
+	//	// Bufferのデータ更新
+	//	wellBuffer->data_[jointIndex] = skinCluster->mappedPalette[jointIndex];
+	//}
 
 	// データのコピー
 	//std::memcpy(wellBuffer->data_, skinCluster->mappedPalette.data(), sizeof(Primitive::WellForGPU) * skinCluster->mappedPalette.size());
 }
 void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();
+	if (ImGui::TreeNode("Materials")) {
+		for (int i = 0; i < materials.size(); i++) {
+			materials[i].DebugGUI(std::to_string(i));
+		}
+		ImGui::TreePop();
+	}
 	ImGui::Checkbox("enableLighting", &enableLighting);
 	ImGui::Checkbox("isActive", &isActive);
 	if (ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
@@ -73,4 +83,15 @@ void SkinningModel::DebugGUI() {
 
 void SkinningModel::ChangeFillMode() {
 	System::engine->resourceManager_->ChangeFillMode(this, filePath);
+}
+
+void SkinningModel::SetBufferData(Primitive::WellForGPU* data, int offset) {
+	// 全Jointの計算結果を渡す
+	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); jointIndex++) {
+		assert(jointIndex < skinCluster->inverseBindPoseMatrices.size());
+		Math::Matrix4x4 skeSpaceMatrix = skinCluster->inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
+		// Bufferのデータ更新
+		data[jointIndex + offset].skeletonSpaceMatrix = skeSpaceMatrix;
+		data[jointIndex + offset].skeletonSpaceInverseTransposeMatrix = skeSpaceMatrix.Inverse().Transpose();
+	}
 }

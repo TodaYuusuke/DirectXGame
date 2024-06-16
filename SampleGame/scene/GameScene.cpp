@@ -10,12 +10,11 @@ using namespace LWP::Utility;
 
 // 初期化
 void GameScene::Initialize() {
-	//LWP::Info::ChangeShowDebugGUI();
+	LWP::Info::ChangeShowDebugGUI();
 	//levelData.LoadShortPath("Scene.json");
 	// bloomをON
 	mainCamera.pp.use = true;
 	mainCamera.pp.bloom.use = true;
-	mainCamera.pp.bloom.threshold;
 	mainCamera.pp.CreateShaderFile();
 
 	buildings[0].LoadShortPath("buildings/1Story_Mat.gltf");
@@ -29,7 +28,7 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 8; i++) {
 		buildings[i].worldTF.translation.x += i * 2.0f;
 		buildings[i].worldTF.translation.z = 2.0f;
-		//buildings[i].worldTF.rotation.y = 3.14f;
+		//buildings[i].worldTF.rotation *= Quaternion::CreateFromAxisAngle({ 0.0f,1.0f,0.0f }, 3.14f);
 		buildings[i].enableLighting = true;
 	}
 	buildings[6].worldTF.translation.x = 3.0f;
@@ -48,7 +47,7 @@ void GameScene::Initialize() {
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
 		}.Normalize() * 99.0f;
-		stars[i].worldTF.rotation = Quaternion{ 
+		stars[i].worldTF.rotation = Quaternion{
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,

@@ -29,19 +29,52 @@ void Quaternion::Init() {
 }
 
 Quaternion Quaternion::Normalize() const {
-	Quaternion result{};
-	float norm = std::sqrt(x * x + y * y + z * z + w * w);
-	if (norm != 0.0f) {
-		result.x = x / norm;
-		result.y = y / norm;
-		result.z = z / norm;
-		result.w = w / norm;
+	//Quaternion result{};
+	//float norm = std::sqrt(x * x + y * y + z * z + w * w);
+	//if (norm != 0.0f) {
+	//	result.x = x / norm;
+	//	result.y = y / norm;
+	//	result.z = z / norm;
+	//	result.w = w / norm;
+	//}
+	//return result;
+
+	// 正規化するベクトルの長さを求める
+	float length = Length();
+	// 結果格納用
+	Quaternion result;
+
+	// 計算処理
+	if (length != 0.0f) {
+		result.x = x / length;
+		result.y = y / length;
+		result.z = z / length;
+		result.w = w / length;
 	}
+	else {
+		result.x = 0.0f;
+		result.y = 0.0f;
+		result.z = 0.0f;
+		result.w = 0.0f;
+	}
+
+	// 結果を返す
 	return result;
 }
 Quaternion Quaternion::Conjugate() const {
 	// 結果を返す
 	return { x * -1.0f,y * -1.0f,z * -1.0f,w };
+
+	//// 結果格納用
+	//Quaternion result = *this;
+
+	//// 虚部を反転
+	//result.x *= -1.0f;
+	//result.y *= -1.0f;
+	//result.z *= -1.0f;
+
+	//// 結果を返す
+	//return result;
 }
 
 float Quaternion::Length() const {
@@ -114,8 +147,8 @@ Quaternion Quaternion::DirectionToDirection(const Vector3& from, const Vector3& 
 }
 
 
-float Quaternion::Dot(const Quaternion& v1, const Quaternion& v2) {
-	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
+float Quaternion::Dot(const Quaternion& q1, const Quaternion& q2) {
+	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 }
 Quaternion Quaternion::ConvertDirection(const Vector3& dir) {
 	// 方向ベクトルを正規化する
@@ -259,17 +292,17 @@ Quaternion Quaternion::operator*(const Quaternion& other) const {
 }
 Quaternion& Quaternion::operator*=(const Quaternion& other) { return *this = *this * other; }
 
-Quaternion Quaternion::operator* (const float& other) const {
+Quaternion Quaternion::operator*(const float& other) const {
 	Quaternion result;
 	result.x = this->x * other;
 	result.y = this->y * other;
 	result.z = this->z * other;
 	result.w = this->w * other;
-	return result.Normalize();
+	return result;
 }
 Quaternion& Quaternion::operator*=(const float& other) { return *this = *this * other; }
 
-Quaternion Quaternion::operator/ (const Quaternion& other) const {
+Quaternion Quaternion::operator/(const Quaternion& other) const {
 	Quaternion result;
 	result.x = this->x / other.x;
 	result.y = this->y / other.y;

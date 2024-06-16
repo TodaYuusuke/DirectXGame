@@ -33,7 +33,7 @@ InstanceData& InstanceData::operator=(const Resource::SkinningModel& value) {
 }
 
 
-void Models::Buffer::Init() {
+void Models::RigidBuffer::Init() {
 	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
 	SRV* srv = System::engine->directXCommon_->GetSRV();
 
@@ -43,11 +43,34 @@ void Models::Buffer::Init() {
 	material->Init(dev, srv);
 	common.Init(dev);
 }
-void Models::Buffer::Reset(uint32_t mSize) {
+void Models::RigidBuffer::Reset(uint32_t mSize) {
 	inst->Reset();
 	material->Reset();
-	common.data_->materialCount = mSize;
+	mSize;
+	//common.data_->materialCount = mSize;
 	common.data_->instanceCount = 0;
+}
+
+void Models::SkinBuffer::Init() {
+	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+	SRV* srv = System::engine->directXCommon_->GetSRV();
+
+	inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
+	inst->Init(dev, srv);
+	material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
+	material->Init(dev, srv);
+	well = std::make_unique<Base::StructuredBuffer<Primitive::WellForGPU>>(lwpC::Rendering::kMaxSkinJointInstance);
+	well->Init(dev, srv);
+	common.Init(dev);
+}
+void Models::SkinBuffer::Reset(uint32_t mSize) {
+	inst->Reset();
+	material->Reset();
+	well->Reset();
+	mSize;
+	//common.data_->materialCount = mSize;
+	common.data_->instanceCount = 0;
+	//common.data_->jointCount = 0;
 }
 
 
@@ -85,8 +108,6 @@ void Manager::Initialize() {
 }
 
 void Manager::Update() {
-	// リセット
-
 	// アニメーション更新
 	for (Animation* a : animations_.list) { a->Update(); }
 	// モーション更新
@@ -97,8 +118,8 @@ void Manager::Update() {
 		it->second.rigid.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
 		it->second.skin.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
 
-		Models::Pointers<RigidModel>* rigid[2] = { &it->second.rigid.solid, &it->second.rigid.wireFrame };
-		Models::Pointers<SkinningModel>* skin[2] = { &it->second.skin.solid, &it->second.skin.wireFrame };
+		Models::Pointers<RigidModel, Models::RigidBuffer>* rigid[2] = { &it->second.rigid.solid, &it->second.rigid.wireFrame };
+		Models::Pointers<SkinningModel, Models::SkinBuffer>* skin[2] = { &it->second.skin.solid, &it->second.skin.wireFrame };
 		for (int i = 0; i < 2; i++) {
 			for (RigidModel* m : rigid[i]->ptrs.list) {
 				m->Update();
@@ -116,9 +137,10 @@ void Manager::Update() {
 				// バッファーにデータ登録
 				if (m->isActive) {
 					skin[i]->buffer.inst->Add(*m);
-					//for (const Primitive::Material& mat : m->materials) {
-					//	it->second.skinBuffer.material->Add(mat);
-					//}
+					for (const Primitive::Material& mat : m->materials) {
+						skin[i]->buffer.material->Add(mat);
+					}
+					m->SetBufferData(skin[i]->buffer.well->data_, skin[i]->buffer.well->GetCount());
 					skin[i]->buffer.common.data_->instanceCount += 1;
 				}
 			}
@@ -172,6 +194,24 @@ void Manager::Update() {
 				else if (radioValue == 1) {
 					SkinningGUI(m->second);
 				}
+			}
+			ImGui::EndTabItem();
+		}
+
+		// ** アニメーションクラス ** //
+
+		if (ImGui::BeginTabItem("Animation")) {
+			// 読み込み済みのアニメーション一覧
+			if (!animations_.list.empty()) {
+				std::vector<const char*> itemText;
+				int i = 0;
+				for (Animation* p : animations_.list) {
+					p;
+					itemText.push_back(std::to_string(i++).c_str());
+				}
+				ImGui::ListBox("List", &currentAnim, itemText.data(), static_cast<int>(itemText.size()), 4);
+				// 現在選択中のアニメーションのDebugGUIを呼び出し
+				(*Utility::GetIteratorAtIndex<Animation*>(animations_.list, currentAnim))->DebugGUI();
 			}
 			ImGui::EndTabItem();
 		}
@@ -230,6 +270,16 @@ void Manager::LoadModelData(const std::string& filePath) {
 		// 初期化
 		modelDataMap_[filePath].rigid.Init();
 		modelDataMap_[filePath].skin.Init();
+
+		// マテリアルの数とJointの数をここでセット
+		int m = static_cast<int>(modelDataMap_[filePath].data.materials_.size());
+		int j = static_cast<int>(modelDataMap_[filePath].data.skeleton_->joints.size());
+		modelDataMap_[filePath].rigid.solid.buffer.common.data_->materialCount = m;
+		modelDataMap_[filePath].rigid.wireFrame.buffer.common.data_->materialCount = m;
+		modelDataMap_[filePath].skin.solid.buffer.common.data_->materialCount = m;
+		modelDataMap_[filePath].skin.wireFrame.buffer.common.data_->materialCount = m;
+		modelDataMap_[filePath].skin.solid.buffer.common.data_->jointCount = j;
+		modelDataMap_[filePath].skin.wireFrame.buffer.common.data_->jointCount = j;
 	}
 }
 ModelData* Manager::GetModelData(const std::string& filePath) {
@@ -253,7 +303,7 @@ std::vector<std::reference_wrapper<Models>> Manager::GetModels() {
 }
 
 void Manager::ChangeFillMode(RigidModel* ptr, const std::string& filePath) {
-	Models::FillMode<RigidModel>& f = modelDataMap_[filePath].rigid;
+	Models::FillMode<RigidModel, Models::RigidBuffer>& f = modelDataMap_[filePath].rigid;
 
 	// solidの方にあればwireframeに
 	if (f.solid.ptrs.Find(ptr)) {
@@ -267,7 +317,7 @@ void Manager::ChangeFillMode(RigidModel* ptr, const std::string& filePath) {
 	}
 }
 void Manager::ChangeFillMode(SkinningModel* ptr, const std::string& filePath) {
-	Models::FillMode<SkinningModel>& f = modelDataMap_[filePath].skin;
+	Models::FillMode<SkinningModel, Models::SkinBuffer>& f = modelDataMap_[filePath].skin;
 
 	// solidの方にあればwireframeに
 	if (f.solid.ptrs.Find(ptr)) {

@@ -44,6 +44,7 @@ struct PayLoad {
 struct ModelCommon {
     uint32_t instanceSize; // !< Instance Size
     uint32_t mSize; // !< Material Size
+    uint32_t jSize; // !< Joint Size
 };
 
 

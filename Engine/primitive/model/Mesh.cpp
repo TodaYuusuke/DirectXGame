@@ -99,7 +99,6 @@ void Mesh::Load(aiMesh* mesh) {
 			//jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 		}
 	}
-
 }
 
 void Mesh::Load(aiMesh* mesh, Skeleton& skeleton, SkinCluster& cluster) {

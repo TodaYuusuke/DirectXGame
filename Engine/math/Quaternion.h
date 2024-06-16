@@ -103,6 +103,7 @@ namespace LWP::Math {
 		/// Quaternion Multiply(*) float
 		Quaternion operator* (const float& other) const;
 		Quaternion& operator*=(const float& other);
+		friend Quaternion operator*(float scalar, const Quaternion& vec) { return vec * scalar; }
 		// Quaternion Division(/) Quaternion
 		Quaternion operator/ (const Quaternion& other) const;
 		Quaternion operator/= (const Quaternion& other);

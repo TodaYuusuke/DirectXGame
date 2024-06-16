@@ -157,9 +157,6 @@
     <ClCompile Include="Engine\object\collider\ColliderManager.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\math\Quaternion.cpp">
-      <Filter>Engine\math</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\collider\cCapsule.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
@@ -264,6 +261,7 @@
     <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
     <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
     <ClCompile Include="Engine\resources\level\LevelData.cpp" />
+    <ClCompile Include="Engine\math\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -470,9 +468,6 @@
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h">
       <Filter>Engine\utilitiy\observers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\math\Quaternion.h">
-      <Filter>Engine\math</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\collider\cCapsule.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
@@ -619,6 +614,7 @@
     <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
     <ClInclude Include="Engine\resources\level\LevelData.h" />
     <ClInclude Include="Externals\nlohmann\json.hpp" />
+    <ClInclude Include="Engine\math\Quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

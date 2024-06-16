@@ -24,7 +24,7 @@ TransformQuat::TransformQuat(Math::Vector3 t) {
 
 void TransformQuat::Init() {
 	translation = { 0.0f, 0.0f, 0.0f };
-	rotation = { 0.0f, 0.0f, 0.0f };
+	rotation.Init();
 	scale = { 1.0f, 1.0f, 1.0f };
 }
 
@@ -83,9 +83,9 @@ void TransformQuat::DebugGUI(const std::string& label) {
 		ImGui::DragFloat3("Translation", &translation.x, 0.01f);
 		Vector3 rot = { 0.0f,0.0f,0.0f };
 		ImGui::DragFloat3("Rotation", &rot.x, 0.01f);
-		rotation = Quaternion::ConvertEuler(rot) * rotation;
+		//rotation = Quaternion::ConvertEuler(rot) * rotation;
 		ImGui::DragFloat4("Quaternion", &rotation.x, 0.01f);
-		if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
+		//if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
 		ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		ImGui::TreePop();
 	}

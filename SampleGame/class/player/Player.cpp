@@ -11,11 +11,12 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
 	model.LoadShortPath("human/walk.gltf");
 	//model.LoadShortPath("human/simpleSkin.gltf");
-	//model.worldTF.translation.y = 0.4f;
-	model.worldTF.scale = { 0.4f,0.4f,0.4f };
+	model.worldTF.translation.y = 3.4f;
+	model.worldTF.scale = { 3.0f,3.0f,3.0f };
+	//model.worldTF.scale = { 0.4f,0.4f,0.4f };
 	model.enableLighting = true;
 	// アニメーション用意
-	//walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
+	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
 	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);
 	
 	// カメラのポインタをセット
@@ -31,11 +32,12 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	pl.transform.Parent(&model.worldTF);
 	pl.transform.translation.z = 2.0f;
 	pl.transform.translation.y = 1.75f;
-	pl.radius = 13.0f;
-	pl.intensity = 0.4f;
+	//pl.radius = 13.0f;
+	pl.radius = 20.0f;
+	pl.intensity = 0.7f;
 	pl.isActive = true;
 
-
+	walkAnim.Start();
 }
 
 // 更新
@@ -65,15 +67,16 @@ void Player::Move() {
 	}
 
 	// コントローラーでの移動
-	dir.x += Pad::GetLStick(0).x;
-	dir.z += Pad::GetLStick(0).y;
+	dir.x += Pad::GetLStick().x;
+	dir.z += Pad::GetLStick().y;
 
 	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
 	model.worldTF.translation += dir * kPlayerSpeed;
 
 	if (dir.Length() > 0.0f) {
 		// 現在プレイヤーの向いている角度
-		Vector3 currentDir = Vector3{ 0.0f,0.0f,1.0f } *model.worldTF.rotation;
+		Vector3 currentDir = Vector3{ 0.0f,0.0f,1.0f } * model.worldTF.rotation;
+		currentDir;
 		// 回転
 		model.worldTF.rotation =
 			Utility::Interp::SlerpQuaternion(
@@ -102,16 +105,15 @@ void Player::FollowCameraUpdate() {
 	}
 
 	// コントローラーでの回転
-	dir.x += Pad::GetRStick(0).y;
-	dir.y += Pad::GetRStick(0).x;
+	dir.x += Pad::GetRStick().y;
+	dir.y += Pad::GetRStick().x;
 
 	// 正規化してから使用
 	dir = dir.Normalize();
 
-	// 移動量のクォータニオン
-	Quaternion quat = Quaternion::ConvertEuler(Vector3{ 0.0f,dir.y, 0.0f } *kFollowCameraSpeed);
 	// カメラを回転させる
-	camera_->transform.rotation *= quat;
+	camera_->transform.rotation *= Quaternion::CreateFromAxisAngle(Vector3{ 0.0f, 1.0f, 0.0f }, dir.y * kFollowCameraSpeed);
+	//camera_->transform.rotation *= Quaternion::CreateFromAxisAngle(Vector3{ 1.0f, 0.0f, 0.0f } * camera_->transform.rotation, dir.x * kFollowCameraSpeed);
 	// カメラの座標を決定
 	camera_->transform.translation = model.worldTF.GetWorldPosition() + cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
 	// カメラから追従対象に対する角度を求める

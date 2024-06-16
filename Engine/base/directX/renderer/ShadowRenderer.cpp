@@ -199,7 +199,7 @@ void ShadowRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GP
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
 
 
-		Models::FillMode<RigidModel>& f = m.rigid;
+		Models::FillMode<RigidModel, Models::RigidBuffer>& f = m.rigid;
 		// Solidの描画処理
 		if (!f.solid.ptrs.list.empty()) {
 			// 追加のViewをセット
@@ -230,7 +230,7 @@ void ShadowRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GP
 		//list->SetGraphicsRootDescriptorTable(6, sm->wellBuffer->GetGPUView());
 
 
-		Models::FillMode<SkinningModel>& f = m.skin;
+		Models::FillMode<SkinningModel, Models::SkinBuffer>& f = m.skin;
 		// Solidの描画処理
 		if (!f.solid.ptrs.list.empty()) {
 			// 追加のViewをセット

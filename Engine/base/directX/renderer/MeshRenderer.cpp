@@ -29,8 +29,8 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.AddTableParameter(509, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
 		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
-		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
-			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build(device->GetDevice());
 	skinning_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
@@ -154,7 +154,7 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
 		
 
-		Models::FillMode<RigidModel>& f = m.rigid;
+		Models::FillMode<RigidModel, Models::RigidBuffer>& f = m.rigid;
 		// Solidの描画処理
 		if (!f.solid.ptrs.list.empty()) {
 			// 追加のViewをセット
@@ -197,14 +197,15 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
 
-
-		Models::FillMode<SkinningModel>& f = m.skin;
+		Models::FillMode<SkinningModel, Models::SkinBuffer>& f = m.skin;
 		// Solidの描画処理
 		if (!f.solid.ptrs.list.empty()) {
 			// 追加のViewをセット
 			list->SetGraphicsRootConstantBufferView(4, f.solid.buffer.common.GetGPUView());
 			list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
 			list->SetGraphicsRootDescriptorTable(8, f.solid.buffer.material->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(14, f.solid.buffer.well->GetGPUView());	// Well
+
 
 			list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
@@ -216,6 +217,7 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			list->SetGraphicsRootConstantBufferView(4, f.wireFrame.buffer.common.GetGPUView());
 			list->SetGraphicsRootDescriptorTable(5, f.wireFrame.buffer.inst->GetGPUView());
 			list->SetGraphicsRootDescriptorTable(8, f.wireFrame.buffer.material->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(14, f.solid.buffer.well->GetGPUView());	// Well
 
 			list->SetPipelineState(skinning_.wirePso.GetState());	// PSOセット
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行

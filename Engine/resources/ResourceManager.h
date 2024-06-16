@@ -47,8 +47,9 @@ namespace LWP::Resource {
 		struct Common {
 			uint32_t instanceCount = 0;
 			uint32_t materialCount = 0;
+			uint32_t jointCount = 0;
 		};
-		struct Buffer {
+		struct RigidBuffer {
 			// トランスフォームのバッファー
 			std::unique_ptr<Base::StructuredBuffer<Base::InstanceData>> inst;
 			// マテリアルバッファー
@@ -59,19 +60,32 @@ namespace LWP::Resource {
 			void Init();
 			void Reset(uint32_t mSize);
 		};
-		template<typename T>
+		struct SkinBuffer {
+			// トランスフォームのバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::InstanceData>> inst;
+			// マテリアルバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> material;
+			// WellForGPUバッファー
+			std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> well;
+			// モデル別共通データ
+			Base::ConstantBuffer<Common> common;
+
+			void Init();
+			void Reset(uint32_t mSize);
+		};
+		template<typename T, typename U>
 		struct Pointers {
 			Utility::PtrManager<T*> ptrs;
-			Buffer buffer;
+			U buffer;
 
 			void Init() { buffer.Init(); }
 			void Reset(uint32_t mSize) { buffer.Reset(mSize); }
 		};
 		
-		template<typename U>
+		template<typename T, typename U>
 		struct FillMode {
-			Pointers<U> solid;
-			Pointers<U> wireFrame;
+			Pointers<T, U> solid;
+			Pointers<T, U> wireFrame;
 
 			void Init() {
 				solid.Init();
@@ -84,9 +98,11 @@ namespace LWP::Resource {
 		};
 
 		ModelData data;
-		FillMode<RigidModel> rigid;
-		FillMode<SkinningModel> skin;
+		
+		FillMode<RigidModel, RigidBuffer> rigid;
+		FillMode<SkinningModel, SkinBuffer> skin;
 	};
+
 
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
@@ -178,6 +194,7 @@ namespace LWP::Resource {
 		int selectedClass = 0;
 		int radioValue = 0;
 		int currentItem = 0;
+		int currentAnim = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IModel*> debugModels;
 #endif

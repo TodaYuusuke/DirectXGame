@@ -69,6 +69,11 @@ namespace LWP::Resource {
 		bool isEnd();
 		
 		/// <summary>
+		/// ImGui
+		/// </summary>
+		void DebugGUI();
+
+		/// <summary>
 		/// アニメーション読み込み
 		/// </summary>
 		void LoadAnimation(std::string filepath, Resource::SkinningModel* ptr);

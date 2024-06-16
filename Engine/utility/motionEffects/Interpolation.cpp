@@ -12,7 +12,8 @@ using namespace LWP::Math;
 //	return (1.0f - t) * start + t * end;
 //}
 Vector3 Interpolation::Lerp(const Vector3& start, const Vector3& end, const float& t) {
-	return (1.0f - t) * start + t * end;
+	//return (1.0f - t) * start + t * end;
+	return (start * (1.0f - t) + end * t);
 }
 // 球面線形補間
 //float Interpolation::Slerp(const float& start, const float& end, const float& t) {
@@ -54,11 +55,11 @@ Quaternion Interpolation::SlerpQuaternion(const Quaternion& start, const Quatern
 	}
 	// 近いほうで補完する
 	else if (dot < 0.0f) {
-		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end.Inverse() * (std::sin(theta * t) * sinTheta));
+		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (e.Inverse() * (std::sin(theta * t) * sinTheta));
 	}
 	else {
 		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end * (std::sin(theta * t) * sinTheta));
 	}
 	// 結果を返す
-	return result.Normalize();
+	return result;
 }
