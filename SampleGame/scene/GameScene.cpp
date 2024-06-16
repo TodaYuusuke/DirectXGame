@@ -28,7 +28,7 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 8; i++) {
 		buildings[i].worldTF.translation.x += i * 2.0f;
 		buildings[i].worldTF.translation.z = 2.0f;
-		//buildings[i].worldTF.rotation *= Quaternion::CreateFromAxisAngle({ 0.0f,1.0f,0.0f }, 3.14f);
+		buildings[i].worldTF.rotation *= Quaternion::CreateFromAxisAngle({ 0.0f,1.0f,0.0f }, 3.14f);
 		buildings[i].enableLighting = true;
 	}
 	buildings[6].worldTF.translation.x = 3.0f;
@@ -70,12 +70,12 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	player.Update();
 
-	// シーン再読み込み
-	if (Input::Keyboard::GetTrigger(DIK_R)) {
-		levelData.HotReload();
-		//nextSceneFunction = []() { return new GameScene(); };
-	}
-	if (Input::Keyboard::GetTrigger(DIK_N)) {
-		nextSceneFunction = []() { return new Test(); };
-	}
+	//// シーン再読み込み
+	//if (Input::Keyboard::GetTrigger(DIK_R)) {
+	//	levelData.HotReload();
+	//	//nextSceneFunction = []() { return new GameScene(); };
+	//}
+	//if (Input::Keyboard::GetTrigger(DIK_N)) {
+	//	nextSceneFunction = []() { return new Test(); };
+	//}
 }

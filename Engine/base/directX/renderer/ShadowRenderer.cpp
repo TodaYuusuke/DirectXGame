@@ -236,6 +236,7 @@ void ShadowRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GP
 			// 追加のViewをセット
 			list->SetGraphicsRootConstantBufferView(4, f.solid.buffer.common.GetGPUView());
 			list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(7, f.solid.buffer.well->GetGPUView());	// Well
 
 			list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
