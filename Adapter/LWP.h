@@ -65,7 +65,7 @@ namespace LWP::System {
 		void EndFrame();
 
 		/// <summary>
-		/// 
+		/// ImGui表示
 		/// </summary>
 		void DebugGUI();
 
@@ -114,6 +114,10 @@ namespace LWP::System {
 		// デバッグ用タイマークラス
 		LWP::Information::FrameTracker debugTimer_;
 		// デバッグ情報の表示切替フラグ
-		bool isShowDebugInfo = false;
+#if DEMO
+		bool isShowDebugGUI = true;
+#else
+		bool isShowDebugGUI = false;
+#endif
 	};
 }

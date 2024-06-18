@@ -188,7 +188,15 @@ namespace LWP::Resource {
 		// モーションの配列
 		Utility::PtrManager<Motion*> motions_;
 
-#if DEMO
+
+	private:
+		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
+
+		void RigidGUI(Models& m);
+		void SkinningGUI(Models& m);
+
+
+	private:
 		// ImGui用変数
 		int selectedClass = 0;
 		int radioValue = 0;
@@ -196,12 +204,10 @@ namespace LWP::Resource {
 		int currentAnim = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IModel*> debugModels;
-#endif
-
-	private:
-		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
-
-		void RigidGUI(Models& m);
-		void SkinningGUI(Models& m);
+	public:
+		/// <summary>
+		/// Debug用GUI
+		/// </summary>
+		void DebugGUI();
 	};
 }

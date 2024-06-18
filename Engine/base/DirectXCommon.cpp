@@ -72,9 +72,11 @@ void DirectXCommon::SetMainCamera(Object::Camera* camera) {
 }
 
 void DirectXCommon::DrawCall() {
-	heaps_->DebugGUI();
-
 	renderer_->DrawCall();
 	// GPUとOSに画面の交換を行うよう通知する
 	swapChain_->Present(FPSPara::kVsync, 0);	// 垂直同期をする際は左の数字を1にする
+}
+
+void DirectXCommon::DebugGUI() {
+	heaps_->DebugGUI();
 }

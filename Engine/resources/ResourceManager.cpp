@@ -97,12 +97,10 @@ void Manager::Initialize() {
 	// MediaFoundationの初期化
 	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 
-#if DEMO
 	for (IModel* m : debugModels) {
 		delete m;
 	}
 	debugModels.clear();
-#endif
 }
 
 void Manager::Update() {
@@ -144,79 +142,6 @@ void Manager::Update() {
 			}
 		}
 	}
-
-	// Debugビルド時のみImGuiを表示
-#if DEMO
-	// 生成用の関数ポインタ
-	static std::vector<std::function<void(std::string)>> functions = {
-		[this](std::string str) {
-			debugModels.push_back(new RigidModel());
-			debugModels.back()->LoadFullPath(str);
-		},
-		[this](std::string str) {
-			debugModels.push_back(new SkinningModel());
-			debugModels.back()->LoadFullPath(str);
-		},
-	};
-
-	ImGui::Begin("LWP");
-
-	if (ImGui::BeginTabBar("LWP")) {
-		if (ImGui::BeginTabItem("Resource")) {
-			// 読み込み済みのモデル一覧
-			if (!modelDataMap_.empty()) {
-				std::vector<const char*> itemText;
-				float maxSize = 0;	// Textの中で一番長いサイズを保持する
-				// 一覧のパス取得
-				for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
-					itemText.push_back(it->first.c_str());
-					maxSize = std::max<float>(maxSize, static_cast<float>(it->first.size()));	// 現在の長さより大きければ更新
-				}
-				ImGui::PushItemWidth(maxSize * 7.5f);	// 最大サイズにUIを合わせる
-				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-				// 現在選択中のModelの参照を取得
-				auto m = Utility::GetIteratorAtIndex<std::string, Models>(modelDataMap_, currentItem);
-
-				// どっち（rigid,skinning）を表示するか選択
-				ImGui::RadioButton("Rigid", &radioValue, 0);
-				ImGui::RadioButton("Skinning", &radioValue, 1);
-				
-				// 変更されて渡される値は添え字
-				if (ImGui::Button("Create")) { functions[radioValue](m->first); }
-
-				// 0ならRigidを表示
-				if (radioValue == 0) {
-					RigidGUI(m->second);
-				}
-				// 1ならSkinningのほうを表示
-				else if (radioValue == 1) {
-					SkinningGUI(m->second);
-				}
-			}
-			ImGui::EndTabItem();
-		}
-
-		// ** アニメーションクラス ** //
-
-		if (ImGui::BeginTabItem("Animation")) {
-			// 読み込み済みのアニメーション一覧
-			if (!animations_.list.empty()) {
-				std::vector<const char*> itemText;
-				int i = 0;
-				for (Animation* p : animations_.list) {
-					p;
-					itemText.push_back(std::to_string(i++).c_str());
-				}
-				ImGui::ListBox("List", &currentAnim, itemText.data(), static_cast<int>(itemText.size()), 4);
-				// 現在選択中のアニメーションのDebugGUIを呼び出し
-				(*Utility::GetIteratorAtIndex<Animation*>(animations_.list, currentAnim))->DebugGUI();
-			}
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
-#endif
 }
 
 Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
@@ -454,5 +379,74 @@ void Manager::SkinningGUI(Models& m) {
 
 		// 選択された番号のDebugGUIを呼び出す
 		(*Utility::GetIteratorAtIndex<SkinningModel*>(lists, selectedNum))->DebugGUI();
+	}
+}
+
+
+void Manager::DebugGUI() {
+	// ImGuiを表示
+
+	// 生成用の関数ポインタ
+	static std::vector<std::function<void(std::string)>> functions = {
+		[this](std::string str) {
+			debugModels.push_back(new RigidModel());
+			debugModels.back()->LoadFullPath(str);
+		},
+		[this](std::string str) {
+			debugModels.push_back(new SkinningModel());
+			debugModels.back()->LoadFullPath(str);
+		},
+	};
+
+	if (ImGui::BeginTabItem("Resource")) {
+		// 読み込み済みのモデル一覧
+		if (!modelDataMap_.empty()) {
+			std::vector<const char*> itemText;
+			float maxSize = 0;	// Textの中で一番長いサイズを保持する
+			// 一覧のパス取得
+			for (std::map<std::string, Models>::iterator it = modelDataMap_.begin(); it != modelDataMap_.end(); ++it) {
+				itemText.push_back(it->first.c_str());
+				maxSize = std::max<float>(maxSize, static_cast<float>(it->first.size()));	// 現在の長さより大きければ更新
+			}
+			ImGui::PushItemWidth(maxSize * 7.5f);	// 最大サイズにUIを合わせる
+			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+			// 現在選択中のModelの参照を取得
+			auto m = Utility::GetIteratorAtIndex<std::string, Models>(modelDataMap_, currentItem);
+
+			// どっち（rigid,skinning）を表示するか選択
+			ImGui::RadioButton("Rigid", &radioValue, 0);
+			ImGui::RadioButton("Skinning", &radioValue, 1);
+
+			// 変更されて渡される値は添え字
+			if (ImGui::Button("Create")) { functions[radioValue](m->first); }
+
+			// 0ならRigidを表示
+			if (radioValue == 0) {
+				RigidGUI(m->second);
+			}
+			// 1ならSkinningのほうを表示
+			else if (radioValue == 1) {
+				SkinningGUI(m->second);
+			}
+		}
+		ImGui::EndTabItem();
+	}
+
+	// ** アニメーションクラス ** //
+
+	if (ImGui::BeginTabItem("Animation")) {
+		// 読み込み済みのアニメーション一覧
+		if (!animations_.list.empty()) {
+			std::vector<const char*> itemText;
+			int i = 0;
+			for (Animation* p : animations_.list) {
+				p;
+				itemText.push_back(std::to_string(i++).c_str());
+			}
+			ImGui::ListBox("List", &currentAnim, itemText.data(), static_cast<int>(itemText.size()), 4);
+			// 現在選択中のアニメーションのDebugGUIを呼び出し
+			(*Utility::GetIteratorAtIndex<Animation*>(animations_.list, currentAnim))->DebugGUI();
+		}
+		ImGui::EndTabItem();
 	}
 }

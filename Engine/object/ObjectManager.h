@@ -41,12 +41,18 @@ namespace LWP::Object {
 		// カウンター
 		int objectCount_ = 0;
 
-#if DEMO
+
+	private:
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IObject*> debugPris;
-#endif
+
+	public:
+		/// <summary>
+		/// Debug用GUI
+		/// </summary>
+		void DebugGUI();
 	};
 }

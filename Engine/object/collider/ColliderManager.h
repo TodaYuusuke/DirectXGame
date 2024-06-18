@@ -45,13 +45,6 @@ namespace LWP::Object::Collider {
 		using CollisionFunction = std::function<bool(ICollider*, ICollider*)>;
 		CollisionFunction checkCollisions_[4][4];	// Shape::Countの値がサイズだよ！
 
-#if DEMO
-		// ImGui用変数
-		int selectedClass = 0;
-		int currentItem = 0;
-		// デバッグ用の生成したインスンタンスを格納しておく配列
-		std::vector<ICollider*> debugPris;
-#endif
 
 	public: // ** プライベートなメンバ関数 ** //
 
@@ -76,5 +69,17 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(Capsule* c1, Sphere* c2) { return CheckCollision(c2, c1); }
 		bool CheckCollision(Capsule* c1, Capsule* c2);
 
+
+	private:
+		// ImGui用変数
+		int selectedClass = 0;
+		int currentItem = 0;
+		// デバッグ用の生成したインスンタンスを格納しておく配列
+		std::vector<ICollider*> debugPris;
+	public:
+		/// <summary>
+		/// Debug用GUI
+		/// </summary>
+		void DebugGUI();
 	};
 };

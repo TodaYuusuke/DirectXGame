@@ -114,13 +114,30 @@ void Engine::BeginFrame() {
 }
 
 void Engine::EndFrame() {
-	// FPS系の情報描画
-	if (isShowDebugInfo) { debugTimer_.DebugGUI(); }
+	DebugGUI();
 
 	directXCommon_->DrawCall();
 
 	// 計測終了
 	debugTimer_.End();
+}
+
+void Engine::DebugGUI() {
+	// フラグがfalseなら早期リターン
+	if (!isShowDebugGUI) { return; }
+
+	ImGui::Begin("LWP");
+	if (ImGui::BeginTabBar("LWP")) {
+		primitiveManager_->DebugGUI();
+		objectManager_->DebugGUI();
+		colliderManager_->DebugGUI();
+		resourceManager_->DebugGUI();
+		directXCommon_->DebugGUI();
+		debugTimer_.DebugGUI();
+
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
 }
 
 void Engine::Finalize() {

@@ -27,7 +27,7 @@ Math::Vector2 Information::GetWindow() {
 }
 
 void Information::ChangeShowDebugGUI() {
-	engine->isShowDebugInfo = !engine->isShowDebugInfo;
+	engine->isShowDebugGUI = !engine->isShowDebugGUI;
 }
 
 double Information::GetDeltaTime() {

@@ -4,9 +4,7 @@
 #include "utility/MyUtility.h"
 #include <iostream>
 
-#if DEMO
 #include <component/Object.h>
-#endif
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -40,47 +38,6 @@ void Manager::Initialize() {
 
 
 void Manager::Update() {
-	// Debugビルド時のみImGuiを表示
-#if DEMO
-	// 生成用の関数ポインタ
-	static std::vector<std::function<void()>> functions = {
-		[this]() { debugPris.push_back(new AABB()); },
-		/*[this]() { debugPris.push_back(new OBB()); },*/
-		[this]() { debugPris.push_back(new Sphere()); },
-		[this]() { debugPris.push_back(new Capsule()); },
-	};
-	// 選択肢の変数
-	static std::vector<const char*> classText = {
-		"AABB",/*"OBB",*/"Sphere","Capsule"
-	};
-
-	ImGui::Begin("LWP");
-
-	if (ImGui::BeginTabBar("LWP")) {
-		if (ImGui::BeginTabItem("Collider")) {
-			// 変更されて渡される値は添え字
-			ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
-			if (ImGui::Button("Create")) { 
-				functions[selectedClass]();
-			}
-
-			// 形状一覧
-			if (!colliders_.list.empty()) {
-				std::vector<const char*> itemText;
-				for (ICollider* c : colliders_.list) {
-					itemText.push_back(c->name.c_str());
-				}
-				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-				(*Utility::GetIteratorAtIndex<ICollider*>(colliders_.list, currentItem))->DebugGUI();
-			}
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
-
-#endif
-
 	// 全体を更新
 	for (ICollider* c : colliders_.list) {
 		c->Update();
@@ -223,4 +180,39 @@ bool Manager::CheckCollision(Sphere* c1, Capsule* c2) {
 bool Manager::CheckCollision(Capsule* c1, Capsule* c2) {
 	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
 	c1;	c2; return false;
+}
+
+void Manager::DebugGUI() {
+	// ImGuiを表示
+
+	// 生成用の関数ポインタ
+	static std::vector<std::function<void()>> functions = {
+		[this]() { debugPris.push_back(new AABB()); },
+		/*[this]() { debugPris.push_back(new OBB()); },*/
+		[this]() { debugPris.push_back(new Sphere()); },
+		[this]() { debugPris.push_back(new Capsule()); },
+	};
+	// 選択肢の変数
+	static std::vector<const char*> classText = {
+		"AABB",/*"OBB",*/"Sphere","Capsule"
+	};
+
+	if (ImGui::BeginTabItem("Collider")) {
+		// 変更されて渡される値は添え字
+		ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
+		if (ImGui::Button("Create")) {
+			functions[selectedClass]();
+		}
+
+		// 形状一覧
+		if (!colliders_.list.empty()) {
+			std::vector<const char*> itemText;
+			for (ICollider* c : colliders_.list) {
+				itemText.push_back(c->name.c_str());
+			}
+			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+			(*Utility::GetIteratorAtIndex<ICollider*>(colliders_.list, currentItem))->DebugGUI();
+		}
+		ImGui::EndTabItem();
+	}
 }
