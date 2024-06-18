@@ -29,7 +29,7 @@ struct Vertex {
 // ** InstanceData ** //
 struct InstanceData {
     WorldTransform wtf;
-    int32_t enableLighting; // !< Flag(bool)
+    //int32_t enableLighting; // !< Flag(bool)
 };
 struct Well
 { // !< Used during skinning

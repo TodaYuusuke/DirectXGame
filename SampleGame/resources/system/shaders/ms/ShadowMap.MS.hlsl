@@ -34,7 +34,6 @@ void main(
         // 取得したインデックスから頂点座標を求める
         Vertex vertex = mVertices[vertexIndex];
         
-        // 出力する頂点座標を求める
         outVerts[gtid].position = mul(mul(vertex.position, InstData[gid].wtf.m), gViewProjection.m);
     }
     if (gtid < meshlet.PrimCount)

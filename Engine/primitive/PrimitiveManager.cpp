@@ -40,7 +40,7 @@ void Manager::Update() {
 		"Billboard2D","Billboard3D","Surface",/*"Sprite",*/"Triangle", "Capsule", "Cube",/*"Mesh",*/ "Sphere"
 	};
 
-	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("LWP");
 
 	if (ImGui::BeginTabBar("LWP")) {
 		if (ImGui::BeginTabItem("Primitive")) {

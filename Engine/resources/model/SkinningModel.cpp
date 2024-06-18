@@ -50,23 +50,6 @@ void SkinningModel::Update() {
 
 	// スケルトンがあるなら更新
 	skeleton.Update();
-
-	
-
-	//// SkinClusterの更新
-	//for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); jointIndex++) {
-	//	assert(jointIndex < skinCluster->inverseBindPoseMatrices.size());
-	//	Math::Matrix4x4 skeSpaceMatrix = skinCluster->inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
-	//	skinCluster->mappedPalette[jointIndex].skeletonSpaceMatrix =
-	//		skeSpaceMatrix;
-	//	skinCluster->mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
-	//		skeSpaceMatrix.Inverse().Transpose();
-	//	// Bufferのデータ更新
-	//	wellBuffer->data_[jointIndex] = skinCluster->mappedPalette[jointIndex];
-	//}
-
-	// データのコピー
-	//std::memcpy(wellBuffer->data_, skinCluster->mappedPalette.data(), sizeof(Primitive::WellForGPU) * skinCluster->mappedPalette.size());
 }
 void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();
@@ -76,13 +59,20 @@ void SkinningModel::DebugGUI() {
 		}
 		ImGui::TreePop();
 	}
-	ImGui::Checkbox("enableLighting", &enableLighting);
 	ImGui::Checkbox("isActive", &isActive);
 	if (ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
+	if (ImGui::Button("Change All Lighting Flag true")) { SetAllMaterialLighting(true); }
+	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
 }
 
 void SkinningModel::ChangeFillMode() {
 	System::engine->resourceManager_->ChangeFillMode(this, filePath);
+}
+
+void SkinningModel::SetAllMaterialLighting(bool flag) {
+	for (Primitive::Material& m : materials) {
+		m.enableLighting = flag;
+	}
 }
 
 void SkinningModel::SetBufferData(Primitive::WellForGPU* data, int offset) {

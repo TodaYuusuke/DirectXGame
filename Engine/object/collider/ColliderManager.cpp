@@ -54,7 +54,7 @@ void Manager::Update() {
 		"AABB",/*"OBB",*/"Sphere","Capsule"
 	};
 
-	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("LWP");
 
 	if (ImGui::BeginTabBar("LWP")) {
 		if (ImGui::BeginTabItem("Collider")) {

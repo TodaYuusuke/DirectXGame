@@ -15,6 +15,7 @@ RigidModel::RigidModel() {}
 RigidModel::RigidModel(const RigidModel& other) : RigidModel() {
 	this->LoadFullPath(other.filePath);
 	worldTF = other.worldTF;
+	enableLighting = other.enableLighting;
 	isActive = other.isActive;
 }
 RigidModel::~RigidModel() {
@@ -51,18 +52,11 @@ void RigidModel::DebugGUI() {
 		}
 		ImGui::TreePop();
 	}
+	ImGui::Checkbox("enableLighting", &enableLighting);
 	ImGui::Checkbox("isActive", &isActive);
 	if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
-	if (ImGui::Button("Change All Lighting Flag true")) { SetAllMaterialLighting(true); }
-	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
 }
 
 void RigidModel::ChangeFillMode() {
 	System::engine->resourceManager_->ChangeFillMode(this, filePath);
-}
-
-void RigidModel::SetAllMaterialLighting(bool flag) {
-	for (Primitive::Material& m : materials) {
-		m.enableLighting = flag;
-	}
 }

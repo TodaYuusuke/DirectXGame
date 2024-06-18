@@ -20,7 +20,6 @@ InstanceData::InstanceData(const Resource::RigidModel& value) {
 }
 InstanceData& InstanceData::operator=(const Resource::RigidModel& value) {
 	wtf = value.worldTF;
-	enableLighting = value.enableLighting;
 	return *this;
 }
 InstanceData::InstanceData(const Resource::SkinningModel& value) {
@@ -28,7 +27,6 @@ InstanceData::InstanceData(const Resource::SkinningModel& value) {
 }
 InstanceData& InstanceData::operator=(const Resource::SkinningModel& value) {
 	wtf = value.worldTF;
-	enableLighting = value.enableLighting;
 	return *this;
 }
 
@@ -161,7 +159,7 @@ void Manager::Update() {
 		},
 	};
 
-	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("LWP");
 
 	if (ImGui::BeginTabBar("LWP")) {
 		if (ImGui::BeginTabItem("Resource")) {

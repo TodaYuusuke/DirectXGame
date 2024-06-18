@@ -618,9 +618,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="resources\system\shaders\Object3d.hlsli">
-      <Filter>Engine\resources\shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

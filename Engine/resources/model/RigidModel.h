@@ -8,6 +8,8 @@ namespace LWP::Resource {
 	class RigidModel : public IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
+		// ワールドトランスフォーム
+		Object::TransformQuat worldTF{};
 		// マテリアル
 		std::vector<Primitive::Material> materials;
 
@@ -64,6 +66,10 @@ namespace LWP::Resource {
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
 		void ChangeFillMode();
+		/// <summary>
+		/// 全マテリアルのenableLightingを切り替え
+		/// </summary>
+		void SetAllMaterialLighting(bool flag);
 
 
 	public:	// ** オペレータオーバーロード ** //
@@ -72,7 +78,6 @@ namespace LWP::Resource {
 		bool operator==(const RigidModel& other) const = delete;
 		bool operator==(RigidModel& other) {
 			return worldTF == other.worldTF &&
-				enableLighting == other.enableLighting &&
 				isActive == other.isActive;
 		}
 
@@ -81,7 +86,6 @@ namespace LWP::Resource {
 			if (this != &other) {
 				this->LoadFullPath(other.filePath);
 				worldTF = other.worldTF;
-				enableLighting = other.enableLighting;
 				isActive = other.isActive;
 			}
 			return *this;
@@ -92,15 +96,9 @@ namespace LWP::Resource {
 	// RigidModelのデータのみ（Observerクラス用）
 	struct RigidModelStruct {
 		Object::TransformQuat worldTF;
-		//bool enableLighting;
-		//bool isActive;
-		//std::vector<Primitive::Material> materials;
 
 		RigidModelStruct& operator=(const RigidModel& other) {
 			worldTF = other.worldTF;
-			//enableLighting = other.enableLighting;
-			//isActive = other.isActive;
-			//materials = other.materials;
 			return *this;
 		}
 		bool operator==(RigidModel& other) {

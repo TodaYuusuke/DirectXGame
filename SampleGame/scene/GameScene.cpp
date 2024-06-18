@@ -28,7 +28,7 @@ void GameScene::Initialize() {
 		buildings[i].worldTF.translation.x += i * 2.0f;
 		buildings[i].worldTF.translation.z = 2.0f;
 		buildings[i].worldTF.rotation *= Quaternion::CreateFromAxisAngle({ 0.0f,1.0f,0.0f }, 3.14f);
-		buildings[i].enableLighting = true;
+		buildings[i].SetAllMaterialLighting(true);
 	}
 	buildings[6].worldTF.translation.x = 3.0f;
 	buildings[6].worldTF.translation.z = 7.0f;
@@ -39,6 +39,7 @@ void GameScene::Initialize() {
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { 100.0f,100.0f, 100.0f };
 	skydome.materials[1].color = Color(5, 5, 16, 255);
+	skydome.SetAllMaterialLighting(false);
 	for (int i = 0; i < kStarCount; i++) {
 		stars[i].LoadCube();
 		stars[i].worldTF.translation = Vector3{
@@ -56,11 +57,11 @@ void GameScene::Initialize() {
 		stars[i].worldTF.scale = { scale,scale,scale };
 
 		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
-		stars[i].enableLighting = false;
+		stars[i].SetAllMaterialLighting(false);
 	}
 	ground.LoadShortPath("ground/Ground.gltf");
 	ground.worldTF.scale = { 100.0f,1.0f, 100.0f };
-	ground.enableLighting = true;
+	ground.SetAllMaterialLighting(true);
 
 	// プレイヤー初期化
 	player.Init(&mainCamera);

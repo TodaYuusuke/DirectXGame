@@ -27,7 +27,6 @@ namespace LWP::Base {
 namespace LWP::Base {
 	struct InstanceData {
 		Base::WTFStruct wtf;
-		int32_t enableLighting;
 
 		InstanceData() = default;
 		InstanceData(const Resource::RigidModel& value);

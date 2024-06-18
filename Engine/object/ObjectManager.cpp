@@ -32,7 +32,7 @@ void Manager::Update(Base::RendererManager* manager) {
 		"Camera","DirectionLight","PointLight"/*,"Particle"*/
 	};
 
-	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("LWP");
 
 	if (ImGui::BeginTabBar("LWP")) {
 		if (ImGui::BeginTabItem("Object")) {

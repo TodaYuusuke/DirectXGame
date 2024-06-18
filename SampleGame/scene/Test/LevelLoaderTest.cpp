@@ -5,7 +5,7 @@ using namespace LWP::Math;
 // 初期化
 void LevelLoaderTest::Initialize() {
 	levelData.LoadShortPath("Scene.json");
-	levelData.rigidModels["Cube"].enableLighting = true;
+	//levelData.rigidModels["Cube"].enableLighting = true;
 }
 
 // 更新

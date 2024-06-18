@@ -3,36 +3,26 @@
 
 namespace LWP::Resource {
 	/// <summary>
-	/// 3Dモデルを扱うアダプタークラス
+	/// 実行中に動かすことのない3Dモデル
 	/// </summary>
-	class SkinningModel final : public IModel {
+	class StaticModel : public IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// ワールドトランスフォーム
-		Object::TransformQuat worldTF{};
 		// マテリアル
 		std::vector<Primitive::Material> materials;
 
-		// スケルトン
-		Primitive::Skeleton skeleton{};
-		// スキンクラスターのポインタ
-		Primitive::SkinCluster* skinCluster = nullptr;
-		
-		// バッファーに代入するデータ
-		
-		//Base::ConstantBuffer<Base::InstanceSkinData> buffer;
-		//std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> wellBuffer;
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		SkinningModel();
+		StaticModel();
+		StaticModel(const StaticModel& other);
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~SkinningModel() override;
+		~StaticModel() override;
 
 		/// <summary>
 		/// 3Dモデルのデータを読み込む（exeからのパス指定）
@@ -54,15 +44,27 @@ namespace LWP::Resource {
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
 		void ChangeFillMode();
-		/// <summary>
-		/// 全マテリアルのenableLightingを切り替え
-		/// </summary>
-		void SetAllMaterialLighting(bool flag);
 
-		/// <summary>
-		/// Bufferにデータをセットする
-		/// </summary>
-		void SetBufferData(Primitive::WellForGPU* data, int offset);
 
+	public:	// ** オペレータオーバーロード ** //
+
+		// Observerクラス用のオペレーターオーバーロード
+		bool operator==(const StaticModel& other) const = delete;
+		bool operator==(StaticModel& other) {
+			return worldTF == other.worldTF &&
+				enableLighting == other.enableLighting &&
+				isActive == other.isActive;
+		}
+
+		// コピー演算子
+		StaticModel& operator=(const Resource::StaticModel& other) {
+			if (this != &other) {
+				this->LoadFullPath(other.filePath);
+				worldTF = other.worldTF;
+				enableLighting = other.enableLighting;
+				isActive = other.isActive;
+			}
+			return *this;
+		}
 	};
 }

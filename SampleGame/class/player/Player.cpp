@@ -14,7 +14,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	model.worldTF.translation.y = 0.4f;
 	//model.worldTF.scale = { 3.0f,3.0f,3.0f };
 	model.worldTF.scale = { 0.4f,0.4f,0.4f };
-	model.enableLighting = true;
+	model.SetAllMaterialLighting(true);
 	// アニメーション用意
 	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
 	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);

@@ -17,11 +17,6 @@ namespace LWP::Resource {
 	class IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// ワールドトランスフォーム
-		Object::TransformQuat worldTF{};
-
-		// ライティングを行うかどうか
-		bool enableLighting = false;
 		// アクティブ切り替え
 		bool isActive = true;
 

@@ -65,6 +65,11 @@ namespace LWP::System {
 		void EndFrame();
 
 		/// <summary>
+		/// 
+		/// </summary>
+		void DebugGUI();
+
+		/// <summary>
 		/// ライブラリの終了
 		/// </summary>
 		void Finalize();
