@@ -1,6 +1,8 @@
 #pragma once
 #include "math/vector/Vector2.h"
 #include "math/vector/Vector3.h"
+#include "math/matrix/Matrix4x4.h"
+
 #include "utility/Color.h"
 #include <array>
 
@@ -68,5 +70,31 @@ namespace LWP::Base {
 			materialIndex_ = value.materialIndex;
 			return *this;
 		}
+	};
+
+	/// <summary>
+	/// MSで出力される頂点データの構造体
+	/// </summary>
+	struct OutputVertexStruct {
+		Math::Vector4 position;	// 座標
+		Math::Vector3 worldPosition;	// ワールド座標
+		Math::Vector2 texCoord;	// UV座標
+		Math::Vector3 normal;	// 法線
+		Math::Vector4 color;	// 色
+		uint32_t mIndex;	// 適応されるマテリアルの番号
+
+		OutputVertexStruct() = default;
+		// VertexStructからデータをコピーするためのオペレータオーバーロード
+		OutputVertexStruct& operator=(const VertexStruct& value) {
+			position = value.position_;
+			worldPosition = { 0.0f,0.0f,0.0f };	// 求められないので初期値
+			texCoord = value.texCoord_;
+			normal = value.normal_;
+			color = value.color_;
+			mIndex = value.materialIndex_;
+			return *this;
+		}
+		// OutPutVertexStructにWorldTransformを適応する
+		void ApplyWorldTransform(const Math::Matrix4x4& affine);
 	};
 }

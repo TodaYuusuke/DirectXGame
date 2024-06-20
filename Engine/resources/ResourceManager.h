@@ -11,8 +11,8 @@
 // 3Dモデル
 #include "primitive/3d/OldMesh.h"
 #include "model/RigidModel.h"
-
 #include "model/SkinningModel.h"
+#include "model/StaticModel.h"
 #include "model/ModelData.h"
 
 #include "level/LevelData.h"
@@ -100,6 +100,7 @@ namespace LWP::Resource {
 		
 		FillMode<RigidModel, RigidBuffer> rigid;
 		FillMode<SkinningModel, SkinBuffer> skin;
+		Utility::PtrManager<StaticModel*> statics;
 	};
 
 
@@ -141,6 +142,7 @@ namespace LWP::Resource {
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
 		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPointer(ptr); }
 		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPointer(ptr); }
+		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPointer(ptr); }
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
 		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
@@ -152,6 +154,7 @@ namespace LWP::Resource {
 			modelDataMap_[filePath].skin.solid.ptrs.DeletePointer(ptr);
 			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePointer(ptr);
 		}
+		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePointer(ptr); }
 		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
 		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 
@@ -194,6 +197,7 @@ namespace LWP::Resource {
 
 		void RigidGUI(Models& m);
 		void SkinningGUI(Models& m);
+		void StaticGUI(Models& m);
 
 
 	private:

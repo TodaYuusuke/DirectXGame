@@ -77,5 +77,6 @@ namespace LWP::Resource {
 		/// メッシュレット数を返す関数
 		/// </summary>
 		int GetMeshletCount() const { return meshletCount_; }
+
 	};
 }

@@ -1,4 +1,4 @@
-#include "RigidModel.h"
+#include "StaticModel.h"
 
 #include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
@@ -11,14 +11,8 @@ using namespace LWP::Math;
 using namespace LWP::Resource;
 
 
-RigidModel::RigidModel() {}
-RigidModel::RigidModel(const RigidModel& other) : RigidModel() {
-	this->LoadFullPath(other.filePath);
-	worldTF = other.worldTF;
-	enableLighting = other.enableLighting;
-	isActive = other.isActive;
-}
-RigidModel::~RigidModel() {
+StaticModel::StaticModel() {}
+StaticModel::~StaticModel() {
 	// パスが空じゃなかったら消しに行く
 	if (!filePath.empty()) {
 		// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
@@ -26,37 +20,43 @@ RigidModel::~RigidModel() {
 	}
 }
 
-void RigidModel::LoadFullPath(const std::string& fp) {
+void StaticModel::LoadFullPath(const std::string& fp) {
 	// 名前を保持
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
 	LoadModel(filePath);
-	// マテリアルをコピー
 	ModelData* data = GetModel(filePath);
-	materials.resize(data->materials_.size());
-	std::copy(data->materials_.begin(), data->materials_.end(), materials.begin());
+
+	// バッファ生成のためにデバイスとSRVを取得する
+	GPUDevice* device = System::engine->directXCommon_->GetGPUDevice();
+	SRV* srv = System::engine->directXCommon_->GetSRV();
+
+	// ** Bufferのみあれば問題ないので最低限の処理で済ます ** //
+
+	// バッファの生成
+	vertexBuffer_ = std::make_unique<StructuredBuffer<Base::OutputVertexStruct>>(data->buffers_.vertex->kMaxSize);	// 頂点
+	// バッファの初期化
+	vertexBuffer_->Init(device, srv);
+	// データのコピー
+	// Vertexだけ型が代わるのでfor文
+	for (uint32_t i = 0; i < data->buffers_.vertex->kMaxSize; i++) {
+		vertexBuffer_->data_[i] = data->buffers_.vertex->data_[i];
+	}
 
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
 	System::engine->resourceManager_->SetPointer(this, filePath);
 }
 
 
-void RigidModel::Update() {
-	if (!isActive) { return; }
-}
-void RigidModel::DebugGUI() {
-	worldTF.DebugGUI();
-	if (ImGui::TreeNode("Materials")) {
-		for (int i = 0; i < materials.size(); i++) {
-			materials[i].DebugGUI(std::to_string(i));
-		}
-		ImGui::TreePop();
+void StaticModel::ApplyWorldTransform(const Object::TransformQuat& wtf) {
+	Matrix4x4 affine = wtf.GetAffineMatrix();
+	// 渡されたワールド変換を適応する
+	for (uint32_t i = 0; i < vertexBuffer_->kMaxSize; i++) {
+		vertexBuffer_->data_[i].ApplyWorldTransform(affine);
 	}
-	ImGui::Checkbox("enableLighting", &enableLighting);
-	ImGui::Checkbox("isActive", &isActive);
-	if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
 }
 
-void RigidModel::ChangeFillMode() {
-	System::engine->resourceManager_->ChangeFillMode(this, filePath);
+void StaticModel::DebugGUI() {
+	ImGui::Checkbox("isActive", &isActive);
+	//if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
 }

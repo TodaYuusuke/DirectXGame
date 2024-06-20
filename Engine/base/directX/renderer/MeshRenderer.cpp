@@ -52,6 +52,23 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
 			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build(device->GetDevice());
+	static_.root.AddTableParameter(0, SV_All)	// メッシュレット
+		.AddTableParameter(1, SV_All)	// 頂点
+		.AddTableParameter(2, SV_All)	// ユニークポインタ
+		.AddTableParameter(3, SV_All)	// プリミティブインデックス
+		.AddCBVParameter(0, SV_All)	// 共通データ
+		.AddCBVParameter(1, SV_All)	// カメラのView
+		.AddTableParameter(4, SV_Pixel)	// マテリアル
+		.AddTableParameter(5, SV_Pixel)	// 平行光源
+		.AddTableParameter(6, SV_Pixel)	// 点光源
+		.AddTableParameter(7, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
+		.AddTableParameter(507, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
+		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
+		.Build(device->GetDevice());
 
 	// PSOを生成
 	rigid_.pso.Init(rigid_.root, dxc, PSO::Type::Mesh)
@@ -80,6 +97,15 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.SetAmpShader("ms/Meshlet.AS.hlsl")
 		.SetMeshShader("ms/Skinning.MS.hlsl")
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.Build(device->GetDevice());
+	static_.pso.Init(static_.root, dxc, PSO::Type::Mesh)
+		.SetMeshShader("ms/static/Normal.MS.hlsl")
+		.SetPixelShader("ms/static/Normal.PS.hlsl")
+		.Build(device->GetDevice());
+	static_.wirePso.Init(static_.root, dxc, PSO::Type::Mesh)
+		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
+		.SetMeshShader("ms/static/Normal.MS.hlsl")
+		.SetPixelShader("ms/static/Normal.PS.hlsl")
 		.Build(device->GetDevice());
 }
 
@@ -136,6 +162,8 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 	// 全モデル分ループ
 	auto models = System::engine->resourceManager_->GetModels();
 
+	// -------------------------------------------------------------- //
+
 	// RigidModelをDispatch
 	list->SetGraphicsRootSignature(rigid_.root);	// Rootセット
 	for (Models& m : models) {
@@ -152,7 +180,7 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
 		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
-		
+
 
 		Models::FillMode<RigidModel, Models::RigidBuffer>& f = m.rigid;
 		// Solidの描画処理
@@ -178,6 +206,8 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
 	}
+
+	// -------------------------------------------------------------- //
 
 	// SkinningModelをDispatch
 	list->SetGraphicsRootSignature(skinning_.root);	// Rootセット
@@ -223,7 +253,7 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
-		
+
 		// スキニングモデルを描画
 		//for (SkinningModel* sm : m.skin.list) {
 		//	// isActiveがfalseなら描画しない
@@ -240,5 +270,37 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 		//		list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
 		//	}
 		//}
+	}
+
+	// -------------------------------------------------------------- //
+
+	// StaticModelをDispatch
+	list->SetGraphicsRootSignature(static_.root);	// Rootセット
+	list->SetPipelineState(static_.pso.GetState());	// PSOセット
+	for (Models& m : models) {
+		// ModelのStructerdBufferのViewをセット
+		ModelData& d = m.data;
+		list->SetGraphicsRootDescriptorTable(0, d.buffers_.meshlet->GetGPUView());
+		// VertexはStaticModelが持っているBufferを使う
+		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
+		buffersPtr_->SetCommonView(4, list);	// 共通
+		list->SetGraphicsRootConstantBufferView(5, cameraView);	// カメラ
+		list->SetGraphicsRootDescriptorTable(6, d.buffers_.materials->GetGPUView());
+		buffersPtr_->SetDirLightView(7, list);	// 平行光源
+		buffersPtr_->SetPointLightView(8, list);	// 点光源
+		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstTexView());	// テクスチャ
+		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstDirShadowView());		// 平行光源シャドウ
+		list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstPointShadowView());	// 点光源シャドウ
+
+		// 全要素ループ
+		for (StaticModel* ptr : m.statics.list) {
+			if (!ptr->isActive) { continue; }
+
+			// 頂点のViewをセット
+			list->SetGraphicsRootDescriptorTable(1, ptr->GetVertexBufferView());
+			// メッシュレット数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
 	}
 }

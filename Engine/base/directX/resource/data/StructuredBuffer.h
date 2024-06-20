@@ -78,7 +78,7 @@ namespace LWP::Base {
 		SRVInfo GetInfo() const { return info; }
 
 
-	private: // ** メンバ定数 ** //
+	public: // ** メンバ定数 ** //
 
 		// データ1つ分のサイズ定数
 		const uint32_t kElementSize;

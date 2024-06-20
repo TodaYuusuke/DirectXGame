@@ -262,6 +262,8 @@
     <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
     <ClCompile Include="Engine\resources\level\LevelData.cpp" />
     <ClCompile Include="Engine\math\Quaternion.cpp" />
+    <ClCompile Include="Engine\resources\model\StaticModel.cpp" />
+    <ClCompile Include="Engine\primitive\model\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -615,6 +617,7 @@
     <ClInclude Include="Engine\resources\level\LevelData.h" />
     <ClInclude Include="Externals\nlohmann\json.hpp" />
     <ClInclude Include="Engine\math\Quaternion.h" />
+    <ClInclude Include="Engine\resources\model\StaticModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

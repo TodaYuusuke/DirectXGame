@@ -381,6 +381,30 @@ void Manager::SkinningGUI(Models& m) {
 		(*Utility::GetIteratorAtIndex<SkinningModel*>(lists, selectedNum))->DebugGUI();
 	}
 }
+void Manager::StaticGUI(Models& m) {
+	static int selectedNum = 0;	// 選択された番号
+	std::list<StaticModel*>& list = m.statics.list;
+	
+	// Staticの一覧を表示
+	if (!list.empty()) {
+		int size = static_cast<int>(list.size());
+		// 最大値以上にならないように修正
+		if (selectedNum >= size) {
+			selectedNum = size - 1;
+		}
+
+		std::string text = "";
+		for (int i = 0; i < size; i++) {
+			text += std::to_string(i);
+			text += '\0';
+		}
+		text += '\0';	// 最後は二個必要なので追加
+		ImGui::Combo("List", &selectedNum, text.c_str());
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<StaticModel*>(list, selectedNum))->DebugGUI();
+	}
+}
 
 
 void Manager::DebugGUI() {
@@ -394,6 +418,10 @@ void Manager::DebugGUI() {
 		},
 		[this](std::string str) {
 			debugModels.push_back(new SkinningModel());
+			debugModels.back()->LoadFullPath(str);
+		},
+		[this](std::string str) {
+			debugModels.push_back(new StaticModel());
 			debugModels.back()->LoadFullPath(str);
 		},
 	};
@@ -416,17 +444,22 @@ void Manager::DebugGUI() {
 			// どっち（rigid,skinning）を表示するか選択
 			ImGui::RadioButton("Rigid", &radioValue, 0);
 			ImGui::RadioButton("Skinning", &radioValue, 1);
+			ImGui::RadioButton("Static", &radioValue, 2);
 
 			// 変更されて渡される値は添え字
 			if (ImGui::Button("Create")) { functions[radioValue](m->first); }
 
-			// 0ならRigidを表示
-			if (radioValue == 0) {
-				RigidGUI(m->second);
-			}
-			// 1ならSkinningのほうを表示
-			else if (radioValue == 1) {
-				SkinningGUI(m->second);
+			switch (radioValue) {
+				default:
+				case 0:
+					RigidGUI(m->second);
+					break;
+				case 1:
+					SkinningGUI(m->second);
+					break;
+				case 2:
+					StaticGUI(m->second);
+					break;
 			}
 		}
 		ImGui::EndTabItem();

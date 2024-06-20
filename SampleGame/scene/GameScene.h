@@ -24,7 +24,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	const static int kStarCount = 512;
 	LWP::Resource::RigidModel stars[kStarCount];
 	// 地面
-	LWP::Resource::RigidModel ground;
+	LWP::Resource::StaticModel ground;
 
 
 	// プレイヤー

@@ -37,7 +37,7 @@ void GameScene::Initialize() {
 
 
 	skydome.LoadShortPath("skydome/skydome.obj");
-	skydome.worldTF.scale = { 100.0f,100.0f, 100.0f };
+	skydome.worldTF.scale = { 100.0f,100.0f,100.0f };
 	skydome.materials[1].color = Color(5, 5, 16, 255);
 	skydome.SetAllMaterialLighting(false);
 	for (int i = 0; i < kStarCount; i++) {
@@ -60,8 +60,12 @@ void GameScene::Initialize() {
 		stars[i].SetAllMaterialLighting(false);
 	}
 	ground.LoadShortPath("ground/Ground.gltf");
-	ground.worldTF.scale = { 100.0f,1.0f, 100.0f };
-	ground.SetAllMaterialLighting(true);
+	ground.ApplyWorldTransform({
+		{},
+		Quaternion(),
+		{ 100.0f,1.0f, 100.0f }
+	});
+	//ground.SetAllMaterialLighting(true);
 
 	// プレイヤー初期化
 	player.Init(&mainCamera);
