@@ -31,19 +31,19 @@ void Engine::Run(IScene* firstScene) {
 		BeginFrame();
 
 		// 更新処理
-		sceneManager_->Update();
-		// リソース更新（アニメーションの更新処理）
-		resourceManager_->Update();
-		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをCommandManagerに登録している
+		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
+		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());	// BackBufferのレンダリングに使うカメラをセット
+		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
+		
+		resourceManager_->Update();	// リソース更新（アニメーションの更新処理）
 		primitiveManager_->Update();
+
 		colliderManager_->Update();	// 当たり判定検証
 
-		// カメラのビュープロジェクションをcommandManagerに
-		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());
-
-		// 描画処理
+		// Primitiveの描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
 
+		// RigidModelやSkinningModelは最後にレンダリング
 		EndFrame();
 	}
 	Finalize();

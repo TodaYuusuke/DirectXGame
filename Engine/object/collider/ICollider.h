@@ -49,6 +49,9 @@ namespace LWP::Object::Collider {
 		bool isMove = true;
 		// アクティブ切り替え
 		bool isActive = true;
+		// ナローフェーズ用のコライダー
+		std::vector<ICollider*> narrows;
+
 #if DEMO
 		// ** デバッグ用の変数 ** //
 		bool isShowWireFrame = true;

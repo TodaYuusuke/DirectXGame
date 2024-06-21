@@ -618,6 +618,7 @@
     <ClInclude Include="Externals\nlohmann\json.hpp" />
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\resources\model\StaticModel.h" />
+    <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

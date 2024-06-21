@@ -339,6 +339,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\IDataResource.h" />
+    <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\IResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\BackBuffer.h" />
