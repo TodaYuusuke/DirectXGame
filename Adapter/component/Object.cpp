@@ -9,10 +9,3 @@ void Object::SetPointer(Object::IObject* ptr) {
 void Object::DeletePointer(Object::IObject* ptr) {
 	engine->objectManager_->DeletePointer(ptr);
 }
-
-void Object::Collider::SetPointer(ICollider* ptr) {
-	engine->colliderManager_->SetPointer(ptr);
-}
-void Object::Collider::DeletePointer(ICollider* ptr) {
-	engine->colliderManager_->DeletePointer(ptr);
-}

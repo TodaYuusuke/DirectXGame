@@ -53,23 +53,30 @@ namespace LWP::Object::Collider {
 		// デバッグ用モデル
 		LWP::Primitive::Capsule capsuleModel;
 #endif
-	};
+
+	public: // ** 各形状との当たり判定関数 ** //
+
+		bool CheckCollision(AABB* c) override;
+		//bool CheckCollision(OBB* c)  override;
+		bool CheckCollision(Sphere* c)  override;
+		bool CheckCollision(Capsule* c)  override;
 
 
-	// データ構造体
-	struct Capsule_Data {
-		// 始点
-		LWP::Math::Vector3 start;
-		// 終点
-		LWP::Math::Vector3 end;
-		// 半径
-		float radius;
+		// 当たり判定計算に適したデータ構造体
+		struct Data {
+			// 始点
+			LWP::Math::Vector3 start;
+			// 終点
+			LWP::Math::Vector3 end;
+			// 半径
+			float radius;
 
-		// コンストラクタ
-		Capsule_Data(const Capsule& cap) {
-			start = cap.start;
-			end = cap.end;
-			radius = cap.radius;
-		}
+			// コンストラクタ
+			Data(Capsule* cap) {
+				start = cap->start;
+				end = cap->end;
+				radius = cap->radius;
+			}
+		};
 	};
 };

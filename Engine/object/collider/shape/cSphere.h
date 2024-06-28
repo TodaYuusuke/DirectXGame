@@ -51,21 +51,27 @@ namespace LWP::Object::Collider {
 		// デバッグ用モデル
 		LWP::Primitive::Sphere sphereModel;
 #endif
-	};
+
+	public: // ** 各形状との当たり判定関数 ** //
+
+		bool CheckCollision(AABB* c) override;
+		//bool CheckCollision(OBB* c)  override;
+		bool CheckCollision(Sphere* c)  override;
+		bool CheckCollision(Capsule* c)  override;
 
 
-	// データ構造体
-	struct Sphere_Data {
-		// 中心座標
-		LWP::Math::Vector3 position;
-		// 半径
-		float radius;
+		// 当たり判定計算に適したデータ構造体
+		struct Data {
+			// 中心座標
+			LWP::Math::Vector3 position;
+			// 半径
+			float radius;
 
-		// コンストラクタ
-		Sphere_Data(const Sphere& sphere) {
-			position = sphere.position;
-			// 球体は半径しかscaleが変わらないのでxのみ参照する
-			radius = sphere.radius;
-		}
+			// コンストラクタ
+			Data(Sphere* sphere) {
+				position = sphere->position;
+				radius = sphere->radius;
+			}
+		};
 	};
 };

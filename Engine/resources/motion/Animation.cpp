@@ -29,9 +29,6 @@ void Animation::Init() {
 	for (Joint& joint : modelPtr_->skeleton.joints) {
 		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
 		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
-			if (joint.name == "mixamorig:RightUpLeg") {
-				printf("");
-			}
 			const NodeAnimation& rootNodeAnimation = (*it).second;
 			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
 			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_).Normalize();

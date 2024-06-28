@@ -1,4 +1,7 @@
+#include "cAABB.h"
 #include "cSphere.h"
+#include "cCapsule.h"
+
 #include "base/ImGuiManager.h"
 
 using namespace LWP::Object::Collider;
@@ -74,3 +77,44 @@ void Sphere::Create(LWP::Resource::RigidModel* model) {
 	// 半径を割り出す
 	radius = (max - position).Length();
 }
+
+
+bool Sphere::CheckCollision(AABB* c) {
+	return c->CheckCollision(this);
+}
+//bool CheckCollision(OBB* c) {}
+bool Sphere::CheckCollision(Sphere* c) {
+	Sphere::Data data1(this);	// transformをかけたデータで計算する
+	Sphere::Data data2(c);
+
+	// 二つの球体の中心点間の距離を求める
+	Vector3 dist = data1.position - data2.position;
+	// 半径の合計よりも短ければ衝突
+	return dist.Length() <= (data1.radius + data2.radius);
+}
+bool Sphere::CheckCollision(Capsule* c) {
+	Sphere::Data sphere(this);
+	Capsule::Data capsule(c);
+
+	Vector3 d = sphere.position - capsule.start;
+	Vector3 ba = capsule.end - capsule.start;
+	// カプセルのベクトルの長さ
+	float length = ba.Length();
+	// 正規化
+	Vector3 e = ba.Normalize();
+	// 内積
+	float dot = Vector3::Dot(d, e);
+
+	float t = dot / length;
+	t = std::clamp<float>(t, 0.0f, 1.0f);
+	// 線形補間
+	Vector3 f;
+	f = (1.0f - t) * capsule.start + t * capsule.end;
+
+	// 距離
+	float distance = (sphere.position - f).Length();
+
+	// 当たっているかを判定
+	return distance < sphere.radius + capsule.radius;
+}
+

@@ -1,5 +1,9 @@
+#include "cAABB.h"
+#include "cSphere.h"
 #include "cCapsule.h"
+
 #include "base/ImGuiManager.h"
+#include "utility/MyUtility.h"
 
 using namespace LWP::Object::Collider;
 using namespace LWP;
@@ -44,11 +48,22 @@ void Capsule::DebugGUI() {
 	ImGui::DragFloat("radius", &radius, 0.01f);
 }
 
-
-
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_) { Create(start_, end_, 1.0f); }
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_, const float& rad_) {
 	start = start_;
 	end = end_;
 	radius = rad_;
+}
+
+
+bool Capsule::CheckCollision(AABB* c) {
+	return c->CheckCollision(this);
+}
+//bool CheckCollision(OBB* c)  override;
+bool Capsule::CheckCollision(Sphere* c) {
+	return c->CheckCollision(this);
+}
+bool Capsule::CheckCollision(Capsule* c) {
+	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
+	c; return false;
 }

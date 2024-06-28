@@ -46,7 +46,7 @@ namespace LWP::Primitive {
 		/// スフィアコライダーから描画用のスフィアを生成
 		/// </summary>
 		/// <param name="sphere"></param>
-		void CreateFromCapsuleCol(const LWP::Object::Collider::Capsule& capsule);
+		//void CreateFromCapsuleCol(const LWP::Object::Collider::Capsule& capsule);
 
 
 	private: // ** プライベートな関数 ** //
@@ -57,7 +57,7 @@ namespace LWP::Primitive {
 		void DerivedDebugGUI(const std::string& label = "Derived") override;
 
 		// 始点が変わっているかを監視するための変数
-		Utility::Observer<LWP::Object::TransformEuler*> obsTransform = &worldTF;
+		Utility::Observer<LWP::Object::TransformQuat*> obsTransform = &worldTF;
 
 		/// <summary>
 		/// パラメータが変わっているかを検証
@@ -67,7 +67,7 @@ namespace LWP::Primitive {
 
 
 		// スフィアコライダーから描画用のスフィアを生成する関数だが、使用しないので隠蔽
-		using Sphere::CreateFromSphereCol;
+		//using Sphere::CreateFromSphereCol;
 
 	};
 }

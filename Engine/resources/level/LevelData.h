@@ -4,10 +4,7 @@
 
 #include "object/core/Camera.h"
 
-#include "object/collider/cAABB.h"
-#include "object/collider/cCapsule.h"
-#include "object/collider/cSphere.h"
-
+#include "object/collider/Collider.h"
 
 #include "../Externals/nlohmann/json.hpp"
 
@@ -24,7 +21,7 @@ namespace LWP::Resource {
 		// スキンモデル
 		std::map<std::string, SkinningModel> skinModels;
 		// 当たり判定
-		std::map<std::string, Object::Collider::ICollider*> colliders;
+		std::map<std::string, Object::Collider::Collider> colliders;
 
 
 	public: // ** メンバ関数 ** //

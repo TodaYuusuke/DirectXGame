@@ -31,7 +31,7 @@ namespace LWP::Primitive {
 		std::vector<uint32_t> indexes;	// インデックス
 
 		// ワールドトランスフォーム
-		Object::TransformEuler worldTF;
+		Object::TransformQuat worldTF;
 
 		// マテリアル
 		Material material;
@@ -129,7 +129,7 @@ namespace LWP::Primitive {
 		std::string name;
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indexes;
-		Object::TransformEuler worldTF;
+		Object::TransformQuat worldTF;
 		Material material;
 
 		IPrimitiveStruct& operator=(const IPrimitive& other) {

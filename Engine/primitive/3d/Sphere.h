@@ -54,7 +54,7 @@ namespace LWP::Primitive {
 		/// スフィアコライダーから描画用のスフィアを生成
 		/// </summary>
 		/// <param name="sphere"></param>
-		void CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere);
+		//void CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere);
 
 
 	protected: // ** プライベートな関数 ** //

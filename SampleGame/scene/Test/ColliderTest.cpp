@@ -17,13 +17,13 @@ void ColliderTest::Initialize() {
 	// モデル読み込み
 	mesh.LoadShortPath("human/walk.gltf");
 	
-	// 追従
-	aabb.SetFollowTarget(&mesh);
-	aabb.Create(&mesh);
-	aabb.enterLambda = [](HitData data) {
-		data;
-		Info::ChangeShowDebugGUI();
-	};
+	//// 追従
+	//aabb.SetFollowTarget(&mesh);
+	//aabb.Create(&mesh);
+	//aabb.enterLambda = [](HitData data) {
+	//	data;
+	//	Info::ChangeShowDebugGUI();
+	//};
 }
 
 // 更新

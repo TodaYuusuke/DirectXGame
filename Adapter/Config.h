@@ -164,6 +164,12 @@ namespace LWP::Config {
 	/// 当たり判定に関するパラメータ
 	/// </summary>
 	namespace Collider {
+		
+		/// <summary>
+		/// コライダークラスの最大数
+		/// </summary>
+		static const uint32_t kMaxColliderAmount = 1024;
+
 		// 当たり判定マスク用の列挙子定義
 		enum MaskLayer : uint32_t {
 			Player = ColMask0,

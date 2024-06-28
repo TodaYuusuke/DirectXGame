@@ -14,9 +14,6 @@ using namespace LWP::Utility;
 LevelData::~LevelData() {
 	rigidModels.clear();
 	skinModels.clear();
-	for (auto c : colliders) {
-		delete c.second;
-	}
 	colliders.clear();
 }
 

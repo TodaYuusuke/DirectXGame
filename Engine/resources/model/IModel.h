@@ -68,7 +68,7 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 自分の読み込んだモデルデータを返す
 		/// </summary>
-		ModelData* GetModelData();
+		ModelData* GetModelData() const;
 
 	protected: // ** メンバ変数 ** //
 

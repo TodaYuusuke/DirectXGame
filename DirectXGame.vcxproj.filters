@@ -142,22 +142,10 @@
     <ClCompile Include="Engine\utility\UI.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\collider\cAABB.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\collider\ICollider.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\collider\cSphere.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\collider\ColliderManager.cpp">
-      <Filter>Engine\object\collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\collider\cCapsule.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\motion\Motion.cpp">
@@ -264,6 +252,9 @@
     <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\resources\model\StaticModel.cpp" />
     <ClCompile Include="Engine\primitive\model\Vertex.cpp" />
+    <ClCompile Include="Engine\object\collider\Collider.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cAABB.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\ICollisionShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -443,16 +434,7 @@
     <ClInclude Include="Engine\utility\UI.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\collider\cAABB.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\collider\ICollider.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\collider\ColliderManager.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\collider\cSphere.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\collider\Mask.h">
@@ -469,9 +451,6 @@
     </ClInclude>
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h">
       <Filter>Engine\utilitiy\observers</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\collider\cCapsule.h">
-      <Filter>Engine\object\collider</Filter>
     </ClInclude>
     <ClInclude Include="Engine\resources\motion\Motion.h">
       <Filter>Engine\resources\motion</Filter>
@@ -619,6 +598,9 @@
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\resources\model\StaticModel.h" />
     <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />
+    <ClInclude Include="Engine\object\collider\Collider.h" />
+    <ClInclude Include="Engine\object\collider\shape\ICollisionShape.h" />
+    <ClInclude Include="Engine\object\collider\shape\cAABB.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
