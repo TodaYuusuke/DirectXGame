@@ -28,23 +28,50 @@ void Collider::CheckCollision(Collider* c) {
 
 	// １．ブロードフェーズチェック
 	if (!CheckBroadCollision(c->broad)) {
+		// Noヒット処理を行う
+		NoHit(c);	// 自分の処理
+		c->NoHit(this);	// 相手の処理
 		return;	// ヒットしていないので早期リターン
 	}
 
 	// ２．ナローフェーズがある場合 -> チェック
 	if (!narrows.empty()) {
 		if (!CheckNarrowsCollision(c)) {
+			// Noヒット処理を行う
+			NoHit(c);	// 自分の処理
+			c->NoHit(this);	// 相手の処理
 			return;	// ヒットしていないならば処理を終了
 		}
 	}
 
 	// ３．ヒット処理を行う
-	Hit(c->GetSerial());	// 自分の処理
-	c->Hit(GetSerial());	// 相手の処理
+	Hit(c);	// 自分の処理
+	c->Hit(this);	// 相手の処理
 }
 
-void Collider::Hit(int targetIndex) {
-	targetIndex;
+void Collider::Hit(Collider* c) {
+	int targetIndex = c->GetSerial();
+
+	if(serialMap[targetIndex] <= 0)	{
+		enterLambda(c);	// 0なら前フレームヒットしていないのでEnter
+	}
+	else {
+		stayLambda(c);	// そうでないなら前フレームヒットしているのでStay
+	}
+	
+	// ヒットフレーム数+1
+	serialMap[targetIndex]++;
+}
+void Collider::NoHit(Collider* c) {
+	int targetIndex = c->GetSerial();
+
+	// 1以上なら前フレーム以前にヒットしているのでExitを呼び出す
+	if (serialMap[targetIndex] >= 1) {
+		exitLambda(c);
+	}
+
+	// ヒットフレーム数を0に
+	serialMap[targetIndex] = 0;
 }
 
 void Collider::DebugGUI() {

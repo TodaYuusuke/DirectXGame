@@ -70,7 +70,9 @@ namespace LWP::Object::Collider {
 		// 渡された形との当たり判定を確認する関数
 		void CheckCollision(Collider* c);
 		// ヒット時の処理（受け身のとき相手に呼び出してもらうためにpublic）
-		void Hit(int targetIndex);
+		void Hit(Collider* c);
+		// ヒットしていなかった時の処理（受け身のとき相手に呼び出してもらうためにpublic）
+		void NoHit(Collider* c);
 		// シリアル番号をセットする関数
 		void SetSerial(Utility::Index&& s) { serialNum = std::move(s); }
 		// シリアル番号を返す関数
