@@ -2,6 +2,8 @@
 #include "base/ImGuiManager.h"
 #include "component/System.h"
 
+#include <typeinfo>
+
 using namespace LWP;
 using namespace LWP::Object::Collider;
 
@@ -84,15 +86,21 @@ void Collider::DebugGUI() {
 		ImGui::TreePop();
 	}
 	// ナローフェーズ
-	//ImGui::Text("Narrows");
-	//	for (ShapeVariant& v : narrows) {
-	//		std::visit([](auto& f) {
-	//			((ICollisionShape*)(&f))->DebugGUI();
-	//		}, v);
-	//	}
+	if (!narrows.empty() && ImGui::TreeNode("Narrows")) {
+		std::vector<const char*> itemText;
+		static int currentItem = 0;
+		for (ShapeVariant& v : narrows) {
+			itemText.push_back(typeid(v).name());
+		}
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		GetBasePtr(narrows[currentItem])->DebugGUI();
+		
+		ImGui::TreePop();
+	}
 
 	ImGui::Checkbox("isMove", &isMove);	// 動くかのフラグ
 	ImGui::Checkbox("isActive", &isActive);	// 有効/無効
+	ImGui::Text(std::string("serialNumber : " + std::to_string(serialNum)).c_str());
 }
 
 bool Collider::CheckBroadCollision(ShapeVariant& c) {
