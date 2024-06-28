@@ -74,7 +74,7 @@ namespace LWP::Object::Collider {
 
 		virtual bool CheckCollision(AABB& c) = 0;
 		//virtual bool CheckCollision(OBB& c) = 0;
-		//virtual bool CheckCollision(Sphere& c) = 0;
+		virtual bool CheckCollision(Sphere& c) = 0;
 		//virtual bool CheckCollision(Capsule& c) = 0;
 
 	protected:

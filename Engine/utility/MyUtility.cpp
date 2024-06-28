@@ -41,6 +41,21 @@ std::string LWP::Utility::ConvertString(const std::wstring& str) {
 	return result;
 }
 
+std::string LWP::Utility::TrimmingString(const std::string& str, std::size_t n, std::size_t m) {
+	// nが文字列の長さを超える場合は、0から文字列全体を削除する
+	if (n >= str.size()) {
+		return "";
+	}
+
+	// mが残りの文字列の長さを超える場合は、最後まで削除する
+	if (n + m >= str.size()) {
+		return str.substr(n);
+	}
+
+	// 前n文字、後m文字を削除した文字列を返す
+	return str.substr(n, str.size() - n - m);
+}
+
 std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) {
 	// ファイルパスを逆順にして、最初に見つかった'/'の位置を取得
 	size_t dotPos = filePath.rfind('/');

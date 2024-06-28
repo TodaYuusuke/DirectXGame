@@ -55,9 +55,12 @@ namespace LWP::Primitive {
 		/// デフォルトコンストラクタ
 		/// </summary>
 		IPrimitive();
-
 		/// <summary>
-		/// デフォルトデストラクタ
+		/// コピーコンストラクタ
+		/// </summary>
+		IPrimitive(const IPrimitive& other);
+		/// <summary>
+		/// デストラクタ
 		/// </summary>
 		~IPrimitive();
 

@@ -26,6 +26,13 @@ namespace LWP::Primitive {
 
 		// 初期化を呼び出す
 		Sphere() { Init(); }
+		
+		// ムーブコンストラクタ
+		Sphere(const Sphere& other) {
+			subdivision = other.subdivision;
+			radius = other.radius;
+			Init();
+		}
 
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
@@ -53,8 +60,9 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// スフィアコライダーから描画用のスフィアを生成
 		/// </summary>
-		/// <param name="sphere"></param>
-		//void CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere);
+		/// <param name="pos">中心</param>
+		/// <param name="rad">半径</param>
+		void CreateFromSphereCol(const Math::Vector3& pos, const float rad);
 
 
 	protected: // ** プライベートな関数 ** //

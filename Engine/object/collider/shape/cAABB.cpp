@@ -1,5 +1,5 @@
 #include "cAABB.h"
-//#include "cSphere.h"
+#include "cSphere.h"
 //#include "cCapsule.h"
 
 #include "resources/model/RigidModel.h"
@@ -17,6 +17,17 @@ AABB::AABB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {}
 AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 	min = min_;
 	max = max_;
+
+#if DEMO
+	// 立方体のインスタンスを作成
+	cube.CreateFromAABB(*this);
+	cube.material.enableLighting = false;
+	cube.isWireFrame = true;
+#endif
+}
+
+AABB::AABB(const AABB& other) {
+	*this = other;
 
 #if DEMO
 	// 立方体のインスタンスを作成
@@ -52,12 +63,6 @@ void AABB::Update() {
 	max.z = std::max<float>(min.z, max.z);
 }
 
-void AABB::DebugGUI() {
-	ICollisionShape::DebugGUI();
-	ImGui::DragFloat3("min", &min.x, 0.01f);
-	ImGui::DragFloat3("max", &max.x, 0.01f);
-}
-
 void AABB::Create(const LWP::Math::Vector3& position) { Create(position, { 1.0f,1.0f,1.0 }); }
 void AABB::Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size) {
 	// サイズの値を求める
@@ -86,6 +91,11 @@ void AABB::Create(const LWP::Resource::RigidModel& model) {
 	}
 }
 
+void AABB::DebugGUI() {
+	ImGui::DragFloat3("min", &min.x, 0.01f);
+	ImGui::DragFloat3("max", &max.x, 0.01f);
+	ICollisionShape::DebugGUI();
+}
 
 bool AABB::CheckCollision(AABB& c) {
 	AABB::Data data1(*this);
@@ -103,51 +113,53 @@ bool AABB::CheckCollision(AABB& c) {
 #endif
 	return result;
 }
-//bool AABB::CheckCollision(Sphere& c) {
-//	AABB::Data aabb(this);
-//	Sphere::Data sphere(c);
-//
-//	// 最近接点
-//	Vector3 closestPoint = {
-//		std::clamp(sphere.position.x, aabb.min.x, aabb.max.x),
-//		std::clamp(sphere.position.y, aabb.min.y, aabb.max.y),
-//		std::clamp(sphere.position.z, aabb.min.z, aabb.max.z),
-//	};
-//
-//	float dist = (closestPoint - sphere.position).Length();
-//	return dist <= sphere.radius;
-//}
-//bool AABB::CheckCollision(Capsule& c) {
-//	AABB::Data aabb(this);
-//	Capsule::Data capsule(c);
-//
-//	Vector3 d = aabb.center - capsule.start;
-//	Vector3 ba = capsule.end - capsule.start;
-//	// カプセルのベクトルの長さ
-//	float length = ba.Length();
-//	// 正規化
-//	Vector3 e = ba.Normalize();
-//	// 内積
-//	float dot = Vector3::Dot(d, e);
-//
-//	float t = dot / length;
-//	t = std::clamp<float>(t, 0.0f, 1.0f);
-//	// 線形補間
-//	Vector3 f;
-//	f.x = (1.0f - t) * capsule.start.x + t * capsule.end.x;
-//	f.y = (1.0f - t) * capsule.start.y + t * capsule.end.y;
-//	f.z = (1.0f - t) * capsule.start.z + t * capsule.end.z;
-//
-//	// 最近接点
-//	Vector3 closestPoint = {
-//		std::clamp(f.x, aabb.min.x, aabb.max.x),
-//		std::clamp(f.y, aabb.min.y, aabb.max.y),
-//		std::clamp(f.z, aabb.min.z, aabb.max.z),
-//	};
-//
-//	float dist = (closestPoint - f).Length();
-//	return dist <= capsule.radius;
-//}
+bool AABB::CheckCollision(Sphere& c) {
+	AABB::Data aabb(*this);
+	Sphere::Data sphere(c);
+
+	// 最近接点
+	Vector3 closestPoint = {
+		std::clamp(sphere.position.x, aabb.min.x, aabb.max.x),
+		std::clamp(sphere.position.y, aabb.min.y, aabb.max.y),
+		std::clamp(sphere.position.z, aabb.min.z, aabb.max.z),
+	};
+
+	float dist = (closestPoint - sphere.position).Length();
+	return dist <= sphere.radius;
+}
+/*
+bool AABB::CheckCollision(Capsule& c) {
+	AABB::Data aabb(this);
+	Capsule::Data capsule(c);
+
+	Vector3 d = aabb.center - capsule.start;
+	Vector3 ba = capsule.end - capsule.start;
+	// カプセルのベクトルの長さ
+	float length = ba.Length();
+	// 正規化
+	Vector3 e = ba.Normalize();
+	// 内積
+	float dot = Vector3::Dot(d, e);
+
+	float t = dot / length;
+	t = std::clamp<float>(t, 0.0f, 1.0f);
+	// 線形補間
+	Vector3 f;
+	f.x = (1.0f - t) * capsule.start.x + t * capsule.end.x;
+	f.y = (1.0f - t) * capsule.start.y + t * capsule.end.y;
+	f.z = (1.0f - t) * capsule.start.z + t * capsule.end.z;
+
+	// 最近接点
+	Vector3 closestPoint = {
+		std::clamp(f.x, aabb.min.x, aabb.max.x),
+		std::clamp(f.y, aabb.min.y, aabb.max.y),
+		std::clamp(f.z, aabb.min.z, aabb.max.z),
+	};
+
+	float dist = (closestPoint - f).Length();
+	return dist <= capsule.radius;
+}
+*/
 
 void AABB::Hit() {
 #if DEMO

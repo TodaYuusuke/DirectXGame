@@ -1,5 +1,6 @@
 #pragma once
 #include "shape/cAABB.h"
+#include "shape/cSphere.h"
 
 #include "Mask.h"
 
@@ -28,7 +29,7 @@ namespace LWP::Object::Collider {
 		bool isActive = true;
 		
 		// Variant
-		using ShapeVariant = std::variant<AABB>;
+		using ShapeVariant = std::variant<AABB, Sphere>;
 
 		// ブロードフェーズのコライダー形状
 		ShapeVariant broad;
@@ -84,6 +85,19 @@ namespace LWP::Object::Collider {
 		void DebugGUI();
 
 
+		/// <summary>
+		/// ブロードフェーズの形状をセットする関数
+		/// </summary>
+		/// <typeparam name="T">IColliderShapeを継承したクラスのみ</typeparam>
+		/// <param name="t">代入する実態</param>
+		/// <returns>代入された実体への参照を返す</returns>
+		template<IsICollider T>
+		T& SetBroadShape(const T& t) {
+			broad = t;
+			GetBasePtr(broad)->SetFollowPtr(&worldTF);	// followをセット
+			return std::get<T>(broad);
+		}
+
 	private: // ** メンバ変数 ** //
 
 		// 自身のシリアル番号
@@ -99,11 +113,14 @@ namespace LWP::Object::Collider {
 		/// </summary>
 		/// <param name="variant">共通化された型</param>
 		/// <returns>基底クラス型のポインタ</returns>
-		ICollisionShape* GetBasePtr(ShapeVariant& variant) {
-			return std::visit([](auto& shape) -> ICollisionShape* {
-				return &shape;
-			}, variant);
-		}
+		ICollisionShape* GetBasePtr(ShapeVariant& variant);
+		
+		/// <summary>
+		/// 現在の型名を取得する関数
+		/// </summary>
+		/// <param name="variant">共通化された型</param>
+		/// <returns>現在入っているクラス名</returns>
+		std::string GetCurrentTypeName(const ShapeVariant& variant);
 
 		/// <summary>
 		/// 共通化変数同士の当たり判定チェックの関数（ブロードフェーズ）

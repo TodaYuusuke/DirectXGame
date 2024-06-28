@@ -1,7 +1,8 @@
 #include "cAABB.h"
 #include "cSphere.h"
-#include "cCapsule.h"
+//#include "cCapsule.h"
 
+#include "resources/model/RigidModel.h"
 #include "base/ImGuiManager.h"
 
 using namespace LWP::Object::Collider;
@@ -17,37 +18,37 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	sphereModel.CreateFromSphereCol(*this);
+	sphereModel.CreateFromSphereCol(position, radius);
 	sphereModel.material.enableLighting = false;
 	sphereModel.isWireFrame = true;
 #endif
 }
 
-void Sphere::Update() {
-	ICollider::Update();
+Sphere::Sphere(const Sphere& other) {
+	*this = other;
+
 #if DEMO
-	sphereModel.CreateFromSphereCol(*this);	// cube再生成
+	// 立方体のインスタンスを作成
+	sphereModel.CreateFromSphereCol(position, radius);
+	sphereModel.material.enableLighting = false;
+	sphereModel.isWireFrame = true;
+#endif
+}
+
+
+void Sphere::Update() {
+#if DEMO
+	sphereModel.CreateFromSphereCol(position * follow_->GetAffineMatrix(), radius);	// Sphere再生成
+	sphereModel.worldTF.Parent(follow_);
 	// isActive切り替え
 	sphereModel.isActive = isShowWireFrame && isActive;
-	// hitしているときは色を変える
-	sphereModel.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+	// 色を白に戻す
+	sphereModel.material.color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
-	if (!isActive) { return; }
-
-	// データが変わったら再生成
-	if (followModel_.t && followModel_.GetChanged()) {
-		Create(followModel_.t);
-	}
+	//if (!isActive) { return; }
 }
-
-void Sphere::DebugGUI() {
-	ICollider::DebugGUI();
-	ImGui::DragFloat3("position", &position.x, 0.01f);
-	ImGui::DragFloat("radius", &radius, 0.01f);
-}
-
 
 void Sphere::Create(const LWP::Math::Vector3& pos) { Create(pos, 1.0f); }
 void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {
@@ -78,13 +79,18 @@ void Sphere::Create(LWP::Resource::RigidModel* model) {
 	radius = (max - position).Length();
 }
 
+void Sphere::DebugGUI() {
+	ImGui::DragFloat3("position", &position.x, 0.01f);
+	ImGui::DragFloat("radius", &radius, 0.01f);
+	ICollisionShape::DebugGUI();
+}
 
-bool Sphere::CheckCollision(AABB* c) {
-	return c->CheckCollision(this);
+bool Sphere::CheckCollision(AABB& c) {
+	return c.CheckCollision(*this);
 }
 //bool CheckCollision(OBB* c) {}
-bool Sphere::CheckCollision(Sphere* c) {
-	Sphere::Data data1(this);	// transformをかけたデータで計算する
+bool Sphere::CheckCollision(Sphere& c) {
+	Sphere::Data data1(*this);	// transformをかけたデータで計算する
 	Sphere::Data data2(c);
 
 	// 二つの球体の中心点間の距離を求める
@@ -92,6 +98,7 @@ bool Sphere::CheckCollision(Sphere* c) {
 	// 半径の合計よりも短ければ衝突
 	return dist.Length() <= (data1.radius + data2.radius);
 }
+/*
 bool Sphere::CheckCollision(Capsule* c) {
 	Sphere::Data sphere(this);
 	Capsule::Data capsule(c);
@@ -117,4 +124,19 @@ bool Sphere::CheckCollision(Capsule* c) {
 	// 当たっているかを判定
 	return distance < sphere.radius + capsule.radius;
 }
+*/
 
+void Sphere::Hit() {
+#if DEMO
+	// hitしているときは色を変える
+	sphereModel.material.color = Utility::Color(Utility::ColorPattern::RED);
+#endif
+}
+
+Sphere::Data::Data(Sphere& sphere) {
+	Matrix4x4 affine = sphere.follow_->GetAffineMatrix();
+	
+	position = sphere.position * affine;
+	radius = sphere.radius;
+	//radius = sphere.radius * sphere.follow_->scale.x;
+}

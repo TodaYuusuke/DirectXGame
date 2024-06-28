@@ -1,6 +1,6 @@
 #include "Sphere.h"
 #include "base/ImGuiManager.h"
-//#include "object/collider/cSphere.h"
+#include "object/collider/shape/cSphere.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;
@@ -85,14 +85,13 @@ void Sphere::Update() {
 int Sphere::GetVertexCount() const { return (subdivision + 1u) * (subdivision + 1u); }
 int Sphere::GetIndexCount() const { return subdivision * (subdivision - 1u) * 2u * 3u; }
 
-//void Sphere::CreateFromSphereCol(const LWP::Object::Collider::Sphere& sphere) {
-//	worldTF.translation = sphere.position;
-//	radius = sphere.radius;
-//	subdivision = 16;
-//	isWireFrame = true;
-//	CreateVertices();	// 再計算
-//	CreateIndexes();
-//}
+void Sphere::CreateFromSphereCol(const Math::Vector3& pos, const float rad) {
+	worldTF.translation = pos;
+	radius = rad;
+	subdivision = 16;
+	CreateVertices();	// 再計算
+	CreateIndexes();
+}
 
 void Sphere::DerivedDebugGUI(const std::string& label) {
 	int s = static_cast<int>(subdivision);

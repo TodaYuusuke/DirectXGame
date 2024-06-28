@@ -27,6 +27,8 @@ namespace LWP::Object::Collider {
 		// コンストラクタ
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
+		// コピーコンストラクタ
+		AABB(const AABB& other);
 
 		// 固有の更新処理
 		void Update() override;
@@ -52,7 +54,7 @@ namespace LWP::Object::Collider {
 
 		bool CheckCollision(AABB& c) override;
 		//bool CheckCollision(OBB& c)  override;
-		//bool CheckCollision(Sphere& c)  override;
+		bool CheckCollision(Sphere& c)  override;
 		//bool CheckCollision(Capsule& c)  override;
 
 		// ヒット時の処理をまとめた関数

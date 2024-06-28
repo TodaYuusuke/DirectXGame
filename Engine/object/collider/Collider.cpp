@@ -1,5 +1,6 @@
 #include "Collider.h"
 #include "base/ImGuiManager.h"
+#include "utility/MyUtility.h"
 #include "component/System.h"
 
 #include <typeinfo>
@@ -82,6 +83,12 @@ void Collider::DebugGUI() {
 	
 	// ブロードフェーズ
 	if (ImGui::TreeNode("Broad")) {
+		ImGui::Text("Shape Type : %s", Utility::TrimmingString(GetCurrentTypeName(broad), 29, 0).c_str());
+		if (ImGui::BeginMenu("Change Shape Type")) {
+			if (ImGui::MenuItem("AABB")) { SetBroadShape(AABB()); }
+			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
+			ImGui::EndMenu();
+		}
 		GetBasePtr(broad)->DebugGUI();
 		ImGui::TreePop();
 	}
@@ -90,7 +97,7 @@ void Collider::DebugGUI() {
 		std::vector<const char*> itemText;
 		static int currentItem = 0;
 		for (ShapeVariant& v : narrows) {
-			itemText.push_back(typeid(v).name());
+			itemText.push_back(Utility::TrimmingString(typeid(v).name(), 48, 1).c_str());
 		}
 		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
 		GetBasePtr(narrows[currentItem])->DebugGUI();
@@ -110,9 +117,20 @@ bool Collider::CheckBroadCollision(ShapeVariant& c) {
 	}, broad, c);
 }
 
+ICollisionShape* Collider::GetBasePtr(ShapeVariant& variant) {
+	return std::visit([](auto& shape) -> ICollisionShape* {
+		return &shape;
+	}, variant);
+}
+std::string Collider::GetCurrentTypeName(const ShapeVariant& variant) {
+	return std::visit([](const auto& shape) {
+		return std::string(typeid(shape).name());
+	}, variant);
+}
+
 bool Collider::CheckNarrowsCollision(Collider* c) {
 	// 相手にナローがない場合
-	if (c - narrows.empty()) {
+	if (c->narrows.empty()) {
 		// ナロー一つ一つと相手のブロードを比較
 		for (ShapeVariant& narrow : narrows) {
 			if (std::visit([](auto& f, auto& t) {
