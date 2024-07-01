@@ -39,10 +39,11 @@ AABB::AABB(const AABB& other) {
 
 void AABB::Update() {
 #if DEMO
-	cube.CreateFromAABB(*this);	// cube再生成
-	cube.worldTF.Parent(follow_);
-	follow_->rotation.Init();
-	cube.worldTF.rotation.Init();
+	Vector3 worldPos = follow_->GetWorldPosition();
+	Vector3 worldMin = min + worldPos;
+	Vector3 worldMax = max + worldPos;
+	cube.CreateVertices(worldMin, worldMax);	// cube再生成
+	//follow_->rotation.Init();
 	// isActive切り替え
 	cube.isActive = isShowWireFrame && isActive;
 	// 色を白に戻す
@@ -125,7 +126,15 @@ bool AABB::CheckCollision(Sphere& c) {
 	};
 
 	float dist = (closestPoint - sphere.position).Length();
-	return dist <= sphere.radius;
+	bool result = dist <= sphere.radius;
+
+#if DEMO
+	if (result) {
+		Hit();
+		c.Hit();
+	}
+#endif
+	return result;
 }
 /*
 bool AABB::CheckCollision(Capsule& c) {
@@ -169,8 +178,11 @@ void AABB::Hit() {
 }
 
 AABB::Data::Data(AABB& aabb) {
-	Matrix4x4 affine = aabb.follow_->GetScaleMatrix() * aabb.follow_->GetTranslationMatrix();
-	min = aabb.min * affine;
-	max = aabb.max * affine;
+	//Matrix4x4 affine = aabb.follow_->GetScaleMatrix() * aabb.follow_->GetTranslationMatrix();
+	//min = aabb.min * affine;
+	//max = aabb.max * affine;
+	Vector3 worldPos = aabb.follow_->GetWorldPosition();
+	min = aabb.min + worldPos;
+	max = aabb.max + worldPos;
 	center = (min + max) / 2.0f;
 }

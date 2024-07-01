@@ -38,8 +38,7 @@ Sphere::Sphere(const Sphere& other) {
 
 void Sphere::Update() {
 #if DEMO
-	sphereModel.CreateFromSphereCol(position * follow_->GetAffineMatrix(), radius);	// Sphere再生成
-	sphereModel.worldTF.Parent(follow_);
+	sphereModel.CreateFromSphereCol(position + follow_->GetWorldPosition(), radius);	// Sphere再生成
 	// isActive切り替え
 	sphereModel.isActive = isShowWireFrame && isActive;
 	// 色を白に戻す
@@ -134,9 +133,9 @@ void Sphere::Hit() {
 }
 
 Sphere::Data::Data(Sphere& sphere) {
-	Matrix4x4 affine = sphere.follow_->GetAffineMatrix();
-	
-	position = sphere.position * affine;
+	position = sphere.position + sphere.follow_->GetWorldPosition();
+	ImGui::Begin("Test");
+	ImGui::DragFloat3("t", &position.x);
+	ImGui::End();
 	radius = sphere.radius;
-	//radius = sphere.radius * sphere.follow_->scale.x;
 }
