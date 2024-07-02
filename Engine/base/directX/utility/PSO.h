@@ -54,10 +54,10 @@ namespace LWP::Base {
 		// グラフィックパイプラインの状態を定義
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> state_ = nullptr;
 		// PSOの種類
-		Type type_;
+		Type type_ = Type::Vertex;
 		// PSOの詳細
 		union Desc {
-			D3D12_GRAPHICS_PIPELINE_STATE_DESC vertex;
+			D3D12_GRAPHICS_PIPELINE_STATE_DESC vertex{};
 			D3DX12_MESH_SHADER_PIPELINE_STATE_DESC mesh;
 
 			Desc() {};
