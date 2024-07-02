@@ -24,28 +24,30 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 	capsuleModel.isWireFrame = true;
 #endif
 };
+// コピーコンストラクタ
+Capsule::Capsule(const Capsule& other) {
+	*this = other;
+
+#if DEMO
+	// カプセルモデルを生成
+	capsuleModel.CreateFromCapsuleCol(*this);
+	capsuleModel.material.enableLighting = false;
+	capsuleModel.isWireFrame = true;
+#endif
+}
 
 
 void Capsule::Update() {
-	ICollider::Update();
 #if DEMO
 	capsuleModel.CreateFromCapsuleCol(*this);	// Capsule再生成
 	// isActive切り替え
 	capsuleModel.isActive = isShowWireFrame && isActive;
-	// hitしているときは色を変える
-	capsuleModel.material.color = Utility::Color(preHit ? Utility::ColorPattern::RED : Utility::ColorPattern::WHITE);
+	// 色を白に戻す
+	capsuleModel.material.color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
 	//if (!isActive) { return; }
-}
-
-void Capsule::DebugGUI() {
-	ICollider::DebugGUI();
-
-	ImGui::DragFloat3("start", &start.x, 0.01f);
-	ImGui::DragFloat3("end", &end.x, 0.01f);
-	ImGui::DragFloat("radius", &radius, 0.01f);
 }
 
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_) { Create(start_, end_, 1.0f); }
@@ -55,15 +57,35 @@ void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3&
 	radius = rad_;
 }
 
+void Capsule::DebugGUI() {
+	ImGui::DragFloat3("start", &start.x, 0.01f);
+	ImGui::DragFloat3("end", &end.x, 0.01f);
+	ImGui::DragFloat("radius", &radius, 0.01f);
+	ICollisionShape::DebugGUI();
+}
 
-bool Capsule::CheckCollision(AABB* c) {
-	return c->CheckCollision(this);
+bool Capsule::CheckCollision(AABB& c) {
+	return c.CheckCollision(*this);
 }
-//bool CheckCollision(OBB* c)  override;
-bool Capsule::CheckCollision(Sphere* c) {
-	return c->CheckCollision(this);
+//bool CheckCollision(OBB& c);
+bool Capsule::CheckCollision(Sphere& c) {
+	return c.CheckCollision(*this);
 }
-bool Capsule::CheckCollision(Capsule* c) {
+bool Capsule::CheckCollision(Capsule& c) {
 	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
 	c; return false;
+}
+
+void Capsule::Hit() {
+#if DEMO
+	// hitしているときは色を変える
+	capsuleModel.material.color = Utility::Color(Utility::ColorPattern::RED);
+#endif
+}
+
+Capsule::Data::Data(Capsule& cap) {
+	Vector3 worldPos = cap.follow_->GetWorldPosition();
+	start = cap.start + worldPos;
+	end = cap.end + worldPos;
+	radius = cap.radius;
 }

@@ -1,6 +1,6 @@
 #include "cAABB.h"
 #include "cSphere.h"
-//#include "cCapsule.h"
+#include "cCapsule.h"
 
 #include "resources/model/RigidModel.h"
 #include "base/ImGuiManager.h"
@@ -95,11 +95,18 @@ bool Sphere::CheckCollision(Sphere& c) {
 	// 二つの球体の中心点間の距離を求める
 	Vector3 dist = data1.position - data2.position;
 	// 半径の合計よりも短ければ衝突
-	return dist.Length() <= (data1.radius + data2.radius);
+	bool result = dist.Length() <= (data1.radius + data2.radius);
+
+#if DEMO
+	if (result) {
+		Hit();
+		c.Hit();
+	}
+#endif
+	return result;
 }
-/*
-bool Sphere::CheckCollision(Capsule* c) {
-	Sphere::Data sphere(this);
+bool Sphere::CheckCollision(Capsule& c) {
+	Sphere::Data sphere(*this);
 	Capsule::Data capsule(c);
 
 	Vector3 d = sphere.position - capsule.start;
@@ -121,9 +128,17 @@ bool Sphere::CheckCollision(Capsule* c) {
 	float distance = (sphere.position - f).Length();
 
 	// 当たっているかを判定
-	return distance < sphere.radius + capsule.radius;
+	bool result = distance < sphere.radius + capsule.radius;
+
+#if DEMO
+	if (result) {
+		Hit();
+		c.Hit();
+	}
+#endif
+	return result;
+
 }
-*/
 
 void Sphere::Hit() {
 #if DEMO

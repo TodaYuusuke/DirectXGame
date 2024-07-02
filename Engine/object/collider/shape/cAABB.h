@@ -55,7 +55,7 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(AABB& c) override;
 		//bool CheckCollision(OBB& c)  override;
 		bool CheckCollision(Sphere& c)  override;
-		//bool CheckCollision(Capsule& c)  override;
+		bool CheckCollision(Capsule& c)  override;
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;

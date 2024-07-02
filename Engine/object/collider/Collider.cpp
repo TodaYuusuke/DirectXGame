@@ -87,6 +87,9 @@ void Collider::DebugGUI() {
 		if (ImGui::BeginMenu("Change Shape Type")) {
 			if (ImGui::MenuItem("AABB")) { SetBroadShape(AABB()); }
 			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
+			if (ImGui::MenuItem("Capsule")) { 
+				SetBroadShape(Capsule());
+			}
 			ImGui::EndMenu();
 		}
 		GetBasePtr(broad)->DebugGUI();

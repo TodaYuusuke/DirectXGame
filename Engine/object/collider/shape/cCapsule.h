@@ -1,5 +1,5 @@
 #pragma once
-#include "ICollider.h"
+#include "ICollisionShape.h"
 
 #if DEMO
 #include "primitive/3d/Capsule.h"
@@ -10,7 +10,7 @@ namespace LWP::Object::Collider {
 	/// 当たり判定用のCapsuleクラス
 	/// </summary>
 	class Capsule
-		: public ICollider {
+		: public ICollisionShape {
 	public: // ** パブリックなメンバ変数 ** //
 		// 始点
 		LWP::Math::Vector3 start = { 0.0f,0.0f,0.0f };
@@ -26,27 +26,21 @@ namespace LWP::Object::Collider {
 		Capsule(const LWP::Math::Vector3& start);
 		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
 		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
+		// コピーコンストラクタ
+		Capsule(const Capsule& other);
 
 		// 固有の更新処理
 		void Update() override;
-		// ImGuiの派生クラス
-		void DebugGUI() override;
 
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
 		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
+		
 		// 形状を返す
 		Shape GetShape() override { return Shape::Capsule; }
+		// ImGuiの派生クラス
+		void DebugGUI() override;
 
-		// Observer用（==）
-		bool operator==(const Capsule& other) {
-			return {
-				followModel_.GetChanged() &&
-				start == other.start &&
-				end == other.end &&
-				radius == other.radius
-			};
-		}
 
 #if DEMO
 	private:
@@ -56,11 +50,13 @@ namespace LWP::Object::Collider {
 
 	public: // ** 各形状との当たり判定関数 ** //
 
-		bool CheckCollision(AABB* c) override;
-		//bool CheckCollision(OBB* c)  override;
-		bool CheckCollision(Sphere* c)  override;
-		bool CheckCollision(Capsule* c)  override;
+		bool CheckCollision(AABB& c) override;
+		//bool CheckCollision(OBB& c)  override;
+		bool CheckCollision(Sphere& c)  override;
+		bool CheckCollision(Capsule& c)  override;
 
+		// ヒット時の処理をまとめた関数
+		void Hit() override;
 
 		// 当たり判定計算に適したデータ構造体
 		struct Data {
@@ -72,11 +68,7 @@ namespace LWP::Object::Collider {
 			float radius;
 
 			// コンストラクタ
-			Data(Capsule* cap) {
-				start = cap->start;
-				end = cap->end;
-				radius = cap->radius;
-			}
+			Data(Capsule& cap);
 		};
 	};
 };

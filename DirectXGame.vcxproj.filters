@@ -256,6 +256,7 @@
     <ClCompile Include="Engine\object\collider\shape\cAABB.cpp" />
     <ClCompile Include="Engine\object\collider\shape\ICollisionShape.cpp" />
     <ClCompile Include="Engine\object\collider\shape\cSphere.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cCapsule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -603,6 +604,7 @@
     <ClInclude Include="Engine\object\collider\shape\ICollisionShape.h" />
     <ClInclude Include="Engine\object\collider\shape\cAABB.h" />
     <ClInclude Include="Engine\object\collider\shape\cSphere.h" />
+    <ClInclude Include="Engine\object\collider\shape\cCapsule.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

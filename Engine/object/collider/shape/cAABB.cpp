@@ -1,6 +1,6 @@
 #include "cAABB.h"
 #include "cSphere.h"
-//#include "cCapsule.h"
+#include "cCapsule.h"
 
 #include "resources/model/RigidModel.h"
 #include "base/ImGuiManager.h"
@@ -136,9 +136,8 @@ bool AABB::CheckCollision(Sphere& c) {
 #endif
 	return result;
 }
-/*
 bool AABB::CheckCollision(Capsule& c) {
-	AABB::Data aabb(this);
+	AABB::Data aabb(*this);
 	Capsule::Data capsule(c);
 
 	Vector3 d = aabb.center - capsule.start;
@@ -166,9 +165,16 @@ bool AABB::CheckCollision(Capsule& c) {
 	};
 
 	float dist = (closestPoint - f).Length();
-	return dist <= capsule.radius;
+	bool result = dist <= capsule.radius;
+
+#if DEMO
+	if (result) {
+		Hit();
+		c.Hit();
+	}
+#endif
+	return result;
 }
-*/
 
 void AABB::Hit() {
 #if DEMO
