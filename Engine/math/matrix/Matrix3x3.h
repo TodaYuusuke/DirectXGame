@@ -7,10 +7,16 @@
 /// </summary>
 namespace LWP::Math {
 	class Vector2;
+	class Matrix4x4;
 
 	class Matrix3x3 final {
 	public:
 		float m[3][3];
+
+
+		// コンストラクタ
+		Matrix3x3() = default;
+		Matrix3x3(const Matrix4x4& m);
 
 		// *** オペーレーターオーバーロード *** //
 

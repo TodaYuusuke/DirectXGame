@@ -75,6 +75,8 @@ namespace LWP::Base {
 		RenderData rigid_;
 		// スキニングモデル
 		RenderData skinning_;
+		// 静的モデル
+		RenderData static_;
 
 
 	private: // ** プライベートなメンバ関数 ** //

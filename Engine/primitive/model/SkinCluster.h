@@ -20,7 +20,8 @@ namespace LWP::Primitive {
 		// JointのInverseBindPoseMatrixがIndex順に保存されているだけのもの
 		std::vector<Math::Matrix4x4> inverseBindPoseMatrices;
 		//std::vector<VertexInfluence> mappedInfluence;
-		std::vector<WellForGPU> mappedPalette;
+		//std::vector<WellForGPU> mappedPalette;
+
 
 	public: // ** メンバ関数 ** //
 

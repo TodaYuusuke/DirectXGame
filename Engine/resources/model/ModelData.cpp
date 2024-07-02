@@ -125,8 +125,8 @@ void ModelData::Load(const std::string& filePath) {
 	std::memcpy(buffers_.uniqueVertexIndices->data_, uniqueVertices.data(), sizeof(uint8_t) * uniqueVertices.size());
 	std::memcpy(buffers_.primitiveIndices->data_, primitiveIndices.data(), sizeof(DirectX::MeshletTriangle) * primitiveIndices.size());
 	std::memcpy(buffers_.materials->data_, materials.data(), sizeof(Base::MaterialStruct) * materials.size());
-}
 
+}
 
 std::vector<Vertex> ModelData::GetVertices() const {
 	std::vector<Vertex> result;

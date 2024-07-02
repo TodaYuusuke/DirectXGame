@@ -17,20 +17,12 @@ HeapManager::HeapManager(GPUDevice* gpuDevice) {
 }
 
 void HeapManager::DebugGUI() {
-#if DEMO
-	ImGui::Begin("LWP", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::BeginTabItem("Base")) {
 
-	if (ImGui::BeginTabBar("LWP")) {
-		if (ImGui::BeginTabItem("Base")) {
+		rtv_->DebugGUI();
+		srv_->DebugGUI();
+		dsv_->DebugGUI();
 
-			rtv_->DebugGUI();
-			srv_->DebugGUI();
-			dsv_->DebugGUI();
-
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
+		ImGui::EndTabItem();
 	}
-	ImGui::End();
-#endif
 }

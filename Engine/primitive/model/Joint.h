@@ -15,7 +15,7 @@ namespace LWP::Primitive {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// トランスフォーム（クォータニオン）
-		Object::TransformQuat transform;
+		Object::TransformQuat localTF;
 		// skeletonSpaceでの変換行列
 		Math::Matrix4x4 skeletonSpaceMatrix;
 		// 名前

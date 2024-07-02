@@ -1,7 +1,7 @@
 #include "Capsule.h"
 #include "base/ImGuiManager.h"
 
-#include "object/collider/cCapsule.h"
+#include "object/collider/shape/cCapsule.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;

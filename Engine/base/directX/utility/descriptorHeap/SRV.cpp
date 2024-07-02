@@ -162,6 +162,21 @@ SRVInfo SRV::CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER
 	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
+UAVInfo SRV::CreateRWStructuredBuffer(ID3D12Resource* resource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& desc) {
+	// SRVの登録情報
+	UAVInfo info;
+
+	// 設定をコピー
+	info.desc = desc;
+	// 空きを使用
+	info.index = indexManager_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに登録
+	device_->CreateUnorderedAccessView(resource, nullptr, &info.desc, info.cpuView);
+	return info;
+}
 
 
 SRVInfo SRV::CreateShadowMapDir(ID3D12Resource* resource) {

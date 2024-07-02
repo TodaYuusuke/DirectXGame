@@ -12,8 +12,9 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	model.LoadShortPath("human/walk.gltf");
 	//model.LoadShortPath("human/simpleSkin.gltf");
 	model.worldTF.translation.y = 0.4f;
+	//model.worldTF.scale = { 3.0f,3.0f,3.0f };
 	model.worldTF.scale = { 0.4f,0.4f,0.4f };
-	model.enableLighting = true;
+	model.SetAllMaterialLighting(true);
 	// アニメーション用意
 	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
 	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);
@@ -32,10 +33,10 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	pl.transform.translation.z = 2.0f;
 	pl.transform.translation.y = 1.75f;
 	pl.radius = 13.0f;
-	pl.intensity = 0.4f;
+	pl.intensity = 0.7f;
 	pl.isActive = true;
 
-
+	walkAnim.Start();
 }
 
 // 更新
@@ -65,47 +66,30 @@ void Player::Move() {
 	}
 
 	// コントローラーでの移動
-	dir.x += Pad::GetLStick(0).x;
-	dir.z += Pad::GetLStick(0).y;
+	dir.x += Pad::GetLStick().x;
+	dir.z += Pad::GetLStick().y;
 
 	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
 	model.worldTF.translation += dir * kPlayerSpeed;
 
 	if (dir.Length() > 0.0f) {
-		// オイラー角
-		Vector3& rotation = model.worldTF.rotation;
-
-		// 目的の角度
-		Vector3 goalRotation = { 0.0f, 0.0f, 0.0f };
-		// Y軸周りの角度
-		goalRotation.y = std::atan2f(dir.x, dir.z);
-		// モデルの回転分補正
-		//goalRotation.y -= 1.57f;
-		// X軸周りの角度
-		//goalRotation.x = std::atan2f(-dir.y, Vector3{ dir.x, 0.0f, dir.z }.Length());
-
-		// 現在の角度と目標の角度を比較し、逆回転の場合に調整
-		if (std::abs(rotation.y - goalRotation.y) > M_PI) {
-			if (rotation.y > goalRotation.y) {
-				rotation.y -= static_cast<float>(2.0f * M_PI);
-			}
-			else {
-				rotation.y += static_cast<float>(2.0f * M_PI);
-			}
-		}
-
-		// 回転適応
-		rotation.y = goalRotation.y;
-		//rotation = Utility::Interp::Slerp(rotation, goalRotation, 0.2f);
-
-		// 歩いているのでアニメーション起動
+		// 現在プレイヤーの向いている角度
+		Vector3 currentDir = Vector3{ 0.0f,0.0f,1.0f } * model.worldTF.rotation;
+		currentDir;
+		// 回転
+		model.worldTF.rotation =
+			Utility::Interp::SlerpQuaternion(
+				model.worldTF.rotation,
+				model.worldTF.rotation * Quaternion::DirectionToDirection(currentDir, dir), 0.8f);
+		// 歩いているのでアニメーション
 		if (walkAnim.isEnd()) {
 			walkAnim.Start();
 		}
 	}
 	else {
-		// 歩いていないでアニメーションストップ（無理やり0秒地点に固定している）
-		walkAnim.Start();
+		// 止まってるのでアニメーションストップ
+		walkAnim.Stop();
+		walkAnim.Init();
 	}
 }
 
@@ -129,16 +113,15 @@ void Player::FollowCameraUpdate() {
 	}
 
 	// コントローラーでの回転
-	dir.x += Pad::GetRStick(0).y;
-	dir.y += Pad::GetRStick(0).x;
+	dir.x += Pad::GetRStick().y;
+	dir.y += Pad::GetRStick().x;
 
 	// 正規化してから使用
 	dir = dir.Normalize();
 
-	// 移動量のクォータニオン
-	Quaternion quat = Quaternion::ConvertEuler(Vector3{ 0.0f,dir.y, 0.0f } *kFollowCameraSpeed);
 	// カメラを回転させる
-	camera_->transform.rotation *= quat;
+	camera_->transform.rotation *= Quaternion::CreateFromAxisAngle(Vector3{ 0.0f, 1.0f, 0.0f }, dir.y * kFollowCameraSpeed);
+	//camera_->transform.rotation *= Quaternion::CreateFromAxisAngle(Vector3{ 1.0f, 0.0f, 0.0f } * camera_->transform.rotation, dir.x * kFollowCameraSpeed);
 	// カメラの座標を決定
 	camera_->transform.translation = model.worldTF.GetWorldPosition() + cameraOffset_ * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation);
 	// カメラから追従対象に対する角度を求める

@@ -46,6 +46,11 @@ namespace LWP::Base {
 		/// </summary>
 		void DrawCall();
 
+		/// <summary>
+		/// Debug用GUI
+		/// </summary>
+		void DebugGUI();
+
 		// アクセサ
 		GPUDevice* GetGPUDevice() const { return gpuDevice_.get(); }
 		ID3D12Device* GetDevice() const { return device_; }

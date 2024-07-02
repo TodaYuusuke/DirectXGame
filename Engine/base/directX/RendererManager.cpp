@@ -71,6 +71,7 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 	// ノーマルレンダラー初期化
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
 	meshRenderer_.Init(device, srv_, dxc_, meshFunc);
+	meshRenderer_.SetBufferGroup(&buffers_);
 	// ポストプロセスレンダラー初期化
 	ppRender_.Init();
 	// コピーレンダラー初期化

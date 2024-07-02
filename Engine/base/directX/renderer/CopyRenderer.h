@@ -11,8 +11,8 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 		// 通常描画のターゲット構造体
 		struct Target {
-			RenderResource* src;	// BackBuffer（RenderRsource）
-			RenderResource* dst;	// BackBuffer（RenderRsource）
+			RenderResource* src;	// BackBuffer（RenderResource）
+			RenderResource* dst;	// BackBuffer（RenderResource）
 		};
 
 

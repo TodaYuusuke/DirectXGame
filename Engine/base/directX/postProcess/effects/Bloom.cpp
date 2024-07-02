@@ -11,15 +11,16 @@ void Bloom::Init() {
 	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
 	DXC* dxc = System::engine->directXCommon_->GetDXC();
 
-	intensity = 1.0f;
+	threshold = 0.95f;
 
 
 	buffer_.Init(dev);
 
 	brightnessFilter.rr.Init(dev, heaps);
 	gaussX.rr.Init(dev, heaps);
-
-	brightnessFilter.root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
+	// 輝度抽出
+	brightnessFilter.root.AddCBVParameter(0, SV_Pixel)
+		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
 		.Build(dev->GetDevice());
 	brightnessFilter.pso.Init(brightnessFilter.root, dxc)
@@ -27,7 +28,7 @@ void Bloom::Init() {
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
 		.SetPixelShader("postProcess/bloom/BrightnessFilter.PS.hlsl")
 		.Build(dev->GetDevice());
-
+	// X軸ガウシアンブラー
 	gaussX.root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
 		.Build(dev->GetDevice());
@@ -36,7 +37,7 @@ void Bloom::Init() {
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
 		.SetPixelShader("postProcess/bloom/GaussianBlurX.PS.hlsl")
 		.Build(dev->GetDevice());
-
+	// Y軸ガウシアンブラー
 	gaussY.Init(gaussX.root, dxc)
 		.SetDepthStencilState(false)
 		.SetBlendState(PSO::BlendMode::Add)
@@ -45,7 +46,7 @@ void Bloom::Init() {
 		.Build(dev->GetDevice());
 }
 void Bloom::Update() {
-	*buffer_.data_ = intensity;
+	*buffer_.data_ = threshold;
 }
 
 void Bloom::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) { stream; root; i; }
@@ -76,7 +77,8 @@ void Bloom::PreCommand(ID3D12GraphicsCommandList* list, RenderResource* target) 
 	list->SetGraphicsRootSignature(brightnessFilter.root);
 	list->SetPipelineState(brightnessFilter.pso.GetState());
 	// テクスチャのバインド
-	list->SetGraphicsRootDescriptorTable(0, target->srvInfo.gpuView);
+	list->SetGraphicsRootConstantBufferView(0, buffer_.GetGPUView());
+	list->SetGraphicsRootDescriptorTable(1, target->srvInfo.gpuView);
 
 	// リソースバリアをセット
 	target->ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);	// 加工する画像
@@ -134,7 +136,7 @@ void Bloom::PreCommand(ID3D12GraphicsCommandList* list, RenderResource* target) 
 
 void Bloom::DebugGUI() {
 	if (ImGui::TreeNode("Bloom")) {
-		ImGui::DragFloat("Intensity", &intensity, 0.01f);
+		ImGui::DragFloat("Threshold", &threshold, 0.01f);
 		ImGui::Checkbox("Use", &use);
 		ImGui::TreePop();
 	}

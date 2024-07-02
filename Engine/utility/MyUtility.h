@@ -36,6 +36,16 @@ namespace LWP::Utility {
 
 
 	/// <summary>
+	/// stringから前n文字、後m文字を削除する関数
+	/// </summary>
+	/// <param name="str"></param>
+	/// <param name="n"></param>
+	/// <param name="m"></param>
+	/// <returns></returns>
+	std::string TrimmingString(const std::string& str, std::size_t n, std::size_t m);
+
+
+	/// <summary>
 	/// パスを１つ上のディレクトリパスのパスに変換する関数
 	/// </summary>
 	/// <param name="filePath"></param>
@@ -87,12 +97,12 @@ namespace LWP::Utility {
 	/// <summary>
 	/// radian から degreeへ
 	/// </summary>
-	int RadianToDegree(float radian);
+	float RadianToDegree(float radian);
 
 	/// <summary>
 	/// degree から radian へ
 	/// </summary>
-	float DegreeToRadian(int degree);
+	float DegreeToRadian(float degree);
 
 
 	// インデックスを指定してstd::listのイテレーターを取得する関数

@@ -24,6 +24,19 @@ Animation::~Animation() {
 	DeleteInstance(this);
 }
 
+void Animation::Init() {
+	time_ = 0.0f;
+	for (Joint& joint : modelPtr_->skeleton.joints) {
+		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_).Normalize();
+			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
+		}
+	}
+}
+
 void Animation::Start() { Start(0.0f); }
 void Animation::Start(float startSec) {
 	isStart_ = true;
@@ -43,15 +56,23 @@ void Animation::Update() {
 	for (Joint& joint : modelPtr_->skeleton.joints) {
 		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
 		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
+			if (joint.name == "mixamorig:RightUpLeg") {
+				printf("");
+			}
 			const NodeAnimation& rootNodeAnimation = (*it).second;
-			joint.transform.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
-			joint.transform.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_);
-			joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
+			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_).Normalize();
+			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
 		}
 	}
 }
 
 bool Animation::isEnd() { return !isStart_; }
+
+void Animation::DebugGUI() {
+	ImGui::SliderFloat("time", &time_, 0.0f, duration_);
+	ImGui::Checkbox("isStart", &isStart_);
+}
 
 void Animation::LoadAnimation(std::string filepath, Resource::SkinningModel* ptr) {
 	return LoadAnimationLongPath(kDirectoryPath + filepath, ptr);

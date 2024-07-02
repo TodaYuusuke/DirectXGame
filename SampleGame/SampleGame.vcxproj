@@ -149,16 +149,19 @@
   <ItemGroup>
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="scene\ColliderTest.cpp" />
+    <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
-    <ClCompile Include="scene\Test.cpp" />
+    <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
+    <ClCompile Include="scene\Test\Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\particle\DamageParticle.h" />
     <ClInclude Include="class\player\Player.h" />
-    <ClInclude Include="scene\ColliderTest.h" />
+    <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\GameScene.h" />
-    <ClInclude Include="scene\Test.h" />
+    <ClInclude Include="scene\Test\LevelLoaderTest.h" />
+    <ClInclude Include="scene\Test\Test.h" />
+    <ClInclude Include="scene\Test\TestIncludes.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXGame.vcxproj">

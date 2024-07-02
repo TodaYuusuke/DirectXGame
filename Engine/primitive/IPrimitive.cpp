@@ -14,6 +14,20 @@ IPrimitive::IPrimitive() {
 	// 管理クラスにポインタを送信
 	SetInstance(this);
 }
+IPrimitive::IPrimitive(const IPrimitive& other) {
+	name = other.name;
+	vertices = other.vertices;
+	indexes = other.indexes;
+	worldTF = other.worldTF;
+	material = other.material;
+	isUI = other.isUI;
+	isWireFrame = other.isWireFrame;
+	isActive = other.isActive;
+
+	// 管理クラスにポインタを送信
+	SetInstance(this);
+}
+
 
 IPrimitive::~IPrimitive() {
 	// 管理クラスのポインタを削除

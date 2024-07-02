@@ -10,7 +10,7 @@ using namespace LWP::Math;
 using namespace LWP::Primitive;
 
 SkinCluster::SkinCluster(uint32_t size) {
-	mappedPalette.resize(size);
+	//mappedPalette.resize(size);
 
 	inverseBindPoseMatrices.resize(size);
 	for (int i = 0; i < inverseBindPoseMatrices.size(); i++) {

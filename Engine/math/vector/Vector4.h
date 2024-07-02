@@ -4,6 +4,8 @@
 /// 4次元ベクトル
 /// </summary>
 namespace LWP::Math {
+	class Matrix4x4;
+
 	class Vector4 final {
 	public:
 		float x;
@@ -23,5 +25,8 @@ namespace LWP::Math {
 		Vector4 operator*(const float& other) const;
 		Vector4& operator*=(const float& other);
 		friend Vector4 operator*(float scalar, const Vector4& vec) { return vec * scalar; }
+		// Vector4 Multiply(*) Matrix4x4
+		Vector4 operator*(const Matrix4x4& other) const;
+		Vector4& operator*=(const Matrix4x4& other);
 	};
 }

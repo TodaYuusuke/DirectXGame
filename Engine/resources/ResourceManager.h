@@ -11,10 +11,11 @@
 // 3Dモデル
 #include "primitive/3d/OldMesh.h"
 #include "model/RigidModel.h"
-
 #include "model/SkinningModel.h"
+#include "model/StaticModel.h"
 #include "model/ModelData.h"
 
+#include "level/LevelData.h"
 
 #include "utility/PtrManager.h"
 
@@ -26,7 +27,6 @@ namespace LWP::Base {
 namespace LWP::Base {
 	struct InstanceData {
 		Base::WTFStruct wtf;
-		int32_t enableLighting;
 
 		InstanceData() = default;
 		InstanceData(const Resource::RigidModel& value);
@@ -46,8 +46,9 @@ namespace LWP::Resource {
 		struct Common {
 			uint32_t instanceCount = 0;
 			uint32_t materialCount = 0;
+			uint32_t jointCount = 0;
 		};
-		struct Buffer {
+		struct RigidBuffer {
 			// トランスフォームのバッファー
 			std::unique_ptr<Base::StructuredBuffer<Base::InstanceData>> inst;
 			// マテリアルバッファー
@@ -58,19 +59,32 @@ namespace LWP::Resource {
 			void Init();
 			void Reset(uint32_t mSize);
 		};
-		template<typename T>
+		struct SkinBuffer {
+			// トランスフォームのバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::InstanceData>> inst;
+			// マテリアルバッファー
+			std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> material;
+			// WellForGPUバッファー
+			std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> well;
+			// モデル別共通データ
+			Base::ConstantBuffer<Common> common;
+
+			void Init();
+			void Reset(uint32_t mSize);
+		};
+		template<typename T, typename U>
 		struct Pointers {
 			Utility::PtrManager<T*> ptrs;
-			Buffer buffer;
+			U buffer;
 
 			void Init() { buffer.Init(); }
 			void Reset(uint32_t mSize) { buffer.Reset(mSize); }
 		};
 		
-		template<typename U>
+		template<typename T, typename U>
 		struct FillMode {
-			Pointers<U> solid;
-			Pointers<U> wireFrame;
+			Pointers<T, U> solid;
+			Pointers<T, U> wireFrame;
 
 			void Init() {
 				solid.Init();
@@ -83,9 +97,12 @@ namespace LWP::Resource {
 		};
 
 		ModelData data;
-		FillMode<RigidModel> rigid;
-		FillMode<SkinningModel> skin;
+		
+		FillMode<RigidModel, RigidBuffer> rigid;
+		FillMode<SkinningModel, SkinBuffer> skin;
+		Utility::PtrManager<StaticModel*> statics;
 	};
+
 
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
@@ -125,6 +142,7 @@ namespace LWP::Resource {
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
 		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPointer(ptr); }
 		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPointer(ptr); }
+		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPointer(ptr); }
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
 		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
@@ -136,6 +154,7 @@ namespace LWP::Resource {
 			modelDataMap_[filePath].skin.solid.ptrs.DeletePointer(ptr);
 			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePointer(ptr);
 		}
+		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePointer(ptr); }
 		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
 		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 
@@ -172,19 +191,27 @@ namespace LWP::Resource {
 		// モーションの配列
 		Utility::PtrManager<Motion*> motions_;
 
-#if DEMO
-		// ImGui用変数
-		int selectedClass = 0;
-		int radioValue = 0;
-		int currentItem = 0;
-		// デバッグ用の生成したインスンタンスを格納しておく配列
-		std::vector<IModel*> debugModels;
-#endif
 
 	private:
 		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
 
 		void RigidGUI(Models& m);
 		void SkinningGUI(Models& m);
+		void StaticGUI(Models& m);
+
+
+	private:
+		// ImGui用変数
+		int selectedClass = 0;
+		int radioValue = 0;
+		int currentItem = 0;
+		int currentAnim = 0;
+		// デバッグ用の生成したインスンタンスを格納しておく配列
+		std::vector<IModel*> debugModels;
+	public:
+		/// <summary>
+		/// Debug用GUI
+		/// </summary>
+		void DebugGUI();
 	};
 }

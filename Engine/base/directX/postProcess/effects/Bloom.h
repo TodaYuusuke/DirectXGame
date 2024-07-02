@@ -12,8 +12,8 @@ namespace LWP::Base::PostProcess {
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// 強度
-		float intensity;
+		// 輝度
+		float threshold;
 
 
 	private: // ** メンバ変数 ** //

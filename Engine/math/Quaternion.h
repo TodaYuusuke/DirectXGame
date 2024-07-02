@@ -60,12 +60,17 @@ namespace LWP::Math {
 		/// <param name="radian">角度(ラジアン)</param>
 		/// <returns></returns>
 		static Quaternion CreateFromAxisAngle(const Vector3& axis, float radian);
+		/// <summary>
+		/// ある方向からある方向への回転
+		/// </summary>
+		/// <returns></returns>
+		static Quaternion DirectionToDirection(const Vector3& from, const Vector3& to);
 
 		/// <summary>
 		/// 内積を求める
 		/// </summary>
 		static float Dot(const Quaternion& v1, const Quaternion& v2);
-			
+		
 		/// <summary>
 		/// ある方向ベクトルのほうを向くクォータニオンを生成する
 		/// </summary>
@@ -98,6 +103,7 @@ namespace LWP::Math {
 		/// Quaternion Multiply(*) float
 		Quaternion operator* (const float& other) const;
 		Quaternion& operator*=(const float& other);
+		friend Quaternion operator*(float scalar, const Quaternion& vec) { return vec * scalar; }
 		// Quaternion Division(/) Quaternion
 		Quaternion operator/ (const Quaternion& other) const;
 		Quaternion operator/= (const Quaternion& other);

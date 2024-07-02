@@ -99,5 +99,5 @@ Vector2 DIController::GetRStick() {
 Vector2 DIController::GetCrossKey() {
 	if (states_.rgdwPOV[0] == -1) { return { 0.0f,0.0f }; }
 	Vector2 vector = { 0.0f,-1.0f };
-	return vector.Rotate(Utility::DegreeToRadian(static_cast<int>(states_.rgdwPOV[0] / 100.0f)));
+	return vector.Rotate(Utility::DegreeToRadian(states_.rgdwPOV[0] / 100.0f));
 }

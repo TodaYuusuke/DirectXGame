@@ -242,19 +242,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\input\controller\XInputController.cpp" />
     <ClCompile Include="Engine\input\InputManager.cpp" />
     <ClCompile Include="Engine\input\keyboard\DIKeyboard.cpp" />
+    <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix3x3.cpp" />
     <ClCompile Include="Engine\math\matrix\Matrix4x4.cpp" />
-    <ClCompile Include="Engine\math\Quaternion.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
     <ClCompile Include="Engine\math\vector\Vector3.cpp" />
     <ClCompile Include="Engine\math\vector\Vector4.cpp" />
-    <ClCompile Include="Engine\object\collider\cAABB.cpp" />
-    <ClCompile Include="Engine\object\collider\cCapsule.cpp" />
     <ClCompile Include="Engine\object\collider\ColliderManager.cpp" />
-    <ClCompile Include="Engine\object\collider\cSphere.cpp" />
-    <ClCompile Include="Engine\object\collider\ICollider.cpp" />
+    <ClCompile Include="Engine\object\collider\Collider.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cAABB.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cCapsule.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cSphere.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\ICollisionShape.cpp" />
     <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
@@ -277,6 +276,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\model\Node.cpp" />
     <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
     <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
+    <ClCompile Include="Engine\primitive\model\Vertex.cpp" />
+    <ClCompile Include="Engine\resources\level\LevelData.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -285,6 +286,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\model\Material.cpp" />
     <ClCompile Include="Engine\resources\model\RigidModel.cpp" />
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
+    <ClCompile Include="Engine\resources\model\StaticModel.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
     <ClCompile Include="Engine\resources\motion\Motion.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
@@ -308,12 +310,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="resources\system\shaders\Object3d.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='TestDemo|x64'">true</ExcludedFromBuild>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h" />
@@ -344,6 +340,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\IDataResource.h" />
+    <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\IResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\BackBuffer.h" />
@@ -372,21 +369,20 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\input\controller\XInputController.h" />
     <ClInclude Include="Engine\input\InputManager.h" />
     <ClInclude Include="Engine\input\keyboard\DIKeyboard.h" />
+    <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\math\Math.h" />
     <ClInclude Include="Engine\math\matrix\Matrix3x3.h" />
     <ClInclude Include="Engine\math\matrix\Matrix4x4.h" />
-    <ClInclude Include="Engine\math\Quaternion.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Engine\math\vector\Vector2.h" />
     <ClInclude Include="Engine\math\vector\Vector3.h" />
     <ClInclude Include="Engine\math\vector\Vector4.h" />
-    <ClInclude Include="Engine\object\collider\cAABB.h" />
-    <ClInclude Include="Engine\object\collider\cCapsule.h" />
     <ClInclude Include="Engine\object\collider\ColliderManager.h" />
-    <ClInclude Include="Engine\object\collider\cSphere.h" />
-    <ClInclude Include="Engine\object\collider\ICollider.h" />
+    <ClInclude Include="Engine\object\collider\Collider.h" />
     <ClInclude Include="Engine\object\collider\Mask.h" />
+    <ClInclude Include="Engine\object\collider\shape\cAABB.h" />
+    <ClInclude Include="Engine\object\collider\shape\cCapsule.h" />
+    <ClInclude Include="Engine\object\collider\shape\cSphere.h" />
+    <ClInclude Include="Engine\object\collider\shape\ICollisionShape.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
     <ClInclude Include="Engine\object\core\CoreList.h" />
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
@@ -414,6 +410,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\model\Node.h" />
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
     <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
+    <ClInclude Include="Engine\resources\level\LevelData.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
@@ -423,6 +420,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\model\Material.h" />
     <ClInclude Include="Engine\resources\model\RigidModel.h" />
     <ClInclude Include="Engine\resources\model\SkinningModel.h" />
+    <ClInclude Include="Engine\resources\model\StaticModel.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
     <ClInclude Include="Engine\resources\motion\Motion.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />
@@ -453,6 +451,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Externals\nlohmann\json.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

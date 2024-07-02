@@ -23,7 +23,7 @@ void IModel::LoadShortPath(const std::string& fp) {
 	LoadFullPath(kDirectoryPath + fp);
 }
 
-ModelData* IModel::GetModelData() {
+ModelData* IModel::GetModelData() const {
 	// パスが空じゃなかったら返す
 	if (!filePath.empty()) {
 		return GetModel(filePath);

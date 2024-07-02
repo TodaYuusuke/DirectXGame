@@ -19,21 +19,5 @@ namespace LWP {
 		/// <para>※ ユーザー呼び出し禁止</para>
 		/// </summary>
 		void DeletePointer(IObject* ptr);
-
-		/// <summary>
-		/// 当たり判定関連
-		/// </summary>
-		namespace Collider {
-			/// <summary>
-			/// <para>コライダーのインスタンスをエンジンにセットする関数</para>
-			/// <para>※ ユーザー呼び出し禁止</para>
-			/// </summary>
-			void SetPointer(ICollider* ptr);
-			/// <summary>
-			/// <para>コライダーのインスタンスをエンジンから解放する関数</para>
-			/// <para>※ ユーザー呼び出し禁止</para>
-			/// </summary>
-			void DeletePointer(ICollider* ptr);
-		};
 	};
 };

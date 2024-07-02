@@ -13,6 +13,8 @@ public:
 		mainCamera.name = "MainCamera";
 		mainCamera.isActive = false;	// 複数画面描画のときのみtrueにすればいいのでfalse
 		SetMainRenderCamera(&mainCamera);
+		// levelDataの適応対象にmainCameraをセット
+		levelData.SetCameraPtr(&mainCamera);
 	}
 
 	//*** 純粋仮想関数 ***//
@@ -31,6 +33,8 @@ protected:	// ** メンバ変数 ** //
 	
 	// シーンが持つデフォルトのカメラ
 	LWP::Object::Camera mainCamera;
+	// レベルエディタのデータ読み込み用クラス
+	LWP::Resource::LevelData levelData;
 
 
 private: // ** プロパティ変数 ** //

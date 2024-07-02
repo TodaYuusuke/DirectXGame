@@ -71,6 +71,10 @@ namespace LWP::Config {
 		/// 同一モデルの最大同時描画数
 		/// </summary>
 		static const UINT kMaxModelInstance = 1000;
+		/// <summary>
+		/// 同一モデルのジョイント最大同時描画数
+		/// </summary>
+		static const UINT kMaxSkinJointInstance = 1000;
 
 		/// <summary>
 		/// ストラクチャーバッファー当の最大数（※変更非推奨）
@@ -160,6 +164,12 @@ namespace LWP::Config {
 	/// 当たり判定に関するパラメータ
 	/// </summary>
 	namespace Collider {
+		
+		/// <summary>
+		/// コライダークラスの最大数
+		/// </summary>
+		static const uint32_t kMaxColliderAmount = 1024;
+
 		// 当たり判定マスク用の列挙子定義
 		enum MaskLayer : uint32_t {
 			Player = ColMask0,

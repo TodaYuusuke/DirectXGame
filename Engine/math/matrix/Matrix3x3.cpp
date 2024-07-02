@@ -1,7 +1,20 @@
 #include "Matrix3x3.h"
+#include "Matrix4x4.h"
 #include "../vector/Vector2.h"
 
 using namespace LWP::Math;
+
+Matrix3x3::Matrix3x3(const Matrix4x4& m4) {
+	m[0][0] = m4.m[0][0];
+	m[0][1] = m4.m[0][1];
+	m[0][2] = m4.m[0][2];
+	m[1][0] = m4.m[1][0];
+	m[1][1] = m4.m[1][1];
+	m[1][2] = m4.m[1][2];
+	m[2][0] = m4.m[2][0];
+	m[2][1] = m4.m[2][1];
+	m[2][2] = m4.m[2][2];
+}
 
 // *** オペーレーターオーバーロード *** //
 

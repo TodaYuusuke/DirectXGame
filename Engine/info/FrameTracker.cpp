@@ -107,16 +107,18 @@ void FrameTracker::SetDeltaTimeMultiply(float value) {
 }
 
 void FrameTracker::DebugGUI() {
-	// 60処理ごとに一度取得するFPS
-	if (elapsedFrame_ % 60 == 0) {
-		frameRate = GetFPS();
+	if (ImGui::BeginTabItem("Info")) {
+		// 60処理ごとに一度取得するFPS
+		if (elapsedFrame_ % 60 == 0) {
+			frameRate = GetFPS();
+		}
+		
+		ImGui::Text("ElapsedTime ... %02d:%02d:%02d:%02d", (int)GetElapsedTimeH() % 24, (int)GetElapsedTimeM() % 60, (int)GetElapsedTimeS() % 60, (int)GetElapsedTimeMS() % 1000 / 10);
+		ImGui::Text("FPS ... %.1f (%.1lf)", frameRate, GetFPS());
+		ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());
+		ImGui::Text("DeltaTime ... %lf", GetDeltaTime());
+		ImGui::Text("ElapsedFrame ... %d", elapsedFrame_);
+		
+		ImGui::EndTabItem();
 	}
-
-	ImGui::Begin("Information", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::Text("ElapsedTime ... %02d:%02d:%02d:%02d", (int)GetElapsedTimeH() % 24, (int)GetElapsedTimeM() % 60, (int)GetElapsedTimeS() % 60, (int)GetElapsedTimeMS() % 1000 / 10);
-	ImGui::Text("FPS ... %.1f (%.1lf)", frameRate, GetFPS());
-	ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());
-	ImGui::Text("DeltaTime ... %lf", GetDeltaTime());
-	ImGui::Text("ElapsedFrame ... %d", elapsedFrame_);
-	ImGui::End();
 }

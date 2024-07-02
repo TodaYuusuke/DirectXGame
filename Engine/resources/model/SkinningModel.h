@@ -7,15 +7,21 @@ namespace LWP::Resource {
 	/// </summary>
 	class SkinningModel final : public IModel {
 	public: // ** パブリックなメンバ変数 ** //
-		
+
+		// ワールドトランスフォーム
+		Object::TransformQuat worldTF{};
+		// マテリアル
+		std::vector<Primitive::Material> materials;
+
 		// スケルトン
 		Primitive::Skeleton skeleton{};
-		// スキンクラスター
-		std::optional<Primitive::SkinCluster> skinCluster{};
+		// スキンクラスターのポインタ
+		Primitive::SkinCluster* skinCluster = nullptr;
 		
-		// バッファー
+		// バッファーに代入するデータ
+		
 		//Base::ConstantBuffer<Base::InstanceSkinData> buffer;
-		std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> wellBuffer;
+		//std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> wellBuffer;
 
 	public: // ** メンバ関数 ** //
 
@@ -48,5 +54,15 @@ namespace LWP::Resource {
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
 		void ChangeFillMode();
+		/// <summary>
+		/// 全マテリアルのenableLightingを切り替え
+		/// </summary>
+		void SetAllMaterialLighting(bool flag);
+
+		/// <summary>
+		/// Bufferにデータをセットする
+		/// </summary>
+		void SetBufferData(Primitive::WellForGPU* data, int offset);
+
 	};
 }

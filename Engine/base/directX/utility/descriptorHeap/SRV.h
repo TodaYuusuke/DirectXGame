@@ -44,6 +44,41 @@ namespace LWP::Base {
 		SRVInfo(const SRVInfo&) = delete;
 		SRVInfo& operator=(const SRVInfo&) = delete;
 	};
+	struct UAVInfo : public HeapInfo {
+	public:
+		D3D12_GPU_DESCRIPTOR_HANDLE gpuView{};
+		D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
+
+
+		// デフォルトコンストラクタ
+		UAVInfo() = default;
+
+		void SetView(IDescriptorHeap* heap) override {
+			cpuView = heap->GetCPUHandle(index);
+			gpuView = heap->GetGPUHandle(index);
+		}
+
+		// ムーブコンストラクタ
+		UAVInfo(UAVInfo&& other) noexcept : HeapInfo(std::move(other)) {
+			gpuView = std::exchange(other.gpuView, {});
+			desc = std::exchange(other.desc, {});
+		}
+
+		// ムーブ代入演算子
+		UAVInfo& operator=(UAVInfo&& other) noexcept {
+			if (this != &other) {
+				HeapInfo::operator=(std::move(other));
+				// ムーブ代入の実装
+				gpuView = std::exchange(other.gpuView, {});
+				desc = std::exchange(other.desc, {});
+			}
+			return *this;
+		}
+
+		// コピー操作を禁止
+		UAVInfo(const UAVInfo&) = delete;
+		UAVInfo& operator=(const UAVInfo&) = delete;
+	};
 
 	/// <summary>
 	/// ShaderResourceView
@@ -100,6 +135,10 @@ namespace LWP::Base {
 		/// StructuredBufferをSRVに登録
 		/// </summary>
 		SRVInfo CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER_RESOURCE_VIEW_DESC& desc);
+		/// <summary>
+		/// RWStructuredBufferをSRVに登録
+		/// </summary>
+		UAVInfo CreateRWStructuredBuffer(ID3D12Resource* resource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& desc);
 
 		/// <summary>
 		/// ShadowMapDirをSRVに登録

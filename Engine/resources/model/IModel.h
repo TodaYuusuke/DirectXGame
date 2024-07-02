@@ -17,11 +17,6 @@ namespace LWP::Resource {
 	class IModel {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// ワールドトランスフォーム
-		Object::TransformEuler worldTF{};
-
-		// ライティングを行うかどうか
-		bool enableLighting = false;
 		// アクティブ切り替え
 		bool isActive = true;
 
@@ -73,7 +68,7 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 自分の読み込んだモデルデータを返す
 		/// </summary>
-		ModelData* GetModelData();
+		ModelData* GetModelData() const;
 
 	protected: // ** メンバ変数 ** //
 
