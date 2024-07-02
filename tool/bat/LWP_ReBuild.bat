@@ -22,6 +22,6 @@ REM xcopy "x64/Demo/DirectXGame.lib" "../lib/LWP_Demo.lib" /y
 REM xcopy "x64/Release/DirectXGame.lib" "../lib/LWP_Release.lib" /y
 
 REM システムのリソースをコピー
-xcopy "resources/system" "../resources/system\" /e /y
+xcopy "SampleGame/resources/system" "../resources/system\" /e /y
 
 pause

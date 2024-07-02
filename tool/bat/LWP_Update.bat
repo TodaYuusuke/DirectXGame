@@ -31,6 +31,6 @@ REM 一時ファイルを削除
 rmdir "DirectXGame" /s /q
 
 REM システムのリソースをコピー
-xcopy "resources/system" "../resources/system\" /e /y
+xcopy "SampleGame/resources/system" "../resources/system\" /e /y
 
 pause
