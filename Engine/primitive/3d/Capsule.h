@@ -24,6 +24,26 @@ namespace LWP::Primitive {
 		// 初期化を呼び出す
 		Capsule() { Init(); }
 
+		// ムーブコンストラクタ
+		Capsule(const Capsule& other) {
+			worldTF = other.worldTF;
+			end = other.end;
+			subdivision = other.subdivision;
+			radius = other.radius;
+			Init();
+		}
+
+
+		// カプセルコライダーエラー回避用
+		void Set() {
+			obsTransform = &worldTF;
+		}
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		//void Init() override;
+
 		/// <summary>
 		/// 頂点を生成する関数（ユーザ呼び出し禁止）
 		/// </summary>
@@ -67,7 +87,7 @@ namespace LWP::Primitive {
 
 
 		// スフィアコライダーから描画用のスフィアを生成する関数だが、使用しないので隠蔽
-		//using Sphere::CreateFromSphereCol;
+		using Sphere::CreateFromSphereCol;
 
 	};
 }

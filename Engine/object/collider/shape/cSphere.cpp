@@ -18,7 +18,7 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	sphereModel.CreateFromSphereCol(position, radius);
+	sphereModel.CreateFromSphereCol(position + follow_->GetWorldPosition(), radius);
 	sphereModel.material.enableLighting = false;
 	sphereModel.isWireFrame = true;
 #endif
@@ -29,7 +29,7 @@ Sphere::Sphere(const Sphere& other) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	sphereModel.CreateFromSphereCol(position, radius);
+	sphereModel.CreateFromSphereCol(position + follow_->GetWorldPosition(), radius);
 	sphereModel.material.enableLighting = false;
 	sphereModel.isWireFrame = true;
 #endif
@@ -149,8 +149,5 @@ void Sphere::Hit() {
 
 Sphere::Data::Data(Sphere& sphere) {
 	position = sphere.position + sphere.follow_->GetWorldPosition();
-	ImGui::Begin("Test");
-	ImGui::DragFloat3("t", &position.x);
-	ImGui::End();
 	radius = sphere.radius;
 }

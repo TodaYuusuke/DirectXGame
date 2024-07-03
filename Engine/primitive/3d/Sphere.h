@@ -29,6 +29,7 @@ namespace LWP::Primitive {
 		
 		// ムーブコンストラクタ
 		Sphere(const Sphere& other) {
+			worldTF = other.worldTF;
 			subdivision = other.subdivision;
 			radius = other.radius;
 			Init();

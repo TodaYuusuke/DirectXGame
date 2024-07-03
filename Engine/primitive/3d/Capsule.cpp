@@ -8,6 +8,12 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
+
+//void Capsule::Init() {
+//	IPrimitive::Init();
+//	obsTransform = &worldTF;
+//}
+
 void Capsule::CreateVertices() {
 	// 頂点をクリア
 	vertices.clear();

@@ -20,6 +20,7 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 #if DEMO
 	// カプセルモデルを生成
 	capsuleModel.CreateFromCapsuleCol(*this);
+	capsuleModel.Set();
 	capsuleModel.material.enableLighting = false;
 	capsuleModel.isWireFrame = true;
 #endif
@@ -31,6 +32,7 @@ Capsule::Capsule(const Capsule& other) {
 #if DEMO
 	// カプセルモデルを生成
 	capsuleModel.CreateFromCapsuleCol(*this);
+	capsuleModel.Set();
 	capsuleModel.material.enableLighting = false;
 	capsuleModel.isWireFrame = true;
 #endif
