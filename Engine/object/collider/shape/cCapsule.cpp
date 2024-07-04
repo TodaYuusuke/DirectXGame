@@ -3,7 +3,6 @@
 #include "cCapsule.h"
 
 #include "base/ImGuiManager.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP::Object::Collider;
 using namespace LWP;
@@ -64,18 +63,6 @@ void Capsule::DebugGUI() {
 	ImGui::DragFloat3("end", &end.x, 0.01f);
 	ImGui::DragFloat("radius", &radius, 0.01f);
 	ICollisionShape::DebugGUI();
-}
-
-bool Capsule::CheckCollision(AABB& c) {
-	return c.CheckCollision(*this);
-}
-//bool CheckCollision(OBB& c);
-bool Capsule::CheckCollision(Sphere& c) {
-	return c.CheckCollision(*this);
-}
-bool Capsule::CheckCollision(Capsule& c) {
-	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
-	c; return false;
 }
 
 void Capsule::Hit() {

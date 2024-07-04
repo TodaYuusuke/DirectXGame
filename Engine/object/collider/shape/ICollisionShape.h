@@ -76,8 +76,6 @@ namespace LWP::Object::Collider {
 		//virtual bool CheckCollision(OBB& c) = 0;
 		virtual bool CheckCollision(Sphere& c) = 0;
 		virtual bool CheckCollision(Capsule& c) = 0;
-
-	protected:
 		
 		// ヒット時の処理をまとめた関数
 		virtual void Hit() {};

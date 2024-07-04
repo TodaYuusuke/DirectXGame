@@ -3,6 +3,7 @@
 #include "../utility/PSO.h"
 
 #include "effects/Bloom.h"
+//#include "effects/OutLine.h"
 #include "effects/GrayScale.h"
 #include "effects/Vignetting.h"
 
@@ -20,6 +21,7 @@ namespace LWP::Base {
 		bool use = false;
 
 		PostProcess::Bloom bloom;	// ブルーム
+		//PostProcess::OutLine outLine;	// アウトライン
 		PostProcess::GrayScale grayScale;	// グレースケール
 		PostProcess::Vignetting vignetting;	// ビネット
 		// ここにどんどん種類を増やしていく
