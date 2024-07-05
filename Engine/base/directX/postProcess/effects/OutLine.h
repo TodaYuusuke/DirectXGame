@@ -3,6 +3,8 @@
 
 #include "math/matrix/Matrix4x4.h"
 
+#include "utility/Color.h"
+
 namespace LWP::Base::PostProcess {
 	/// <summary>
 	/// アウトライン
@@ -10,15 +12,17 @@ namespace LWP::Base::PostProcess {
 	class OutLine final
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
-
-		// 強度
-		//float intensity;
+		// しきい値
+		float threshold = 0.5f;
+		// 色
+		Utility::Color color;
 
 
 	private: // ** メンバ変数 ** //
 		struct Data {
-			//float intensity;
 			Math::Matrix4x4 projectionInverse;	// カメラのプロジェクション行列の逆行列
+			Math::Vector4 color;
+			float threshold;
 		};
 		
 		Base::ConstantBuffer<Data> buffer_;

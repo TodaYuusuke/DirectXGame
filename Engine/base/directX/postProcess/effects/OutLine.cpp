@@ -3,13 +3,17 @@
 #include "component/System.h"
 
 using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void OutLine::Init() {
-	//intensity = 1.0f;
+	threshold = 0.5f;
+	color = Utility::ColorPattern::BLACK;
 	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
 }
 void OutLine::Update() {
+	buffer_.data_->color = color.GetVector4();
+	buffer_.data_->threshold = threshold;
 	//*buffer_.data_ = intensity;
 }
 
@@ -19,6 +23,8 @@ void OutLine::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
 	std::string str = R"(
 struct OutLineData {
 	float32_t4x4 projectionInverse;
+	float32_t4 color;
+	float32_t threshold;
 };
 ConstantBuffer<OutLineData> olData : register(b${v});
 
@@ -38,7 +44,7 @@ static const float32_t kPrewittVerticalKernel[3][3] = {
 	{ 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f },
 };
 
-float32_t OutLine(float32_t2 uv) {
+float32_t3 OutLine(float32_t2 uv, float32_t3 color) {
 	float32_t2 difference = float32_t2(0.0f, 0.0f);
 	uint32_t width, height;
 	gTexture.GetDimensions(width, height);
@@ -57,7 +63,17 @@ float32_t OutLine(float32_t2 uv) {
 	}
 
 	float32_t weight = length(difference);
-	return (1.0f - weight);
+	weight = saturate(weight);
+
+	if (olData.threshold >= weight) {
+		return color;
+	}
+	return lerp(color, olData.color.rgb, weight);
+
+	// color 元の色
+	// olData.color.rgb アウトラインの色
+	//return color * (1.0f - weight);
+	//return color * (olData.color.rgb * (1.0f - weight));
 }
 )";
 	// 変数で値を書き換え
@@ -74,7 +90,7 @@ float32_t OutLine(float32_t2 uv) {
 		// シェーダー内の処理を書き込む
 void OutLine::WriteProcess(std::ofstream* stream) {
 	*stream << R"(
-	output.rgb *= OutLine(uv);
+	output.rgb = OutLine(uv, output.rgb);
 )";
 }
 		
@@ -84,6 +100,8 @@ void OutLine::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 
 void OutLine::DebugGUI() {
 	if (ImGui::TreeNode("OutLine")) {
+		ImGui::DragFloat("Threshold", &threshold, 0.01f);
+		ImGuiManager::ColorEdit4("color", color);
 		ImGui::Checkbox("Use", &use);
 		ImGui::TreePop();
 	}

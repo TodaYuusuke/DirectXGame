@@ -20,6 +20,8 @@ SamplerState gPointSampler : register(s1);
 
 struct OutLineData {
 	float32_t4x4 projectionInverse;
+	float32_t4 color;
+	float32_t threshold;
 };
 ConstantBuffer<OutLineData> olData : register(b1);
 
@@ -39,7 +41,7 @@ static const float32_t kPrewittVerticalKernel[3][3] = {
 	{ 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f },
 };
 
-float32_t OutLine(float32_t2 uv) {
+float32_t3 OutLine(float32_t2 uv, float32_t3 color) {
 	float32_t2 difference = float32_t2(0.0f, 0.0f);
 	uint32_t width, height;
 	gTexture.GetDimensions(width, height);
@@ -58,29 +60,26 @@ float32_t OutLine(float32_t2 uv) {
 	}
 
 	float32_t weight = length(difference);
-	return (1.0f - weight);
+	weight = saturate(weight);
+
+	if (olData.threshold >= weight) {
+		return color;
+	}
+	return lerp(color, olData.color.rgb, weight);
+
+	// color 元の色
+	// olData.color.rgb アウトラインの色
+	//return color * (1.0f - weight);
+	//return color * (olData.color.rgb * (1.0f - weight));
 }
 
-struct VignettingData {
-	float32_t intensity;
-};
-ConstantBuffer<VignettingData> vData : register(b2);
-
-float32_t Vignetting(float32_t2 uv) {
-	float32_t2 correct = uv * (1.0f - uv.xy);
-	float vignette = correct.x * correct.y * 16.0f;
-	vignette = saturate(pow(vignette, vData.intensity));
-	return vignette;
-}
 float32_t4 main(PSInput input) : SV_TARGET {
 	float32_t4 output;
 	float2 uv = input.texcoord;
 
     output = gTexture.Sample(gSampler, uv);
 
-	output.rgb *= OutLine(uv);
-
-	output.rgb *= Vignetting(uv);
+	output.rgb = OutLine(uv, output.rgb);
 
 	return output;
 }

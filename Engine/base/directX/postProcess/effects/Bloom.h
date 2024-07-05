@@ -12,7 +12,7 @@ namespace LWP::Base::PostProcess {
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// 輝度
+		// 彩度のしきい地
 		float threshold;
 
 

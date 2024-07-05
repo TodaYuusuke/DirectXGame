@@ -3,6 +3,7 @@
 #include "component/System.h"
 
 using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void Vignetting::Init() {
@@ -10,7 +11,7 @@ void Vignetting::Init() {
 	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
 }
 void Vignetting::Update() {
-	*buffer_.data_ = intensity;
+	buffer_.data_->intensity = intensity;
 }
 
 void Vignetting::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
