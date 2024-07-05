@@ -39,7 +39,7 @@ void DepthStencil::Init(GPUDevice* device, HeapManager* heaps) {
 	// DSV上に登録
 	dsvInfo = heaps->dsv()->CreateDepthStencilView(resource_.Get());
 	// SRV上にも登録
-	//srvInfo = heaps->srv()->CreateDepthTexture(resource_.Get());
+	srvInfo = heaps->srv()->CreateDepthTexture(resource_.Get());
 }
 
 void DepthStencil::Clear(ID3D12GraphicsCommandList* list) {

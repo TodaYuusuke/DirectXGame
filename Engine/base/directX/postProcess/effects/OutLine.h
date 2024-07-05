@@ -1,6 +1,8 @@
 #pragma once
 #include "../IPostProcess.h"
 
+#include "math/matrix/Matrix4x4.h"
+
 namespace LWP::Base::PostProcess {
 	/// <summary>
 	/// アウトライン
@@ -10,12 +12,12 @@ namespace LWP::Base::PostProcess {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// 強度
-		float intensity;
+		//float intensity;
 
 
 	private: // ** メンバ変数 ** //
 		struct Data {
-			float intensity;
+			//float intensity;
 			Math::Matrix4x4 projectionInverse;	// カメラのプロジェクション行列の逆行列
 		};
 		

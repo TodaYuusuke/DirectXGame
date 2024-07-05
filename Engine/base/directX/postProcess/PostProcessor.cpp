@@ -10,12 +10,14 @@ using namespace LWP::Base::PostProcess;
 
 void PostProcessor::Init() {
 	bloom.Init();
+	outLine.Init();
 	grayScale.Init();
 	vignetting.Init();
 	CreateShaderFile();
 }
 void PostProcessor::Update() {
 	bloom.Update();
+	outLine.Update();
 	grayScale.Update();
 	vignetting.Update();
 }
@@ -54,8 +56,9 @@ struct Parameter
 
 ConstantBuffer<Parameter> gPara : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
-Texture2D<float32_t4> gDepth : register(t1);
+Texture2D<float32_t> gDepth : register(t1);
 SamplerState gSampler : register(s0);
+SamplerState gPointSampler : register(s1);
 )";
 	// 初期化
 	root_.Init();
@@ -63,7 +66,8 @@ SamplerState gSampler : register(s0);
 	root_ = root_.AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
 		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddTableParameter(1, SV_Pixel)	// レンダリングに使う深度マップ
-		.AddSampler(0, SV_Pixel);		// テクスチャのサンプラー
+		.AddSampler(0, SV_Pixel)		// テクスチャのサンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_MIN_MAG_MIP_POINT);	// デプステクスチャのサンプラー
 	// 宣言の書き込み & RootSignature生成
 	int b = 1;	// Binding用の通し番号
 	for (int i = 0; i < vec.size(); i++) {
@@ -123,7 +127,8 @@ void PostProcessor::CreatePSO(std::string filePath) {
 		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddTableParameter(1, SV_Pixel)	// レンダリングに使う深度マップ
 		.AddSampler(0, SV_Pixel)	// テクスチャのサンプラー
-		.Build(dev->GetDevice());
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_MIN_MAG_MIP_POINT)	// デプステクスチャのサンプラー
+	.Build(dev->GetDevice());
 	// PSO生成
 	pso_.Init(root_, dxc)
 		.SetDepthStencilState(false)
@@ -154,6 +159,7 @@ void PostProcessor::SetCommands(ID3D12GraphicsCommandList* list) {
 void PostProcessor::DebugGUI() {
 	if (ImGui::TreeNode("PostProcess")) {
 		bloom.DebugGUI();
+		outLine.DebugGUI();
 		grayScale.DebugGUI();
 		vignetting.DebugGUI();
 		ImGui::Text("----------");
@@ -167,6 +173,7 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	// 共通化してまとめて処理
 	std::vector<IPostProcess*> result;
 	result.push_back(&bloom);
+	result.push_back(&outLine);
 	result.push_back(&grayScale);
 	result.push_back(&vignetting);
 

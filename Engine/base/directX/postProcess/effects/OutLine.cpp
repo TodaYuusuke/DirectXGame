@@ -1,30 +1,63 @@
-#include "GrayScale.h"
+#include "OutLine.h"
 
 #include "component/System.h"
 
 using namespace LWP;
 using namespace LWP::Base::PostProcess;
 
-void GrayScale::Init() {
-	intensity = 1.0f;
+void OutLine::Init() {
+	//intensity = 1.0f;
 	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
 }
-void GrayScale::Update() {
-	*buffer_.data_ = intensity;
+void OutLine::Update() {
+	//*buffer_.data_ = intensity;
 }
 
-void GrayScale::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
+void OutLine::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
 	// Bindする番号を保持
 	bindIndex = *i;
 	std::string str = R"(
-struct GrayScaleData {
-	float32_t intensity;
+struct OutLineData {
+	float32_t4x4 projectionInverse;
 };
-ConstantBuffer<GrayScaleData> gsData : register(b${v});
+ConstantBuffer<OutLineData> olData : register(b${v});
 
-float32_t3 GrayScale(float32_t3 color) {
-    float32_t3 result = dot(color, float32_t3(0.2125f, 0.7154f, 0.0721f));
-    return lerp(color, result, gsData.intensity);
+static const float32_t2 kIndex3x3[3][3] = {
+	{{-1.0f,-1.0f},{ 0.0f,-1.0f},{ 1.0f,-1.0f}},
+	{{-1.0f, 0.0f},{ 0.0f, 0.0f},{ 1.0f, 0.0f}},
+	{{-1.0f, 1.0f},{ 0.0f, 1.0f},{ 1.0f, 1.0f}},
+};
+static const float32_t kPrewittHorizontalKernel[3][3] = {
+	{ -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
+	{ -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
+	{ -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
+};
+static const float32_t kPrewittVerticalKernel[3][3] = {
+	{ -1.0f / 6.0f, -1.0f / 6.0f, -1.0f / 6.0f },
+	{ 0.0f, 0.0f, 0.0f },
+	{ 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f },
+};
+
+float32_t OutLine(float32_t2 uv) {
+	float32_t2 difference = float32_t2(0.0f, 0.0f);
+	uint32_t width, height;
+	gTexture.GetDimensions(width, height);
+	float32_t2 uvStepSize = float32_t2(rcp(width), rcp(height));
+
+	for(int32_t x = 0; x < 3; x++) {
+		for(int32_t y = 0; y < 3; y++) {
+			float32_t2 texcoord = uv + kIndex3x3[x][y] * uvStepSize;
+			float32_t ndcDepth = gDepth.Sample(gPointSampler, texcoord);
+
+			float32_t4 viewSpace = mul(float32_t4(0.0f,0.0f,ndcDepth,1.0f), olData.projectionInverse);
+			float32_t viewZ = viewSpace.z * rcp(viewSpace.w);
+			difference.x += viewZ * kPrewittHorizontalKernel[x][y];
+			difference.y += viewZ * kPrewittVerticalKernel[x][y];
+		}
+	}
+
+	float32_t weight = length(difference);
+	return (1.0f - weight);
 }
 )";
 	// 変数で値を書き換え
@@ -39,19 +72,18 @@ float32_t3 GrayScale(float32_t3 color) {
 	*i += 1;
 }
 		// シェーダー内の処理を書き込む
-void GrayScale::WriteProcess(std::ofstream* stream) {
+void OutLine::WriteProcess(std::ofstream* stream) {
 	*stream << R"(
-	output.rgb = GrayScale(output.rgb);
+	output.rgb *= OutLine(uv);
 )";
 }
 		
-void GrayScale::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
+void OutLine::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 	list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
 }
 
-void GrayScale::DebugGUI() {
-	if (ImGui::TreeNode("GrayScale")) {
-		ImGui::DragFloat("Intensity", &intensity, 0.01f);
+void OutLine::DebugGUI() {
+	if (ImGui::TreeNode("OutLine")) {
 		ImGui::Checkbox("Use", &use);
 		ImGui::TreePop();
 	}

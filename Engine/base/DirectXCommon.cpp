@@ -62,7 +62,7 @@ void DirectXCommon::SetMainCamera(Object::Camera* camera) {
 		// カメラのリソースに書き込み
 		renderer_->AddTarget(camera->GetBufferView(), camera->GetRenderResource(), &depthStencil_);
 		// ポストプロセス用のターゲットセット
-		renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], camera->GetDepthStencil(), &camera->pp);
+		renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_, &camera->pp);
 	}
 	// しないならば
 	else {
