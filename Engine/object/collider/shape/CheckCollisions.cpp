@@ -1,3 +1,4 @@
+#include "cPoint.h"
 #include "cAABB.h"
 #include "cSphere.h"
 #include "cCapsule.h"
@@ -28,11 +29,47 @@ void CallHit(ICollisionShape* c1, ICollisionShape* c2, const bool& flag) {
 
 
 #pragma region Point * other
+// ALL 未実装
+bool Point::CheckCollision(Point& c) {
+	Point::Data data1(*this);
+	Point::Data data2(c);
+	
+	bool result = data1.position == data2.position;
+
+	CallHit(this, &c, result);
+	return result;
+}
+bool Point::CheckCollision(AABB& c) {
+	Point::Data point(*this);
+	AABB::Data aabb(c);
+
+	bool result =
+		(point.position.x >= aabb.min.x && point.position.x <= aabb.max.x) &&
+		(point.position.y >= aabb.min.y && point.position.y <= aabb.max.y) &&
+		(point.position.z >= aabb.min.z && point.position.z <= aabb.max.z);
+
+	CallHit(this, &c, result);
+	return result;
+}
+bool Point::CheckCollision(Sphere& c) {
+	Point::Data point(*this);
+	Sphere::Data s(c);
+
+	bool result = (point.position - s.position).Length() <= s.radius;
+
+	CallHit(this, &c, result);
+	return result;
+}
+bool Point::CheckCollision(Capsule& c) {
+	Utility::Log("Error!! Point * Capsule Collision is Unimplemented");
+	c; return false;
+}
 
 #pragma endregion
 
 #pragma region AABB * other
 // ALL OK
+bool AABB::CheckCollision(Point& c) { return c.CheckCollision(*this); }
 bool AABB::CheckCollision(AABB& c) {
 	AABB::Data data1(*this);
 	AABB::Data data2(c);
@@ -100,6 +137,7 @@ bool AABB::CheckCollision(Capsule& c) {
 
 #pragma region Sphere * other
 // ALL OK
+bool Sphere::CheckCollision(Point& c) { return c.CheckCollision(*this); }
 bool Sphere::CheckCollision(AABB& c) { return c.CheckCollision(*this); }
 bool Sphere::CheckCollision(Sphere& c) {
 	Sphere::Data data1(*this);	// transformをかけたデータで計算する
@@ -146,6 +184,7 @@ bool Sphere::CheckCollision(Capsule& c) {
 
 #pragma region Capsule * other
 // Capsule * Capsule 未実装
+bool Capsule::CheckCollision(Point& c) { return c.CheckCollision(*this); }
 bool Capsule::CheckCollision(AABB& c) { return c.CheckCollision(*this); }
 bool Capsule::CheckCollision(Sphere& c) { return c.CheckCollision(*this); }
 bool Capsule::CheckCollision(Capsule& c) {

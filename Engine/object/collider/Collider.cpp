@@ -85,6 +85,7 @@ void Collider::DebugGUI() {
 	if (ImGui::TreeNode("Broad")) {
 		ImGui::Text("Shape Type : %s", Utility::TrimmingString(GetCurrentTypeName(broad), 29, 0).c_str());
 		if (ImGui::BeginMenu("Change Shape Type")) {
+			if (ImGui::MenuItem("Point")) { SetBroadShape(Point()); }
 			if (ImGui::MenuItem("AABB")) { SetBroadShape(AABB()); }
 			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
 			if (ImGui::MenuItem("Capsule")) { 

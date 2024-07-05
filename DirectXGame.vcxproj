@@ -253,6 +253,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\collider\shape\cAABB.cpp" />
     <ClCompile Include="Engine\object\collider\shape\cCapsule.cpp" />
     <ClCompile Include="Engine\object\collider\shape\CheckCollisions.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cPoint.cpp" />
     <ClCompile Include="Engine\object\collider\shape\cSphere.cpp" />
     <ClCompile Include="Engine\object\collider\shape\ICollisionShape.cpp" />
     <ClCompile Include="Engine\object\core\Camera.cpp" />
@@ -382,6 +383,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\collider\Mask.h" />
     <ClInclude Include="Engine\object\collider\shape\cAABB.h" />
     <ClInclude Include="Engine\object\collider\shape\cCapsule.h" />
+    <ClInclude Include="Engine\object\collider\shape\cPoint.h" />
     <ClInclude Include="Engine\object\collider\shape\cSphere.h" />
     <ClInclude Include="Engine\object\collider\shape\ICollisionShape.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
