@@ -61,6 +61,17 @@ float32_t OutLine(float32_t2 uv) {
 	return (1.0f - weight);
 }
 
+struct VignettingData {
+	float32_t intensity;
+};
+ConstantBuffer<VignettingData> vData : register(b2);
+
+float32_t Vignetting(float32_t2 uv) {
+	float32_t2 correct = uv * (1.0f - uv.xy);
+	float vignette = correct.x * correct.y * 16.0f;
+	vignette = saturate(pow(vignette, vData.intensity));
+	return vignette;
+}
 float32_t4 main(PSInput input) : SV_TARGET {
 	float32_t4 output;
 	float2 uv = input.texcoord;
@@ -68,6 +79,8 @@ float32_t4 main(PSInput input) : SV_TARGET {
     output = gTexture.Sample(gSampler, uv);
 
 	output.rgb *= OutLine(uv);
+
+	output.rgb *= Vignetting(uv);
 
 	return output;
 }
