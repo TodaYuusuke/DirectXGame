@@ -3,6 +3,7 @@
 #include "component/System.h"
 
 using namespace LWP;
+using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void Vignetting::Init() {
@@ -10,7 +11,7 @@ void Vignetting::Init() {
 	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
 }
 void Vignetting::Update() {
-	*buffer_.data_ = intensity;
+	buffer_.data_->intensity = intensity;
 }
 
 void Vignetting::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
@@ -22,11 +23,11 @@ struct VignettingData {
 };
 ConstantBuffer<VignettingData> vData : register(b${v});
 
-float32_t3 Vignetting(float32_t2 uv, float32_t3 color) {
+float32_t Vignetting(float32_t2 uv) {
 	float32_t2 correct = uv * (1.0f - uv.xy);
 	float vignette = correct.x * correct.y * 16.0f;
-	vignette = saturate(pow(vignette, 0.8f));
-	return color * vignette;
+	vignette = saturate(pow(vignette, vData.intensity));
+	return vignette;
 })";
 	// 変数で値を書き換え
 	size_t pos;
@@ -42,7 +43,7 @@ float32_t3 Vignetting(float32_t2 uv, float32_t3 color) {
 		// シェーダー内の処理を書き込む
 void Vignetting::WriteProcess(std::ofstream* stream) {
 	*stream << R"(
-	output.rgb = Vignetting(uv, output.rgb);
+	output.rgb *= Vignetting(uv);
 )";
 }
 		

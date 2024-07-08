@@ -1,33 +1,31 @@
 #pragma once
 #include "../IPostProcess.h"
 
-#include "base/directX/utility/RootSignature.h"
-#include "base/directX/utility/PSO.h"
+#include "math/matrix/Matrix4x4.h"
+
+#include "utility/Color.h"
 
 namespace LWP::Base::PostProcess {
 	/// <summary>
-	/// ブルーム
+	/// アウトライン
 	/// </summary>
-	class Bloom final
+	class OutLine final
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
-
-		// 彩度のしきい地
-		float threshold;
+		// しきい値
+		float threshold = 0.5f;
+		// 色
+		Utility::Color color;
 
 
 	private: // ** メンバ変数 ** //
-
-		Base::ConstantBuffer<float> buffer_;
-		// ブルームをかけるのに一時的に必要なデータ
-		struct TempData {
-			Base::RenderResource rr;
-			Base::RootSignature root;
-			Base::PSO pso;
+		struct Data {
+			Math::Matrix4x4 projectionInverse;	// カメラのプロジェクション行列の逆行列
+			Math::Vector4 color;
+			float threshold;
 		};
-		TempData brightnessFilter;	// 輝度抽出
-		TempData gaussX;	// Xガウス
-		PSO gaussY;	// Yガウス
+		
+		Base::ConstantBuffer<Data> buffer_;
 
 	public: // ** メンバ関数 ** //
 
@@ -36,14 +34,15 @@ namespace LWP::Base::PostProcess {
 		// 更新
 		void Update() override;
 
+		// カメラのプロジェクション行列の逆行列をセットするための関数
+		void SetProjectionInverse(const Math::Matrix4x4& m) { buffer_.data_->projectionInverse = m; }
+
 		// シェーダーでincludeする処理を書き込む
 		void WriteBinding(std::ofstream* stream, RootSignature* root, int* i) override;
 		// シェーダー内の処理を書き込む
 		void WriteProcess(std::ofstream* stream) override;
 		// commandListにBind情報を指示
 		void BindCommand(ID3D12GraphicsCommandList* list, int* offset) override;
-		// 事前に行わなければいけない処理をここにまとめる
-		void PreCommand(ID3D12GraphicsCommandList* list, Base::RenderResource* target) override;
 		// ImGui
 		void DebugGUI() override;
 

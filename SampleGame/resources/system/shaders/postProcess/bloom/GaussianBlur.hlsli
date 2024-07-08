@@ -9,8 +9,8 @@ SamplerState gSampler : register(s0);
 
 static const float32_t PI = 3.14159265f;
 
-static const float32_t kSpI = 2.0f; //
-static const float32_t kSpO = 4.0f; // 
+static const float32_t kSpI = 2.0f; // inline
+static const float32_t kSpO = 4.0f; // outline
 
 //static const float32_t2 kIndex3x3[5][5] = {
 //    { { -kSpO, -kSpO }, { -kSpI, -kSpO }, { +0.0f, -kSpO }, { +kSpI, -kSpO }, { +kSpO, -kSpO } },

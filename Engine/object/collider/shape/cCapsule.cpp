@@ -3,7 +3,6 @@
 #include "cCapsule.h"
 
 #include "base/ImGuiManager.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP::Object::Collider;
 using namespace LWP;
@@ -19,7 +18,7 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 
 #if DEMO
 	// カプセルモデルを生成
-	capsuleModel.CreateFromCapsuleCol(*this);
+	capsuleModel.Set();
 	capsuleModel.material.enableLighting = false;
 	capsuleModel.isWireFrame = true;
 #endif
@@ -30,7 +29,7 @@ Capsule::Capsule(const Capsule& other) {
 
 #if DEMO
 	// カプセルモデルを生成
-	capsuleModel.CreateFromCapsuleCol(*this);
+	capsuleModel.Set();
 	capsuleModel.material.enableLighting = false;
 	capsuleModel.isWireFrame = true;
 #endif
@@ -39,7 +38,8 @@ Capsule::Capsule(const Capsule& other) {
 
 void Capsule::Update() {
 #if DEMO
-	capsuleModel.CreateFromCapsuleCol(*this);	// Capsule再生成
+	Data d(*this);
+	capsuleModel.CreateFromCapsuleCol(d.start, d.end, d.radius);
 	// isActive切り替え
 	capsuleModel.isActive = isShowWireFrame && isActive;
 	// 色を白に戻す
@@ -62,18 +62,6 @@ void Capsule::DebugGUI() {
 	ImGui::DragFloat3("end", &end.x, 0.01f);
 	ImGui::DragFloat("radius", &radius, 0.01f);
 	ICollisionShape::DebugGUI();
-}
-
-bool Capsule::CheckCollision(AABB& c) {
-	return c.CheckCollision(*this);
-}
-//bool CheckCollision(OBB& c);
-bool Capsule::CheckCollision(Sphere& c) {
-	return c.CheckCollision(*this);
-}
-bool Capsule::CheckCollision(Capsule& c) {
-	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
-	c; return false;
 }
 
 void Capsule::Hit() {

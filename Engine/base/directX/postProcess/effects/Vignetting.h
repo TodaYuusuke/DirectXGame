@@ -9,15 +9,14 @@ namespace LWP::Base::PostProcess {
 		: public IPostProcess {
 	public: // ** パブリックなメンバ変数 ** //
 
-		// 強度（現在機能しない）
+		// 強度
 		float intensity;
-
 
 	private: // ** メンバ変数 ** //
 		struct Data {
-			float i;
+			float intensity;
 		};
-		Base::ConstantBuffer<float> buffer_;
+		Base::ConstantBuffer<Data> buffer_;
 
 	public: // ** メンバ関数 ** //
 

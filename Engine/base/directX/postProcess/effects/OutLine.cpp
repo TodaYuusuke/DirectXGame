@@ -1,29 +1,32 @@
+#include "OutLine.h"
 
-struct PSInput
-{
-    float32_t4 position : SV_POSITION;
-    float32_t2 texcoord : TEXCOORD0;
-};
+#include "component/System.h"
 
-struct Parameter
-{
-    int time;
-    int rWidth;
-    int rHeight;
-};
+using namespace LWP;
+using namespace LWP::Base;
+using namespace LWP::Base::PostProcess;
 
-ConstantBuffer<Parameter> gPara : register(b0);
-Texture2D<float32_t4> gTexture : register(t0);
-Texture2D<float32_t> gDepth : register(t1);
-SamplerState gSampler : register(s0);
-SamplerState gPointSampler : register(s1);
+void OutLine::Init() {
+	threshold = 0.5f;
+	color = Utility::ColorPattern::BLACK;
+	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
+}
+void OutLine::Update() {
+	buffer_.data_->color = color.GetVector4();
+	buffer_.data_->threshold = threshold;
+	//*buffer_.data_ = intensity;
+}
 
+void OutLine::WriteBinding(std::ofstream* stream, RootSignature* root, int* i) {
+	// Bindする番号を保持
+	bindIndex = *i;
+	std::string str = R"(
 struct OutLineData {
 	float32_t4x4 projectionInverse;
 	float32_t4 color;
 	float32_t threshold;
 };
-ConstantBuffer<OutLineData> olData : register(b1);
+ConstantBuffer<OutLineData> olData : register(b${v});
 
 static const float32_t2 kIndex3x3[3][3] = {
 	{{-1.0f,-1.0f},{ 0.0f,-1.0f},{ 1.0f,-1.0f}},
@@ -67,19 +70,39 @@ float32_t3 OutLine(float32_t2 uv, float32_t3 color) {
 	}
 	return lerp(color, olData.color.rgb, weight);
 
-	// color ���̐F
-	// olData.color.rgb �A�E�g���C���̐F
+	// color 元の色
+	// olData.color.rgb アウトラインの色
 	//return color * (1.0f - weight);
 	//return color * (olData.color.rgb * (1.0f - weight));
 }
-
-float32_t4 main(PSInput input) : SV_TARGET {
-	float32_t4 output;
-	float2 uv = input.texcoord;
-
-    output = gTexture.Sample(gSampler, uv);
-
+)";
+	// 変数で値を書き換え
+	size_t pos;
+	while ((pos = str.find("${v}")) != std::string::npos) {
+		str.replace(pos, 4, std::to_string(bindIndex));
+	}
+	*stream << str;	// 書き込み
+	// rootSignatureを宣言
+	*root = root->AddCBVParameter(bindIndex, SV_Pixel);
+	// iを加算
+	*i += 1;
+}
+		// シェーダー内の処理を書き込む
+void OutLine::WriteProcess(std::ofstream* stream) {
+	*stream << R"(
 	output.rgb = OutLine(uv, output.rgb);
+)";
+}
+		
+void OutLine::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
+	list->SetGraphicsRootConstantBufferView(bindIndex + *offset, buffer_.GetGPUView());
+}
 
-	return output;
+void OutLine::DebugGUI() {
+	if (ImGui::TreeNode("OutLine")) {
+		ImGui::DragFloat("Threshold", &threshold, 0.01f);
+		ImGuiManager::ColorEdit4("color", color);
+		ImGui::Checkbox("Use", &use);
+		ImGui::TreePop();
+	}
 }

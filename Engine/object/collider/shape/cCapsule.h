@@ -50,6 +50,7 @@ namespace LWP::Object::Collider {
 
 	public: // ** 各形状との当たり判定関数 ** //
 
+		bool CheckCollision(Point& c) override;
 		bool CheckCollision(AABB& c) override;
 		//bool CheckCollision(OBB& c)  override;
 		bool CheckCollision(Sphere& c)  override;

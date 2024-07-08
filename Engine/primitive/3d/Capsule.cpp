@@ -8,6 +8,12 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
+
+//void Capsule::Init() {
+//	IPrimitive::Init();
+//	obsTransform = &worldTF;
+//}
+
 void Capsule::CreateVertices() {
 	// 頂点をクリア
 	vertices.clear();
@@ -94,10 +100,10 @@ void Capsule::CreateIndexes() {
 int Capsule::GetVertexCount() const { return (subdivision + 1u) * (subdivision + 1u); }
 int Capsule::GetIndexCount() const { return subdivision * (subdivision - 1u) * 2u * 3u; }
 
-void Capsule::CreateFromCapsuleCol(const LWP::Object::Collider::Capsule& capsule) {
-	worldTF.translation = capsule.start;
-	end = capsule.end;
-	radius = capsule.radius;
+void Capsule::CreateFromCapsuleCol(const Vector3& s, const Vector3& e, const float& r) {
+	worldTF.translation = s;
+	end = e;
+	radius = r;
 	subdivision = 16;
 	isWireFrame = true;
 	CreateVertices();	// 再計算

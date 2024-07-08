@@ -10,9 +10,12 @@ using namespace LWP::Utility;
 
 // 初期化
 void GameScene::Initialize() {
+	//Info::ChangeShowDebugGUI();
 	//levelData.LoadShortPath("Scene.json");
+	
 	// bloomをON
 	mainCamera.pp.use = true;
+	mainCamera.pp.outLine.use = true;
 	mainCamera.pp.bloom.use = true;
 	mainCamera.pp.CreateShaderFile();
 

@@ -17,8 +17,7 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 	radius = rad;
 
 #if DEMO
-	// 立方体のインスタンスを作成
-	sphereModel.CreateFromSphereCol(position, radius);
+	// モデルの初期設定
 	sphereModel.material.enableLighting = false;
 	sphereModel.isWireFrame = true;
 #endif
@@ -28,8 +27,7 @@ Sphere::Sphere(const Sphere& other) {
 	*this = other;
 
 #if DEMO
-	// 立方体のインスタンスを作成
-	sphereModel.CreateFromSphereCol(position, radius);
+	// モデルの初期設定
 	sphereModel.material.enableLighting = false;
 	sphereModel.isWireFrame = true;
 #endif
@@ -84,62 +82,6 @@ void Sphere::DebugGUI() {
 	ICollisionShape::DebugGUI();
 }
 
-bool Sphere::CheckCollision(AABB& c) {
-	return c.CheckCollision(*this);
-}
-//bool CheckCollision(OBB* c) {}
-bool Sphere::CheckCollision(Sphere& c) {
-	Sphere::Data data1(*this);	// transformをかけたデータで計算する
-	Sphere::Data data2(c);
-
-	// 二つの球体の中心点間の距離を求める
-	Vector3 dist = data1.position - data2.position;
-	// 半径の合計よりも短ければ衝突
-	bool result = dist.Length() <= (data1.radius + data2.radius);
-
-#if DEMO
-	if (result) {
-		Hit();
-		c.Hit();
-	}
-#endif
-	return result;
-}
-bool Sphere::CheckCollision(Capsule& c) {
-	Sphere::Data sphere(*this);
-	Capsule::Data capsule(c);
-
-	Vector3 d = sphere.position - capsule.start;
-	Vector3 ba = capsule.end - capsule.start;
-	// カプセルのベクトルの長さ
-	float length = ba.Length();
-	// 正規化
-	Vector3 e = ba.Normalize();
-	// 内積
-	float dot = Vector3::Dot(d, e);
-
-	float t = dot / length;
-	t = std::clamp<float>(t, 0.0f, 1.0f);
-	// 線形補間
-	Vector3 f;
-	f = (1.0f - t) * capsule.start + t * capsule.end;
-
-	// 距離
-	float distance = (sphere.position - f).Length();
-
-	// 当たっているかを判定
-	bool result = distance < sphere.radius + capsule.radius;
-
-#if DEMO
-	if (result) {
-		Hit();
-		c.Hit();
-	}
-#endif
-	return result;
-
-}
-
 void Sphere::Hit() {
 #if DEMO
 	// hitしているときは色を変える
@@ -149,8 +91,5 @@ void Sphere::Hit() {
 
 Sphere::Data::Data(Sphere& sphere) {
 	position = sphere.position + sphere.follow_->GetWorldPosition();
-	ImGui::Begin("Test");
-	ImGui::DragFloat3("t", &position.x);
-	ImGui::End();
 	radius = sphere.radius;
 }

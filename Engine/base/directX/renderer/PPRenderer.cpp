@@ -21,7 +21,7 @@ void PPRenderer::DrawCall(ID3D12GraphicsCommandList* list) {
 		// 既定値のViewをバインド
 		//list->SetGraphicsRootConstantBufferView(0, );
 		list->SetGraphicsRootDescriptorTable(1, it->render->srvInfo.gpuView);
-		//list->SetGraphicsRootDescriptorTable(2, it->depth->srvInfo.gpuView);
+		list->SetGraphicsRootDescriptorTable(2, it->depth->srvInfo.gpuView);
 
 		// リソースバリアをセット
 		D3D12_RESOURCE_STATES beforeBarrier = it->texture->GetBarrier();

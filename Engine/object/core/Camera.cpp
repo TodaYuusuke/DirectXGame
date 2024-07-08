@@ -44,6 +44,9 @@ void Camera::Update(Base::RendererManager* manager) {
 	if (pp.use) {
 		// データ更新
 		pp.Update();
+		float fovF = fov / 100.0f / 2.0f;
+		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fovF, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 300.0f);
+		pp.outLine.SetProjectionInverse(projectionMatrix.Inverse());
 	}
 
 	// isActiveがfalseならレンダリングはしない

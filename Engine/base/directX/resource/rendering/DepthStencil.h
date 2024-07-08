@@ -19,7 +19,7 @@ namespace LWP::Base {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// SRVの登録情報
-		//SRVInfo srvInfo;
+		SRVInfo srvInfo;
 		// DSVの登録情報
 		DSVInfo dsvInfo;
 
