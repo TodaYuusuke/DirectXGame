@@ -355,6 +355,10 @@ void Manager::RigidGUI(Models& m) {
 		// 選択された番号のDebugGUIを呼び出す
 		(*Utility::GetIteratorAtIndex<RigidModel*>(lists, selectedNum))->DebugGUI();
 	}
+	ImGui::Text("--------- Solid Info ---------");
+	ImGui::Text("ptr Count ... %d", m.rigid.solid.ptrs.list.size());
+	ImGui::Text("InstanceData UsedCount ... %d", m.rigid.solid.buffer.inst->GetCount());
+	ImGui::Text("MaterialStruct UsedCount ... %d", m.rigid.solid.buffer.material->GetCount());
 }
 void Manager::SkinningGUI(Models& m) {
 	static int selectedNum = 0;	// 選択された番号
