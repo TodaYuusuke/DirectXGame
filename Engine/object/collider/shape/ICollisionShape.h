@@ -19,6 +19,7 @@ namespace LWP::Object::Collider {
 	//class OBB;
 	class Sphere;
 	class Capsule;
+	class Mesh;
 
 
 	/// <summary>
@@ -80,6 +81,7 @@ namespace LWP::Object::Collider {
 		//virtual bool CheckCollision(OBB& c) = 0;
 		virtual bool CheckCollision(Sphere& c) = 0;
 		virtual bool CheckCollision(Capsule& c) = 0;
+		//virtual bool CheckCollision(Mesh& c) = 0;
 		
 		// ヒット時の処理をまとめた関数
 		virtual void Hit() {};

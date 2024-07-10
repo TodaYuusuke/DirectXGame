@@ -4,7 +4,11 @@
 #include <functional>
 
 #include "resources/model/RigidModel.h"
-//#include "base/ImGuiManager.h"
+
+#include "../Externals/imgui/imgui.h"
+#include "../Externals/imgui/imgui_impl_dx12.h"
+#include "../Externals/imgui/imgui_impl_win32.h"
+#include "../Externals/imgui/imgui_stdlib.h"
 
 namespace LWP::Object {
 	/// <summary>
@@ -20,11 +24,9 @@ namespace LWP::Object {
 			int elapsedFrame = 0;
 
 			// デフォルトコンストラクタ
-			Data() = default;
-			Data(const Data& other) {
-				m = other.m;
-				velocity = other.velocity;
-				elapsedFrame = other.elapsedFrame;
+			Data() = delete;
+			Data(const T& t) {
+				m = t;
 			}
 
 			// デストラクタ
@@ -56,11 +58,13 @@ namespace LWP::Object {
 			// 必須の設定だがいい感じに設定できるタイミングがないので無理やりここで設定
 			model.isActive = false;
 
-			// 関数ポインタがあるなら実行
-			for (int i = 0; i < data_.size(); i++) {
-				if (UpdateParticle(data_[i])) {
-					data_.erase(data_.begin() + i);
-					i--;
+			// イテレータを使用してリストを走査しながら要素を削除
+			for (auto it = data_.begin(); it != data_.end(); ) {
+				if (UpdateParticle(*it)) {
+					it = data_.erase(it); // 要素を削除し、新しいイテレータを取得
+				}
+				else {
+					it++; // 次の要素に進む
 				}
 			}
 			// パーティクル用のデータ登録関数を呼び出す
@@ -71,8 +75,7 @@ namespace LWP::Object {
 		// パーティクルを追加
 		void Add(int value) {
 			for (int i = 0; i < value; i++) {
-				data_.emplace_back();
-				data_.back().m = model;
+				data_.emplace_back(model);
 				data_.back().m.isActive = true;
 				Generate(data_.back());
 			}
@@ -80,7 +83,8 @@ namespace LWP::Object {
 		// デバッグ用GUI
 		void DebugGUI() override final {
 			model.DebugGUI();
-			//ImGui::Checkbox("isActive", &isActive);
+			ImGui::Checkbox("isActive", &isActive);
+			ImGui::Text("Count %d", data_.size());
 		}
 
 	protected: // ** 派生先で定義してもらう関数 ** //
@@ -103,6 +107,6 @@ namespace LWP::Object {
 	private: // ** メンバ変数 ** //
 
 		// パーティクルのトランスフォーム
-		std::vector<Data> data_;
+		std::list<Data> data_;
 	};
 }

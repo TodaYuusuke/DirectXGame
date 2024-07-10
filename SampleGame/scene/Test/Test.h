@@ -19,11 +19,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Resource::RigidModel mesh;
 	//LWP::Resource::Animation anim;
-	LWP::Primitive::Sprite sprite;
-	LWP::Object::Camera subCamera;
-
-	LWP::Resource::RigidModel cube;
-	LWP::Resource::RigidModel cube2;
 
 	LWP::Object::PointLight pl;
 

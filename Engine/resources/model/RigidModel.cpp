@@ -12,7 +12,7 @@ using namespace LWP::Resource;
 
 
 RigidModel::RigidModel() {}
-RigidModel::RigidModel(const RigidModel& other) : RigidModel() {
+RigidModel::RigidModel(const RigidModel& other) {
 	this->LoadFullPath(other.filePath);
 	worldTF = other.worldTF;
 	isActive = other.isActive;
