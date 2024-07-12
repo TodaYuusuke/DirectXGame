@@ -36,6 +36,10 @@ void LevelData::LoadFullPath(const std::string& fp) {
 }
 
 void LevelData::HotReload() {
+	rigidModels.clear();
+	skinModels.clear();
+	colliders.clear();
+
 	// ファイルストリーム
 	std::ifstream file;
 	file.open(filePath);
@@ -84,6 +88,26 @@ void LevelData::HotReload() {
 				rigidModels[objName].LoadCube();
 			}
 
+			// コライダーがあれば生成
+			if (object.contains("collider")) {
+				nlohmann::json& collider = object["collider"];
+				if (collider["type"] == "AABB") {
+					AABB& aabb = colliders[objName].SetBroadShape(AABB());
+					aabb.min = {
+						static_cast<float>(collider["min"][0]),
+						static_cast<float>(collider["min"][2]),
+						static_cast<float>(collider["min"][1]),
+					};
+					aabb.max = {
+						static_cast<float>(collider["max"][0]),
+						static_cast<float>(collider["max"][2]),
+						static_cast<float>(collider["max"][1]),
+					};
+					colliders[objName].SetFollowTarget(&rigidModels[objName].worldTF);
+				}
+				//rigidModels[objName].LoadShortPath(object["file_name"].get<std::string>());
+			}
+
 			// トランスフォームのパラメータ読み込み
 			SetWorldTF(object["transform"], &rigidModels[objName].worldTF);
 		}
@@ -103,13 +127,13 @@ void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* ta
 	};
 	// 回転角
 	target->rotation =
-		/*Quaternion::CreateFromAxisAngle({1.0f,0.0f,0.0f}, -static_cast<float>(M_PI) / 2.0f) **/
 		Quaternion{
-			data["rotation"][0],
-			data["rotation"][2],
 			data["rotation"][1],
 			data["rotation"][3],
-	}.Inverse();
+			data["rotation"][0],
+			data["rotation"][2],
+		};
+	target->rotation.z *= -1.0f;
 	
 	// 平行移動
 	target->scale = {

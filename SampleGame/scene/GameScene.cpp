@@ -12,33 +12,13 @@ using namespace LWP::Utility;
 // 初期化
 void GameScene::Initialize() {
 	//Info::ChangeShowDebugGUI();
-	//levelData.LoadShortPath("Scene.json");
+	levelData.LoadShortPath("SampleGameScene.json");
 	
 	// bloomをON
 	mainCamera.pp.use = true;
 	mainCamera.pp.outLine.use = true;
 	mainCamera.pp.bloom.use = true;
 	mainCamera.pp.CreateShaderFile();
-
-	buildings[0].LoadShortPath("buildings/1Story_Mat.gltf");
-	buildings[1].LoadShortPath("buildings/1Story_GableRoof_Mat.gltf");
-	buildings[2].LoadShortPath("buildings/1Story_RoundRoof_Mat.gltf");
-	buildings[3].LoadShortPath("buildings/2Story_Mat.gltf");
-	buildings[4].LoadShortPath("buildings/2Story_Sign_Mat.gltf");
-	buildings[5].LoadShortPath("buildings/3Story_Balcony_Mat.gltf");
-	buildings[6].LoadShortPath("buildings/4Story_Center_Mat.gltf");
-	buildings[7].LoadShortPath("buildings/4Story_Wide_2Doors_Mat.gltf");
-	for (int i = 0; i < 8; i++) {
-		buildings[i].worldTF.translation.x += i * 2.0f;
-		buildings[i].worldTF.translation.z = 2.0f;
-		buildings[i].worldTF.rotation *= Quaternion::CreateFromAxisAngle({ 0.0f,1.0f,0.0f }, 3.14f);
-		buildings[i].SetAllMaterialLighting(true);
-	}
-	buildings[6].worldTF.translation.x = 3.0f;
-	buildings[6].worldTF.translation.z = 7.0f;
-	buildings[7].worldTF.translation.x = -8.0f;
-	buildings[7].worldTF.translation.z = 7.0f;
-
 
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { 100.0f,100.0f,100.0f };
@@ -63,14 +43,14 @@ void GameScene::Initialize() {
 		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
 		stars[i].SetAllMaterialLighting(false);
 	}
-	ground.LoadShortPath("ground/Ground.gltf");
+	/*ground.LoadShortPath("ground/Ground.gltf");
 	ground.ApplyWorldTransform({
 		{},
 		Quaternion(),
 		{ 100.0f,1.0f, 100.0f }
-	});
-	Collider::Mesh& colliderMesh = groundCollider.SetBroadShape(Collider::Mesh());
-	colliderMesh.Create(ground);
+	});*/
+	//Collider::Mesh& colliderMesh = groundCollider.SetBroadShape(Collider::Mesh());
+	//colliderMesh.Create(ground);
 	//ground.SetAllMaterialLighting(true);
 
 	// プレイヤー初期化
@@ -80,11 +60,10 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	player.Update();
 
-	//// シーン再読み込み
-	//if (Input::Keyboard::GetTrigger(DIK_R)) {
-	//	levelData.HotReload();
-	//	//nextSceneFunction = []() { return new GameScene(); };
-	//}
+	// シーン再読み込み
+	if (Input::Keyboard::GetTrigger(DIK_R)) {
+		levelData.HotReload();
+	}
 	//if (Input::Keyboard::GetTrigger(DIK_N)) {
 	//	nextSceneFunction = []() { return new Test(); };
 	//}
