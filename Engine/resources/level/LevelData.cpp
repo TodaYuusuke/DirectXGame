@@ -105,7 +105,6 @@ void LevelData::HotReload() {
 					};
 					colliders[objName].SetFollowTarget(&rigidModels[objName].worldTF);
 				}
-				//rigidModels[objName].LoadShortPath(object["file_name"].get<std::string>());
 			}
 
 			// トランスフォームのパラメータ読み込み
