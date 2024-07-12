@@ -4,6 +4,7 @@
 using namespace LWP;
 using namespace LWP::Resource;
 using namespace LWP::Input;
+using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Primitive;
 using namespace LWP::Utility;
@@ -68,6 +69,8 @@ void GameScene::Initialize() {
 		Quaternion(),
 		{ 100.0f,1.0f, 100.0f }
 	});
+	Collider::Mesh& colliderMesh = groundCollider.SetBroadShape(Collider::Mesh());
+	colliderMesh.Create(ground);
 	//ground.SetAllMaterialLighting(true);
 
 	// プレイヤー初期化

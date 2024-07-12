@@ -121,9 +121,13 @@ void ModelData::Load(const std::string& filePath) {
 	buffers_.materials->Init(device, srv);
 	// データのコピー
 	std::memcpy(buffers_.meshlet->data_, meshlets.data(), sizeof(DirectX::Meshlet) * meshlets.size());
-	std::memcpy(buffers_.vertex->data_, vertices.data(), sizeof(Base::VertexStruct) * vertices.size());
+	for (VertexStruct& v : vertices) {
+		buffers_.vertex->Add(v);
+	}
 	std::memcpy(buffers_.uniqueVertexIndices->data_, uniqueVertices.data(), sizeof(uint8_t) * uniqueVertices.size());
-	std::memcpy(buffers_.primitiveIndices->data_, primitiveIndices.data(), sizeof(DirectX::MeshletTriangle) * primitiveIndices.size());
+	for (DirectX::MeshletTriangle& v : primitiveIndices) {
+		buffers_.primitiveIndices->Add(v.i0 | (v.i1 << 10) | (v.i2 << 20));
+	}
 	std::memcpy(buffers_.materials->data_, materials.data(), sizeof(Base::MaterialStruct) * materials.size());
 
 }

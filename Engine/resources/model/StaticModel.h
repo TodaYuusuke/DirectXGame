@@ -6,7 +6,7 @@ namespace LWP::Resource {
 	/// 実行中に動かすことのない3Dモデル
 	/// </summary>
 	class StaticModel : public IModel {
-	private: // ** メンバ変数 ** //
+	public: // ** メンバ変数 ** //
 		// 加工済み頂点
 		std::unique_ptr<Base::StructuredBuffer<Base::OutputVertexStruct>> vertexBuffer_;
 

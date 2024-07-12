@@ -3,6 +3,7 @@
 #include "shape/cAABB.h"
 #include "shape/cSphere.h"
 #include "shape/cCapsule.h"
+#include "shape/cMesh.h"
 
 #include "Mask.h"
 
@@ -31,7 +32,7 @@ namespace LWP::Object::Collider {
 		bool isActive = true;
 		
 		// Variant
-		using ShapeVariant = std::variant<Point, AABB, Sphere, Capsule>;
+		using ShapeVariant = std::variant<Point, AABB, Sphere, Capsule, Mesh>;
 
 		// ブロードフェーズのコライダー形状
 		ShapeVariant broad;

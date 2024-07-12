@@ -2,6 +2,7 @@
 #include "cAABB.h"
 #include "cSphere.h"
 #include "cCapsule.h"
+#include "cMesh.h"
 
 #include "utility/MyUtility.h"
 
@@ -10,7 +11,7 @@ using namespace LWP::Math;
 using namespace LWP;
 
 void CallHit(ICollisionShape* c1, ICollisionShape* c2, const bool& flag) {
-	#if DEMO
+#if DEMO
 	if (flag) {
 		c1->Hit();
 		c2->Hit();
@@ -64,6 +65,7 @@ bool Point::CheckCollision(Capsule& c) {
 	Utility::Log("Error!! Point * Capsule Collision is Unimplemented");
 	c; return false;
 }
+bool Point::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
 
 #pragma endregion
 
@@ -132,6 +134,7 @@ bool AABB::CheckCollision(Capsule& c) {
 	CallHit(this, &c, result);
 	return result;
 }
+bool AABB::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
 
 #pragma endregion
 
@@ -179,6 +182,7 @@ bool Sphere::CheckCollision(Capsule& c) {
 	CallHit(this, &c, result);
 	return result;
 }
+bool Sphere::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
 
 #pragma endregion
 
@@ -187,13 +191,17 @@ bool Sphere::CheckCollision(Capsule& c) {
 bool Capsule::CheckCollision(Point& c) { return c.CheckCollision(*this); }
 bool Capsule::CheckCollision(AABB& c) { return c.CheckCollision(*this); }
 bool Capsule::CheckCollision(Sphere& c) { return c.CheckCollision(*this); }
-bool Capsule::CheckCollision(Capsule& c) {
-	Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented");
-	c; return false;
-}
+bool Capsule::CheckCollision(Capsule& c) { Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented"); c; return false; }
+bool Capsule::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
 
 #pragma endregion
 
 #pragma region Mesh * other
+
+bool Mesh::CheckCollision(Point& c) { Utility::Log("Error!! Mesh * Point Collision is Unimplemented"); c; return false; }
+bool Mesh::CheckCollision(AABB& c) { Utility::Log("Error!! Mesh * AABB Collision is Unimplemented"); c; return false; }
+bool Mesh::CheckCollision(Sphere& c) { Utility::Log("Error!! Mesh * Sphere Collision is Unimplemented"); c; return false; }
+bool Mesh::CheckCollision(Capsule& c) { Utility::Log("Error!! Mesh * Capsule Collision is Unimplemented"); c; return false; }
+bool Mesh::CheckCollision(Mesh& c) { Utility::Log("Error!! Mesh * Mesh Collision is Unimplemented"); c; return false; }
 
 #pragma endregion

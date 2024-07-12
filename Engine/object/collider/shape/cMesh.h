@@ -1,5 +1,6 @@
 #pragma once
 #include "ICollisionShape.h"
+#include <list>
 
 #if DEMO
 #include "primitive/2d/Triangle.h"
@@ -36,10 +37,12 @@ namespace LWP::Object::Collider {
 		// ImGuiの派生クラス
 		void DebugGUI() override;
 
-#if DEMO
 	private:
+		// 当たり判定用のモデル
+		Resource::StaticModel* model_;
+#if DEMO
 		// デバッグ用モデル
-		std::vector<LWP::Primitive::Triangle> triangles_;
+		std::list<Primitive::Triangle> triangles_;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //
@@ -49,7 +52,7 @@ namespace LWP::Object::Collider {
 		//bool CheckCollision(OBB& c)  override;
 		bool CheckCollision(Sphere& c)  override;
 		bool CheckCollision(Capsule& c)  override;
-		//bool CheckCollision(Mesh& c)  override;
+		bool CheckCollision(Mesh& c)  override;
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;
@@ -64,7 +67,7 @@ namespace LWP::Object::Collider {
 			LWP::Math::Vector3 center;
 
 			// コンストラクタ
-			Data(AABB& aabb);
+			Data(Mesh& aabb);
 		};
 	};
 

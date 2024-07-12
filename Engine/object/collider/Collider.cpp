@@ -88,9 +88,8 @@ void Collider::DebugGUI() {
 			if (ImGui::MenuItem("Point")) { SetBroadShape(Point()); }
 			if (ImGui::MenuItem("AABB")) { SetBroadShape(AABB()); }
 			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
-			if (ImGui::MenuItem("Capsule")) { 
-				SetBroadShape(Capsule());
-			}
+			if (ImGui::MenuItem("Capsule")) { SetBroadShape(Capsule()); }
+			//if (ImGui::MenuItem("Mesh")) { SetBroadShape(Mesh()); }	// Meshの動的生成は厳しいので廃止
 			ImGui::EndMenu();
 		}
 		GetBasePtr(broad)->DebugGUI();

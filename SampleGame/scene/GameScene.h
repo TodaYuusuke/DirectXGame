@@ -25,6 +25,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::RigidModel stars[kStarCount];
 	// 地面
 	LWP::Resource::StaticModel ground;
+	LWP::Object::Collider::Collider groundCollider;
 
 
 	// プレイヤー

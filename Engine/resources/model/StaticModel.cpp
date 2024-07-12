@@ -40,7 +40,7 @@ void StaticModel::LoadFullPath(const std::string& fp) {
 	// データのコピー
 	// Vertexだけ型が代わるのでfor文
 	for (uint32_t i = 0; i < data->buffers_.vertex->kMaxSize; i++) {
-		vertexBuffer_->data_[i] = data->buffers_.vertex->data_[i];
+		vertexBuffer_->Add(data->buffers_.vertex->data_[i]);
 	}
 
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）

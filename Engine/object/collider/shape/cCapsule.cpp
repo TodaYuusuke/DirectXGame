@@ -1,5 +1,3 @@
-#include "cAABB.h"
-#include "cSphere.h"
 #include "cCapsule.h"
 
 #include "base/ImGuiManager.h"
