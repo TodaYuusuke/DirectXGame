@@ -45,4 +45,7 @@ public:
 	void SetMainRenderCamera(LWP::Object::Camera* setCamera) { mainRenderCamera_ = setCamera; }
 	// メインのレンダリングで使うカメラを渡す関数
 	LWP::Object::Camera* GetMainRenderCamera() { return mainRenderCamera_; }
+
+	// LevelDataのDebugGUI呼び出し用関数
+	void DebugGUI() { levelData.DebugGUI(); }
 };

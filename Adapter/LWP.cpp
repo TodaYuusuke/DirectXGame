@@ -133,6 +133,7 @@ void Engine::DebugGUI() {
 		colliderManager_->DebugGUI();
 		resourceManager_->DebugGUI();
 		directXCommon_->DebugGUI();
+		sceneManager_->DebugGUI();
 		debugTimer_.DebugGUI();
 
 		ImGui::EndTabBar();

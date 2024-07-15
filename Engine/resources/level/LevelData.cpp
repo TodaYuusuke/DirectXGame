@@ -1,5 +1,6 @@
 #include "LevelData.h"
 
+#include "base/ImGuiManager.h"
 #include "utility/MyUtility.h"
 #include <fstream>
 
@@ -71,6 +72,7 @@ void LevelData::HotReload() {
 		std::string type = object["type"].get<std::string>();	// 種別を取得
 		std::string objName = object["name"].get<std::string>();	// 名前を受け取る
 		
+		// カメラの回転だけ正常に読み込めないのでコメントアウト中
 		// CAMERA（適応対象のカメラの実体がなければ検証しない）
 		//if (cameraPtr && type.compare("CAMERA") == 0) {
 		//	// トランスフォームのパラメータ読み込み
@@ -114,7 +116,33 @@ void LevelData::HotReload() {
 }
 
 void LevelData::DebugGUI() {
+	if (ImGui::BeginTabItem("LevelData")) {
+		static int radioValue = 0;
+		// どれを（Rigid, Skinning, Static, Collider）を表示するか選択
+		ImGui::RadioButton("Rigid", &radioValue, 0);
+		ImGui::SameLine();
+		ImGui::RadioButton("Skinning", &radioValue, 1);
+		ImGui::SameLine();
+		ImGui::RadioButton("Static", &radioValue, 2);
+		ImGui::SameLine();
+		ImGui::RadioButton("Collider", &radioValue, 3);
 
+		switch (radioValue) {
+			case 0:
+				RigidDebugGUI();
+				break;
+			case 1:
+				SkinDebugGUI();
+				break;
+			case 2:
+				StaticDebugGUI();
+				break;
+			case 3:
+				ColliderDebugGUI();
+				break;
+		}
+		ImGui::EndTabItem();
+	}
 }
 
 void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target) {
@@ -142,6 +170,78 @@ void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* ta
 	};
 }
 
+void LevelData::RigidDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!rigidModels.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : rigidModels) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, RigidModel>(rigidModels, currentItem)).second.DebugGUI();
+	}
+}
+void LevelData::SkinDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!skinModels.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : skinModels) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, SkinningModel>(skinModels, currentItem)).second.DebugGUI();
+	}
+}
+void LevelData::StaticDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!staticModels.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : staticModels) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, StaticModel>(staticModels, currentItem)).second.DebugGUI();
+	}
+}
+void LevelData::ColliderDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!colliders.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : colliders) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, Collider>(colliders, currentItem)).second.DebugGUI();
+	}
+}
 
 // 短縮用パス
 const std::string LevelData::kDirectoryPath = "resources/level/";

@@ -19,6 +19,11 @@ namespace LWP::Scene {
 		void Initialize(IScene* firstScene);
 		// 更新
 		void Update();
+		
+		/// <summary>
+		/// Debug用ImGui
+		/// </summary>
+		void DebugGUI();
 
 		/// <summary>
 		/// CommandManagerにビュープロジェクション行列を登録するため、カメラのポインタを返す関数
