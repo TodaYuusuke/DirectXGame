@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector3.h"
 
 /// <summary>
 /// 4次元ベクトル
@@ -12,6 +13,10 @@ namespace LWP::Math {
 		float y;
 		float z;
 		float w;
+
+		// ** メンバ関数 ** //
+
+		Vector3 xyz() { return { x,y,z }; }
 
 		// *** オペーレーターオーバーロード *** //
 

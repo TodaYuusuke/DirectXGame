@@ -8,6 +8,7 @@
 
 // 前方宣言
 namespace LWP::Resource {
+	class RigidModel;
 	class StaticModel;
 }
 
@@ -18,7 +19,12 @@ namespace LWP::Object::Collider {
 	class Mesh final
 		: public ICollisionShape {
 	public: // ** パブリックなメンバ変数 ** //
-
+		// 三角形
+		struct TriangleData {
+			Math::Vector3 pos[3];
+			Math::Vector3 normal;
+		};
+		std::vector<TriangleData> data;
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
@@ -56,19 +62,6 @@ namespace LWP::Object::Collider {
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;
-
-		// 当たり判定計算に適したデータ構造体
-		struct Data {
-			// 最小
-			LWP::Math::Vector3 min;
-			// 最大
-			LWP::Math::Vector3 max;
-			// 中心の座標
-			LWP::Math::Vector3 center;
-
-			// コンストラクタ
-			Data(Mesh& aabb);
-		};
 	};
 
 

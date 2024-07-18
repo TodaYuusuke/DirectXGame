@@ -16,6 +16,10 @@ namespace LWP::Resource {
 
 		// メッシュ
 		std::vector<Primitive::Mesh> meshes_;
+		// 頂点
+		std::vector<Base::VertexStruct> vertices;
+		// インデックス
+		std::vector<uint32_t> indexes;
 		// ノード
 		std::vector<Primitive::Node> nodes_;
 		// マテリアル

@@ -15,10 +15,10 @@ void GameScene::Initialize() {
 	levelData.LoadShortPath("SampleGameScene.json");
 	
 	// bloomをON
-	mainCamera.pp.use = true;
+	/*mainCamera.pp.use = true;
 	mainCamera.pp.outLine.use = true;
 	mainCamera.pp.bloom.use = true;
-	mainCamera.pp.CreateShaderFile();
+	mainCamera.pp.CreateShaderFile();*/
 
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { 100.0f,100.0f,100.0f };
@@ -43,14 +43,14 @@ void GameScene::Initialize() {
 		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
 		stars[i].SetAllMaterialLighting(false);
 	}
-	/*ground.LoadShortPath("ground/Ground.gltf");
+	ground.LoadShortPath("ground/Ground.gltf");
 	ground.ApplyWorldTransform({
 		{},
 		Quaternion(),
 		{ 100.0f,1.0f, 100.0f }
-	});*/
-	//Collider::Mesh& colliderMesh = groundCollider.SetBroadShape(Collider::Mesh());
-	//colliderMesh.Create(ground);
+	});
+	Collider::Mesh& colliderMesh = groundCollider.SetBroadShape(Collider::Mesh());
+	colliderMesh.Create(ground);
 	//ground.SetAllMaterialLighting(true);
 
 	// プレイヤー初期化

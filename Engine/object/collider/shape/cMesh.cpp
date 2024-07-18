@@ -36,15 +36,24 @@ void Mesh::Update() {
 }
 
 void Mesh::Create(const LWP::Resource::StaticModel& model) {
-	StructuredBuffer<uint32_t>* indexes = model.GetModelData()->buffers_.primitiveIndices.get();
-	StructuredBuffer<OutputVertexStruct>* vertices = model.vertexBuffer_.get();
+	const std::vector<uint32_t>& indexes = model.GetModelData()->indexes; // インデックス
+	StructuredBuffer<OutputVertexStruct>* vertices = model.vertexBuffer_.get();	// 頂点
 
-	for (int i = 0; i < indexes->GetCount(); i += 3) {
+	for (int i = 0; i < indexes.size(); i += 3) {
+		TriangleData& d = data.emplace_back();
+		d.pos[0] = vertices->data_[indexes[i]].position.xyz();
+		d.pos[1] = vertices->data_[indexes[i + 1]].position.xyz();
+		d.pos[2] = vertices->data_[indexes[i + 2]].position.xyz();
+		d.normal = Vector3::Cross(d.pos[2] - d.pos[0], d.pos[1] - d.pos[0]).Normalize();	// 外積で面の法線を求める
+
 #if DEMO
 		triangles_.emplace_back();
-		triangles_.back().vertices[0] = vertices->data_[indexes->data_[i]];
-		triangles_.back().vertices[1] = vertices->data_[indexes->data_[i + 1]];
-		triangles_.back().vertices[2] = vertices->data_[indexes->data_[i + 2]];
+		triangles_.back().name = "Mesh Collider " + std::to_string(i);
+		triangles_.back().vertices[0] = vertices->data_[indexes[i]];
+		triangles_.back().vertices[1] = vertices->data_[indexes[i + 1]];
+		triangles_.back().vertices[2] = vertices->data_[indexes[i + 2]];
+		triangles_.back().material.enableLighting = false;
+		triangles_.back().isWireFrame = true;
 #endif
 	}
 }
@@ -60,8 +69,4 @@ void Mesh::Hit() {
 		it->material.color = Utility::Color(Utility::ColorPattern::WHITE);
 	}
 #endif
-}
-
-Mesh::Data::Data(Mesh& aabb) {
-	aabb;
 }

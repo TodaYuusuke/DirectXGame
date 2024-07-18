@@ -21,8 +21,8 @@ void ModelData::Load(const std::string& filePath) {
 	assert(scene->HasMeshes());	// メッシュがないのは対応しない
 
 	// メッシュレット生成用のデータ
-	std::vector<Base::VertexStruct> vertices;
-	std::vector<uint32_t> indexes;
+	//std::vector<Base::VertexStruct> vertices;
+	//std::vector<uint32_t> indexes;
 	std::vector<Base::MaterialStruct> materials;
 
 	// ノード情報を格納
