@@ -7,16 +7,24 @@ using namespace LWP::Primitive;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Object;
-using namespace LWP::Object::Collider;
 
 // 初期化
 void ColliderTest::Initialize() {
 	// デバッグ情報表示
-	Info::ChangeShowDebugGUI();
+	//Info::ChangeShowDebugGUI();
 
 	// モデル読み込み
-	mesh.LoadShortPath("human/walk.gltf");
+	mesh.LoadShortPath("meshColliderTest/meshColTest.gltf");
+	//mesh.LoadShortPath("ground/Ground.gltf");
 	
+	Collider::Mesh& m = meshCol.SetBroadShape(Collider::Mesh());
+	m.Create(mesh);
+
+	pointCol.isMove = true;
+	pointCol.stayLambda = [&](Collider::Collider* c) {
+		ImGui::Begin("Test");
+		ImGui::End();
+	};
 	//// 追従
 	//aabb.SetFollowTarget(&mesh);
 	//aabb.Create(&mesh);
@@ -28,4 +36,30 @@ void ColliderTest::Initialize() {
 
 // 更新
 void ColliderTest::Update() {
+
+	if (Keyboard::GetPress(DIK_W)) {
+		pointCol.worldTF.translation.z += 0.01f;
+	}
+	if (Keyboard::GetPress(DIK_S)) {
+		pointCol.worldTF.translation.z -= 0.01f;
+	}
+	if (Keyboard::GetPress(DIK_A)) {
+		pointCol.worldTF.translation.x -= 0.01f;
+	}
+	if (Keyboard::GetPress(DIK_D)) {
+		pointCol.worldTF.translation.x += 0.01f;
+	}
+	if (Keyboard::GetPress(DIK_SPACE)) {
+		pointCol.worldTF.translation.y += 0.01f;
+	}
+	if (Keyboard::GetPress(DIK_LSHIFT)) {
+		pointCol.worldTF.translation.y -= 0.01f;
+	}
+
+	if (Keyboard::GetPress(DIK_SPACE)) {
+		pointCol.worldTF.translation.y += 0.01f;
+	}
+	if (Keyboard::GetPress(DIK_LSHIFT)) {
+		pointCol.worldTF.translation.y -= 0.01f;
+	}
 }

@@ -21,13 +21,14 @@ namespace LWP::Object::Collider {
 	public: // ** パブリックなメンバ変数 ** //
 		// トランスフォーム
 		Object::TransformQuat worldTF;
+
 		// 固有名詞
 		std::string name = "Collider";
 		// マスク
 		Mask mask;
 
 		// 動くかのフラグ
-		bool isMove = true;
+		bool isMove = false;
 		// アクティブ切り替え
 		bool isActive = true;
 		
@@ -67,9 +68,9 @@ namespace LWP::Object::Collider {
 		void Update();
 
 		// 追従するトランスフォームをペアレントにセットする関数
-		void SetFollowTarget(Object::TransformQuat* ptr) { worldTF.Parent(ptr); }
+		void SetFollowTarget(Object::TransformQuat* ptr);
 		// ヒット時に正常な位置に修正するベクトルを加算
-		//void AdjustPosition(const LWP::Math::Vector3& fixVector) { followModel_.t->worldTF += fixVector; }
+		void ApplyFixVector(const LWP::Math::Vector3& fixVector);
 
 		// 渡された形との当たり判定を確認する関数
 		void CheckCollision(Collider* c);
@@ -103,6 +104,9 @@ namespace LWP::Object::Collider {
 
 	private: // ** メンバ変数 ** //
 
+		// 追従するトランスフォーム
+		Object::TransformQuat* followTF;
+
 		// 自身のシリアル番号
 		Utility::Index serialNum;
 		// 多重ヒット回避用のヒット対象を保持する変数<シリアル番号、ヒット回数（呼び出す関数を識別)>
@@ -128,10 +132,10 @@ namespace LWP::Object::Collider {
 		/// <summary>
 		/// 共通化変数同士の当たり判定チェックの関数（ブロードフェーズ）
 		/// </summary>
-		bool CheckBroadCollision(ShapeVariant& c);
+		bool CheckBroadCollision(ShapeVariant& c, Math::Vector3* fixVec);
 		/// <summary>
 		/// 共通化変数同士の当たり判定チェックの関数（ナローフェーズ
 		/// </summary>
-		bool CheckNarrowsCollision(Collider* c);
+		bool CheckNarrowsCollision(Collider* c, Math::Vector3* fixVec);
 	};
 };

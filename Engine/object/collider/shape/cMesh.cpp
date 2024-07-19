@@ -13,11 +13,6 @@ using namespace LWP::Base;
 Mesh::Mesh() {}
 Mesh::Mesh(const Mesh& other) {
 	*this = other;
-
-#if DEMO
-	//cube.material.enableLighting = false;
-	//cube.isWireFrame = true;
-#endif
 }
 
 void Mesh::Update() {
@@ -45,6 +40,7 @@ void Mesh::Create(const LWP::Resource::StaticModel& model) {
 		d.pos[1] = vertices->data_[indexes[i + 1]].position.xyz();
 		d.pos[2] = vertices->data_[indexes[i + 2]].position.xyz();
 		d.normal = Vector3::Cross(d.pos[2] - d.pos[0], d.pos[1] - d.pos[0]).Normalize();	// 外積で面の法線を求める
+		d.center = (d.pos[0] + d.pos[1] + d.pos[2]) / 3.0f;
 
 #if DEMO
 		triangles_.emplace_back();

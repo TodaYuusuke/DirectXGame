@@ -54,12 +54,12 @@ namespace LWP::Object::Collider {
 
 	public: // ** 各形状との当たり判定関数 ** //
 
-		bool CheckCollision(Point& c) override;
-		bool CheckCollision(AABB& c) override;
-		//bool CheckCollision(OBB& c)  override;
-		bool CheckCollision(Sphere& c)  override;
-		bool CheckCollision(Capsule& c)  override;
-		bool CheckCollision(Mesh& c)  override;
+		bool CheckCollision(Point& c, Math::Vector3* fixVec) override;
+		bool CheckCollision(AABB& c, Math::Vector3* fixVec) override;
+		//bool CheckCollision(OBB& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Sphere& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Capsule& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Mesh& c, Math::Vector3* fixVec)  override;
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;

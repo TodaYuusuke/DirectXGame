@@ -39,11 +39,9 @@ void Engine::Run(IScene* firstScene) {
 		primitiveManager_->Update();
 
 		colliderManager_->Update();	// 当たり判定検証
-
 		// Primitiveの描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
 
-		// RigidModelやSkinningModelは最後にレンダリング
 		EndFrame();
 	}
 	Finalize();

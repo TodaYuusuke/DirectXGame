@@ -4,6 +4,8 @@
 #include "cCapsule.h"
 #include "cMesh.h"
 
+#include "base/ImGuiManager.h"
+
 #include "utility/MyUtility.h"
 
 using namespace LWP::Object::Collider;
@@ -30,17 +32,18 @@ void CallHit(ICollisionShape* c1, ICollisionShape* c2, const bool& flag) {
 
 
 #pragma region Point * other
-// ALL 未実装
-bool Point::CheckCollision(Point& c) {
+// Capsule 未実装
+bool Point::CheckCollision(Point& c, Math::Vector3* fixVec) {
 	Point::Data data1(*this);
 	Point::Data data2(c);
 	
 	bool result = data1.position == data2.position;
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Point::CheckCollision(AABB& c) {
+bool Point::CheckCollision(AABB& c, Math::Vector3* fixVec) {
 	Point::Data point(*this);
 	AABB::Data aabb(c);
 
@@ -50,29 +53,32 @@ bool Point::CheckCollision(AABB& c) {
 		(point.position.z >= aabb.min.z && point.position.z <= aabb.max.z);
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Point::CheckCollision(Sphere& c) {
+bool Point::CheckCollision(Sphere& c, Math::Vector3* fixVec) {
 	Point::Data point(*this);
 	Sphere::Data s(c);
 
 	bool result = (point.position - s.position).Length() <= s.radius;
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Point::CheckCollision(Capsule& c) {
+bool Point::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
 	Utility::Log("Error!! Point * Capsule Collision is Unimplemented");
+	*fixVec = { 0.0f,0.0f,0.0f };
 	c; return false;
 }
-bool Point::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
+bool Point::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
 #pragma region AABB * other
 // ALL OK
-bool AABB::CheckCollision(Point& c) { return c.CheckCollision(*this); }
-bool AABB::CheckCollision(AABB& c) {
+bool AABB::CheckCollision(Point& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
+bool AABB::CheckCollision(AABB& c, Math::Vector3* fixVec) {
 	AABB::Data data1(*this);
 	AABB::Data data2(c);
 	bool result =
@@ -81,9 +87,10 @@ bool AABB::CheckCollision(AABB& c) {
 		(data1.min.z <= data2.max.z && data1.max.z >= data2.min.z);
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool AABB::CheckCollision(Sphere& c) {
+bool AABB::CheckCollision(Sphere& c, Math::Vector3* fixVec) {
 	AABB::Data aabb(*this);
 	Sphere::Data sphere(c);
 
@@ -98,9 +105,10 @@ bool AABB::CheckCollision(Sphere& c) {
 	bool result = dist <= sphere.radius;
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool AABB::CheckCollision(Capsule& c) {
+bool AABB::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
 	AABB::Data aabb(*this);
 	Capsule::Data capsule(c);
 
@@ -132,17 +140,18 @@ bool AABB::CheckCollision(Capsule& c) {
 	bool result = dist <= capsule.radius;
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool AABB::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
+bool AABB::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
 #pragma region Sphere * other
 // ALL OK
-bool Sphere::CheckCollision(Point& c) { return c.CheckCollision(*this); }
-bool Sphere::CheckCollision(AABB& c) { return c.CheckCollision(*this); }
-bool Sphere::CheckCollision(Sphere& c) {
+bool Sphere::CheckCollision(Point& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
+bool Sphere::CheckCollision(AABB& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
+bool Sphere::CheckCollision(Sphere& c, Math::Vector3* fixVec) {
 	Sphere::Data data1(*this);	// transformをかけたデータで計算する
 	Sphere::Data data2(c);
 
@@ -152,9 +161,10 @@ bool Sphere::CheckCollision(Sphere& c) {
 	bool result = dist.Length() <= (data1.radius + data2.radius);
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Sphere::CheckCollision(Capsule& c) {
+bool Sphere::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
 	Sphere::Data sphere(*this);
 	Capsule::Data capsule(c);
 
@@ -180,28 +190,67 @@ bool Sphere::CheckCollision(Capsule& c) {
 	bool result = distance < sphere.radius + capsule.radius;
 
 	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Sphere::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
+bool Sphere::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
 #pragma region Capsule * other
 // Capsule * Capsule 未実装
-bool Capsule::CheckCollision(Point& c) { return c.CheckCollision(*this); }
-bool Capsule::CheckCollision(AABB& c) { return c.CheckCollision(*this); }
-bool Capsule::CheckCollision(Sphere& c) { return c.CheckCollision(*this); }
-bool Capsule::CheckCollision(Capsule& c) { Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented"); c; return false; }
-bool Capsule::CheckCollision(Mesh& c) { return c.CheckCollision(*this); }
+bool Capsule::CheckCollision(Point& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
+bool Capsule::CheckCollision(AABB& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
+bool Capsule::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
+bool Capsule::CheckCollision(Capsule& c, Math::Vector3* fixVec) { Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented"); c; fixVec; return false; }
+bool Capsule::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
 #pragma region Mesh * other
+// ALL 未実装
+bool Mesh::CheckCollision(Point& c, Math::Vector3* fixVec) {
+	Point::Data point(c);
+	// 結果
+	struct Result {
+		bool b = false;
+		int index = -1;
+		
+	}result;
+	// 移動方向のベクトル
+	Vector3 fixNormal = { 0.0f,0.0f,0.0f };
+	// 面と点の距離
+	float fixDist = 999999999.0f;
 
-bool Mesh::CheckCollision(Point& c) { Utility::Log("Error!! Mesh * Point Collision is Unimplemented"); c; return false; }
-bool Mesh::CheckCollision(AABB& c) { Utility::Log("Error!! Mesh * AABB Collision is Unimplemented"); c; return false; }
-bool Mesh::CheckCollision(Sphere& c) { Utility::Log("Error!! Mesh * Sphere Collision is Unimplemented"); c; return false; }
-bool Mesh::CheckCollision(Capsule& c) { Utility::Log("Error!! Mesh * Capsule Collision is Unimplemented"); c; return false; }
-bool Mesh::CheckCollision(Mesh& c) { Utility::Log("Error!! Mesh * Mesh Collision is Unimplemented"); c; return false; }
+	// ※凹み形状には未対応
+
+	// 全三角形検証
+	for (const TriangleData& d : data) {
+		// 三角形の法線と中心点の内積
+		float dot = Vector3::Dot(d.normal ,d.center);
+		// 平面に対する符号付距離
+		float dist = (Vector3::Dot(d.normal, point.position) - dot) / Vector3::Dot(d.normal, d.normal);
+
+		// 距離が0以上の場合は内部にないとして早期終了
+		if (dist < 0.0f) {
+			return false;
+		}
+
+		// 距離がより小さい場合
+		if (dist < fixDist) {
+			// 修正ベクトル計算用に保持
+			fixNormal = d.normal;
+			fixDist = dist;
+		}
+	}
+
+	CallHit(this, &c, true);
+	*fixVec = fixNormal * (-fixDist);
+	return true;
+}
+bool Mesh::CheckCollision(AABB& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * AABB Collision is Unimplemented"); c; fixVec; return false; }
+bool Mesh::CheckCollision(Sphere& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * Sphere Collision is Unimplemented"); c; fixVec; return false; }
+bool Mesh::CheckCollision(Capsule& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * Capsule Collision is Unimplemented"); c; fixVec; return false; }
+bool Mesh::CheckCollision(Mesh& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * Mesh Collision is Unimplemented"); c; fixVec; return false; }
 
 #pragma endregion
