@@ -50,10 +50,6 @@ namespace LWP::Object::Collider {
 	private:
 		// 当たり判定用のモデル
 		Resource::StaticModel* model_;
-#if DEMO
-		// デバッグ用モデル
-		std::list<Primitive::Triangle> triangles_;
-#endif
 
 	public: // ** 各形状との当たり判定関数 ** //
 
