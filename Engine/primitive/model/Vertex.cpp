@@ -19,7 +19,10 @@ Vertex& Vertex::operator=(const OutputVertexStruct& value) {
 
 void OutputVertexStruct::ApplyWorldTransform(const Matrix4x4& affine) {
 	// X,Y,Z に　アフィン行列を掛ける
-	position *= affine;
+	Vector3 p = position.xyz() * affine;
+	position.x = p.x;
+	position.y = p.y;
+	position.z = p.z;
 	worldPosition = Vector3{ position.x,position.y,position.z };
 	//texCoord; これはそのまま
 	normal = normal * Matrix3x3(affine).Inverse();

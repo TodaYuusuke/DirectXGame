@@ -88,7 +88,11 @@ namespace LWP::Resource {
 
 	private: // ** プライベートなメンバ関数 ** //
 
-		void SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target);
+		/// <summary>
+		/// ワールドトランスフォームを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		Object::TransformQuat LoadWorldTF(const nlohmann::json& data);
 
 		/// <summary>
 		/// RigidModel用ImGui

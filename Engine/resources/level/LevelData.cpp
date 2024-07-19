@@ -83,12 +83,16 @@ void LevelData::HotReload() {
 		if (type.compare("MESH") == 0) {
 			// ファイルパスがあればそのパスを読み込み
 			if (object.contains("file_name")) {
-				rigidModels[objName].LoadShortPath(object["file_name"].get<std::string>());
+				staticModels[objName].LoadShortPath(object["file_name"].get<std::string>());
 			}
 			// ファイルパスが無いので仮でCubeを読み込み
 			else {
-				rigidModels[objName].LoadCube();
+				staticModels[objName].LoadCube();
 			}
+
+			// トランスフォームのパラメータ読み込み
+			Object::TransformQuat wtf = LoadWorldTF(object["transform"]);
+			staticModels[objName].ApplyWorldTransform(wtf);
 
 			// コライダーがあれば生成
 			if (object.contains("collider")) {
@@ -105,12 +109,10 @@ void LevelData::HotReload() {
 						static_cast<float>(collider["max"][2]),
 						static_cast<float>(collider["max"][1]),
 					};
-					colliders[objName].SetFollowTarget(&rigidModels[objName].worldTF);
+					colliders[objName].worldTF = wtf;
 				}
 			}
 
-			// トランスフォームのパラメータ読み込み
-			SetWorldTF(object["transform"], &rigidModels[objName].worldTF);
 		}
 	}
 }
@@ -145,29 +147,33 @@ void LevelData::DebugGUI() {
 	}
 }
 
-void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target) {
+Object::TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
+	Object::TransformQuat wtf;
+
 	// 平行移動（Blenderの座標系からここで変換）
-	target->translation = {
+	wtf.translation = {
 		static_cast<float>(data["translation"][0]),
 		static_cast<float>(data["translation"][2]),
 		static_cast<float>(data["translation"][1]),
 	};
 	// 回転角
-	target->rotation =
+	wtf.rotation =
 		Quaternion{
 			data["rotation"][1],
 			data["rotation"][3],
 			data["rotation"][0],
 			data["rotation"][2],
 		};
-	target->rotation.z *= -1.0f;
+	wtf.rotation.z *= -1.0f;
 	
 	// 平行移動
-	target->scale = {
+	wtf.scale = {
 		static_cast<float>(data["scaling"][0]),
 		static_cast<float>(data["scaling"][2]),
 		static_cast<float>(data["scaling"][1]),
 	};
+
+	return wtf;
 }
 
 void LevelData::RigidDebugGUI() {
