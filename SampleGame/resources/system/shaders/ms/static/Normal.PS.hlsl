@@ -1,5 +1,6 @@
 #include "Common.hlsli"
 
+#include "../UtilityFunction.hlsli"
 
 // -- 平行光源のライティング -- //
 float3 DirectionLightingDiffuse(VSOutput input, uint32_t n)
@@ -107,6 +108,9 @@ float32_t4 main(VSOutput input) : SV_TARGET
         output.rgb = ((input.color.rgb * texColor.rgb * cMaterials[m].color.rgb * diffuse) + specular) * shadow;
         //output.rgb = (input.color.rgb * texColor.rgb * diffuse);
         output.a = input.color.a * texColor.a * cMaterials[m].color.a; // 透明度を保持
+        
+        output.rgb = RGBtoHSV(output.rgb);
+        output.rgb = HSVtoRGB(output.rgb);
     }
     else
     { // Lightingの計算を行わない
