@@ -8,7 +8,6 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-
 Terrain::Terrain() {}
 
 // 初期化
@@ -24,54 +23,54 @@ void Terrain::Update(Base::RendererManager* manager) {
 	}
 
 	// 当たり判定を検証
-	for (Point& p : points_) {
+	for (Point& point : points_) {
 		// 座標を求める
-		Vector3 pos = p.offset + p.wtf->GetWorldPosition();
+		Vector3 pos = point.offset + point.wtf->GetWorldPosition();
 
-		// 検索するモートン空間番号
-		const uint32_t kMortonNum = GetMortonNumber(pos);
-		uint32_t mortonNum = kMortonNum;
-		mortonNum;
-		/*
-		while (true) {
-			// 現在の空間内に登録されているオブジェクトと当たり判定検証
-			if (!polygonMap_[mortonNum].empty()) {
-				for (const Polygon& polygon : polygonMap_[mortonNum]) {
-					// ここで当たり判定検証
-					polygon;
+		// 検索するモートン番号
+		const uint32_t kTargetMorton = GetMortonNumber(pos);
+		if (kTargetMorton == -1) { continue; }	// -1だった場合早期終了
+		uint32_t currentMorton = kTargetMorton;	// 現在のモートン番号（下位レベルから検証）
+
+		do {
+			// 現在の空間内の全オブジェクトと検証
+			for (const Polygon& p : polygonMap_[currentMorton]) {
+				// 平面のパラメータ
+				float distance = p.normal.x * p.pos[0].x + p.normal.y * p.pos[0].y + p.normal.z * p.pos[0].z;
+				// 垂直の場合はヒットしていない
+				if (Vector3::Dot(p.normal, Vector3::UnitY()) == 0.0f) { continue; }
+
+				// 媒介変数tを求める
+				float t = (distance - Vector3::Dot(pos, p.normal)) / Vector3::Dot(Vector3::UnitY(), p.normal);
+				// 衝突点を求める
+				Vector3 hitPosition = pos + (t * Vector3::UnitY());
+
+				// 各辺を結んだベクトルと頂点と衝突点pを結んだベクトルのクロス積を取る
+				Vector3 cross01 = Vector3::Cross((p.pos[0] - p.pos[1]), (p.pos[1] - hitPosition));
+				Vector3 cross12 = Vector3::Cross((p.pos[1] - p.pos[2]), (p.pos[2] - hitPosition));
+				Vector3 cross20 = Vector3::Cross((p.pos[2] - p.pos[0]), (p.pos[0] - hitPosition));
+
+				// すべての小三角形のクロス積と法線が同じ方向を向いていたら衝突
+				if (Vector3::Dot(cross01, p.normal) >= 0.0f && Vector3::Dot(cross12, p.normal) >= 0.0f && Vector3::Dot(cross20, p.normal) >= 0.0f) {
+#if DEMO
+					triangleCube_[0].worldTF.translation = p.pos[0];
+					triangleCube_[1].worldTF.translation = p.pos[1];
+					triangleCube_[2].worldTF.translation = p.pos[2];
+					triangleCube_[3].worldTF.translation = hitPosition;	// 4つ目はヒットしている場所
+#endif
+					// 衝突点がposより上だった場合 -> 座標を修正
+					if (hitPosition.y > pos.y) {
+						point.wtf->translation.y = hitPosition.y;
+					}
+					currentMorton = 0;	// モートンを0にして強制終了
+					break;
 				}
 			}
-
-			// 次の小空間が8分木分割数を超えていなければ移動
-			if ((mortonNum << 3) + 1 < maxResolution) {
-				mortonNum = (mortonNum << 3) + 1;
-				// 最初に戻る
-				continue;
-			}
-			// そうでない場合は次のモートン番号に移動する
-			else if (mortonNum % 4 != 0) {
-				mortonNum++;
-				// 最初に戻る
-				continue;
-			}
-
-			// 上の空間に所属する小空間をすべて検証し終わった場合
-
-			// １つ上の空間に戻る
-			do {
-				mortonNum = (mortonNum - 1) >> 3;
-				// 戻った空間がその空間の最後の数値の場合 -> もう一度戻る
-			} while (mortonNum % 4 == 0);
-
-			// 次のモートン番号へ進む
-			mortonNum++;
-
-			// 戻った空間が最初の空間（kMortonNum）だった場合 -> ループ終了
-			if (mortonNum == kMortonNum) {
-				break;
-			}
-		}
-		*/
+			// 検証したモートン番号が0だった場合終了
+			if (currentMorton == 0) { break; }
+			// 検証が終わったので上の空間レベルへ
+			currentMorton >>= 3;
+		} while (true);
 	}
 }
 
@@ -109,18 +108,25 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 	max_ = center + Vector3{ maxSizeHalf,maxSizeHalf,maxSizeHalf };
 	cellSize_ = maxSize / std::powf(2.0f, (float)kSubdivision_);	// 分割された空間の最小サイズを求める
 
+
 	// -- モデルデータからポリゴンを生成 -- //
 	for (int i = 0; i < indexes.size(); i += 3) {
 		Terrain::Polygon p;
 		p.pos[0] = vertices->data_[indexes[i]].position.xyz();
 		p.pos[1] = vertices->data_[indexes[i + 1]].position.xyz();
 		p.pos[2] = vertices->data_[indexes[i + 2]].position.xyz();
-		p.normal = Vector3::Cross(p.pos[2] - p.pos[0], p.pos[1] - p.pos[0]).Normalize();	// 外積で面の法線を求める
+		p.normal = Vector3::Cross(p.pos[1] - p.pos[0], p.pos[2] - p.pos[1]).Normalize();	// 外積で面の法線を求める
 		polygonMap_[GetMortonNumber(p)].push_back(p);	// 求めたモートン序列番号の元に格納
 	}
 
 #if DEMO
 	// -- デバッグ用 -- //
+	for (int i = 0; i < 4; i++) {
+		triangleCube_[i].LoadCube();
+		triangleCube_[i].worldTF.scale = { 0.1f,0.1f,0.1f };
+		triangleCube_[i].SetAllMaterialLighting(false);
+	}
+	 
 	// 空間の数
 	int cubeCount = int(std::pow(2, kSubdivision_));
 	// 立方体の幅
@@ -198,7 +204,7 @@ int Terrain::GetMortonNumber(Math::Vector3 point) {
 	// モートン番号
 	int mortonNum = GetMortonOrder(point);
 	// 線形8分木に直す
-	mortonNum += (int)((powf(8.0f, (float)(kSubdivision_)) - 1.0f) / 7.0f);	// 点は必ず一番小さい空間レベルになる
+	mortonNum += GetSpaceLevelObjectsSum(kSubdivision_);	// 点は必ず一番小さい空間レベルになる
 
 	// モートン空間番号を計算
 	return mortonNum;
@@ -218,9 +224,9 @@ int Terrain::GetMortonNumber(const Terrain::Polygon& p) {
 	}
 
 	// モートン空間番号を出すために座標を変換
-	//min -= min_;
+	min -= min_;
 	min /= cellSize_;
-	//max -= AABBmin_;
+	max -= min_;
 	max /= cellSize_;
 
 	// モートン空間番号を計算
@@ -241,7 +247,12 @@ int Terrain::GetMortonNumber(const Terrain::Polygon& p) {
 	// 領域の所属するモートン空間番号を出す
 	int mortonNum = maxMortonNum >> ((kSubdivision_ - spaceLevel) * 3);
 	// 線形8分木に直す
-	mortonNum += (int)((powf(8.0f, (float)(spaceLevel)) - 1.0f) / 7.0f);
+	mortonNum += GetSpaceLevelObjectsSum(spaceLevel);
 
 	return mortonNum;
+}
+
+int Terrain::GetSpaceLevelObjectsSum(const int& spaceLevel) {
+	if (spaceLevel < 0) { return 0; }	// 空間レベルが0未満の場合要素数は0
+	return (int)((powf(8.0f, (float)(spaceLevel)) - 1.0f) / 7.0f);
 }

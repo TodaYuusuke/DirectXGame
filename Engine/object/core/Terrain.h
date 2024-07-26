@@ -36,7 +36,7 @@ namespace LWP::Object {
 	private: // ** メンバ定数 ** //
 
 		// 空間分割レベル
-		const uint32_t kSubdivision_ = 3;
+		const uint32_t kSubdivision_ = 2;
 
 
 	private: // ** メンバ変数 ** //
@@ -68,6 +68,8 @@ namespace LWP::Object {
 
 		// 8分木の空間表示
 		std::vector<Resource::RigidModel> cubes_;
+		// ヒットしていた三角形の頂点に目印表示用
+		Resource::RigidModel triangleCube_[4];
 		// ImGui用変数
 		int currentItem = 0;
 #endif
@@ -81,5 +83,8 @@ namespace LWP::Object {
 		// ポリゴンの所属する空間番号を求める関数
 		int GetMortonNumber(Math::Vector3 point);
 		int GetMortonNumber(const Terrain::Polygon& p);
+
+		// その空間レベルまでの要素数を返す関数
+		int GetSpaceLevelObjectsSum(const int& spaceLevel);
 	};
 }
