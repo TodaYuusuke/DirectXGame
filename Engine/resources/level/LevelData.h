@@ -2,6 +2,7 @@
 #include "../model/RigidModel.h"
 #include "../model/SkinningModel.h"
 #include "../model/StaticModel.h"
+#include "object/core/Terrain.h"
 
 #include "object/core/Camera.h"
 
@@ -26,6 +27,8 @@ namespace LWP::Resource {
 		// 当たり判定
 		std::map<std::string, Object::Collider::Collider> colliders;
 
+		// 地形
+		Object::Terrain terrain;
 
 	public: // ** メンバ関数 ** //
 

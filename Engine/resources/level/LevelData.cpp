@@ -79,8 +79,13 @@ void LevelData::HotReload() {
 		//	SetWorldTF(object["transform"], &cameraPtr->transform);
 		//}
 
+		// 地形ならば特殊な処理
+		if (objName == "Terrain") {
+			terrain.name = "Terrain";
+			terrain.LoadModel(object["file_name"].get<std::string>(), LoadWorldTF(object["transform"]));
+		}
 		// MESH
-		if (type.compare("MESH") == 0) {
+		else if (type.compare("MESH") == 0) {
 			// ファイルパスがあればそのパスを読み込み
 			if (object.contains("file_name")) {
 				staticModels[objName].LoadShortPath(object["file_name"].get<std::string>());

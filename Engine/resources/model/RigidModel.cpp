@@ -52,7 +52,7 @@ void RigidModel::DebugGUI() {
 		ImGui::TreePop();
 	}
 	ImGui::Checkbox("isActive", &isActive);
-	if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
+	if(ImGui::Button("Change FillMode")) { ChangeFillMode(); }
 	if (ImGui::Button("Change All Lighting Flag true")) { SetAllMaterialLighting(true); }
 	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
 }

@@ -3,7 +3,7 @@
     "objects": [
         {
             "type": "MESH",
-            "name": "Ground",
+            "name": "Terrain",
             "transform": {
                 "translation": [
                     0.0,
@@ -17,12 +17,35 @@
                     1.0
                 ],
                 "scaling": [
-                    100.0,
-                    100.0,
+                    1.0,
+                    1.0,
                     1.0
                 ]
             },
-            "file_name": "ground/Ground.gltf"
+            "file_name": "terrain/Terrain.gltf"
+        },
+        {
+            "type": "MESH",
+            "name": "寸法確認用人間",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.06739813089370728
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scaling": [
+                    0.05000000074505806,
+                    0.05000000074505806,
+                    0.06562308967113495
+                ]
+            },
+            "file_name": "human/17cmHuman.gltf"
         },
         {
             "type": "LIGHT",
@@ -188,9 +211,9 @@
             "name": "3Story_Balcony_Mat",
             "transform": {
                 "translation": [
-                    0.8438991904258728,
+                    -12.215924263000488,
                     -7.7115302085876465,
-                    -0.26050758361816406
+                    2.0378799438476562
                 ],
                 "rotation": [
                     -0.0976247787475586,

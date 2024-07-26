@@ -5,14 +5,15 @@ class Player final {
 public:
 
 	// 初期化
-	void Init(LWP::Object::Camera* ptr);
+	void Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain);
 	// 更新
 	void Update();
 
 private:
 
 	// プレイヤーの速度
-	const float kPlayerSpeed = 0.1f;
+	//float kPlayerSpeed = 0.1f;
+	float kPlayerSpeed = 60.0f;
 	// 3Dモデル
 	LWP::Resource::SkinningModel model;
 	// アニメーション
@@ -35,7 +36,7 @@ private: // ** カメラ系処理 ** //
 	// 追従させるカメラのポインタ
 	LWP::Object::Camera* camera_ = nullptr;
 	// カメラのオフセット
-	const LWP::Math::Vector3 cameraOffset_ = { 0.0f, 2.0f, -20.0f };
+	LWP::Math::Vector3 cameraOffset_ = { 0.0f, 2.0f, -20.0f };
 
 	void FollowCameraUpdate();
 };

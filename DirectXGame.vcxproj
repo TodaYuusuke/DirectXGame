@@ -216,6 +216,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
+    <ClCompile Include="Engine\object\core\Terrain.cpp" />
     <ClCompile Include="Engine\object\IObject.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\TransformEuler.cpp" />
@@ -349,6 +350,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
     <ClInclude Include="Engine\object\core\light\PointLight.h" />
     <ClInclude Include="Engine\object\core\Particle.h" />
+    <ClInclude Include="Engine\object\core\Terrain.h" />
     <ClInclude Include="Engine\object\IObject.h" />
     <ClInclude Include="Engine\object\ObjectManager.h" />
     <ClInclude Include="Engine\object\TransformEuler.h" />

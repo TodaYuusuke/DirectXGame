@@ -66,7 +66,7 @@ namespace LWP::Config {
 		/// <summary>
 		/// 同一モデルの最大同時描画数
 		/// </summary>
-		static const UINT kMaxModelInstance = 1000;
+		static const UINT kMaxModelInstance = 10000;
 		/// <summary>
 		/// 同一モデルのジョイント最大同時描画数
 		/// </summary>
