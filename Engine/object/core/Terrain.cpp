@@ -16,23 +16,19 @@ void Terrain::Initialize() {}
 void Terrain::Update(Base::RendererManager* manager) {
 	manager;
 
-	// 空間の最大分割数
-	uint32_t maxResolution = 0;
-	for (uint32_t i = 1; i <= kSubdivision_; i++) {
-		maxResolution += (int)powf(8.0f, (float)i);
-	}
-
 	// 当たり判定を検証
 	for (Point& point : points_) {
 		// 座標を求める
 		Vector3 pos = point.offset + point.wtf->GetWorldPosition();
+		point.preFrameHit = false;
 
 		// 検索するモートン番号
 		const uint32_t kTargetMorton = GetMortonNumber(pos);
 		if (kTargetMorton == -1) { continue; }	// -1だった場合早期終了
 		uint32_t currentMorton = kTargetMorton;	// 現在のモートン番号（下位レベルから検証）
+		uint32_t currentSpaceLevel = kSubdivision_;	// 現在の空間レベル（下位レベルから検証）
 
-		do {
+		while (true) {
 			// 現在の空間内の全オブジェクトと検証
 			for (const Polygon& p : polygonMap_[currentMorton]) {
 				// 平面のパラメータ
@@ -57,10 +53,14 @@ void Terrain::Update(Base::RendererManager* manager) {
 					triangleCube_[1].worldTF.translation = p.pos[1];
 					triangleCube_[2].worldTF.translation = p.pos[2];
 					triangleCube_[3].worldTF.translation = hitPosition;	// 4つ目はヒットしている場所
+					ImGui::Begin("TerrianTest");
+					ImGui::Text("mortonNum : %d", currentMorton);
+					ImGui::End();
 #endif
 					// 衝突点がposより上だった場合 -> 座標を修正
 					if (hitPosition.y > pos.y) {
-						point.wtf->translation.y = hitPosition.y;
+						point.wtf->translation.y = hitPosition.y - point.offset.y;
+						point.preFrameHit = true;
 					}
 					currentMorton = 0;	// モートンを0にして強制終了
 					break;
@@ -69,8 +69,9 @@ void Terrain::Update(Base::RendererManager* manager) {
 			// 検証したモートン番号が0だった場合終了
 			if (currentMorton == 0) { break; }
 			// 検証が終わったので上の空間レベルへ
-			currentMorton >>= 3;
-		} while (true);
+			currentMorton = (currentMorton - GetSpaceLevelObjectsSum(currentSpaceLevel--)) >> 3;
+			currentMorton += GetSpaceLevelObjectsSum(currentSpaceLevel);
+		};
 	}
 }
 
@@ -153,8 +154,9 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 	}
 #endif
 }
-void Terrain::SetNewCollider(Math::Vector3 offset, TransformQuat* wtf) {
-	points_.push_back({ offset,wtf });
+Terrain::Point* Terrain::SetNewCollider(Math::Vector3 offset, TransformQuat* wtf) {
+	points_.push_back({ offset,wtf,false });
+	return &points_[points_.size() - 1];
 }
 
 void Terrain::DebugGUI() {

@@ -26,8 +26,15 @@ namespace LWP::Object {
 
 		// 地形に使うモデルデータを読み込む
 		void LoadModel(std::string filePath, const TransformQuat& wtf);
+
+		// ** 当たり判定（点） ** //
+		struct Point {
+			Math::Vector3 offset;
+			TransformQuat* wtf;
+			bool preFrameHit = false;
+		};
 		// 地形と検証する当たり判定を追加する関数
-		void SetNewCollider(Math::Vector3 offset, TransformQuat* wtf);
+		Point* SetNewCollider(Math::Vector3 offset, TransformQuat* wtf);
 
 		// デバッグ用GUI
 		void DebugGUI() override;
@@ -56,11 +63,7 @@ namespace LWP::Object {
 		float cellSize_;
 
 
-		// ** 当たり判定（点） ** //
-		struct Point {
-			Math::Vector3 offset;
-			TransformQuat* wtf;
-		};
+		// 地形との当たり判定（点）
 		std::vector<Point> points_;
 
 #if DEMO

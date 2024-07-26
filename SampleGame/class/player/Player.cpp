@@ -39,7 +39,7 @@ void Player::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	walkAnim.Start();
 
 	// 地形に接地部分を登録
-	terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &model.worldTF);
+	terrainPoint = terrain->SetNewCollider({ 0.0f,-0.4f,0.0f }, &model.worldTF);
 }
 
 // 更新
@@ -49,13 +49,26 @@ void Player::Update() {
 	// カメラの計算
 	FollowCameraUpdate();
 
+	// 加速度を加算
+	velocity.y -= kGravityAcce * Info::GetDeltaTimeF();
+	// 速度を加算
+	model.worldTF.translation += velocity;
+
+	// 速度を減衰させる
+	velocity.x *= kDecayRate;
+	velocity.z *= kDecayRate;
+	// 前フレームで地形にヒットしていたなら重力加速度をリセット
+	if (terrainPoint->preFrameHit) {
+		velocity.y = 0.0f;
+	}
+
 #if DEMO
 	ImGui::Begin("Player");
 	if (ImGui::TreeNode("Model")) {
 		model.DebugGUI();
 		ImGui::TreePop();
 	}
-	ImGui::DragFloat("kSpeed", &kPlayerSpeed, 0.1f);
+	ImGui::DragFloat("kSpeed", &kWalkSpeed, 0.1f);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.1f);
 	ImGui::End();
 #endif
@@ -78,19 +91,25 @@ void Player::Move() {
 	if (Keyboard::GetPress(DIK_A)) {
 		dir.x -= 1.0f;
 	}
-	if (Keyboard::GetPress(DIK_LSHIFT)) {
-		dir.y -= 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_SPACE)) {
-		dir.y += 1.0f;
-	}
+	//if (Keyboard::GetPress(DIK_LSHIFT)) {
+	//	dir.y -= 1.0f;
+	//}
+	//if (Keyboard::GetPress(DIK_SPACE)) {
+	//	dir.y += 1.0f;
+	//}
 
 	// コントローラーでの移動
 	dir.x += Pad::GetLStick().x;
 	dir.z += Pad::GetLStick().y;
 
 	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation)).Normalize();
-	model.worldTF.translation += dir * kPlayerSpeed;
+	// シフトを押しているならダッシュ
+	if (Keyboard::GetPress(DIK_LSHIFT)) {
+		velocity += (dir * 1.9f) * kWalkSpeed * Info::GetDeltaTimeF();
+	}
+	else {
+		velocity += dir * kWalkSpeed * Info::GetDeltaTimeF();
+	}
 
 	if (dir.Length() > 0.0f) {
 		// 現在プレイヤーの向いている角度

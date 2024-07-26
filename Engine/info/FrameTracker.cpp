@@ -36,7 +36,7 @@ void FrameTracker::Initialize() {
 	frameDurationIndex_ = 0;
 	// フレーム経過時間の配列
 	for (int i = 0; i < kFrameDurationSize_; i++) {
-		frameDurations_[i] = LWP::Config::FrameRate::kFixedFPS;
+		frameDurations_[i] = 1.0f / LWP::Config::FrameRate::kFixedFPS;
 	}
 
 	// 経過フレーム
@@ -46,7 +46,7 @@ void FrameTracker::Initialize() {
 }
 
 void FrameTracker::Start() {
-	//frameStartTime_ = std::chrono::steady_clock::now();
+	frameStartTime_ = std::chrono::steady_clock::now();
 }
 
 void FrameTracker::End() {
@@ -96,10 +96,13 @@ double FrameTracker::GetElapsedTimeH() {
 
 double FrameTracker::GetDeltaTime() {
 	// 係数を掛けて返す
-	return frameDurations_[frameDurationIndex_ - 1] * deltaFactor;
+	return GetDefaultDeltaTime() * deltaFactor;
 }
 double FrameTracker::GetDefaultDeltaTime() {
 	// そのまま返す
+	if (frameDurationIndex_ == 0) {
+		return frameDurations_[kFrameDurationSize_ - 1];
+	}
 	return frameDurations_[frameDurationIndex_ - 1];
 }
 void FrameTracker::SetDeltaTimeMultiply(float value) {
