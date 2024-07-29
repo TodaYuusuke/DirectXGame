@@ -58,7 +58,7 @@ SRVInfo SRV::CreateTexture(ID3D12Resource* resource, ID3D12Resource* intermediat
 	SRVInfo info;
 
 	UpdateSubresources(cmd_->List(), resource, intermediateResource, 0, 0, UINT(subResources->size()), subResources->data());
-	//cmd_->SetReleaseFunction([intermediateResource]() { intermediateResource->Release(); });
+	cmd_->SetReleaseFunction([intermediateResource]() { intermediateResource->Release(); });
 	// テクスチャへの転送後は利用できるよう、D3D12_RESOURCE_STATE_COPY_DESTからD3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
 	D3D12_RESOURCE_BARRIER barrier{};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

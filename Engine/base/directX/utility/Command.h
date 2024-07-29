@@ -73,9 +73,10 @@ namespace LWP::Base {
 			assert(SUCCEEDED(hr));
 
 			// 一時リソースを解放
-			/*for (std::function<void()>& f : releaseFunctions_) {
+			for (const std::function<void()>& f : releaseFunctions_) {
 				f();
-			}*/
+			}
+			releaseFunctions_.clear();
 		}
 
 
@@ -87,7 +88,7 @@ namespace LWP::Base {
 		ID3D12GraphicsCommandList6* List() { return list_.Get(); }
 
 		// 一時リソース解放用関数ポインタをセット
-		//void SetReleaseFunction(std::function<void()> f) { releaseFunctions_.push_back(f); }
+		void SetReleaseFunction(std::function<void()> f) { releaseFunctions_.push_back(f); }
 
 	private: // ** メンバ変数 ** //
 
@@ -103,6 +104,6 @@ namespace LWP::Base {
 		UINT64 fenceVal_ = 0;
 
 		// テクスチャの一時リソースを解放する関数
-		std::vector<int> releaseFunctions_;
+		std::vector<std::function<void()>> releaseFunctions_;
 	};
 }
