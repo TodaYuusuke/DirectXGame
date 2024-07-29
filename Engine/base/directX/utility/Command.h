@@ -2,6 +2,8 @@
 #include "GPUDevice.h"
 
 #include <cassert>
+#include <vector>
+#include <functional>
 
 namespace LWP::Base {
 	/// <summary>
@@ -69,6 +71,11 @@ namespace LWP::Base {
 			assert(SUCCEEDED(hr));
 			hr = list_->Reset(allocator_.Get(), nullptr);
 			assert(SUCCEEDED(hr));
+
+			// 一時リソースを解放
+			/*for (std::function<void()>& f : releaseFunctions_) {
+				f();
+			}*/
 		}
 
 
@@ -79,6 +86,8 @@ namespace LWP::Base {
 		// hlslファイル内でコンパイルするファイルの処理を行うハンドラ
 		ID3D12GraphicsCommandList6* List() { return list_.Get(); }
 
+		// 一時リソース解放用関数ポインタをセット
+		//void SetReleaseFunction(std::function<void()> f) { releaseFunctions_.push_back(f); }
 
 	private: // ** メンバ変数 ** //
 
@@ -92,5 +101,8 @@ namespace LWP::Base {
 		// GPU同期用のフェンス
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 		UINT64 fenceVal_ = 0;
+
+		// テクスチャの一時リソースを解放する関数
+		std::vector<int> releaseFunctions_;
 	};
 }

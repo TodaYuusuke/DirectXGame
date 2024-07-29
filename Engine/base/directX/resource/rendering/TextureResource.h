@@ -44,11 +44,15 @@ namespace LWP::Base {
 		// SRV上の登録データ
 		SRVInfo info_;
 
+		// VRAM配置用の一時リソース
+		ID3D12Resource* intermediateResource_;
 
 	private: // ** プライベートなメンバ関数 ** //
 
 		void Load(const std::string& filePath);
 
+		// リソースを作成する関数
+		ID3D12Resource* CreateResource(GPUDevice* device, size_t size);
 
 	public: // ** オペレーターオーバーロード ** //
 

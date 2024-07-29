@@ -1,6 +1,7 @@
 #pragma once
 #include "IDescriptorHeap.h"
 
+#include "../Command.h"
 #include "Config.h"
 
 // 前方宣言
@@ -100,6 +101,10 @@ namespace LWP::Base {
 		/// 初期化
 		/// </summary>
 		void Init();
+
+		// コマンドクラスをセット
+		void SetCommand(Command* cmd) { cmd_ = cmd; }
+
 		/// <summary>
 		/// ImGui
 		/// </summary>
@@ -121,7 +126,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// TextureをSRVに登録
 		/// </summary>
-		SRVInfo CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages);
+		SRVInfo CreateTexture(ID3D12Resource* resource, ID3D12Resource* intermediateResource, std::vector<D3D12_SUBRESOURCE_DATA>* subResources, const DirectX::ScratchImage& mipImages);
 		/// <summary>
 		/// DepthStencilをSRVに登録
 		/// </summary>
@@ -158,6 +163,8 @@ namespace LWP::Base {
 		SRVInfo CreateImGuiSpace();
 
 	private: // ** メンバ変数 ** //
+		// コマンドのポインタ
+		Command* cmd_ = nullptr;
 
 		// インデックスの論理分割
 		// StructerdBuffer当のデータ系 : 500枠
@@ -170,9 +177,6 @@ namespace LWP::Base {
 		Utility::IndexManager pointShadowIM_;
 
 
-
 	private: // ** プライベートなメンバ関数 ** //
-
-		//void UploadTextureResource(ID3D12Resource* resource, int index, D3D12_SHADER_RESOURCE_VIEW_DESC desc);
 	};
 }

@@ -37,11 +37,10 @@ namespace LWP::Base {
 			resourceDesc.SampleDesc.Count = 1;
 			// バッファの場合はこれにする決まり
 			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-			// 実際に頂点リソースを作る
+			// 実際にリソースを作る
 			hr = device->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource_));
 			assert(SUCCEEDED(hr));
 		}
-
 
 	protected: // ** メンバ定数 ** //
 		// データ1つ分のサイズ定数
