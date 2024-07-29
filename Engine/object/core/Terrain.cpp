@@ -53,9 +53,6 @@ void Terrain::Update(Base::RendererManager* manager) {
 					triangleCube_[1].worldTF.translation = p.pos[1];
 					triangleCube_[2].worldTF.translation = p.pos[2];
 					triangleCube_[3].worldTF.translation = hitPosition;	// 4つ目はヒットしている場所
-					ImGui::Begin("TerrianTest");
-					ImGui::Text("mortonNum : %d", currentMorton);
-					ImGui::End();
 #endif
 					// 衝突点がposより上だった場合 -> 座標を修正
 					if (hitPosition.y > pos.y) {
@@ -151,6 +148,7 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 	for (RigidModel& r : cubes_) {
 		r.SetAllMaterialLighting(false);
 		r.ChangeFillMode();
+		r.isActive = false;
 	}
 #endif
 }
@@ -181,6 +179,13 @@ void Terrain::DebugGUI() {
 		int mortonNum = GetMortonNumber(p.offset + p.wtf->GetWorldPosition());	// 所属するモートン空間番号
 		ImGui::Text("MortonNumber : %d", mortonNum);
 	}
+#if DEMO
+	if (ImGui::Button("ChangeSpaceBorder")) {
+		for (RigidModel& r : cubes_) {
+			r.isActive = !r.isActive;
+		}
+	}
+#endif
 }
 
 DWORD Terrain::BitSeparate(BYTE n) {

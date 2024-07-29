@@ -43,7 +43,7 @@ namespace LWP::Object {
 	private: // ** メンバ定数 ** //
 
 		// 空間分割レベル
-		const uint32_t kSubdivision_ = 2;
+		const uint32_t kSubdivision_ = 4;
 
 
 	private: // ** メンバ変数 ** //
@@ -66,15 +66,14 @@ namespace LWP::Object {
 		// 地形との当たり判定（点）
 		std::vector<Point> points_;
 
-#if DEMO
 	private: // ** デバッグ用 ** //
-
+		// ImGui用変数
+		int currentItem = 0;
+#if DEMO
 		// 8分木の空間表示
 		std::vector<Resource::RigidModel> cubes_;
 		// ヒットしていた三角形の頂点に目印表示用
 		Resource::RigidModel triangleCube_[4];
-		// ImGui用変数
-		int currentItem = 0;
 #endif
 
 	private: // ** プライベートなメンバ関数 ** //
