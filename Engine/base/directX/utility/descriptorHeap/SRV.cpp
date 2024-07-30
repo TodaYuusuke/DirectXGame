@@ -71,20 +71,6 @@ SRVInfo SRV::CreateTexture(ID3D12Resource* resource, ID3D12Resource* intermediat
 	
 	// Meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	//// 全MipMapについて
-	//for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-	//	// MipMapLevelを指定して各Imageを取得
-	//	const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-	//	// Textureに転送
-	//	hr = resource->WriteToSubresource(
-	//		UINT(mipLevel),
-	//		nullptr,
-	//		img->pixels,
-	//		UINT(img->rowPitch),
-	//		UINT(img->slicePitch)
-	//	);
-	//	assert(SUCCEEDED(hr));
-	//}
 
 	// metaDataを元にSRVの設定
 	info.desc.Format = metadata.format;
