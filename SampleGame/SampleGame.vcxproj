@@ -223,6 +223,7 @@
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\Test.cpp" />
+    <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\particle\DamageParticle.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\Test.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
+    <ClInclude Include="scene\Title.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXGame.vcxproj">
