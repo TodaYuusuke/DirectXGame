@@ -25,6 +25,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// 太陽
 	LWP::Object::DirectionLight sun;
 
+	//LWP::Object::Camera subCamera;
+	//LWP::Primitive::Sprite sprite_;
+
 	// プレイヤー
 	Player player;
 };

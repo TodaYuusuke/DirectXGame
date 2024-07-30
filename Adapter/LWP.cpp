@@ -32,9 +32,9 @@ void Engine::Run(IScene* firstScene) {
 
 		// 更新処理
 		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
-		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());	// BackBufferのレンダリングに使うカメラをセット
 		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
-		
+		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());	// BackBufferのレンダリングに使うカメラをセット
+
 		resourceManager_->Update();	// リソース更新（アニメーションの更新処理）
 		primitiveManager_->Update();
 

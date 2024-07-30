@@ -14,6 +14,12 @@ void GameScene::Initialize() {
 	//Info::ChangeShowDebugGUI();
 	levelData.LoadShortPath("SampleGameScene.json");
 	
+	// 複数画面描画確認
+	//sprite_.material.texture = subCamera.GetTexture();
+	//sprite_.material.enableLighting = false;
+	//sprite_.isActive = true;
+	//sprite_.name = "Sprite";
+
 	// bloomをON
 	/*mainCamera.pp.use = true;
 	mainCamera.pp.outLine.use = true;

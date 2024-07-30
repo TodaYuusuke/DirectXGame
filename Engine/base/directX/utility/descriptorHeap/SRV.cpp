@@ -108,26 +108,8 @@ SRVInfo SRV::CreateDepthTexture(ID3D12Resource* resource) {
 	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
-SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource, const int width, const int height) {
-	HRESULT hr = S_FALSE;
+SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource) {
 	SRVInfo info;
-
-	// 画素数
-	const UINT pixelCount = width * height;
-	// 画像1行分のデータサイズ
-	const UINT rowPitch = sizeof(UINT) * width;
-	// 画像全体のデータサイズ
-	const UINT depthPitch = rowPitch * height;
-	// 画像イメージ
-	UINT* img = new UINT[pixelCount];
-	// 一度緑で画像を初期化
-	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF00FF00; }
-
-	// TextureBufferに転送
-	hr = resource->WriteToSubresource(
-		0, nullptr, img, rowPitch, depthPitch
-	);
-	assert(SUCCEEDED(hr));
 
 	// SRVの設定
 	info.desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
