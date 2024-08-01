@@ -1,0 +1,64 @@
+#include "EMapModel.h"
+
+#include "base/directX/RendererManager.h"
+#include "resources/ResourceManager.h"
+#include "component/Resource.h"
+#include "component/System.h"
+
+using namespace LWP;
+using namespace LWP::Base;
+using namespace LWP::Math;
+using namespace LWP::Resource;
+
+
+EMapModel::EMapModel() {}
+EMapModel::EMapModel(const EMapModel& other) {
+	this->LoadFullPath(other.filePath);
+	worldTF = other.worldTF;
+	isActive = other.isActive;
+}
+EMapModel::~EMapModel() {
+	// パスが空じゃなかったら消しに行く
+	if (!filePath.empty()) {
+		// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
+		System::engine->resourceManager_->DeletePointer(this, filePath);
+	}
+}
+
+void EMapModel::LoadFullPath(const std::string& fp) {
+	// 名前を保持
+	filePath = fp;
+	// リソースマネージャーに読み込んでもらう
+	LoadModel(filePath);
+	// マテリアルをコピー
+	ModelData* data = GetModel(filePath);
+	materials.resize(data->materials_.size());
+	std::copy(data->materials_.begin(), data->materials_.end(), materials.begin());
+
+	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
+	System::engine->resourceManager_->SetPointer(this, filePath);
+}
+
+
+void EMapModel::Update() {
+	if (!isActive) { return; }
+}
+void EMapModel::DebugGUI() {
+	worldTF.DebugGUI();
+	if (ImGui::TreeNode("Materials")) {
+		for (int i = 0; i < materials.size(); i++) {
+			materials[i].DebugGUI(std::to_string(i));
+		}
+		ImGui::TreePop();
+	}
+	ImGui::Checkbox("isActive", &isActive);
+	if(ImGui::Button("Change FillMode")) { ChangeFillMode(); }
+	if (ImGui::Button("Change All Lighting Flag true")) { SetAllMaterialLighting(true); }
+	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
+}
+
+void EMapModel::SetAllMaterialLighting(bool flag) {
+	for (Primitive::Material& m : materials) {
+		m.enableLighting = flag;
+	}
+}

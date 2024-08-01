@@ -171,11 +171,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\RendererManager.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\BufferGroup.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthStencil.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp" />
@@ -237,6 +239,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
     <ClCompile Include="Engine\primitive\model\Vertex.cpp" />
     <ClCompile Include="Engine\resources\level\LevelData.cpp" />
+    <ClCompile Include="Engine\resources\model\EMapModel.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -292,6 +295,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\RendererManager.h" />
     <ClInclude Include="Engine\base\directX\renderer\BufferGroup.h" />
     <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\IRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h" />
@@ -304,6 +308,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\IResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\BackBuffer.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\DepthStencil.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\IRenderingResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\RenderResource.h" />
@@ -374,6 +379,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\model\Skeleton.h" />
     <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
     <ClInclude Include="Engine\resources\level\LevelData.h" />
+    <ClInclude Include="Engine\resources\model\EMapModel.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\primitive\model\Vertex.h" />
