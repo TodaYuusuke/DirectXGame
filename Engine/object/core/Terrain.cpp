@@ -144,7 +144,7 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 		}
 	}
 
-	// なぜかこうしないとうまくワイヤーフレームにならない
+	// こうしないとうまくワイヤーフレームにならない
 	for (RigidModel& r : cubes_) {
 		r.SetAllMaterialLighting(false);
 		r.ChangeFillMode();
