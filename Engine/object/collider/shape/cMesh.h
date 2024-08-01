@@ -1,5 +1,9 @@
 #pragma once
 #include "ICollisionShape.h"
+#include <list>
+#include <vector>
+
+#include "math/vector/Vector3.h"
 
 #if DEMO
 #include "primitive/2d/Triangle.h"
@@ -7,6 +11,7 @@
 
 // 前方宣言
 namespace LWP::Resource {
+	class RigidModel;
 	class StaticModel;
 }
 
@@ -17,7 +22,13 @@ namespace LWP::Object::Collider {
 	class Mesh final
 		: public ICollisionShape {
 	public: // ** パブリックなメンバ変数 ** //
-
+		// 三角形
+		struct TriangleData {
+			Math::Vector3 pos[3];
+			Math::Vector3 normal;
+			Math::Vector3 center;
+		};
+		std::vector<TriangleData> data;
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
@@ -36,36 +47,21 @@ namespace LWP::Object::Collider {
 		// ImGuiの派生クラス
 		void DebugGUI() override;
 
-#if DEMO
 	private:
-		// デバッグ用モデル
-		std::vector<LWP::Primitive::Triangle> triangles_;
-#endif
+		// 当たり判定用のモデル
+		Resource::StaticModel* model_;
 
 	public: // ** 各形状との当たり判定関数 ** //
 
-		bool CheckCollision(Point& c) override;
-		bool CheckCollision(AABB& c) override;
-		//bool CheckCollision(OBB& c)  override;
-		bool CheckCollision(Sphere& c)  override;
-		bool CheckCollision(Capsule& c)  override;
-		//bool CheckCollision(Mesh& c)  override;
+		bool CheckCollision(Point& c, Math::Vector3* fixVec) override;
+		bool CheckCollision(AABB& c, Math::Vector3* fixVec) override;
+		//bool CheckCollision(OBB& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Sphere& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Capsule& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Mesh& c, Math::Vector3* fixVec)  override;
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;
-
-		// 当たり判定計算に適したデータ構造体
-		struct Data {
-			// 最小
-			LWP::Math::Vector3 min;
-			// 最大
-			LWP::Math::Vector3 max;
-			// 中心の座標
-			LWP::Math::Vector3 center;
-
-			// コンストラクタ
-			Data(AABB& aabb);
-		};
 	};
 
 

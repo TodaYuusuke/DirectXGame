@@ -76,12 +76,11 @@ namespace LWP::Object::Collider {
 
 	public: // ** 各形状との当たり判定関数 ** //
 
-		virtual bool CheckCollision(Point& c) = 0;
-		virtual bool CheckCollision(AABB& c) = 0;
-		//virtual bool CheckCollision(OBB& c) = 0;
-		virtual bool CheckCollision(Sphere& c) = 0;
-		virtual bool CheckCollision(Capsule& c) = 0;
-		//virtual bool CheckCollision(Mesh& c) = 0;
+		virtual bool CheckCollision(Point& c, Math::Vector3* resVec) = 0;
+		virtual bool CheckCollision(AABB& c, Math::Vector3* resVec) = 0;
+		virtual bool CheckCollision(Sphere& c, Math::Vector3* resVec) = 0;
+		virtual bool CheckCollision(Capsule& c, Math::Vector3* resVec) = 0;
+		virtual bool CheckCollision(Mesh& c, Math::Vector3* resVec) = 0;
 		
 		// ヒット時の処理をまとめた関数
 		virtual void Hit() {};

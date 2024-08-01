@@ -11,6 +11,15 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+// 前方宣言
+namespace LWP::Primitive {
+	class Vertex;
+}
+namespace LWP::Base {
+	struct VertexStruct;
+	struct OutputVertexStruct;
+}
+
 namespace LWP::Primitive {
 	/// <summary>
 	/// 頂点クラス
@@ -41,6 +50,9 @@ namespace LWP::Primitive {
 		bool operator==(const Vertex& other) const {
 			return { position == other.position && texCoord == other.texCoord && normal == other.normal };
 		}
+
+		// Vertexに戻すためのオペレータオーバーロード
+		Vertex& operator=(const Base::OutputVertexStruct& value);
 	};
 }
 
@@ -84,6 +96,9 @@ namespace LWP::Base {
 		uint32_t mIndex;	// 適応されるマテリアルの番号
 
 		OutputVertexStruct() = default;
+		OutputVertexStruct(const VertexStruct& value) {
+			*this = value;
+		}
 		// VertexStructからデータをコピーするためのオペレータオーバーロード
 		OutputVertexStruct& operator=(const VertexStruct& value) {
 			position = value.position_;

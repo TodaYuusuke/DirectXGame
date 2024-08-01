@@ -46,7 +46,7 @@ void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
 	// RTV上に登録
 	rtvInfo = heaps->rtv()->CreateRenderTargetView(resource_.Get());
 	// SRV上に登録
-	srvInfo = heaps->srv()->CreateRenderResource(resource_.Get(), width, height);
+	srvInfo = heaps->srv()->CreateRenderResource(resource_.Get());
 }
 
 void RenderResource::Clear(ID3D12GraphicsCommandList* list) {

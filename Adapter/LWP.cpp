@@ -32,18 +32,16 @@ void Engine::Run(IScene* firstScene) {
 
 		// 更新処理
 		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
-		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());	// BackBufferのレンダリングに使うカメラをセット
 		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
-		
+		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());	// BackBufferのレンダリングに使うカメラをセット
+
 		resourceManager_->Update();	// リソース更新（アニメーションの更新処理）
 		primitiveManager_->Update();
 
 		colliderManager_->Update();	// 当たり判定検証
-
 		// Primitiveの描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
 
-		// RigidModelやSkinningModelは最後にレンダリング
 		EndFrame();
 	}
 	Finalize();
@@ -133,6 +131,7 @@ void Engine::DebugGUI() {
 		colliderManager_->DebugGUI();
 		resourceManager_->DebugGUI();
 		directXCommon_->DebugGUI();
+		sceneManager_->DebugGUI();
 		debugTimer_.DebugGUI();
 
 		ImGui::EndTabBar();

@@ -13,7 +13,7 @@ namespace LWP::Base {
 		uint32_t vertex;		// 実質頂点インデックスの役割
 		uint32_t worldMatrix;	// ワールドトランスフォーム
 		uint32_t material;		// マテリアル
-		uint32_t isUI;			// UIとして表示するかのフラグ
+		uint32_t isUI;			// スクリーン座標で表示するかのフラグ
 	};
 
 	// 全体で共通のデータ

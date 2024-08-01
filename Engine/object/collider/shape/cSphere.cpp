@@ -1,6 +1,4 @@
-#include "cAABB.h"
 #include "cSphere.h"
-#include "cCapsule.h"
 
 #include "resources/model/RigidModel.h"
 #include "base/ImGuiManager.h"

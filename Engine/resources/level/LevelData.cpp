@@ -1,5 +1,6 @@
 #include "LevelData.h"
 
+#include "base/ImGuiManager.h"
 #include "utility/MyUtility.h"
 #include <fstream>
 
@@ -36,6 +37,10 @@ void LevelData::LoadFullPath(const std::string& fp) {
 }
 
 void LevelData::HotReload() {
+	rigidModels.clear();
+	skinModels.clear();
+	colliders.clear();
+
 	// ファイルストリーム
 	std::ifstream file;
 	file.open(filePath);
@@ -67,58 +72,187 @@ void LevelData::HotReload() {
 		std::string type = object["type"].get<std::string>();	// 種別を取得
 		std::string objName = object["name"].get<std::string>();	// 名前を受け取る
 		
+		// カメラの回転だけ正常に読み込めないのでコメントアウト中
 		// CAMERA（適応対象のカメラの実体がなければ検証しない）
 		//if (cameraPtr && type.compare("CAMERA") == 0) {
 		//	// トランスフォームのパラメータ読み込み
 		//	SetWorldTF(object["transform"], &cameraPtr->transform);
 		//}
 
+		// 地形ならば特殊な処理
+		if (objName == "Terrain") {
+			terrain.name = "Terrain";
+			terrain.LoadModel(object["file_name"].get<std::string>(), LoadWorldTF(object["transform"]));
+		}
 		// MESH
-		if (type.compare("MESH") == 0) {
+		else if (type.compare("MESH") == 0) {
 			// ファイルパスがあればそのパスを読み込み
 			if (object.contains("file_name")) {
-				rigidModels[objName].LoadShortPath(object["file_name"].get<std::string>());
+				staticModels[objName].LoadShortPath(object["file_name"].get<std::string>());
 			}
 			// ファイルパスが無いので仮でCubeを読み込み
 			else {
-				rigidModels[objName].LoadCube();
+				staticModels[objName].LoadCube();
 			}
 
 			// トランスフォームのパラメータ読み込み
-			SetWorldTF(object["transform"], &rigidModels[objName].worldTF);
+			Object::TransformQuat wtf = LoadWorldTF(object["transform"]);
+			staticModels[objName].ApplyWorldTransform(wtf);
+
+			// コライダーがあれば生成
+			if (object.contains("collider")) {
+				nlohmann::json& collider = object["collider"];
+				if (collider["type"] == "AABB") {
+					AABB& aabb = colliders[objName].SetBroadShape(AABB());
+					aabb.min = {
+						static_cast<float>(collider["min"][0]),
+						static_cast<float>(collider["min"][2]),
+						static_cast<float>(collider["min"][1]),
+					};
+					aabb.max = {
+						static_cast<float>(collider["max"][0]),
+						static_cast<float>(collider["max"][2]),
+						static_cast<float>(collider["max"][1]),
+					};
+					colliders[objName].worldTF = wtf;
+				}
+			}
+
 		}
 	}
 }
 
 void LevelData::DebugGUI() {
+	if (ImGui::BeginTabItem("LevelData")) {
+		static int radioValue = 0;
+		// どれを（Rigid, Skinning, Static, Collider）を表示するか選択
+		ImGui::RadioButton("Rigid", &radioValue, 0);
+		ImGui::SameLine();
+		ImGui::RadioButton("Skinning", &radioValue, 1);
+		ImGui::SameLine();
+		ImGui::RadioButton("Static", &radioValue, 2);
+		ImGui::SameLine();
+		ImGui::RadioButton("Collider", &radioValue, 3);
 
+		switch (radioValue) {
+			case 0:
+				RigidDebugGUI();
+				break;
+			case 1:
+				SkinDebugGUI();
+				break;
+			case 2:
+				StaticDebugGUI();
+				break;
+			case 3:
+				ColliderDebugGUI();
+				break;
+		}
+		ImGui::EndTabItem();
+	}
 }
 
-void LevelData::SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target) {
+Object::TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
+	Object::TransformQuat wtf;
+
 	// 平行移動（Blenderの座標系からここで変換）
-	target->translation = {
+	wtf.translation = {
 		static_cast<float>(data["translation"][0]),
 		static_cast<float>(data["translation"][2]),
 		static_cast<float>(data["translation"][1]),
 	};
 	// 回転角
-	target->rotation =
-		/*Quaternion::CreateFromAxisAngle({1.0f,0.0f,0.0f}, -static_cast<float>(M_PI) / 2.0f) **/
+	wtf.rotation =
 		Quaternion{
-			data["rotation"][0],
-			data["rotation"][2],
 			data["rotation"][1],
 			data["rotation"][3],
-	}.Inverse();
+			data["rotation"][0],
+			data["rotation"][2],
+		};
+	wtf.rotation.z *= -1.0f;
 	
 	// 平行移動
-	target->scale = {
+	wtf.scale = {
 		static_cast<float>(data["scaling"][0]),
 		static_cast<float>(data["scaling"][2]),
 		static_cast<float>(data["scaling"][1]),
 	};
+
+	return wtf;
 }
 
+void LevelData::RigidDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!rigidModels.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : rigidModels) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, RigidModel>(rigidModels, currentItem)).second.DebugGUI();
+	}
+}
+void LevelData::SkinDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!skinModels.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : skinModels) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, SkinningModel>(skinModels, currentItem)).second.DebugGUI();
+	}
+}
+void LevelData::StaticDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!staticModels.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : staticModels) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, StaticModel>(staticModels, currentItem)).second.DebugGUI();
+	}
+}
+void LevelData::ColliderDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!colliders.empty()) {
+		std::vector<const char*> itemText;
+		float maxSize = 0;	// Textの中で一番長いサイズを保持する
+		// 一覧のパス取得
+		for (const auto& m : colliders) {
+			itemText.push_back(m.first.c_str());
+			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
+		}
+		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, Collider>(colliders, currentItem)).second.DebugGUI();
+	}
+}
 
 // 短縮用パス
 const std::string LevelData::kDirectoryPath = "resources/level/";

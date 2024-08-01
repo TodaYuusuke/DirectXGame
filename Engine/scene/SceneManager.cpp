@@ -29,6 +29,11 @@ void Manager::Update() {
 	currentScene_->Update();
 }
 
+void Manager::DebugGUI() {
+	currentScene_->DebugGUI();
+}
+
+
 LWP::Object::Camera* Manager::GetMainCamera() {
 	return currentScene_->GetMainRenderCamera();
 }

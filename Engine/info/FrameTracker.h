@@ -59,7 +59,7 @@ namespace LWP::Information {
 		// 次にデータを入れるindex
 		short frameDurationIndex_ = 0;
 		// フレーム経過時間の配列
-		double frameDurations_[kFrameDurationSize_]{};
+		double frameDurations_[kFrameDurationSize_];
 
 		// 経過フレーム
 		long elapsedFrame_ = 0;

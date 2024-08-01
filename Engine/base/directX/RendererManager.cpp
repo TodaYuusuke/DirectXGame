@@ -17,6 +17,9 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 
 	// コマンド初期化
 	commander_.Init(device);
+	// コマンドをSRVに渡しておく
+	srv->SetCommand(&commander_);
+	
 	// バッファー達を初期化
 	buffers_.Init(device, srv_);
 	// DXCはデフォルトコンストラクタで初期化済み

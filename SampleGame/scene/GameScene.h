@@ -16,16 +16,17 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	// ビル群
-	LWP::Resource::RigidModel buildings[8];
 	// スカイドーム
 	LWP::Resource::RigidModel skydome;
 	// ☆
 	const static int kStarCount = 512;
 	LWP::Resource::RigidModel stars[kStarCount];
-	// 地面
-	LWP::Resource::StaticModel ground;
 
+	// 太陽
+	LWP::Object::DirectionLight sun;
+
+	//LWP::Object::Camera subCamera;
+	//LWP::Primitive::Sprite sprite_;
 
 	// プレイヤー
 	Player player;

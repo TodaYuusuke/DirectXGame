@@ -1,6 +1,8 @@
 #pragma once
 #include "../model/RigidModel.h"
 #include "../model/SkinningModel.h"
+#include "../model/StaticModel.h"
+#include "object/core/Terrain.h"
 
 #include "object/core/Camera.h"
 
@@ -20,9 +22,13 @@ namespace LWP::Resource {
 		std::map<std::string, RigidModel> rigidModels;
 		// スキンモデル
 		std::map<std::string, SkinningModel> skinModels;
+		// スタティックモデル
+		std::map<std::string, StaticModel> staticModels;
 		// 当たり判定
 		std::map<std::string, Object::Collider::Collider> colliders;
 
+		// 地形
+		Object::Terrain terrain;
 
 	public: // ** メンバ関数 ** //
 
@@ -85,6 +91,27 @@ namespace LWP::Resource {
 
 	private: // ** プライベートなメンバ関数 ** //
 
-		void SetWorldTF(const nlohmann::json& data, Object::TransformQuat* target);
+		/// <summary>
+		/// ワールドトランスフォームを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		Object::TransformQuat LoadWorldTF(const nlohmann::json& data);
+
+		/// <summary>
+		/// RigidModel用ImGui
+		/// </summary>
+		void RigidDebugGUI();
+		/// <summary>
+		/// SkinModel用ImGui
+		/// </summary>
+		void SkinDebugGUI();
+		/// <summary>
+		/// StaticModel用ImGui
+		/// </summary>
+		void StaticDebugGUI();
+		/// <summary>
+		/// Collider用ImGui
+		/// </summary>
+		void ColliderDebugGUI();
 	};
 }

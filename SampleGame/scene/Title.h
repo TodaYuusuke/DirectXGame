@@ -18,34 +18,6 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Triangle tri[2];
-	LWP::Primitive::Surface surface;
-	LWP::Primitive::Sphere sphere;
-	LWP::Primitive::Cube cube;
-	LWP::Primitive::Capsule capsule;
-	LWP::Primitive::Sprite sprite[2];
-
-	LWP::Primitive::Mesh ground;
-	LWP::Primitive::Mesh wall[2];
-	//LWP::Primitive::Mesh stressTestModel;	// 描画負荷検証用モデル
-
-	LWP::Resource::Texture uvTexture;
-	LWP::Resource::Texture monsterBall;
-
-	// SEデータ
-	LWP::Resource::Audio* audio;
-
-	// サブカメラ
-	LWP::Object::Camera subCamera[2];
-	// 平行光源
-	LWP::Object::DirectionLight dl;
-	// 点光源
-	LWP::Object::PointLight pl;
-	// パーティクル
-	LWP::Object::Particle particle;
-
-	// コライダー
-	//LWP::Object::Collider::AABB aabbCol;
-
-	bool useMonsterBall = true;
+	// 仮画像
+	LWP::Primitive::Sprite sprite_;
 };

@@ -1,4 +1,6 @@
 #include "SRV.h"
+#include "base/directX/resource/data/IDataResource.h"
+
 #include "../Externals/DirectXTex/DirectXTex.h"
 #include "../Externals/DirectXTex/d3dx12.h"
 
@@ -52,26 +54,23 @@ D3D12_GPU_DESCRIPTOR_HANDLE SRV::GetFirstDirShadowView() { return GetGPUHandle(c
 D3D12_GPU_DESCRIPTOR_HANDLE SRV::GetFirstPointShadowView() { return GetGPUHandle(cPointSOffset); }
 
 
-SRVInfo SRV::CreateTexture(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
-	HRESULT hr = S_FALSE;
+SRVInfo SRV::CreateTexture(ID3D12Resource* resource, ID3D12Resource* intermediateResource, std::vector<D3D12_SUBRESOURCE_DATA>* subResources, const DirectX::ScratchImage& mipImages) {
 	SRVInfo info;
 
+	UpdateSubresources(cmd_->List(), resource, intermediateResource, 0, 0, UINT(subResources->size()), subResources->data());
+	cmd_->SetReleaseFunction([intermediateResource]() { intermediateResource->Release(); });
+	// テクスチャへの転送後は利用できるよう、D3D12_RESOURCE_STATE_COPY_DESTからD3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
+	D3D12_RESOURCE_BARRIER barrier{};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = resource;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+	cmd_->List()->ResourceBarrier(1, &barrier);
+	
 	// Meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	// 全MipMapについて
-	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-		// MipMapLevelを指定して各Imageを取得
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		// Textureに転送
-		hr = resource->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,
-			img->pixels,
-			UINT(img->rowPitch),
-			UINT(img->slicePitch)
-		);
-		assert(SUCCEEDED(hr));
-	}
 
 	// metaDataを元にSRVの設定
 	info.desc.Format = metadata.format;
@@ -109,26 +108,8 @@ SRVInfo SRV::CreateDepthTexture(ID3D12Resource* resource) {
 	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
-SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource, const int width, const int height) {
-	HRESULT hr = S_FALSE;
+SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource) {
 	SRVInfo info;
-
-	// 画素数
-	const UINT pixelCount = width * height;
-	// 画像1行分のデータサイズ
-	const UINT rowPitch = sizeof(UINT) * width;
-	// 画像全体のデータサイズ
-	const UINT depthPitch = rowPitch * height;
-	// 画像イメージ
-	UINT* img = new UINT[pixelCount];
-	// 一度緑で画像を初期化
-	for (UINT i = 0; i < pixelCount; i++) { img[i] = 0xFF00FF00; }
-
-	// TextureBufferに転送
-	hr = resource->WriteToSubresource(
-		0, nullptr, img, rowPitch, depthPitch
-	);
-	assert(SUCCEEDED(hr));
 
 	// SRVの設定
 	info.desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -225,28 +206,6 @@ SRVInfo SRV::CreateShadowMapPoint(ID3D12Resource* resource) {
 	return info;
 }
 
-
-//int SRV::UploadDepthMap(ID3D12Resource* resource) {
-//	// SRVの設定
-//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-//	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-//	srvDesc.Texture2D.MipLevels = 1;
-//	srvDesc.Texture2D.MostDetailedMip = 0;
-//	srvDesc.Texture2D.PlaneSlice = 0;
-//	srvDesc.Texture2D.ResourceMinLODClamp = 0.0F;
-//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-//	
-//	// SRVを作成するDescriptorHeapの場所を決める
-//	int srvIndex = GetAndIncrement();
-//	D3D12_CPU_DESCRIPTOR_HANDLE textureSRVHandleCPU = GetCPUHandle(srvIndex);
-//	// SRVの生成
-//	device_->CreateShaderResourceView(resource, &srvDesc, textureSRVHandleCPU);
-//
-//	loadedTextureCount++;
-//	return srvIndex;
-//}
-
 SRVInfo SRV::CreateImGuiSpace() {
 	SRVInfo info;
 	// インデックスを登録
@@ -254,4 +213,3 @@ SRVInfo SRV::CreateImGuiSpace() {
 	info.SetView(this);
 	return info;
 }
-

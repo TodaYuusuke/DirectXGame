@@ -58,11 +58,7 @@ namespace LWP::Config {
 		/// <summary>
 		/// トランスフォームのResourceの最大数
 		/// </summary>
-#if _DEBUG
-		static const UINT kMaxMatrix = 1280;
-#else
 		static const UINT kMaxMatrix = 12800;
-#endif
 		/// <summary>
 		/// マテリアルの最大数
 		/// </summary>
@@ -70,7 +66,7 @@ namespace LWP::Config {
 		/// <summary>
 		/// 同一モデルの最大同時描画数
 		/// </summary>
-		static const UINT kMaxModelInstance = 1000;
+		static const UINT kMaxModelInstance = 10000;
 		/// <summary>
 		/// 同一モデルのジョイント最大同時描画数
 		/// </summary>

@@ -6,7 +6,7 @@ namespace LWP::Resource {
 	/// 実行中に動かすことのない3Dモデル
 	/// </summary>
 	class StaticModel : public IModel {
-	private: // ** メンバ変数 ** //
+	public: // ** メンバ変数 ** //
 		// 加工済み頂点
 		std::unique_ptr<Base::StructuredBuffer<Base::OutputVertexStruct>> vertexBuffer_;
 
@@ -26,6 +26,12 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath) override;
+		/// <summary>
+		/// 標準モデルのデータを読み込む
+		/// </summary>
+		void LoadCube() { LoadFullPath("resources/system/model/standard/cube.gltf"); }
+		void LoadSphere() { LoadFullPath("resources/system/model/standard/sphere.gltf"); }
+
 		/// <summary>
 		/// ワールド変換行列を適応する
 		/// </summary>

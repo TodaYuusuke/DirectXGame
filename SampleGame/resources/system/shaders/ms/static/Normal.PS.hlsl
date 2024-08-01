@@ -1,5 +1,6 @@
 #include "Common.hlsli"
 
+#include "../UtilityFunction.hlsli"
 
 // -- 平行光源のライティング -- //
 float3 DirectionLightingDiffuse(VSOutput input, uint32_t n)

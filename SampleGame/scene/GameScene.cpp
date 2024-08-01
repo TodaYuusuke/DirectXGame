@@ -4,6 +4,7 @@
 using namespace LWP;
 using namespace LWP::Resource;
 using namespace LWP::Input;
+using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Primitive;
 using namespace LWP::Utility;
@@ -11,36 +12,23 @@ using namespace LWP::Utility;
 // 初期化
 void GameScene::Initialize() {
 	//Info::ChangeShowDebugGUI();
-	//levelData.LoadShortPath("Scene.json");
+	levelData.LoadShortPath("SampleGameScene.json");
 	
+	// 複数画面描画確認
+	//sprite_.material.texture = subCamera.GetTexture();
+	//sprite_.material.enableLighting = false;
+	//sprite_.isActive = true;
+	//sprite_.name = "Sprite";
+
 	// bloomをON
-	mainCamera.pp.use = true;
+	/*mainCamera.pp.use = true;
 	mainCamera.pp.outLine.use = true;
 	mainCamera.pp.bloom.use = true;
-	mainCamera.pp.CreateShaderFile();
+	mainCamera.pp.CreateShaderFile();*/
 
-	buildings[0].LoadShortPath("buildings/1Story_Mat.gltf");
-	buildings[1].LoadShortPath("buildings/1Story_GableRoof_Mat.gltf");
-	buildings[2].LoadShortPath("buildings/1Story_RoundRoof_Mat.gltf");
-	buildings[3].LoadShortPath("buildings/2Story_Mat.gltf");
-	buildings[4].LoadShortPath("buildings/2Story_Sign_Mat.gltf");
-	buildings[5].LoadShortPath("buildings/3Story_Balcony_Mat.gltf");
-	buildings[6].LoadShortPath("buildings/4Story_Center_Mat.gltf");
-	buildings[7].LoadShortPath("buildings/4Story_Wide_2Doors_Mat.gltf");
-	for (int i = 0; i < 8; i++) {
-		buildings[i].worldTF.translation.x += i * 2.0f;
-		buildings[i].worldTF.translation.z = 2.0f;
-		buildings[i].worldTF.rotation *= Quaternion::CreateFromAxisAngle({ 0.0f,1.0f,0.0f }, 3.14f);
-		buildings[i].SetAllMaterialLighting(true);
-	}
-	buildings[6].worldTF.translation.x = 3.0f;
-	buildings[6].worldTF.translation.z = 7.0f;
-	buildings[7].worldTF.translation.x = -8.0f;
-	buildings[7].worldTF.translation.z = 7.0f;
-
-
+	const float s = 1000.0f;
 	skydome.LoadShortPath("skydome/skydome.obj");
-	skydome.worldTF.scale = { 100.0f,100.0f,100.0f };
+	skydome.worldTF.scale = { s,s,s };
 	skydome.materials[1].color = Color(5, 5, 16, 255);
 	skydome.SetAllMaterialLighting(false);
 	for (int i = 0; i < kStarCount; i++) {
@@ -49,39 +37,33 @@ void GameScene::Initialize() {
 			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
-		}.Normalize() * 99.0f;
+		}.Normalize() * (s - 1.0f);
 		stars[i].worldTF.rotation = Quaternion{
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
 			1.0f
 		}.Normalize();
-		float scale = LWP::Utility::GenerateRandamNum<int>(10, 30) / 100.0f;
+		float scale = LWP::Utility::GenerateRandamNum<int>(50, 100) / 100.0f;
 		stars[i].worldTF.scale = { scale,scale,scale };
 
 		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
 		stars[i].SetAllMaterialLighting(false);
 	}
-	ground.LoadShortPath("ground/Ground.gltf");
-	ground.ApplyWorldTransform({
-		{},
-		Quaternion(),
-		{ 100.0f,1.0f, 100.0f }
-	});
-	//ground.SetAllMaterialLighting(true);
+
+	sun.rotation.x = 0.0f;
 
 	// プレイヤー初期化
-	player.Init(&mainCamera);
+	player.Init(&mainCamera, &levelData.terrain);
 }
 // 更新
 void GameScene::Update() {
 	player.Update();
 
-	//// シーン再読み込み
-	//if (Input::Keyboard::GetTrigger(DIK_R)) {
-	//	levelData.HotReload();
-	//	//nextSceneFunction = []() { return new GameScene(); };
-	//}
+	// シーン再読み込み
+	if (Input::Keyboard::GetTrigger(DIK_R)) {
+		levelData.HotReload();
+	}
 	//if (Input::Keyboard::GetTrigger(DIK_N)) {
 	//	nextSceneFunction = []() { return new Test(); };
 	//}

@@ -1,6 +1,8 @@
 #pragma once
 #include <cmath>
 
+#include "Vector2.h"
+
 /// <summary>
 /// 3次元ベクトル
 /// </summary>
@@ -46,6 +48,11 @@ namespace LWP::Math {
 		bool operator==(const Vector3& other) const {
 			return { x == other.x && y == other.y && z == other.z };
 		}
+
+		// Vector2への変換
+		Vector2 xy() const { return { x,y }; }
+		Vector2 xz() const { return { x,z }; }
+		Vector2 yz() const { return { y,z }; }
 
 		/// <summary>
 		/// 3次元ベクトルの長さを求める

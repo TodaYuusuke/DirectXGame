@@ -6,6 +6,7 @@
 #include <typeinfo>
 
 using namespace LWP;
+using namespace LWP::Math;
 using namespace LWP::Object::Collider;
 
 Collider::Collider() {
@@ -19,18 +20,32 @@ Collider::~Collider() {
 }
 
 void Collider::Update() {
-	// ブロードフェーズ
+	// ブロードフェーズ更新
 	GetBasePtr(broad)->Update();
-	// ナローフェーズ
+	// ナローフェーズ更新
 	for (ShapeVariant& n : narrows) {
 		GetBasePtr(n)->Update();
 	}
 }
 
+void Collider::SetFollowTarget(Object::TransformQuat* ptr) {
+	followTF = ptr;	// ポインタを保持
+	worldTF.Parent(ptr);
+}
+
+void Collider::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
+	// 追従対象がいるなら対象に適応
+	if (followTF) { followTF->translation += fixVector;  }
+	// いないなら自分に適応
+	else { worldTF.translation += fixVector; }
+}
+
 void Collider::CheckCollision(Collider* c) {
+	// 埋まっている場合の修正ベクトル
+	Vector3 fixVec = { 0.0f,0.0f,0.0f };
 
 	// １．ブロードフェーズチェック
-	if (!CheckBroadCollision(c->broad)) {
+	if (!CheckBroadCollision(c->broad, &fixVec)) {
 		// Noヒット処理を行う
 		NoHit(c);	// 自分の処理
 		c->NoHit(this);	// 相手の処理
@@ -39,7 +54,7 @@ void Collider::CheckCollision(Collider* c) {
 
 	// ２．ナローフェーズがある場合 -> チェック
 	if (!narrows.empty()) {
-		if (!CheckNarrowsCollision(c)) {
+		if (!CheckNarrowsCollision(c, &fixVec)) {
 			// Noヒット処理を行う
 			NoHit(c);	// 自分の処理
 			c->NoHit(this);	// 相手の処理
@@ -50,6 +65,23 @@ void Collider::CheckCollision(Collider* c) {
 	// ３．ヒット処理を行う
 	Hit(c);	// 自分の処理
 	c->Hit(this);	// 相手の処理
+
+	// 4. 修正ベクトルを適応（isMoveの可否で決まる）
+
+	// どちらもtrue
+	if (isMove && c->isMove) {
+		ApplyFixVector(fixVec / 2.0f);
+		c->ApplyFixVector(fixVec / 2.0f);
+	}
+	// 自分だけtrue
+	else if (isMove && !c->isMove) {
+		ApplyFixVector(fixVec);
+	}
+	// 相手だけtrue
+	else if (!isMove && c->isMove) {
+		c->ApplyFixVector(fixVec);
+	}
+	// どちらもfalseなら何もしない
 }
 
 void Collider::Hit(Collider* c) {
@@ -88,9 +120,8 @@ void Collider::DebugGUI() {
 			if (ImGui::MenuItem("Point")) { SetBroadShape(Point()); }
 			if (ImGui::MenuItem("AABB")) { SetBroadShape(AABB()); }
 			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
-			if (ImGui::MenuItem("Capsule")) { 
-				SetBroadShape(Capsule());
-			}
+			if (ImGui::MenuItem("Capsule")) { SetBroadShape(Capsule()); }
+			//if (ImGui::MenuItem("Mesh")) { SetBroadShape(Mesh()); }	// Meshの動的生成は厳しいので廃止
 			ImGui::EndMenu();
 		}
 		GetBasePtr(broad)->DebugGUI();
@@ -114,10 +145,10 @@ void Collider::DebugGUI() {
 	ImGui::Text(std::string("serialNumber : " + std::to_string(serialNum)).c_str());
 }
 
-bool Collider::CheckBroadCollision(ShapeVariant& c) {
-	return std::visit([](auto& f, auto& t) {
+bool Collider::CheckBroadCollision(ShapeVariant& c, Math::Vector3* fixVec) {
+	return std::visit([fixVec](auto& f, auto& t) {
 		ICollisionShape* a = &f;
-		return a->CheckCollision(t);
+		return a->CheckCollision(t, fixVec);
 	}, broad, c);
 }
 
@@ -132,14 +163,14 @@ std::string Collider::GetCurrentTypeName(const ShapeVariant& variant) {
 	}, variant);
 }
 
-bool Collider::CheckNarrowsCollision(Collider* c) {
+bool Collider::CheckNarrowsCollision(Collider* c, Vector3* fixVec) {
 	// 相手にナローがない場合
 	if (c->narrows.empty()) {
 		// ナロー一つ一つと相手のブロードを比較
 		for (ShapeVariant& narrow : narrows) {
-			if (std::visit([](auto& f, auto& t) {
+			if (std::visit([fixVec](auto& f, auto& t) {
 				ICollisionShape* a = &f;
-				return a->CheckCollision(t);
+				return a->CheckCollision(t, fixVec);
 				}, narrow, c->broad)) {
 				return true;	// ヒットしていたのでループを終了
 			}
@@ -150,9 +181,9 @@ bool Collider::CheckNarrowsCollision(Collider* c) {
 		// ナローと相手のナローを１つずつ比較
 		for (ShapeVariant& f : narrows) {
 			for (ShapeVariant& t : c->narrows) {
-				if (std::visit([](auto& f, auto& t) {
+				if (std::visit([fixVec](auto& f, auto& t) {
 					ICollisionShape* a = &f;
-					return a->CheckCollision(t);
+					return a->CheckCollision(t, fixVec);
 					}, f, t)) {
 					return true;	// ヒットしていたのでループを終了
 				}

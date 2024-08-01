@@ -17,7 +17,7 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Resource::RigidModel mesh;
-	LWP::Resource::RigidModel sphere;
-	LWP::Object::Collider::AABB aabb;
+	LWP::Resource::StaticModel mesh;
+	LWP::Object::Collider::Collider meshCol;
+	LWP::Object::Collider::Collider pointCol;
 };

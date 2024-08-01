@@ -260,6 +260,8 @@
     <ClCompile Include="Engine\object\collider\shape\CheckCollisions.cpp" />
     <ClCompile Include="Engine\object\collider\shape\cPoint.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp" />
+    <ClCompile Include="Engine\object\collider\shape\cMesh.cpp" />
+    <ClCompile Include="Engine\object\core\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -610,6 +612,8 @@
     <ClInclude Include="Engine\object\collider\shape\cCapsule.h" />
     <ClInclude Include="Engine\object\collider\shape\cPoint.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h" />
+    <ClInclude Include="Engine\object\collider\shape\cMesh.h" />
+    <ClInclude Include="Engine\object\core\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
