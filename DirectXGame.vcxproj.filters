@@ -262,6 +262,7 @@
     <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp" />
     <ClCompile Include="Engine\object\collider\shape\cMesh.cpp" />
     <ClCompile Include="Engine\object\core\Terrain.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -614,6 +615,7 @@
     <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h" />
     <ClInclude Include="Engine\object\collider\shape\cMesh.h" />
     <ClInclude Include="Engine\object\core\Terrain.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -4,6 +4,12 @@
 void main(uint3 DTid : SV_DispatchThreadID)
 {
     PayLoad p;
+    uint32_t instanceID = DTid.x / 211;
+    uint32_t meshletID = DTid.x % 211;
     p.groupID = DTid.x;
-    DispatchMesh(mCommonData.instanceSize, 1, 1, p);
+    bool visible = !(instanceID == 1 && meshletID == 3);
+    //bool visible = instanceID != 1;
+    
+    DispatchMesh(visible, 1, 1, p);
+    //DispatchMesh(mCommonData.instanceSize * visible, 1, 1, p);
 }

@@ -29,8 +29,8 @@ namespace LWP::Base {
 
 	public: // ** パブリックなメンバ変数 ** //
 		
-		// RTVの登録情報
-		RTVInfo rtvInfo;
+		// RTVの登録情報（キューブマップなので6枚）
+		std::array<RTVInfo, 6> rtvInfos;
 		// SRVの登録情報
 		SRVInfo srvInfo;
 

@@ -37,3 +37,26 @@ RTVInfo RTV::CreateRenderTargetView(ID3D12Resource* resource) {
 	device_->CreateRenderTargetView(resource, &info.desc, info.cpuView);
 	return info;
 }
+
+std::array<RTVInfo, 6> RTV::CreateCubeMapView(ID3D12Resource* resource) {
+	std::array<RTVInfo, 6> info;
+
+	// キューブマップ分生成
+	for (int i = 0; i < 6; i++) {
+		// RTVの設定
+		info[i].desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // Format。基本敵にはResourceに合わせる
+		info[i].desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY; // 2DTexture配列
+		info[i].desc.Texture2DArray.MipSlice = 0;
+		info[i].desc.Texture2DArray.ArraySize = 1;
+		info[i].desc.Texture2DArray.FirstArraySlice = i;
+
+		// 空きを使用
+		info[i].index = indexManager_.UseEmpty();
+		// viewも設定
+		info[i].SetView(this);
+
+		// RTVに登録
+		device_->CreateRenderTargetView(resource, &info[i].desc, info[i].cpuView);
+	}
+	return info;
+}

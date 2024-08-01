@@ -11,7 +11,7 @@ void main(
 )
 {
     // Meshlet取得
-    Meshlet meshlet = mMeshlets[meshPayload.groupID];
+    Meshlet meshlet = mMeshlets[meshPayload.groupID % 211];
 
     // メッシュレット出力数を求める
     SetMeshOutputCounts(meshlet.VertCount, meshlet.PrimCount);
@@ -24,7 +24,7 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点のデータを求める
-        outVerts[gtid].pos = mul(mul(vertex.position, InstData[gid].wtf.m), cCamera.viewProjection);
+        outVerts[gtid].pos = mul(mul(vertex.position, InstData[meshPayload.groupID / 211].wtf.m), cCamera.viewProjection);
         outVerts[gtid].worldPos = mul(vertex.position, InstData[gid].wtf.m).xyz;
         outVerts[gtid].texcoord = vertex.texcoord;
         outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstData[gid].wtf.inverse)));

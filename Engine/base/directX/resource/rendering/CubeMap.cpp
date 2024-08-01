@@ -27,11 +27,9 @@ void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	clearValue.Color[3] = 1.0f;
 
 	// 3. 利用するHeapの設定。非常に特殊な運用。
-	properties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
-	properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
-	properties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
+	properties.Type = D3D12_HEAP_TYPE_DEFAULT; // デフォルト
 
-	// 4. バリアを設定（深度値を書き込む状態にしておく）
+	// 4. バリアを設定
 	currentBarrierState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 	// 5. Resourceを生成する
@@ -39,20 +37,22 @@ void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
-		currentBarrierState,	// 初回のResourceState。RTVで書き込むのでちょっとちがう設定
+		currentBarrierState,	// 初回のResourceState
 		&clearValue,			// Clear最適地。使わないならnullptr
 		IID_PPV_ARGS(&resource_)	// 作成するResourceポインタへのポインタ
 	);
 	assert(SUCCEEDED(hr));
 
 	// RTV上に登録
-	rtvInfo = heaps->rtv()->CreateRenderTargetView(resource_.Get());
+	rtvInfos = heaps->rtv()->CreateCubeMapView(resource_.Get());
 	// SRV上に登録
-	srvInfo = heaps->srv()->CreateRenderResource(resource_.Get());
+	srvInfo = heaps->srv()->CreateCubeMap(resource_.Get());
 }
 
 void CubeMap::Clear(ID3D12GraphicsCommandList* list) {
-	list->ClearRenderTargetView(rtvInfo.cpuView, clearValue.Color, 0, nullptr);
+	for (int i = 0; i < 6; i++) {
+		list->ClearRenderTargetView(rtvInfos[i].cpuView, clearValue.Color, 0, nullptr);
+	}
 };
 
 //RenderResource::operator Resource::Texture() { return *this; }

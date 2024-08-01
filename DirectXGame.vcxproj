@@ -176,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthStencil.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp" />
@@ -304,6 +305,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\resource\data\StructuredBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\IResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\BackBuffer.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\DepthStencil.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\IRenderingResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\RenderResource.h" />
