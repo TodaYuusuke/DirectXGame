@@ -64,8 +64,6 @@ float3 PointLightingShadow(VSOutput input, uint32_t n, float3 dir)
     return (normZComp - 0.00005f < depth) ? 1.0f : kShadowDensity;
 }
 
-
-
 float32_t4 main(VSOutput input) : SV_TARGET
 {
     // インデックス抽出
@@ -111,10 +109,9 @@ float32_t4 main(VSOutput input) : SV_TARGET
         
         float32_t3 cameraToPosition = normalize(input.worldPos - cCamera.position);
         float32_t3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
-        float32_t4 environmentColor = tEMap.SampleLevel(sTexSmp, reflectedVector, 0);
-    
-        output.rgb = ((input.color.rgb * texColor.rgb * cMaterials[m].color.rgb * diffuse) + specular);
-        output.rgb += environmentColor.rgb * 2.0f;
+        float32_t3 environmentColor = tEMap.SampleLevel(sTexSmp, reflectedVector, 0).rgb * 0.4f;
+        
+        output.rgb = ((input.color.rgb * texColor.rgb * cMaterials[m].color.rgb * diffuse) + specular) + environmentColor;
         output.rgb *= shadow;
         //output.rgb = (input.color.rgb * texColor.rgb * diffuse);
         output.a = input.color.a * texColor.a * cMaterials[m].color.a; // 透明度を保持
