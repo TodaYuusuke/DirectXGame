@@ -217,6 +217,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class\car\Car.cpp" />
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\Test\ColliderTest.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class\car\Car.h" />
     <ClInclude Include="class\particle\DamageParticle.h" />
     <ClInclude Include="class\player\Player.h" />
     <ClInclude Include="scene\Test\ColliderTest.h" />

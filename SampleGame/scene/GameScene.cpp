@@ -55,24 +55,22 @@ void GameScene::Initialize() {
 
 	// プレイヤー初期化
 	player.Init(&mainCamera, &levelData.terrain);
-
-	eMap.LoadShortPath("cars/TestCar.gltf");
-	eMap.materials[0].enableLighting = false;
-	eMap.materials[1].enableLighting = false;
-	eMap.materials[2].shininess = 200;
-	eMap.materials[4].enableLighting = false;
-	eMap.materials[5].enableLighting = false;
-	eMap.materials[6].enableLighting = false;
+	car.Init(&mainCamera, &levelData.terrain);
 }
 // 更新
 void GameScene::Update() {
-	player.Update();
+	if (isDriving) {
+		car.Update();
+	}
+	else {
+		player.Update();
+		//car..worldTF.rotation *= Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 0.02f);
+	}
 
-	eMap.worldTF.rotation *= Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 0.02f);
-
-	ImGui::Begin("Car");
-	eMap.DebugGUI();
-	ImGui::End();
+	// 車乗り降り
+	if (Input::Keyboard::GetTrigger(DIK_E)) {
+		isDriving = !isDriving;
+	}
 
 	// シーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {

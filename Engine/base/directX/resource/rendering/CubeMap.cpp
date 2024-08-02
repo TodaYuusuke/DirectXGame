@@ -6,8 +6,8 @@ using namespace LWP::Base;
 
 void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	HRESULT hr = S_FALSE;
-	width = 1024;
-	height = 1024;
+	width = 1024 / 2;
+	height = 1024 / 2;
 
 	// 1. Resourceの設定
 	desc.Width = UINT(width);

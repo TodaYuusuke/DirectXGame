@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "Car.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -7,50 +7,51 @@ using namespace LWP::Primitive;
 using namespace LWP::Object;
 
 // 初期化
-void Player::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
-	// モデル用意
-	model.LoadShortPath("human/walk.gltf");
-	//model.LoadShortPath("human/simpleSkin.gltf");
-	model.worldTF.translation.y = 0.4f;
-	//model.worldTF.scale = { 3.0f,3.0f,3.0f };
-	model.worldTF.scale = { 0.4f,0.4f,0.4f };
-	model.SetAllMaterialLighting(true);
-	// アニメーション用意
-	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
-	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);
+void Car::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
+	model.LoadShortPath("cars/TestCar.gltf");
+	model.materials[0].enableLighting = false;
+	model.materials[1].enableLighting = false;
+	model.materials[2].shininess = 200;
+	model.materials[4].enableLighting = false;
+	model.materials[5].enableLighting = false;
+	model.materials[6].enableLighting = false;
 	
 	// カメラのポインタをセット
 	camera_ = ptr;
-	//camera_->transform.Parent(&meshes[0].transform);
 	camera_->transform.translation = cameraOffset_;
-	//camera_->transform.rotation = Quaternion::CreateFromAxisAngle(Vector3{ 0.0f,1.0f,0.0f }, 1.54f);
-	//camera_->transform.rotation *= Quaternion::ConvertEuler(Vector3{ 0.0f, -1.54f, 0.0f });
-	//camera_->transform.rotation.x = 0.65f;
-	//cameraGoalRotation_ = camera_->transform.rotation;
-
-	// 点光源
-	pl.transform.Parent(&model.worldTF);
-	pl.transform.translation.z = 2.0f;
-	pl.transform.translation.y = 1.75f;
-	pl.radius = 13.0f;
-	pl.intensity = 0.7f;
-	pl.isActive = false;
-
-	walkAnim.Start();
 
 	// 地形に接地部分を登録
-	terrainPoint = terrain->SetNewCollider({ 0.0f,-0.4f,0.0f }, &model.worldTF);
+	for (int i = 0; i < 4; i++) {
+		wtf[i].Parent(&model.worldTF);
+	}
+	wtf[0].translation = { -0.68f,0.0f,1.24f };
+	wtf[1].translation = {  0.68f,0.0f,1.24f };
+	wtf[2].translation = { -0.68f,0.0f,-1.24f };
+	wtf[3].translation = {  0.68f,0.0f,-1.24f };
+
+	frontPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[0]);
+	frontPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[1]);
+	backPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[2]);
+	backPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[3]);
 }
 
 // 更新
-void Player::Update() {
+void Car::Update() {
+	// 車の現在地を求める
+	Vector3 currentPos = { 0.0f,0.0f,0.0f };
+	for (int i = 0; i < 4; i++) {
+		//wtf[i].translation.y -= model.worldTF.translation.y;
+		currentPos += wtf[i].GetWorldPosition();
+		// 重力加速度を加算
+		wtf[i].translation.y -= kGravityAcce * Info::GetDeltaTimeF();
+	}
+	model.worldTF.translation = currentPos / 4.0f;
+
 	// 移動処理
 	Move();
 	// カメラの計算
 	FollowCameraUpdate();
 
-	// 加速度を加算
-	velocity.y -= kGravityAcce * Info::GetDeltaTimeF();
 	// 速度を加算
 	model.worldTF.translation += velocity;
 
@@ -58,23 +59,31 @@ void Player::Update() {
 	velocity.x *= kDecayRate;
 	velocity.z *= kDecayRate;
 	// 前フレームで地形にヒットしていたなら重力加速度をリセット
-	if (terrainPoint->preFrameHit) {
+	if (frontPoint[0]->preFrameHit || frontPoint[1]->preFrameHit || backPoint[0]->preFrameHit || backPoint[1]->preFrameHit) {
 		velocity.y = 0.0f;
 	}
 
 #if DEMO
-	ImGui::Begin("Player");
+	ImGui::Begin("Car");
 	if (ImGui::TreeNode("Model")) {
 		model.DebugGUI();
 		ImGui::TreePop();
 	}
 	ImGui::DragFloat("kSpeed", &kWalkSpeed, 0.1f);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.1f);
+	for (int i = 0; i < 4; i++) {
+		if (ImGui::TreeNode(("wheel" + std::to_string(i)).c_str())) {
+			wtf[i].DebugGUI();
+			Vector3 p = wtf[i].GetWorldPosition();
+			ImGui::Text("%f, %f, %f", p.x, p.y, p.z);
+			ImGui::TreePop();
+		}
+	}
 	ImGui::End();
 #endif
 }
 
-void Player::Move() {
+void Car::Move() {
 	// 移動する向き
 	Vector3 dir = { 0.0f,0.0f,0.0f };
 
@@ -91,12 +100,6 @@ void Player::Move() {
 	if (Keyboard::GetPress(DIK_A)) {
 		dir.x -= 1.0f;
 	}
-	//if (Keyboard::GetPress(DIK_LSHIFT)) {
-	//	dir.y -= 1.0f;
-	//}
-	//if (Keyboard::GetPress(DIK_SPACE)) {
-	//	dir.y += 1.0f;
-	//}
 
 	// コントローラーでの移動
 	dir.x += Pad::GetLStick().x;
@@ -121,20 +124,11 @@ void Player::Move() {
 			Utility::Interp::SlerpQuaternion(
 				model.worldTF.rotation,
 				model.worldTF.rotation * Quaternion::DirectionToDirection(currentDir, dir), 0.8f);
-		// 歩いているのでアニメーション
-		if (walkAnim.isEnd()) {
-			walkAnim.Start();
-		}
-	}
-	else {
-		// 止まってるのでアニメーションストップ
-		walkAnim.Stop();
-		walkAnim.Init();
 	}
 }
 
 
-void Player::FollowCameraUpdate() {
+void Car::FollowCameraUpdate() {
 	// 回転する向き
 	Vector2 dir = { 0.0f,0.0f };
 
