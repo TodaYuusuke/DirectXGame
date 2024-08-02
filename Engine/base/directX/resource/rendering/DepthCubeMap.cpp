@@ -1,10 +1,10 @@
-#include "CubeMap.h"
+#include "DepthCubeMap.h"
 #include "resources/texture/Texture.h"
 
 using namespace LWP;
 using namespace LWP::Base;
 
-void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
+void DepthCubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	HRESULT hr = S_FALSE;
 	width = 1024;
 	height = 1024;
@@ -14,23 +14,20 @@ void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	desc.Height = UINT(height);
 	desc.MipLevels = 0;
 	desc.DepthOrArraySize = 6;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	desc.SampleDesc.Count = 1;
 	desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
 	// 2．クリアカラー
-	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	clearValue.Color[0] = 0.1f;
-	clearValue.Color[1] = 0.25f;
-	clearValue.Color[2] = 0.5f;
-	clearValue.Color[3] = 1.0f;
+	clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	clearValue.DepthStencil.Depth = 1.0f; // 1.0f(最大値)でクリア
 
 	// 3. 利用するHeapの設定。非常に特殊な運用。
 	properties.Type = D3D12_HEAP_TYPE_DEFAULT; // デフォルト
 
 	// 4. バリアを設定
-	currentBarrierState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	currentBarrierState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
 	// 5. Resourceを生成する
 	hr = device->GetDevice()->CreateCommittedResource(
@@ -44,14 +41,13 @@ void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	assert(SUCCEEDED(hr));
 
 	// RTV上に登録
-	rtvInfos = heaps->rtv()->CreateCubeMapView(resource_.Get());
-	// SRV上に登録
-	srvInfo = heaps->srv()->CreateCubeMap(resource_.Get());
+	dsvInfos = heaps->dsv()->CreateDepthStencilCubeMap(resource_.Get());
 }
 
-void CubeMap::Clear(ID3D12GraphicsCommandList* list) {
+void DepthCubeMap::Clear(ID3D12GraphicsCommandList* list) {
 	for (int i = 0; i < 6; i++) {
-		list->ClearRenderTargetView(rtvInfos[i].cpuView, clearValue.Color, 0, nullptr);
+		// 指定した深度で画面全体をクリアする
+		list->ClearDepthStencilView(dsvInfos[i].cpuView, D3D12_CLEAR_FLAG_DEPTH, clearValue.DepthStencil.Depth, 0, 0, nullptr);
 	}
 };
 

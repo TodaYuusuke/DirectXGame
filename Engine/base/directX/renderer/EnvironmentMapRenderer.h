@@ -19,12 +19,7 @@ namespace LWP::Base {
 	/// </summary>
 	class EnvironmentMapRenderer : public IRenderer {
 	public: // ** メンバ関数 ** //
-		// ターゲット構造体
-		struct Target {
-			Math::Vector3 position;	// モデルの中心点
-			CubeMap* cube;	// キューブマップのリソース
-		};
-
+		
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
@@ -44,11 +39,6 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="list">コマンドリストのポインタ/param>
 		void DrawCall(ID3D12GraphicsCommandList6* list);
-
-		/// <summary>
-		/// 描画ターゲットセット
-		/// </summary>
-		void AddTarget(const Target& target) { target_.push_back(target); }
 
 		/// <summary>
 		/// インデックスデータリセット
@@ -73,15 +63,13 @@ namespace LWP::Base {
 		RenderData skinning_;
 		// スタティックモデル
 		RenderData static_;
-		
-		// ターゲット
-		std::vector<Target> target_;
+
 
 	private: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
 		/// 全てのモデルをターゲットに描画する関数
 		/// </summary>
-		void DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS view);
+		void DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
 	};
 }

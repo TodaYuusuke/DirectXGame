@@ -135,6 +135,10 @@ namespace LWP::Base {
 		/// RenderResourceをSRVに登録
 		/// </summary>
 		SRVInfo CreateRenderResource(ID3D12Resource* resource);
+		/// <summary>
+		/// CubeMapをSRVに登録
+		/// </summary>
+		SRVInfo CreateCubeMap(ID3D12Resource* resource);
 
 		/// <summary>
 		/// StructuredBufferをSRVに登録

@@ -126,6 +126,28 @@ SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource) {
 	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
+SRVInfo SRV::CreateCubeMap(ID3D12Resource* resource) {
+	// SRVにテクスチャとして登録（キューブマップ）
+	SRVInfo info;	// SRVの登録情報
+
+	// metaDataを元にSRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	info.desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	info.desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	info.desc.TextureCube.MipLevels = UINT_MAX;
+	info.desc.TextureCube.MostDetailedMip = 0;
+	info.desc.TextureCube.ResourceMinLODClamp = 0.0F;
+	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	// 空きを使用
+	info.index = textureIM_.UseEmpty();
+	// viewも設定
+	info.SetView(this);
+
+	// SRVに登録
+	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	return info;
+}
 
 SRVInfo SRV::CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER_RESOURCE_VIEW_DESC& desc) {
 	// SRVの登録情報

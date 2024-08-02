@@ -77,6 +77,8 @@ namespace LWP::Base {
 		RenderData skinning_;
 		// 静的モデル
 		RenderData static_;
+		// 環境モデル
+		RenderData eMap_;
 
 
 	private: // ** プライベートなメンバ関数 ** //

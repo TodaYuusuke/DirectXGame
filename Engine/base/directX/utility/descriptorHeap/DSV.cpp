@@ -40,6 +40,29 @@ DSVInfo DSV::CreateDepthStencilView(ID3D12Resource* resource) {
 	device_->CreateDepthStencilView(resource, &info.desc, info.cpuView);
 	return info;
 }
+std::array<DSVInfo, 6> DSV::CreateDepthStencilCubeMap(ID3D12Resource* resource) {
+	std::array<DSVInfo, 6> info;
+
+	// キューブマップ分生成
+	for (int i = 0; i < 6; i++) {
+		// DSVの設定
+		info[i].desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		info[i].desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DARRAY; // 2DTexture配列
+		info[i].desc.Texture2DArray.MipSlice = 0;
+		info[i].desc.Texture2DArray.ArraySize = 1;
+		info[i].desc.Texture2DArray.FirstArraySlice = i;
+
+		// 空きを使用
+		info[i].index = indexManager_.UseEmpty();
+		// viewも設定
+		info[i].SetView(this);
+
+		// DSVに登録
+		device_->CreateDepthStencilView(resource, &info[i].desc, info[i].cpuView);
+	}
+
+	return info;
+}
 
 DSVInfo DSV::CreateShadowMapDir(ID3D12Resource* resource) {
 	DSVInfo info;

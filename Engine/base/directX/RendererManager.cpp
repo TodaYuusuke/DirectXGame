@@ -71,6 +71,8 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 
 	// シャドウレンダラー初期化
 	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
+	eMapRenderer_.Init(device, srv_, dxc_, meshFunc);
+	eMapRenderer_.SetBufferGroup(&buffers_);
 	// ノーマルレンダラー初期化
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
 	meshRenderer_.Init(device, srv_, dxc_, meshFunc);
@@ -97,6 +99,7 @@ void RendererManager::DrawCall() {
 
 	// シャドウ描画
 	shadowRender_.DrawCall(list);
+	eMapRenderer_.DrawCall(list);
 	// 通常描画
 	meshRenderer_.DrawCall(list);
 	normalRender_.DrawCall(list);

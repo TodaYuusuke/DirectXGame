@@ -10,9 +10,9 @@ namespace LWP::Resource {
 
 namespace LWP::Base {
 	/// <summary>
-	/// キューブマップのリソースクラス
+	/// 深度キューブマップのリソースクラス
 	/// </summary>
-	class CubeMap
+	class DepthCubeMap
 		: public IRenderingResource {
 	public: // ** メンバ関数 ** //
 
@@ -21,20 +21,11 @@ namespace LWP::Base {
 		// 画面クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
 
-		// SRV上の登録インデックス番号を返す
-		int GetSRVIndex() const { return srvInfo.index; }
-		// SRV上のViewを返す
-		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUView() const { return srvInfo.gpuView; }
-		// 解像度を返す関数
-		Math::Vector2 GetTextureSize() const { return { static_cast<float>(width), static_cast<float>(height) }; }
-
 
 	public: // ** パブリックなメンバ変数 ** //
 		
-		// RTVの登録情報（キューブマップなので6枚）
-		std::array<RTVInfo, 6> rtvInfos;
-		// SRVの登録情報
-		SRVInfo srvInfo;
+		// DSVの登録情報（キューブマップなので6枚）
+		std::array<DSVInfo, 6> dsvInfos;
 
 
 	public: // ** オペレーターオーバーロード ** //

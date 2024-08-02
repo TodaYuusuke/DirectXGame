@@ -29,6 +29,13 @@ InstanceData& InstanceData::operator=(const Resource::SkinningModel& value) {
 	wtf = value.worldTF;
 	return *this;
 }
+InstanceData::InstanceData(const Resource::EMapModel& value) {
+	*this = value;
+}
+InstanceData& InstanceData::operator=(const Resource::EMapModel& value) {
+	wtf = value.worldTF;
+	return *this;
+}
 
 
 void Models::RigidBuffer::Init() {
@@ -113,9 +120,12 @@ void Manager::Update() {
 		// リソースリセット
 		it->second.rigid.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
 		it->second.skin.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
+		it->second.eMaps.Reset(static_cast<uint32_t>(it->second.data.materials_.size()));
+
 
 		Models::Pointers<RigidModel, Models::RigidBuffer>* rigid[2] = { &it->second.rigid.solid, &it->second.rigid.wireFrame };
 		Models::Pointers<SkinningModel, Models::SkinBuffer>* skin[2] = { &it->second.skin.solid, &it->second.skin.wireFrame };
+		Models::Pointers<EMapModel, Models::RigidBuffer>* emap = &it->second.eMaps;
 		for (int i = 0; i < 2; i++) {
 			for (RigidModel* m : rigid[i]->ptrs.list) {
 				m->Update();
@@ -139,6 +149,18 @@ void Manager::Update() {
 					m->SetBufferData(skin[i]->buffer.well->data_, skin[i]->buffer.well->GetCount());
 					skin[i]->buffer.common.data_->instanceCount += 1;
 				}
+			}
+		}
+
+		for (EMapModel* e : emap->ptrs.list) {
+			e->Update();
+			// バッファーにデータ登録
+			if (e->isActive) {
+				emap->buffer.inst->Add(*e);
+				for (const Primitive::Material& mat : e->materials) {
+					emap->buffer.material->Add(mat);
+				}
+				emap->buffer.common.data_->instanceCount += 1;
 			}
 		}
 	}
@@ -193,6 +215,7 @@ void Manager::LoadModelData(const std::string& filePath) {
 		// 初期化
 		modelDataMap_[filePath].rigid.Init();
 		modelDataMap_[filePath].skin.Init();
+		modelDataMap_[filePath].eMaps.Init();
 
 		// マテリアルの数とJointの数をここでセット
 		int m = static_cast<int>(modelDataMap_[filePath].data.materials_.size());
@@ -203,6 +226,7 @@ void Manager::LoadModelData(const std::string& filePath) {
 		modelDataMap_[filePath].skin.wireFrame.buffer.common.data_->materialCount = m;
 		modelDataMap_[filePath].skin.solid.buffer.common.data_->jointCount = j;
 		modelDataMap_[filePath].skin.wireFrame.buffer.common.data_->jointCount = j;
+		modelDataMap_[filePath].eMaps.buffer.common.data_->materialCount = m;
 	}
 }
 ModelData* Manager::GetModelData(const std::string& filePath) {

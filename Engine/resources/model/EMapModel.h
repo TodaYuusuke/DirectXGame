@@ -1,6 +1,10 @@
 #pragma once
 #include "IModel.h"
 
+#include "base/directX/resource/data/ConstantBuffer.h"
+#include "base/directX/resource/rendering/CubeMap.h"
+#include "base/directX/resource/rendering/DepthCubeMap.h"
+
 namespace LWP::Resource {
 	/// <summary>
 	/// 環境マップ効果のある3Dモデルを扱うアダプタークラス
@@ -16,6 +20,13 @@ namespace LWP::Resource {
 		// モデルの中心座標（環境マップの中心）
 		Math::Vector3 modelCenterPosition;
 
+		// 環境マップのリソース
+		Base::CubeMap cubeMap;
+		Base::DepthCubeMap depthCubeMap;
+		// 描画用ViewProjection
+		std::array<Base::ConstantBuffer<Math::Matrix4x4>, 6> viewBuffers;
+
+	
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
@@ -33,11 +44,6 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath) override;
-		/// <summary>
-		/// 標準モデルのデータを読み込む
-		/// </summary>
-		void LoadCube() { LoadFullPath("resources/system/model/standard/cube.gltf"); }
-		void LoadSphere() { LoadFullPath("resources/system/model/standard/sphere.gltf"); }
 
 		/// <summary>
 		/// 更新（ユーザー呼び出し禁止）
@@ -49,6 +55,10 @@ namespace LWP::Resource {
 		/// </summary>
 		void DebugGUI() override;
 
+		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		void ChangeFillMode() {};
 		/// <summary>
 		/// 全マテリアルのenableLightingを切り替え
 		/// </summary>
@@ -76,7 +86,7 @@ namespace LWP::Resource {
 	};
 	
 
-	// RigidModelのデータのみ（Observerクラス用）
+	// EMapModelのデータのみ（Observerクラス用）
 	struct EMapModelStruct {
 		Object::TransformQuat worldTF;
 

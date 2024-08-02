@@ -5,6 +5,7 @@
 #include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
 #include "renderer/MeshRenderer.h"
+#include "renderer/EnvironmentMapRenderer.h"
 #include "renderer/BufferGroup.h"
 
 #include "object/core/Particle.h"
@@ -124,6 +125,8 @@ namespace LWP::Base {
 
 #pragma region シャドウマッピング
 	private:
+		// 環境マップ
+		EnvironmentMapRenderer eMapRenderer_;
 		// レンダラー
 		ShadowRenderer shadowRender_;
 	public:

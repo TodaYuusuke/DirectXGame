@@ -30,4 +30,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// プレイヤー
 	Player player;
+
+	// 反射モデル
+	LWP::Resource::EMapModel eMap;
 };

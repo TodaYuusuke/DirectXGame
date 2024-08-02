@@ -1,6 +1,8 @@
 #pragma once
 #include "IDescriptorHeap.h"
 
+#include <array>
+
 namespace LWP::Base {
 	struct RTVInfo : public HeapInfo {
 	public:
@@ -57,5 +59,10 @@ namespace LWP::Base {
 		/// RenderTargetViewを作成する関数
 		/// </summary>
 		RTVInfo CreateRenderTargetView(ID3D12Resource* resource);
+
+		/// <summary>
+		/// CubeMap用のViewを作成する関数
+		/// </summary>
+		std::array<RTVInfo, 6> CreateCubeMapView(ID3D12Resource* resource);
 	};
 }

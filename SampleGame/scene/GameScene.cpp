@@ -55,10 +55,17 @@ void GameScene::Initialize() {
 
 	// プレイヤー初期化
 	player.Init(&mainCamera, &levelData.terrain);
+
+	eMap.LoadShortPath("human/walk.gltf");
+	eMap.worldTF.translation.y = 3.0f;
 }
 // 更新
 void GameScene::Update() {
 	player.Update();
+
+	ImGui::Begin("Test");
+	eMap.DebugGUI();
+	ImGui::End();
 
 	// シーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {

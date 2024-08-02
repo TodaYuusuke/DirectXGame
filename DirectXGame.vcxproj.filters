@@ -265,6 +265,7 @@
     <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="Engine\resources\model\EMapModel.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\DepthCubeMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -620,6 +621,7 @@
     <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h" />
     <ClInclude Include="Engine\resources\model\EMapModel.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\DepthCubeMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
