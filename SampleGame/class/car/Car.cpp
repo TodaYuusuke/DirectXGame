@@ -21,31 +21,30 @@ void Car::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	camera_->transform.translation = cameraOffset_;
 
 	// 地形に接地部分を登録
-	for (int i = 0; i < 4; i++) {
-		wtf[i].Parent(&model.worldTF);
+	for (int i = 1; i < 5; i++) {
+		wtf[i].Parent(&wtf[0]);
 	}
-	wtf[0].translation = { -0.68f,0.0f,1.24f };
-	wtf[1].translation = {  0.68f,0.0f,1.24f };
-	wtf[2].translation = { -0.68f,0.0f,-1.24f };
-	wtf[3].translation = {  0.68f,0.0f,-1.24f };
+	wtf[1].translation = { -0.68f,0.0f,1.24f };
+	wtf[2].translation = {  0.68f,0.0f,1.24f };
+	wtf[3].translation = { -0.68f,0.0f,-1.24f };
+	wtf[4].translation = {  0.68f,0.0f,-1.24f };
 
-	frontPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[0]);
-	frontPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[1]);
-	backPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[2]);
-	backPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[3]);
+	terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &model.worldTF);
+	frontPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[1]);
+	frontPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[2]);
+	backPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[3]);
+	backPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[4]);
 }
 
 // 更新
 void Car::Update() {
 	// 車の現在地を求める
-	Vector3 currentPos = { 0.0f,0.0f,0.0f };
-	for (int i = 0; i < 4; i++) {
-		//wtf[i].translation.y -= model.worldTF.translation.y;
-		currentPos += wtf[i].GetWorldPosition();
-		// 重力加速度を加算
-		wtf[i].translation.y -= kGravityAcce * Info::GetDeltaTimeF();
-	}
-	//model.worldTF.translation = currentPos / 4.0f;
+	//Vector3 currentPos = { 0.0f,0.0f,0.0f };
+	//for (int i = 1; i < 5; i++) {
+	//	currentPos += wtf[i].GetWorldPosition();
+	//	wtf[i].translation.y = 0.0f;
+	//}
+	//model.worldTF.translation.y = currentPos.y / 4.0f;
 
 	// 移動処理
 	Move();
@@ -54,6 +53,9 @@ void Car::Update() {
 
 	// 速度を加算
 	model.worldTF.translation += velocity;
+
+	wtf[0] = model.worldTF;
+	wtf[0].translation.y = 0.0f;
 
 	// 速度を減衰させる
 	velocity.x *= kDecayRate;
@@ -79,6 +81,7 @@ void Car::Update() {
 			ImGui::TreePop();
 		}
 	}
+	//ImGui::DragFloat3("centerPosition", &currentPos.x);
 	ImGui::End();
 #endif
 }
