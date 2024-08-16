@@ -1,6 +1,7 @@
 #include "Terrain.h"
 
 #include "base/ImGuiManager.h"
+#include "component/System.h"
 
 using namespace LWP;
 using namespace LWP::Base;
@@ -8,13 +9,20 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-Terrain::Terrain() {}
+Terrain::Terrain() : grassPositions_(65535) {
+	Initialize();
+}
 
 // 初期化
-void Terrain::Initialize() {}
+void Terrain::Initialize() {
+	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
+	SRV* srv = System::engine->directXCommon_->GetSRV();
+	grassPositions_.Init(dev, srv);
+}
 // 更新
 void Terrain::Update(Base::RendererManager* manager) {
-	manager;
+	// 描画データ用のデータ登録
+	manager->AddGrassData(grassPositions_.GetGPUView(), grassPositions_.GetCount());
 
 	// 当たり判定を検証
 	for (Point& point : points_) {
@@ -73,6 +81,8 @@ void Terrain::Update(Base::RendererManager* manager) {
 }
 
 void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
+	grassPositions_.Add({ 0.0f,1.0f,0.0f });	// 草生やしテスト
+	
 	// モデル読み込み
 	model_.LoadShortPath(filePath);
 	model_.ApplyWorldTransform(wtf);

@@ -121,6 +121,15 @@ namespace LWP::Base {
 			normalRender_.AddTarget({ view, back, depth });
 			meshRenderer_.AddTarget({ view, back, depth });
 		}
+		/// <summary>
+		/// Terrainの草描画用データセット
+		/// </summary>
+		/// <param name="view">カメラデータのView</param>
+		/// <param name="back">BackBuffer（RenderRsource）</param>
+		/// <param name="depth">DepthStencil</param>
+		void AddGrassData(const D3D12_GPU_DESCRIPTOR_HANDLE& view, int count) {
+			meshRenderer_.AddGrassData(view, count);
+		}
 #pragma endregion
 
 #pragma region シャドウマッピング

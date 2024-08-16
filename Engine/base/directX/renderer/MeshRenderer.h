@@ -47,9 +47,16 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="target"></param>
 		void AddTarget(const Target& target) { target_.push_back(target); }
+		/// <summary>
+		/// 草描画用データセット
+		/// </summary>
+		void AddGrassData(const D3D12_GPU_DESCRIPTOR_HANDLE& view, int count) {
+			grassData_.positionView = view;
+			*grassData_.count.data_ = count;
+		}
 
 		/// <summary>
-		/// インデックスデータリセット
+		/// リセット
 		/// </summary>
 		void Reset();
 
@@ -80,6 +87,13 @@ namespace LWP::Base {
 		// 環境モデル
 		RenderData eMap_;
 
+		// 草の数用データ
+		struct GrassData {
+			RootSignature root;
+			PSO pso;
+			ConstantBuffer<uint32_t> count;
+			D3D12_GPU_DESCRIPTOR_HANDLE positionView;
+		}grassData_;
 
 	private: // ** プライベートなメンバ関数 ** //
 

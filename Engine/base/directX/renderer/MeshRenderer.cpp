@@ -128,6 +128,20 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.SetMeshShader("ms/eMap/Meshlet.MS.hlsl")
 		.SetPixelShader("ms/eMap/EMap.PS.hlsl")
 		.Build(device->GetDevice());
+
+
+	// RootSignatureを生成
+	grassData_.root.AddCBVParameter(0, SV_All)	// インスタンス数のデータ
+		.AddCBVParameter(1, SV_All)	// カメラデータ
+		.AddTableParameter(0, SV_All)	// 草を生やす座標データ
+		.Build(device->GetDevice());
+	grassData_.pso.Init(grassData_.root, dxc, PSO::Type::Mesh)
+		//.SetAmpShader("ms/terrain/TerrainGrass.AS.hlsl")
+		.SetMeshShader("ms/terrain/TerrainGrass.MS.hlsl")
+		.SetPixelShader("ms/terrain/TerrainGrass.PS.hlsl")
+		.Build(device->GetDevice());
+	grassData_.count.Init(System::engine->directXCommon_->GetGPUDevice());
+	*grassData_.count.data_ = 0;
 }
 
 void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -177,6 +191,7 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 
 void MeshRenderer::Reset() {
 	target_.clear();
+	*grassData_.count.data_ = 0;
 }
 
 void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {
@@ -342,5 +357,19 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			// メッシュレット数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
+	}
+
+	// -------------------------------------------------------------- //
+
+	// 草をDispatch
+	if (*grassData_.count.data_ > 0) {
+		list->SetGraphicsRootSignature(grassData_.root);	// Rootセット
+		list->SetPipelineState(grassData_.pso.GetState());	// PSOセット
+		// Viewをセット
+		list->SetGraphicsRootConstantBufferView(0, grassData_.count.GetGPUView());
+		list->SetGraphicsRootConstantBufferView(1, cameraView);
+		list->SetGraphicsRootDescriptorTable(2, grassData_.positionView);
+		// 生やす地点数分メッシュシェーダーを実行
+		list->DispatchMesh(1, 1, 1);
 	}
 }
