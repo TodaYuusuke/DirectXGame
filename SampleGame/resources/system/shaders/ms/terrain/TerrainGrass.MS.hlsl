@@ -1,129 +1,73 @@
-#include "Struct.hlsli"
+#include "TerrainGrass.hlsli"
 #include "../UtilityFunction.hlsli"
 
-int tsign(in uint gtid, in int id)
+float32_t4 ConvertVector4(float32_t3 v)
 {
-    return (gtid & (1u << id)) ? 1 : -1;
+    return float32_t4(v.x, v.y, v.z, 1.0f);
 }
 
-static const int GROUP_SIZE = 128;
-static const int GRASS_VERT_COUNT = 256;
-static const int GRASS_PRIM_COUNT = 192;
-static const int GRASS_END_DISTANCE = 1;
+struct Vertices
+{
+    float32_t4 v[4];
+};
 
-[NumThreads(GROUP_SIZE, 1, 1)]
+// 点に草を生やす
+Vertices GenerateGrass(float32_t3 pos, float32_t height, float32_t2 dir)
+{
+    Vertices result;
+    result.v[0] = mul(ConvertVector4(pos + float32_t3(-dir.x, 0.0f, -dir.y)), cCamera.viewProjection); // 左下
+    result.v[1] = mul(ConvertVector4(pos + float32_t3(dir.x, 0.0f, dir.y)), cCamera.viewProjection); // 右下
+    result.v[2] = mul(ConvertVector4(pos + float32_t3(-dir.x, height, -dir.y)), cCamera.viewProjection); // 左上
+    result.v[3] = mul(ConvertVector4(pos + float32_t3(dir.x, height, dir.y)), cCamera.viewProjection); // 右上
+    return result;
+}
+
+static const int GRASS_COUNT = 5;
+static const int GRASS_VERT_COUNT = 4 * GRASS_COUNT;
+static const int GRASS_PRIM_COUNT = 2 * GRASS_COUNT;
+static const float4 GRASS_COLOR = float4(0.254f, 0.539f, 0.054f, 1.0f);
+
+[NumThreads(1, 1, 1)]
 [OutputTopology("triangle")]
-void MeshShader(
-    uint gtid : SV_GroupThreadID,
-    uint gid : SV_GroupID,
-    out indices uint3 tris[GRASS_PRIM_COUNT],
-    out vertices Vertex verts[GRASS_VERT_COUNT]
+void main(
+    in uint gid : SV_GroupID, // グループID
+    in uint gtid : SV_GroupThreadID, // グループ内のスレッドID
+    out vertices VSOutput outVerts[GRASS_VERT_COUNT], // 出力頂点
+    out indices uint3 outIndices[GRASS_PRIM_COUNT] // 出力インデックス
 )
 {
-    const GrassPatchArguments arguments = sGrassPatch[gid]; //Load arguments
-    
+    // 頂点数とプリミティブ（三角形）の数を設定
     SetMeshOutputCounts(GRASS_VERT_COUNT, GRASS_PRIM_COUNT);
-	
-    static const int verticesPerBladeEdge = 4;
-    static const int verticesPerBlade = 2 * verticesPerBladeEdge;
-    static const int trianglesPerBlade = 6;
-    static const int maxBladeCount = 32;
-    
-    const float3 patchCenter = arguments.position;
-    const float3 patchNormal = arguments.normal;
-    const float spacing = 1.0f; /*DynamicConst.grassSpacing;*/
-    //const int seed = combineSeed(asuint(int(patchCenter.x / spacing)), asuint(int(patchCenter.y / spacing)));
-    RandomGenerator random;
-    random.seed = arguments.position / spacing;
-	
-    float distanceToCamera = distance(arguments.position, cCamera.position.xyz);
-    float bladeCountF = lerp(float(maxBladeCount), 2., pow(saturate(distanceToCamera / (GRASS_END_DISTANCE * 1.05)), 0.75));
-    
-    int bladeCount = ceil(bladeCountF);
-    
-    const int vertexCount = bladeCount * verticesPerBlade;
-    const int triangleCount = bladeCount * trianglesPerBlade;
-        
-    for (uint i = 0; i < 2; ++i)
-    {
-        int vertId = gtid + GROUP_SIZE * i;
+    // 中央位置を求める
+    float32_t3 center = sInstance[gid].position;
 
-        if (vertId >= vertexCount)
-            break;
+    // 平面を構成する4頂点の位置を計算
+    float halfSize = 0.5f;
+    
+    // 草を生成
+    RandomGenerator random;
+    random.seed = center;   // seed生成
+    for (int i = 0; i < GRASS_COUNT; i++)
+    {
+        Vertices ver;
+        float32_t2 dir = normalize(float32_t2(2 * random.Generate1d() - 1, 2 * random.Generate1d() - 1));
+        dir *= 0.02f;
+        //float32_t2 dist = normalize(float32_t2(2 * random.Generate1d() - 1, 2 * random.Generate1d() - 1));
+        //dist *= random.Generate1d() * 0.2f;
+        float32_t2 dist = float32_t2(random.Generate1d() * 0.3f, random.Generate1d() * 0.3f);
+        ver = GenerateGrass(center + float3(dist.x, 0.0f, dist.y), 0.1f + random.Generate1d() * 0.08f, dir);
         
-        int bladeId = vertId / verticesPerBlade;
-        int vertIdLocal = vertId % verticesPerBlade;
-           
-        //const float height = arguments.height + float(rand(seed, bladeId, 20)) / 40.;
-        const float height = arguments.height + random.Generate1d() / 40.;
+        int vOffset = i * 4;
         
-        //position the grass in a circle around the patchPosition and angled using the patchNormal
-        float3 tangent = normalize(cross(float3(0, 1, 0), patchNormal));
-        float3 bitangent = normalize(cross(patchNormal, tangent));
-             
-        //float bladeDirectionAngle = 2. * PI * rand(seed, 4, bladeId);
-        float bladeDirectionAngle = 2. * PI * random.Generate1d();
-        float2 bladeDirection = float2(cos(bladeDirectionAngle), sin(bladeDirectionAngle));
-       
-        //float offsetAngle = 2. * PI * rand(seed, bladeId);
-        float offsetAngle = 2. * PI * random.Generate1d();
-        //float offsetRadius = spacing * sqrt(rand(seed, 19, bladeId));
-        float offsetRadius = spacing * sqrt(random.Generate1d());
-        float3 bladeOffset = offsetRadius * (cos(offsetAngle) * tangent + sin(offsetAngle) * bitangent);
-        
-        float3 p0 = patchCenter + bladeOffset;
-        float3 p1 = p0 + float3(0, 0, height);
-        float3 p2 = p1 + bladeDirection * height * 0.3;
-     
-        //p2 += GetWindOffset(p0.xy, DynamicConst.shaderTime);
-        p2 += GetWindOffset(p0.xy, 1.0f);
-        
-        MakePersistentLength(p0, p1, p2, height);
-        
-        float width = 0.03;
-        
-        width *= maxBladeCount / bladeCountF;
-        
-        if (bladeId == (bladeCount - 1))
+        for (int j = 0; j < 4; j++)
         {
-            width *= frac(bladeCountF);
+            outVerts[j + vOffset].position = ver.v[j];
+            outVerts[j + vOffset].normal = float3(0.0f, 1.0f, 0.0f);
+            outVerts[j + vOffset].color = GRASS_COLOR;
         }
         
-        Vertex vertex;
-        vertex.height = arguments.height;
-        vertex.worldSpaceGroundNormal = arguments.normal;
-        vertex.rootHeight = p0.z;
-        
-        float3 sideVec = normalize(float3(bladeDirection.y, -bladeDirection.x, 0));
-        float3 offset = tsign(vertIdLocal, 0) * width * sideVec;
-        
-        p0 += offset * 1.0;
-        p1 += offset * 0.7;
-        p2 += offset * 0.3;
-          
-        float t = (vertIdLocal / 2) / float(verticesPerBladeEdge - 1);
-        vertex.worldSpacePosition = bezier(p0, p1, p2, t);
-        vertex.worldSpaceNormal = cross(sideVec, normalize(bezierDerivative(p0, p1, p2, t)));
-        vertex.clipSpacePosition = mul(DynamicConst.viewProjectionMatrix, float4(vertex.worldSpacePosition, 1));
-
-        verts[vertId] = vertex;
-    }
-
-    for (uint i = 0; i < 2; ++i)
-    {
-        int triId = gtid + GROUP_SIZE * i;
-
-        if (triId >= triangleCount)
-            break;
-
-        int bladeId = triId / trianglesPerBlade;
-        int triIdLocal = triId % trianglesPerBlade;
-
-        int offset = bladeId * verticesPerBlade + 2 * (triIdLocal / 2);
-
-        uint3 triangleIndices = (triLocal & 1) == 0 ? uint3(0, 1, 2) :
-                                                     uint3(3, 2, 1);
-
-        tris[triId] = offset + triangleIndices;
+        // インデックスを設定して三角形を構成
+        outIndices[i*2]     = uint3(0 + vOffset, 2 + vOffset, 1 + vOffset); // 左下三角形
+        outIndices[i*2 + 1] = uint3(1 + vOffset, 2 + vOffset, 3 + vOffset); // 右上三角形
     }
 }

@@ -52,7 +52,7 @@ namespace LWP::Base {
 		/// </summary>
 		void AddGrassData(const D3D12_GPU_DESCRIPTOR_HANDLE& view, int count) {
 			grassData_.positionView = view;
-			*grassData_.count.data_ = count;
+			grassData_.count = count;
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace LWP::Base {
 		struct GrassData {
 			RootSignature root;
 			PSO pso;
-			ConstantBuffer<uint32_t> count;
+			int count;
 			D3D12_GPU_DESCRIPTOR_HANDLE positionView;
 		}grassData_;
 

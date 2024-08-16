@@ -72,7 +72,7 @@ namespace LWP::Object {
 			Math::Vector3 groundNormal;
 			float height;
 		};
-		Base::StructuredBuffer<Grass> grassPositions_;
+		Base::StructuredBuffer<Math::Vector3> grassPositions_;
 		
 
 	private: // ** デバッグ用 ** //
@@ -97,5 +97,8 @@ namespace LWP::Object {
 
 		// その空間レベルまでの要素数を返す関数
 		int GetSpaceLevelObjectsSum(const int& spaceLevel);
+
+		// 当たり判定チェック
+
 	};
 }

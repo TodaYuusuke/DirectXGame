@@ -1,6 +1,7 @@
 #include "Terrain.h"
 
 #include "base/ImGuiManager.h"
+#include "utility/MyUtility.h"
 #include "component/System.h"
 
 using namespace LWP;
@@ -21,6 +22,8 @@ void Terrain::Initialize() {
 }
 // 更新
 void Terrain::Update(Base::RendererManager* manager) {
+	if (!isActive) { return; }
+
 	// 描画データ用のデータ登録
 	manager->AddGrassData(grassPositions_.GetGPUView(), grassPositions_.GetCount());
 
@@ -81,8 +84,6 @@ void Terrain::Update(Base::RendererManager* manager) {
 }
 
 void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
-	grassPositions_.Add({ 0.0f,1.0f,0.0f });	// 草生やしテスト
-	
 	// モデル読み込み
 	model_.LoadShortPath(filePath);
 	model_.ApplyWorldTransform(wtf);
@@ -161,6 +162,59 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 		r.isActive = false;
 	}
 #endif
+
+	// 草を生成
+	for (int i = 0; i < 50000; i++) {
+		Vector3 pos;
+		pos.x = min_.x + float(Utility::GenerateRandamNum<int>(0, 10000)) / 10000.0f * (max_.x - min_.x);
+		pos.y = 0.0f;
+		pos.z = min_.z + float(Utility::GenerateRandamNum<int>(0, 10000)) / 10000.0f * (max_.z - min_.z);
+
+		// 地形上に出るように修正
+
+		// 検索するモートン番号
+		const uint32_t kTargetMorton = GetMortonNumber(pos);
+		if (kTargetMorton == -1) { continue; }	// -1だった場合早期終了
+		uint32_t currentMorton = kTargetMorton;	// 現在のモートン番号（下位レベルから検証）
+		uint32_t currentSpaceLevel = kSubdivision_;	// 現在の空間レベル（下位レベルから検証）
+
+		while (true) {
+			// 現在の空間内の全オブジェクトと検証
+			for (const Polygon& p : polygonMap_[currentMorton]) {
+				// 平面のパラメータ
+				float distance = p.normal.x * p.pos[0].x + p.normal.y * p.pos[0].y + p.normal.z * p.pos[0].z;
+				// 垂直の場合はヒットしていない
+				if (Vector3::Dot(p.normal, Vector3::UnitY()) == 0.0f) { continue; }
+
+				// 媒介変数tを求める
+				float t = (distance - Vector3::Dot(pos, p.normal)) / Vector3::Dot(Vector3::UnitY(), p.normal);
+				// 衝突点を求める
+				Vector3 hitPosition = pos + (t * Vector3::UnitY());
+
+				// 各辺を結んだベクトルと頂点と衝突点pを結んだベクトルのクロス積を取る
+				Vector3 cross01 = Vector3::Cross((p.pos[0] - p.pos[1]), (p.pos[1] - hitPosition));
+				Vector3 cross12 = Vector3::Cross((p.pos[1] - p.pos[2]), (p.pos[2] - hitPosition));
+				Vector3 cross20 = Vector3::Cross((p.pos[2] - p.pos[0]), (p.pos[0] - hitPosition));
+
+				// すべての小三角形のクロス積と法線が同じ方向を向いていたら衝突
+				if (Vector3::Dot(cross01, p.normal) >= 0.0f && Vector3::Dot(cross12, p.normal) >= 0.0f && Vector3::Dot(cross20, p.normal) >= 0.0f) {
+					// 衝突点がposより上だった場合 -> 座標を修正
+					if (hitPosition.y > pos.y) {
+						pos.y = hitPosition.y;
+					}
+					currentMorton = 0;	// モートンを0にして強制終了
+					break;
+				}
+			}
+			// 検証したモートン番号が0だった場合終了
+			if (currentMorton == 0) { break; }
+			// 検証が終わったので上の空間レベルへ
+			currentMorton = (currentMorton - GetSpaceLevelObjectsSum(currentSpaceLevel--)) >> 3;
+			currentMorton += GetSpaceLevelObjectsSum(currentSpaceLevel);
+		};
+
+		grassPositions_.Add(pos);
+	}
 }
 Terrain::Point* Terrain::SetNewCollider(Math::Vector3 offset, TransformQuat* wtf) {
 	points_.push_back({ offset,wtf,false });
