@@ -11,7 +11,10 @@ using namespace LWP::Utility;
 
 // 初期化
 void GameScene::Initialize() {
-	//Info::ChangeShowDebugGUI();
+#if DEMO
+#else
+	Info::ChangeShowDebugGUI();
+#endif
 	levelData.LoadShortPath("SampleGameScene.json");
 	
 	// 複数画面描画確認

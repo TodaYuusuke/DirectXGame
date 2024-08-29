@@ -22,7 +22,7 @@ void Terrain::Initialize() {
 }
 // 更新
 void Terrain::Update(Base::RendererManager* manager) {
-	if (!isActive) { return; }
+	//if (!isActive) { return; }
 
 	// 描画データ用のデータ登録
 	manager->AddGrassData(grassPositions_.GetGPUView(), grassPositions_.GetCount());
