@@ -127,8 +127,8 @@ namespace LWP::Base {
 		/// <param name="view">カメラデータのView</param>
 		/// <param name="back">BackBuffer（RenderRsource）</param>
 		/// <param name="depth">DepthStencil</param>
-		void AddGrassData(const D3D12_GPU_DESCRIPTOR_HANDLE& view, int count) {
-			meshRenderer_.AddGrassData(view, count);
+		void SetTerrainData(Math::Vector3 min, Math::Vector3 max) {
+			meshRenderer_.SetTerrainData(min, max);
 		}
 #pragma endregion
 

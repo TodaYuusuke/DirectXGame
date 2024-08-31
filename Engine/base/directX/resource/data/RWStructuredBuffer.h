@@ -26,59 +26,71 @@ namespace LWP::Base {
 		virtual ~RWStructuredBuffer() = default;
 
 		void Init(GPUDevice* device, SRV* srv) {
-			// リソース作成
-			CreateResource(device, kElementSize * kMaxSize);
-			// リソースをマップ
-			resource_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
+			// リソース作成(UAV用はフラグが特殊)
+			HRESULT hr = S_FALSE;
+			// ヒープの設定
+			D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+			uploadHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;	// UploadHeapを使う
+			// 設定
+			D3D12_RESOURCE_DESC resourceDesc{};
+			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+			resourceDesc.Width = kElementSize * kMaxSize; // リソースのサイズ
+			resourceDesc.Height = 1;
+			resourceDesc.DepthOrArraySize = 1;
+			resourceDesc.MipLevels = 1;
+			resourceDesc.SampleDesc.Count = 1;
+			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+			resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+			// 実際にリソースを作る
+			hr = device->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&resource_));
+			assert(SUCCEEDED(hr));
 
-			// SRVへの登録設定
+			// UAVへの登録設定
 			D3D12_UNORDERED_ACCESS_VIEW_DESC desc;
 			desc.Format = DXGI_FORMAT_UNKNOWN;
 			//desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 			desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-			desc.Buffer.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;	// GPUからアクセスできるように
+			desc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;	// GPUからアクセスできるように
 			desc.Buffer.FirstElement = 0;
 			desc.Buffer.CounterOffsetInBytes = 0;
 			desc.Buffer.NumElements = kMaxSize;
 			desc.Buffer.StructureByteStride = kElementSize;
 
+			// UAVに登録
+			uavInfo = srv->CreateRWStructuredBuffer(resource_.Get(), desc);
+
+			// 読み取り専用にSRVにも登録する
+
+			// SRVへの登録設定
+			D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
+			srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+			srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+			srvDesc.Buffer.FirstElement = 0;
+			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+			srvDesc.Buffer.NumElements = kMaxSize;
+			srvDesc.Buffer.StructureByteStride = kElementSize;
+
 			// SRVに登録
-			info = srv->CreateRWStructuredBuffer(resource_.Get(), desc);
+			srvInfo = srv->CreateStructuredBuffer(resource_.Get(), srvDesc);
 		}
-
-		/// <summary>
-		/// データを追加
-		/// </summary>
-		int Add(const T& t) {
-			// 最大数を超えてないか確認
-			assert(static_cast<uint32_t>(usedCount_.Get()) < kMaxSize);
-			// データを追加しカウンターを進める
-			data_[usedCount_.GetAndIncrement()] = t;
-
-			// インデックスを返す
-			return usedCount_.Get() - 1;
-		}
-		/// <summary>
-		/// カウンターリセット
-		/// </summary>
-		void Reset() { usedCount_.Reset(); }
-		/// <summary>
-		/// 使用済みの数を返す
-		/// </summary>
-		/// <returns></returns>
-		int GetCount() { return usedCount_.Get(); }
 
 		/// <summary>
 		/// GPU上のViewを取得
 		/// </summary>
-		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUView() const { return info.gpuView; }
 
+		/// <summary>
+		/// UAVInfoを取得
+		/// </summary>
+		UAVInfo GetUAVInfo() const { return uavInfo; }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetUAVGPUView() const { return uavInfo.gpuView; }
 		/// <summary>
 		/// SRVInfoを取得
 		/// </summary>
-		SRVInfo GetInfo() const { return info; }
+		SRVInfo GetSRVInfo() const { return srvInfo; }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUView() const { return srvInfo.gpuView; }
 
-
+		
 	public: // ** メンバ定数 ** //
 
 		// データ1つ分のサイズ定数
@@ -86,14 +98,13 @@ namespace LWP::Base {
 		// データの最大数
 		const uint32_t kMaxSize;
 
-	public: // ** パブリックなメンバ変数 ** //
-
-		// 実際のデータ
-		T* data_ = nullptr;
 
 	private: // ** メンバ変数 ** //
+		// UAV上の登録データ
+		UAVInfo uavInfo;
 		// SRV上の登録データ
-		UAVInfo info;
+		SRVInfo srvInfo;
+
 
 		// 使用済みカウント
 		LWP::Utility::Counter usedCount_;

@@ -3,6 +3,7 @@
 #include "base/directX/resource/rendering/BackBuffer.h"
 #include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
+#include "base/directX/resource/data/RWStructuredBuffer.h"
 #include "base/directX/utility/DXC.h"
 
 #include "resources/model/RigidModel.h"
@@ -33,7 +34,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func);
+		void Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令
@@ -50,10 +51,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 草描画用データセット
 		/// </summary>
-		void AddGrassData(const D3D12_GPU_DESCRIPTOR_HANDLE& view, int count) {
-			grassData_.positionView = view;
-			grassData_.count = count;
-		}
+		void SetTerrainData(Math::Vector3 min, Math::Vector3 max) { min; max; }
 
 		/// <summary>
 		/// リセット
@@ -89,10 +87,16 @@ namespace LWP::Base {
 
 		// 草の数用データ
 		struct GrassData {
+			struct Generate {
+				RootSignature root;
+				PSO pso;
+				std::unique_ptr<RWStructuredBuffer<Math::Vector3>> rwBuffer;
+				int kMultiply = 50;
+				int kSize = 1024 * kMultiply;
+			}generate;
+
 			RootSignature root;
 			PSO pso;
-			int count;
-			D3D12_GPU_DESCRIPTOR_HANDLE positionView;
 		}grassData_;
 
 	private: // ** プライベートなメンバ関数 ** //

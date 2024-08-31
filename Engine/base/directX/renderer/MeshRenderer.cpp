@@ -8,7 +8,7 @@
 using namespace LWP::Base;
 using namespace LWP::Resource;
 
-void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func) {
+void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std::function<void()> func) {
 	srv_ = srv;
 	setViewFunction_ = func;	// 関数セット
 
@@ -130,7 +130,24 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.Build(device->GetDevice());
 
 
-	// RootSignatureを生成
+	// 草用のRootSignatureとPSOを生成
+	grassData_.generate.root.AddUAVParameter(0, SV_All)	// 書き込むリソース
+		.Build(device->GetDevice());
+	grassData_.generate.pso.Init(grassData_.generate.root, dxc, PSO::Type::Compute)
+		.SetComputeShader("cs/Grass.CS.hlsl")
+		.Build(device->GetDevice());
+	grassData_.generate.rwBuffer = std::make_unique<RWStructuredBuffer<Math::Vector3>>(65535);
+	grassData_.generate.rwBuffer->Init(device, srv);
+	// 草の地点を生成するCSをコマンドリストに積む
+	ID3D12GraphicsCommandList6* list = cmd->List();
+	list->SetComputeRootSignature(grassData_.generate.root);
+	list->SetPipelineState(grassData_.generate.pso.GetState());
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srv->GetHeap() };
+	list->SetDescriptorHeaps(1, descriptorHeaps);
+	list->SetComputeRootDescriptorTable(0, grassData_.generate.rwBuffer->GetUAVGPUView());
+	list->Dispatch(grassData_.generate.kSize, 1, 1);	// 1024 * 50回生成する
+
+	
 	grassData_.root.AddCBVParameter(0, SV_All)	// カメラデータ
 		.AddTableParameter(0, SV_All)	// 草を生やす座標データ
 		.Build(device->GetDevice());
@@ -139,6 +156,7 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.SetPixelShader("ms/terrain/TerrainGrass.PS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_NONE)
 		.Build(device->GetDevice());
+
 }
 
 void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -188,7 +206,6 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 
 void MeshRenderer::Reset() {
 	target_.clear();
-	grassData_.count = 0;
 }
 
 void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {
@@ -359,13 +376,11 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 	// -------------------------------------------------------------- //
 
 	// 草をDispatch
-	if (grassData_.count > 0) {
-		list->SetGraphicsRootSignature(grassData_.root);	// Rootセット
-		list->SetPipelineState(grassData_.pso.GetState());	// PSOセット
-		// Viewをセット
-		list->SetGraphicsRootConstantBufferView(0, cameraView);
-		list->SetGraphicsRootDescriptorTable(1, grassData_.positionView);
-		// 生やす地点数分メッシュシェーダーを実行
-		list->DispatchMesh(grassData_.count, 1, 1);
-	}
+	list->SetGraphicsRootSignature(grassData_.root);	// Rootセット
+	list->SetPipelineState(grassData_.pso.GetState());	// PSOセット
+	// Viewをセット
+	list->SetGraphicsRootConstantBufferView(0, cameraView);
+	list->SetGraphicsRootDescriptorTable(1, grassData_.generate.rwBuffer->GetSRVGPUView());
+	// 生やす地点数分メッシュシェーダーを実行
+	list->DispatchMesh(grassData_.generate.kSize, 1, 1);
 }

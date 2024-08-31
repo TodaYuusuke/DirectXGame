@@ -83,6 +83,13 @@ class RandomGenerator {
         seed = rand3dTo3d(seed);
         return seed;
     }
+    float32_t2 Generate2d()
+    {
+        float32_t2 result = rand3dTo2d(seed);
+        seed.x = result.x;
+        seed.y = result.y;
+        return result;
+    }
     float32_t Generate1d() {
         float32_t result = rand3dTo1d(seed);
         seed.x = result;

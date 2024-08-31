@@ -72,7 +72,7 @@ namespace LWP::Object {
 			Math::Vector3 groundNormal;
 			float height;
 		};
-		Base::StructuredBuffer<Math::Vector3> grassPositions_;
+		//Base::RWStructuredBuffer<Math::Vector3> grassPositions_;
 		
 
 	private: // ** デバッグ用 ** //

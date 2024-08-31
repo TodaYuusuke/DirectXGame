@@ -46,6 +46,28 @@ RootSignature& RootSignature::AddTableParameter(int registerNum, ShaderVisibilit
 	parameters_.push_back(newPara);
 	return *this;
 }
+RootSignature& RootSignature::AddUAVParameter(int registerNum, ShaderVisibility visibility, int space, UINT maxSize) {
+	// 新しく登録するTableの設定
+	D3D12_DESCRIPTOR_RANGE newDesc = defaultTableDesc_;
+	newDesc.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	newDesc.BaseShaderRegister = registerNum;	// レジスタ番号を登録
+	newDesc.RegisterSpace = space;	// スペースを設定（デフォは0）
+	if (maxSize != 0) { newDesc.NumDescriptors = maxSize; }	// 0じゃないときのみ最大数を登録
+	// 設定も登録
+	parametersDesc_.push_back(newDesc);
+
+	// 新しく登録するデータ
+	D3D12_ROOT_PARAMETER newPara{};
+	//newPara.ParameterType = D3D12_ROOT_PARAMETER_TYPE_UAV;
+	newPara.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	newPara.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(visibility);
+	newPara.DescriptorTable.pDescriptorRanges = &parametersDesc_.back(); // Tabelの中身の配列を指定
+	newPara.DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
+	// 登録
+	parameters_.push_back(newPara);
+	return *this;
+}
+
 RootSignature& RootSignature::AddSampler(int registerNum, ShaderVisibility visibility,
 	D3D12_FILTER filter, D3D12_COMPARISON_FUNC func,
 	D3D12_TEXTURE_ADDRESS_MODE addressU, D3D12_TEXTURE_ADDRESS_MODE addressV, D3D12_TEXTURE_ADDRESS_MODE addressW) {
