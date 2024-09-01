@@ -165,6 +165,12 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 #endif
 
 	// 草を生成
+	System::engine->directXCommon_->GetRendererManager()->GenerateGrass(
+		min_, max_,
+		model_.GetModelData()->materials_[0].texture.t.GetIndex()
+	);
+
+	
 	//for (int i = 0; i < 50000; i++) {
 	//	Vector3 pos;
 	//	pos.x = min_.x + float(Utility::GenerateRandamNum<int>(0, 10000)) / 10000.0f * (max_.x - min_.x);

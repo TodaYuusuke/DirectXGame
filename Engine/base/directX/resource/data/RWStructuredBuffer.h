@@ -105,10 +105,6 @@ namespace LWP::Base {
 		// SRV上の登録データ
 		SRVInfo srvInfo;
 
-
-		// 使用済みカウント
-		LWP::Utility::Counter usedCount_;
-
 	public: // ** オペレーターオーバーロード ** //
 
 		// ID3D12Resource型への暗黙の変換演算子をオーバーロード

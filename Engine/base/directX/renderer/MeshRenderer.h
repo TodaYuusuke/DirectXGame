@@ -49,9 +49,9 @@ namespace LWP::Base {
 		/// <param name="target"></param>
 		void AddTarget(const Target& target) { target_.push_back(target); }
 		/// <summary>
-		/// 草描画用データセット
+		/// 草を生成する関数
 		/// </summary>
-		void SetTerrainData(Math::Vector3 min, Math::Vector3 max) { min; max; }
+		void GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textureIndex);
 
 		/// <summary>
 		/// リセット
@@ -62,6 +62,8 @@ namespace LWP::Base {
 	private: // ** プライベートなメンバ変数 ** //
 		// srvのポインタを保持
 		SRV* srv_;
+		// Commandのポインタを保持
+		Command* cmd_;
 
 		// ターゲット配列
 		std::vector<Target> target_;
@@ -87,12 +89,13 @@ namespace LWP::Base {
 
 		// 草の数用データ
 		struct GrassData {
+			struct AABB { Math::Vector3 min; Math::Vector3 max; };
 			struct Generate {
 				RootSignature root;
 				PSO pso;
+				ConstantBuffer<AABB> cBuffer;
 				std::unique_ptr<RWStructuredBuffer<Math::Vector3>> rwBuffer;
-				int kMultiply = 50;
-				int kSize = 1024 * kMultiply;
+				int kSize = 65535;
 			}generate;
 
 			RootSignature root;

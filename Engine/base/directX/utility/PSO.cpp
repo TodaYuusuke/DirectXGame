@@ -190,7 +190,7 @@ PSO& PSO::SetComputeShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_0");
+	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_6");
 	assert(blob != nullptr);
 
 	// セット

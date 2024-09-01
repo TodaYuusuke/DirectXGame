@@ -10,6 +10,7 @@ using namespace LWP::Resource;
 
 void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std::function<void()> func) {
 	srv_ = srv;
+	cmd_ = cmd;
 	setViewFunction_ = func;	// 関数セット
 
 	// RootSignatureを生成
@@ -131,21 +132,17 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std
 
 
 	// 草用のRootSignatureとPSOを生成
-	grassData_.generate.root.AddUAVParameter(0, SV_All)	// 書き込むリソース
+	grassData_.generate.root.AddCBVParameter(0, SV_All)
+		.AddUAVParameter(0, SV_All)	// 書き込むリソース
+		.AddTableParameter(0, SV_All)	// 地形のテクスチャ
+		.AddSampler(0, SV_All)		// テクスチャ用サンプラー
 		.Build(device->GetDevice());
 	grassData_.generate.pso.Init(grassData_.generate.root, dxc, PSO::Type::Compute)
 		.SetComputeShader("cs/Grass.CS.hlsl")
 		.Build(device->GetDevice());
-	grassData_.generate.rwBuffer = std::make_unique<RWStructuredBuffer<Math::Vector3>>(65535);
+	grassData_.generate.cBuffer.Init(device);
+	grassData_.generate.rwBuffer = std::make_unique<RWStructuredBuffer<Math::Vector3>>(grassData_.generate.kSize);
 	grassData_.generate.rwBuffer->Init(device, srv);
-	// 草の地点を生成するCSをコマンドリストに積む
-	ID3D12GraphicsCommandList6* list = cmd->List();
-	list->SetComputeRootSignature(grassData_.generate.root);
-	list->SetPipelineState(grassData_.generate.pso.GetState());
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srv->GetHeap() };
-	list->SetDescriptorHeaps(1, descriptorHeaps);
-	list->SetComputeRootDescriptorTable(0, grassData_.generate.rwBuffer->GetUAVGPUView());
-	list->Dispatch(grassData_.generate.kSize, 1, 1);	// 1024 * 50回生成する
 
 	
 	grassData_.root.AddCBVParameter(0, SV_All)	// カメラデータ
@@ -203,6 +200,23 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		it->back->ChangeResourceBarrier(beforeBarrier, list);
 	}
 }
+
+void MeshRenderer::GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textureIndex) {
+	grassData_.generate.cBuffer.data_->min = min;
+	grassData_.generate.cBuffer.data_->max = max;
+
+	// 草の地点を生成するCSをコマンドリストに積む
+	ID3D12GraphicsCommandList6* list = cmd_->List();
+	list->SetComputeRootSignature(grassData_.generate.root);
+	list->SetPipelineState(grassData_.generate.pso.GetState());
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
+	list->SetDescriptorHeaps(1, descriptorHeaps);
+	list->SetComputeRootConstantBufferView(0, grassData_.generate.cBuffer.GetGPUView());
+	list->SetComputeRootDescriptorTable(1, grassData_.generate.rwBuffer->GetUAVGPUView());
+	list->SetComputeRootDescriptorTable(2, srv_->GetGPUHandle(textureIndex));
+	list->Dispatch(grassData_.generate.kSize, 1, 1);	// 65535回生成する
+}
+
 
 void MeshRenderer::Reset() {
 	target_.clear();

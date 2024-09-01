@@ -122,13 +122,10 @@ namespace LWP::Base {
 			meshRenderer_.AddTarget({ view, back, depth });
 		}
 		/// <summary>
-		/// Terrainの草描画用データセット
+		/// Terrainの草生成用データセット
 		/// </summary>
-		/// <param name="view">カメラデータのView</param>
-		/// <param name="back">BackBuffer（RenderRsource）</param>
-		/// <param name="depth">DepthStencil</param>
-		void SetTerrainData(Math::Vector3 min, Math::Vector3 max) {
-			meshRenderer_.SetTerrainData(min, max);
+		void GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textureIndex) {
+			meshRenderer_.GenerateGrass(min, max, textureIndex);
 		}
 #pragma endregion
 
