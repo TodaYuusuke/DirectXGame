@@ -56,7 +56,7 @@ void main(uint32_t3 DTid : SV_DispatchThreadID)
                 0.0f,
                 cAABB.min.z + ((cAABB.max.z - cAABB.min.z) * (1.0f - pos.y))
             );
-            rPosition[DTid.x].p = float32_t3(
+            //rPosition[DTid.x].p = float32_t3(
             //    pos.x * 3.0f,
             //    0.0f,
             //    (1.0f - pos.y) * 3.0f
