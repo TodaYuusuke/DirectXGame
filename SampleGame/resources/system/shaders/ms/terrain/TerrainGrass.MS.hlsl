@@ -27,6 +27,7 @@ static const int GRASS_VERT_COUNT = 4 * GRASS_COUNT;
 static const int GRASS_PRIM_COUNT = 2 * GRASS_COUNT;
 static const float4 GRASS_COLOR = float4(0.254f, 0.539f, 0.054f, 1.0f);
 
+
 [NumThreads(1, 1, 1)]
 [OutputTopology("triangle")]
 void main(
@@ -70,4 +71,24 @@ void main(
         outIndices[i*2]     = uint3(0 + vOffset, 2 + vOffset, 1 + vOffset); // 左下三角形
         outIndices[i*2 + 1] = uint3(1 + vOffset, 2 + vOffset, 3 + vOffset); // 右上三角形
     }
+    
+    // 中心にのみ草を生やす処理（GRASS_COUNTを1にすること）
+    /*
+    RandomGenerator random;
+    random.seed = center; // seed生成
+    float32_t2 dir = normalize(float32_t2(2 * random.Generate1d() - 1, 2 * random.Generate1d() - 1));
+    dir *= 0.02f;
+    Vertices ver = GenerateGrass(center, 0.4f, dir);
+    
+    for (int j = 0; j < 4; j++)
+    {
+        outVerts[j].position = ver.v[j];
+        outVerts[j].normal = float3(0.0f, 1.0f, 0.0f);
+        outVerts[j].color = GRASS_COLOR;
+    }
+        
+        // インデックスを設定して三角形を構成
+    outIndices[0] = uint3(0, 2, 1); // 左下三角形
+    outIndices[1] = uint3(1, 2, 3); // 右上三角形
+    */
 }
