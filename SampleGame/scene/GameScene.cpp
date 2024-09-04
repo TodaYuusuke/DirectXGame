@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 	const float s = 1000.0f;
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { s,s,s };
-	skydome.materials[1].color = Color(5, 5, 16, 255);
+	//skydome.materials[1].color = Color(5, 5, 16, 255);
 	skydome.SetAllMaterialLighting(false);
 	for (int i = 0; i < kStarCount; i++) {
 		stars[i].LoadCube();
@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 		float scale = LWP::Utility::GenerateRandamNum<int>(50, 100) / 100.0f;
 		stars[i].worldTF.scale = { scale,scale,scale };
 
-		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
+		//stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
 		stars[i].SetAllMaterialLighting(false);
 	}
 

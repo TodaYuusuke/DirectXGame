@@ -165,10 +165,10 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 #endif
 
 	// 草を生成
-	System::engine->directXCommon_->GetRendererManager()->GenerateGrass(
-		min_, max_,
-		model_.GetModelData()->materials_[0].texture.t.GetIndex()
-	);
+	//System::engine->directXCommon_->GetRendererManager()->GenerateGrass(
+	//	min_, max_,
+	//	model_.GetModelData()->materials_[0].texture.t.GetIndex()
+	//);
 
 	
 	//for (int i = 0; i < 50000; i++) {

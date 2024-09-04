@@ -9,12 +9,12 @@ using namespace LWP::Object;
 // 初期化
 void Car::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	model.LoadShortPath("cars/TestCar.gltf");
-	model.materials[0].enableLighting = false;
-	model.materials[1].enableLighting = false;
-	model.materials[2].shininess = 200;
-	model.materials[4].enableLighting = false;
-	model.materials[5].enableLighting = false;
-	model.materials[6].enableLighting = false;
+	//model.materials[0].enableLighting = false;
+	//model.materials[1].enableLighting = false;
+	//model.materials[2].shininess = 200;
+	//model.materials[4].enableLighting = false;
+	//model.materials[5].enableLighting = false;
+	//model.materials[6].enableLighting = false;
 	
 	// カメラのポインタをセット
 	camera_ = ptr;

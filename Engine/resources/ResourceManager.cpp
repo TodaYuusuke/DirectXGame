@@ -132,8 +132,8 @@ void Manager::Update() {
 				// バッファーにデータ登録
 				if (m->isActive) {
 					rigid[i]->buffer.inst->Add(*m);
-					for (const Primitive::Material& mat : m->materials) {
-						rigid[i]->buffer.material->Add(mat);
+					for (auto itr = m->materials.begin(); itr != m->materials.end(); itr++) {
+						rigid[i]->buffer.material->Add(itr->second);
 					}
 					rigid[i]->buffer.common.data_->instanceCount += 1;
 				}
@@ -143,8 +143,8 @@ void Manager::Update() {
 				// バッファーにデータ登録
 				if (m->isActive) {
 					skin[i]->buffer.inst->Add(*m);
-					for (const Primitive::Material& mat : m->materials) {
-						skin[i]->buffer.material->Add(mat);
+					for (auto itr = m->materials.begin(); itr != m->materials.end(); itr++) {
+						skin[i]->buffer.material->Add(itr->second);
 					}
 					m->SetBufferData(skin[i]->buffer.well->data_, skin[i]->buffer.well->GetCount());
 					skin[i]->buffer.common.data_->instanceCount += 1;
@@ -157,8 +157,8 @@ void Manager::Update() {
 			// バッファーにデータ登録
 			if (e->isActive) {
 				emap->buffer.inst->Add(*e);
-				for (const Primitive::Material& mat : e->materials) {
-					emap->buffer.material->Add(mat);
+				for (auto itr = e->materials.begin(); itr != e->materials.end(); itr++) {
+					emap->buffer.material->Add(itr->second);
 				}
 				emap->buffer.common.data_->instanceCount += 1;
 			}

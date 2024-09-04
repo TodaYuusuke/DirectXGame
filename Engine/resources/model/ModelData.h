@@ -23,7 +23,7 @@ namespace LWP::Resource {
 		// ノード
 		std::vector<Primitive::Node> nodes_;
 		// マテリアル
-		std::vector<Primitive::Material> materials_;
+		std::map<std::string, Primitive::Material> materials_;
 		// スケルトン
 		std::optional<Primitive::Skeleton> skeleton_{};
 		// スキンクラスター

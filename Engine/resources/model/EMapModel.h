@@ -15,7 +15,7 @@ namespace LWP::Resource {
 		// ワールドトランスフォーム
 		Object::TransformQuat worldTF{};
 		// マテリアル
-		std::vector<Primitive::Material> materials;
+		std::map<std::string, Primitive::Material> materials;
 
 		// モデルの中心座標（環境マップの中心）
 		Math::Vector3 modelCenterPosition;

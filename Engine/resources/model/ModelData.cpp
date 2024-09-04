@@ -69,14 +69,17 @@ void ModelData::Load(const std::string& filePath) {
 
 	// マテリアルの解析
 	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; materialIndex++) {
-		// 新しいメッシュを生成
-		materials_.emplace_back();
-		// 読み込む
-		materials_.back().Load(scene->mMaterials[materialIndex], scene, filePath);
+		// マテリアルを作成
+		std::string name = scene->mMaterials[materialIndex]->GetName().C_Str();
+		// 無名であれば自動で名前を付ける
+		if (name == "") {
+			name = "Material" + std::to_string(materialIndex);
+		}
+		materials_[name].Load(scene->mMaterials[materialIndex], scene, filePath);
 	}
 	// データ構造体に加工
-	for (int i = 0; i < materials_.size(); i++) {
-		materials.push_back(materials_[i]);
+	for (auto itr = materials_.begin(); itr != materials_.end(); itr++) {
+		materials.push_back(itr->second);
 	}
 
 	// 頂点座標格納用配列の作成

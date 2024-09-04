@@ -30,10 +30,9 @@ void EMapModel::LoadFullPath(const std::string& fp) {
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
 	LoadModel(filePath);
-	// マテリアルをコピー
 	ModelData* data = GetModel(filePath);
-	materials.resize(data->materials_.size());
-	std::copy(data->materials_.begin(), data->materials_.end(), materials.begin());
+	// マテリアルをコピー
+	materials = data->materials_;
 
 	// モデルの中心座標を計算
 	std::vector<Primitive::Vertex> vertices = data->GetVertices();
@@ -95,8 +94,8 @@ void EMapModel::Update() {
 void EMapModel::DebugGUI() {
 	worldTF.DebugGUI();
 	if (ImGui::TreeNode("Materials")) {
-		for (int i = 0; i < materials.size(); i++) {
-			materials[i].DebugGUI(std::to_string(i));
+		for (auto itr = materials.begin(); itr != materials.end(); itr++) {
+			itr->second.DebugGUI(itr->first);
 		}
 		ImGui::TreePop();
 	}
@@ -106,7 +105,7 @@ void EMapModel::DebugGUI() {
 }
 
 void EMapModel::SetAllMaterialLighting(bool flag) {
-	for (Primitive::Material& m : materials) {
-		m.enableLighting = flag;
+	for (auto itr = materials.begin(); itr != materials.end(); itr++) {
+		itr->second.enableLighting = flag;
 	}
 }
