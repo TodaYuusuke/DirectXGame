@@ -132,8 +132,9 @@ void Manager::Update() {
 				// バッファーにデータ登録
 				if (m->isActive) {
 					rigid[i]->buffer.inst->Add(*m);
-					for (auto itr = m->materials.begin(); itr != m->materials.end(); itr++) {
-						rigid[i]->buffer.material->Add(itr->second);
+					// 順番に追加する
+					for (std::string str : it->second.data.materialOrder_) {
+						rigid[i]->buffer.material->Add(m->materials[str]);
 					}
 					rigid[i]->buffer.common.data_->instanceCount += 1;
 				}
@@ -143,8 +144,9 @@ void Manager::Update() {
 				// バッファーにデータ登録
 				if (m->isActive) {
 					skin[i]->buffer.inst->Add(*m);
-					for (auto itr = m->materials.begin(); itr != m->materials.end(); itr++) {
-						skin[i]->buffer.material->Add(itr->second);
+					// 順番に追加する
+					for (std::string str : it->second.data.materialOrder_) {
+						skin[i]->buffer.material->Add(m->materials[str]);
 					}
 					m->SetBufferData(skin[i]->buffer.well->data_, skin[i]->buffer.well->GetCount());
 					skin[i]->buffer.common.data_->instanceCount += 1;
@@ -157,8 +159,9 @@ void Manager::Update() {
 			// バッファーにデータ登録
 			if (e->isActive) {
 				emap->buffer.inst->Add(*e);
-				for (auto itr = e->materials.begin(); itr != e->materials.end(); itr++) {
-					emap->buffer.material->Add(itr->second);
+				// 順番に追加する
+				for (std::string str : it->second.data.materialOrder_) {
+					emap->buffer.material->Add(e->materials[str]);
 				}
 				emap->buffer.common.data_->instanceCount += 1;
 			}

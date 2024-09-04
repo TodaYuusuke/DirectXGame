@@ -76,10 +76,11 @@ void ModelData::Load(const std::string& filePath) {
 			name = "Material" + std::to_string(materialIndex);
 		}
 		materials_[name].Load(scene->mMaterials[materialIndex], scene, filePath);
+		materialOrder_.push_back(name);
 	}
 	// データ構造体に加工
-	for (auto itr = materials_.begin(); itr != materials_.end(); itr++) {
-		materials.push_back(itr->second);
+	for (std::string str : materialOrder_) {
+		materials.push_back(materials_[str]);
 	}
 
 	// 頂点座標格納用配列の作成
