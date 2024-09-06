@@ -31,9 +31,7 @@ void RigidModel::LoadFullPath(const std::string& fp) {
 	// リソースマネージャーに読み込んでもらう
 	LoadModel(filePath);
 	// マテリアルをコピー
-	ModelData* data = GetModel(filePath);
-	materials.resize(data->materials_.size());
-	std::copy(data->materials_.begin(), data->materials_.end(), materials.begin());
+	materials = GetModel(filePath)->materials_;
 
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
 	System::engine->resourceManager_->SetPointer(this, filePath);
@@ -46,8 +44,8 @@ void RigidModel::Update() {
 void RigidModel::DebugGUI() {
 	worldTF.DebugGUI();
 	if (ImGui::TreeNode("Materials")) {
-		for (int i = 0; i < materials.size(); i++) {
-			materials[i].DebugGUI(std::to_string(i));
+		for (auto itr = materials.begin(); itr != materials.end(); itr++) {
+			itr->second.DebugGUI(itr->first);
 		}
 		ImGui::TreePop();
 	}
@@ -62,7 +60,7 @@ void RigidModel::ChangeFillMode() {
 }
 
 void RigidModel::SetAllMaterialLighting(bool flag) {
-	for (Primitive::Material& m : materials) {
-		m.enableLighting = flag;
+	for (auto itr = materials.begin(); itr != materials.end(); itr++) {
+		itr->second.enableLighting = flag;
 	}
 }

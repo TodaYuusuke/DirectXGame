@@ -23,7 +23,8 @@ namespace LWP::Resource {
 		// ノード
 		std::vector<Primitive::Node> nodes_;
 		// マテリアル
-		std::vector<Primitive::Material> materials_;
+		std::map<std::string, Primitive::Material> materials_;
+		std::vector<std::string> materialOrder_;	// マテリアルの順番を名前で保存しておく
 		// スケルトン
 		std::optional<Primitive::Skeleton> skeleton_{};
 		// スキンクラスター

@@ -11,7 +11,10 @@ using namespace LWP::Utility;
 
 // 初期化
 void GameScene::Initialize() {
-	//Info::ChangeShowDebugGUI();
+#if DEMO
+#else
+	Info::ChangeShowDebugGUI();
+#endif
 	levelData.LoadShortPath("SampleGameScene.json");
 	
 	// 複数画面描画確認
@@ -29,7 +32,7 @@ void GameScene::Initialize() {
 	const float s = 1000.0f;
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { s,s,s };
-	skydome.materials[1].color = Color(5, 5, 16, 255);
+	//skydome.materials[1].color = Color(5, 5, 16, 255);
 	skydome.SetAllMaterialLighting(false);
 	for (int i = 0; i < kStarCount; i++) {
 		stars[i].LoadCube();
@@ -47,18 +50,30 @@ void GameScene::Initialize() {
 		float scale = LWP::Utility::GenerateRandamNum<int>(50, 100) / 100.0f;
 		stars[i].worldTF.scale = { scale,scale,scale };
 
-		stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
+		//stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
 		stars[i].SetAllMaterialLighting(false);
 	}
 
 	sun.rotation.x = 0.0f;
 
 	// プレイヤー初期化
-	player.Init(&mainCamera, &levelData.terrain);
+	player.Init(&mainCamera, levelData.terrain.get());
+	car.Init(&mainCamera, levelData.terrain.get());
 }
 // 更新
 void GameScene::Update() {
-	player.Update();
+	if (isDriving) {
+		car.Update();
+	}
+	else {
+		player.Update();
+		//car..worldTF.rotation *= Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 0.02f);
+	}
+
+	// 車乗り降り
+	if (Input::Keyboard::GetTrigger(DIK_E)) {
+		isDriving = !isDriving;
+	}
 
 	// シーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {

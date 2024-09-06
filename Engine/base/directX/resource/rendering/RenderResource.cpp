@@ -25,11 +25,12 @@ void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
 	clearValue.Color[3] = 1.0f;
 
 	// 3. 利用するHeapの設定。非常に特殊な運用。
-	properties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
-	properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
-	properties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
+	properties.Type = D3D12_HEAP_TYPE_DEFAULT; // デフォルト
+	//properties.Type = D3D12_HEAP_TYPE_CUSTOM; // 細かい設定を行う
+	//properties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK; // WriteBackポリシーでCPUアクセス可能
+	//properties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
 
-	// 4. バリアを設定（深度値を書き込む状態にしておく）
+	// 4. バリアを設定
 	currentBarrierState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 	// 5. Resourceを生成する

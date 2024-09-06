@@ -1,5 +1,6 @@
 #pragma once
 #include "../class/player/Player.h"
+#include "../class/car/Car.h"
 #include "scene/IScene.h" 
 
 class GameScene final
@@ -30,4 +31,12 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// プレイヤー
 	Player player;
+	// カメラ
+	Car car;
+
+	// 車乗車フラグ
+	bool isDriving = false;
+
+	// 反射モデル
+	LWP::Resource::EMapModel eMap;
 };

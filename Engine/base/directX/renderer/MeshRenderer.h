@@ -3,6 +3,7 @@
 #include "base/directX/resource/rendering/BackBuffer.h"
 #include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
+#include "base/directX/resource/data/RWStructuredBuffer.h"
 #include "base/directX/utility/DXC.h"
 
 #include "resources/model/RigidModel.h"
@@ -33,7 +34,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func);
+		void Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令
@@ -47,9 +48,13 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="target"></param>
 		void AddTarget(const Target& target) { target_.push_back(target); }
+		/// <summary>
+		/// 草を生成する関数
+		/// </summary>
+		void GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textureIndex);
 
 		/// <summary>
-		/// インデックスデータリセット
+		/// リセット
 		/// </summary>
 		void Reset();
 
@@ -57,6 +62,8 @@ namespace LWP::Base {
 	private: // ** プライベートなメンバ変数 ** //
 		// srvのポインタを保持
 		SRV* srv_;
+		// Commandのポインタを保持
+		Command* cmd_;
 
 		// ターゲット配列
 		std::vector<Target> target_;
@@ -77,7 +84,25 @@ namespace LWP::Base {
 		RenderData skinning_;
 		// 静的モデル
 		RenderData static_;
+		// 環境モデル
+		RenderData eMap_;
 
+		// 草の数用データ
+		struct GrassData {
+			struct AABB { Math::Vector3 min; Math::Vector3 max; };
+			struct Generate {
+				RootSignature root;
+				PSO pso;
+				ConstantBuffer<AABB> cBuffer;
+				std::unique_ptr<RWStructuredBuffer<Math::Vector3>> rwBuffer;
+				int kSize = 65535;
+				// 生成したかフラグ
+				bool generated = false;
+			}generate;
+
+			RootSignature root;
+			PSO pso;
+		}grassData_;
 
 	private: // ** プライベートなメンバ関数 ** //
 

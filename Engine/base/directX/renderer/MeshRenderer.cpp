@@ -8,8 +8,9 @@
 using namespace LWP::Base;
 using namespace LWP::Resource;
 
-void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func) {
+void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std::function<void()> func) {
 	srv_ = srv;
+	cmd_ = cmd;
 	setViewFunction_ = func;	// 関数セット
 
 	// RootSignatureを生成
@@ -69,16 +70,32 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build(device->GetDevice());
+	// eMap
+	eMap_.root.AddTableParameter(0, SV_All)	// メッシュレット
+		.AddTableParameter(1, SV_All)	// 頂点
+		.AddTableParameter(2, SV_All)	// ユニークポインタ
+		.AddTableParameter(3, SV_All)	// プリミティブインデックス
+		.AddCBVParameter(0, SV_All)	// モデルの共通データ
+		.AddTableParameter(4, SV_All)	//	インデックスデータ
+		.AddCBVParameter(1, SV_All)	// 全体共通のデータ
+		.AddCBVParameter(2, SV_All)	// カメラのView
+		.AddTableParameter(5, SV_Pixel)	// マテリアル
+		.AddTableParameter(6, SV_Pixel)	// 平行光源
+		.AddTableParameter(7, SV_Pixel)	// 点光源
+		.AddTableParameter(8, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(509, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
+		.AddTableParameter(517, SV_Pixel)	// 環境マップ
+		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
+		.Build(device->GetDevice());
 
 	// PSOを生成
 	rigid_.pso.Init(rigid_.root, dxc, PSO::Type::Mesh)
 		.SetAmpShader("ms/Meshlet.AS.hlsl")
-#if DEMO
 		.SetMeshShader("ms/Meshlet.MS.hlsl")
-		//.SetMeshShader("ms/MeshletDebug.MS.hlsl")
-#else
-		.SetMeshShader("ms/Meshlet.MS.hlsl")
-#endif
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
 		.Build(device->GetDevice());
 	rigid_.wirePso.Init(rigid_.root, dxc, PSO::Type::Mesh)
@@ -107,6 +124,36 @@ void MeshRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<voi
 		.SetMeshShader("ms/static/Normal.MS.hlsl")
 		.SetPixelShader("ms/static/Normal.PS.hlsl")
 		.Build(device->GetDevice());
+	eMap_.pso.Init(eMap_.root, dxc, PSO::Type::Mesh)
+		.SetAmpShader("ms/eMap/Meshlet.AS.hlsl")
+		.SetMeshShader("ms/eMap/Meshlet.MS.hlsl")
+		.SetPixelShader("ms/eMap/EMap.PS.hlsl")
+		.Build(device->GetDevice());
+
+
+	// 草用のRootSignatureとPSOを生成
+	grassData_.generate.root.AddCBVParameter(0, SV_All)
+		.AddUAVParameter(0, SV_All)	// 書き込むリソース
+		.AddTableParameter(0, SV_All)	// 地形のテクスチャ
+		.AddSampler(0, SV_All)		// テクスチャ用サンプラー
+		.Build(device->GetDevice());
+	grassData_.generate.pso.Init(grassData_.generate.root, dxc, PSO::Type::Compute)
+		.SetComputeShader("cs/Grass.CS.hlsl")
+		.Build(device->GetDevice());
+	grassData_.generate.cBuffer.Init(device);
+	grassData_.generate.rwBuffer = std::make_unique<RWStructuredBuffer<Math::Vector3>>(grassData_.generate.kSize);
+	grassData_.generate.rwBuffer->Init(device, srv);
+
+	
+	grassData_.root.AddCBVParameter(0, SV_All)	// カメラデータ
+		.AddTableParameter(0, SV_All)	// 草を生やす座標データ
+		.Build(device->GetDevice());
+	grassData_.pso.Init(grassData_.root, dxc, PSO::Type::Mesh)
+		.SetMeshShader("ms/terrain/TerrainGrass.MS.hlsl")
+		.SetPixelShader("ms/terrain/TerrainGrass.PS.hlsl")
+		.SetRasterizerState(D3D12_CULL_MODE_NONE)
+		.Build(device->GetDevice());
+
 }
 
 void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -153,6 +200,25 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		it->back->ChangeResourceBarrier(beforeBarrier, list);
 	}
 }
+
+void MeshRenderer::GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textureIndex) {
+	grassData_.generate.cBuffer.data_->min = min;
+	grassData_.generate.cBuffer.data_->max = max;
+
+	// 草の地点を生成するCSをコマンドリストに積む
+	ID3D12GraphicsCommandList6* list = cmd_->List();
+	list->SetComputeRootSignature(grassData_.generate.root);
+	list->SetPipelineState(grassData_.generate.pso.GetState());
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srv_->GetHeap() };
+	list->SetDescriptorHeaps(1, descriptorHeaps);
+	list->SetComputeRootConstantBufferView(0, grassData_.generate.cBuffer.GetGPUView());
+	list->SetComputeRootDescriptorTable(1, grassData_.generate.rwBuffer->GetUAVGPUView());
+	list->SetComputeRootDescriptorTable(2, srv_->GetGPUHandle(textureIndex));
+	list->Dispatch(grassData_.generate.kSize, 1, 1);	// 65535回生成する
+
+	grassData_.generate.generated = true;
+}
+
 
 void MeshRenderer::Reset() {
 	target_.clear();
@@ -253,23 +319,6 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
-
-		// スキニングモデルを描画
-		//for (SkinningModel* sm : m.skin.list) {
-		//	// isActiveがfalseなら描画しない
-		//	if (!sm->isActive) { continue; }
-
-		//	// Wellをセット
-		//	list->SetGraphicsRootDescriptorTable(14, sm->wellBuffer->GetGPUView());
-
-		//	// ワイヤーフレームか確認
-		//	if (sm->isWireFrame) {
-		//		list->SetPipelineState(skinning_.wirePso.GetState());	// PSOセット
-		//	}
-		//	else {
-		//		list->SetPipelineState(skinning_.pso.GetState());	// PSOセット
-		//	}
-		//}
 	}
 
 	// -------------------------------------------------------------- //
@@ -302,5 +351,54 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 			// メッシュレット数分メッシュシェーダーを実行
 			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
 		}
+	}
+
+	// -------------------------------------------------------------- //
+
+	// EMapModelをDispatch
+	list->SetGraphicsRootSignature(eMap_.root);	// Rootセット
+	list->SetPipelineState(eMap_.pso.GetState());	// PSOセット
+	for (Models& m : models) {
+		// Viewをセット
+		list->SetGraphicsRootConstantBufferView(7, cameraView);	// カメラ
+		setViewFunction_();
+		list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstTexView());	// テクスチャ
+		list->SetGraphicsRootDescriptorTable(12, srv_->GetFirstDirShadowView());		// 平行光源シャドウ
+		list->SetGraphicsRootDescriptorTable(13, srv_->GetFirstPointShadowView());	// 点光源シャドウ
+
+		// ModelのStructerdBufferのViewをセット
+		ModelData& d = m.data;
+		list->SetGraphicsRootDescriptorTable(0, d.buffers_.meshlet->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(1, d.buffers_.vertex->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
+
+		// 全要素ループ
+		Models::Pointers<EMapModel, Models::RigidBuffer>& e = m.eMaps;
+		for (EMapModel* ptr : e.ptrs.list) {
+			if (!ptr->isActive) { continue; }
+
+			// 追加のViewをセット
+			list->SetGraphicsRootConstantBufferView(4, e.buffer.common.GetGPUView());
+			list->SetGraphicsRootDescriptorTable(5, e.buffer.inst->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(8, e.buffer.material->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(14, ptr->cubeMap.GetSRVGPUView());
+
+			// メッシュレット数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
+	}
+
+	// -------------------------------------------------------------- //
+
+	if (grassData_.generate.generated) {
+		// 草をDispatch
+		list->SetGraphicsRootSignature(grassData_.root);	// Rootセット
+		list->SetPipelineState(grassData_.pso.GetState());	// PSOセット
+		// Viewをセット
+		list->SetGraphicsRootConstantBufferView(0, cameraView);
+		list->SetGraphicsRootDescriptorTable(1, grassData_.generate.rwBuffer->GetSRVGPUView());
+		// 生やす地点数分メッシュシェーダーを実行
+		list->DispatchMesh(grassData_.generate.kSize, 1, 1);
 	}
 }

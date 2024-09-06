@@ -23,12 +23,9 @@
 			"doubleSided":true,
 			"name":"\u30de\u30c6\u30ea\u30a2\u30eb.001",
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.800000011920929,
-					0.800000011920929,
-					0.800000011920929,
-					1
-				],
+				"baseColorTexture":{
+					"index":0
+				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
@@ -50,11 +47,24 @@
 			]
 		}
 	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"Terrain",
+			"uri":"Terrain.png"
+		}
+	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":20434,
+			"count":26505,
 			"max":[
 				500,
 				164.86264038085938,
@@ -62,7 +72,7 @@
 			],
 			"min":[
 				-500,
-				0,
+				-2.1622724533081055,
 				-500
 			],
 			"type":"VEC3"
@@ -70,13 +80,13 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":20434,
+			"count":26505,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":20434,
+			"count":26505,
 			"type":"VEC3"
 		},
 		{
@@ -89,32 +99,38 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":245208,
+			"byteLength":318060,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":163472,
-			"byteOffset":245208,
+			"byteLength":212040,
+			"byteOffset":318060,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":245208,
-			"byteOffset":408680,
+			"byteLength":318060,
+			"byteOffset":530100,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":117612,
-			"byteOffset":653888,
+			"byteOffset":848160,
 			"target":34963
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":771500,
+			"byteLength":965772,
 			"uri":"Terrain.bin"
 		}
 	]

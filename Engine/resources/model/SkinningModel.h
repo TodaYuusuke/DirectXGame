@@ -11,7 +11,7 @@ namespace LWP::Resource {
 		// ワールドトランスフォーム
 		Object::TransformQuat worldTF{};
 		// マテリアル
-		std::vector<Primitive::Material> materials;
+		std::map<std::string, Primitive::Material> materials;
 
 		// スケルトン
 		Primitive::Skeleton skeleton{};

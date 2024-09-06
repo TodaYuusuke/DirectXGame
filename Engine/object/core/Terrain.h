@@ -31,6 +31,7 @@ namespace LWP::Object {
 		struct Point {
 			Math::Vector3 offset;
 			TransformQuat* wtf;
+			float radius;	// 草を潰す半径
 			bool preFrameHit = false;
 		};
 		// 地形と検証する当たり判定を追加する関数
@@ -50,7 +51,7 @@ namespace LWP::Object {
 
 		// 地形のモデル
 		Resource::StaticModel model_;
-
+		
 		// ** 当たり判定（地形用） ** //
 		struct Polygon {
 			Math::Vector3 pos[3];	// 3点
@@ -62,9 +63,17 @@ namespace LWP::Object {
 		Math::Vector3 max_;	
 		float cellSize_;
 
-
 		// 地形との当たり判定（点）
 		std::vector<Point> points_;
+
+		// 草を生やす座標
+		struct Grass {
+			Math::Vector3 patchPosition;
+			Math::Vector3 groundNormal;
+			float height;
+		};
+		//Base::RWStructuredBuffer<Math::Vector3> grassPositions_;
+		
 
 	private: // ** デバッグ用 ** //
 		// ImGui用変数
@@ -88,5 +97,8 @@ namespace LWP::Object {
 
 		// その空間レベルまでの要素数を返す関数
 		int GetSpaceLevelObjectsSum(const int& spaceLevel);
+
+		// 当たり判定チェック
+
 	};
 }

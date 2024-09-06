@@ -5,6 +5,7 @@
 #include "renderer/PPRenderer.h"
 #include "renderer/CopyRenderer.h"
 #include "renderer/MeshRenderer.h"
+#include "renderer/EnvironmentMapRenderer.h"
 #include "renderer/BufferGroup.h"
 
 #include "object/core/Particle.h"
@@ -120,10 +121,18 @@ namespace LWP::Base {
 			normalRender_.AddTarget({ view, back, depth });
 			meshRenderer_.AddTarget({ view, back, depth });
 		}
+		/// <summary>
+		/// Terrainの草生成用データセット
+		/// </summary>
+		void GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textureIndex) {
+			meshRenderer_.GenerateGrass(min, max, textureIndex);
+		}
 #pragma endregion
 
 #pragma region シャドウマッピング
 	private:
+		// 環境マップ
+		EnvironmentMapRenderer eMapRenderer_;
 		// レンダラー
 		ShadowRenderer shadowRender_;
 	public:

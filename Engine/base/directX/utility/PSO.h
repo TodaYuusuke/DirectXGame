@@ -14,6 +14,7 @@ namespace LWP::Base {
 	public: // ** 設定用の列挙子 ** //
 		enum class Type {
 			Vertex,
+			Compute,
 			Mesh
 		};
 		// ブレンドモード
@@ -39,6 +40,7 @@ namespace LWP::Base {
 			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
 		PSO& SetAmpShader(std::string filePath);
 		PSO& SetMeshShader(std::string filePath);
+		PSO& SetComputeShader(std::string filePath);
 		PSO& SetVertexShader(std::string filePath);
 		PSO& SetPixelShader(std::string filePath);
 		PSO& SetDepthStencilState(bool enable);
@@ -58,6 +60,7 @@ namespace LWP::Base {
 		// PSOの詳細
 		union Desc {
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC vertex{};
+			D3D12_COMPUTE_PIPELINE_STATE_DESC compute;
 			D3DX12_MESH_SHADER_PIPELINE_STATE_DESC mesh;
 
 			Desc() {};

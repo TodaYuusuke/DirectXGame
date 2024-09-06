@@ -31,6 +31,10 @@ PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc, Type type) {
 		d.SampleDesc.Count = 1;
 		d.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	}
+	else if (type_ == Type::Compute) {
+		D3D12_COMPUTE_PIPELINE_STATE_DESC& d = desc_.compute;
+		d.pRootSignature = root;	// セットするのはRootSignatureのみ
+	}
 	else if(type_ == Type::Mesh){
 		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC& d = desc_.mesh;
 		// ルートシグネチャをセットする
@@ -77,8 +81,8 @@ PSO& PSO::SetInputLayout() {
 		desc_.vertex.InputLayout = D3D12_INPUT_LAYOUT_DESC();
 	}
 	else {
-		// Meshのときは使わないのでエラー
-		assert(type_ == Type::Mesh);
+		// ComputeかMeshのときは使わないのでエラー
+		assert(false);
 	}
 
 	return *this;
@@ -178,6 +182,21 @@ PSO& PSO::SetMeshShader(std::string filePath) {
 	desc_.mesh.MS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
+PSO& PSO::SetComputeShader(std::string filePath) {
+	// Compute以外ならセットしないのでエラー
+	assert(type_ == Type::Compute);
+	// 空ならコンパイルしない
+	if (filePath.empty()) { return *this; }
+
+	// シェーダーをコンパイルする
+	IDxcBlob* blob = nullptr;
+	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_6");
+	assert(blob != nullptr);
+
+	// セット
+	desc_.compute.CS = { blob->GetBufferPointer(),blob->GetBufferSize() };
+	return *this;
+}
 PSO& PSO::SetVertexShader(std::string filePath) {
 	// Vertex以外ならセットしないのでエラー
 	assert(type_ == Type::Vertex);
@@ -254,6 +273,9 @@ void PSO::Build(ID3D12Device2* device) {
 	// 実際に生成
 	if (type_ == Type::Vertex) {
 		hr = device->CreateGraphicsPipelineState(&desc_.vertex, IID_PPV_ARGS(&state_));
+	}
+	else if (type_ == Type::Compute) {
+		hr = device->CreateComputePipelineState(&desc_.compute, IID_PPV_ARGS(&state_));
 	}
 	else if (type_ == Type::Mesh) {
 		// PSOの型を指定形式に変換

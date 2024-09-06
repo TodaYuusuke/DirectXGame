@@ -13,6 +13,7 @@
 #include "model/RigidModel.h"
 #include "model/SkinningModel.h"
 #include "model/StaticModel.h"
+#include "model/EMapModel.h"
 #include "model/ModelData.h"
 
 #include "level/LevelData.h"
@@ -31,9 +32,11 @@ namespace LWP::Base {
 		InstanceData() = default;
 		InstanceData(const Resource::RigidModel& value);
 		InstanceData(const Resource::SkinningModel& value);
+		InstanceData(const Resource::EMapModel& value);
 		// Materialクラスのデータを代入する演算子をオーバーロード
 		InstanceData& operator=(const Resource::RigidModel& value);
 		InstanceData& operator=(const Resource::SkinningModel& value);
+		InstanceData& operator=(const Resource::EMapModel& value);
 	};
 }
 
@@ -101,6 +104,7 @@ namespace LWP::Resource {
 		FillMode<RigidModel, RigidBuffer> rigid;
 		FillMode<SkinningModel, SkinBuffer> skin;
 		Utility::PtrManager<StaticModel*> statics;
+		Pointers<EMapModel, RigidBuffer> eMaps;
 	};
 
 
@@ -143,6 +147,7 @@ namespace LWP::Resource {
 		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPointer(ptr); }
 		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPointer(ptr); }
 		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPointer(ptr); }
+		void SetPointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.SetPointer(ptr); }
 		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
 		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
@@ -155,6 +160,7 @@ namespace LWP::Resource {
 			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePointer(ptr);
 		}
 		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePointer(ptr); }
+		void DeletePointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.DeletePointer(ptr); }
 		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
 		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
 

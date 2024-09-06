@@ -59,6 +59,10 @@ namespace LWP::Base {
 		/// デプスステンシルビューを作成
 		/// </summary>
 		DSVInfo CreateDepthStencilView(ID3D12Resource* resource);
+		/// <summary>
+		/// デプスキューブマップを作成
+		/// </summary>
+		std::array<DSVInfo, 6> CreateDepthStencilCubeMap(ID3D12Resource* resource);
 
 		/// <summary>
 		/// 平行光源シャドウマップ用のリソースを作成

@@ -29,8 +29,7 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 	System::engine->resourceManager_->SetPointer(this, filePath);
 	ModelData* data = GetModel(filePath);
 	// マテリアルをコピー
-	materials.resize(data->materials_.size());
-	std::copy(data->materials_.begin(), data->materials_.end(), materials.begin());
+	materials = data->materials_;
 
 	// なければおかしいのでassert
 	assert(data->skeleton_.has_value());
@@ -54,8 +53,8 @@ void SkinningModel::Update() {
 void SkinningModel::DebugGUI() {
 	worldTF.DebugGUI();
 	if (ImGui::TreeNode("Materials")) {
-		for (int i = 0; i < materials.size(); i++) {
-			materials[i].DebugGUI(std::to_string(i));
+		for (auto itr = materials.begin(); itr != materials.end(); itr++) {
+			itr->second.DebugGUI(itr->first);
 		}
 		ImGui::TreePop();
 	}
@@ -70,8 +69,8 @@ void SkinningModel::ChangeFillMode() {
 }
 
 void SkinningModel::SetAllMaterialLighting(bool flag) {
-	for (Primitive::Material& m : materials) {
-		m.enableLighting = flag;
+	for (auto itr = materials.begin(); itr != materials.end(); itr++) {
+		itr->second.enableLighting = flag;
 	}
 }
 

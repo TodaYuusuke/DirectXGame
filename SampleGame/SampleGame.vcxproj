@@ -217,8 +217,10 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class\car\Car.cpp" />
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene\Test\AnimationTest.cpp" />
     <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
@@ -226,8 +228,10 @@
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class\car\Car.h" />
     <ClInclude Include="class\particle\DamageParticle.h" />
     <ClInclude Include="class\player\Player.h" />
+    <ClInclude Include="scene\Test\AnimationTest.h" />
     <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
