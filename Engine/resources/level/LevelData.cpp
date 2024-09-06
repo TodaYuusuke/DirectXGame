@@ -81,8 +81,9 @@ void LevelData::HotReload() {
 
 		// 地形ならば特殊な処理
 		if (objName == "Terrain") {
-			terrain.name = "Terrain";
-			terrain.LoadModel(object["file_name"].get<std::string>(), LoadWorldTF(object["transform"]));
+			terrain = std::make_unique<Object::Terrain>();
+			terrain->name = "Terrain";
+			terrain->LoadModel(object["file_name"].get<std::string>(), LoadWorldTF(object["transform"]));
 		}
 		// MESH
 		else if (type.compare("MESH") == 0) {

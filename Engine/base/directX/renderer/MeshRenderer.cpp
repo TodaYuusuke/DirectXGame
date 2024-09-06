@@ -215,6 +215,8 @@ void MeshRenderer::GenerateGrass(Math::Vector3 min, Math::Vector3 max, int textu
 	list->SetComputeRootDescriptorTable(1, grassData_.generate.rwBuffer->GetUAVGPUView());
 	list->SetComputeRootDescriptorTable(2, srv_->GetGPUHandle(textureIndex));
 	list->Dispatch(grassData_.generate.kSize, 1, 1);	// 65535回生成する
+
+	grassData_.generate.generated = true;
 }
 
 
@@ -389,12 +391,14 @@ void MeshRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_
 
 	// -------------------------------------------------------------- //
 
-	// 草をDispatch
-	list->SetGraphicsRootSignature(grassData_.root);	// Rootセット
-	list->SetPipelineState(grassData_.pso.GetState());	// PSOセット
-	// Viewをセット
-	list->SetGraphicsRootConstantBufferView(0, cameraView);
-	list->SetGraphicsRootDescriptorTable(1, grassData_.generate.rwBuffer->GetSRVGPUView());
-	// 生やす地点数分メッシュシェーダーを実行
-	list->DispatchMesh(grassData_.generate.kSize, 1, 1);
+	if (grassData_.generate.generated) {
+		// 草をDispatch
+		list->SetGraphicsRootSignature(grassData_.root);	// Rootセット
+		list->SetPipelineState(grassData_.pso.GetState());	// PSOセット
+		// Viewをセット
+		list->SetGraphicsRootConstantBufferView(0, cameraView);
+		list->SetGraphicsRootDescriptorTable(1, grassData_.generate.rwBuffer->GetSRVGPUView());
+		// 生やす地点数分メッシュシェーダーを実行
+		list->DispatchMesh(grassData_.generate.kSize, 1, 1);
+	}
 }

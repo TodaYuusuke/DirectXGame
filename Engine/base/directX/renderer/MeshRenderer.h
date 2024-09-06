@@ -96,6 +96,8 @@ namespace LWP::Base {
 				ConstantBuffer<AABB> cBuffer;
 				std::unique_ptr<RWStructuredBuffer<Math::Vector3>> rwBuffer;
 				int kSize = 65535;
+				// 生成したかフラグ
+				bool generated = false;
 			}generate;
 
 			RootSignature root;
