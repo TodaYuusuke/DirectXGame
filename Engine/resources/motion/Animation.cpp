@@ -26,91 +26,146 @@ Animation::~Animation() {
 
 void Animation::Init() {
 	time_ = 0.0f;
-	for (Joint& joint : modelPtr_->skeleton.joints) {
-		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
-		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
-			const NodeAnimation& rootNodeAnimation = (*it).second;
-			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
-			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_).Normalize();
-			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
-		}
-	}
+	playingAnimationName_ = "";
 }
 
-void Animation::Start() { Start(0.0f); }
-void Animation::Start(float startSec) {
-	isStart_ = true;
-	time_ = startSec;
+void Animation::Play(const std::string name) { Play(name, false, 0.0f); }
+void Animation::Play(const std::string name, bool loop) { Play(name, loop, 0.0f); }
+void Animation::Play(const std::string name, bool loop, float startTime) {
+	// 存在するアニメーションかチェック
+	if (!data.contains(name)) {
+		// 存在しないのでエラー
+		assert(false);
+	}
+
+	playingAnimationName_ = name;
+	loopFlag_ = loop;
+	time_ = startTime;
+	isActive = true;
 }
-void Animation::Stop() { isStart_ = false; }
+void Animation::Stop() { isActive = false; }
 
 void Animation::Update() {
-	if (!isStart_) { return; }	// 早期リターン
+	// isActiveがfalse、もしくは再生中のアニメーションが""のとき再生しない
+	if (!isActive || playingAnimationName_ == "") { return; }	// 早期リターン
 
+	// アニメーションの時間
+	float total = data[playingAnimationName_].totalTime;
 	// 時間を更新
-	time_ += useDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF();
-	// 最後までいったらリピート再生。リピートしなくても別に良い
-	time_ = std::fmod(time_, duration_);
+	time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;
 
+	// ループする場合
+	if (loopFlag_) {
+		// 最後までいったらリピート再生
+		time_ = std::fmod(time_, 1.0f);
+	}
+	// ループしない場合
+	else {
+		// 1を超えないように
+		if (time_ > 1.0f) { time_ = 1.0f; }
+	}
 
+	// アニメーションの時間
+	float seconds = total * time_;
 	for (Joint& joint : modelPtr_->skeleton.joints) {
 		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
-		if (auto it = nodeAnimations.find(joint.name); it != nodeAnimations.end()) {
-			if (joint.name == "mixamorig:RightUpLeg") {
-				printf("");
-			}
+		if (auto it = data[playingAnimationName_].node.find(joint.name); it != data[playingAnimationName_].node.end()) {
 			const NodeAnimation& rootNodeAnimation = (*it).second;
-			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, time_);
-			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, time_).Normalize();
-			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, time_);
+			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, seconds);
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds).Normalize();
+			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, seconds);
 		}
 	}
 }
 
-bool Animation::isEnd() { return !isStart_; }
+bool Animation::GetPlaying() {
+	// ループする場合
+	if (loopFlag_) {
+		// 再生しているアニメーションの名前があれば再生中
+		return playingAnimationName_ != "";
+	}
+	// ループしない場合
+	else {
+		// 1未満なら再生中
+		return time_ < 1.0f;
+	}
+}
+bool Animation::GetPlaying(const std::string& name) {
+	// ループする場合
+	if (loopFlag_) {
+		// 再生しているアニメーションの名前が一致すれば再生中
+		return playingAnimationName_ == name;
+	}
+	// ループしない場合
+	else {
+		// 再生しているアニメーションの名前が一致し、1未満なら再生中
+		return playingAnimationName_ == name && time_ < 1.0f;
+	}
+}
 
 void Animation::DebugGUI() {
-	ImGui::SliderFloat("time", &time_, 0.0f, duration_);
-	ImGui::Checkbox("isStart", &isStart_);
+	// アニメーション一覧
+	static int currentItem = 0;
+	if (!data.empty()) {
+		std::vector<const char*> itemText;
+		for (auto itr = data.begin(); itr != data.end(); itr++) {
+			itemText.push_back(itr->first.c_str());
+		}
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
+		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
+	}
+	ImGui::Text("--- Parameter ---");
+	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
+	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
+	ImGui::Checkbox("loopFlag", &loopFlag_);
+	ImGui::Checkbox("isActive", &isActive);
 }
 
-void Animation::LoadAnimation(std::string filepath, Resource::SkinningModel* ptr) {
-	return LoadAnimationLongPath(kDirectoryPath + filepath, ptr);
+
+void Animation::LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr) {
+	return LoadFullPath(kDirectoryPath + filePath, ptr);
 }
-void Animation::LoadAnimationLongPath(std::string filepath, Resource::SkinningModel* ptr) {
+void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr) {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(filepath.c_str(), 0);
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 	assert(scene->mAnimations != 0); // アニメーションがない
-	aiAnimation* animationAssimp = scene->mAnimations[0];	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
-	duration_ = static_cast<float>(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);	// 時間の単位を秒に変換
 
-	// assimpでは個々のNodeのAnimationをchannelと呼んでいるので、cahnnelを回してNodeAnimationの情報を取ってくる
-	for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; channelIndex++) {
-		aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
-		NodeAnimation& nodeAnimation = nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];
-		// position
-		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; keyIndex++) {
-			aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
-			nodeAnimation.translate.keyframes.push_back({
-				static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
-				{-keyAssimp.mValue.x, keyAssimp.mValue.y, -keyAssimp.mValue.z}	// 右手->左手
-			});
-		}
-		// rotate
-		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; keyIndex++) {
-			aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
-			nodeAnimation.rotate.keyframes.push_back({
-				static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
-				{keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w}	// 右手->左手
-			});
-		}
-		// scale
-		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; keyIndex++) {
-			aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
-			nodeAnimation.scale.keyframes.push_back({
-				static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
-				{keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}	// そのまま	
-			});
+	// 全アニメーションを読み取る
+	for (uint32_t i = 0; i < scene->mNumAnimations; i++) {
+		aiAnimation* animationAssimp = scene->mAnimations[i];	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
+		std::string animationName = scene->mAnimations[i]->mName.C_Str();	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
+		data[animationName].totalTime = static_cast<float>(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);	// 時間の単位を秒に変換
+
+		// assimpでは個々のNodeのAnimationをchannelと呼んでいるので、cahnnelを回してNodeAnimationの情報を取ってくる
+		for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; channelIndex++) {
+			aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
+			NodeAnimation& nodeAnimation = data[animationName].node[nodeAnimationAssimp->mNodeName.C_Str()];
+
+			// position
+			for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; keyIndex++) {
+				aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
+				nodeAnimation.translate.keyframes.push_back({
+					static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
+					{-keyAssimp.mValue.x, keyAssimp.mValue.y, -keyAssimp.mValue.z}	// 右手->左手
+					});
+			}
+			// rotate
+			for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; keyIndex++) {
+				aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
+				nodeAnimation.rotate.keyframes.push_back({
+					static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
+					{keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w}	// 右手->左手
+					});
+			}
+			// scale
+			for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; keyIndex++) {
+				aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
+				nodeAnimation.scale.keyframes.push_back({
+					static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
+					{keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}	// そのまま	
+					});
+			}
 		}
 	}
 

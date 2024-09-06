@@ -34,17 +34,20 @@ namespace LWP::Resource {
 	/// アニメーションクラス
 	/// </summary>
 	class Animation final {
+	public: // **　パブリックなメンバ変数 ** //
+
+		// deltaTimeの係数影響OnOff
+		bool useDeltaTimeMultiply = true;
+
+		// アクティブ切り替え
+		bool isActive = true;
+
 	public: // **　メンバ関数 ** //
+
 		// デフォルトコンストラクタ
 		Animation();
 		// デストラクタ
 		~Animation();
-
-		/// <summary>
-		/// デルタタイム係数の影響を受けるかどうかを切り替え（default = true）
-		/// </summary>
-		/// <returns></returns>
-		void ToggleDeltaTimeMultiply() { useDeltaTimeMultiply_ = !useDeltaTimeMultiply_; }
 
 		/// <summary>
 		/// モーション経過時間の初期化
@@ -52,12 +55,26 @@ namespace LWP::Resource {
 		void Init();
 
 		/// <summary>
-		/// モーション開始
+		/// アニメーション開始
 		/// </summary>
-		void Start();
-		void Start(float startSec);
+		/// <param name="name">再生するアニメーション名</param>
+		void Play(const std::string name);
 		/// <summary>
-		/// モーション停止
+		/// アニメーション開始
+		/// </summary>
+		/// <param name="name">再生するアニメーション名</param>
+		/// <param name="loop">ループするかのフラグ</param>
+		void Play(const std::string name, bool loop);
+		/// <summary>
+		/// アニメーション開始
+		/// </summary>
+		/// <param name="name">再生するアニメーション名</param>
+		/// <param name="loop">ループするかのフラグ</param>
+		/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
+		void Play(const std::string name, bool loop, float startTime);
+		
+		/// <summary>
+		/// アニメーション停止
 		/// </summary>
 		void Stop();
 
@@ -67,10 +84,13 @@ namespace LWP::Resource {
 		void Update();
 
 		/// <summary>
-		/// アニメーションが実行中ならばfalse、終了済みならばtrueを返す
+		/// アニメーション中か返す関数
 		/// </summary>
-		/// <returns></returns>
-		bool isEnd();
+		bool GetPlaying();
+		/// <summary>
+		/// 指定のアニメーションが再生中か返す関数
+		/// </summary>
+		bool GetPlaying(const std::string& name);
 		
 		/// <summary>
 		/// ImGui
@@ -78,24 +98,39 @@ namespace LWP::Resource {
 		void DebugGUI();
 
 		/// <summary>
-		/// アニメーション読み込み
+		/// アニメーションのデータを読み込む
 		/// </summary>
-		void LoadAnimation(std::string filepath, Resource::SkinningModel* ptr);
-		void LoadAnimationLongPath(std::string filepath, Resource::SkinningModel* ptr);
+		/// <param name="fileName">読み込むファイルの名前</param>
+		//void Load(const std::string& fileName, Resource::SkinningModel* ptr);
+		/// <summary>
+		/// アニメーションのデータを読み込む（resources/model/を短縮ver）
+		/// </summary>
+		/// <param name="filePath">読み込むファイルの名前</param>
+		void LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr);
+		/// <summary>
+		/// アニメーションのデータを読み込む（exeからのパス指定）
+		/// </summary>
+		/// <param name="filePath">読み込むファイルの名前</param>
+		void LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr);
+
 
 	private: // ** メンバ変数 ** //
 
-		// アニメーション全体の尺（秒）
-		float duration_;
-		// NodeAnimationの集合。Node名でひけるようにしておく
-		std::map<std::string, NodeAnimation> nodeAnimations;
+		struct AnimationData {
+			// NodeAnimationの集合。Node名でひけるようにしておく
+			std::map<std::string, NodeAnimation> node;
+			// アニメーショントータル時間（秒）
+			float totalTime;
+		};
+		std::map<std::string, AnimationData> data;
 
-		// 開始フラグ
-		bool isStart_ = false;
-		// モーション経過時間（秒数）
+		// 経過割合(0.0f ~ 1.0f)
 		float time_ = 0.0f;
-		// deltaTimeの係数の影響OnOff
-		bool useDeltaTimeMultiply_ = true;
+		
+		// 再生中のアニメーションの名前
+		std::string playingAnimationName_ = "";
+		// ループするかフラグ
+		bool loopFlag_ = false;
 
 		// 適応するModelのポインタ
 		Resource::SkinningModel* modelPtr_ = nullptr;
