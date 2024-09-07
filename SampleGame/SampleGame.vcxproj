@@ -223,6 +223,7 @@
     <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
+    <ClCompile Include="scene\Test\SkinningTest.cpp" />
     <ClCompile Include="scene\Test\Test.cpp" />
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
@@ -233,6 +234,7 @@
     <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
+    <ClInclude Include="scene\Test\SkinningTest.h" />
     <ClInclude Include="scene\Test\Test.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
     <ClInclude Include="scene\Title.h" />
