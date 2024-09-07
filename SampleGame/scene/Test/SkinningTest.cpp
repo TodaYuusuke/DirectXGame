@@ -9,8 +9,12 @@ using namespace LWP::Object;
 
 // 初期化
 void SkinningTest::Initialize() {
-	model.LoadShortPath("SkinningTestModel/Player_Boned_IK.gltf");
-	anim.Load
+	model.LoadShortPath("SkinningTest/Player_Boned_IK.gltf");
+	anim.LoadFullPath("resources/model/SkinningTest/Player_Boned_IK.gltf", &model);
+
+	model.worldTF.translation.y = -1.0f;
+	model.worldTF.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 1.57f);
+	model.SetAllMaterialLighting(false);
 }
 
 // 更新
