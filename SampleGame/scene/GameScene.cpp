@@ -57,8 +57,8 @@ void GameScene::Initialize() {
 	sun.rotation.x = 0.0f;
 
 	// プレイヤー初期化
-	player.Init(&mainCamera, &levelData.terrain);
-	car.Init(&mainCamera, &levelData.terrain);
+	player.Init(&mainCamera, levelData.terrain.get());
+	car.Init(&mainCamera, levelData.terrain.get());
 }
 // 更新
 void GameScene::Update() {

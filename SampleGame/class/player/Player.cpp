@@ -16,7 +16,7 @@ void Player::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	model.worldTF.scale = { 0.4f,0.4f,0.4f };
 	model.SetAllMaterialLighting(true);
 	// アニメーション用意
-	walkAnim.LoadAnimationLongPath("resources/model/human/walk.gltf", &model);
+	walkAnim.LoadFullPath("resources/model/human/walk.gltf", &model);
 	//walkAnim.LoadAnimationLongPath("resources/model/human/simpleSkin.gltf", &model);
 	
 	// カメラのポインタをセット
@@ -36,7 +36,7 @@ void Player::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	pl.intensity = 0.7f;
 	pl.isActive = false;
 
-	walkAnim.Start();
+	//walkAnim.PL();
 
 	// 地形に接地部分を登録
 	terrainPoint = terrain->SetNewCollider({ 0.0f,-0.4f,0.0f }, &model.worldTF);
@@ -122,9 +122,9 @@ void Player::Move() {
 				model.worldTF.rotation,
 				model.worldTF.rotation * Quaternion::DirectionToDirection(currentDir, dir), 0.8f);
 		// 歩いているのでアニメーション
-		if (walkAnim.isEnd()) {
-			walkAnim.Start();
-		}
+		//if (walkAnim.isEnd()) {
+		//	walkAnim.Start();
+		//}
 	}
 	else {
 		// 止まってるのでアニメーションストップ

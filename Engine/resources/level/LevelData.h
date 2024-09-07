@@ -28,7 +28,7 @@ namespace LWP::Resource {
 		std::map<std::string, Object::Collider::Collider> colliders;
 
 		// 地形
-		Object::Terrain terrain;
+		std::unique_ptr<Object::Terrain> terrain;
 
 	public: // ** メンバ関数 ** //
 
