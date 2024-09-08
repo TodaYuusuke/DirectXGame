@@ -52,7 +52,8 @@ void Animation::Update() {
 	// アニメーションの時間
 	float total = data[playingAnimationName_].totalTime;
 	// 時間を更新
-	time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;
+	//time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;
+	time_ += (1.0f / 60.0f) / total;
 
 	// ループする場合
 	if (loopFlag_) {
@@ -72,7 +73,7 @@ void Animation::Update() {
 		if (auto it = data[playingAnimationName_].node.find(joint.name); it != data[playingAnimationName_].node.end()) {
 			const NodeAnimation& rootNodeAnimation = (*it).second;
 			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, seconds);
-			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds);
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds).Normalize();
 			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, seconds);
 		}
 	}

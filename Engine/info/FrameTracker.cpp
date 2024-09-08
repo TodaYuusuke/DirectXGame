@@ -61,6 +61,10 @@ void FrameTracker::End() {
 			// 1マイクロ秒スリープ
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
 		}
+
+		// 経過時間を修正
+		frameEndTime_ = std::chrono::steady_clock::now();
+		frameDuration = std::chrono::duration_cast<std::chrono::microseconds>(frameEndTime_ - frameStartTime_);
 	}
 	
 	// 平均FPSを計算するためにデータを保持
