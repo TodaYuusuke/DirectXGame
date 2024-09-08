@@ -15,8 +15,13 @@ void SkinningTest::Initialize() {
 	model.worldTF.translation.y = -1.0f;
 	model.worldTF.rotation = Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 1.57f);
 	model.SetAllMaterialLighting(false);
+
+	anim.Play("01_Run", true);
 }
 
 // 更新
 void SkinningTest::Update() {
+	ImGui::Begin("Test");
+	anim.DebugGUI();
+	ImGui::End();
 }

@@ -11,9 +11,12 @@ using namespace LWP::Object;
 void AnimationTest::Initialize() {
 	model.LoadShortPath("Robot/Player_Boned_IK.gltf");
 	anim.LoadFullPath("resources/model/Robot/Player_Boned_IK.gltf", &model);
+
 }
 
 // 更新
 void AnimationTest::Update() {
-
+	ImGui::Begin("Test");
+	anim.DebugGUI();
+	ImGui::End();
 }

@@ -38,6 +38,8 @@ namespace LWP::Resource {
 
 		// deltaTimeの係数影響OnOff
 		bool useDeltaTimeMultiply = true;
+		// クォータニオン正規化切り替え
+		bool normalizeFlag = true;
 
 		// アクティブ切り替え
 		bool isActive = true;
