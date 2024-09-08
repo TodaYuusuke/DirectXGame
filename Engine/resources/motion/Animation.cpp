@@ -72,7 +72,7 @@ void Animation::Update() {
 		if (auto it = data[playingAnimationName_].node.find(joint.name); it != data[playingAnimationName_].node.end()) {
 			const NodeAnimation& rootNodeAnimation = (*it).second;
 			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, seconds);
-			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds).Normalize();
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds);
 			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, seconds);
 		}
 	}
@@ -111,10 +111,20 @@ void Animation::DebugGUI() {
 		for (auto itr = data.begin(); itr != data.end(); itr++) {
 			itemText.push_back(itr->first.c_str());
 		}
-		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		ImGui::ListBox("AnimationList", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
 		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
 		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
 	}
+	if (ImGui::TreeNode("Node")) {
+		for (Joint& joint : modelPtr_->skeleton.joints) {
+			if (ImGui::TreeNode(joint.name.c_str())) {
+				joint.localTF.DebugGUI();
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
+
 	ImGui::Text("--- Parameter ---");
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
 	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
@@ -147,7 +157,7 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 				aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
 				nodeAnimation.translate.keyframes.push_back({
 					static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
-					{-keyAssimp.mValue.x, keyAssimp.mValue.y, -keyAssimp.mValue.z}	// 右手->左手
+					{-keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}	// 右手->左手
 					});
 			}
 			// rotate
@@ -171,6 +181,7 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 
 	// 追従セット
 	modelPtr_ = ptr;
+	loadedPath = filePath;
 }
 
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {

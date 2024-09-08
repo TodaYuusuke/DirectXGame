@@ -55,7 +55,7 @@ Quaternion Interpolation::SlerpQuaternion(const Quaternion& start, const Quatern
 	}
 	// 近いほうで補完する
 	else if (dot < 0.0f) {
-		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (e.Inverse() * (std::sin(theta * t) * sinTheta));
+		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end.Inverse() * (std::sin(theta * t) * sinTheta));
 	}
 	else {
 		result = (start * (std::sin(theta * (1.0f - t)) * sinTheta)) + (end * (std::sin(theta * t) * sinTheta));

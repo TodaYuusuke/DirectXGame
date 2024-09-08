@@ -7,7 +7,7 @@
 
 using namespace LWP::Math;
 
-
+Quaternion::Quaternion() { Init(); }
 Quaternion::Quaternion(const Vector3& other) {
 	x = other.x;
 	y = other.y;
@@ -63,18 +63,18 @@ Quaternion Quaternion::Normalize() const {
 }
 Quaternion Quaternion::Conjugate() const {
 	// 結果を返す
-	return { x * -1.0f,y * -1.0f,z * -1.0f,w };
+	//return { x * -1.0f,y * -1.0f,z * -1.0f,w };
 
-	//// 結果格納用
-	//Quaternion result = *this;
+	// 結果格納用
+	Quaternion result = *this;
 
-	//// 虚部を反転
-	//result.x *= -1.0f;
-	//result.y *= -1.0f;
-	//result.z *= -1.0f;
+	// 虚部を反転
+	result.x *= -1.0f;
+	result.y *= -1.0f;
+	result.z *= -1.0f;
 
-	//// 結果を返す
-	//return result;
+	// 結果を返す
+	return result;
 }
 
 float Quaternion::Length() const {
@@ -148,7 +148,9 @@ Quaternion Quaternion::DirectionToDirection(const Vector3& from, const Vector3& 
 
 
 float Quaternion::Dot(const Quaternion& q1, const Quaternion& q2) {
-	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+	//return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+	return (q1.x * q2.x) + (q1.y * q2.y) + (q1.z * q2.z) + (q1.w * q2.w);
+
 }
 Quaternion Quaternion::ConvertDirection(const Vector3& dir) {
 	// 方向ベクトルを正規化する
