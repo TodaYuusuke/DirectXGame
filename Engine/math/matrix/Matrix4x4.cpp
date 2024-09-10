@@ -224,6 +224,7 @@ Matrix4x4 Matrix4x4::CreateRotateXYZMatrix(const Quaternion& q) {
 
 	//return result;
 
+
 	// 結果格納用
 	Matrix4x4 result = Matrix4x4::CreateIdentity4x4();
 

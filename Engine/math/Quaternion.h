@@ -22,7 +22,7 @@ namespace LWP::Math {
 
 	public: // ** メンバ関数 ** //
 
-		Quaternion() = default;
+		Quaternion();
 		// Vector3のコンストラクタ
 		Quaternion(const Vector3& other);
 		Quaternion(float x, float y, float z, float w);

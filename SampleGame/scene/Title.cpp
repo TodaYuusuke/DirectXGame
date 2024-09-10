@@ -10,7 +10,7 @@ using namespace LWP::Object;
 
 // 初期化
 void Title::Initialize() {
-	LWP::Window::ChangeFullScreenMode();
+	//LWP::Window::ChangeFullScreenMode();
 	sprite_.material.texture = LWP::Resource::LoadTexture("Title.png");
 	sprite_.material.enableLighting = false;
 	sprite_.isUI = true;

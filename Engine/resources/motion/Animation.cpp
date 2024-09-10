@@ -52,7 +52,8 @@ void Animation::Update() {
 	// アニメーションの時間
 	float total = data[playingAnimationName_].totalTime;
 	// 時間を更新
-	time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;
+	//time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;
+	time_ += (1.0f / 60.0f) / total;
 
 	// ループする場合
 	if (loopFlag_) {
@@ -115,6 +116,16 @@ void Animation::DebugGUI() {
 		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
 		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
 	}
+	if (ImGui::TreeNode("Node")) {
+		for (Joint& joint : modelPtr_->skeleton.joints) {
+			if (ImGui::TreeNode(joint.name.c_str())) {
+				joint.localTF.DebugGUI();
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
+
 	ImGui::Text("--- Parameter ---");
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
 	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
@@ -147,7 +158,7 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 				aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
 				nodeAnimation.translate.keyframes.push_back({
 					static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
-					{-keyAssimp.mValue.x, keyAssimp.mValue.y, -keyAssimp.mValue.z}	// 右手->左手
+					{-keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}	// 右手->左手
 					});
 			}
 			// rotate
@@ -171,6 +182,7 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 
 	// 追従セット
 	modelPtr_ = ptr;
+	loadedPath = filePath;
 }
 
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {

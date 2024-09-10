@@ -115,6 +115,10 @@ namespace LWP::Resource {
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr);
 
+		/// <summary>
+		/// 読み込んだパスを返す関数
+		/// </summary>
+		std::string GetLoadedPath() { return loadedPath; }
 
 	private: // ** メンバ変数 ** //
 
@@ -136,6 +140,8 @@ namespace LWP::Resource {
 
 		// 適応するModelのポインタ
 		Resource::SkinningModel* modelPtr_ = nullptr;
+		// 読み込んだファイル名
+		std::string loadedPath = "";
 
 		// アニメーションファイルの位置
 		const static std::string kDirectoryPath;
