@@ -503,8 +503,7 @@ void Manager::DebugGUI() {
 		if (!animations_.list.empty()) {
 			std::vector<const char*> itemText;
 			for (Animation* p : animations_.list) {
-				std::string str = p->GetLoadedPath();
-				itemText.push_back(str.c_str());
+				itemText.push_back(p->name.c_str());
 			}
 			ImGui::ListBox("List", &currentAnim, itemText.data(), static_cast<int>(itemText.size()), 4);
 			// 現在選択中のアニメーションのDebugGUIを呼び出し
