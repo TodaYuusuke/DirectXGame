@@ -35,7 +35,9 @@ namespace LWP::Resource {
 	/// </summary>
 	class Animation final {
 	public: // **　パブリックなメンバ変数 ** //
-
+		
+		// 固有名詞
+		std::string name = "Animation";
 		// deltaTimeの係数影響OnOff
 		bool useDeltaTimeMultiply = true;
 
@@ -58,20 +60,20 @@ namespace LWP::Resource {
 		/// アニメーション開始
 		/// </summary>
 		/// <param name="name">再生するアニメーション名</param>
-		void Play(const std::string name);
+		void Play(const std::string animName);
 		/// <summary>
 		/// アニメーション開始
 		/// </summary>
 		/// <param name="name">再生するアニメーション名</param>
 		/// <param name="loop">ループするかのフラグ</param>
-		void Play(const std::string name, bool loop);
+		void Play(const std::string animName, bool loop);
 		/// <summary>
 		/// アニメーション開始
 		/// </summary>
 		/// <param name="name">再生するアニメーション名</param>
 		/// <param name="loop">ループするかのフラグ</param>
 		/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
-		void Play(const std::string name, bool loop, float startTime);
+		void Play(const std::string animName, bool loop, float startTime);
 		
 		/// <summary>
 		/// アニメーション停止
@@ -90,7 +92,7 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 指定のアニメーションが再生中か返す関数
 		/// </summary>
-		bool GetPlaying(const std::string& name);
+		bool GetPlaying(const std::string& animName);
 		
 		/// <summary>
 		/// ImGui

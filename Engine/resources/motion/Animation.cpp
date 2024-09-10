@@ -29,16 +29,16 @@ void Animation::Init() {
 	playingAnimationName_ = "";
 }
 
-void Animation::Play(const std::string name) { Play(name, false, 0.0f); }
-void Animation::Play(const std::string name, bool loop) { Play(name, loop, 0.0f); }
-void Animation::Play(const std::string name, bool loop, float startTime) {
+void Animation::Play(const std::string animName) { Play(animName, false, 0.0f); }
+void Animation::Play(const std::string animName, bool loop) { Play(animName, loop, 0.0f); }
+void Animation::Play(const std::string animName, bool loop, float startTime) {
 	// 存在するアニメーションかチェック
-	if (!data.contains(name)) {
+	if (!data.contains(animName)) {
 		// 存在しないのでエラー
 		assert(false);
 	}
 
-	playingAnimationName_ = name;
+	playingAnimationName_ = animName;
 	loopFlag_ = loop;
 	time_ = startTime;
 	isActive = true;
@@ -90,16 +90,16 @@ bool Animation::GetPlaying() {
 		return time_ < 1.0f;
 	}
 }
-bool Animation::GetPlaying(const std::string& name) {
+bool Animation::GetPlaying(const std::string& animName) {
 	// ループする場合
 	if (loopFlag_) {
 		// 再生しているアニメーションの名前が一致すれば再生中
-		return playingAnimationName_ == name;
+		return playingAnimationName_ == animName;
 	}
 	// ループしない場合
 	else {
 		// 再生しているアニメーションの名前が一致し、1未満なら再生中
-		return playingAnimationName_ == name && time_ < 1.0f;
+		return playingAnimationName_ == animName && time_ < 1.0f;
 	}
 }
 
@@ -111,7 +111,7 @@ void Animation::DebugGUI() {
 		for (auto itr = data.begin(); itr != data.end(); itr++) {
 			itemText.push_back(itr->first.c_str());
 		}
-		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		ImGui::ListBox("AnimationList", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
 		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
 		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
 	}
