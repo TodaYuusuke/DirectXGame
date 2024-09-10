@@ -74,13 +74,17 @@ void SkinningModel::SetAllMaterialLighting(bool flag) {
 	}
 }
 
-void SkinningModel::SetBufferData(Primitive::WellForGPU* data, int offset) {
+void SkinningModel::SetBufferData(Base::StructuredBuffer<Primitive::WellForGPU>* data) {
 	// 全Jointの計算結果を渡す
 	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); jointIndex++) {
 		assert(jointIndex < skinCluster->inverseBindPoseMatrices.size());
 		Math::Matrix4x4 skeSpaceMatrix = skinCluster->inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
 		// Bufferのデータ更新
-		data[jointIndex + offset].skeletonSpaceMatrix = skeSpaceMatrix;
-		data[jointIndex + offset].skeletonSpaceInverseTransposeMatrix = skeSpaceMatrix.Inverse().Transpose();
+		data->Add(Primitive::WellForGPU{
+			skeSpaceMatrix,
+			skeSpaceMatrix.Inverse().Transpose()
+		});
+		//data[jointIndex + offset].skeletonSpaceMatrix = skeSpaceMatrix;
+		//data[jointIndex + offset].skeletonSpaceInverseTransposeMatrix = skeSpaceMatrix.Inverse().Transpose();
 	}
 }

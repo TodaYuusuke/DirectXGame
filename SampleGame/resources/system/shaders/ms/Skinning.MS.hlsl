@@ -6,20 +6,20 @@ struct Skinned {
 
 StructuredBuffer<Well> Wells : register(t517);
 
-Skinned Skinning(Vertex v)
+Skinned Skinning(Vertex v, uint32_t instanceIndex)
 {
     Skinned skinned;
     
-    skinned.position = mul(v.position, Wells[v.jIndex.x].skeletonSpaceMatrix) * v.weight.x;
-    skinned.position += mul(v.position, Wells[v.jIndex.y].skeletonSpaceMatrix) * v.weight.y;
-    skinned.position += mul(v.position, Wells[v.jIndex.z].skeletonSpaceMatrix) * v.weight.z;
-    skinned.position += mul(v.position, Wells[v.jIndex.w].skeletonSpaceMatrix) * v.weight.w;
+    skinned.position = mul(v.position, Wells[v.jIndex.x + (instanceIndex * mCommonData.jSize)].skeletonSpaceMatrix) * v.weight.x;
+    skinned.position += mul(v.position, Wells[v.jIndex.y + (instanceIndex * mCommonData.jSize)].skeletonSpaceMatrix) * v.weight.y;
+    skinned.position += mul(v.position, Wells[v.jIndex.z + (instanceIndex * mCommonData.jSize)].skeletonSpaceMatrix) * v.weight.z;
+    skinned.position += mul(v.position, Wells[v.jIndex.w + (instanceIndex * mCommonData.jSize)].skeletonSpaceMatrix) * v.weight.w;
     skinned.position.w = 1.0f;
     
-    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.x].skeletonSpaceInverseTransposeMatrix) * v.weight.x;
-    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.y].skeletonSpaceInverseTransposeMatrix) * v.weight.y;
-    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.z].skeletonSpaceInverseTransposeMatrix) * v.weight.z;
-    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.w].skeletonSpaceInverseTransposeMatrix) * v.weight.w;
+    skinned.normal = mul(v.normal, (float32_t3x3) Wells[v.jIndex.x + (instanceIndex * mCommonData.jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.x;
+    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.y + (instanceIndex * mCommonData.jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.y;
+    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.z + (instanceIndex * mCommonData.jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.z;
+    skinned.normal += mul(v.normal, (float32_t3x3) Wells[v.jIndex.w + (instanceIndex * mCommonData.jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.w;
     skinned.normal = normalize(skinned.normal);
     
     return skinned;
@@ -49,7 +49,7 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点のデータを求める
-        Skinned skinned = Skinning(vertex);
+        Skinned skinned = Skinning(vertex, gid);
         //outVerts[gtid].pos = mul(mul(vertex.position, InstanceData.wtf.m), cCamera.viewProjection);
         outVerts[gtid].pos = mul(mul(skinned.position, InstData[gid].wtf.m), cCamera.viewProjection);
         //outVerts[gtid].worldPos = mul(vertex.position, InstanceData.wtf.m).xyz;

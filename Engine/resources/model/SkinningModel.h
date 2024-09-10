@@ -62,7 +62,7 @@ namespace LWP::Resource {
 		/// <summary>
 		/// Bufferにデータをセットする
 		/// </summary>
-		void SetBufferData(Primitive::WellForGPU* data, int offset);
+		void SetBufferData(Base::StructuredBuffer<Primitive::WellForGPU>* data);
 
 	};
 }

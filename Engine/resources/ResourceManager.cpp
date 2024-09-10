@@ -148,7 +148,7 @@ void Manager::Update() {
 					for (std::string str : it->second.data.materialOrder_) {
 						skin[i]->buffer.material->Add(m->materials[str]);
 					}
-					m->SetBufferData(skin[i]->buffer.well->data_, skin[i]->buffer.well->GetCount());
+					m->SetBufferData(skin[i]->buffer.well.get());
 					skin[i]->buffer.common.data_->instanceCount += 1;
 				}
 			}
