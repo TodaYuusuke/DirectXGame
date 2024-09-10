@@ -109,7 +109,7 @@ namespace LWP::Utility {
 		}
 #pragma endregion
 
-	private: // ** メンバ変数 ** //
+	public: // ** メンバ変数 ** //
 
 		// 変化前の値を保持する変数
 		T preT;
@@ -147,7 +147,7 @@ namespace LWP::Utility {
 		Observer() = default;
 		Observer(T* initValue) { Init(initValue); }
 
-	private: // ** メンバ変数 ** //
+	public: // ** メンバ変数 ** //
 
 		// 変化前の値を保持する変数
 		T preT;
