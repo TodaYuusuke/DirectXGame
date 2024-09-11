@@ -80,6 +80,15 @@ namespace LWP::Object {
 				Generate(data_.back());
 			}
 		}
+		void Add(int value, LWP::Math::Vector3 position) {
+			model.worldTF.translation = position;
+
+			for (int i = 0; i < value; i++) {
+				data_.emplace_back(model);
+				data_.back().m.isActive = true;
+				Generate(data_.back());
+			}
+		}
 		// デバッグ用GUI
 		void DebugGUI() override final {
 			model.DebugGUI();
