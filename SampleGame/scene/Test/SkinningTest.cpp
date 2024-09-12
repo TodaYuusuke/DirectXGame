@@ -21,8 +21,16 @@ void SkinningTest::Initialize() {
 
 	model[0].worldTF.translation.x = -1.0f;
 	model[0].worldTF.translation.x = 1.0f;
+
+	audio.LoadShortPath("powerup01.mp3");
 }
 
 // 更新
 void SkinningTest::Update() {
+	if (Keyboard::GetTrigger(DIK_A)) {
+		audio.Play(0.5f, 255);
+	}
+	if (Keyboard::GetTrigger(DIK_S)) {
+		audio.Stop();
+	}
 }

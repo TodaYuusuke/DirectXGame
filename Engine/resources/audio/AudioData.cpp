@@ -101,7 +101,12 @@ void AudioData::Play(float volume, UINT loopCount) {
 	hr = pSourceVoice->Start();
 }
 void AudioData::Stop() {
-	pSourceVoice->Stop();
+	// 再生中でなければ止めない
+	XAUDIO2_VOICE_STATE state{};
+	pSourceVoice->GetState(&state);
+	if (state.SamplesPlayed != 0) {
+		pSourceVoice->Stop();
+	}
 }
 
 void AudioData::SetVolume(float v) {

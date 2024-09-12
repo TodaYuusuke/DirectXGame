@@ -8,6 +8,9 @@ using namespace LWP::Resource;
 void Audio::Load(const std::string& path) {
 	ptr_ = LoadAudio(path);
 }
+void Audio::LoadShortPath(const std::string& path) {
+	ptr_ = LoadAudioLongPath("resources/audio/" + path);
+}
 void Audio::LoadLongPath(const std::string& path) {
 	ptr_ = LoadAudioLongPath(path);
 }
