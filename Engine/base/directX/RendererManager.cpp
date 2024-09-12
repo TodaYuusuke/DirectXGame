@@ -47,20 +47,6 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 		list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstDirShadowView());
 		list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstPointShadowView());
 	};
-	//std::function<void()> skinningFunc = [&]() {
-	//	ID3D12GraphicsCommandList* list = commander_.List();
-	//	// 各種Viewをセット
-	//	buffers_.SetCommonView(2, list);
-	//	buffers_.SetTransformView(5, list);
-	//	buffers_.SetMaterialView(6, list);
-	//	buffers_.SetDirLightView(7, list);
-	//	buffers_.SetPointLightView(8, list);
-	//	// テクスチャのViewをセット
-	//	list->SetGraphicsRootDescriptorTable(9, srv_->GetFirstTexView());
-	//	// シャドウマップのViewをセット
-	//	list->SetGraphicsRootDescriptorTable(10, srv_->GetFirstDirShadowView());
-	//	list->SetGraphicsRootDescriptorTable(11, srv_->GetFirstPointShadowView());
-	//};
 	std::function<void()> meshFunc = [&]() {
 		ID3D12GraphicsCommandList* list = commander_.List();
 		// 各種Viewをセット

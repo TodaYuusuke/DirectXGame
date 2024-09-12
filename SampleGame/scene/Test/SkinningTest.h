@@ -18,5 +18,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::SkinningModel model[2];
 	LWP::Resource::Animation anim[2];
 
-	LWP::Resource::Audio audio;
+	LWP::Object::PointLight pl;
+	LWP::Object::DirectionLight dl;
+	LWP::Primitive::Sprite sp;
 };

@@ -15,11 +15,11 @@ DirectionLight::DirectionLight() {
 	// GPUデバイスのポインタ
 	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
 	// HeapManagerのポインタ
-	//HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
+	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
 	
 	// リソースの初期化
 	viewBuffer_.Init(dev);
-	//shadowMap_.Init(dev, heaps);
+	shadowMap_.Init(dev, heaps);
 }
 
 // 初期化
