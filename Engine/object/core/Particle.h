@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "resources/model/RigidModel.h"
+#include "../collider/Collider.h"
 
 #include "../Externals/imgui/imgui.h"
 #include "../Externals/imgui/imgui_impl_dx12.h"
@@ -21,6 +22,7 @@ namespace LWP::Object {
 		struct Data {
 			T m;
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
+			LWP::Object::Collider::Collider* collider;
 			int elapsedFrame = 0;
 
 			// デフォルトコンストラクタ
@@ -30,13 +32,16 @@ namespace LWP::Object {
 			}
 
 			// デストラクタ
-			~Data() = default;
+			~Data() {
+				if (collider) { delete collider; }
+			};
 
 
 			Data& operator=(const Data& other) {
 				if (this != &other) {
 					m = other.m;
 					velocity = other.velocity;
+					collider = other.collider;
 					elapsedFrame = other.elapsedFrame;
 				}
 				return *this;
