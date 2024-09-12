@@ -23,6 +23,11 @@ namespace LWP::Resource {
 		/// ファイル読み込み
 		/// </summary>
 		/// <param name="path">exeからのパス</param>
+		void LoadShortPath(const std::string& path);
+		/// <summary>
+		/// ファイル読み込み
+		/// </summary>
+		/// <param name="path">exeからのパス</param>
 		void LoadLongPath(const std::string& path);
 		
 		/// <summary>
@@ -61,6 +66,5 @@ namespace LWP::Resource {
 
 		// ボリューム
 		float volume_ = 1.0f;
-
 	};
 }
