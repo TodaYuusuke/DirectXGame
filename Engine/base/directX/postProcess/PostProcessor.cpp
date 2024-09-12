@@ -11,17 +11,17 @@ using namespace LWP::Base::PostProcess;
 void PostProcessor::Init() {
 	bloom.Init();
 	outLine.Init();
+	radialBlur.Init();
 	grayScale.Init();
 	vignetting.Init();
-	radialBlur.Init();
 	CreateShaderFile();
 }
 void PostProcessor::Update() {
 	bloom.Update();
 	outLine.Update();
+	radialBlur.Update();
 	grayScale.Update();
 	vignetting.Update();
-	radialBlur.Update();
 }
 
 void PostProcessor::CreateShaderFile() {
@@ -162,9 +162,9 @@ void PostProcessor::DebugGUI() {
 	if (ImGui::TreeNode("PostProcess")) {
 		bloom.DebugGUI();
 		outLine.DebugGUI();
+		radialBlur.DebugGUI();
 		grayScale.DebugGUI();
 		vignetting.DebugGUI();
-		radialBlur.DebugGUI();
 		ImGui::Text("----------");
 		ImGui::Checkbox("Use", &use);
 		if (use && ImGui::Button("Update Shader")) { CreateShaderFile(); }
@@ -177,9 +177,9 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	std::vector<IPostProcess*> result;
 	result.push_back(&bloom);
 	result.push_back(&outLine);
+	result.push_back(&radialBlur);
 	result.push_back(&grayScale);
 	result.push_back(&vignetting);
-	result.push_back(&radialBlur);
 
 	return result;
 }

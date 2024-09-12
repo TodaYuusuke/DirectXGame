@@ -175,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
@@ -302,6 +303,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\IRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />

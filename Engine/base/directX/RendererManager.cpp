@@ -75,6 +75,7 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 	eMapRenderer_.SetBufferGroup(&buffers_);
 	// ノーマルレンダラー初期化
 	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
+	postRenderer_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
 	meshRenderer_.Init(device, srv_, dxc_, &commander_, meshFunc);
 	meshRenderer_.SetBufferGroup(&buffers_);
 	// ポストプロセスレンダラー初期化
@@ -105,6 +106,8 @@ void RendererManager::DrawCall() {
 	normalRender_.DrawCall(list);
 	// ポストプロセス描画
 	ppRender_.DrawCall(list);
+	// スプライト描画
+	postRenderer_.DrawCall(list);
 	// リソースをコピー
 	copyRenderer_.Execute(list);
 
@@ -113,6 +116,7 @@ void RendererManager::DrawCall() {
 
 	// 次のフレームのためにリセット
 	normalRender_.Reset();
+	postRenderer_.Reset();
 	meshRenderer_.Reset();
 	shadowRender_.Reset();
 	ppRender_.Reset();
@@ -176,7 +180,7 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(Primitive::IPrimitive* primitive) {
 	// Spriteのとき
 	if (dynamic_cast<Primitive::Sprite*>(primitive)) {
-		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataSprite(index); };
+		return [this](const IndexInfoStruct& index) { postRenderer_.AddIndexDataSprite(index); };
 	}
 	// ビルボード2Dのとき
 	if (dynamic_cast<Primitive::Billboard2D*>(primitive)) {

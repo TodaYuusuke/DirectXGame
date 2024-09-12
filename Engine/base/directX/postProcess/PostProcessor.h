@@ -23,9 +23,9 @@ namespace LWP::Base {
 
 		PostProcess::Bloom bloom;	// ブルーム
 		PostProcess::OutLine outLine;	// アウトライン
+		PostProcess::RadialBlur radialBlur;	// ラジアルブラー
 		PostProcess::GrayScale grayScale;	// グレースケール
 		PostProcess::Vignetting vignetting;	// ビネット
-		PostProcess::RadialBlur radialBlur;	// ラジアルブラーs
 		// ここにどんどん種類を増やしていく
 
 
