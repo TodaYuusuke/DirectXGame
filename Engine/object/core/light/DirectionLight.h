@@ -65,6 +65,6 @@ namespace LWP::Object {
 		// ViewProjection
 		Base::ConstantBuffer<Math::Matrix4x4> viewBuffer_;
 		// シャドウマップ
-		Base::SM_Direction shadowMap_;
+		//Base::SM_Direction shadowMap_;
 	};
 }

@@ -15,11 +15,11 @@ DirectionLight::DirectionLight() {
 	// GPUデバイスのポインタ
 	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
 	// HeapManagerのポインタ
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
+	//HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
 	
 	// リソースの初期化
 	viewBuffer_.Init(dev);
-	shadowMap_.Init(dev, heaps);
+	//shadowMap_.Init(dev, heaps);
 }
 
 // 初期化
@@ -35,8 +35,9 @@ void DirectionLight::Update(Base::RendererManager* manager) {
 
 	// データを登録
 	manager->AddLightData(this);
-	*viewBuffer_.data_ = GetViewProjection();
-	manager->AddTarget(viewBuffer_.GetGPUView(), &shadowMap_);
+	// 平行光源のシャドウマッピングを一時的に停止
+	//*viewBuffer_.data_ = GetViewProjection();
+	//manager->AddTarget(viewBuffer_.GetGPUView(), &shadowMap_);
 }
 
 // ビュープロジェクションを返す関数
