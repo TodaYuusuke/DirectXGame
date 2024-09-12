@@ -166,6 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\RendererManager.cpp" />
@@ -290,6 +291,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\RadialBlur.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
