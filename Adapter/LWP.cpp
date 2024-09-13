@@ -13,7 +13,7 @@ using namespace LWP::Scene;
 
 namespace kWind = LWP::Config::Window;
 
-void Engine::StartUp(std::string str) {
+void Engine::StartUp(std::wstring str) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
@@ -61,7 +61,7 @@ void Engine::InitializeForScene() {
 	//resourceManager_->Initialize();
 }
 
-void Engine::Initialize(const char* title, int width, int height) {
+void Engine::Initialize(std::wstring title, int width, int height) {
 	// インスタンスを受け取る //
 	
 	// Base
