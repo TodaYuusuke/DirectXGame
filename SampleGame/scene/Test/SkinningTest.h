@@ -2,6 +2,8 @@
 #include <Adapter.h>
 #include "scene/IScene.h"
 
+#include "../../class/particle/DamageParticle.h"
+
 class SkinningTest final
 	: public IScene {
 public:
@@ -17,6 +19,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Resource::SkinningModel model[2];
 	LWP::Resource::Animation anim[2];
+
+	DamageParticle part;
 
 	LWP::Object::PointLight pl;
 	LWP::Object::DirectionLight dl;

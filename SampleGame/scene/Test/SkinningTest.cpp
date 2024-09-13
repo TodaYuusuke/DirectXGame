@@ -23,8 +23,14 @@ void SkinningTest::Initialize() {
 	model[0].worldTF.translation.x = 1.0f;
 
 	sp.isUI = true;
+
+	part.model.LoadCube();
 }
 
 // 更新
 void SkinningTest::Update() {
+	ImGui::Begin("Test");
+	part.DebugGUI();
+	if (ImGui::Button("Generate")) { part.Add(12); }
+	ImGui::End();
 }

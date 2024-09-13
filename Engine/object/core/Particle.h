@@ -22,7 +22,7 @@ namespace LWP::Object {
 		struct Data {
 			T m;
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
-			LWP::Object::Collider::Collider* collider;
+			LWP::Object::Collider::Collider* collider = nullptr;
 			int elapsedFrame = 0;
 
 			// デフォルトコンストラクタ
