@@ -101,6 +101,9 @@ void AudioData::Play(float volume, UINT loopCount) {
 	hr = pSourceVoice->Start();
 }
 void AudioData::Stop() {
+	// そもそも再生してないなら止めない
+	if (!pSourceVoice) { return; }
+
 	// 再生中でなければ止めない
 	XAUDIO2_VOICE_STATE state{};
 	pSourceVoice->GetState(&state);
