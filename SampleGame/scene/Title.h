@@ -1,5 +1,5 @@
 #pragma once
-#include <Adapter.h>
+#include "../class/field/Field.h"
 #include "scene/IScene.h"
 
 class Title final
@@ -18,6 +18,9 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
+	// 地形データ
+	Field field_;
+	
 	// 仮画像
 	LWP::Primitive::Sprite sprite_;
 };
