@@ -11,6 +11,7 @@ using namespace LWP::Base::PostProcess;
 void PostProcessor::Init() {
 	bloom.Init();
 	outLine.Init();
+	radialBlur.Init();
 	grayScale.Init();
 	vignetting.Init();
 	CreateShaderFile();
@@ -18,6 +19,7 @@ void PostProcessor::Init() {
 void PostProcessor::Update() {
 	bloom.Update();
 	outLine.Update();
+	radialBlur.Update();
 	grayScale.Update();
 	vignetting.Update();
 }
@@ -160,6 +162,7 @@ void PostProcessor::DebugGUI() {
 	if (ImGui::TreeNode("PostProcess")) {
 		bloom.DebugGUI();
 		outLine.DebugGUI();
+		radialBlur.DebugGUI();
 		grayScale.DebugGUI();
 		vignetting.DebugGUI();
 		ImGui::Text("----------");
@@ -174,6 +177,7 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	std::vector<IPostProcess*> result;
 	result.push_back(&bloom);
 	result.push_back(&outLine);
+	result.push_back(&radialBlur);
 	result.push_back(&grayScale);
 	result.push_back(&vignetting);
 

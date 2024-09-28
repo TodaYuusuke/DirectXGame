@@ -7,9 +7,9 @@
 
 namespace LWP::Base {
 	/// <summary>
-	/// 通常描画のレンダラー
+	/// ポストプロセスのあとに描画するレンダラー
 	/// </summary>
-	class NormalRenderer : public IRenderer {
+	class PostRenderer : public IRenderer {
 	public: // ** メンバ関数 ** //
 		// 通常描画のターゲット構造体
 		struct Target {
@@ -22,11 +22,11 @@ namespace LWP::Base {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		NormalRenderer();
+		PostRenderer();
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~NormalRenderer() = default;
+		~PostRenderer() = default;
 
 		/// <summary>
 		/// 初期化
@@ -43,10 +43,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// インデックスデータを追加
 		/// </summary>
-		void AddIndexData(const IndexInfoStruct& data) { normal_.indexBuffer.Add(data); }
-		void AddIndexDataWire(const IndexInfoStruct& data) { wireframe_.indexBuffer.Add(data); }
-		void AddIndexDataBillboard2D(const IndexInfoStruct& data) { billboard2D_.indexBuffer.Add(data); }
-		void AddIndexDataBillboard3D(const IndexInfoStruct& data) { billboard3D_.indexBuffer.Add(data); }
+		void AddIndexDataSprite(const IndexInfoStruct& data) { sprite_.indexBuffer.Add(data); }
 
 		/// <summary>
 		/// 描画ターゲットセット
@@ -75,13 +72,7 @@ namespace LWP::Base {
 			RenderData(uint32_t size) : indexBuffer(size) {};
 		};
 
-		// 通常
-		RenderData normal_;
-		// ワイヤーフレーム
-		RenderData wireframe_;
-		// ビルボード2D
-		RenderData billboard2D_;
-		// ビルボード3D
-		RenderData billboard3D_;
+		// スプライト
+		RenderData sprite_;
 	};
 }

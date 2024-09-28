@@ -266,6 +266,8 @@
     <ClCompile Include="Engine\resources\model\EMapModel.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthCubeMap.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -622,6 +624,8 @@
     <ClInclude Include="Engine\resources\model\EMapModel.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\DepthCubeMap.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\RadialBlur.h" />
+    <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

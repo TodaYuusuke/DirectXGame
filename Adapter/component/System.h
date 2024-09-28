@@ -17,7 +17,7 @@ namespace LWP {
 		/// <summary>
 		/// エンジン初期起動処理（※二重呼び出し禁止）
 		/// </summary>
-		void StartUp(std::string windowTitle);
+		void StartUp(std::wstring windowTitle);
 
 		/// <summary>
 		/// エンジン起動（※二重呼び出し禁止）

@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <cstdint>
+#include <string>
 #include "../../Externals/imgui/imgui.h"
 #include "../../Externals/imgui/imgui_impl_dx12.h"
 #include "../../Externals/imgui/imgui_impl_win32.h"
@@ -20,7 +21,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(const char* title, int width, int height);
+		void Initialize(std::wstring title, int width, int height);
 
 		/// <summary>
 		/// ウィンドウからのイベントをチェックする関数
@@ -56,7 +57,7 @@ namespace LWP::Base {
 	private: // メンバ変数
 
 		// タイトル
-		const char* title_;
+		std::wstring title_;
 
 		// クライアント領域のサイズ
 		int32_t clientWidth_;

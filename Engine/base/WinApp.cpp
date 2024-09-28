@@ -8,7 +8,7 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-void WinApp::Initialize(const char* title, int width, int height) {
+void WinApp::Initialize(std::wstring title, int width, int height) {
 
 	// 初期化
 	wc_ = {};
@@ -40,11 +40,10 @@ void WinApp::Initialize(const char* title, int width, int height) {
 	// クライアント領域を元に実際のサイズにwrcを変更してもらう
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
-
 	// ウィンドウの生成
 	hwnd_ = CreateWindow(
 		wc_.lpszClassName,				// 利用するクラス名
-		ConvertString(title_).c_str(),	// タイトルバーの文字（何でもいい）
+		title_.c_str(),	// タイトルバーの文字（何でもいい）
 		WS_OVERLAPPEDWINDOW,			// よく見るウィンドウスタイル
 		CW_USEDEFAULT,					// 表示X座標（Windowsに任せる）
 		CW_USEDEFAULT,					// 表示Y座標（WindowsOSに任せる）

@@ -69,6 +69,9 @@ void DirectXCommon::SetMainCamera(Object::Camera* camera) {
 		// 直接BackBufferに書き込み
 		renderer_->AddTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
 	}
+
+	// SpriteをBackBufferに
+	renderer_->AddSpriteTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
 }
 
 void DirectXCommon::DrawCall() {

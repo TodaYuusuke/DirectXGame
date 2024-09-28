@@ -3,6 +3,7 @@
 #include "renderer/NormalRenderer.h"
 #include "renderer/ShadowRenderer.h"
 #include "renderer/PPRenderer.h"
+#include "renderer/PostRenderer.h"
 #include "renderer/CopyRenderer.h"
 #include "renderer/MeshRenderer.h"
 #include "renderer/EnvironmentMapRenderer.h"
@@ -108,6 +109,7 @@ namespace LWP::Base {
 	private:
 		// レンダラー
 		NormalRenderer normalRender_;
+		PostRenderer postRenderer_;
 		// メッシュシェーダー
 		MeshRenderer meshRenderer_;
 	public:
@@ -120,6 +122,15 @@ namespace LWP::Base {
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { 
 			normalRender_.AddTarget({ view, back, depth });
 			meshRenderer_.AddTarget({ view, back, depth });
+		}
+		/// <summary>
+		/// スプライトを描画するターゲット
+		/// </summary>
+		/// <param name="view">カメラデータのView</param>
+		/// <param name="back">BackBuffer（RenderRsource）</param>
+		/// <param name="depth">DepthStencil</param>
+		void AddSpriteTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) {
+			postRenderer_.AddTarget({ view, back, depth });
 		}
 		/// <summary>
 		/// Terrainの草生成用データセット

@@ -95,6 +95,11 @@ namespace LWP::Resource {
 		bool GetPlaying(const std::string& animName);
 		
 		/// <summary>
+		/// 全体の進捗を受け取る関数
+		/// </summary>
+		float GetProgress() { return time_; }
+
+		/// <summary>
 		/// ImGui
 		/// </summary>
 		void DebugGUI();

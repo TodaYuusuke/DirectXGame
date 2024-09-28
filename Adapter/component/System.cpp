@@ -2,7 +2,7 @@
 
 using namespace LWP;
 
-void System::StartUp(std::string windowTitle) {
+void System::StartUp(std::wstring windowTitle) {
 	// エンジン生成
 	engine = std::make_unique<Engine>();
 	engine->StartUp(windowTitle);

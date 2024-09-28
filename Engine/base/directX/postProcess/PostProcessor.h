@@ -6,6 +6,7 @@
 #include "effects/OutLine.h"
 #include "effects/GrayScale.h"
 #include "effects/Vignetting.h"
+#include "effects/RadialBlur.h"
 
 #include <fstream>
 
@@ -22,6 +23,7 @@ namespace LWP::Base {
 
 		PostProcess::Bloom bloom;	// ブルーム
 		PostProcess::OutLine outLine;	// アウトライン
+		PostProcess::RadialBlur radialBlur;	// ラジアルブラー
 		PostProcess::GrayScale grayScale;	// グレースケール
 		PostProcess::Vignetting vignetting;	// ビネット
 		// ここにどんどん種類を増やしていく
