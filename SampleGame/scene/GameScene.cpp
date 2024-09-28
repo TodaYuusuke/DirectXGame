@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 		stars[i].SetAllMaterialLighting(false);
 	}
 
-	//sun.rotation.x = 0.0f;
+	sun.rotation.x = 0.0f;
 
 	// プレイヤー初期化
 	player.Init(&mainCamera, levelData.terrain.get());

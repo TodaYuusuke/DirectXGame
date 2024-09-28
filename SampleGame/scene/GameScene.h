@@ -24,7 +24,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::RigidModel stars[kStarCount];
 
 	// 太陽
-	//LWP::Object::DirectionLight sun;
+	LWP::Object::DirectionLight sun;
 
 	//LWP::Object::Camera subCamera;
 	//LWP::Primitive::Sprite sprite_;
