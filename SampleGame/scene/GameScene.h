@@ -1,5 +1,7 @@
 #pragma once
+#include "../class/field/Field.h"
 #include "../class/player/Player.h"
+#include "../class/player/Drone.h"
 #include "../class/car/Car.h"
 #include "scene/IScene.h" 
 
@@ -17,26 +19,13 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	// スカイドーム
-	LWP::Resource::RigidModel skydome;
-	// ☆
-	const static int kStarCount = 512;
-	LWP::Resource::RigidModel stars[kStarCount];
-
-	// 太陽
-	LWP::Object::DirectionLight sun;
-
-	//LWP::Object::Camera subCamera;
-	//LWP::Primitive::Sprite sprite_;
+	// 地形データ
+	Field field_;
 
 	// プレイヤー
-	Player player;
+	Player player_;
 	// カメラ
-	Car car;
-
-	// 車乗車フラグ
-	bool isDriving = false;
-
-	// 反射モデル
-	LWP::Resource::EMapModel eMap;
+	Car car_;
+	// ドローン
+	Drone drone_;
 };
