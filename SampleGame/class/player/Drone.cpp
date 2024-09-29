@@ -29,6 +29,7 @@ void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	pointLight_.isActive = false;
 
 	particle_.model.LoadCube();
+	particle_.model.worldTF.scale *= 0.4f;
 	particle_.terrain = terrain;
 
 	// カメラのポインタをセット

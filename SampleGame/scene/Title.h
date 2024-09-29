@@ -24,6 +24,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::SkinningModel drone_;
 	LWP::Resource::Animation droneAnim_;
 
+	// 操作表示
+	LWP::Primitive::Sprite ui_;
+
 	// 画面遷移用UI
 	LWP::Primitive::Sprite stagingSprite_;
 	// シーン開始演出用
@@ -52,7 +55,4 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		// 終了フラグ
 		bool end = false;
 	}endStaging_;
-	
-	// 操作表示
-	LWP::Primitive::Sprite ui_;
 };

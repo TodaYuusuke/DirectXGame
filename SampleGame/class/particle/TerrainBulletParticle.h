@@ -63,7 +63,7 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 
 			// 経過フレーム加算
 			data.elapsedFrame++;
-			data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(float(data.elapsedFrame) / 60.0f));
+			data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(float(data.elapsedFrame) / 60.0f));
 		}
 		// 1秒かけて消滅アニメーションを完了したとき
 		else {

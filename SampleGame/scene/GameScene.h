@@ -31,6 +31,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Math::Vector3 startPos_;
 	LWP::Math::Quaternion startRot_;
 
+	// 操作表示
+	LWP::Primitive::Sprite ui_;
 
 	// 画面遷移用UI
 	LWP::Primitive::Sprite stagingSprite_;
@@ -57,6 +59,4 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		bool end = false;
 	}endStaging_;
 
-	// 操作表示
-	LWP::Primitive::Sprite ui_;
 };
