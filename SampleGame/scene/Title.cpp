@@ -63,7 +63,7 @@ void Title::Update() {
 	// 通常更新処理
 	else if (!endStaging_.start) {
 		// SPACEキーを押すとシーン切り替え
-		if (Keyboard::GetTrigger(DIK_P)) {
+		if (Keyboard::GetTrigger(DIK_P) || Controller::GetTrigger(XBOX_A)) {
 			// 演出開始
 			endStaging_.start = true;
 		}

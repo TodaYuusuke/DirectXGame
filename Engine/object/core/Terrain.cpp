@@ -7,8 +7,18 @@
 using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Object;
+using namespace LWP::Object::TerrainCollider;
 using namespace LWP::Math;
 using namespace LWP::Resource;
+
+void Point::Init(Terrain* terrain, TransformQuat* tf) {
+	terrain_ = terrain;
+	wtf = tf;
+	terrain_->SetPointCollider(this);
+}
+Point::~Point() {
+	terrain_->DeletePointCollider(this);
+}
 
 Terrain::Terrain() {
 	Initialize();
@@ -29,10 +39,15 @@ void Terrain::Update(Base::RendererManager* manager) {
 	//manager->SetTerrainData(grassPositions_.GetSRVGPUView(), 0);
 
 	// 当たり判定を検証
-	for (Point& point : points_) {
+	for (Point* point : points_.list) {
+		// wtfがnullなら処理しない
+		if (!point->wtf) {
+			continue;
+		}
+
 		// 座標を求める
-		Vector3 pos = point.offset + point.wtf->GetWorldPosition();
-		point.preFrameHit = false;
+		Vector3 pos = point->offset + point->wtf->GetWorldPosition();
+		point->preFrameHit = false;
 
 		// 検索するモートン番号
 		const uint32_t kTargetMorton = GetMortonNumber(pos);
@@ -68,8 +83,8 @@ void Terrain::Update(Base::RendererManager* manager) {
 #endif
 					// 衝突点がposより上だった場合 -> 座標を修正
 					if (hitPosition.y > pos.y) {
-						point.wtf->translation.y = hitPosition.y - point.offset.y;
-						point.preFrameHit = true;
+						point->wtf->translation.y = hitPosition.y - point->offset.y;
+						point->preFrameHit = true;
 					}
 					currentMorton = 0;	// モートンを0にして強制終了
 					break;
@@ -224,10 +239,6 @@ void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
 	//	//grassPositions_.Add(pos);
 	//}
 }
-Terrain::Point* Terrain::SetNewCollider(Math::Vector3 offset, TransformQuat* wtf) {
-	points_.push_back({ offset,wtf,false });
-	return &points_[points_.size() - 1];
-}
 
 void Terrain::DebugGUI() {
 	if (ImGui::TreeNode("Model")) {
@@ -239,16 +250,16 @@ void Terrain::DebugGUI() {
 	ImGui::Text("CellSize : %f", cellSize_);
 	ImGui::Checkbox("isActive", &isActive);
 	// 当たり判定一覧
-	if (!points_.empty()) {
+	if (!points_.list.empty()) {
 		std::vector<const char*> itemText;
-		for (int i = 0; i < points_.size(); i++) {
+		for (int i = 0; i < points_.list.size(); i++) {
 			itemText.push_back(std::to_string(i).c_str());
 		}
 		ImGui::ListBox("Collisions", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-		Point& p = points_[currentItem];
-		p.wtf->DebugGUI();
-		ImGui::DragFloat3("offset", &p.offset.x, 0.1f);
-		int mortonNum = GetMortonNumber(p.offset + p.wtf->GetWorldPosition());	// 所属するモートン空間番号
+		Point* p = *Utility::GetIteratorAtIndex(points_.list, currentItem);
+		p->wtf->DebugGUI();
+		ImGui::DragFloat3("offset", &p->offset.x, 0.1f);
+		int mortonNum = GetMortonNumber(p->offset + p->wtf->GetWorldPosition());	// 所属するモートン空間番号
 		ImGui::Text("MortonNumber : %d", mortonNum);
 	}
 #if DEMO

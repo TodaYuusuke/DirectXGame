@@ -39,7 +39,8 @@ void Player::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	//walkAnim.PL();
 
 	// 地形に接地部分を登録
-	terrainPoint = terrain->SetNewCollider({ 0.0f,-0.4f,0.0f }, &model.worldTF);
+	terrainPoint->Init(terrain, &model.worldTF);
+	terrainPoint->offset = { 0.0f,-0.4f,0.0f };
 }
 
 // 更新

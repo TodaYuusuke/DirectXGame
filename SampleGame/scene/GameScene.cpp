@@ -26,8 +26,6 @@ void GameScene::Initialize() {
 	field_.Init(&levelData, &mainCamera);
 
 	// プレイヤー初期化
-	player_.Init(&mainCamera, levelData.terrain.get());
-	car_.Init(&mainCamera, levelData.terrain.get());
 	drone_.Init(&mainCamera, levelData.terrain.get());
 	drone_.SetModelTF(startPos_, startRot_);
 

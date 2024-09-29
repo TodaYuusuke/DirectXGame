@@ -1,8 +1,6 @@
 #pragma once
 #include "../class/field/Field.h"
-#include "../class/player/Player.h"
 #include "../class/player/Drone.h"
-#include "../class/car/Car.h"
 #include "scene/IScene.h" 
 
 class GameScene final
@@ -26,10 +24,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// 地形データ
 	Field field_;
 
-	// プレイヤー
-	Player player_;
-	// カメラ
-	Car car_;
 	// ドローン
 	Drone drone_;
 

@@ -7,9 +7,35 @@
 #include "resources/model/RigidModel.h"
 #endif
 
+#include "utility/PtrManager.h"
+
 #include <map>
 
 namespace LWP::Object {
+	// 前方宣言
+	class Terrain;
+
+	// 地形の当たり判定
+	namespace TerrainCollider {
+		// ** 点 ** //
+		class Point {
+		public: // ** メンバ関数 ** //
+			// 初期化関数
+			void Init(Terrain* terrain, TransformQuat* tf);
+			// デストラクタ
+			~Point();
+
+		public: // ** パブリックなメンバ変数 ** //
+			Math::Vector3 offset;
+			TransformQuat* wtf;
+			bool preFrameHit = false;
+
+		private: // ** メンバ変数 ** //
+			// Terrainのポインタを保持（デストラクタ排除用）
+			Terrain* terrain_;
+		};
+	}
+
 	/// <summary>
 	/// 地形クラス
 	/// </summary>
@@ -27,15 +53,10 @@ namespace LWP::Object {
 		// 地形に使うモデルデータを読み込む
 		void LoadModel(std::string filePath, const TransformQuat& wtf);
 
-		// ** 当たり判定（点） ** //
-		struct Point {
-			Math::Vector3 offset;
-			TransformQuat* wtf;
-			float radius;	// 草を潰す半径
-			bool preFrameHit = false;
-		};
-		// 地形と検証する当たり判定を追加する関数
-		Point* SetNewCollider(Math::Vector3 offset, TransformQuat* wtf);
+		// 点の当たり判定をセット（※ユーザー呼び出し不要）
+		void SetPointCollider(TerrainCollider::Point* p) { points_.SetPointer(p); }
+		// 点の当たり判定を削除（※ユーザー呼び出し不要）
+		void DeletePointCollider(TerrainCollider::Point* p) { points_.DeletePointer(p); }
 
 		// デバッグ用GUI
 		void DebugGUI() override;
@@ -64,7 +85,7 @@ namespace LWP::Object {
 		float cellSize_;
 
 		// 地形との当たり判定（点）
-		std::vector<Point> points_;
+		Utility::PtrManager<TerrainCollider::Point*> points_;
 
 		// 草を生やす座標
 		struct Grass {
