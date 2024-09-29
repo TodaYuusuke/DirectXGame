@@ -56,4 +56,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		// 終了フラグ
 		bool end = false;
 	}endStaging_;
+
+	// 操作表示
+	LWP::Primitive::Sprite ui_;
 };
