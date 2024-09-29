@@ -7,6 +7,11 @@
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	LWP::System::StartUp(L"LWP サンプルゲーム");
+#if DEMO
+#else
+	// デバッグ情報の表示切替フラグ
+	LWP::Info::ChangeShowDebugGUI();
+#endif
 	LWP::System::Run(new Title);
 	return 0;
 }

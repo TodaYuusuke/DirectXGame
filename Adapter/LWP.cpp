@@ -126,6 +126,7 @@ void Engine::DebugGUI() {
 
 	ImGui::Begin("LWP");
 	if (ImGui::BeginTabBar("LWP")) {
+#if DEMO
 		primitiveManager_->DebugGUI();
 		objectManager_->DebugGUI();
 		colliderManager_->DebugGUI();
@@ -133,7 +134,9 @@ void Engine::DebugGUI() {
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
 		debugTimer_.DebugGUI();
-
+#else
+		debugTimer_.DebugGUI();
+#endif
 		ImGui::EndTabBar();
 	}
 	ImGui::End();

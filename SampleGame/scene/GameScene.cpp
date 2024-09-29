@@ -18,11 +18,6 @@ GameScene::GameScene(LWP::Math::Vector3 startPos, LWP::Math::Quaternion startRot
 
 // 初期化
 void GameScene::Initialize() {
-#if DEMO
-#else
-	Info::ChangeShowDebugGUI();
-#endif
-
 	// 操作UI
 	ui_.material.texture = LWP::Resource::LoadTexture("ui/gameScene.png");
 	ui_.worldTF.translation = { 14.0f, 422.0f };
