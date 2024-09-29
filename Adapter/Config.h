@@ -170,9 +170,9 @@ namespace LWP::Config {
 		enum MaskLayer : uint32_t {
 			Player = ColMask0,
 			Enemy = ColMask1,
-			Layer2 = ColMask2,
-			Layer3 = ColMask3,
-			Layer4 = ColMask4,
+			Bullet = ColMask2,
+			Ground = ColMask3,
+			Particle = ColMask4,
 			Layer5 = ColMask5,
 			Layer6 = ColMask6,
 			Layer7 = ColMask7,

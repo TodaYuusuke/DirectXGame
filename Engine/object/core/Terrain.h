@@ -26,7 +26,7 @@ namespace LWP::Object {
 			~Point();
 
 		public: // ** パブリックなメンバ変数 ** //
-			Math::Vector3 offset;
+			Math::Vector3 offset = { 0.0f,0.0f,0.0f };
 			TransformQuat* wtf;
 			bool preFrameHit = false;
 

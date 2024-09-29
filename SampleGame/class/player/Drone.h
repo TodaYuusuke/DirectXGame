@@ -35,6 +35,8 @@ private: // ** メンバ変数 ** //
 	LWP::Math::Vector3 velocity_ = { 0.0f,0.0f,0.0f };
 	// 弾
 	std::list<Bullet> bullets_;
+	// 弾が使うパーティクル
+	TerrainBulletParticle particle_;
 
 
 	// カメラ

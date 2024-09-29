@@ -1,5 +1,6 @@
 #pragma once
 #include <Adapter.h>
+#include "../particle/TerrainBulletParticle.h"
 
 class Bullet final {
 public: // ** メンバ関数 ** //
@@ -7,7 +8,7 @@ public: // ** メンバ関数 ** //
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain);
+	Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainBulletParticle* particle);
 
 	/// <summary>
 	/// 更新処理
@@ -20,6 +21,8 @@ public: // ** メンバ関数 ** //
 
 
 private: // ** メンバ変数 ** //
+	// ポインタを保持
+	TerrainBulletParticle* particle_;
 
 	// モデル
 	LWP::Resource::RigidModel model_;

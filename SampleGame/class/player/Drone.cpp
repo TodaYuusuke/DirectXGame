@@ -5,6 +5,7 @@ using namespace LWP::Math;
 using namespace LWP::Input;
 using namespace LWP::Primitive;
 using namespace LWP::Object;
+using namespace LWP::Utility;
 
 // 初期化
 void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
@@ -26,6 +27,9 @@ void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	pointLight_.radius = 13.0f;
 	pointLight_.intensity = 0.7f;
 	pointLight_.isActive = false;
+
+	particle_.model.LoadCube();
+	particle_.terrain = terrain;
 
 	// カメラのポインタをセット
 	cameraPtr_ = ptr;
@@ -167,10 +171,19 @@ void Drone::Shot() {
 
 	// SpaceかRTを押したら射撃
 	if (Keyboard::GetTrigger(DIK_SPACE) || Controller::GetTrigger(XBOX_RT)) {
-		bullets_.emplace_back(
-			model_.worldTF.GetWorldPosition(),
-			Vector3::UnitZ() * model_.worldTF.rotation,
-			terrainPtr_
-		);
+		// 弾を7発生成
+		for (int i = 0; i < 7; i++) {
+			// 方向ベクトルを計算
+			Vector3 dir = Vector3::UnitZ() * (
+				Quaternion::CreateFromAxisAngle(Vector3::UnitY(), float(GenerateRandamNum<int>(-20, 20)) / 1000.0f) *
+				model_.worldTF.rotation *
+				Quaternion::CreateFromAxisAngle(Vector3::UnitX(), float(GenerateRandamNum<int>(-20, 20)) / 1000.0f));
+			bullets_.emplace_back(
+				model_.worldTF.GetWorldPosition(),
+				dir,
+				terrainPtr_,
+				&particle_
+			);
+		}
 	}
 }

@@ -40,11 +40,6 @@ void Terrain::Update(Base::RendererManager* manager) {
 
 	// 当たり判定を検証
 	for (Point* point : points_.list) {
-		// wtfがnullなら処理しない
-		if (!point->wtf) {
-			continue;
-		}
-
 		// 座標を求める
 		Vector3 pos = point->offset + point->wtf->GetWorldPosition();
 		point->preFrameHit = false;

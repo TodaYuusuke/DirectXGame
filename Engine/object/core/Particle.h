@@ -24,6 +24,7 @@ namespace LWP::Object {
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
 			LWP::Object::Collider::Collider* collider = nullptr;
 			int elapsedFrame = 0;
+			int idNumber;
 
 			// デフォルトコンストラクタ
 			Data() = delete;
@@ -50,6 +51,8 @@ namespace LWP::Object {
 
 		// 基準となるモデルクラス
 		T model;
+		// 識別番号
+		int IDNumber = 0;	// 21億個生成したらバグるけどいったん放置
 
 	public: // ** メンバ関数 ** //
 		// デストラクタ
@@ -82,17 +85,13 @@ namespace LWP::Object {
 			for (int i = 0; i < value; i++) {
 				data_.emplace_back(model);
 				data_.back().m.isActive = true;
+				data_.back().idNumber = IDNumber++;	// 識別番号を付与
 				Generate(data_.back());
 			}
 		}
 		void Add(int value, LWP::Math::Vector3 position) {
 			model.worldTF.translation = position;
-
-			for (int i = 0; i < value; i++) {
-				data_.emplace_back(model);
-				data_.back().m.isActive = true;
-				Generate(data_.back());
-			}
+			Add(value);
 		}
 		// デバッグ用GUI
 		void DebugGUI() override final {

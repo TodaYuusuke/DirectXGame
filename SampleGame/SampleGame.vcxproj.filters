@@ -86,5 +86,8 @@
     <ClInclude Include="class\player\Bullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="class\particle\TerrainBulletParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
