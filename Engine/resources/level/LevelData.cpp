@@ -83,7 +83,10 @@ void LevelData::HotReload() {
 		if (objName == "Terrain") {
 			terrain = std::make_unique<Object::Terrain>();
 			terrain->name = "Terrain";
-			terrain->LoadModel(object["file_name"].get<std::string>(), LoadWorldTF(object["transform"]));
+			// トランスフォームのパラメータ読み込み
+			Object::TransformQuat wtf = LoadWorldTF(object["transform"]);
+			wtf.scale *= scale;	// 全体の倍率をかける
+			terrain->LoadModel(object["file_name"].get<std::string>(), wtf);
 		}
 		// MESH
 		else if (type.compare("MESH") == 0) {
@@ -98,6 +101,8 @@ void LevelData::HotReload() {
 
 			// トランスフォームのパラメータ読み込み
 			Object::TransformQuat wtf = LoadWorldTF(object["transform"]);
+			wtf.translation *= scale;	// 全体の倍率をかける
+			wtf.scale *= scale;	// 全体の倍率をかける
 			staticModels[objName].ApplyWorldTransform(wtf);
 
 			// コライダーがあれば生成
@@ -122,6 +127,8 @@ void LevelData::HotReload() {
 		}
 	}
 }
+
+void LevelData::SetScaleMultiply(float s) { scale = s; }
 
 void LevelData::DebugGUI() {
 	if (ImGui::BeginTabItem("LevelData")) {

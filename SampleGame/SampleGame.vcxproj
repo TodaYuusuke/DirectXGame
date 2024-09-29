@@ -222,12 +222,12 @@
     <ClCompile Include="class\player\Drone.cpp" />
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene\NullScene.cpp" />
     <ClCompile Include="scene\Test\AnimationTest.cpp" />
     <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\SkinningTest.cpp" />
-    <ClCompile Include="scene\Test\Test.cpp" />
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -236,12 +236,12 @@
     <ClInclude Include="class\particle\DamageParticle.h" />
     <ClInclude Include="class\player\Drone.h" />
     <ClInclude Include="class\player\Player.h" />
+    <ClInclude Include="scene\NullScene.h" />
     <ClInclude Include="scene\Test\AnimationTest.h" />
     <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\SkinningTest.h" />
-    <ClInclude Include="scene\Test\Test.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
     <ClInclude Include="scene\Title.h" />
   </ItemGroup>

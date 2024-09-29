@@ -10,8 +10,6 @@ using namespace LWP::Object;
 void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	// モデル用意
 	model_.LoadShortPath("Drone/Drone.gltf");
-	//model_.worldTF.translation;
-	model_.worldTF.scale = { 0.4f,0.4f,0.4f };
 	model_.SetAllMaterialLighting(true);
 	model_.isActive = false;
 	
@@ -63,6 +61,11 @@ void Drone::Update() {
 #endif
 }
 
+void Drone::SetModelTF(LWP::Math::Vector3 pos, LWP::Math::Quaternion rotation) {
+	model_.worldTF.translation = pos;
+	model_.worldTF.rotation = rotation;
+}
+
 void Drone::Move() {
 	// 移動する向き
 	Vector3 dir = { 0.0f,0.0f,0.0f };
@@ -85,7 +88,7 @@ void Drone::Move() {
 	dir.x += Pad::GetLStick().x;
 	dir.z += Pad::GetLStick().y;
 
-	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(cameraPtr_->transform.rotation)).Normalize();
+	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(model_.worldTF.rotation)).Normalize();
 	dir = Vector3{ dir.x, 0.0f, dir.z };
 
 	// 上下移動
@@ -134,6 +137,6 @@ void Drone::CameraMove() {
 	dir = dir.Normalize();
 	dir *= kCameraSpeed_;
 
-	cameraPtr_->transform.rotation = 
-		Quaternion::CreateFromAxisAngle(Vector3::UnitY(), dir.y) * cameraPtr_->transform.rotation * Quaternion::CreateFromAxisAngle(Vector3::UnitX(), dir.x);
+	model_.worldTF.rotation =
+		Quaternion::CreateFromAxisAngle(Vector3::UnitY(), dir.y) * model_.worldTF.rotation * Quaternion::CreateFromAxisAngle(Vector3::UnitX(), dir.x);
 }

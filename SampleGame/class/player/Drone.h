@@ -9,6 +9,9 @@ public:
 	// 更新
 	void Update();
 
+	// モデルの状態をセット
+	void SetModelTF(LWP::Math::Vector3 pos, LWP::Math::Quaternion rotation);
+
 private: // ** メンバ定数 ** //
 
 	// 速度

@@ -61,6 +61,10 @@ namespace LWP::Resource {
 		/// シーンのファイルを再読み込み
 		/// </summary>
 		void HotReload();
+		/// <summary>
+		/// 全体のスケールにかける倍率（読み込み時に適応）
+		/// </summary>
+		void SetScaleMultiply(float s);
 
 
 		/// <summary>
@@ -82,6 +86,8 @@ namespace LWP::Resource {
 
 		// カメラのポインタ
 		LWP::Object::Camera* cameraPtr = nullptr;
+		// 全体のスケール倍率
+		float scale = 1.0f;
 
 		// 短縮用パス
 		const static std::string kDirectoryPath;

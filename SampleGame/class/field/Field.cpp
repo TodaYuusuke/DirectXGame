@@ -9,6 +9,7 @@ using namespace LWP::Object;
 // 初期化
 void Field::Init(LWP::Resource::LevelData* level, LWP::Object::Camera* camera) {
 	// レベルデータ読み込み
+	level->SetScaleMultiply(10.0f);	// 地形は10倍サイズに
 	level->LoadShortPath("SampleGameScene.json");
 
 	// bloomをON

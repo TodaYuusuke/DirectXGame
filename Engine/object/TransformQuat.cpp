@@ -22,6 +22,7 @@ TransformQuat::TransformQuat(Math::Vector3 t) {
 	translation = t;
 }
 
+
 void TransformQuat::Init() {
 	translation = { 0.0f, 0.0f, 0.0f };
 	rotation.Init();
