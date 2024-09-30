@@ -231,7 +231,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h" />
-    <ClInclude Include="class\particle\DamageParticle.h" />
     <ClInclude Include="class\particle\TerrainBulletParticle.h" />
     <ClInclude Include="class\player\Bullet.h" />
     <ClInclude Include="class\player\Drone.h" />

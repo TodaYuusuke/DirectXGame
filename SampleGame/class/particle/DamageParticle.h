@@ -35,7 +35,7 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		if (LWP::Info::GetDeltaTime() == 0.0f) { return false; }
 
 		// 経過フレーム追加
-		data.elapsedFrame++;
+		data.elapsedTime += LWP::Info::GetDeltaTimeF();
 
 		data.m.worldTF.translation += data.velocity;    // 速度ベクトルを加算
 		data.m.worldTF.translation.y += -9.8f / 80.0f;    // 重力を加算
@@ -58,6 +58,6 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 			data.velocity *= 0.9f;
 		}
 
-		return data.elapsedFrame > 50 ? true : false;
+		return data.elapsedTime > 0.9f ? true : false;
 	};
 };

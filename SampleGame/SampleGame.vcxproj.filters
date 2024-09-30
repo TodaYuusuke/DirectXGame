@@ -53,9 +53,6 @@
     <ClInclude Include="scene\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="class\particle\DamageParticle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="scene\Test\ColliderTest.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

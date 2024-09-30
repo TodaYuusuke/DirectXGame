@@ -22,8 +22,8 @@ namespace LWP::Object {
 		struct Data {
 			T m;
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
-			LWP::Object::Collider::Collider* collider = nullptr;
-			int elapsedFrame = 0;
+			LWP::Object::Collider::Collider* collider = nullptr;	// コライダーを設定する場合はインスタンスをここに
+			float elapsedTime = 0.0f;
 			int idNumber;
 
 			// デフォルトコンストラクタ
@@ -43,7 +43,7 @@ namespace LWP::Object {
 					m = other.m;
 					velocity = other.velocity;
 					collider = other.collider;
-					elapsedFrame = other.elapsedFrame;
+					elapsedTime = other.elapsedTime;
 				}
 				return *this;
 			}

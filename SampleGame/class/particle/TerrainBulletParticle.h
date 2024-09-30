@@ -58,12 +58,12 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 			data.velocity.y += -9.8f / 600.0f;
 		}
 		// 速度がなくなった時の処理
-		else if(data.elapsedFrame <= 60) {
+		else if(data.elapsedTime <= 1.0f) {
 			data.velocity = { 0.0f,0.0f,0.0f };
 
 			// 経過フレーム加算
-			data.elapsedFrame++;
-			data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(float(data.elapsedFrame) / 60.0f));
+			data.elapsedTime += LWP::Info::GetDeltaTimeF();
+			data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(data.elapsedTime));
 		}
 		// 1秒かけて消滅アニメーションを完了したとき
 		else {
