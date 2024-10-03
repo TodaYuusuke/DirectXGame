@@ -21,7 +21,7 @@ void ColliderTest::Initialize() {
 	m.Create(mesh);
 
 	pointCol.isMove = true;
-	pointCol.stayLambda = [&](Collider::Collider* c) {
+	pointCol.stayLambda = [&](Collision* c) {
 		ImGui::Begin("Test");
 		ImGui::End();
 	};

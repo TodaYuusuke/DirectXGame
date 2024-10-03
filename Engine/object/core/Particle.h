@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "resources/model/RigidModel.h"
-#include "../collider/Collider.h"
+#include "collision/Collision.h"
 
 #include "../Externals/imgui/imgui.h"
 #include "../Externals/imgui/imgui_impl_dx12.h"
@@ -22,7 +22,7 @@ namespace LWP::Object {
 		struct Data {
 			T m;
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
-			LWP::Object::Collider::Collider* collider = nullptr;	// コライダーを設定する場合はインスタンスをここに
+			LWP::Object::Collision* collider = nullptr;	// コライダーを設定する場合はインスタンスをここに
 			float elapsedTime = 0.0f;
 			int idNumber;
 

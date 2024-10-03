@@ -1,4 +1,4 @@
-#include "Collider.h"
+#include "Collision.h"
 #include "base/ImGuiManager.h"
 #include "utility/MyUtility.h"
 #include "component/System.h"
@@ -7,19 +7,20 @@
 
 using namespace LWP;
 using namespace LWP::Math;
+using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 
-Collider::Collider() {
+Collision::Collision() {
 	// デフォルトの形状にfollowをセット
 	GetBasePtr(broad)->SetFollowPtr(&worldTF);
-	System::engine->colliderManager_->SetPointer(this);
+	System::engine->collisionManager_->SetPointer(this);
 }
 
-Collider::~Collider() {
-	System::engine->colliderManager_->DeletePointer(this);
+Collision::~Collision() {
+	System::engine->collisionManager_->DeletePointer(this);
 }
 
-void Collider::Update() {
+void Collision::Update() {
 	// ブロードフェーズ更新
 	GetBasePtr(broad)->Update();
 	// ナローフェーズ更新
@@ -28,19 +29,19 @@ void Collider::Update() {
 	}
 }
 
-void Collider::SetFollowTarget(Object::TransformQuat* ptr) {
+void Collision::SetFollowTarget(Object::TransformQuat* ptr) {
 	followTF = ptr;	// ポインタを保持
 	worldTF.Parent(ptr);
 }
 
-void Collider::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
+void Collision::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
 	// 追従対象がいるなら対象に適応
 	if (followTF) { followTF->translation += fixVector;  }
 	// いないなら自分に適応
 	else { worldTF.translation += fixVector; }
 }
 
-void Collider::CheckCollision(Collider* c) {
+void Collision::CheckCollision(Collision* c) {
 	// 埋まっている場合の修正ベクトル
 	Vector3 fixVec = { 0.0f,0.0f,0.0f };
 
@@ -84,7 +85,7 @@ void Collider::CheckCollision(Collider* c) {
 	// どちらもfalseなら何もしない
 }
 
-void Collider::Hit(Collider* c) {
+void Collision::Hit(Collision* c) {
 	int targetIndex = c->GetSerial();
 
 	if(serialMap[targetIndex] <= 0)	{
@@ -97,7 +98,7 @@ void Collider::Hit(Collider* c) {
 	// ヒットフレーム数+1
 	serialMap[targetIndex]++;
 }
-void Collider::NoHit(Collider* c) {
+void Collision::NoHit(Collision* c) {
 	int targetIndex = c->GetSerial();
 
 	// 1以上なら前フレーム以前にヒットしているのでExitを呼び出す
@@ -109,7 +110,7 @@ void Collider::NoHit(Collider* c) {
 	serialMap[targetIndex] = 0;
 }
 
-void Collider::DebugGUI() {
+void Collision::DebugGUI() {
 	// ワールドトランスフォーム
 	worldTF.DebugGUI();
 	
@@ -145,31 +146,31 @@ void Collider::DebugGUI() {
 	ImGui::Text(std::string("serialNumber : " + std::to_string(serialNum)).c_str());
 }
 
-bool Collider::CheckBroadCollision(ShapeVariant& c, Math::Vector3* fixVec) {
+bool Collision::CheckBroadCollision(ShapeVariant& c, Math::Vector3* fixVec) {
 	return std::visit([fixVec](auto& f, auto& t) {
-		ICollisionShape* a = &f;
+		ICollider* a = &f;
 		return a->CheckCollision(t, fixVec);
 	}, broad, c);
 }
 
-ICollisionShape* Collider::GetBasePtr(ShapeVariant& variant) {
-	return std::visit([](auto& shape) -> ICollisionShape* {
+ICollider* Collision::GetBasePtr(ShapeVariant& variant) {
+	return std::visit([](auto& shape) -> ICollider* {
 		return &shape;
 	}, variant);
 }
-std::string Collider::GetCurrentTypeName(const ShapeVariant& variant) {
+std::string Collision::GetCurrentTypeName(const ShapeVariant& variant) {
 	return std::visit([](const auto& shape) {
 		return std::string(typeid(shape).name());
 	}, variant);
 }
 
-bool Collider::CheckNarrowsCollision(Collider* c, Vector3* fixVec) {
+bool Collision::CheckNarrowsCollision(Collision* c, Vector3* fixVec) {
 	// 相手にナローがない場合
 	if (c->narrows.empty()) {
 		// ナロー一つ一つと相手のブロードを比較
 		for (ShapeVariant& narrow : narrows) {
 			if (std::visit([fixVec](auto& f, auto& t) {
-				ICollisionShape* a = &f;
+				ICollider* a = &f;
 				return a->CheckCollision(t, fixVec);
 				}, narrow, c->broad)) {
 				return true;	// ヒットしていたのでループを終了
@@ -182,7 +183,7 @@ bool Collider::CheckNarrowsCollision(Collider* c, Vector3* fixVec) {
 		for (ShapeVariant& f : narrows) {
 			for (ShapeVariant& t : c->narrows) {
 				if (std::visit([fixVec](auto& f, auto& t) {
-					ICollisionShape* a = &f;
+					ICollider* a = &f;
 					return a->CheckCollision(t, fixVec);
 					}, f, t)) {
 					return true;	// ヒットしていたのでループを終了

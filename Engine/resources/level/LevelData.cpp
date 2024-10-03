@@ -8,6 +8,7 @@
 using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Math;
+using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 using namespace LWP::Resource;
 using namespace LWP::Utility;
@@ -15,7 +16,7 @@ using namespace LWP::Utility;
 LevelData::~LevelData() {
 	rigidModels.clear();
 	skinModels.clear();
-	colliders.clear();
+	collisions.clear();
 }
 
 void LevelData::Load(const std::string& fileName) {
@@ -39,7 +40,7 @@ void LevelData::LoadFullPath(const std::string& fp) {
 void LevelData::HotReload() {
 	rigidModels.clear();
 	skinModels.clear();
-	colliders.clear();
+	collisions.clear();
 
 	// ファイルストリーム
 	std::ifstream file;
@@ -109,7 +110,7 @@ void LevelData::HotReload() {
 			if (object.contains("collider")) {
 				nlohmann::json& collider = object["collider"];
 				if (collider["type"] == "AABB") {
-					AABB& aabb = colliders[objName].SetBroadShape(AABB());
+					AABB& aabb = collisions[objName].SetBroadShape(AABB());
 					aabb.min = {
 						static_cast<float>(collider["min"][0]),
 						static_cast<float>(collider["min"][2]),
@@ -120,7 +121,7 @@ void LevelData::HotReload() {
 						static_cast<float>(collider["max"][2]),
 						static_cast<float>(collider["max"][1]),
 					};
-					colliders[objName].worldTF = wtf;
+					collisions[objName].worldTF = wtf;
 				}
 			}
 
@@ -245,11 +246,11 @@ void LevelData::StaticDebugGUI() {
 }
 void LevelData::ColliderDebugGUI() {
 	// 読み込み済みのモデル一覧
-	if (!colliders.empty()) {
+	if (!collisions.empty()) {
 		std::vector<const char*> itemText;
 		float maxSize = 0;	// Textの中で一番長いサイズを保持する
 		// 一覧のパス取得
-		for (const auto& m : colliders) {
+		for (const auto& m : collisions) {
 			itemText.push_back(m.first.c_str());
 			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
 		}
@@ -258,7 +259,7 @@ void LevelData::ColliderDebugGUI() {
 		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
 
 		// 選択された番号のDebugGUIを呼び出す
-		(*Utility::GetIteratorAtIndex<std::string, Collider>(colliders, currentItem)).second.DebugGUI();
+		(*Utility::GetIteratorAtIndex<std::string, Collision>(collisions, currentItem)).second.DebugGUI();
 	}
 }
 

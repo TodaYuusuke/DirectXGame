@@ -1,6 +1,6 @@
 #include "Sphere.h"
 #include "base/ImGuiManager.h"
-#include "object/collider/shape/cSphere.h"
+#include "object/core/collision/collider/child/cSphere.h"
 
 using namespace LWP::Primitive;
 using namespace LWP::Resource;

@@ -11,7 +11,7 @@
 #include "../Engine/input/InputManager.h"
 
 #include "../Engine/object/ObjectManager.h"
-#include "../Engine/object/collider/ColliderManager.h"
+#include "../Engine/object/core/collision/CollisionManager.h"
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
@@ -102,7 +102,7 @@ namespace LWP::System {
 
 		// オブジェクト管理
 		std::unique_ptr<Object::Manager> objectManager_;
-		std::unique_ptr<Object::Collider::Manager> colliderManager_;
+		std::unique_ptr<Object::CollisionManager> collisionManager_;
 		// 描画管理
 		std::unique_ptr<Primitive::Manager> primitiveManager_;
 		// リソース管理

@@ -32,7 +32,7 @@ void Mesh::Create(const LWP::Resource::StaticModel& model) {
 }
 
 void Mesh::DebugGUI() {
-	ICollisionShape::DebugGUI();
+	ICollider::DebugGUI();
 }
 
 void Mesh::Hit() {}

@@ -77,7 +77,7 @@ void Sphere::Create(LWP::Resource::RigidModel* model) {
 void Sphere::DebugGUI() {
 	ImGui::DragFloat3("position", &position.x, 0.01f);
 	ImGui::DragFloat("radius", &radius, 0.01f);
-	ICollisionShape::DebugGUI();
+	ICollider::DebugGUI();
 }
 
 void Sphere::Hit() {

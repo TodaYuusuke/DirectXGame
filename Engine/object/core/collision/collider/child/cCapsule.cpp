@@ -59,7 +59,7 @@ void Capsule::DebugGUI() {
 	ImGui::DragFloat3("start", &start.x, 0.01f);
 	ImGui::DragFloat3("end", &end.x, 0.01f);
 	ImGui::DragFloat("radius", &radius, 0.01f);
-	ICollisionShape::DebugGUI();
+	ICollider::DebugGUI();
 }
 
 void Capsule::Hit() {

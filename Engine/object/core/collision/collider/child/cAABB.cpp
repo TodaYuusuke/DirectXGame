@@ -93,7 +93,7 @@ void AABB::Create(const LWP::Resource::RigidModel& model) {
 void AABB::DebugGUI() {
 	ImGui::DragFloat3("min", &min.x, 0.01f);
 	ImGui::DragFloat3("max", &max.x, 0.01f);
-	ICollisionShape::DebugGUI();
+	ICollider::DebugGUI();
 }
 
 void AABB::Hit() {

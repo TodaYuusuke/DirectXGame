@@ -6,7 +6,7 @@
 
 #include "object/core/Camera.h"
 
-#include "object/collider/Collider.h"
+#include "object/core/collision/Collision.h"
 
 #include "../Externals/nlohmann/json.hpp"
 
@@ -25,7 +25,7 @@ namespace LWP::Resource {
 		// スタティックモデル
 		std::map<std::string, StaticModel> staticModels;
 		// 当たり判定
-		std::map<std::string, Object::Collider::Collider> colliders;
+		std::map<std::string, Object::Collision> collisions;
 
 		// 地形
 		std::unique_ptr<Object::Terrain> terrain;

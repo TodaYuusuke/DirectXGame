@@ -51,7 +51,7 @@ void Point::Update() {
 
 void Point::DebugGUI() {
 	ImGui::DragFloat3("position", &position.x, 0.01f);
-	ICollisionShape::DebugGUI();
+	ICollider::DebugGUI();
 }
 
 void Point::Hit() {

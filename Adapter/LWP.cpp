@@ -38,7 +38,7 @@ void Engine::Run(IScene* firstScene) {
 		resourceManager_->Update();	// リソース更新（アニメーションの更新処理）
 		primitiveManager_->Update();
 
-		colliderManager_->Update();	// 当たり判定検証
+		collisionManager_->Update();	// 当たり判定検証
 		// Primitiveの描画処理
 		primitiveManager_->Draw(directXCommon_->GetRendererManager());
 
@@ -56,7 +56,7 @@ void Engine::InitializeForScene() {
 	// Primitive
 	primitiveManager_->Initialize();
 	// Primitive
-	colliderManager_->Initialize();
+	collisionManager_->Initialize();
 	// Resource
 	//resourceManager_->Initialize();
 }
@@ -73,7 +73,7 @@ void Engine::Initialize(std::wstring title, int width, int height) {
 	// Object
 	objectManager_ = std::make_unique<Object::Manager>();
 	// Collider
-	colliderManager_ = std::make_unique<Object::Collider::Manager>();
+	collisionManager_ = std::make_unique<Object::CollisionManager>();
 	// Primitive
 	primitiveManager_ = std::make_unique<Primitive::Manager>();
 	// Resource
@@ -90,7 +90,7 @@ void Engine::Initialize(std::wstring title, int width, int height) {
 	// Object
 	objectManager_->Initialize();
 	// Collider
-	colliderManager_->Initialize();
+	collisionManager_->Initialize();
 	// Primitive
 	primitiveManager_->Initialize();
 	// Resource
@@ -129,7 +129,7 @@ void Engine::DebugGUI() {
 #if DEMO
 		primitiveManager_->DebugGUI();
 		objectManager_->DebugGUI();
-		colliderManager_->DebugGUI();
+		collisionManager_->DebugGUI();
 		resourceManager_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();

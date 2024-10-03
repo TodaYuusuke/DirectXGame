@@ -16,6 +16,6 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Resource::StaticModel mesh;
-	LWP::Object::Collider::Collider meshCol;
-	LWP::Object::Collider::Collider pointCol;
+	LWP::Object::Collision meshCol;
+	LWP::Object::Collision pointCol;
 };

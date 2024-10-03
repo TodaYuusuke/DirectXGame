@@ -12,7 +12,7 @@ using namespace LWP::Object::Collider;
 using namespace LWP::Math;
 using namespace LWP;
 
-void CallHit(ICollisionShape* c1, ICollisionShape* c2, const bool& flag) {
+void CallHit(ICollider* c1, ICollider* c2, const bool& flag) {
 #if DEMO
 	if (flag) {
 		c1->Hit();

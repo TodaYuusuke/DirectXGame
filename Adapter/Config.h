@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <object/collider/Mask.h>
+#include "object/core/collision/Collision.h"
 
 /// --- 設定用の定数 --- ///
 
@@ -168,6 +168,7 @@ namespace LWP::Config {
 
 		// 当たり判定マスク用の列挙子定義
 		enum MaskLayer : uint32_t {
+			None= ColMaskNone,
 			Player = ColMask0,
 			Enemy = ColMask1,
 			Bullet = ColMask2,

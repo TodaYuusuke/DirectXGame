@@ -1,55 +1,51 @@
 #pragma once
-#include "ICollisionShape.h"
+#include "../ICollider.h"
 
 #if DEMO
-#include "primitive/3d/Sphere.h"
+#include "primitive/3d/Capsule.h"
 #endif
-
-// 前方宣言
-namespace LWP::Resource {
-	class RigidModel;
-}
 
 namespace LWP::Object::Collider {
 	/// <summary>
-	/// 当たり判定用のSphereクラス
+	/// 当たり判定用のCapsuleクラス
 	/// </summary>
-	class Sphere
-		: public ICollisionShape {
+	class Capsule
+		: public ICollider {
 	public: // ** パブリックなメンバ変数 ** //
-		// 中心座標
-		LWP::Math::Vector3 position;
+		// 始点
+		LWP::Math::Vector3 start = { 0.0f,0.0f,0.0f };
+		// 終点
+		LWP::Math::Vector3 end = { 0.0f,1.0f,0.0f };
 		// 半径
 		float radius = 1.0f;
 
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
-		Sphere();
-		Sphere(const LWP::Math::Vector3& pos);
-		Sphere(const float& rad);
-		Sphere(const LWP::Math::Vector3& pos, const float& rad);
+		Capsule();
+		Capsule(const LWP::Math::Vector3& start);
+		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
+		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
 		// コピーコンストラクタ
-		Sphere(const Sphere& other);
+		Capsule(const Capsule& other);
 
-		// 更新時に形状を追従するための処理
+		// 固有の更新処理
 		void Update() override;
 
 		// 座標を指定して生成
-		void Create(const LWP::Math::Vector3& pos);
-		void Create(const LWP::Math::Vector3& pos, const float& rad);
-		// 形状から包み込む最小のAABBを生成する関数
-		void Create(LWP::Resource::RigidModel* model);
-
+		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
+		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
+		
 		// 形状を返す
-		Shape GetShape() override { return Shape::Sphere; }
+		Shape GetShape() override { return Shape::Capsule; }
 		// ImGuiの派生クラス
 		void DebugGUI() override;
+
 
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Sphere sphereModel;
+		LWP::Primitive::Capsule capsuleModel;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //
@@ -66,13 +62,15 @@ namespace LWP::Object::Collider {
 
 		// 当たり判定計算に適したデータ構造体
 		struct Data {
-			// 中心座標
-			LWP::Math::Vector3 position;
+			// 始点
+			LWP::Math::Vector3 start;
+			// 終点
+			LWP::Math::Vector3 end;
 			// 半径
 			float radius;
 
 			// コンストラクタ
-			Data(Sphere& sphere);
+			Data(Capsule& cap);
 		};
 	};
 };

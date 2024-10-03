@@ -25,7 +25,7 @@ namespace LWP::Object::Collider {
 	/// <summary>
 	/// 当たり判定の形状用の基底クラス
 	/// </summary>
-	class ICollisionShape {
+	class ICollider {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// アクティブ切り替え
@@ -46,11 +46,11 @@ namespace LWP::Object::Collider {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		ICollisionShape() {};
+		ICollider() {};
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		virtual ~ICollisionShape() {};
+		virtual ~ICollider() {};
 
 		/// <summary>
 		/// 更新処理
@@ -91,4 +91,4 @@ namespace LWP::Object::Collider {
 /// ICollisionShapeを継承したクラスのみを選択できるテンプレート
 /// </summary>
 template<class ColliderT>
-concept IsICollider = std::is_base_of<LWP::Object::Collider::ICollisionShape, ColliderT>::value;
+concept IsICollider = std::is_base_of<LWP::Object::Collider::ICollider, ColliderT>::value;

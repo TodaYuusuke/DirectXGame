@@ -1,5 +1,5 @@
 #pragma once
-#include "ICollisionShape.h"
+#include "../ICollider.h"
 
 #if DEMO
 #include "primitive/3d/Sphere.h"
@@ -12,33 +12,44 @@ namespace LWP::Resource {
 
 namespace LWP::Object::Collider {
 	/// <summary>
-	/// 当たり判定用のPointクラス
+	/// 当たり判定用のSphereクラス
 	/// </summary>
-	class Point final
-		: public ICollisionShape {
+	class Sphere
+		: public ICollider {
 	public: // ** パブリックなメンバ変数 ** //
-		// 座標
-		Math::Vector3 position;
+		// 中心座標
+		LWP::Math::Vector3 position;
+		// 半径
+		float radius = 1.0f;
+
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
-		Point();
-		Point(const LWP::Math::Vector3& pos);
+		Sphere();
+		Sphere(const LWP::Math::Vector3& pos);
+		Sphere(const float& rad);
+		Sphere(const LWP::Math::Vector3& pos, const float& rad);
 		// コピーコンストラクタ
-		Point(const Point& other);
+		Sphere(const Sphere& other);
 
-		// 固有の更新処理
+		// 更新時に形状を追従するための処理
 		void Update() override;
 
+		// 座標を指定して生成
+		void Create(const LWP::Math::Vector3& pos);
+		void Create(const LWP::Math::Vector3& pos, const float& rad);
+		// 形状から包み込む最小のAABBを生成する関数
+		void Create(LWP::Resource::RigidModel* model);
+
 		// 形状を返す
-		Shape GetShape() override { return Shape::Point; }
+		Shape GetShape() override { return Shape::Sphere; }
 		// ImGuiの派生クラス
 		void DebugGUI() override;
 
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Sphere sphere;
+		LWP::Primitive::Sphere sphereModel;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //
@@ -55,13 +66,13 @@ namespace LWP::Object::Collider {
 
 		// 当たり判定計算に適したデータ構造体
 		struct Data {
-			// 座標
+			// 中心座標
 			LWP::Math::Vector3 position;
+			// 半径
+			float radius;
 
 			// コンストラクタ
-			Data(Point& point);
+			Data(Sphere& sphere);
 		};
 	};
-
-
 };

@@ -27,7 +27,7 @@ private: // ** メンバ変数 ** //
 	// モデル
 	LWP::Resource::RigidModel model_;
 	// コライダー
-	LWP::Object::Collider::Collider collider_;
+	LWP::Object::Collision collision_;
 	LWP::Object::Collider::Capsule& capsule_;
 
 	// 地形とのコライダーポインタ

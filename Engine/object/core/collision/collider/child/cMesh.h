@@ -1,5 +1,6 @@
 #pragma once
-#include "ICollisionShape.h"
+#include "../ICollider.h"
+
 #include <list>
 #include <vector>
 
@@ -20,7 +21,7 @@ namespace LWP::Object::Collider {
 	/// 当たり判定用のMeshクラス
 	/// </summary>
 	class Mesh final
-		: public ICollisionShape {
+		: public ICollider {
 	public: // ** パブリックなメンバ変数 ** //
 		// 三角形
 		struct TriangleData {

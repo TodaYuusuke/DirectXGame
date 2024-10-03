@@ -145,7 +145,7 @@
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\collider\ColliderManager.cpp">
+    <ClCompile Include="Engine\object\core\collision\CollisionManager.cpp">
       <Filter>Engine\object\collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\motion\Motion.cpp">
@@ -252,15 +252,15 @@
     <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\resources\model\StaticModel.cpp" />
     <ClCompile Include="Engine\primitive\model\Vertex.cpp" />
-    <ClCompile Include="Engine\object\collider\Collider.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\cAABB.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\ICollisionShape.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\cSphere.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\cCapsule.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\CheckCollisions.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\cPoint.cpp" />
+    <ClCompile Include="Engine\object\core\collision\Collision.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\cAABB.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\cCapsule.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\CheckCollisions.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\cPoint.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp" />
-    <ClCompile Include="Engine\object\collider\shape\cMesh.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\cMesh.cpp" />
     <ClCompile Include="Engine\object\core\Terrain.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="Engine\resources\model\EMapModel.cpp" />
@@ -447,10 +447,7 @@
     <ClInclude Include="Engine\utility\UI.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\collider\ColliderManager.h">
-      <Filter>Engine\object\collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\collider\Mask.h">
+    <ClInclude Include="Engine\object\core\collision\CollisionManager.h">
       <Filter>Engine\object\collider</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Common.h">
@@ -611,14 +608,14 @@
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\resources\model\StaticModel.h" />
     <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />
-    <ClInclude Include="Engine\object\collider\Collider.h" />
-    <ClInclude Include="Engine\object\collider\shape\ICollisionShape.h" />
-    <ClInclude Include="Engine\object\collider\shape\cAABB.h" />
-    <ClInclude Include="Engine\object\collider\shape\cSphere.h" />
-    <ClInclude Include="Engine\object\collider\shape\cCapsule.h" />
-    <ClInclude Include="Engine\object\collider\shape\cPoint.h" />
+    <ClInclude Include="Engine\object\core\collision\Collision.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\ICollider.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child\cAABB.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child\cCapsule.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child\cPoint.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h" />
-    <ClInclude Include="Engine\object\collider\shape\cMesh.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child\cMesh.h" />
     <ClInclude Include="Engine\object\core\Terrain.h" />
     <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h" />
     <ClInclude Include="Engine\resources\model\EMapModel.h" />
