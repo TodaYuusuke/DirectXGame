@@ -26,8 +26,6 @@ private:
 	
 	// 速度
 	LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
-	// 地形とのコライダーポインタ
-	LWP::Object::TerrainCollider::Point terrainPoint;
 
 	void Move();
 

@@ -9,7 +9,7 @@ public: // ** メンバ変数 ** //
 	// 地形のポインタ
 	LWP::Object::Terrain* terrain;
 	// 識別番号、地形との当たり判定のマップ
-	std::map<int, LWP::Object::TerrainCollider::Point> map;
+	//std::map<int, LWP::Object::TerrainCollider::Point> map;
 
 private: // ** 純粋仮想関数のオーバーライド ** //
 
@@ -33,7 +33,7 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		newData.velocity = dir.Normalize() * multiply;
 
 		// 地形との当たり判定を生成
-		map[newData.idNumber].Init(terrain, &newData.m.worldTF);
+		//map[newData.idNumber].Init(terrain, &newData.m.worldTF);
 	};
 	/// <summary>
 	/// パーティクルの更新処理
@@ -44,11 +44,11 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		// 速度がある程度ある間の処理
 		if (data.velocity.Length() > 0.01f) {
 			// 前フレームに地形と当たっていたなら -> 跳ねる
-			if (map[data.idNumber].preFrameHit) {
+			/*if (map[data.idNumber].preFrameHit) {
 				data.velocity.y *= -0.35f;
 				data.velocity.x *= 0.6f;
 				data.velocity.z *= 0.6f;
-			}
+			}*/
 
 			data.m.worldTF.translation += data.velocity;    // 速度ベクトルを加算
 			data.m.worldTF.rotation += data.velocity;    // ついでに回転させとく
@@ -67,7 +67,7 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		}
 		// 1秒かけて消滅アニメーションを完了したとき
 		else {
-			map.erase(data.idNumber);	// 地形のコライダー削除
+			//map.erase(data.idNumber);	// 地形のコライダー削除
 			return true;
 		}
 

@@ -29,9 +29,6 @@ private: // ** メンバ変数 ** //
 	// コライダー
 	LWP::Object::Collision collision_;
 	LWP::Object::Collider::Capsule& capsule_;
-
-	// 地形とのコライダーポインタ
-	LWP::Object::TerrainCollider::Point terrainPoint_;
 	
 	// 経過時間
 	float time_ = 0.0f;

@@ -44,6 +44,12 @@ void Sphere::Update() {
 	// アクティブがOff -> 早期リターン
 	//if (!isActive) { return; }
 }
+void Sphere::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
+	// 中心から半径分移動した地点がminとmax
+	Vector3 center = position + follow_->GetWorldPosition();
+	*minPtr = center - Vector3{ radius, radius, radius };
+	*maxPtr = center + Vector3{ radius, radius, radius };
+}
 
 void Sphere::Create(const LWP::Math::Vector3& pos) { Create(pos, 1.0f); }
 void Sphere::Create(const LWP::Math::Vector3& pos, const float& rad) {

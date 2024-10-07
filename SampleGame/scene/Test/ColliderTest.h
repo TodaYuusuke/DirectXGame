@@ -15,6 +15,8 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
+	LWP::Object::DirectionLight light;
+
 	LWP::Resource::StaticModel mesh;
 	LWP::Object::Collision meshCol;
 	LWP::Object::Collision pointCol;

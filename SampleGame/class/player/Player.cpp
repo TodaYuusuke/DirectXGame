@@ -37,10 +37,6 @@ void Player::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	pl.isActive = false;
 
 	//walkAnim.PL();
-
-	// 地形に接地部分を登録
-	terrainPoint->Init(terrain, &model.worldTF);
-	terrainPoint->offset = { 0.0f,-0.4f,0.0f };
 }
 
 // 更新
@@ -59,9 +55,9 @@ void Player::Update() {
 	velocity.x *= kDecayRate;
 	velocity.z *= kDecayRate;
 	// 前フレームで地形にヒットしていたなら重力加速度をリセット
-	if (terrainPoint->preFrameHit) {
+	/*if (terrainPoint->preFrameHit) {
 		velocity.y = 0.0f;
-	}
+	}*/
 
 #if DEMO
 	ImGui::Begin("Player");

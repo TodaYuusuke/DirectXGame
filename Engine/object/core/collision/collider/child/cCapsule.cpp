@@ -47,6 +47,24 @@ void Capsule::Update() {
 	// アクティブがOff -> 早期リターン
 	//if (!isActive) { return; }
 }
+void Capsule::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
+	// 最大値店と最小地点を求める
+	Vector3 worldPos = follow_->GetWorldPosition();
+	Vector3 min = start + worldPos;
+	Vector3 max = end + worldPos;
+	// MinよりMaxのほうが小さくならないように修正
+	min.x = std::min<float>(min.x, max.x);
+	min.y = std::min<float>(min.y, max.y);
+	min.z = std::min<float>(min.z, max.z);
+	// MaxよりMinのほうが大きくならないように修正
+	max.x = std::max<float>(min.x, max.x);
+	max.y = std::max<float>(min.y, max.y);
+	max.z = std::max<float>(min.z, max.z);
+
+	// そのまま返す
+	*minPtr = min - Vector3{ radius, radius, radius };
+	*maxPtr = max + Vector3{ radius, radius, radius };
+}
 
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_) { Create(start_, end_, 1.0f); }
 void Capsule::Create(const LWP::Math::Vector3& start_, const LWP::Math::Vector3& end_, const float& rad_) {

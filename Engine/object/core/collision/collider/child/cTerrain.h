@@ -1,58 +1,54 @@
 #pragma once
 #include "../ICollider.h"
-
-#include <list>
-#include <vector>
-
-#include "math/vector/Vector3.h"
-
-#if DEMO
-#include "primitive/2d/Triangle.h"
-#endif
+#include "../../OctreeSpaceDivision.h"
 
 // 前方宣言
-namespace LWP::Resource {
-	class RigidModel;
-	class StaticModel;
+namespace LWP {
+	namespace Resource { class StaticModel; }
 }
 
 namespace LWP::Object::Collider {
 	/// <summary>
-	/// 当たり判定用のMeshクラス
+	/// 当たり判定用のTerrainクラス
 	/// </summary>
-	class Mesh final
+	class Terrain final
 		: public ICollider {
-	public: // ** パブリックなメンバ変数 ** //
-		// 三角形
-		struct TriangleData {
-			Math::Vector3 pos[3];
-			Math::Vector3 normal;
-			Math::Vector3 center;
+	public: // ** 内包クラス ** //
+		struct Polygon {
+			Math::Vector3 pos[3];	// 3点
+			Math::Vector3 normal;	// 向いている法線
 		};
-		std::vector<TriangleData> data;
+		// モートン序列番号（8分木空間分割）ごとにリスト化されたポリゴンのマップ
+		std::map<int, std::list<Polygon>> polygonMap_;
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
-		Mesh();
+		Terrain() = default;
 		// コピーコンストラクタ
-		Mesh(const Mesh& other);
+		Terrain(const Terrain& other);
 
 		// 固有の更新処理
 		void Update() override;
 		// 自分を囲む最小のAABBを返す関数
 		void GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) override;
 
-		// StaticModelから当たり判定を生成
-		void Create(LWP::Resource::StaticModel* model);
+		// Staticモデルと適応するwtfからコライダーを生成
+		void Create(const Resource::StaticModel& model);
 
+		// octreeのポインタをセット
+		void SetOctree(Object::OctreeSpaceDivision* octree) { octree_ = octree; }
 		// 形状を返す
-		Shape GetShape() override { return Shape::Mesh; }
+		Shape GetShape() override { return Shape::Terrain; }
 		// ImGuiの派生クラス
 		void DebugGUI() override;
 
 	private:
-		// 当たり判定用のモデル
-		Resource::StaticModel* model_;
+		// octreeのポインタ
+		Object::OctreeSpaceDivision* octree_;
+		// このモデルを囲うAABB
+		LWP::Math::Vector3 min_;
+		LWP::Math::Vector3 max_;
+
 
 	public: // ** 各形状との当たり判定関数 ** //
 

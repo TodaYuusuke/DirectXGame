@@ -64,7 +64,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;DEMO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include;externals</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -95,7 +95,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include;Externals</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -128,7 +128,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;DEMO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>Adapter;Engine;externals\assimp\include;Externals</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -208,6 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
     <ClCompile Include="Engine\math\vector\Vector3.cpp" />
     <ClCompile Include="Engine\math\vector\Vector4.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child\cTerrain.cpp" />
     <ClCompile Include="Engine\object\core\collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\object\core\collision\Collision.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\cAABB.cpp" />
@@ -218,6 +219,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp" />
     <ClCompile Include="Engine\object\core\Camera.cpp" />
+    <ClCompile Include="Engine\object\core\collision\OctreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
@@ -347,6 +349,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\vector\Vector2.h" />
     <ClInclude Include="Engine\math\vector\Vector3.h" />
     <ClInclude Include="Engine\math\vector\Vector4.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child\cTerrain.h" />
     <ClInclude Include="Engine\object\core\collision\CollisionManager.h" />
     <ClInclude Include="Engine\object\core\collision\Collision.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child\cAABB.h" />
@@ -356,7 +359,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h" />
     <ClInclude Include="Engine\object\core\collision\collider\ICollider.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
-    <ClInclude Include="Engine\object\core\CoreList.h" />
+    <ClInclude Include="Engine\object\core\collision\OctreeSpaceDivision.h" />
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
     <ClInclude Include="Engine\object\core\light\PointLight.h" />
     <ClInclude Include="Engine\object\core\Particle.h" />

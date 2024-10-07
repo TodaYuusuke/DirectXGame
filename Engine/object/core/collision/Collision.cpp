@@ -21,11 +21,26 @@ Collision::~Collision() {
 }
 
 void Collision::Update() {
+	ICollider* ptr = GetBasePtr(broad);
+	
 	// ブロードフェーズ更新
-	GetBasePtr(broad)->Update();
+	ptr->Update();
 	// ナローフェーズ更新
 	for (ShapeVariant& n : narrows) {
 		GetBasePtr(n)->Update();
+	}
+
+	// モートン序列番号を更新
+	Vector3 min = { 0.0f,0.0f, 0.0f };
+	Vector3 max = { 0.0f,0.0f, 0.0f };
+	ptr->GetBoundingAABB(&min, &max);	// ブロードのAABBを取得
+	// 点の場合の処理
+	if (ptr->GetShape() == Shape::Point) {
+		mortonNumber = octree_->GetMortonNumber(min);	// 点だけ送る
+	}
+	// それ以外の処理
+	else {
+		mortonNumber = octree_->GetMortonNumber(min, max);
 	}
 }
 
@@ -41,7 +56,11 @@ void Collision::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
 	else { worldTF.translation += fixVector; }
 }
 
+bool Collision::CheckMask(Collision* c) { return mask.CheckBelong(c->mask) || c->mask.CheckBelong(mask); }
 void Collision::CheckCollision(Collision* c) {
+	// お互いがアクティブかつマスクが成立していない -> 早期リターン
+	if (!(isActive && c->isActive && (CheckMask(c)))) { return; }
+
 	// 埋まっている場合の修正ベクトル
 	Vector3 fixVec = { 0.0f,0.0f,0.0f };
 
@@ -123,6 +142,7 @@ void Collision::DebugGUI() {
 			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
 			if (ImGui::MenuItem("Capsule")) { SetBroadShape(Capsule()); }
 			//if (ImGui::MenuItem("Mesh")) { SetBroadShape(Mesh()); }	// Meshの動的生成は厳しいので廃止
+			//if (ImGui::MenuItem("Terrain")) { SetBroadShape(Terrain()); }	// Terrainの動的生成は厳しいので廃止
 			ImGui::EndMenu();
 		}
 		GetBasePtr(broad)->DebugGUI();
@@ -144,6 +164,7 @@ void Collision::DebugGUI() {
 	ImGui::Checkbox("isMove", &isMove);	// 動くかのフラグ
 	ImGui::Checkbox("isActive", &isActive);	// 有効/無効
 	ImGui::Text(std::string("serialNumber : " + std::to_string(serialNum)).c_str());
+	ImGui::Text(std::string("mortonNumber : " + std::to_string(mortonNumber)).c_str());
 }
 
 bool Collision::CheckBroadCollision(ShapeVariant& c, Math::Vector3* fixVec) {

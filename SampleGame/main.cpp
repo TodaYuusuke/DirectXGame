@@ -12,6 +12,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// デバッグ情報の表示切替フラグ
 	LWP::Info::ChangeShowDebugGUI();
 #endif
-	LWP::System::Run(new Title);
+	LWP::System::Run(new ColliderTest);
 	return 0;
 }

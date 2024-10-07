@@ -36,8 +36,6 @@ void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	cameraPtr_ = ptr;
 	cameraPtr_->transform.Init();	// 座標系を初期化
 	cameraPtr_->transform.Parent(&model_.worldTF);
-	// 地形に接地部分を登録
-	terrainPoint_.Init(terrain, &model_.worldTF);
 }
 
 // 更新
@@ -53,9 +51,6 @@ void Drone::Update() {
 	// 速度を減衰させる
 	velocity_ *= kDecayRate_;
 	// 前フレームで地形にヒットしていたなら重力加速度をリセット
-	if (terrainPoint_.preFrameHit) {
-		velocity_.y = 0.0f;
-	}
 
 #if DEMO
 	ImGui::Begin("Drone");

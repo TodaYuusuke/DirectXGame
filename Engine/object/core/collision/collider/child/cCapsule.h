@@ -31,6 +31,8 @@ namespace LWP::Object::Collider {
 
 		// 固有の更新処理
 		void Update() override;
+		// 自分を囲む最小のAABBを返す関数
+		void GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) override;
 
 		// 座標を指定して生成
 		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
@@ -56,6 +58,7 @@ namespace LWP::Object::Collider {
 		bool CheckCollision(Sphere& c, Math::Vector3* fixVec)  override;
 		bool CheckCollision(Capsule& c, Math::Vector3* fixVec)  override;
 		bool CheckCollision(Mesh& c, Math::Vector3* fixVec)  override;
+		bool CheckCollision(Terrain& c, Math::Vector3* fixVec)  override;
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;

@@ -1,90 +1,112 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="class">
+      <UniqueIdentifier>{1af02141-ea7e-42b9-bae5-350b9356d9c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="scene">
+      <UniqueIdentifier>{f5636492-1b68-4d4b-81fc-ef0451220007}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="class\car">
+      <UniqueIdentifier>{426dca7f-f954-4cc3-9054-b4c440d2e26d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="class\field">
+      <UniqueIdentifier>{574d02c9-4b0d-4c46-afda-f6b62b227720}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="class\particle">
+      <UniqueIdentifier>{b66f49e3-ad7f-472e-9149-536945910205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="class\player">
+      <UniqueIdentifier>{3eedb842-b825-4180-8bab-9ec1720e1665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\Test">
+      <UniqueIdentifier>{8e337633-aa46-4504-97ae-10ba7661fde0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\Test\ColliderTest.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\Test\LevelLoaderTest.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\Title.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\Test\AnimationTest.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\Test\SkinningTest.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="class\player\Drone.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="class\car\Car.cpp">
+      <Filter>class\car</Filter>
     </ClCompile>
     <ClCompile Include="class\field\Field.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\NullScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>class\field</Filter>
     </ClCompile>
     <ClCompile Include="class\player\Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>class\player</Filter>
     </ClCompile>
+    <ClCompile Include="class\player\Drone.cpp">
+      <Filter>class\player</Filter>
+    </ClCompile>
+    <ClCompile Include="class\player\Player.cpp">
+      <Filter>class\player</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Test\AnimationTest.cpp">
+      <Filter>scene\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Test\ColliderTest.cpp">
+      <Filter>scene\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Test\LevelLoaderTest.cpp">
+      <Filter>scene\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Test\SkinningTest.cpp">
+      <Filter>scene\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\GameScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\NullScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Title.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="scene\GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Test\ColliderTest.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Test\LevelLoaderTest.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Test\TestIncludes.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Title.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Test\AnimationTest.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Test\SkinningTest.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="class\player\Drone.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="class\car\Car.h">
+      <Filter>class\car</Filter>
     </ClInclude>
     <ClInclude Include="class\field\Field.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>class\field</Filter>
     </ClInclude>
-    <ClInclude Include="scene\NullScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="class\player\Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="class\particle\DamageParticle.h">
+      <Filter>class\particle</Filter>
     </ClInclude>
     <ClInclude Include="class\particle\TerrainBulletParticle.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>class\particle</Filter>
+    </ClInclude>
+    <ClInclude Include="class\player\Bullet.h">
+      <Filter>class\player</Filter>
+    </ClInclude>
+    <ClInclude Include="class\player\Drone.h">
+      <Filter>class\player</Filter>
+    </ClInclude>
+    <ClInclude Include="class\player\Player.h">
+      <Filter>class\player</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Test\AnimationTest.h">
+      <Filter>scene\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Test\ColliderTest.h">
+      <Filter>scene\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Test\LevelLoaderTest.h">
+      <Filter>scene\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Test\SkinningTest.h">
+      <Filter>scene\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Test\TestIncludes.h">
+      <Filter>scene\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\GameScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\NullScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Title.h">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

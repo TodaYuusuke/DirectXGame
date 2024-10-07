@@ -91,9 +91,6 @@
     <ClCompile Include="Engine\resources\ResourceManager.cpp">
       <Filter>Engine\resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Material.cpp">
-      <Filter>Engine\resources\material</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\resources\texture\Texture.cpp">
       <Filter>Engine\resources\texture</Filter>
     </ClCompile>
@@ -146,7 +143,7 @@
       <Filter>Adapter\component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\collision\CollisionManager.cpp">
-      <Filter>Engine\object\collider</Filter>
+      <Filter>Engine\object\core\collision</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\motion\Motion.cpp">
       <Filter>Engine\resources\motion</Filter>
@@ -211,63 +208,162 @@
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp">
       <Filter>Engine\base\directX\resource\rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp">
-      <Filter>Engine\base\directX\resource\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Point.cpp">
-      <Filter>Engine\base\directX\resource\rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\resource\rendering\TextureResource.cpp">
       <Filter>Engine\base\directX\resource\rendering</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\audio\AudioData.cpp">
       <Filter>Engine\resources\audio</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\motion\Animation.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
-    <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
-    <ClCompile Include="Engine\object\TransformQuat.cpp" />
-    <ClCompile Include="Engine\primitive\model\Mesh.cpp" />
-    <ClCompile Include="Engine\resources\model\ModelData.cpp" />
-    <ClCompile Include="Engine\resources\model\RigidModel.cpp" />
-    <ClCompile Include="Engine\primitive\model\Node.cpp" />
-    <ClCompile Include="Engine\primitive\model\Skeleton.cpp" />
-    <ClCompile Include="Engine\primitive\model\Joint.cpp" />
-    <ClCompile Include="Engine\primitive\model\SkinCluster.cpp" />
-    <ClCompile Include="Engine\primitive\model\JointWeight.cpp" />
-    <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
-    <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
-    <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
-    <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
-    <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
-    <ClCompile Include="Engine\resources\model\IModel.cpp" />
-    <ClCompile Include="Engine\object\core\Particle.cpp" />
-    <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
-    <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
-    <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
-    <ClCompile Include="Engine\primitive\3d\OldMesh.cpp" />
-    <ClCompile Include="Engine\resources\level\LevelData.cpp" />
-    <ClCompile Include="Engine\math\Quaternion.cpp" />
-    <ClCompile Include="Engine\resources\model\StaticModel.cpp" />
-    <ClCompile Include="Engine\primitive\model\Vertex.cpp" />
-    <ClCompile Include="Engine\object\core\collision\Collision.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cAABB.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cCapsule.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\CheckCollisions.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cPoint.cpp" />
-    <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cMesh.cpp" />
-    <ClCompile Include="Engine\object\core\Terrain.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
-    <ClCompile Include="Engine\resources\model\EMapModel.cpp" />
-    <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
-    <ClCompile Include="Engine\base\directX\resource\rendering\DepthCubeMap.cpp" />
-    <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp">
+      <Filter>Engine\base\directX\postProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp">
+      <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Point.cpp">
+      <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\resource\rendering\DepthCubeMap.cpp">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\directX\utility\PSO.cpp">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Quaternion.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\TransformQuat.cpp">
+      <Filter>Engine\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\Terrain.cpp">
+      <Filter>Engine\object\core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\Particle.cpp">
+      <Filter>Engine\object\core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\Collision.cpp">
+      <Filter>Engine\object\core\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\OctreeSpaceDivision.cpp">
+      <Filter>Engine\object\core\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\cAABB.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\cCapsule.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\CheckCollisions.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\cMesh.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\cPoint.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\child\cTerrain.cpp">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp">
+      <Filter>Engine\object\core\collision\collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\JointWeight.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\Joint.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\Mesh.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\Node.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\Skeleton.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\SkinCluster.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\Vertex.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\model\Material.cpp">
+      <Filter>Engine\primitive\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Capsule.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Cube.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\OldMesh.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\motion\Animation.cpp">
+      <Filter>Engine\resources\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\level\LevelData.cpp">
+      <Filter>Engine\resources\level</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\model\ModelData.cpp">
+      <Filter>Engine\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\model\EMapModel.cpp">
+      <Filter>Engine\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\model\IModel.cpp">
+      <Filter>Engine\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\model\RigidModel.cpp">
+      <Filter>Engine\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\model\SkinningModel.cpp">
+      <Filter>Engine\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\resources\model\StaticModel.cpp">
+      <Filter>Engine\resources\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -342,9 +438,6 @@
     <ClInclude Include="Engine\object\TransformEuler.h">
       <Filter>Engine\object</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\core\CoreList.h">
-      <Filter>Engine\object\core</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\core\Camera.h">
       <Filter>Engine\object\core</Filter>
     </ClInclude>
@@ -368,9 +461,6 @@
     </ClInclude>
     <ClInclude Include="Engine\resources\ResourceManager.h">
       <Filter>Engine\resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Material.h">
-      <Filter>Engine\resources\material</Filter>
     </ClInclude>
     <ClInclude Include="Engine\resources\texture\Texture.h">
       <Filter>Engine\resources\texture</Filter>
@@ -448,7 +538,7 @@
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\collision\CollisionManager.h">
-      <Filter>Engine\object\collider</Filter>
+      <Filter>Engine\object\core\collision</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Common.h">
       <Filter>Adapter\component</Filter>
@@ -552,15 +642,6 @@
     <ClInclude Include="Engine\base\directX\resource\rendering\RenderResource.h">
       <Filter>Engine\base\directX\resource\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\IShadowMap.h">
-      <Filter>Engine\base\directX\resource\rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.h">
-      <Filter>Engine\base\directX\resource\rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Point.h">
-      <Filter>Engine\base\directX\resource\rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\resource\rendering\TextureResource.h">
       <Filter>Engine\base\directX\resource\rendering</Filter>
     </ClInclude>
@@ -576,53 +657,165 @@
     <ClInclude Include="Engine\resources\audio\AudioData.h">
       <Filter>Engine\resources\audio</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\motion\Animation.h" />
-    <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
-    <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
-    <ClInclude Include="Engine\object\TransformQuat.h" />
-    <ClInclude Include="Engine\primitive\model\Mesh.h" />
-    <ClInclude Include="Engine\resources\model\ModelData.h" />
-    <ClInclude Include="Engine\resources\model\RigidModel.h" />
-    <ClInclude Include="Engine\primitive\model\Vertex.h" />
-    <ClInclude Include="Engine\primitive\model\Node.h" />
-    <ClInclude Include="Engine\primitive\model\Skeleton.h" />
-    <ClInclude Include="Engine\primitive\model\Joint.h" />
-    <ClInclude Include="Engine\primitive\model\SkinCluster.h" />
-    <ClInclude Include="Engine\primitive\model\JointWeight.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h" />
-    <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
-    <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
-    <ClInclude Include="Engine\base\directX\utility\PSO.h" />
-    <ClInclude Include="Engine\resources\model\SkinningModel.h" />
-    <ClInclude Include="Engine\resources\model\IModel.h" />
-    <ClInclude Include="Engine\primitive\3d\Capsule.h" />
-    <ClInclude Include="Engine\primitive\3d\Sphere.h" />
-    <ClInclude Include="Engine\primitive\3d\Cube.h" />
-    <ClInclude Include="Engine\primitive\3d\OldMesh.h" />
-    <ClInclude Include="Engine\resources\level\LevelData.h" />
-    <ClInclude Include="Externals\nlohmann\json.hpp" />
-    <ClInclude Include="Engine\math\Quaternion.h" />
-    <ClInclude Include="Engine\resources\model\StaticModel.h" />
-    <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />
-    <ClInclude Include="Engine\object\core\collision\Collision.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\ICollider.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cAABB.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cCapsule.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cPoint.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cMesh.h" />
-    <ClInclude Include="Engine\object\core\Terrain.h" />
-    <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h" />
-    <ClInclude Include="Engine\resources\model\EMapModel.h" />
-    <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
-    <ClInclude Include="Engine\base\directX\resource\rendering\DepthCubeMap.h" />
-    <ClInclude Include="Engine\base\directX\postProcess\effects\RadialBlur.h" />
-    <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h">
+      <Filter>Engine\base\directX\postProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h">
+      <Filter>Engine\base\directX\postProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\effects\RadialBlur.h">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h">
+      <Filter>Engine\base\directX\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h">
+      <Filter>Engine\base\directX\resource\data</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\IShadowMap.h">
+      <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.h">
+      <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Point.h">
+      <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\resource\rendering\DepthCubeMap.h">
+      <Filter>Engine\base\directX\resource\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\utility\PSO.h">
+      <Filter>Engine\base\directX\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Quaternion.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\TransformQuat.h">
+      <Filter>Engine\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\Terrain.h">
+      <Filter>Engine\object\core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\Collision.h">
+      <Filter>Engine\object\core\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\OctreeSpaceDivision.h">
+      <Filter>Engine\object\core\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\child\cAABB.h">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\child\cCapsule.h">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\child\cMesh.h">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\child\cPoint.h">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\child\cTerrain.h">
+      <Filter>Engine\object\core\collision\collider\child</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\collider\ICollider.h">
+      <Filter>Engine\object\core\collision\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\JointWeight.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\Joint.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\Mesh.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\Node.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\Skeleton.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\SkinCluster.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\Vertex.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\model\Material.h">
+      <Filter>Engine\primitive\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Capsule.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Cube.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\OldMesh.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\primitive\3d\Sphere.h">
+      <Filter>Engine\primitive\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\motion\Animation.h">
+      <Filter>Engine\resources\motion</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\level\LevelData.h">
+      <Filter>Engine\resources\level</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\model\ModelData.h">
+      <Filter>Engine\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\model\EMapModel.h">
+      <Filter>Engine\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\model\IModel.h">
+      <Filter>Engine\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\model\RigidModel.h">
+      <Filter>Engine\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\model\SkinningModel.h">
+      <Filter>Engine\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\resources\model\StaticModel.h">
+      <Filter>Engine\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h">
+      <Filter>Externals\DirectXMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\nlohmann\json.hpp">
+      <Filter>Externals\nlohmann</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -676,12 +869,6 @@
     <Filter Include="Engine\resources">
       <UniqueIdentifier>{63f38f0f-3aff-4930-9679-1b1002a98808}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\resources\material">
-      <UniqueIdentifier>{8b5a09f0-eefe-4e9d-a55b-76b2f47c7b9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\resources\shaders">
-      <UniqueIdentifier>{e6cf0b3d-2f65-47d4-ab8a-8bb4f969be95}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\resources\texture">
       <UniqueIdentifier>{143ff35b-fe99-42b5-bf01-8b207a3c4f7b}</UniqueIdentifier>
     </Filter>
@@ -706,17 +893,8 @@
     <Filter Include="Engine\scene">
       <UniqueIdentifier>{093777cc-1db7-443d-b68b-e527690c6c7b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\scene\user">
-      <UniqueIdentifier>{960e4147-4156-4275-832b-89f6c6c61824}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\object\core\light">
       <UniqueIdentifier>{d7b05c18-6249-4f61-8559-8af414e7835e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\resources\shaders\postProcess">
-      <UniqueIdentifier>{3107d1da-6626-4c88-ad3e-86e371277c01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\object\collider">
-      <UniqueIdentifier>{5c833c51-fe4d-4823-a931-9c1782e5bba2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\utilitiy\observers">
       <UniqueIdentifier>{2ec6478e-d841-4aa1-827b-1ad8487bd9cc}</UniqueIdentifier>
@@ -745,8 +923,38 @@
     <Filter Include="Engine\base\directX\resource\data">
       <UniqueIdentifier>{7fa81050-974b-4904-b944-cb73557c7998}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base\directX\postEffect">
+    <Filter Include="Engine\base\directX\postProcess">
       <UniqueIdentifier>{a22509c4-b405-4685-9374-18ea4100d5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\postProcess\effects">
+      <UniqueIdentifier>{77c96b9e-a137-4e11-ae10-e9c12a617372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base\directX\resource\rendering\shadow">
+      <UniqueIdentifier>{1d5f330d-1b3b-4d29-a5f2-01164029d12c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object\core\collision">
+      <UniqueIdentifier>{5c833c51-fe4d-4823-a931-9c1782e5bba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object\core\collision\collider">
+      <UniqueIdentifier>{18bc0384-a69e-4935-924b-c702423d4c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\object\core\collision\collider\child">
+      <UniqueIdentifier>{d2de1bd1-59a6-4217-a059-33daa96f9b1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\primitive\model">
+      <UniqueIdentifier>{a63ab08f-541b-4b9b-b0e3-159acd70c52f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\level">
+      <UniqueIdentifier>{933a77b3-b4f8-41cb-b972-8700c82fd38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resources\model">
+      <UniqueIdentifier>{e8bdef8f-90cd-49a4-a03f-e83d99a36119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\DirectXMesh">
+      <UniqueIdentifier>{804479c8-3a26-4ed4-9d72-dcc008c140bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\nlohmann">
+      <UniqueIdentifier>{802b2618-684a-489e-97db-d1b7c4f22654}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

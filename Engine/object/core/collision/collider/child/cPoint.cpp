@@ -48,6 +48,10 @@ void Point::Update() {
 	// アクティブがOff -> 早期リターン
 	//if (!isActive) { return; }
 }
+void Point::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
+	// そのまま返すだけ
+	*minPtr = *maxPtr = position + follow_->GetWorldPosition();
+}
 
 void Point::DebugGUI() {
 	ImGui::DragFloat3("position", &position.x, 0.01f);

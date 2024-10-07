@@ -31,26 +31,20 @@ namespace LWP::Object {
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
 		void DeletePointer(Collision* ptr);
 
+		/// <summary>
+		/// Debug用GUI
+		/// </summary>
+		void DebugGUI();
 
 	private: // ** メンバ変数 ** //
 
-		// 空間分割レベル
-		uint32_t spaceDivisionLevel_ = 4;
-		// 空間サイズ
-		float spaceLength_ = 1000.0f;
-		// 空間中心座標
-		LWP::Math::Vector3 center_;
+		// オクトツリー
+		Object::OctreeSpaceDivision octree_;
 
 		// Colliderに割り振るシリアル番号管理
 		Utility::IndexManager indexManager_;
 		// コライダーのリスト
 		Utility::PtrManager<Collision*> collisions_;
-
-
-	public: // ** プライベートなメンバ関数 ** //
-
-		// マスクチェック
-		bool CheckMask(Collision* f, Collision* t);
 
 
 	private:
@@ -59,10 +53,6 @@ namespace LWP::Object {
 		int currentItem = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<Collision*> debugCols;
-	public:
-		/// <summary>
-		/// Debug用GUI
-		/// </summary>
-		void DebugGUI();
+	private: // ** プライベートなメンバ関数 ** //
 	};
 };

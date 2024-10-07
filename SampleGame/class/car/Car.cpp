@@ -20,20 +20,6 @@ void Car::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 	camera_ = ptr;
 	camera_->transform.translation = cameraOffset_;
 
-	// 地形に接地部分を登録
-	for (int i = 1; i < 5; i++) {
-		wtf[i].Parent(&wtf[0]);
-	}
-	wtf[1].translation = { -0.68f,0.0f,1.24f };
-	wtf[2].translation = {  0.68f,0.0f,1.24f };
-	wtf[3].translation = { -0.68f,0.0f,-1.24f };
-	wtf[4].translation = {  0.68f,0.0f,-1.24f };
-
-	terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &model.worldTF);
-	frontPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[1]);
-	frontPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[2]);
-	backPoint[0] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[3]);
-	backPoint[1] = terrain->SetNewCollider({ 0.0f,0.0f,0.0f }, &wtf[4]);
 }
 
 // 更新
@@ -54,16 +40,13 @@ void Car::Update() {
 	// 速度を加算
 	model.worldTF.translation += velocity;
 
-	wtf[0] = model.worldTF;
-	wtf[0].translation.y = 0.0f;
-
 	// 速度を減衰させる
 	velocity.x *= kDecayRate;
 	velocity.z *= kDecayRate;
 	// 前フレームで地形にヒットしていたなら重力加速度をリセット
-	if (frontPoint[0]->preFrameHit || frontPoint[1]->preFrameHit || backPoint[0]->preFrameHit || backPoint[1]->preFrameHit) {
+	/*if (frontPoint[0]->preFrameHit || frontPoint[1]->preFrameHit || backPoint[0]->preFrameHit || backPoint[1]->preFrameHit) {
 		velocity.y = 0.0f;
-	}
+	}*/
 
 #if DEMO
 	ImGui::Begin("Car");
@@ -73,15 +56,6 @@ void Car::Update() {
 	}
 	ImGui::DragFloat("kSpeed", &kWalkSpeed, 0.1f);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.1f);
-	for (int i = 0; i < 4; i++) {
-		if (ImGui::TreeNode(("wheel" + std::to_string(i)).c_str())) {
-			wtf[i].DebugGUI();
-			Vector3 p = wtf[i].GetWorldPosition();
-			ImGui::Text("%f, %f, %f", p.x, p.y, p.z);
-			ImGui::TreePop();
-		}
-	}
-	//ImGui::DragFloat3("centerPosition", &currentPos.x);
 	ImGui::End();
 #endif
 }

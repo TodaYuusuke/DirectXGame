@@ -23,10 +23,6 @@ private:
 	
 	// 速度
 	LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
-	// 地形とのコライダーポインタ
-	LWP::Object::TransformQuat wtf[5];
-	LWP::Object::Terrain::Point* frontPoint[2];
-	LWP::Object::Terrain::Point* backPoint[2];
 
 	void Move();
 

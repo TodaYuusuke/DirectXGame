@@ -4,6 +4,9 @@
 #include "collider/child/cSphere.h"
 #include "collider/child/cCapsule.h"
 #include "collider/child/cMesh.h"
+#include "collider/child/cTerrain.h"
+
+#include "OctreeSpaceDivision.h"
 
 #include "utility/Index.h"
 
@@ -74,7 +77,7 @@ namespace LWP::Object {
 		bool isActive = true;
 		
 		// Variant
-		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule, Collider::Mesh>;
+		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule, Collider::Mesh, Collider::Terrain>;
 
 		// ブロードフェーズのコライダー形状
 		ShapeVariant broad;
@@ -110,9 +113,15 @@ namespace LWP::Object {
 
 		// 追従するトランスフォームをペアレントにセットする関数
 		void SetFollowTarget(Object::TransformQuat* ptr);
+		// オクトツリーをセットする関数
+		void SetOctree(Object::OctreeSpaceDivision* octree) { octree_ = octree; }
+		// シリアル番号をセットする関数
+		int GetMortonNumber() { return mortonNumber; }
 		// ヒット時に正常な位置に修正するベクトルを加算
 		void ApplyFixVector(const LWP::Math::Vector3& fixVector);
 
+		// マスクチェック
+		bool CheckMask(Collision* c);
 		// 渡された形との当たり判定を確認する関数
 		void CheckCollision(Collision* c);
 		// ヒット時の処理（受け身のとき相手に呼び出してもらうためにpublic）
@@ -139,15 +148,35 @@ namespace LWP::Object {
 		template<IsICollider T>
 		T& SetBroadShape(const T& t) {
 			broad = t;
-			GetBasePtr(broad)->SetFollowPtr(&worldTF);	// followをセット
+			GetBasePtr(broad)->SetFollowPtr(&worldTF);
 			return std::get<T>(broad);
+		}
+		/// <summary>
+		/// ブロードフェーズの形状をセットする関数（Terrain特殊化）
+		/// </summary>
+		/// <typeparam name="T">IColliderShapeを継承したクラスのみ</typeparam>
+		/// <param name="t">代入する実態</param>
+		/// <returns>代入された実体への参照を返す</returns>
+		template<>
+		Collider::Terrain& SetBroadShape<Collider::Terrain>(const Collider::Terrain& t) {
+			broad = t;
+			Collider::ICollider* ptr = GetBasePtr(broad);
+			ptr->SetFollowPtr(&worldTF);	// followをセット
+			// Terrainはポリゴンにモートン序列番号を適応するために必須（いったん無理やり実装）
+			Collider::Terrain* terrain = dynamic_cast<Collider::Terrain*>(ptr);
+			terrain->SetOctree(octree_);
+			return std::get<Collider::Terrain>(broad);
 		}
 
 	private: // ** メンバ変数 ** //
 
 		// 追従するトランスフォーム
 		Object::TransformQuat* followTF;
+		// オクトツリーのポインタ
+		Object::OctreeSpaceDivision* octree_;
 
+		// モートン序列番号
+		int mortonNumber = -1;
 		// 自身のシリアル番号
 		Utility::Index serialNum;
 		// 多重ヒット回避用のヒット対象を保持する変数<シリアル番号、ヒット回数（呼び出す関数を識別)>

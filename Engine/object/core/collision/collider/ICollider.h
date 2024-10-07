@@ -10,6 +10,7 @@ namespace LWP::Object::Collider {
 		Sphere,
 		Capsule,
 		Mesh,
+		Terrain,
 		Count	// カウント
 	};
 
@@ -20,6 +21,7 @@ namespace LWP::Object::Collider {
 	class Sphere;
 	class Capsule;
 	class Mesh;
+	class Terrain;
 
 
 	/// <summary>
@@ -59,6 +61,12 @@ namespace LWP::Object::Collider {
 		virtual void Update() = 0;
 
 		/// <summary>
+		/// 8分木空間分割用の、自分を囲む最小のAABBを返す関数
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		virtual void GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) = 0;
+		/// <summary>
 		/// ポインタをセットする関数
 		/// </summary>
 		/// <param name="ptr"></param>
@@ -81,7 +89,8 @@ namespace LWP::Object::Collider {
 		virtual bool CheckCollision(Sphere& c, Math::Vector3* resVec) = 0;
 		virtual bool CheckCollision(Capsule& c, Math::Vector3* resVec) = 0;
 		virtual bool CheckCollision(Mesh& c, Math::Vector3* resVec) = 0;
-		
+		virtual bool CheckCollision(Terrain& c, Math::Vector3* resVec) = 0;
+
 		// ヒット時の処理をまとめた関数
 		virtual void Hit() {};
 	};

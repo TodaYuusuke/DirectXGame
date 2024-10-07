@@ -1,5 +1,0 @@
-#include "Camera.h"
-#include "Particle.h"
-#include "Terrain.h"
-#include "light/DirectionLight.h"
-#include "light/PointLight.h"

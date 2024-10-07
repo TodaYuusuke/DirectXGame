@@ -16,22 +16,14 @@ void ColliderTest::Initialize() {
 	// モデル読み込み
 	mesh.LoadShortPath("meshColliderTest/meshColTest.gltf");
 	//mesh.LoadShortPath("ground/Ground.gltf");
-	
 	Collider::Mesh& m = meshCol.SetBroadShape(Collider::Mesh());
-	m.Create(mesh);
+	m.Create(&mesh);
 
 	pointCol.isMove = true;
 	pointCol.stayLambda = [&](Collision* c) {
 		ImGui::Begin("Test");
 		ImGui::End();
 	};
-	//// 追従
-	//aabb.SetFollowTarget(&mesh);
-	//aabb.Create(&mesh);
-	//aabb.enterLambda = [](HitData data) {
-	//	data;
-	//	Info::ChangeShowDebugGUI();
-	//};
 }
 
 // 更新

@@ -22,7 +22,7 @@ Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::O
 	capsule_.radius = 0.2f;
 
 	// 地形とのコライダー
-	terrainPoint_.Init(terrain, &model_.worldTF);
+	//terrainPoint_.Init(terrain, &model_.worldTF);
 
 	// 引数を保持
 	direction_ = direction;
@@ -33,7 +33,7 @@ void Bullet::Update() {
 	if (!isAlive_) { return; }
 
 	// 地形にヒットしていたなら終了
-	if (terrainPoint_.preFrameHit) {
+	/*if (terrainPoint_.preFrameHit) {
 		// ここでパーティクルを生成する場所を計算
 		Vector3 start = capsule_.start;
 		Vector3 end = capsule_.end;
@@ -54,13 +54,12 @@ void Bullet::Update() {
 		isAlive_ = false;
 		terrainPoint_.wtf = nullptr;	// 追従対象をnullにして解放
 		return;
-	}
+	}*/
 	// 経過時間更新
 	time_ += GetDeltaTimeF();
 	// 数秒経過していたら終了
 	if (time_ > kAliveTime_) {
 		isAlive_ = false;
-		terrainPoint_.wtf = nullptr;	// 追従対象をnullにして解放
 		return;
 	}
 

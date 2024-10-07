@@ -43,8 +43,6 @@ private: // ** メンバ変数 ** //
 	LWP::Object::Camera* cameraPtr_;
 	// 地形
 	LWP::Object::Terrain* terrainPtr_;
-	// 地形とのコライダーポインタ
-	LWP::Object::TerrainCollider::Point terrainPoint_;
 
 
 private: // ** プライベートなメンバ関数 ** //

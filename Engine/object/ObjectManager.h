@@ -1,5 +1,10 @@
 #pragma once
-#include "core/CoreList.h"
+#include "core/Camera.h"
+#include "core/Particle.h"
+#include "core/Terrain.h"
+#include "core/light/DirectionLight.h"
+#include "core/light/PointLight.h"
+
 #include "utility/PtrManager.h"
 
 #include <vector>
