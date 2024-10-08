@@ -32,6 +32,8 @@ namespace LWP::Object::Collider {
 
 		// アクティブ切り替え
 		bool isActive = true;
+		// モートン序列番号
+		int mortonNumber = -1;
 #if DEMO
 		// ** デバッグ用の変数 ** //
 		bool isShowWireFrame = true;

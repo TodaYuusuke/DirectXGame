@@ -10,19 +10,22 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-Terrain::Terrain() : collider_(collision_.SetBroadShape(Collider::Terrain())) {
+Terrain::Terrain() : collider_(collision.SetBroadShape(Collider::Terrain())) {
 	Initialize();
 }
 
 // 初期化
-void Terrain::Initialize() {}
+void Terrain::Initialize() {
+	collision.mask.SetBelongFrag(lwpC::Collider::Terrain);
+	collision.name = "Terrain";
+}
 // 更新
 void Terrain::Update(Base::RendererManager* manager) {
 	manager;
 
 	// 自身のisActiveをモデルとコライダーに適応
 	model_.isActive = isActive;
-	collision_.isActive = isActive;
+	collision.isActive = isActive;
 }
 
 void Terrain::LoadModel(std::string filePath, const TransformQuat& wtf) {
@@ -40,7 +43,7 @@ void Terrain::DebugGUI() {
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("Collision")) {
-		collision_.DebugGUI();
+		collision.DebugGUI();
 		ImGui::TreePop();
 	}
 	ImGui::Checkbox("isActive", &isActive);

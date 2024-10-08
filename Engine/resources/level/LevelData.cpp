@@ -9,7 +9,6 @@ using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Object;
-using namespace LWP::Object::Collider;
 using namespace LWP::Resource;
 using namespace LWP::Utility;
 
@@ -106,11 +105,18 @@ void LevelData::HotReload() {
 			wtf.scale *= scale;	// 全体の倍率をかける
 			staticModels[objName].ApplyWorldTransform(wtf);
 
+			// もしファイル名がRockの場合
+			//if (objName == "AABB") {
+			//	// Meshコライダーを生成
+			//	Collider::Mesh& m = collisions[objName].SetBroadShape(Collider::Mesh());
+			//	m.Create(&staticModels[objName]);
+			//}
+
 			// コライダーがあれば生成
 			if (object.contains("collider")) {
 				nlohmann::json& collider = object["collider"];
 				if (collider["type"] == "AABB") {
-					AABB& aabb = collisions[objName].SetBroadShape(AABB());
+					Collider::AABB& aabb = collisions[objName].SetBroadShape(Collider::AABB());
 					aabb.min = {
 						static_cast<float>(collider["min"][0]),
 						static_cast<float>(collider["min"][2]),

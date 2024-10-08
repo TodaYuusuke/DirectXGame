@@ -2,6 +2,9 @@
 #include <Adapter.h>
 #include "scene/IScene.h"
 
+#include "../../class/field/Field.h"
+#include "../../class/player/Drone.h"
+
 class ColliderTest final
 	: public IScene {
 public:
@@ -15,9 +18,13 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Object::DirectionLight light;
+	// 地形データ
+	Field field_;
+	// 操作用
+	Drone drone_;
 
 	LWP::Resource::StaticModel mesh;
 	LWP::Object::Collision meshCol;
+	LWP::Object::Collision aabbCol;
 	LWP::Object::Collision pointCol;
 };

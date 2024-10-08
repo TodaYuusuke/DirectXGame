@@ -8,10 +8,7 @@ using namespace LWP::Object;
 using namespace LWP::Utility;
 
 // 初期化
-void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
-	// ポインタを保持
-	terrainPtr_ = terrain;
-
+void Drone::Init(LWP::Object::Camera* ptr) {
 	// モデル用意
 	model_.LoadShortPath("Drone/Drone.gltf");
 	model_.SetAllMaterialLighting(true);
@@ -30,7 +27,6 @@ void Drone::Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain) {
 
 	particle_.model.LoadCube();
 	particle_.model.worldTF.scale *= 0.4f;
-	particle_.terrain = terrain;
 
 	// カメラのポインタをセット
 	cameraPtr_ = ptr;
@@ -168,7 +164,7 @@ void Drone::Shot() {
 	// SpaceかRTを押したら射撃
 	if (Keyboard::GetTrigger(DIK_SPACE) || Controller::GetTrigger(XBOX_RT)) {
 		// 弾を7発生成
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 1; i++) {
 			// 方向ベクトルを計算
 			Vector3 dir = Vector3::UnitZ() * (
 				Quaternion::CreateFromAxisAngle(Vector3::UnitY(), float(GenerateRandamNum<int>(-20, 20)) / 1000.0f) *

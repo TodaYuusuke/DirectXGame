@@ -10,48 +10,40 @@ using namespace LWP::Object;
 
 // 初期化
 void ColliderTest::Initialize() {
-	// デバッグ情報表示
-	//Info::ChangeShowDebugGUI();
+	// 地形初期化
+	field_.Init(&levelData, &mainCamera);
+	// プレイヤー初期化
+	drone_.Init(&mainCamera);
+
+	// Terrainのマスク変更
+	levelData.terrain->collision.mask.SetBelongFrag(lwpC::Collider::ALL);
 
 	// モデル読み込み
 	mesh.LoadShortPath("meshColliderTest/meshColTest.gltf");
-	//mesh.LoadShortPath("ground/Ground.gltf");
+	//mesh.ApplyWorldTransform({
+	//	{8.0f,8.0f,8.0f},
+	//	Quaternion(),
+	//	{1.0f,1.0f,1.0f}
+	//});
 	Collider::Mesh& m = meshCol.SetBroadShape(Collider::Mesh());
 	m.Create(&mesh);
 
+	pointCol.SetFollowTarget(drone_.GetWorldTF());
+	pointCol.worldTF.translation = { 0.0f, 0.0f, 10.0f };
+	pointCol.name = "point";
 	pointCol.isMove = true;
-	pointCol.stayLambda = [&](Collision* c) {
-		ImGui::Begin("Test");
-		ImGui::End();
-	};
+	aabbCol.SetFollowTarget(&pointCol.worldTF);
+	aabbCol.SetBroadShape(Collider::AABB());
+	aabbCol.name = "aabb";
+	aabbCol.isMove = true;
 }
 
 // 更新
 void ColliderTest::Update() {
+	drone_.Update();
 
-	if (Keyboard::GetPress(DIK_W)) {
-		pointCol.worldTF.translation.z += 0.01f;
-	}
-	if (Keyboard::GetPress(DIK_S)) {
-		pointCol.worldTF.translation.z -= 0.01f;
-	}
-	if (Keyboard::GetPress(DIK_A)) {
-		pointCol.worldTF.translation.x -= 0.01f;
-	}
-	if (Keyboard::GetPress(DIK_D)) {
-		pointCol.worldTF.translation.x += 0.01f;
-	}
-	if (Keyboard::GetPress(DIK_SPACE)) {
-		pointCol.worldTF.translation.y += 0.01f;
-	}
-	if (Keyboard::GetPress(DIK_LSHIFT)) {
-		pointCol.worldTF.translation.y -= 0.01f;
-	}
-
-	if (Keyboard::GetPress(DIK_SPACE)) {
-		pointCol.worldTF.translation.y += 0.01f;
-	}
-	if (Keyboard::GetPress(DIK_LSHIFT)) {
-		pointCol.worldTF.translation.y -= 0.01f;
-	}
+	ImGui::Begin("Test");
+	ImGui::Text("point morton : %d", pointCol.GetMortonNumber());
+	ImGui::Text("aabb morton : %d", aabbCol.GetMortonNumber());
+	ImGui::End();
 }

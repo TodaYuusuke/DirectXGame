@@ -9,10 +9,8 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 
 void OctreeSpaceDivision::Init() {
-	//divisionLevel = 4;
-	//spaceSize = 1000.0f;
-	divisionLevel = 1;
-	spaceSize = 10.0f;
+	divisionLevel = 4;
+	spaceSize = 500.0f;
 	centerPosition = { 0.0f,0.0f,0.0f };
 }
 
@@ -41,7 +39,7 @@ int OctreeSpaceDivision::GetMortonNumber(Vector3 position) {
 int OctreeSpaceDivision::GetMortonNumber(Vector3 min, Vector3 max) {
 	// 計算に必要な変数
 	Vector3 octMin = GetMin();
-	Vector3 octMax = GetMax();
+	//Vector3 octMax = GetMax();
 	float cellSize = GetCellSize();
 
 	// 空間の外側の点ならば、-1を返す
@@ -94,7 +92,7 @@ DWORD OctreeSpaceDivision::GetMortonOrder(const Math::Vector3& point) {
 	return BitSeparate(BYTE(point.x)) | BitSeparate(BYTE(point.y)) << 1 | BitSeparate(BYTE(point.z)) << 2;
 }
 int OctreeSpaceDivision::GetSpaceLevelObjects(const int& spaceLevel) {
-	return int(powf(8.0f, float(spaceLevel - 1)));
+	return int(powf(8.0f, float(spaceLevel)));
 }
 int OctreeSpaceDivision::GetSpaceLevelObjectsSum(const int& spaceLevel) {
 	if (spaceLevel < 0) { return 0; }	// 空間レベルが0未満の場合要素数は0

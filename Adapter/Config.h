@@ -174,7 +174,7 @@ namespace LWP::Config {
 			Bullet = ColMask2,
 			Ground = ColMask3,
 			Particle = ColMask4,
-			Layer5 = ColMask5,
+			Terrain = ColMask5,
 			Layer6 = ColMask6,
 			Layer7 = ColMask7,
 			Layer8 = ColMask8,

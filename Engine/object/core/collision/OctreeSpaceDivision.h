@@ -3,12 +3,7 @@
 #include <map>
 #include <list>
 #include <cmath>
-
-#if DEMO
-#include "primitive/3d/Cube.h"
-#endif
-
-
+#include <windows.h>
 
 namespace LWP::Object {
 	/// <summary>

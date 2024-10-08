@@ -9,6 +9,8 @@ using namespace LWP::Resource;
 using namespace LWP::Math;
 using namespace LWP::Base;
 
+Terrain::Terrain() {}
+
 Terrain::Terrain(const Terrain& other) { *this = other; }
 
 void Terrain::Update() {}
@@ -24,6 +26,7 @@ void Terrain::Create(const Resource::StaticModel& model) {
 	StructuredBuffer<OutputVertexStruct>* vertices = model.vertexBuffer_.get();	// 頂点
 
 	// -- モデルデータからポリゴンを生成 -- //
+	polygonMap_.clear();
 	for (int i = 0; i < indexes.size(); i += 3) {
 		Terrain::Polygon p;
 		p.pos[0] = vertices->data_[indexes[i]].position.xyz();

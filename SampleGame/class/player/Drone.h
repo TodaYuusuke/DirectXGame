@@ -5,12 +5,14 @@ class Drone final {
 public:
 
 	// 初期化
-	void Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain);
+	void Init(LWP::Object::Camera* ptr);
 	// 更新
 	void Update();
 
 	// モデルの状態をセット
 	void SetModelTF(LWP::Math::Vector3 pos, LWP::Math::Quaternion rotation);
+	// モデルにペアレントするためにWorldTFを返す関数
+	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 
 private: // ** メンバ定数 ** //
 

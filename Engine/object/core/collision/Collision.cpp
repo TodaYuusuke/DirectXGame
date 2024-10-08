@@ -42,6 +42,8 @@ void Collision::Update() {
 	else {
 		mortonNumber = octree_->GetMortonNumber(min, max);
 	}
+	// ブロードにはモートン序列番号を渡しておく（Terrainとの当たり判定用）
+	ptr->mortonNumber = mortonNumber;
 }
 
 void Collision::SetFollowTarget(Object::TransformQuat* ptr) {

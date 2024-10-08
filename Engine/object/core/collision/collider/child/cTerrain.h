@@ -23,7 +23,7 @@ namespace LWP::Object::Collider {
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
-		Terrain() = default;
+		Terrain();
 		// コピーコンストラクタ
 		Terrain(const Terrain& other);
 

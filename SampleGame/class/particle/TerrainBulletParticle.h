@@ -8,8 +8,6 @@ class TerrainBulletParticle : public LWP::Object::Particle<LWP::Resource::RigidM
 public: // ** メンバ変数 ** //
 	// 地形のポインタ
 	LWP::Object::Terrain* terrain;
-	// 識別番号、地形との当たり判定のマップ
-	//std::map<int, LWP::Object::TerrainCollider::Point> map;
 
 private: // ** 純粋仮想関数のオーバーライド ** //
 
@@ -33,7 +31,16 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		newData.velocity = dir.Normalize() * multiply;
 
 		// 地形との当たり判定を生成
-		//map[newData.idNumber].Init(terrain, &newData.m.worldTF);
+		newData.collider = new LWP::Object::Collision;
+		newData.collider->SetFollowTarget(&newData.m.worldTF);
+		newData.collider->mask.SetBelongFrag(lwpC::Collider::Particle);	// フラグ設定
+		newData.collider->mask.SetHitFrag(lwpC::Collider::Terrain);
+		newData.collider->enterLambda = [&newData, this](LWP::Object::Collision* col) {
+			// 跳ねる
+			newData.velocity.y *= -0.35f;
+			newData.velocity.x *= 0.6f;
+			newData.velocity.z *= 0.6f;
+		};
 	};
 	/// <summary>
 	/// パーティクルの更新処理
@@ -43,13 +50,6 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 	bool UpdateParticle(Data& data) override {
 		// 速度がある程度ある間の処理
 		if (data.velocity.Length() > 0.01f) {
-			// 前フレームに地形と当たっていたなら -> 跳ねる
-			/*if (map[data.idNumber].preFrameHit) {
-				data.velocity.y *= -0.35f;
-				data.velocity.x *= 0.6f;
-				data.velocity.z *= 0.6f;
-			}*/
-
 			data.m.worldTF.translation += data.velocity;    // 速度ベクトルを加算
 			data.m.worldTF.rotation += data.velocity;    // ついでに回転させとく
 			data.m.worldTF.rotation = data.m.worldTF.rotation.Normalize();
@@ -58,16 +58,21 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 			data.velocity.y += -9.8f / 600.0f;
 		}
 		// 速度がなくなった時の処理
-		else if(data.elapsedTime <= 1.0f) {
-			data.velocity = { 0.0f,0.0f,0.0f };
+		//else if(data.elapsedTime <= 1.0f) {
+		//	data.velocity = { 0.0f,0.0f,0.0f };
 
-			// 経過フレーム加算
-			data.elapsedTime += LWP::Info::GetDeltaTimeF();
-			data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(data.elapsedTime));
-		}
+		//	// 経過フレーム加算
+		//	data.elapsedTime += LWP::Info::GetDeltaTimeF();
+		//	data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(data.elapsedTime));
+		//}
 		// 1秒かけて消滅アニメーションを完了したとき
 		else {
-			//map.erase(data.idNumber);	// 地形のコライダー削除
+			return true;
+		}
+
+		// 3秒たったら必ず消去
+		data.elapsedTime += LWP::Info::GetDeltaTimeF();
+		if (data.elapsedTime <= 3.0f) {
 			return true;
 		}
 

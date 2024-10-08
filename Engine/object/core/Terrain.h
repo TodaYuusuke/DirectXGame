@@ -25,14 +25,15 @@ namespace LWP::Object {
 		// デバッグ用GUI
 		void DebugGUI() override;
 
+	public: // ** パブリックなメンバ変数 ** //
+		// コライダー
+		Object::Collision collision;
 
 	private: // ** メンバ変数 ** //
 
 		// 地形のモデル
 		Resource::StaticModel model_;
-		// コライダー
-		Object::Collision collision_;
-		// テレインコライダーの参照
+		// Terrainコライダーの参照
 		Object::Collider::Terrain& collider_;
 	};
 }

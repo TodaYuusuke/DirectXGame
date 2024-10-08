@@ -63,8 +63,9 @@ void AABB::Update() {
 }
 void AABB::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
 	// そのまま返すだけ
-	*minPtr = min;
-	*maxPtr = max;
+	AABB::Data d(*this);
+	*minPtr = d.min;
+	*maxPtr = d.max;
 }
 
 void AABB::Create(const LWP::Math::Vector3& position) { Create(position, { 1.0f,1.0f,1.0 }); }

@@ -28,7 +28,7 @@ private: // ** メンバ変数 ** //
 	LWP::Resource::RigidModel model_;
 	// コライダー
 	LWP::Object::Collision collision_;
-	LWP::Object::Collider::Capsule& capsule_;
+	LWP::Object::Collider::Point& point_;
 	
 	// 経過時間
 	float time_ = 0.0f;
@@ -38,7 +38,7 @@ private: // ** メンバ変数 ** //
 	bool isAlive_ = true;
 
 	// 弾の速度
-	float kSpeed_ = 10.0f;
+	float kSpeed_ = 1.0f;
 	// 消滅までの時間
 	float kAliveTime_ = 3.0f;
 };
