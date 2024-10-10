@@ -28,7 +28,7 @@ private: // ** メンバ変数 ** //
 	LWP::Resource::RigidModel model_;
 	// コライダー
 	LWP::Object::Collision collision_;
-	LWP::Object::Collider::Point& point_;
+	LWP::Object::Collider::Capsule& capsule_;
 	
 	// 経過時間
 	float time_ = 0.0f;

@@ -13,6 +13,10 @@ void Drone::Init(LWP::Object::Camera* ptr) {
 	model_.LoadShortPath("Drone/Drone.gltf");
 	model_.SetAllMaterialLighting(true);
 	model_.isActive = false;
+	// コライダー
+	collision_.SetFollowTarget(&model_.worldTF);
+	collision_.name = "Drone";
+	collision_.isMove = true;
 	
 	// アニメーション用意
 	anim_.LoadFullPath("resources/model/Drone/Drone.gltf", &model_);

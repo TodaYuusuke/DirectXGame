@@ -7,7 +7,7 @@ using namespace LWP::Primitive;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainBulletParticle* particle) : point_(collision_.SetBroadShape(Collider::Point())) {
+Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainBulletParticle* particle) : capsule_(collision_.SetBroadShape(Collider::Capsule())) {
 	// モデル初期設定
 	model_.LoadSphere();
 	model_.worldTF.translation = position;
@@ -40,9 +40,9 @@ Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::O
 		isAlive_ = false;
 		return;
 	};
-	//capsule_.start = model_.worldTF.GetWorldPosition();
-	//capsule_.end = capsule_.start;
-	//capsule_.radius = 0.2f;
+	capsule_.start = model_.worldTF.GetWorldPosition();
+	capsule_.end = capsule_.start;
+	capsule_.radius = 0.2f;
 
 	// 地形とのコライダー
 	//terrainPoint_.Init(terrain, &model_.worldTF);

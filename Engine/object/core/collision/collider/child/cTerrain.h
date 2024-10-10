@@ -1,6 +1,6 @@
 #pragma once
 #include "../ICollider.h"
-#include "../../OctreeSpaceDivision.h"
+#include "../../QuadtreeSpaceDivision.h"
 
 // 前方宣言
 namespace LWP {
@@ -18,7 +18,7 @@ namespace LWP::Object::Collider {
 			Math::Vector3 pos[3];	// 3点
 			Math::Vector3 normal;	// 向いている法線
 		};
-		// モートン序列番号（8分木空間分割）ごとにリスト化されたポリゴンのマップ
+		// モートン序列番号（4分木空間分割）ごとにリスト化されたポリゴンのマップ
 		std::map<int, std::list<Polygon>> polygonMap_;
 
 	public: // ** メンバ関数 ** //
@@ -35,8 +35,6 @@ namespace LWP::Object::Collider {
 		// Staticモデルと適応するwtfからコライダーを生成
 		void Create(const Resource::StaticModel& model);
 
-		// octreeのポインタをセット
-		void SetOctree(Object::OctreeSpaceDivision* octree) { octree_ = octree; }
 		// 形状を返す
 		Shape GetShape() override { return Shape::Terrain; }
 		// ImGuiの派生クラス
@@ -44,7 +42,7 @@ namespace LWP::Object::Collider {
 
 	private:
 		// octreeのポインタ
-		Object::OctreeSpaceDivision* octree_;
+		Object::QuadtreeSpaceDivision quadtree_;
 		// このモデルを囲うAABB
 		LWP::Math::Vector3 min_;
 		LWP::Math::Vector3 max_;

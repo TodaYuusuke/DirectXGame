@@ -72,7 +72,7 @@ void AABB::Create(const LWP::Math::Vector3& position) { Create(position, { 1.0f,
 void AABB::Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& size) {
 	// サイズの値を求める
 	LWP::Math::Vector3 s = size / 2.0f;
-	min = (s * -1.0f) + position; 
+	min = (s * -1.0f) + position;
 	max = s + position;
 }
 

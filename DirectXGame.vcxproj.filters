@@ -364,6 +364,7 @@
     <ClCompile Include="Engine\resources\model\StaticModel.cpp">
       <Filter>Engine\resources\model</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -816,6 +817,7 @@
     <ClInclude Include="Externals\nlohmann\json.hpp">
       <Filter>Externals\nlohmann</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -16,7 +16,7 @@ void ColliderTest::Initialize() {
 	drone_.Init(&mainCamera);
 
 	// Terrainのマスク変更
-	levelData.terrain->collision.mask.SetBelongFrag(lwpC::Collider::ALL);
+	//levelData.terrain->collision.mask.SetBelongFrag(lwpC::Collider::ALL);
 
 	// モデル読み込み
 	mesh.LoadShortPath("meshColliderTest/meshColTest.gltf");

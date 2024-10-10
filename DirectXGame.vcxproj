@@ -220,6 +220,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp" />
     <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\core\collision\OctreeSpaceDivision.cpp" />
+    <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
@@ -360,6 +361,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\collision\collider\ICollider.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
     <ClInclude Include="Engine\object\core\collision\OctreeSpaceDivision.h" />
+    <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
     <ClInclude Include="Engine\object\core\light\PointLight.h" />
     <ClInclude Include="Engine\object\core\Particle.h" />

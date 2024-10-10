@@ -30,6 +30,8 @@ private: // ** メンバ変数 ** //
 	LWP::Resource::SkinningModel model_;
 	// アニメーション
 	LWP::Resource::Animation anim_;
+	// コライダー
+	LWP::Object::Collision collision_;
 	// 光源
 	LWP::Object::PointLight pointLight_;
 

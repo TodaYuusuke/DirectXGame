@@ -33,7 +33,7 @@
 #define ColMask13 0b1 << 13	// 0010000000000000
 #define ColMask14 0b1 << 14	// 0100000000000000
 #define ColMask15 0b1 << 15	// 1000000000000000
-#define ColMaskALL (0b1 << 16) | !(0b1 << 16)	// 1111111111111111
+#define ColMaskALL (0b1 << 16) - 0b1	// 1111111111111111
 
 
 namespace LWP::Object {
@@ -44,8 +44,10 @@ namespace LWP::Object {
 	public: // ** 内包クラス ** //
 		class Mask {
 		public: // ** パブリックなメンバ関数 ** //
-			// 引数のマスクが所属しているグループと重なるか検証する関数
+			// 引数のマスクが所属しているグループと重なるか検証する関数/
 			bool CheckBelong(Mask hit) { return belongFrag & hit.GetHitFrag(); }
+			// デバッグ用ImGui
+			void DebugGUI();
 
 		private: // ** プロパティ変数 ** //
 			// 衝突を検証するグループのフラグ
@@ -150,22 +152,6 @@ namespace LWP::Object {
 			broad = t;
 			GetBasePtr(broad)->SetFollowPtr(&worldTF);
 			return std::get<T>(broad);
-		}
-		/// <summary>
-		/// ブロードフェーズの形状をセットする関数（Terrain特殊化）
-		/// </summary>
-		/// <typeparam name="T">IColliderShapeを継承したクラスのみ</typeparam>
-		/// <param name="t">代入する実態</param>
-		/// <returns>代入された実体への参照を返す</returns>
-		template<>
-		Collider::Terrain& SetBroadShape<Collider::Terrain>(const Collider::Terrain& t) {
-			broad = t;
-			Collider::ICollider* ptr = GetBasePtr(broad);
-			ptr->SetFollowPtr(&worldTF);	// followをセット
-			// Terrainはポリゴンにモートン序列番号を適応するために必須（いったん無理やり実装）
-			Collider::Terrain* terrain = dynamic_cast<Collider::Terrain*>(ptr);
-			terrain->SetOctree(octree_);
-			return std::get<Collider::Terrain>(broad);
 		}
 
 	private: // ** メンバ変数 ** //

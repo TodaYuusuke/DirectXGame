@@ -17,6 +17,7 @@ Terrain::Terrain() : collider_(collision.SetBroadShape(Collider::Terrain())) {
 // 初期化
 void Terrain::Initialize() {
 	collision.mask.SetBelongFrag(lwpC::Collider::Terrain);
+	collision.mask.SetHitFrag(lwpC::Collider::None);
 	collision.name = "Terrain";
 }
 // 更新

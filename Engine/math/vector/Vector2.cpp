@@ -32,6 +32,12 @@ Vector2 Vector2::operator*(const Matrix4x4& other) const {
 	result.y = x * other.m[0][1] + y * other.m[1][1] + other.m[2][1] + other.m[3][1];
 	return result;
 }
+Vector2 Vector2::operator/(const float& other) const {
+	return { x / other, y / other };
+}
+Vector2& Vector2::operator/=(const float& other) {
+	return *this = *this / other;
+}
 
 float Vector2::Length() {
 	return sqrtf(x * x + y * y);

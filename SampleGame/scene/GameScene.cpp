@@ -41,6 +41,10 @@ void GameScene::Initialize() {
 	// Terrainのマスク変更
 	levelData.terrain->collision.mask.SetBelongFrag(lwpC::Collider::ALL);
 	levelData.terrain->collision.mask.SetHitFrag(lwpC::Collider::ALL);
+	/*levelData.terrain->collision.enterLambda = [](LWP::Object::Collision* c) {
+		ImGui::Begin("Hit!!");
+		ImGui::End();
+	};*/
 	//levelData.terrain->collision.mask.SetHitFrag(lwpC::Collider::Particle | lwpC::Collider::Bullet);
 }
 // 更新

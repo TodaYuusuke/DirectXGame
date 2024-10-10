@@ -264,10 +264,10 @@ bool Terrain::CheckCollision(Point& c, Math::Vector3* fixVec) {
 	Point::Data pos(c);
 
 	// 検索するモートン番号
-	const uint32_t kTargetMorton = c.mortonNumber;
+	const uint32_t kTargetMorton = quadtree_.GetMortonNumber(pos.position);
 	if (kTargetMorton == -1) { return false; }	// -1だった場合早期終了
 	uint32_t currentMorton = kTargetMorton;	// 現在のモートン番号（下位レベルから検証）
-	uint32_t currentSpaceLevel = octree_->divisionLevel;	// 現在の空間レベル（下位レベルから検証）
+	uint32_t currentSpaceLevel = quadtree_.divisionLevel;	// 現在の空間レベル（下位レベルから検証）
 	
 	while (true) {
 		// 現在の空間内の全オブジェクトと検証
@@ -303,8 +303,8 @@ bool Terrain::CheckCollision(Point& c, Math::Vector3* fixVec) {
 			break;
 		}
 		// 検証が終わったので上の空間レベルへ
-		currentMorton = (currentMorton - octree_->GetSpaceLevelObjectsSum(currentSpaceLevel--)) >> 3;
-		currentMorton += octree_->GetSpaceLevelObjectsSum(currentSpaceLevel);
+		currentMorton = (currentMorton - quadtree_.GetSpaceLevelObjectsSum(currentSpaceLevel--)) >> 2;
+		currentMorton += quadtree_.GetSpaceLevelObjectsSum(currentSpaceLevel);
 	};
 	
 	// 命中しなかったのでfalse
