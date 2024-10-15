@@ -105,17 +105,10 @@ void LevelData::HotReload() {
 			wtf.scale *= scale;	// 全体の倍率をかける
 			staticModels[objName].ApplyWorldTransform(wtf);
 
-			// もしファイル名がRockの場合
-			//if (objName == "AABB") {
-			//	// Meshコライダーを生成
-			//	Collider::Mesh& m = collisions[objName].SetBroadShape(Collider::Mesh());
-			//	m.Create(&staticModels[objName]);
-			//}
-
 			// コライダーがあれば生成
 			if (object.contains("collider")) {
 				nlohmann::json& collider = object["collider"];
-				if (collider["type"] == "AABB") {
+				if (collider["type"] == "AABB") {	// AABBコライダーを生成
 					Collider::AABB& aabb = collisions[objName].SetBroadShape(Collider::AABB());
 					aabb.min = {
 						static_cast<float>(collider["min"][0]),
@@ -128,6 +121,13 @@ void LevelData::HotReload() {
 						static_cast<float>(collider["max"][1]),
 					};
 					collisions[objName].worldTF = wtf;
+					collisions[objName].mask.SetBelongFrag(lwpC::Collider::FieldObject);
+					collisions[objName].mask.SetHitFrag(lwpC::Collider::ALL ^ lwpC::Collider::Terrain);
+				}
+				else if (collider["type"] == "MESH") {
+					// Meshコライダーを生成
+					Collider::Mesh& m = collisions[objName].SetBroadShape(Collider::Mesh());
+					m.Create(&staticModels[objName]);
 				}
 			}
 

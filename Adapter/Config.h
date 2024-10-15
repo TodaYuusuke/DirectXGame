@@ -174,7 +174,7 @@ namespace LWP::Config {
 			Bullet = ColMask2,
 			Ground = ColMask3,
 			Particle = ColMask4,
-			Terrain = ColMask5,
+			Layer5 = ColMask5,
 			Layer6 = ColMask6,
 			Layer7 = ColMask7,
 			Layer8 = ColMask8,
@@ -183,8 +183,8 @@ namespace LWP::Config {
 			Layer11 = ColMask11,
 			Layer12 = ColMask12,
 			Layer13 = ColMask13,
-			Layer14 = ColMask14,
-			Layer15 = ColMask15,
+			FieldObject = ColMask14,	// Blenderで配置した地形
+			Terrain = ColMask15,		// Terrain
 			ALL = ColMaskALL,
 		};
 	};

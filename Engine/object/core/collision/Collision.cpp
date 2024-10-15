@@ -20,7 +20,7 @@ void Collision::Mask::DebugGUI() {
 		"Bullet",
 		"Ground",
 		"Particle",
-		"Terrain",
+		"Layer5",
 		"Layer6",
 		"Layer7",
 		"Layer8",
@@ -29,8 +29,8 @@ void Collision::Mask::DebugGUI() {
 		"Layer11",
 		"Layer12",
 		"Layer13",
-		"Layer14",
-		"Layer15",
+		"FieldObject",
+		"Terrain",
 	};
 
 	if (ImGui::TreeNode("Mask")) {
@@ -110,7 +110,7 @@ void Collision::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
 	else { worldTF.translation += fixVector; }
 }
 
-bool Collision::CheckMask(Collision* c) { return mask.CheckBelong(c->mask) || c->mask.CheckBelong(mask); }
+bool Collision::CheckMask(Collision* c) { return mask.CheckBelong(c->mask) && c->mask.CheckBelong(mask); }
 void Collision::CheckCollision(Collision* c) {
 	// お互いがアクティブかつマスクが成立していない -> 早期リターン
 	if (!(isActive && c->isActive && (CheckMask(c)))) { return; }

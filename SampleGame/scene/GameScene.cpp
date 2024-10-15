@@ -37,15 +37,6 @@ void GameScene::Initialize() {
 	stagingSprite_.material.enableLighting = false;
 	stagingSprite_.material.color = ColorPattern::BLACK;
 	stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
-
-	// Terrainのマスク変更
-	levelData.terrain->collision.mask.SetBelongFrag(lwpC::Collider::ALL);
-	levelData.terrain->collision.mask.SetHitFrag(lwpC::Collider::ALL);
-	/*levelData.terrain->collision.enterLambda = [](LWP::Object::Collision* c) {
-		ImGui::Begin("Hit!!");
-		ImGui::End();
-	};*/
-	//levelData.terrain->collision.mask.SetHitFrag(lwpC::Collider::Particle | lwpC::Collider::Bullet);
 }
 // 更新
 void GameScene::Update() {

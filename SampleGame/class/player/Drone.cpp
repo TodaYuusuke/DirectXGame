@@ -17,6 +17,8 @@ void Drone::Init(LWP::Object::Camera* ptr) {
 	collision_.SetFollowTarget(&model_.worldTF);
 	collision_.name = "Drone";
 	collision_.isMove = true;
+	collision_.mask.SetBelongFrag(lwpC::Collider::Player);	// フラグ設定
+	collision_.mask.SetHitFrag(lwpC::Collider::FieldObject | lwpC::Collider::Terrain);
 	
 	// アニメーション用意
 	anim_.LoadFullPath("resources/model/Drone/Drone.gltf", &model_);
@@ -157,7 +159,7 @@ void Drone::Shot() {
 	for (Bullet& b : bullets_) {
 		b.Update();
 	}
-
+	// 死亡した弾を削除
 	bullets_.remove_if([](Bullet& data) {
 		if (!data.GetAlive()) {
 			return true;

@@ -7,7 +7,7 @@ using namespace LWP::Primitive;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainBulletParticle* particle) : capsule_(collision_.SetBroadShape(Collider::Capsule())) {
+Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainBulletParticle* particle) : capsule_(collision_.SetBroadShape(Collider::Point())) {
 	// モデル初期設定
 	model_.LoadSphere();
 	model_.worldTF.translation = position;
@@ -15,8 +15,9 @@ Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::O
 
 	// コライダー
 	collision_.SetFollowTarget(&model_.worldTF);
+	collision_.name = "Bullet";
 	collision_.mask.SetBelongFrag(lwpC::Collider::Bullet);	// フラグ設定
-	collision_.mask.SetHitFrag(lwpC::Collider::Enemy | lwpC::Collider::Terrain);
+	collision_.mask.SetHitFrag(lwpC::Collider::Enemy | lwpC::Collider::FieldObject | lwpC::Collider::Terrain);
 	collision_.enterLambda = [this](Collision* c) {
 		// 地形にヒットしていたなら終了
 		
@@ -34,18 +35,12 @@ Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::O
 		//result.y = modelY;
 		//result.z = start.z + t * (end.z - start.z);
 
-		// ここでパーティクル生成
-		particle_->Add(10, model_.worldTF.GetWorldPosition());
-
 		isAlive_ = false;
 		return;
 	};
-	capsule_.start = model_.worldTF.GetWorldPosition();
-	capsule_.end = capsule_.start;
-	capsule_.radius = 0.2f;
-
-	// 地形とのコライダー
-	//terrainPoint_.Init(terrain, &model_.worldTF);
+	//capsule_.start = model_.worldTF.GetWorldPosition();
+	//capsule_.end = capsule_.start;
+	//capsule_.radius = 0.2f;
 
 	// 引数を保持
 	direction_ = direction;
@@ -53,7 +48,13 @@ Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::O
 }
 
 void Bullet::Update() {
-	if (!isAlive_) { return; }
+	if (!isAlive_) {
+		// ここでパーティクル生成
+		Vector3 p = model_.worldTF.GetWorldPosition();
+		p.y += 0.5f;
+		particle_->Add(10, p);
+		return;
+	}
 
 	// 経過時間更新
 	time_ += GetDeltaTimeF();

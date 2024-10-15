@@ -15,25 +15,25 @@ void ColliderTest::Initialize() {
 	// プレイヤー初期化
 	drone_.Init(&mainCamera);
 
-	// Terrainのマスク変更
-	//levelData.terrain->collision.mask.SetBelongFrag(lwpC::Collider::ALL);
-
 	// モデル読み込み
-	mesh.LoadShortPath("meshColliderTest/meshColTest.gltf");
-	//mesh.ApplyWorldTransform({
-	//	{8.0f,8.0f,8.0f},
-	//	Quaternion(),
-	//	{1.0f,1.0f,1.0f}
-	//});
+	mesh.LoadShortPath("test/meshCollider/Rock.gltf");
+	mesh.ApplyWorldTransform({
+		{8.0f,8.0f,8.0f},
+		Quaternion(),
+		{10.0f,10.0f,10.0f}
+	});
 	Collider::Mesh& m = meshCol.SetBroadShape(Collider::Mesh());
 	m.Create(&mesh);
+	meshCol.mask.SetBelongFrag(lwpC::Collider::FieldObject);
+	meshCol.mask.SetHitFrag(lwpC::Collider::Bullet | lwpC::Collider::Particle | lwpC::Collider::Player);
 
 	pointCol.SetFollowTarget(drone_.GetWorldTF());
 	pointCol.worldTF.translation = { 0.0f, 0.0f, 10.0f };
 	pointCol.name = "point";
 	pointCol.isMove = true;
-	aabbCol.SetFollowTarget(&pointCol.worldTF);
+	//aabbCol.SetFollowTarget(&pointCol.worldTF);
 	aabbCol.SetBroadShape(Collider::AABB());
+	aabbCol.mask.SetBelongFrag(lwpC::Collider::None);
 	aabbCol.name = "aabb";
 	aabbCol.isMove = true;
 }

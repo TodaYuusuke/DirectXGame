@@ -9,6 +9,8 @@ public: // ** メンバ変数 ** //
 	// 地形のポインタ
 	LWP::Object::Terrain* terrain;
 
+	float t = 0.0f;
+
 private: // ** 純粋仮想関数のオーバーライド ** //
 
 	/// <summary>
@@ -34,7 +36,8 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		newData.collider = new LWP::Object::Collision;
 		newData.collider->SetFollowTarget(&newData.m.worldTF);
 		newData.collider->mask.SetBelongFrag(lwpC::Collider::Particle);	// フラグ設定
-		newData.collider->mask.SetHitFrag(lwpC::Collider::Terrain);
+		newData.collider->mask.SetHitFrag(lwpC::Collider::FieldObject | lwpC::Collider::Terrain);
+		newData.collider->isMove = true;
 		newData.collider->enterLambda = [&newData, this](LWP::Object::Collision* col) {
 			// 跳ねる
 			newData.velocity.y *= -0.35f;
@@ -48,6 +51,12 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 	/// <param name="data">更新する実態の参照</param>
 	/// <returns></returns>
 	bool UpdateParticle(Data& data) override {
+		// ある程度たったら強制削除
+		data.elapsedTime += LWP::Info::GetDeltaTimeF();
+		if (data.elapsedTime > 5.0f) {
+			return true;
+		}
+
 		// 速度がある程度ある間の処理
 		if (data.velocity.Length() > 0.01f) {
 			data.m.worldTF.translation += data.velocity;    // 速度ベクトルを加算
@@ -58,21 +67,15 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 			data.velocity.y += -9.8f / 600.0f;
 		}
 		// 速度がなくなった時の処理
-		//else if(data.elapsedTime <= 1.0f) {
-		//	data.velocity = { 0.0f,0.0f,0.0f };
+		else if(t <= 1.0f) {
+			data.velocity = { 0.0f,0.0f,0.0f };
 
-		//	// 経過フレーム加算
-		//	data.elapsedTime += LWP::Info::GetDeltaTimeF();
-		//	data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(data.elapsedTime));
-		//}
+			// 経過フレーム加算
+			t += LWP::Info::GetDeltaTimeF();
+			data.m.worldTF.scale = LWP::Utility::Interp::Lerp({ 0.4f,0.4f,0.4f }, { 0.0f,0.0f,0.0f }, LWP::Utility::Easing::InCubic(t));
+		}
 		// 1秒かけて消滅アニメーションを完了したとき
 		else {
-			return true;
-		}
-
-		// 3秒たったら必ず消去
-		data.elapsedTime += LWP::Info::GetDeltaTimeF();
-		if (data.elapsedTime <= 3.0f) {
 			return true;
 		}
 

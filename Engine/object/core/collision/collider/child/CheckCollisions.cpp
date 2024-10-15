@@ -287,15 +287,15 @@ bool Terrain::CheckCollision(Point& c, Math::Vector3* fixVec) {
 			Vector3 cross12 = Vector3::Cross((p.pos[1] - p.pos[2]), (p.pos[2] - hitPosition));
 			Vector3 cross20 = Vector3::Cross((p.pos[2] - p.pos[0]), (p.pos[0] - hitPosition));
 
-			// すべての小三角形のクロス積と法線が同じ方向を向いていたら衝突
+			// すべての小三角形のクロス積と法線が同じ方向を向いていたら衝突可能
 			if (Vector3::Dot(cross01, p.normal) >= 0.0f && Vector3::Dot(cross12, p.normal) >= 0.0f && Vector3::Dot(cross20, p.normal) >= 0.0f) {
 				// 衝突点がposより上だった場合 -> 座標を修正
 				if (hitPosition.y > pos.position.y) {
 					*fixVec = hitPosition - pos.position;
 					// 命中したので戻る
 					CallHit(this, &c, true);
+					return true;
 				}
-				return true;
 			}
 		}
 		// 検証したモートン番号が0だった場合終了
