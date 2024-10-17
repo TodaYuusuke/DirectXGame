@@ -24,8 +24,11 @@ namespace LWP::Resource {
 		std::map<std::string, SkinningModel> skinModels;
 		// スタティックモデル
 		std::map<std::string, StaticModel> staticModels;
+
 		// 当たり判定
 		std::map<std::string, Object::Collision> collisions;
+		// CatmullRom曲線
+		//std::map<std::string, Object::Collision> catmull_Rom;
 
 		// 地形
 		std::unique_ptr<Object::Terrain> terrain;
