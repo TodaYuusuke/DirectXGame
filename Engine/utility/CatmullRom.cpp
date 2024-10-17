@@ -4,6 +4,9 @@
 
 using namespace LWP::Math;
 using namespace LWP::Utility;
+void CatmullRom::Init() {
+	t = 0.0f;	// tをゼロにするだけ
+}
 
 Vector3 CatmullRom::GetPosition() {
 	// 4頂点未満の場合計算しない

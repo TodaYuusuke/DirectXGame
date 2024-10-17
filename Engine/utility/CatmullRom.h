@@ -26,6 +26,10 @@ namespace LWP::Utility {
 		~CatmullRom() = default;
 
 		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Init();
+		/// <summary>
 		/// 現在の補間地点の座標を求める関数
 		/// </summary>
 		LWP::Math::Vector3 GetPosition();
