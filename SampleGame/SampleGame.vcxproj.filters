@@ -61,6 +61,7 @@
       <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="class\camera\CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\car\Car.h">
@@ -108,5 +109,6 @@
     <ClInclude Include="scene\Title.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="class\camera\CameraManager.h" />
   </ItemGroup>
 </Project>

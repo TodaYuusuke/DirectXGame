@@ -13,6 +13,17 @@ namespace LWP::Object::Collider {
 		Terrain,
 		Count	// カウント
 	};
+	// 識別子のstring
+	static std::string kShapeString[] = {
+		"Point",
+		"AABB",
+		"OBB",
+		"Sphere",
+		"Capsule",
+		"Mesh",
+		"Terrain",
+		"Count"
+	};
 
 	// 前方宣言
 	class Point;

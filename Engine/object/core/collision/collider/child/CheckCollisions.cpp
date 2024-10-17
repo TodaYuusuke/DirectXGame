@@ -23,6 +23,20 @@ void CallHit(ICollider* c1, ICollider* c2, const bool& flag) {
 	c1; c2; flag;
 #endif
 }
+bool NotImplementedFunc(ICollider* c1, ICollider* c2, Vector3* v) {
+	// ログ出力でVisualStudioがかなり重くなるので一時的にコメントアウト
+	//Utility::Log(
+	//	"Error!! " +
+	//	kShapeString[static_cast<int>(c1->GetShape())] +
+	//	" * " +
+	//	kShapeString[static_cast<int>(c2->GetShape())] +
+	//	" Capsule Collision is Unimplemented\n"
+	//);
+	c1, c2;
+	*v = { 0.0f,0.0f,0.0f };
+
+	return false;
+}
 
 // 定義の順番
 // Point
@@ -68,7 +82,7 @@ bool Point::CheckCollision(Sphere& c, Math::Vector3* fixVec) {
 	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Point::CheckCollision(Capsule& c, Math::Vector3* fixVec) { Utility::Log("Error!! Point * Capsule Collision is Unimplemented"); c; fixVec; return false; }
+bool Point::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
 bool Point::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Point::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
@@ -203,7 +217,7 @@ bool Sphere::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckC
 bool Capsule::CheckCollision(Point& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(AABB& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-bool Capsule::CheckCollision(Capsule& c, Math::Vector3* fixVec) { Utility::Log("Error!! Capsule * Capsule Collision is Unimplemented"); c; fixVec; return false; }
+bool Capsule::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
 bool Capsule::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
@@ -250,10 +264,10 @@ bool Mesh::CheckCollision(Point& c, Math::Vector3* fixVec) {
 	*fixVec = fixNormal * (-fixDist);
 	return true;
 }
-bool Mesh::CheckCollision(AABB& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * AABB Collision is Unimplemented"); c; fixVec; return false; }
-bool Mesh::CheckCollision(Sphere& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * Sphere Collision is Unimplemented"); c; fixVec; return false; }
-bool Mesh::CheckCollision(Capsule& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * Capsule Collision is Unimplemented"); c; fixVec; return false; }
-bool Mesh::CheckCollision(Mesh& c, Math::Vector3* fixVec) { Utility::Log("Error!! Mesh * Mesh Collision is Unimplemented"); c; fixVec; return false; }
+bool Mesh::CheckCollision(AABB& c, Math::Vector3* fixVec) {	return NotImplementedFunc(this, &c, fixVec); }
+bool Mesh::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Mesh::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Mesh::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
 bool Mesh::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
@@ -310,10 +324,10 @@ bool Terrain::CheckCollision(Point& c, Math::Vector3* fixVec) {
 	// 命中しなかったのでfalse
 	return false;
 }
-bool Terrain::CheckCollision(AABB& c, Math::Vector3* fixVec) { Utility::Log("Error!! Terrain * AABB Collision is Unimplemented"); c; fixVec; return false; }
-bool Terrain::CheckCollision(Sphere& c, Math::Vector3* fixVec) { Utility::Log("Error!! Terrain * Sphere Collision is Unimplemented"); c; fixVec; return false; }
-bool Terrain::CheckCollision(Capsule& c, Math::Vector3* fixVec) { Utility::Log("Error!! Terrain * Capsule Collision is Unimplemented"); c; fixVec; return false; }
-bool Terrain::CheckCollision(Mesh& c, Math::Vector3* fixVec) { Utility::Log("Error!! Terrain * Mesh Collision is Unimplemented"); c; fixVec; return false; }
-bool Terrain::CheckCollision(Terrain& c, Math::Vector3* fixVec) { Utility::Log("Error!! Terrain * Terrain Collision is Unimplemented"); c; fixVec; return false; }
+bool Terrain::CheckCollision(AABB& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Terrain::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Terrain::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Terrain::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Terrain::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
 
 #pragma endregion

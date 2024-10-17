@@ -155,5 +155,10 @@ namespace LWP::Resource {
 		/// Collider用ImGui
 		/// </summary>
 		void ColliderDebugGUI();
+		/// <summary>
+		/// CatmullRom用ImGui
+		/// </summary>
+		void CatmullRomDebugGUI();
+
 	};
 }

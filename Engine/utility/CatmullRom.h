@@ -36,6 +36,11 @@ namespace LWP::Utility {
 		void DebugGUI();
 
 
+	private: // ** メンバ変数 ** //
+
+		// 何番目の頂点を見てるかのインデックス
+		int index_ = 0;
+
 	private: // ** プライベートなメンバ関数 ** //
 
 		// 補間

@@ -107,6 +107,8 @@ void LevelData::DebugGUI() {
 		ImGui::RadioButton("Static", &radioValue, 2);
 		ImGui::SameLine();
 		ImGui::RadioButton("Collider", &radioValue, 3);
+		ImGui::SameLine();
+		ImGui::RadioButton("CatmullRom", &radioValue, 4);
 
 		switch (radioValue) {
 			case 0:
@@ -120,6 +122,9 @@ void LevelData::DebugGUI() {
 				break;
 			case 3:
 				ColliderDebugGUI();
+				break;
+			case 4:
+				CatmullRomDebugGUI();
 				break;
 		}
 		ImGui::EndTabItem();
@@ -278,6 +283,22 @@ void LevelData::ColliderDebugGUI() {
 		(*Utility::GetIteratorAtIndex<std::string, Collision>(collisions, currentItem)).second.DebugGUI();
 	}
 }
+void LevelData::CatmullRomDebugGUI() {
+	// 読み込み済みのモデル一覧
+	if (!catmullRomCurves.empty()) {
+		std::vector<const char*> itemText;
+		// 一覧のパス取得
+		for (const auto& c : catmullRomCurves) {
+			itemText.push_back(c.first.c_str());
+		}
+		static int currentItem = 0;
+		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+		// 選択された番号のDebugGUIを呼び出す
+		(*Utility::GetIteratorAtIndex<std::string, CatmullRom>(catmullRomCurves, currentItem)).second.DebugGUI();
+	}
+}
+
 
 // 短縮用パス
 const std::string LevelData::kDirectoryPath = "resources/level/";

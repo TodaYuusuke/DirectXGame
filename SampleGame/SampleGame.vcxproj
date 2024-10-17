@@ -137,6 +137,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="class\camera\CameraManager.cpp" />
     <ClCompile Include="class\car\Car.cpp" />
     <ClCompile Include="class\field\Field.cpp" />
     <ClCompile Include="class\player\Bullet.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="class\camera\CameraManager.h" />
     <ClInclude Include="class\car\Car.h" />
     <ClInclude Include="class\field\Field.h" />
     <ClInclude Include="class\particle\DamageParticle.h" />

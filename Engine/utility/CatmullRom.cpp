@@ -8,7 +8,8 @@ using namespace LWP::Utility;
 Vector3 CatmullRom::GetPosition() {
 	// 4頂点未満の場合計算しない
 	if (controlPoints.size() < 4) {
-		assert(false);
+		return Vector3(-10000.0f, -10000.0f, -10000.0f);
+		//assert(false);
 	}
 
 	// サイズに応じて計算する4点とtの値を求める
@@ -60,7 +61,28 @@ Vector3 CatmullRom::GetPosition() {
 }
 
 void CatmullRom::DebugGUI() {
-	//LWP::Base::ImGuiManager::ColorEdit4(label.c_str(), *this);
+	int size = static_cast<int>(controlPoints.size());
+	// 座標があるなら表示
+	if (!controlPoints.empty()) {
+		ImGui::SliderInt("index", &index_, 0, size - 1);
+		// 配列外参照回避
+		if (index_ >= size) { index_ = size - 1; }
+		ImGui::DragFloat3("point", &controlPoints[index_].x, 0.01f);
+		if (ImGui::Button("Delete this Point")) {
+			controlPoints.erase(controlPoints.begin() + index_);
+		}
+	}
+	ImGui::Text("-----------------");
+	// 新しい座標追加
+	if (ImGui::Button("Add New Point")) { controlPoints.push_back(Vector3()); }
+	// tの値操作
+	ImGui::SliderFloat("t", &t, 0.0f, 1.0f);
+	// 現在の座標を表示
+	Vector3 pos = GetPosition();
+	ImGui::Text("Current Position");
+	ImGui::Text("x = %f", pos.x);
+	ImGui::Text("y = %f", pos.y);
+	ImGui::Text("z = %f", pos.z);
 }
 
 // 補間
