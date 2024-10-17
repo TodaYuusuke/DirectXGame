@@ -8,7 +8,14 @@ namespace LWP::Utility {
 	/// Catmull-Romスプライン曲線
 	/// </summary>
 	class CatmullRom {
-	public:
+	public: // ** パブリックなメンバ変数 ** //
+		// 補間
+		float t = 0.0f;
+		// スプライン曲線制御点
+		std::vector<LWP::Math::Vector3> controlPoints;
+
+
+	public: // ** メンバ関数 ** //
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
@@ -22,32 +29,16 @@ namespace LWP::Utility {
 		/// 現在の補間地点の座標を求める関数
 		/// </summary>
 		LWP::Math::Vector3 GetPosition();
-
-		/// <summary>
-		/// 現在の補間地点の座標をTを指定して求める関数
-		/// </summary>
-		LWP::Math::Vector3 GetPosition(float specifiedT);
 		
 		/// <summary>
-		/// ImGui（未実装）
+		/// Debug用のImGui
 		/// </summary>
-		void DebugGUI(const std::string& label = "CatmullRom");
+		void DebugGUI();
 
 
-	public: // ** メンバ変数 ** //
+	private: // ** プライベートなメンバ関数 ** //
 
-		// スプライン曲線制御点
-		std::vector<LWP::Math::Vector3> controlPoints;
 		// 補間
-		float t = 0.0f;
-
-
-	private: // ** メンバ関数 ** //
-
-		// Catmull-Romスプライン曲線補間
 		LWP::Math::Vector3 Interpolation(LWP::Math::Vector3 p0, LWP::Math::Vector3 p1, LWP::Math::Vector3 p2, LWP::Math::Vector3 p3, float calcT);
-		
-		// 曲線描画（未実装）
-		void Draw(size_t segmentCount);
 	};
 }

@@ -81,56 +81,15 @@ void LevelData::HotReload() {
 
 		// 地形ならば特殊な処理
 		if (objName == "Terrain") {
-			terrain = std::make_unique<Object::Terrain>();
-			terrain->name = "Terrain";
-			// トランスフォームのパラメータ読み込み
-			Object::TransformQuat wtf = LoadWorldTF(object["transform"]);
-			wtf.scale *= scale;	// 全体の倍率をかける
-			terrain->LoadModel(object["file_name"].get<std::string>(), wtf);
+			LoadTerrain(object);
 		}
 		// MESH
 		else if (type.compare("MESH") == 0) {
-			// ファイルパスがあればそのパスを読み込み
-			if (object.contains("file_name")) {
-				staticModels[objName].LoadShortPath(object["file_name"].get<std::string>());
-			}
-			// ファイルパスが無いので仮でCubeを読み込み
-			else {
-				staticModels[objName].LoadCube();
-			}
-
-			// トランスフォームのパラメータ読み込み
-			Object::TransformQuat wtf = LoadWorldTF(object["transform"]);
-			wtf.translation *= scale;	// 全体の倍率をかける
-			wtf.scale *= scale;	// 全体の倍率をかける
-			staticModels[objName].ApplyWorldTransform(wtf);
-
-			// コライダーがあれば生成
-			if (object.contains("collider")) {
-				nlohmann::json& collider = object["collider"];
-				if (collider["type"] == "AABB") {	// AABBコライダーを生成
-					Collider::AABB& aabb = collisions[objName].SetBroadShape(Collider::AABB());
-					aabb.min = {
-						static_cast<float>(collider["min"][0]),
-						static_cast<float>(collider["min"][2]),
-						static_cast<float>(collider["min"][1]),
-					};
-					aabb.max = {
-						static_cast<float>(collider["max"][0]),
-						static_cast<float>(collider["max"][2]),
-						static_cast<float>(collider["max"][1]),
-					};
-					collisions[objName].worldTF = wtf;
-					collisions[objName].mask.SetBelongFrag(lwpC::Collider::FieldObject);
-					collisions[objName].mask.SetHitFrag(lwpC::Collider::ALL ^ lwpC::Collider::Terrain);
-				}
-				else if (collider["type"] == "MESH") {
-					// Meshコライダーを生成
-					Collider::Mesh& m = collisions[objName].SetBroadShape(Collider::Mesh());
-					m.Create(&staticModels[objName]);
-				}
-			}
-
+			LoadMesh(object, objName);
+		}
+		// CURVE
+		else if (type.compare("CURVE") == 0) {
+			LoadCurve(object, objName);
 		}
 	}
 }
@@ -167,33 +126,84 @@ void LevelData::DebugGUI() {
 	}
 }
 
-Object::TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
-	Object::TransformQuat wtf;
+Vector3 LevelData::LoadVector3(const nlohmann::json& data) {
+	// Blenderの座標系からここで変換
+	return Vector3(static_cast<float>(data[0]), static_cast<float>(data[2]), static_cast<float>(data[1]));
+}
+Quaternion LevelData::LoadQuaternion(const nlohmann::json& data) {
+	// Blenderの座標系からここで変換
+	return Quaternion(data[1], data[3], data[0] * -1.0f, data[2]);
+}
+TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
+	TransformQuat wtf;
 
-	// 平行移動（Blenderの座標系からここで変換）
-	wtf.translation = {
-		static_cast<float>(data["translation"][0]),
-		static_cast<float>(data["translation"][2]),
-		static_cast<float>(data["translation"][1]),
-	};
-	// 回転角
-	wtf.rotation =
-		Quaternion{
-			data["rotation"][1],
-			data["rotation"][3],
-			data["rotation"][0],
-			data["rotation"][2],
-		};
-	wtf.rotation.z *= -1.0f;
-	
 	// 平行移動
-	wtf.scale = {
-		static_cast<float>(data["scaling"][0]),
-		static_cast<float>(data["scaling"][2]),
-		static_cast<float>(data["scaling"][1]),
-	};
+	wtf.translation = LoadVector3(data["translation"]);
+	// 回転角
+	wtf.rotation = LoadQuaternion(data["rotation"]);
+	// スケール
+	wtf.scale = LoadVector3(data["scaling"]);
+
+	// 全体の倍率をかける
+	wtf.translation *= scale;
+	wtf.scale *= scale;
 
 	return wtf;
+}
+void LevelData::LoadMesh(nlohmann::json& data, const std::string& name) {
+	// ファイルパスがあればそのパスを読み込み
+	if (data.contains("file_name")) {
+		staticModels[name].LoadShortPath(data["file_name"].get<std::string>());
+	}
+	// ファイルパスが無いので仮でCubeを読み込み
+	else {
+		staticModels[name].LoadCube();
+	}
+
+	// トランスフォームのパラメータ読み込み
+	TransformQuat wtf = LoadWorldTF(data["transform"]);
+	staticModels[name].ApplyWorldTransform(wtf);
+
+	// コライダーがあれば生成
+	if (data.contains("collider")) {
+		LoadCollider(data, name, wtf);
+	}
+
+}
+void LevelData::LoadCollider(nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf) {
+	nlohmann::json& collider = data["collider"];
+	if (collider["type"] == "AABB") {	// AABBコライダーを生成
+		Collider::AABB& aabb = collisions[name].SetBroadShape(Collider::AABB());
+		aabb.min = LoadVector3(collider["min"]);
+		aabb.max = LoadVector3(collider["max"]);
+
+		collisions[name].worldTF = wtf;
+	}
+	else if (collider["type"] == "MESH") {
+		// Meshコライダーを生成
+		Collider::Mesh& m = collisions[name].SetBroadShape(Collider::Mesh());
+		m.Create(&staticModels[name]);
+	}
+
+	// 名前を付けておく
+	collisions[name].name = name;
+	// マスク設定
+	collisions[name].mask.SetBelongFrag(lwpC::Collider::FieldObject);	// フィールドオブジェクトに分類
+	collisions[name].mask.SetHitFrag(lwpC::Collider::ALL ^ lwpC::Collider::Terrain);	// Terrain以外とのみヒットするように
+}
+void LevelData::LoadCurve(nlohmann::json& data, const std::string& name) {
+	nlohmann::json& curveData = data["curve_data"];
+	// 全てのポイントデータを取得
+	for (const auto& point : curveData) {
+		catmullRomCurves[name].controlPoints.push_back(LoadVector3(point["point"]));
+	}
+}
+void LevelData::LoadTerrain(const nlohmann::json& data) {
+	terrain = std::make_unique<Terrain>();
+	terrain->name = "Terrain";
+	// トランスフォームのパラメータ読み込み
+	TransformQuat wtf = LoadWorldTF(data["transform"]);
+	terrain->LoadModel(data["file_name"].get<std::string>(), wtf);
 }
 
 void LevelData::RigidDebugGUI() {

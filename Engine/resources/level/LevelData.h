@@ -8,6 +8,8 @@
 
 #include "object/core/collision/Collision.h"
 
+#include "utility/CatmullRom.h"
+
 #include "../Externals/nlohmann/json.hpp"
 
 
@@ -28,10 +30,10 @@ namespace LWP::Resource {
 		// 当たり判定
 		std::map<std::string, Object::Collision> collisions;
 		// CatmullRom曲線
-		//std::map<std::string, Object::Collision> catmull_Rom;
+		std::map<std::string, Utility::CatmullRom> catmullRomCurves;
 
 		// 地形
-		std::unique_ptr<Object::Terrain> terrain;
+		std::unique_ptr<Object::Terrain> terrain;	// ない場合もあるのでユニークポインタ
 
 	public: // ** メンバ関数 ** //
 
@@ -101,10 +103,41 @@ namespace LWP::Resource {
 	private: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
+		/// Vector3を解凍
+		/// </summary>
+		/// <param name="data"></param>
+		Math::Vector3 LoadVector3(const nlohmann::json& data);
+		/// <summary>
+		/// Quaternionを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		Math::Quaternion LoadQuaternion(const nlohmann::json& data);
+		/// <summary>
 		/// ワールドトランスフォームを解凍
 		/// </summary>
 		/// <param name="data"></param>
 		Object::TransformQuat LoadWorldTF(const nlohmann::json& data);
+		/// <summary>
+		/// タイプ：メッシュを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadMesh(nlohmann::json& data, const std::string& name);
+		/// <summary>
+		/// タイプ：コライダーを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadCollider(nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf);
+		/// <summary>
+		/// タイプ：Curveを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadCurve(nlohmann::json& data, const std::string& name);
+		/// <summary>
+		/// Terrainを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadTerrain(const nlohmann::json& data);
+
 
 		/// <summary>
 		/// RigidModel用ImGui
