@@ -77,6 +77,7 @@ namespace LWP::Utility {
 		///	デバッグ用のImGui
 		/// </summary>
 		void DebugGUI() {
+			// enumの文字列が取得できないのでいったん数字で表示する
 			ImGui::Text(("State : " + std::to_string(current_)).c_str());
 			ImGui::Text("----- State Change -----");
 			for (int i = 0; i < N; i++) {
