@@ -36,18 +36,18 @@ void GameScene::Initialize() {
 
 	// 状態管理クラスにフェードインアウトの処理を渡す
 #pragma region FadeIn
-	statePattern_.initFunction[FadeIn] = [this](const Behavior& pre) {
+	statePattern_.initFunction[int(BehaviorGS::FadeIn)] = [this](const BehaviorGS& pre) {
 		pre;
 		startStaging_.time = 0.0f;	// 時間初期化
 		};
-	statePattern_.updateFunction[FadeIn] = [this](std::optional<Behavior>& req, const Behavior& pre) {
+	statePattern_.updateFunction[int(BehaviorGS::FadeIn)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
 		StartStaging& s = startStaging_;
 		// 時間更新
 		s.time += GetDeltaTimeF();
 		// 最大時間を超過しないように
 		if (s.time > s.kTime) {
 			s.time = s.kTime;
-			req = Movie0;	// 演出終了
+			req = BehaviorGS::Movie0;	// 演出終了
 		}
 
 		// tを計算
@@ -57,11 +57,11 @@ void GameScene::Initialize() {
 		};
 #pragma endregion
 #pragma region FadeOut
-	statePattern_.initFunction[FadeOut] = [this](const Behavior& pre) {
+	statePattern_.initFunction[int(BehaviorGS::FadeOut)] = [this](const BehaviorGS& pre) {
 		pre;
 		endStaging_.time = 0.0f;	// 時間初期化
 		};
-	statePattern_.updateFunction[FadeOut] = [this](std::optional<Behavior>& req, const Behavior& pre) {
+	statePattern_.updateFunction[int(BehaviorGS::FadeOut)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
 		EndStaging& e = endStaging_;
 		// 時間更新
 		e.time += GetDeltaTimeF();
@@ -75,18 +75,24 @@ void GameScene::Initialize() {
 		float t = Easing::InCubic(e.time / e.kTime);
 		// フェードアウト
 		stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
-		};
+	};
 #pragma endregion
 
+	// 名前を登録しておく
+	statePattern_.name[int(BehaviorGS::FadeIn)] = "FadeIn";
+	statePattern_.name[int(BehaviorGS::Movie0)] = "Movie0";
+	statePattern_.name[int(BehaviorGS::Play0)] = "Play0";
+	statePattern_.name[int(BehaviorGS::FadeOut)] = "FadeOut";
+
 	// いったんMovie0
-	statePattern_.updateFunction[Movie0] = [this](std::optional<Behavior>& req, const Behavior& pre) {
+	statePattern_.updateFunction[int(BehaviorGS::Movie0)] = [this](std::optional<BehaviorGS> & req, const BehaviorGS& pre) {
 		// シーン再読み込み
 		if (Input::Keyboard::GetTrigger(DIK_R)) {
 			levelData.HotReload();
 		}
 		// Pキーを押すとシーン切り替え
 		if (Keyboard::GetTrigger(DIK_P)) {
-			req = FadeOut;
+			req = BehaviorGS::FadeOut;
 		}
 	};
 }

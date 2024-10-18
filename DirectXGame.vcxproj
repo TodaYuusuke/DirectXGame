@@ -266,6 +266,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\utility\motionEffects\Easing.cpp" />
     <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
+    <ClCompile Include="Engine\utility\MyString.cpp" />
     <ClCompile Include="Engine\utility\UI.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
@@ -420,6 +421,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\observers\Observer2.h" />
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h" />
     <ClInclude Include="Engine\utility\PtrManager.h" />
+    <ClInclude Include="Engine\utility\MyString.h" />
     <ClInclude Include="Engine\utility\UI.h" />
     <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />

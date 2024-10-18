@@ -110,5 +110,6 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="class\camera\CameraManager.h" />
+    <ClInclude Include="class\Behavior.h" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #pragma once
+#include "MyString.h"
 #include <array>
 #include <functional>
 #include <optional>
@@ -24,6 +25,11 @@ namespace LWP::Utility {
 		/// <para>次の状態をリクエストするため(req)と、前回の状態を貰うため(pre)の引数</para>
 		std::array<std::function<void(std::optional<E>& req, const E& pre)>, N> updateFunction;
 
+		/// <summary>
+		/// ImGui用の文字列
+		/// </summary>
+		std::array<std::string, N> name;
+
 
 	private: // ** メンバ変数 ** //
 
@@ -33,7 +39,7 @@ namespace LWP::Utility {
 		E current_;
 		// 変更前の状態
 		E pre_;
-		
+
 
 	public: // ** メンバ関数 ** //
 		
@@ -54,6 +60,7 @@ namespace LWP::Utility {
 			for (int i = 0; i < N; i++) {
 				initFunction[i] = [](const E& pre) { pre; };
 				updateFunction[i] = [](std::optional<E>& req, const E& pre) { req; pre; };
+				name[i] = std::to_string(i);
 			}
 		}
 		/// <summary>
@@ -68,7 +75,6 @@ namespace LWP::Utility {
 				// 初期化処理
 				initFunction[static_cast<int>(current_)](pre_);
 			}
-
 			// 状態更新処理
 			updateFunction[static_cast<int>(current_)](request_, pre_);
 		}
@@ -78,10 +84,11 @@ namespace LWP::Utility {
 		/// </summary>
 		void DebugGUI() {
 			// enumの文字列が取得できないのでいったん数字で表示する
-			ImGui::Text(("State : " + std::to_string(current_)).c_str());
+			ImGui::Text(("Current State : " + name[static_cast<int>(current_)]).c_str());
+			ImGui::Text(("Pre State : " + name[static_cast<int>(pre_)]).c_str());
 			ImGui::Text("----- State Change -----");
 			for (int i = 0; i < N; i++) {
-				if (ImGui::Button(std::to_string(i).c_str())) { request_ = static_cast<E>(i); }
+				if (ImGui::Button(name[i].c_str())) { request_ = static_cast<E>(i); }
 			}
 		}
 

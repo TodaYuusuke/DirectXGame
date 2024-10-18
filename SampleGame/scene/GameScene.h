@@ -1,7 +1,9 @@
 #pragma once
-#include "../class/field/Field.h"
-#include "../class/player/Drone.h"
 #include "scene/IScene.h" 
+
+#include "class/field/Field.h"
+#include "class/player/Drone.h"
+#include "class/Behavior.h"
 
 class GameScene final
 	: public IScene {
@@ -21,14 +23,8 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// 状態管理
-	enum Behavior{
-		FadeIn,
-		Movie0,
-		Play0,
-		FadeOut,
-		Count,
-	};
-	LWP::Utility::StatePattern<Behavior, Count> statePattern_;
+	LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)> statePattern_;
+	BehaviorGS b = BehaviorGS::FadeIn;
 
 	// 地形データ
 	Field field_;
