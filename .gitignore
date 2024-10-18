@@ -70,7 +70,7 @@ artifacts/
 StyleCopReport.xml
 
 # Files built by Visual Studio
-imgui.ini
+*.ini
 *_i.c
 *_p.c
 *_h.h
