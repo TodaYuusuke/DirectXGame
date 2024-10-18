@@ -39,6 +39,7 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 		newData.collider->mask.SetHitFrag(lwpC::Collider::FieldObject | lwpC::Collider::Terrain);
 		newData.collider->isMove = true;
 		newData.collider->enterLambda = [&newData, this](LWP::Object::Collision* col) {
+			col;
 			// 跳ねる
 			newData.velocity.y *= -0.35f;
 			newData.velocity.x *= 0.6f;

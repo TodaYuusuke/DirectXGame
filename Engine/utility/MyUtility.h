@@ -9,6 +9,7 @@
 #include "observers/Observer2.h"
 #include "observers/ObserverPtr.h"
 #include "PtrManager.h"
+#include "StatePattern.h"
 #include "UI.h"
 
 #include <string>

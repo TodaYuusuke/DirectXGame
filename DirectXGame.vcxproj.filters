@@ -818,6 +818,7 @@
       <Filter>Externals\nlohmann</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
+    <ClInclude Include="Engine\utility\StatePattern.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

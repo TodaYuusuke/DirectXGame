@@ -16,16 +16,22 @@ public:
 	void Initialize();
 	// 更新
 	void Update();
-
 	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
+	// 状態管理
+	enum Behavior{
+		FadeIn,
+		Movie0,
+		Play0,
+		FadeOut,
+		Count,
+	};
+	LWP::Utility::StatePattern<Behavior, Count> statePattern_;
+
 	// 地形データ
 	Field field_;
-
-	// ドローン
-	Drone drone_;
 
 	// 開始時の地点
 	LWP::Math::Vector3 startPos_;
@@ -42,9 +48,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		float time = 0.0f;
 		// アニメーションにかかる時間
 		float kTime = 1.5f;
-
-		// 終了フラグ
-		bool end = false;
 	}startStaging_;
 	// シーン終了演出用
 	struct EndStaging {
@@ -52,11 +55,5 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		float time = 0.0f;
 		// アニメーションにかかる時間
 		float kTime = 1.5f;
-
-		// 開始フラグ
-		bool start = false;
-		// 終了フラグ
-		bool end = false;
 	}endStaging_;
-
 };

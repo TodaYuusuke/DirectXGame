@@ -58,7 +58,7 @@ void Title::Update() {
 		float t = Easing::Liner(s.time / s.kTime);
 
 		// フェードイン
-		stagingSprite_.material.color.A = 255 - t * 255;
+		stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
 	}
 	// 通常更新処理
 	else if (!endStaging_.start) {
@@ -90,7 +90,7 @@ void Title::Update() {
 			float t = Easing::InCubic(e.time / e.kTime);
 
 			// フェードアウト
-			stagingSprite_.material.color.A = t * 255;
+			stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
 			// ドローンの位置へカメラをアニメーション
 			mainCamera.transform.translation = Interp::Lerp(e.startPos, drone_.worldTF.GetWorldPosition(), t);
 			mainCamera.transform.rotation = Interp::SlerpQuaternion(e.startRotation, drone_.worldTF.rotation, t / 2.0f);

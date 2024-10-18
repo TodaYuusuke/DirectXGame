@@ -406,6 +406,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\CatmullRom.h" />
     <ClInclude Include="Engine\utility\Color.h" />
     <ClInclude Include="Engine\utility\Counter.h" />
