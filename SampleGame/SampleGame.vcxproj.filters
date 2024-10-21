@@ -111,5 +111,6 @@
     <ClInclude Include="class\enemy\EnemyManager.h" />
     <ClInclude Include="class\enemy\Enemy.h" />
     <ClInclude Include="class\player\guns\Pistol.h" />
+    <ClInclude Include="class\enemy\BloodParticle.h" />
   </ItemGroup>
 </Project>

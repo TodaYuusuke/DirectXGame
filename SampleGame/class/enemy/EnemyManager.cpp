@@ -12,6 +12,12 @@ void EnemyManager::Init(LevelData* level, Player* player) {
 	// ポインタを保持
 	player_ = player;
 
+	// パーティクル初期設定
+	particle_.model.LoadSphere();
+	particle_.model.worldTF.scale = { 0.05f, 0.05f ,0.05f };
+	particle_.model.materials["Material0"].color = ColorPattern::RED;
+	//particle_.model.SetAllMaterialLighting(false);
+
 	// 敵のスポーン地点を保存
 	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.000"]);
 	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.001"]);
@@ -67,7 +73,7 @@ void EnemyManager::Spawn() {
 
 	// 敵の初期設定
 	Enemy* e = new Enemy();
-	e->Init(spawnPoint_[wave_][sp].curve, player_);
+	e->Init(spawnPoint_[wave_][sp].curve, player_, &particle_);
 	spawnPoint_[wave_][sp].enemy = e;	// 配列に格納
 	spawnedEnemyCount_++;	// スポーン済みカウント+1
 }

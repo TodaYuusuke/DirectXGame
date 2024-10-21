@@ -32,6 +32,7 @@ public:
 	/// </summary>
 	void DebugGUI();
 
+
 private: // ** メンバ変数 ** //
 	// 全体ウェーブ数
 	const static int kMaxWave = 1;
@@ -65,6 +66,9 @@ private: // ** メンバ変数 ** //
 	int killCount_ = 0;
 	// 敵撃破ノルマ
 	int quota_ = 10;
+
+	// パーティクルクラス
+	BloodParticle particle_;
 
 private: // ** メンバ関数 ** //
 	

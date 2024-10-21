@@ -8,9 +8,10 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace LWP::Info;
 
-void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player) {
+void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, BloodParticle* particle) {
 	// ポインタを保持
 	player_ = player;
+	particle_ = particle;
 	curve_ = curve;
 	curve_->t = 0.0f;	// tを初期化
 
@@ -24,9 +25,16 @@ void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player) {
 	collision_.mask.SetBelongFrag(MaskLayer::Enemy);
 	collision_.mask.SetHitFrag(MaskLayer::Bullet);
 	collision_.enterLambda = [this](Collision* c) {
-		isDead_ = true;	// いったん被弾したら死亡
+		isDeath_ = true;	// いったん被弾したら死亡
+		anim_.Play("Death");	// 死亡アニメーション
 		// 弾のコライダーはオフに
 		c->isActive = false;
+
+		// パーティクル生成
+		Vector3 pos = model_.worldTF.GetWorldPosition();
+		pos.y += 1.0f;	// ちょっとだけ上に生成
+		particle_->bulletPos = c->GetWorldPosition();
+		particle_->Add(16, pos);
 	};
 	Collider::AABB& aabb = collision_.SetBroadShape(Collider::AABB());
 	aabb.min = { -0.2f,0.0f,-0.45f };
@@ -34,7 +42,10 @@ void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player) {
 }
 void Enemy::Update() {
 	// 死んでいたら早期リターン
-	if (isDead_) { return; }
+	if (isDeath_) {
+		DeathAnimation();
+		return;
+	}
 
 	float& t = curve_->t;
 	t += GetDeltaTimeF() * (1.0f / 30.0f);	// 30秒かけて到達するように
@@ -82,5 +93,17 @@ void Enemy::DebugGUI() {
 	if (ImGui::TreeNode("Curve")) {
 		curve_->DebugGUI();
 		ImGui::TreePop();
+	}
+}
+
+void Enemy::DeathAnimation() {
+	if (!anim_.GetPlaying("Death")) {
+		deathTime_ += GetDeltaTimeF();	// 少しずつスケール0に縮小させる
+		// 1.0を超えないように
+		if (deathTime_ > 1.0f) {
+			deathTime_ = 1.0f;
+			isDead_ = true;
+		}
+		model_.worldTF.scale = Interp::Slerp({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, Easing::InCubic(deathTime_));
 	}
 }

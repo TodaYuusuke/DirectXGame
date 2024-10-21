@@ -137,7 +137,9 @@ Vector3 LevelData::LoadVector3(const nlohmann::json& data) {
 }
 Quaternion LevelData::LoadQuaternion(const nlohmann::json& data) {
 	// Blenderの座標系からここで変換
-	return Quaternion(data[1], data[3], data[0] * -1.0f, data[2]);
+	Quaternion q = Quaternion(data[1], data[3], data[0], data[2]);
+	q.z *= -1.0f;
+	return q;
 }
 TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
 	TransformQuat wtf;
