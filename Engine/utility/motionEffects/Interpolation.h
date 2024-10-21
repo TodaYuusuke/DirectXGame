@@ -10,10 +10,10 @@ namespace LWP::Utility::Interpolation {
 		InterpCount	// 個数カウント用
 	};
 	// 線形補間
-	//float Lerp(const float& start, const float& end, const float& t);
+	float LerpF(const float& start, const float& end, const float& t);
 	Math::Vector3 Lerp(const Math::Vector3& start, const Math::Vector3& end,const float& t);
 	// 球面線形補間
-	//float Slerp(const float& start, const float& end, const float& t);
+	//float SlerpF(const float& start, const float& end, const float& t);
 	Math::Vector3 Slerp(const Math::Vector3& start, const Math::Vector3& end, const float& t);
 	Math::Quaternion SlerpQuaternion(const Math::Quaternion& start, const Math::Quaternion& end, const float& t);
 	// Cat-mullRom曲線

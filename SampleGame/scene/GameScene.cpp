@@ -106,20 +106,19 @@ void GameScene::Initialize() {
 // 更新
 void GameScene::Update() {
 	statePattern_.Update();
-	// ムービー中の処理
+	// プレイ中の処理
 	if (int(statePattern_.GetCurrentBehavior()) % 2 == 0) {
 		player_.Update();
 	}
-	// プレイ中の処理
-	else {
-		cameraManager_.Update();
-	}
+	cameraManager_.Update();
 	enemyManager_.Update();
 
+#if DEMO
 	ImGui::Begin("State");
 	statePattern_.DebugGUI();
 	ImGui::End();
 	enemyManager_.DebugGUI();
+#endif
 
 	// シーン再読み込み
 	if (Input::Keyboard::GetTrigger(DIK_R)) {

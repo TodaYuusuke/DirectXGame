@@ -27,12 +27,6 @@
     <ClCompile Include="class\field\Field.cpp">
       <Filter>class\field</Filter>
     </ClCompile>
-    <ClCompile Include="class\player\Bullet.cpp">
-      <Filter>class\player</Filter>
-    </ClCompile>
-    <ClCompile Include="class\player\Drone.cpp">
-      <Filter>class\player</Filter>
-    </ClCompile>
     <ClCompile Include="class\player\Player.cpp">
       <Filter>class\player</Filter>
     </ClCompile>
@@ -62,6 +56,9 @@
     <ClCompile Include="class\enemy\EnemyManager.cpp" />
     <ClCompile Include="class\enemy\Enemy.cpp" />
     <ClCompile Include="class\player\guns\Pistol.cpp" />
+    <ClCompile Include="class\camera\BlackBelt.cpp" />
+    <ClCompile Include="class\player\Bullet.cpp" />
+    <ClCompile Include="class\player\Drone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h">
@@ -72,12 +69,6 @@
     </ClInclude>
     <ClInclude Include="class\particle\TerrainBulletParticle.h">
       <Filter>class\particle</Filter>
-    </ClInclude>
-    <ClInclude Include="class\player\Bullet.h">
-      <Filter>class\player</Filter>
-    </ClInclude>
-    <ClInclude Include="class\player\Drone.h">
-      <Filter>class\player</Filter>
     </ClInclude>
     <ClInclude Include="class\player\Player.h">
       <Filter>class\player</Filter>
@@ -112,5 +103,8 @@
     <ClInclude Include="class\enemy\Enemy.h" />
     <ClInclude Include="class\player\guns\Pistol.h" />
     <ClInclude Include="class\enemy\BloodParticle.h" />
+    <ClInclude Include="class\camera\BlackBelt.h" />
+    <ClInclude Include="class\player\Bullet.h" />
+    <ClInclude Include="class\player\Drone.h" />
   </ItemGroup>
 </Project>

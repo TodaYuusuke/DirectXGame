@@ -18,7 +18,11 @@ namespace LWP::Primitive {
 	public: // ** 関数 ** //
 
 		// 初期化を呼び出す
-		Sprite() { Init(); }
+		Sprite() { 
+			isUI = true;
+			material.enableLighting = false;
+			Init();
+		}
 
 		/// <summary>
 		/// 更新処理

@@ -5,7 +5,6 @@
 #include "class/player/Player.h"
 #include "class/enemy/EnemyManager.h"
 #include "class/field/Field.h"
-#include "class/player/Drone.h"
 #include "class/Behavior.h"
 
 class GameScene final

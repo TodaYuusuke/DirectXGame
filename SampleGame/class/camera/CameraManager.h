@@ -1,5 +1,5 @@
 #pragma once
-#include <Adapter.h>
+#include "BlackBelt.h"
 #include "class/Behavior.h"
 
 /// <summary>
@@ -30,6 +30,9 @@ private: // ** メンバ変数 ** //
 
 	// 使用するアニメーション用の曲線のポインタ
 	LWP::Utility::CatmullRom* catmullRom_ = nullptr;
+
+	// 上下の黒帯
+	BlackBelt blackBelt_;
 
 private: // ** メンバ関数 ** //
 };

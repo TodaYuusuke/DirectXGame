@@ -14,14 +14,19 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 	level_ = level;
 	camera_ = camera;
 	state_ = state;
+	// 黒帯初期化
+	blackBelt_.Init();
 
 	state_->initFunction[int(BehaviorGS::Movie0)] = [this](const BehaviorGS& pre) {
 		catmullRom_ = &level_->catmullRomCurves["StartCurve"];	// 使用するアニメーションを設定
 		catmullRom_->t = 0.0f;	// 初期化
+		blackBelt_.SetIsActive(true);
 	};
 }
 
 void CameraManager::Update() {
+	blackBelt_.Update();
+
 	// 曲線の処理を行う
 	if (catmullRom_) {
 		float& t = catmullRom_->t;	// 現在のt
@@ -55,6 +60,7 @@ void CameraManager::Update() {
 		// tが1以上ならシーン変更処理
 		if (catmullRom_->t >= 1.0f) {
 			state_->request = BehaviorGS::Play0;	// 次のシーンにする
+			blackBelt_.SetIsActive(false);
 			catmullRom_ = nullptr;
 		}
 	}

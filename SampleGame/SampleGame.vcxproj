@@ -137,6 +137,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="class\camera\BlackBelt.cpp" />
     <ClCompile Include="class\camera\CameraManager.cpp" />
     <ClCompile Include="class\enemy\Enemy.cpp" />
     <ClCompile Include="class\enemy\EnemyManager.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\Behavior.h" />
+    <ClInclude Include="class\camera\BlackBelt.h" />
     <ClInclude Include="class\camera\CameraManager.h" />
     <ClInclude Include="class\enemy\BloodParticle.h" />
     <ClInclude Include="class\enemy\Enemy.h" />
