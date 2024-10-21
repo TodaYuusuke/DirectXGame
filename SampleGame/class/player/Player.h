@@ -1,15 +1,27 @@
 #pragma once
-#include <Adapter.h>
+#include "guns/Pistol.h"
 
+/// <summary>
+/// プレイヤー
+/// </summary>
 class Player final {
 public:
-
-	// 初期化
-	void Init(LWP::Object::Camera* ptr, LWP::Object::Terrain* terrain);
-	// 更新
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init(LWP::Object::Camera* ptr);
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-private:
+	/// <summary>
+	/// 座標を取得
+	/// </summary>
+	LWP::Math::Vector3 GetWorldPosition() { return camera_->transform.GetWorldPosition(); };
+
+
+private: // ** メンバ定数 ** //
 
 	// 重力加速度
 	float kGravityAcce = 9.8f;
@@ -18,30 +30,29 @@ private:
 	// 速度の減衰率
 	float kDecayRate = 0.8f;
 
+	// カメラの回転速度
+	float kCameraRotationSpeed = 0.011f;
 
-	// 3Dモデル
-	LWP::Resource::SkinningModel model;
-	// アニメーション
-	LWP::Resource::Animation walkAnim;
+
+private: // ** メンバ変数 ** //
 	
+	// カメラのポインタ
+	LWP::Object::Camera* camera_ = nullptr;
 	// 速度
 	LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
 
-	void Move();
-
-	// 光源
-	LWP::Object::PointLight pl;
+	// 銃のデータ
+	Pistol pistol_;
 
 
 private: // ** カメラ系処理 ** // 
-	
-	// 追従カメラの速度
-	const float kFollowCameraSpeed = 0.033f;
 
-	// 追従させるカメラのポインタ
-	LWP::Object::Camera* camera_ = nullptr;
-	// カメラのオフセット
-	LWP::Math::Vector3 cameraOffset_ = { 0.0f, 2.0f, -20.0f };
-
-	void FollowCameraUpdate();
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
+	/// <summary>
+	/// カメラ回転処理
+	/// </summary>
+	void CameraRotate();
 };

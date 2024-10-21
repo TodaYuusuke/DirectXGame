@@ -24,6 +24,11 @@ namespace LWP::Utility {
 		/// </summary>
 		/// <para>次の状態をリクエストするため(req)と、前回の状態を貰うため(pre)の引数</para>
 		std::array<std::function<void(std::optional<E>& req, const E& pre)>, N> updateFunction;
+		
+		/// <summary>
+		/// 次の状態リクエスト
+		/// </summary>
+		std::optional<E> request = std::nullopt;
 
 		/// <summary>
 		/// ImGui用の文字列
@@ -33,8 +38,6 @@ namespace LWP::Utility {
 
 	private: // ** メンバ変数 ** //
 
-		// 状態リクエスト
-		std::optional<E> request_ = std::nullopt;
 		// 現在の状態
 		E current_;
 		// 変更前の状態
@@ -53,7 +56,7 @@ namespace LWP::Utility {
 		/// </summary>
 		void Init() {
 			// 各変数を初期化
-			request_ = std::nullopt;
+			request = std::nullopt;
 			current_ = static_cast<E>(0);	// 0が初期値前提
 			pre_ = static_cast<E>(0);
 			// 関数ポインタに何もしない関数をデフォルトで設定
@@ -68,15 +71,15 @@ namespace LWP::Utility {
 		/// </summary>
 		void Update() {
 			// 状態リクエストがある時実行
-			if (request_) {
+			if (request) {
 				pre_ = current_;	// 過去の状態を保存
-				current_ = request_.value();	// 状態を更新
-				request_ = std::nullopt;	// リクエストを無に
+				current_ = request.value();	// 状態を更新
+				request = std::nullopt;	// リクエストを無に
 				// 初期化処理
 				initFunction[static_cast<int>(current_)](pre_);
 			}
 			// 状態更新処理
-			updateFunction[static_cast<int>(current_)](request_, pre_);
+			updateFunction[static_cast<int>(current_)](request, pre_);
 		}
 
 		/// <summary>
@@ -88,7 +91,7 @@ namespace LWP::Utility {
 			ImGui::Text(("Pre State : " + name[static_cast<int>(pre_)]).c_str());
 			ImGui::Text("----- State Change -----");
 			for (int i = 0; i < N; i++) {
-				if (ImGui::Button(name[i].c_str())) { request_ = static_cast<E>(i); }
+				if (ImGui::Button(name[i].c_str())) { request = static_cast<E>(i); }
 			}
 		}
 

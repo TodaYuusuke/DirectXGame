@@ -88,6 +88,9 @@ void TransformQuat::DebugGUI(const std::string& label) {
 		ImGui::DragFloat4("Quaternion", &rotation.x, 0.01f);
 		if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
 		ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+		// ペアレント先を表示
+		if (parent_) { parent_->t->DebugGUI("Parent"); }
+		else { ImGui::Text("Not Parent"); }
 		ImGui::TreePop();
 	}
 }

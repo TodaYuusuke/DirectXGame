@@ -1,6 +1,9 @@
 #pragma once
 #include "scene/IScene.h" 
 
+#include "class/camera/CameraManager.h"
+#include "class/player/Player.h"
+#include "class/enemy/EnemyManager.h"
 #include "class/field/Field.h"
 #include "class/player/Drone.h"
 #include "class/Behavior.h"
@@ -24,10 +27,15 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// 状態管理
 	LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)> statePattern_;
-	BehaviorGS b = BehaviorGS::FadeIn;
 
 	// 地形データ
 	Field field_;
+	// カメラ管理
+	CameraManager cameraManager_;
+	// プレイヤー
+	Player player_;
+	// 敵管理
+	EnemyManager enemyManager_;
 
 	// 開始時の地点
 	LWP::Math::Vector3 startPos_;

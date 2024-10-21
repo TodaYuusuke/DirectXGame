@@ -200,7 +200,8 @@ void LevelData::LoadCurve(nlohmann::json& data, const std::string& name) {
 	nlohmann::json& curveData = data["curve_data"];
 	// 全てのポイントデータを取得
 	for (const auto& point : curveData) {
-		catmullRomCurves[name].controlPoints.push_back(LoadVector3(point["point"]));
+		Vector3 pos = LoadVector3(point["point"]) * scale;	// 全体の倍率も掛ける
+		catmullRomCurves[name].controlPoints.push_back(pos);
 	}
 }
 void LevelData::LoadTerrain(const nlohmann::json& data) {

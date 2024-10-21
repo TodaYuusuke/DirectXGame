@@ -33,6 +33,10 @@ namespace LWP::Utility {
 		/// 現在の補間地点の座標を求める関数
 		/// </summary>
 		LWP::Math::Vector3 GetPosition();
+		/// <summary>
+		/// 指定時間の補間地点の座標を求める関数
+		/// </summary>
+		LWP::Math::Vector3 GetPosition(float time);
 		
 		/// <summary>
 		/// Debug用のImGui

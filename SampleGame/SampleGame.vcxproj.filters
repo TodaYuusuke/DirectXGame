@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="class\car\Car.cpp">
-      <Filter>class\car</Filter>
-    </ClCompile>
     <ClCompile Include="class\field\Field.cpp">
       <Filter>class\field</Filter>
     </ClCompile>
@@ -62,11 +59,11 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="class\camera\CameraManager.cpp" />
+    <ClCompile Include="class\enemy\EnemyManager.cpp" />
+    <ClCompile Include="class\enemy\Enemy.cpp" />
+    <ClCompile Include="class\player\guns\Pistol.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="class\car\Car.h">
-      <Filter>class\car</Filter>
-    </ClInclude>
     <ClInclude Include="class\field\Field.h">
       <Filter>class\field</Filter>
     </ClInclude>
@@ -111,5 +108,8 @@
     </ClInclude>
     <ClInclude Include="class\camera\CameraManager.h" />
     <ClInclude Include="class\Behavior.h" />
+    <ClInclude Include="class\enemy\EnemyManager.h" />
+    <ClInclude Include="class\enemy\Enemy.h" />
+    <ClInclude Include="class\player\guns\Pistol.h" />
   </ItemGroup>
 </Project>

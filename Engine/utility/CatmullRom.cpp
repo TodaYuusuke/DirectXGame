@@ -7,8 +7,9 @@ using namespace LWP::Utility;
 void CatmullRom::Init() {
 	t = 0.0f;	// tをゼロにするだけ
 }
+Vector3 CatmullRom::GetPosition() { return GetPosition(t); }
 
-Vector3 CatmullRom::GetPosition() {
+Vector3 CatmullRom::GetPosition(float time) {
 	// 4頂点未満の場合計算しない
 	if (controlPoints.size() < 4) {
 		return Vector3(-10000.0f, -10000.0f, -10000.0f);
@@ -16,14 +17,14 @@ Vector3 CatmullRom::GetPosition() {
 	}
 
 	// サイズに応じて計算する4点とtの値を求める
-	float calcT = t * (controlPoints.size() - 1);
+	float calcT = time * (controlPoints.size() - 1);
 	// 整数部を取得
 	int roop = static_cast<int>(calcT);
-	if (t == 1.0f) {
+	if (time == 1.0f) {
 		roop -= 1;
 	}
 	// 小数部を取得
-	if (t == 1.0f) {
+	if (time == 1.0f) {
 		calcT = 1.0f;
 	}
 	else {

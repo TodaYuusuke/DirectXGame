@@ -27,6 +27,12 @@ void GameScene::Initialize() {
 
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
+	// カメラ管理に登録
+	cameraManager_.Init(&levelData, &mainCamera, &statePattern_);
+	// プレイヤー初期化
+	player_.Init(&mainCamera);
+	// 敵管理クラス初期化
+	enemyManager_.Init(&levelData, &player_);
 
 	// 演出初期化
 	stagingSprite_.isUI = true;
@@ -78,29 +84,49 @@ void GameScene::Initialize() {
 	};
 #pragma endregion
 
+
+	statePattern_.initFunction[int(BehaviorGS::Play0)] = [this](const BehaviorGS& pre) {
+		enemyManager_.StartWave(int(BehaviorGS::Play0) / 2 - 1);
+	};
+	statePattern_.updateFunction[int(BehaviorGS::Play0)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+		if (enemyManager_.GetClearFlag()) { req = BehaviorGS::FadeOut; }	// 敵を倒したらフェードアウト
+	};
+	statePattern_.initFunction[int(BehaviorGS::Play1)] = [this](const BehaviorGS& pre) {
+		enemyManager_.StartWave(int(BehaviorGS::Play1) / 2 - 1);
+	};
+
 	// 名前を登録しておく
 	statePattern_.name[int(BehaviorGS::FadeIn)] = "FadeIn";
 	statePattern_.name[int(BehaviorGS::Movie0)] = "Movie0";
 	statePattern_.name[int(BehaviorGS::Play0)] = "Play0";
+	statePattern_.name[int(BehaviorGS::Movie1)] = "Movie1";
+	statePattern_.name[int(BehaviorGS::Play1)] = "Play1";
 	statePattern_.name[int(BehaviorGS::FadeOut)] = "FadeOut";
-
-	// いったんMovie0
-	statePattern_.updateFunction[int(BehaviorGS::Movie0)] = [this](std::optional<BehaviorGS> & req, const BehaviorGS& pre) {
-		// シーン再読み込み
-		if (Input::Keyboard::GetTrigger(DIK_R)) {
-			levelData.HotReload();
-		}
-		// Pキーを押すとシーン切り替え
-		if (Keyboard::GetTrigger(DIK_P)) {
-			req = BehaviorGS::FadeOut;
-		}
-	};
 }
 // 更新
 void GameScene::Update() {
 	statePattern_.Update();
+	// ムービー中の処理
+	if (int(statePattern_.GetCurrentBehavior()) % 2 == 0) {
+		player_.Update();
+	}
+	// プレイ中の処理
+	else {
+		cameraManager_.Update();
+	}
+	enemyManager_.Update();
 
-	ImGui::Begin("Test");
+	ImGui::Begin("State");
 	statePattern_.DebugGUI();
 	ImGui::End();
+	enemyManager_.DebugGUI();
+
+	// シーン再読み込み
+	if (Input::Keyboard::GetTrigger(DIK_R)) {
+		levelData.HotReload();
+	}
+	// Pキーを押すとシーン切り替え
+	if (Keyboard::GetTrigger(DIK_P)) {
+		statePattern_.request = BehaviorGS::FadeOut;
+	}
 }
