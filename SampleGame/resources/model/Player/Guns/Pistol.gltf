@@ -3,6 +3,10 @@
 		"generator":"Khronos glTF Blender I/O v3.5.30",
 		"version":"2.0"
 	},
+	"extensionsUsed":[
+		"KHR_materials_specular",
+		"KHR_materials_ior"
+	],
 	"scene":0,
 	"scenes":[
 		{
@@ -15,479 +19,133 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Muzzle",
-			"translation":[
-				4.678647518157959,
-				2.4176840782165527,
-				0
-			]
-		}
-	],
-	"animations":[
-		{
-			"channels":[
-				{
-					"sampler":0,
-					"target":{
-						"node":0,
-						"path":"translation"
-					}
-				},
-				{
-					"sampler":1,
-					"target":{
-						"node":0,
-						"path":"rotation"
-					}
-				},
-				{
-					"sampler":2,
-					"target":{
-						"node":0,
-						"path":"scale"
-					}
-				}
-			],
-			"name":"Muzzle",
-			"samplers":[
-				{
-					"input":18,
-					"interpolation":"LINEAR",
-					"output":19
-				},
-				{
-					"input":18,
-					"interpolation":"LINEAR",
-					"output":20
-				},
-				{
-					"input":18,
-					"interpolation":"LINEAR",
-					"output":21
-				}
-			]
+			"name":"Pistol"
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Muzzle",
-			"pbrMetallicRoughness":{}
-		},
-		{
-			"doubleSided":true,
-			"name":"Magazine",
-			"pbrMetallicRoughness":{}
-		},
-		{
-			"doubleSided":true,
-			"name":"Metal",
-			"pbrMetallicRoughness":{}
-		},
-		{
-			"doubleSided":true,
-			"name":"Wood",
-			"pbrMetallicRoughness":{}
-		},
-		{
-			"doubleSided":true,
-			"name":"Material.003",
-			"pbrMetallicRoughness":{}
-		},
-		{
-			"doubleSided":true,
-			"name":"DarkerMetal",
-			"pbrMetallicRoughness":{}
+			"extensions":{
+				"KHR_materials_specular":{
+					"specularColorFactor":[
+						0,
+						0,
+						0
+					]
+				},
+				"KHR_materials_ior":{
+					"ior":1.4500000476837158
+				}
+			},
+			"name":"Atlas",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Muzzle",
+			"name":"Cube.007",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
-						"NORMAL":1
+						"TEXCOORD_0":1,
+						"NORMAL":2
 					},
-					"indices":2,
+					"indices":3,
 					"material":0
-				},
-				{
-					"attributes":{
-						"POSITION":3,
-						"NORMAL":4
-					},
-					"indices":5,
-					"material":1
-				},
-				{
-					"attributes":{
-						"POSITION":6,
-						"NORMAL":7
-					},
-					"indices":8,
-					"material":2
-				},
-				{
-					"attributes":{
-						"POSITION":9,
-						"NORMAL":10
-					},
-					"indices":11,
-					"material":3
-				},
-				{
-					"attributes":{
-						"POSITION":12,
-						"NORMAL":13
-					},
-					"indices":14,
-					"material":4
-				},
-				{
-					"attributes":{
-						"POSITION":15,
-						"NORMAL":16
-					},
-					"indices":17,
-					"material":5
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"Zombie_Atlas",
+			"uri":"Zombie_Atlas.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":108,
+			"count":1662,
 			"max":[
-				0.2577923834323883,
-				0.2538759410381317,
-				0.2422455996274948
+				0.08780644088983536,
+				0.22586213052272797,
+				0.8803357481956482
 			],
 			"min":[
-				-7.347460746765137,
-				-0.2538759410381317,
-				-0.2577923536300659
+				-0.05341825261712074,
+				-0.1138823851943016,
+				-0.09607069194316864
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":108,
-			"type":"VEC3"
+			"count":1662,
+			"type":"VEC2"
 		},
 		{
 			"bufferView":2,
-			"componentType":5123,
-			"count":204,
-			"type":"SCALAR"
+			"componentType":5126,
+			"count":1662,
+			"type":"VEC3"
 		},
 		{
 			"bufferView":3,
-			"componentType":5126,
-			"count":56,
-			"max":[
-				-6.200637340545654,
-				-1.4792505502700806,
-				0.3279331922531128
-			],
-			"min":[
-				-9.368911743164062,
-				-5.651461601257324,
-				-0.32793232798576355
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":4,
-			"componentType":5126,
-			"count":56,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":5,
 			"componentType":5123,
-			"count":84,
+			"count":4338,
 			"type":"SCALAR"
-		},
-		{
-			"bufferView":6,
-			"componentType":5126,
-			"count":778,
-			"max":[
-				-1.8480875492095947,
-				-0.6061851382255554,
-				0.6178178787231445
-			],
-			"min":[
-				-9.477645874023438,
-				-5.527072906494141,
-				-0.6178179979324341
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":7,
-			"componentType":5126,
-			"count":778,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":8,
-			"componentType":5123,
-			"count":1260,
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":9,
-			"componentType":5126,
-			"count":194,
-			"max":[
-				-6.1538872718811035,
-				-0.8289086222648621,
-				0.7561485767364502
-			],
-			"min":[
-				-8.986128807067871,
-				-5.269806861877441,
-				-0.756148636341095
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":10,
-			"componentType":5126,
-			"count":194,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":11,
-			"componentType":5123,
-			"count":330,
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":12,
-			"componentType":5126,
-			"count":68,
-			"max":[
-				-5.025569915771484,
-				-1.2562260627746582,
-				0.18264280259609222
-			],
-			"min":[
-				-5.779545783996582,
-				-2.3902390003204346,
-				-0.1953602433204651
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":13,
-			"componentType":5126,
-			"count":68,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":14,
-			"componentType":5123,
-			"count":132,
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":15,
-			"componentType":5126,
-			"count":1246,
-			"max":[
-				0.15007969737052917,
-				0.652885913848877,
-				0.675346851348877
-			],
-			"min":[
-				-8.7622709274292,
-				-1.2075380086898804,
-				-0.6753467917442322
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":16,
-			"componentType":5126,
-			"count":1246,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":17,
-			"componentType":5123,
-			"count":2463,
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":18,
-			"componentType":5126,
-			"count":22,
-			"max":[
-				0.7
-			],
-			"min":[
-				0
-			],
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":19,
-			"componentType":5126,
-			"count":22,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":20,
-			"componentType":5126,
-			"count":22,
-			"type":"VEC4"
-		},
-		{
-			"bufferView":21,
-			"componentType":5126,
-			"count":22,
-			"type":"VEC3"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":1296,
+			"byteLength":19944,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":1296,
-			"byteOffset":1296,
+			"byteLength":13296,
+			"byteOffset":19944,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":408,
-			"byteOffset":2592,
+			"byteLength":19944,
+			"byteOffset":33240,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":8676,
+			"byteOffset":53184,
 			"target":34963
-		},
+		}
+	],
+	"samplers":[
 		{
-			"buffer":0,
-			"byteLength":672,
-			"byteOffset":3000,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":672,
-			"byteOffset":3672,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":168,
-			"byteOffset":4344,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":9336,
-			"byteOffset":4512,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":9336,
-			"byteOffset":13848,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":2520,
-			"byteOffset":23184,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":2328,
-			"byteOffset":25704,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":2328,
-			"byteOffset":28032,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":660,
-			"byteOffset":30360,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":816,
-			"byteOffset":31020,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":816,
-			"byteOffset":31836,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":264,
-			"byteOffset":32652,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":14952,
-			"byteOffset":32916,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":14952,
-			"byteOffset":47868,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":4926,
-			"byteOffset":62820,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":88,
-			"byteOffset":67748
-		},
-		{
-			"buffer":0,
-			"byteLength":264,
-			"byteOffset":67836
-		},
-		{
-			"buffer":0,
-			"byteLength":352,
-			"byteOffset":68100
-		},
-		{
-			"buffer":0,
-			"byteLength":264,
-			"byteOffset":68452
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":68716,
+			"byteLength":61860,
 			"uri":"Pistol.bin"
 		}
 	]

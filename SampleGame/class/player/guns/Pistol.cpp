@@ -12,7 +12,7 @@ Pistol::Pistol() : capsule_(collision_.SetBroadShape(Collider::Capsule())) {}
 void Pistol::Init(LWP::Object::TransformQuat* wtf) {
 	model_.LoadShortPath("Player/Guns/Pistol.gltf");
 	model_.worldTF.Parent(wtf);
-	//anim_.LoadShortPath("resources/model/Player/Guns/Pistol.gltf", &model_);
+	model_.worldTF.translation = {0.36f, -0.36f, 1.24f};
 	
 	// コライダーの当たり判定設定
 	collision_.mask.SetBelongFrag(MaskLayer::Bullet);

@@ -40,9 +40,7 @@ private: // ** メンバ定数 ** //
 
 private: // ** メンバ変数 ** //
 	// モデル
-	LWP::Resource::SkinningModel model_;
-	// アニメーション
-	//LWP::Resource::Animation anim_;
+	LWP::Resource::RigidModel model_;
 	// コライダー
 	LWP::Object::Collision collision_;
 	LWP::Object::Collider::Capsule& capsule_;
