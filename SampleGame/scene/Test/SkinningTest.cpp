@@ -10,8 +10,8 @@ using namespace LWP::Object;
 // 初期化
 void SkinningTest::Initialize() {
 	for (int i = 0; i < 2; i++) {
-		model[i].LoadShortPath("SkinningTest/Player_Boned_IK.gltf");
-		anim[i].LoadFullPath("resources/model/SkinningTest/Player_Boned_IK.gltf", &model[i]);
+		model[i].LoadShortPath("buildings/Street/LStreet.gltf");
+		//anim[i].LoadFullPath("resources/model/Player/Guns/Pistol.gltf", &model[i]);
 		anim[i].name = "Anim" + std::to_string(i);
 
 		model[i].worldTF.translation.y = -1.0f;
@@ -23,14 +23,11 @@ void SkinningTest::Initialize() {
 	model[0].worldTF.translation.x = 1.0f;
 
 	sp.isUI = true;
-
-	part.model.LoadCube();
 }
 
 // 更新
 void SkinningTest::Update() {
 	ImGui::Begin("Test");
-	part.DebugGUI();
-	if (ImGui::Button("Generate")) { part.Add(12); }
+	
 	ImGui::End();
 }

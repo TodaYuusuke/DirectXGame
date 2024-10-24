@@ -45,6 +45,9 @@ private: // ** メンバ変数 ** //
 	LWP::Object::Collision collision_;
 	LWP::Object::Collider::Capsule& capsule_;
 
+	// モーションクラス
+	LWP::Resource::Motion motion_;
+
 	// 装填数
 	int ammo_ = 10;
 };

@@ -18,6 +18,9 @@ void Pistol::Init(LWP::Object::TransformQuat* wtf) {
 	collision_.mask.SetBelongFrag(MaskLayer::Bullet);
 	collision_.mask.SetHitFrag(MaskLayer::Enemy);
 	capsule_.radius = 0.2f;
+
+	// モーション用意
+
 }
 
 void Pistol::Update() {

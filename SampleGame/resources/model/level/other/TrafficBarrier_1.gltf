@@ -19,12 +19,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Pistol",
-			"translation":[
-				0,
-				0.0803801491856575,
-				0.07154716551303864
-			]
+			"name":"TrafficBarrier_1"
 		}
 	],
 	"materials":[
@@ -53,7 +48,7 @@
 	],
 	"meshes":[
 		{
-			"name":"Cube.007",
+			"name":"Plane.014",
 			"primitives":[
 				{
 					"attributes":{
@@ -84,61 +79,61 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1662,
+			"count":976,
 			"max":[
-				0.08780644088983536,
-				0.22586213052272797,
-				0.8803357481956482
+				0.7776649594306946,
+				1.1184815168380737,
+				0.4403109848499298
 			],
 			"min":[
-				-0.05341825261712074,
-				-0.1138823851943016,
-				-0.09607069194316864
+				-0.7776649594306946,
+				0.00649812538176775,
+				-0.4403109848499298
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1662,
+			"count":976,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1662,
+			"count":976,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4338,
+			"count":2196,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":19944,
+			"byteLength":11712,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":13296,
-			"byteOffset":19944,
+			"byteLength":7808,
+			"byteOffset":11712,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":19944,
-			"byteOffset":33240,
+			"byteLength":11712,
+			"byteOffset":19520,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8676,
-			"byteOffset":53184,
+			"byteLength":4392,
+			"byteOffset":31232,
 			"target":34963
 		}
 	],
@@ -150,8 +145,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":61860,
-			"uri":"Pistol.bin"
+			"byteLength":35624,
+			"uri":"TrafficBarrier_1.bin"
 		}
 	]
 }

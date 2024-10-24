@@ -160,7 +160,7 @@ TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
 void LevelData::LoadMesh(nlohmann::json& data, const std::string& name) {
 	// ファイルパスがあればそのパスを読み込み
 	if (data.contains("file_name")) {
-		staticModels[name].LoadShortPath(data["file_name"].get<std::string>());
+		staticModels[name].LoadShortPath("level/" + data["file_name"].get<std::string>());
 	}
 	// ファイルパスが無いので仮でCubeを読み込み
 	else {
@@ -181,8 +181,8 @@ void LevelData::LoadCollider(nlohmann::json& data, const std::string& name, cons
 	nlohmann::json& collider = data["collider"];
 	if (collider["type"] == "AABB") {	// AABBコライダーを生成
 		Collider::AABB& aabb = collisions[name].SetBroadShape(Collider::AABB());
-		aabb.min = LoadVector3(collider["min"]);
-		aabb.max = LoadVector3(collider["max"]);
+		aabb.min = LoadVector3(collider["min"]) * scale;	// 全体のスケールをかける
+		aabb.max = LoadVector3(collider["max"]) * scale;
 
 		collisions[name].worldTF = wtf;
 	}
@@ -196,7 +196,7 @@ void LevelData::LoadCollider(nlohmann::json& data, const std::string& name, cons
 	collisions[name].name = name;
 	// マスク設定
 	collisions[name].mask.SetBelongFrag(lwpC::Collider::FieldObject);	// フィールドオブジェクトに分類
-	collisions[name].mask.SetHitFrag(lwpC::Collider::ALL ^ lwpC::Collider::Terrain);	// Terrain以外とのみヒットするように
+	collisions[name].mask.SetHitFrag(lwpC::Collider::ALL ^ (lwpC::Collider::Terrain | lwpC::Collider::FieldObject));	// Terrainとフィールドオブジェクト以外とのみヒットするように
 }
 void LevelData::LoadCurve(nlohmann::json& data, const std::string& name) {
 	nlohmann::json& curveData = data["curve_data"];
@@ -211,7 +211,7 @@ void LevelData::LoadTerrain(const nlohmann::json& data) {
 	terrain->name = "Terrain";
 	// トランスフォームのパラメータ読み込み
 	TransformQuat wtf = LoadWorldTF(data["transform"]);
-	terrain->LoadModel(data["file_name"].get<std::string>(), wtf);
+	terrain->LoadModel("level/" + data["file_name"].get<std::string>(), wtf);
 }
 
 void LevelData::RigidDebugGUI() {

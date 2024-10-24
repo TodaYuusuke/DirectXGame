@@ -14,6 +14,10 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 	level_ = level;
 	camera_ = camera;
 	state_ = state;
+
+	// カメラの初期設定
+	camera_->fov = 120.0f;
+
 	// 黒帯初期化
 	blackBelt_.Init();
 
