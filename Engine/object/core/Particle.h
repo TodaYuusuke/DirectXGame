@@ -15,12 +15,11 @@ namespace LWP::Object {
 	/// <summary>
 	/// パーティクル
 	/// </summary>
-	template<IsRigidModel T>
 	class Particle : public IObject {
 	public: // ** パブリックなメンバ変数 ** //
 		// 構造体
 		struct Data {
-			T m;
+			Resource::RigidModel m;
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
 			LWP::Object::Collision* collider = nullptr;	// コライダーを設定する場合はインスタンスをここに
 			float elapsedTime = 0.0f;
@@ -28,8 +27,8 @@ namespace LWP::Object {
 
 			// デフォルトコンストラクタ
 			Data() = delete;
-			Data(const T& t) {
-				m = t;
+			Data(const Resource::RigidModel& m) {
+				this->m = m;
 			}
 
 			// デストラクタ
@@ -50,7 +49,7 @@ namespace LWP::Object {
 		};
 
 		// 基準となるモデルクラス
-		T model;
+		Resource::RigidModel model;
 		// 識別番号
 		int IDNumber = 0;	// 21億個生成したらバグるけどいったん放置
 

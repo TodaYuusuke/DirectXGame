@@ -13,9 +13,12 @@ void EnemyManager::Init(LevelData* level, Player* player) {
 	player_ = player;
 
 	// パーティクル初期設定
-	particle_.model.LoadSphere();
-	particle_.model.worldTF.scale = { 0.05f, 0.05f ,0.05f };
-	particle_.model.materials["Material0"].color = ColorPattern::RED;
+	PBlood_.model.LoadCube();
+	PBlood_.model.worldTF.scale = { 0.05f, 0.05f ,0.05f };
+	PBlood_.model.materials["Material"].color = ColorPattern::RED;
+	PDeadBody_.model.LoadCube();
+	PDeadBody_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
+	PDeadBody_.model.materials["Material"].color = Color(0.463f, 0.592f, 0.318f, 1.0f);
 	//particle_.model.SetAllMaterialLighting(false);
 
 	// 敵のスポーン地点を保存
@@ -73,7 +76,12 @@ void EnemyManager::Spawn() {
 
 	// 敵の初期設定
 	Enemy* e = new Enemy();
-	e->Init(spawnPoint_[wave_][sp].curve, player_, &particle_);
+	e->Init(spawnPoint_[wave_][sp].curve, player_,
+		[this](Vector3 pos) {
+			PBlood_.Add(32, (pos));
+			PDeadBody_.Add(16, (pos));
+		}
+	);	// 死亡時のパーティクルを生成する関数を渡す
 	spawnPoint_[wave_][sp].enemy = e;	// 配列に格納
 	spawnedEnemyCount_++;	// スポーン済みカウント+1
 }

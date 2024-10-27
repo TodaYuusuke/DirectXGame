@@ -106,5 +106,6 @@
     <ClInclude Include="class\camera\BlackBelt.h" />
     <ClInclude Include="class\player\Bullet.h" />
     <ClInclude Include="class\player\Drone.h" />
+    <ClInclude Include="class\enemy\DeadBodyParticle.h" />
   </ItemGroup>
 </Project>

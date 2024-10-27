@@ -160,6 +160,7 @@
     <ClInclude Include="class\camera\BlackBelt.h" />
     <ClInclude Include="class\camera\CameraManager.h" />
     <ClInclude Include="class\enemy\BloodParticle.h" />
+    <ClInclude Include="class\enemy\DeadBodyParticle.h" />
     <ClInclude Include="class\enemy\Enemy.h" />
     <ClInclude Include="class\enemy\EnemyManager.h" />
     <ClInclude Include="class\field\Field.h" />

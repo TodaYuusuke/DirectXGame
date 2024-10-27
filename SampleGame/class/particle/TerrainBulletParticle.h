@@ -4,7 +4,7 @@
 /// <summary>
 /// 地面に当たった弾から出す破片
 /// </summary>
-class TerrainBulletParticle : public LWP::Object::Particle<LWP::Resource::RigidModel> {
+class TerrainBulletParticle : public LWP::Object::Particle {
 public: // ** メンバ変数 ** //
 	// 地形のポインタ
 	LWP::Object::Terrain* terrain;

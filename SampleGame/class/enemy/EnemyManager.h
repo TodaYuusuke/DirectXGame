@@ -1,6 +1,9 @@
 #pragma once
 #include "Enemy.h"
 
+#include "BloodParticle.h"
+#include "DeadBodyParticle.h"
+
 /// <summary>
 /// 敵出現を管理するクラス
 /// </summary>
@@ -68,7 +71,8 @@ private: // ** メンバ変数 ** //
 	int quota_ = 10;
 
 	// パーティクルクラス
-	BloodParticle particle_;
+	BloodParticle PBlood_;
+	DeadBodyParticle PDeadBody_;
 
 private: // ** メンバ関数 ** //
 	

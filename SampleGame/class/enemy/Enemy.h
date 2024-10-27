@@ -1,6 +1,5 @@
 #pragma once
 #include "class/player/Player.h"
-#include "BloodParticle.h"
 
 /// <summary>
 /// 敵クラス
@@ -11,7 +10,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Init(LWP::Utility::CatmullRom* curve, Player* player, BloodParticle* particle);
+	void Init(LWP::Utility::CatmullRom* curve, Player* player, std::function<void(LWP::Math::Vector3)> func);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -28,10 +27,15 @@ public:
 	void DebugGUI();
 
 
+private: // ** メンバ定数 ** //
+
+	// 12秒で到達するように
+	float kSpeed = (1.0f / 12.0f);
+
 private: // ** メンバ変数 ** //
 	// 保持するポインタ
 	Player* player_;
-	BloodParticle* particle_;
+	std::function<void(LWP::Math::Vector3)> particleFunc_;
 	// 自分が追従するカーブのデータ
 	LWP::Utility::CatmullRom* curve_;
 

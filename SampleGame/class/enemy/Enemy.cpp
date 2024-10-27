@@ -8,10 +8,10 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace LWP::Info;
 
-void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, BloodParticle* particle) {
+void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, std::function<void(LWP::Math::Vector3)> func) {
 	// ポインタを保持
 	player_ = player;
-	particle_ = particle;
+	particleFunc_ = func;
 	curve_ = curve;
 	curve_->t = 0.0f;	// tを初期化
 
@@ -33,8 +33,7 @@ void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, BloodParticle*
 		// パーティクル生成
 		Vector3 pos = model_.worldTF.GetWorldPosition();
 		pos.y += 1.0f;	// ちょっとだけ上に生成
-		particle_->bulletPos = c->GetWorldPosition();
-		particle_->Add(16, pos);
+		particleFunc_(pos);
 	};
 	Collider::AABB& aabb = collision_.SetBroadShape(Collider::AABB());
 	aabb.min = { -0.2f,0.0f,-0.45f };
@@ -48,8 +47,12 @@ void Enemy::Update() {
 	}
 
 	float& t = curve_->t;
-	t += GetDeltaTimeF() * (1.0f / 30.0f);	// 30秒かけて到達するように
-	t = std::clamp<float>(t, 0.0f, 1.0f);	// tを増加
+	t += GetDeltaTimeF() * kSpeed;	// 30秒かけて到達するように
+	if (t > 1.0f) {
+		t = 1.0f;
+		// 到達したらIdleに切り替える
+		if (!anim_.GetPlaying("Idle")) { anim_.Play("Idle"); }
+	}
 
 	// 敵の地点を更新
 	model_.worldTF.translation = curve_->GetPosition();
