@@ -50,9 +50,9 @@ void Animation::Update() {
 	if (!isActive || playingAnimationName_ == "") { return; }	// 早期リターン
 
 	// アニメーションの時間
-	float total = data[playingAnimationName_].totalTime;
+	float total = GetAnimationTotalTime();
 	// 時間を更新
-	//time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
+	//float t = (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
 	float t = (1.0f / 60.0f) / total;
 	if (!reverseFlag_) { time_ += t; }	// リバースフラグに応じて進行方向を変える
 	else { time_ -= t; }
@@ -79,17 +79,8 @@ void Animation::Update() {
 		}
 	}
 
-	// アニメーションの時間
-	float seconds = total * time_;
-	for (Joint& joint : modelPtr_->skeleton.joints) {
-		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
-		if (auto it = data[playingAnimationName_].node.find(joint.name); it != data[playingAnimationName_].node.end()) {
-			const NodeAnimation& rootNodeAnimation = (*it).second;
-			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, seconds);
-			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds).Normalize();
-			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, seconds);
-		}
-	}
+	// Joint更新
+	UpdateJoint();
 }
 
 bool Animation::GetPlaying() {
@@ -137,8 +128,10 @@ void Animation::DebugGUI() {
 			itemText.push_back(itr->first.c_str());
 		}
 		ImGui::ListBox("AnimationList", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+		ImGui::Text("Playing Animation : %s", playingAnimationName_.c_str());
 		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
 		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
+		if (ImGui::Button("Stop")) { Stop(); }
 	}
 	if (ImGui::TreeNode("Node")) {
 		for (Joint& joint : modelPtr_->skeleton.joints) {
@@ -151,7 +144,9 @@ void Animation::DebugGUI() {
 	}
 
 	ImGui::Text("--- Parameter ---");
+	float temp = time_;
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
+	if (temp != time_) { UpdateJoint(); }	// tの値が変わったらJointを更新する
 	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
 	ImGui::Checkbox("LoopFlag", &loopFlag_);
 	ImGui::Checkbox("ReverseFlag", &reverseFlag_);
@@ -254,5 +249,29 @@ Quaternion Animation::CalculateValue(const std::vector<Keyframe<Quaternion>>& ke
 	return (*keyframes.rbegin()).value;
 }
 
+void Animation::UpdateJoint() {
+	// 再生中のアニメーションがないならば
+	if (playingAnimationName_ == "") { return; }	// 早期リターン
+
+	// アニメーションの時間
+	float seconds = GetAnimationTotalTime() * time_;
+	for (Joint& joint : modelPtr_->skeleton.joints) {
+		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+		if (auto it = data[playingAnimationName_].node.find(joint.name); it != data[playingAnimationName_].node.end()) {
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, seconds);
+			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds).Normalize();
+			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, seconds);
+		}
+	}
+}
+
+float Animation::GetAnimationTotalTime() {
+	// 再生中のアニメーションがないならば0を返す
+	if (playingAnimationName_ == "") { return 0.0f; }	// 早期リターン
+	
+	// アニメーションの時間
+	return data[playingAnimationName_].totalTime;
+}
 
 const std::string Animation::kDirectoryPath = "resources/animation/";

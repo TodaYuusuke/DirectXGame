@@ -171,5 +171,16 @@ namespace LWP::Resource {
 		/// 任意の時刻の値を取得する関数
 		/// </summary>
 		Math::Quaternion CalculateValue(const std::vector<Keyframe<Math::Quaternion>>& keyframes, float time);
+
+		/// <summary>
+		/// Jointを更新する関数
+		/// </summary>
+		void UpdateJoint();
+
+		/// <summary>
+		/// 再生中のアニメーションの総時間を返す関数
+		/// </summary>
+		/// <returns></returns>
+		float GetAnimationTotalTime();
 	};
 };
