@@ -52,18 +52,31 @@ void Animation::Update() {
 	// アニメーションの時間
 	float total = data[playingAnimationName_].totalTime;
 	// 時間を更新
-	//time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;
-	time_ += (1.0f / 60.0f) / total;
+	//time_ += (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
+	float t = (1.0f / 60.0f) / total;
+	if (!reverseFlag_) { time_ += t; }	// リバースフラグに応じて進行方向を変える
+	else { time_ -= t; }
 
 	// ループする場合
 	if (loopFlag_) {
 		// 最後までいったらリピート再生
-		time_ = std::fmod(time_, 1.0f);
+		if (!reverseFlag_) {
+			time_ = std::fmod(time_, 1.0f);
+		}
+		else {
+			if (time_ < 0.0f) { time_ += 1.0f; }	// リバースなので0を下回ったら1を足して戻す
+		}
 	}
 	// ループしない場合
 	else {
-		// 1を超えないように
-		if (time_ > 1.0f) { time_ = 1.0f; }
+		// リバースしないなら1を超えないように
+		if (!reverseFlag_) {
+			if (time_ > 1.0f) { time_ = 1.0f; }
+		}
+		// リバースするなら0を超えないように
+		else {
+			if (time_ < 0.0f) { time_ = 0.0f; }
+		}
 	}
 
 	// アニメーションの時間
@@ -88,20 +101,31 @@ bool Animation::GetPlaying() {
 	// ループしない場合
 	else {
 		// 1未満なら再生中
-		return time_ < 1.0f;
+		if (!reverseFlag_) { return time_ < 1.0f; }
+		// 0以上なら再生中
+		else { return time_ > 0.0f; }
 	}
 }
 bool Animation::GetPlaying(const std::string& animName) {
-	// ループする場合
-	if (loopFlag_) {
-		// 再生しているアニメーションの名前が一致すれば再生中
-		return playingAnimationName_ == animName;
+	// そもそも再生しているアニメーションが一致しなければfalse
+	if (!(playingAnimationName_ == animName)) {
+		return false;
 	}
-	// ループしない場合
-	else {
-		// 再生しているアニメーションの名前が一致し、1未満なら再生中
-		return playingAnimationName_ == animName && time_ < 1.0f;
+	
+	// ループしない場合のみ追加処理
+	if(!loopFlag_) {
+		// 1未満なら再生中
+		if (!reverseFlag_) {
+			// 再生しているアニメーションの名前が一致し、1未満なら再生中
+			return time_ < 1.0f;
+		}
+		// 0以上なら再生中
+		else {
+			return time_ > 0.0f;
+		}
 	}
+
+	return true;
 }
 
 void Animation::DebugGUI() {
@@ -129,7 +153,8 @@ void Animation::DebugGUI() {
 	ImGui::Text("--- Parameter ---");
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
 	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
-	ImGui::Checkbox("loopFlag", &loopFlag_);
+	ImGui::Checkbox("LoopFlag", &loopFlag_);
+	ImGui::Checkbox("ReverseFlag", &reverseFlag_);
 	ImGui::Checkbox("isActive", &isActive);
 }
 

@@ -76,6 +76,12 @@ namespace LWP::Resource {
 		void Play(const std::string animName, bool loop, float startTime);
 		
 		/// <summary>
+		/// 逆再生フラグ
+		/// </summary>
+		/// <param name="b">逆再生するかのフラグ</param>
+		void Reverse(bool b) { reverseFlag_ = b; }
+
+		/// <summary>
 		/// アニメーション停止
 		/// </summary>
 		void Stop();
@@ -120,6 +126,7 @@ namespace LWP::Resource {
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr);
 
+
 		/// <summary>
 		/// 読み込んだパスを返す関数
 		/// </summary>
@@ -142,6 +149,8 @@ namespace LWP::Resource {
 		std::string playingAnimationName_ = "";
 		// ループするかフラグ
 		bool loopFlag_ = false;
+		// 逆再生フラグ
+		bool reverseFlag_ = false;
 
 		// 適応するModelのポインタ
 		Resource::SkinningModel* modelPtr_ = nullptr;

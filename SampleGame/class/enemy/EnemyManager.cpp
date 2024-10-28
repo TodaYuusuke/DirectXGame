@@ -19,7 +19,6 @@ void EnemyManager::Init(LevelData* level, Player* player) {
 	PDeadBody_.model.LoadCube();
 	PDeadBody_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
 	PDeadBody_.model.materials["Material"].color = Color(0.463f, 0.592f, 0.318f, 1.0f);
-	//particle_.model.SetAllMaterialLighting(false);
 
 	// 敵のスポーン地点を保存
 	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.000"]);

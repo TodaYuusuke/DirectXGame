@@ -10,7 +10,7 @@ using namespace LWP::Info;
 Pistol::Pistol() : capsule_(collision_.SetBroadShape(Collider::Capsule())) {}
 
 void Pistol::Init(LWP::Object::TransformQuat* wtf) {
-	model_.LoadShortPath("Player/Guns/Pistol.gltf");
+	model_.LoadShortPath("Player/Guns/Pistol/Pistol.gltf");
 	model_.worldTF.Parent(wtf);
 	model_.worldTF.translation = {0.36f, -0.36f, 1.24f};
 	
