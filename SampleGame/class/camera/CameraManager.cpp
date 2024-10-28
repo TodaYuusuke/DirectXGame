@@ -17,6 +17,7 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 
 	// カメラの初期設定
 	camera_->fov = 120.0f;
+	camera_->transform.translation = level_->catmullRomCurves["StartCurve"].GetPosition(0.0f);
 
 	// 黒帯初期化
 	blackBelt_.Init();

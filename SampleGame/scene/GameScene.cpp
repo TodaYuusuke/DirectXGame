@@ -19,11 +19,11 @@ GameScene::GameScene(LWP::Math::Vector3 startPos, LWP::Math::Quaternion startRot
 // 初期化
 void GameScene::Initialize() {
 	// 操作UI
-	ui_.material.texture = LWP::Resource::LoadTexture("ui/gameScene.png");
-	ui_.worldTF.translation = { 14.0f, 422.0f };
-	ui_.worldTF.scale = { 0.7f, 0.7f };
-	ui_.material.enableLighting = false;
-	ui_.isUI = true;
+	//ui_.material.texture = LWP::Resource::LoadTexture("ui/gameScene.png");
+	//ui_.worldTF.translation = { 14.0f, 422.0f };
+	//ui_.worldTF.scale = { 0.7f, 0.7f };
+	//ui_.material.enableLighting = false;
+	//ui_.isUI = true;
 
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);

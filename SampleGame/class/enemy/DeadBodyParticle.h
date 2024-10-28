@@ -25,6 +25,8 @@ private: // ** 純粋仮想関数のオーバーライド ** //
 			// Terrainに当たった場合
 			else if (col->mask.GetBelongFrag() & lwpC::Collider::Terrain) {
 				newData.velocity.y *= -0.5f;
+				newData.velocity.x *= 0.5f;	// 速度は落とす
+				newData.velocity.z *= 0.5f;
 			}
 			col;
 		};
