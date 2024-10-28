@@ -40,13 +40,14 @@ private: // ** メンバ定数 ** //
 
 private: // ** メンバ変数 ** //
 	// モデル
-	LWP::Resource::RigidModel model_;
+	LWP::Resource::SkinningModel model_;
+	LWP::Resource::Animation anim_;
 	// コライダー
 	LWP::Object::Collision collision_;
 	LWP::Object::Collider::Capsule& capsule_;
 
-	// モーションクラス
-	LWP::Resource::Motion motion_;
+	// レティクル
+	LWP::Primitive::Sprite reticle_;
 
 	// 装填数
 	int ammo_ = 10;

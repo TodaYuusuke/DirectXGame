@@ -5,22 +5,26 @@ using namespace LWP::Math;
 using namespace LWP::Input;
 using namespace LWP::Primitive;
 using namespace LWP::Object;
+using namespace LWP::Resource;
 using namespace LWP::Info;
 
 Pistol::Pistol() : capsule_(collision_.SetBroadShape(Collider::Capsule())) {}
 
-void Pistol::Init(LWP::Object::TransformQuat* wtf) {
-	model_.LoadShortPath("Player/Guns/Pistol/Pistol.gltf");
+void Pistol::Init(TransformQuat* wtf) {
+	// モデル
+	model_.LoadShortPath("Player/Guns/Pistol.gltf");
 	model_.worldTF.Parent(wtf);
 	model_.worldTF.translation = {0.36f, -0.36f, 1.24f};
-	
+	// アニメーション
+	anim_.LoadFullPath("resources/model/Player/Guns/Pistol.gltf", &model_);
+
 	// コライダーの当たり判定設定
 	collision_.mask.SetBelongFrag(MaskLayer::Bullet);
 	collision_.mask.SetHitFrag(MaskLayer::Enemy);
 	capsule_.radius = 0.2f;
 
-	// モーション用意
-
+	// レティクルのスプライト表示
+	reticle_.material.texture = Resource::LoadTexture("")
 }
 
 void Pistol::Update() {
@@ -32,6 +36,9 @@ void Pistol::Update() {
 }
 
 void Pistol::Shot(LWP::Math::Vector3 pos, LWP::Math::Vector3 dir) {
+	// アニメーション再生
+	anim_.Play("01_Shot");
+
 	// 射撃地点から遠くまでカプセルコライダーを生成
 	collision_.worldTF.translation = pos;
 	capsule_.end = (dir * 100.0f);
@@ -50,10 +57,10 @@ void Pistol::DebugGUI() {
 		model_.DebugGUI();
 		ImGui::TreePop();
 	}
-	//if (ImGui::TreeNode("Animation")) {
-	//	anim_.DebugGUI();
-	//	ImGui::TreePop();
-	//}
+	if (ImGui::TreeNode("Animation")) {
+		anim_.DebugGUI();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Collision")) {
 		collision_.DebugGUI();
 		ImGui::TreePop();
