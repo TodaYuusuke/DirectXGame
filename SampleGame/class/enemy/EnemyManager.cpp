@@ -19,13 +19,28 @@ void EnemyManager::Init(LevelData* level, Player* player) {
 	PDeadBody_.model.LoadCube();
 	PDeadBody_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
 	PDeadBody_.model.materials["Material"].color = Color(0.463f, 0.592f, 0.318f, 1.0f);
+	
+	// ウェーブデータ設定
+	waveData_[0].kQuota = 15;
+	waveData_[0].kSpeedMultiply = (1.0f / 12.0f);
+	waveData_[1].kQuota = 20;
+	waveData_[1].kSpeedMultiply = (1.0f / 5.0f);
 
 	// 敵のスポーン地点を保存
-	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.000"]);
-	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.001"]);
-	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.002"]);
-	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.003"]);
-	spawnPoint_[0].push_back(&level->catmullRomCurves["EnemySP0.004"]);
+	for (int i = 0; i < Wave::kMax; i++) {
+		for (int j = 0; ; j++) {
+			std::ostringstream oss;
+			oss << std::setw(3) << std::setfill('0') << j;	// 3桁の0埋めの数字
+			std::string str = "EnemySP" + std::to_string(i) + "." + oss.str();	// 参照する名前を決定
+			// その名前が存在するか確認
+			if (level->catmullRomCurves.contains(str)) {
+				spawnPoint_[i].push_back(&level->catmullRomCurves[str]);	// 存在したので保存
+			}
+			else {
+				break;	// 存在しないので次のウェーブへ
+			}
+		}
+	}
 }
 
 void EnemyManager::Update() {
@@ -53,7 +68,7 @@ void EnemyManager::Update() {
 	// スポーン最大数に到達している場合
 	if (spawnedEnemyCount_ >= GetSpawnPointSize()) { return; }	// 処理終了
 	// 現在スポーンしている数とキル済みの数の合計が、ノルマに到達している場合
-	if (spawnedEnemyCount_ + killCount_ >= quota_) { return; }	// 処理終了
+	if (spawnedEnemyCount_ + killCount_ >= waveData_[wave_].kQuota) { return; }	// 処理終了
 
 
 	// スポーンインターバルを更新
@@ -74,11 +89,11 @@ void EnemyManager::Spawn() {
 	}
 
 	// 敵の初期設定
-	Enemy* e = new Enemy();
+	Enemy* e = new Enemy(waveData_[wave_].kSpeedMultiply);
 	e->Init(spawnPoint_[wave_][sp].curve, player_,
 		[this](Vector3 pos) {
 			PBlood_.Add(32, (pos));
-			PDeadBody_.Add(16, (pos));
+			PDeadBody_.Add(32, (pos));
 		}
 	);	// 死亡時のパーティクルを生成する関数を渡す
 	spawnPoint_[wave_][sp].enemy = e;	// 配列に格納
@@ -96,9 +111,9 @@ void EnemyManager::DebugGUI() {
 	static int enemyIndex = 0;
 
 	ImGui::Begin("EnemyManager");
-	ImGui::Text("Quota : %d / %d", killCount_, quota_);
+	if (wave_ != -1) { ImGui::Text("Quota : %d / %d", killCount_, waveData_[wave_].kQuota); }
 	ImGui::Text("--------------------");
-	ImGui::SliderInt("WaveIndex", &waveIndex, 0, kMaxWave - 1);
+	ImGui::SliderInt("WaveIndex", &waveIndex, 0, Wave::kMax - 1);
 	int enemySize = static_cast<int>(spawnPoint_[waveIndex].size()) - 1;
 	ImGui::SliderInt("EnemyIndex", &enemyIndex, 0, enemySize);
 	if (enemyIndex > enemySize) { enemyIndex = enemySize; }	// 配列外参照回避

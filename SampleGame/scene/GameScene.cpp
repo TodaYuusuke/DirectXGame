@@ -18,13 +18,6 @@ GameScene::GameScene(LWP::Math::Vector3 startPos, LWP::Math::Quaternion startRot
 
 // 初期化
 void GameScene::Initialize() {
-	// 操作UI
-	//ui_.material.texture = LWP::Resource::LoadTexture("ui/gameScene.png");
-	//ui_.worldTF.translation = { 14.0f, 422.0f };
-	//ui_.worldTF.scale = { 0.7f, 0.7f };
-	//ui_.material.enableLighting = false;
-	//ui_.isUI = true;
-
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
 	// カメラ管理に登録
@@ -88,12 +81,16 @@ void GameScene::Initialize() {
 	statePattern_.initFunction[int(BehaviorGS::Play0)] = [this](const BehaviorGS& pre) {
 		enemyManager_.StartWave(int(BehaviorGS::Play0) / 2 - 1);
 	};
-	statePattern_.updateFunction[int(BehaviorGS::Play0)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
-		if (enemyManager_.GetClearFlag()) { req = BehaviorGS::FadeOut; }	// 敵を倒したらフェードアウト
-	};
 	statePattern_.initFunction[int(BehaviorGS::Play1)] = [this](const BehaviorGS& pre) {
 		enemyManager_.StartWave(int(BehaviorGS::Play1) / 2 - 1);
 	};
+	statePattern_.updateFunction[int(BehaviorGS::Play0)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+		if (enemyManager_.GetClearFlag()) { req = BehaviorGS::Movie1; }	// 敵を倒したら次のムービー開始
+	};
+	statePattern_.updateFunction[int(BehaviorGS::Play1)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+		if (enemyManager_.GetClearFlag()) { req = BehaviorGS::FadeOut; }	// 敵を倒したらクリア
+	};
+
 
 	// 名前を登録しておく
 	statePattern_.name[int(BehaviorGS::FadeIn)] = "FadeIn";

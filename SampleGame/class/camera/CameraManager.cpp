@@ -17,13 +17,18 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 
 	// カメラの初期設定
 	camera_->fov = 120.0f;
-	camera_->transform.translation = level_->catmullRomCurves["StartCurve"].GetPosition(0.0f);
+	camera_->transform.translation = level_->catmullRomCurves["Movie0"].GetPosition(0.0f);
 
 	// 黒帯初期化
 	blackBelt_.Init();
 
 	state_->initFunction[int(BehaviorGS::Movie0)] = [this](const BehaviorGS& pre) {
-		catmullRom_ = &level_->catmullRomCurves["StartCurve"];	// 使用するアニメーションを設定
+		catmullRom_ = &level_->catmullRomCurves["Movie0"];	// 使用するアニメーションを設定
+		catmullRom_->t = 0.0f;	// 初期化
+		blackBelt_.SetIsActive(true);
+	};
+	state_->initFunction[int(BehaviorGS::Movie1)] = [this](const BehaviorGS& pre) {
+		catmullRom_ = &level_->catmullRomCurves["Movie1"];	// 使用するアニメーションを設定
 		catmullRom_->t = 0.0f;	// 初期化
 		blackBelt_.SetIsActive(true);
 	};
@@ -64,7 +69,7 @@ void CameraManager::Update() {
 #endif
 		// tが1以上ならシーン変更処理
 		if (catmullRom_->t >= 1.0f) {
-			state_->request = BehaviorGS::Play0;	// 次のシーンにする
+			state_->request = BehaviorGS(int(state_->GetCurrentBehavior()) + 1);	// 次のシーンにする
 			blackBelt_.SetIsActive(false);
 			catmullRom_ = nullptr;
 		}

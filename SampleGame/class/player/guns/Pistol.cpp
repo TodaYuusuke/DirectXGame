@@ -14,7 +14,7 @@ void Pistol::Init(TransformQuat* wtf) {
 	// モデル
 	model_.LoadShortPath("Player/Guns/Pistol.gltf");
 	model_.worldTF.Parent(wtf);
-	model_.worldTF.translation = {0.36f, -0.36f, 1.24f};
+	model_.worldTF.translation = { 0.36f, -0.36f, 1.24f };
 	// アニメーション
 	anim_.LoadFullPath("resources/model/Player/Guns/Pistol.gltf", &model_);
 
@@ -24,7 +24,10 @@ void Pistol::Init(TransformQuat* wtf) {
 	capsule_.radius = 0.2f;
 
 	// レティクルのスプライト表示
-	reticle_.material.texture = Resource::LoadTexture("")
+	reticle_.material.texture = Resource::LoadTexture("Reticle.png");
+	reticle_.anchorPoint = { 0.5f,0.5f };
+	reticle_.worldTF.translation.x = 1920.0f / 2.0f;
+	reticle_.worldTF.translation.y = 1080.0f / 2.0f;
 }
 
 void Pistol::Update() {

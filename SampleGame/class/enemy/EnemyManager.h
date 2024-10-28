@@ -37,14 +37,24 @@ public:
 
 
 private: // ** メンバ変数 ** //
-	// 全体ウェーブ数
-	const static int kMaxWave = 1;
-	// ウェーブ番号
-	int wave_ = -1;
-	
 	// プレイヤーのポインタ
 	Player* player_;
-	// 敵の出現ポイントとそこの敵クラス
+
+	// ウェーブ
+	struct Wave {
+		// 静的定数
+		const static int kMax = 2;
+
+		// ノルマ数
+		int kQuota;
+		// 敵の速度
+		float kSpeedMultiply;
+	};
+	Wave waveData_[Wave::kMax];
+	// ウェーブ番号
+	int wave_ = -1;
+
+	// 敵の出現ポイントと敵クラス
 	struct SpawnPoint {
 		LWP::Utility::CatmullRom* curve = nullptr;
 		Enemy* enemy = nullptr;
@@ -57,7 +67,8 @@ private: // ** メンバ変数 ** //
 			if (enemy) { delete enemy; }
 		}
 	};
-	std::vector<SpawnPoint> spawnPoint_[kMaxWave];
+	std::vector<SpawnPoint> spawnPoint_[Wave::kMax];
+
 
 	// 敵出現間隔
 	float kSummonInterval_ = 1.5f;
@@ -68,7 +79,7 @@ private: // ** メンバ変数 ** //
 	// 敵撃破数
 	int killCount_ = 0;
 	// 敵撃破ノルマ
-	int quota_ = 10;
+	int quota_ = 15;
 
 	// パーティクルクラス
 	BloodParticle PBlood_;

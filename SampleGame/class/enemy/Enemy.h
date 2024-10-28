@@ -8,6 +8,11 @@ class Enemy final {
 public:
 	
 	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Enemy(float speed) { kSpeed = speed; }
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Init(LWP::Utility::CatmullRom* curve, Player* player, std::function<void(LWP::Math::Vector3)> func);
