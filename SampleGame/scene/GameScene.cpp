@@ -27,6 +27,12 @@ void GameScene::Initialize() {
 	// 敵管理クラス初期化
 	enemyManager_.Init(&levelData, &player_);
 
+	// UI描画
+	ui_.material.texture = Resource::LoadTexture("ui/Control.png");
+	ui_.anchorPoint = { 0.0f,0.5f };
+	ui_.worldTF.translation.y = 1080.0f / 2.0f;
+	ui_.worldTF.scale = { 0.8f,0.8f,1.0f };
+
 	// 演出初期化
 	stagingSprite_.isUI = true;
 	stagingSprite_.material.enableLighting = false;
