@@ -73,9 +73,7 @@ void Title::Update() {
 		EndStaging& e = endStaging_;
 		// 演出終了したらシーン遷移
 		if (e.end) {
-			Vector3 pos = drone_.worldTF.translation;
-			Quaternion rot = drone_.worldTF.rotation;
-			nextSceneFunction = [pos, rot]() { return new NullScene([pos, rot]() { return new GameScene(pos, rot); }); };
+			nextSceneFunction = []() { return new NullScene([]() { return new GameScene(); }); };
 		}
 		else {
 			// 時間更新

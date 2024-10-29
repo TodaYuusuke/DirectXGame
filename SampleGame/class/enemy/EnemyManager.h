@@ -85,7 +85,7 @@ private: // ** メンバ変数 ** //
 	BloodParticle PBlood_;
 	DeadBodyParticle PDeadBody_;
 	// パーティクルの数
-	int kParticleSize_ = 32;
+	int kParticleSize_ = 32 * 2;
 
 private: // ** メンバ関数 ** //
 	

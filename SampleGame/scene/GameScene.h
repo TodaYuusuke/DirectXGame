@@ -10,10 +10,6 @@
 class GameScene final
 	: public IScene {
 public:
-	
-	// コンストラクタ
-	GameScene(LWP::Math::Vector3 startPos, LWP::Math::Quaternion startRot);
-
 	//*** 純粋仮想関数の実体宣言 ***//
 
 	// 初期化
@@ -35,10 +31,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	Player player_;
 	// 敵管理
 	EnemyManager enemyManager_;
-
-	// 開始時の地点
-	LWP::Math::Vector3 startPos_;
-	LWP::Math::Quaternion startRot_;
 
 	// 操作表示
 	LWP::Primitive::Sprite ui_;

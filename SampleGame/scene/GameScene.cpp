@@ -11,12 +11,6 @@ using namespace LWP::Primitive;
 using namespace LWP::Utility;
 using namespace LWP::Info;
 
-GameScene::GameScene(LWP::Math::Vector3 startPos, LWP::Math::Quaternion startRot) {
-	startPos_ = startPos;
-	startRot_ = startRot;
-}
-
-// 初期化
 void GameScene::Initialize() {
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
