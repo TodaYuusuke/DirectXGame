@@ -125,6 +125,8 @@ void FrameTracker::DebugGUI() {
 		ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());
 		ImGui::Text("DeltaTime ... %lf", GetDeltaTime());
 		ImGui::Text("ElapsedFrame ... %d", elapsedFrame_);
+		ImGui::Text("---------------------------");
+		ImGui::SliderFloat("DeltaTimeMultiply", &deltaFactor, 0.0f, 1.0f);
 		
 		ImGui::EndTabItem();
 	}

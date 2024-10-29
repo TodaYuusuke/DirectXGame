@@ -92,8 +92,8 @@ void EnemyManager::Spawn() {
 	Enemy* e = new Enemy(waveData_[wave_].kSpeedMultiply);
 	e->Init(spawnPoint_[wave_][sp].curve, player_,
 		[this](Vector3 pos) {
-			PBlood_.Add(32, (pos));
-			PDeadBody_.Add(32, (pos));
+			PBlood_.Add(kParticleSize_, (pos));
+			PDeadBody_.Add(kParticleSize_, (pos));
 		}
 	);	// 死亡時のパーティクルを生成する関数を渡す
 	spawnPoint_[wave_][sp].enemy = e;	// 配列に格納
@@ -103,7 +103,7 @@ void EnemyManager::Spawn() {
 void EnemyManager::StartWave(int num) {
 	killCount_ = 0;	// キルカウント初期化
 	wave_ = num;	// ウェーブを登録
-	assert(wave_ < kMaxWave);	// ウェーブが最大値より大きい場合はエラー
+	assert(wave_ < Wave::kMax);	// ウェーブが最大値より大きい場合はエラー
 }
 
 void EnemyManager::DebugGUI() {

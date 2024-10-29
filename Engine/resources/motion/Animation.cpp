@@ -52,8 +52,8 @@ void Animation::Update() {
 	// アニメーションの時間
 	float total = GetAnimationTotalTime();
 	// 時間を更新
-	//float t = (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
-	float t = (1.0f / 60.0f) / total;
+	float t = (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
+	//float t = (1.0f / 60.0f) / total;
 	if (!reverseFlag_) { time_ += t; }	// リバースフラグに応じて進行方向を変える
 	else { time_ -= t; }
 

@@ -78,16 +78,12 @@ void Player::Move() {
 	if (Keyboard::GetPress(DIK_A)) {
 		dir.x -= 1.0f;
 	}
-	//if (Keyboard::GetPress(DIK_LSHIFT)) {
-	//	dir.y -= 1.0f;
-	//}
-	//if (Keyboard::GetPress(DIK_SPACE)) {
-	//	dir.y += 1.0f;
-	//}
-
-	// コントローラーでの移動
-	dir.x += Pad::GetLStick().x;
-	dir.z += Pad::GetLStick().y;
+	if (Keyboard::GetPress(DIK_PGUP)) {
+		dir.y -= 1.0f;
+	}
+	if (Keyboard::GetPress(DIK_PGDN)) {
+		dir.y += 1.0f;
+	}
 
 	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation));
 	dir = Vector3{ dir.x, 0.0f, dir.z }.Normalize();

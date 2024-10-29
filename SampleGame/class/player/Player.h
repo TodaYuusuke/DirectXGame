@@ -26,7 +26,7 @@ private: // ** メンバ定数 ** //
 	// 重力加速度
 	float kGravityAcce = 9.8f;
 	// プレイヤーの加速度
-	float kWalkSpeed = 6.0f;
+	float kWalkSpeed = 3.0f;
 	// 速度の減衰率
 	float kDecayRate = 0.8f;
 
