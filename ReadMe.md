@@ -7,30 +7,38 @@ LWPエンジンは、2023年4月より制作が始まった、3Dゲームを作�
 [フォルダへ](Engine/base)  
 DirectX12、ウィンドウ管理など、エンジンの基礎部分となるクラスが入っています。  
 
-### [Info](Engine/info)
+### Info
+[フォルダへ](Engine/info)  
 フレームレートなど、エンジンのデバッグに必要な情報系を管理するクラスが入っています  
 
-### [Input](Engine/input)
+### Input
+[フォルダへ](Engine/input)  
 キーボード、コントローラーの入力を受け付けるクラスが入っています。  
 
-### [Math](Engine/math)
+### Math
+[フォルダへ](Engine/math)  
 ベクトル、行列、クォータニオンなどの数学的なクラスが入っています。  
 
-### [Object](Engine/object)
+### Object
+[フォルダへ](Engine/object)  
 カメラ、パーティクル、当たり判定など、ゲーム作りに使用するオブジェクトのクラスが入っています。  
 
-### [Primitive](Engine/primitive)
+### Primitive
+[フォルダへ](Engine/primitive)  
 VertexShaderを使って描画される、キューブ、スフィア、スプライトなどの基本的な形状のクラスが入っています。  
 
-### [Resources](Engine/resources)
+### Resources
+[フォルダへ](Engine/resources)  
 3Dモデル、オーディオ、テクスチャ、アニメーションなど、ゲームで使用するリソース系を管理するクラスが入っています。  
 読み込まれた3DモデルはMeshShaderで描画され、同一のモデルを複数描画する場合はAmpShaderによって自動的に増幅されて描画されます。  
 
-### [Scene](Engine/scene)
+### Scene
+[フォルダへ](Engine/scene)  
 ゲームのシーンを管理するクラスが入っています。  
 シーンを作成する際はISceneクラスを継承して実装してください。  
 
-### [Utility](Engine/utility)
+### Utility
+[フォルダへ](Engine/utility)  
 その他便利な関数群が入っています。各種関数の詳細はコメント文に記載されています。
 
 
