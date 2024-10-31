@@ -6,18 +6,15 @@ LWPエンジンは、2023年4月より制作が始まった、3Dゲームを作�
 エンジンの機能は分類ごとに名前空間にまとめられており、フォルダも分けられています。  
 以下に分類ごとに機能解説を記します。  
 
-### - Base
-[フォルダへ](Engine/base)  
+### - [Base](Engine/base)  
 DirectX12、ウィンドウ管理など、エンジンの基礎部分となるクラスが入っています。  
 
 ---
-### - Info
-[フォルダへ](Engine/info)  
+### - [Info](Engine/info)  
 フレームレートなど、エンジンのデバッグに必要な情報系を管理するクラスが入っています。  
 
 ---
-### - Input
-[フォルダへ](Engine/input)  
+### - [Input](Engine/input)  
 キーボード、コントローラーの入力を受け付けるクラスが入っています。  
 
   + **Cameraクラス**  
@@ -25,13 +22,11 @@ DirectX12、ウィンドウ管理など、エンジンの基礎部分となる�
 ウィンドウに表示されるのはISceneクラスのSetMainRenderCamera関数で登録されたカメラからの視点です。  
 GetTexture関数でこのカメラ視点のレンダリング結果のテクスチャを取得できます。  
 ---
-### - Math
-[フォルダへ](Engine/math)  
+### - [Math](Engine/math)  
 ベクトル、行列、クォータニオンなどの数学的なクラスが入っています。  
 
 ---
-### - Object
-[フォルダへ](Engine/object)  
+### - [Object](Engine/object)  
 カメラ、パーティクル、当たり判定など、ゲーム作りに使用するオブジェクトのクラスが入っています。  
 Object内のクラスは、コンストラクタにて自動的にエンジンにポインタが登録されるため、ユーザはメンバのUpdate関数などを呼び出す必要はありません。  
 
@@ -45,14 +40,12 @@ GetTexture関数でこのカメラ視点のレンダリング結果のテクス�
 生成と更新に使う純粋仮想関数を定義すれば、任意のモデルをパーティクルに使用することができます。  
 
 ---
-### - Primitive
-[フォルダへ](Engine/primitive)  
+### - [Primitive](Engine/primitive)  
 VertexShaderを使って描画される、キューブ、スフィア、スプライトなどの基本的な形状のクラスが入っています。  
 Primitive内のクラスは、コンストラクタにて自動的にエンジンにポインタが登録されるため、ユーザはメンバのUpdate関数などを呼び出す必要はありません。  
 
 ---
-### - Resources
-[フォルダへ](Engine/resources)  
+### - [Resources](Engine/resources)  
 3Dモデル、オーディオ、テクスチャ、アニメーションなど、ゲームで使用するリソース系を管理するクラスが入っています。  
 読み込まれた3DモデルはMeshShaderで描画され、同一のモデルを複数描画する場合はAmpShaderによって自動的に増幅されて描画されます。  
 Resources内のクラスは、コンストラクタにて自動的にエンジンにポインタが登録されるため、ユーザはメンバのUpdate関数などを呼び出す必要はありません。  
@@ -69,19 +62,16 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 動的な環境マッピングが行われるモデルとして読み込みます。モデルの中心から6方向にレンダリングし、
 ライティングがonのマテリアルに反射が映り込みます。
 ---
-### - Scene
-[フォルダへ](Engine/scene)  
+### - [Scene](Engine/scene)  
 ゲームのシーンを管理するクラスが入っています。  
 シーンを作成する際はISceneクラスを継承して実装してください。  
 
 ---
-### - Utility
-[フォルダへ](Engine/utility)  
+### - [Utility](Engine/utility)  
 その他便利な関数群が入っています。各種関数の詳細はコメント文に記載されています。  
 
 ---
-### - 外部ライブラリ
-[フォルダへ](Externals)  
+### - [外部ライブラリ](Externals)  
   + [DirectXTex](https://github.com/microsoft/DirectXTex.git)  
   + [DirectXMesh](https://github.com/microsoft/DirectXMesh.git)  
   + [ImGui](https://github.com/ocornut/imgui.git)  
