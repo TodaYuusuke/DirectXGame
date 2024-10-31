@@ -82,11 +82,11 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 ---
 ### - 外部ライブラリ
 [フォルダへ](Externals)  
-  + DirectXTex  
-  + DirectXMesh  
-  + ImGui  
-  + Assimp  
-  + nlohmann - json  
+  + [DirectXTex](https://github.com/microsoft/DirectXTex.git)  
+  + [DirectXMesh](https://github.com/microsoft/DirectXMesh.git)  
+  + [ImGui](https://github.com/ocornut/imgui.git)  
+  + [Assimp](https://github.com/assimp/assimp.git)  
+  + [nlohmann - json](https://github.com/nlohmann/json.git)  
 
 
 ## サンプルゲーム
