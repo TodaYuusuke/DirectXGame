@@ -20,6 +20,10 @@ DirectX12、ウィンドウ管理など、エンジンの基礎部分となる�
 [フォルダへ](Engine/input)  
 キーボード、コントローラーの入力を受け付けるクラスが入っています。  
 
+  + **Cameraクラス**  
+レンダリングの視点とポストプロセスの設定をメンバにもつクラスです。  
+ウィンドウに表示されるのはISceneクラスのSetMainRenderCamera関数で登録されたカメラからの視点です。  
+GetTexture関数でこのカメラ視点のレンダリング結果のテクスチャを取得できます。  
 ---
 ### - Math
 [フォルダへ](Engine/math)  
@@ -75,6 +79,16 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 [フォルダへ](Engine/utility)  
 その他便利な関数群が入っています。各種関数の詳細はコメント文に記載されています。  
 
+---
+### - 外部ライブラリ
+[フォルダへ](Externals)  
+  + DirectXTex  
+  + DirectXMesh  
+  + ImGui  
+  + Assimp  
+  + nlohmann - json  
+
 
 ## サンプルゲーム
 このエンジンを使って作られたサンプルゲームの[プロジェクト](SampleGame)が含まれています。  
+[最新の進捗動画](https://youtu.be/grzkSSoFcx4)
