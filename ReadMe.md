@@ -50,8 +50,8 @@ VertexShaderを使って描画される、キューブ、スフィア、スプ�
 Primitive内のクラスは、コンストラクタにて自動的にエンジンにポインタが登録されるため、ユーザはメンバのUpdate関数などを呼び出す必要はありません。  
 
 Primitiveの描画は、独自の処理でDrawCallを圧縮し、軽量化されています。
-![0](https://github.com/user-attachments/assets/337adf4a-c8be-4490-adf2-a8c01a3f70fc)
-![1](https://github.com/user-attachments/assets/6a59b845-474b-48bc-a52b-23bcb33793f8)
+![スクリーンショット 2024-11-12 101602](https://github.com/user-attachments/assets/7a402d4c-cb0d-432f-b58d-d3649aa2676b)
+![スクリーンショット 2024-11-12 101552](https://github.com/user-attachments/assets/a5a599c4-d29c-4919-a6e0-f799a3be3e05)
 
 ---
 ### - [Resources](Engine/resources)  
