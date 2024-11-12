@@ -108,5 +108,6 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 [リンク](https://github.com/TodaYuusuke/GJ1_LE3.git)
 
 ### 切り切り舞
+![image](https://github.com/user-attachments/assets/afddfb7c-450e-4c50-a63a-fa6cc5a32b89)  
 開発期間：4ヶ月　開発人数：4人  
 [リンク](https://github.com/TodaYuusuke/TD3.git)
