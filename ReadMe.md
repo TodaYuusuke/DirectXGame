@@ -105,12 +105,14 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 
 ---
 ### アンダーガンナー
-![screenShot_UnderGunner](https://github.com/user-attachments/assets/8c99b466-427b-4d29-933d-d876c9bf0270)  
+![SS_UnderGunner_Title](https://github.com/user-attachments/assets/6c6ad8c5-d32d-45f8-953e-b86e73319850)
+![SS_UnderGunner_Play](https://github.com/user-attachments/assets/c04bacbc-218c-4d64-9364-bde4ae5b67f9)  
 開発期間：10日　開発人数：3人  
-[リンク](https://github.com/TodaYuusuke/GJ1_LE3.git)
+[Githubリンク](https://github.com/TodaYuusuke/GJ1_LE3.git)
 
 ---
 ### 切り切り舞
-![screenShot_kirkirimai](https://github.com/user-attachments/assets/5eac5856-e36c-4bf9-8153-17639a5b3f9c)  
+![SS_kirikirimai_Title](https://github.com/user-attachments/assets/8b3387fc-7fba-4acd-aaf4-b7ed94bc751d)
+![SS_kirikirimai_Play](https://github.com/user-attachments/assets/53d82b1e-2b32-4b85-9f17-0d9dcc643ca1)  
 開発期間：4ヶ月　開発人数：4人  
-[リンク](https://github.com/TodaYuusuke/TD3.git)
+[Githubリンク](https://github.com/TodaYuusuke/TD3.git)
