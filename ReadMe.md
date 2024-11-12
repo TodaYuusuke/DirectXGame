@@ -49,6 +49,10 @@ GetTexture関数でこのカメラ視点のレンダリング結果のテクス�
 VertexShaderを使って描画される、キューブ、スフィア、スプライトなどの基本的な形状のクラスが入っています。  
 Primitive内のクラスは、コンストラクタにて自動的にエンジンにポインタが登録されるため、ユーザはメンバのUpdate関数などを呼び出す必要はありません。  
 
+Primitiveの描画は、独自の処理でDrawCallを圧縮し、軽量化されています。
+![0](https://github.com/user-attachments/assets/337adf4a-c8be-4490-adf2-a8c01a3f70fc)
+![1](https://github.com/user-attachments/assets/6a59b845-474b-48bc-a52b-23bcb33793f8)
+
 ---
 ### - [Resources](Engine/resources)  
 3Dモデル、オーディオ、テクスチャ、アニメーションなど、ゲームで使用するリソース系を管理するクラスが入っています。  
