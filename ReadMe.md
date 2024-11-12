@@ -99,4 +99,13 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 
 ## サンプルゲーム
 このエンジンを使って作られたサンプルゲームの[プロジェクト](SampleGame)が含まれています。  
-[最新の進捗動画](https://youtu.be/grzkSSoFcx4)
+[最新の進捗動画](https://youtu.be/grzkSSoFcx4)  
+
+また、このエンジンを使用して制作されたゲームのプロジェクトを以下にまとめてあります。  
+### アンダーガンナー
+開発期間：10日　開発人数：3人
+[リンク](https://github.com/TodaYuusuke/GJ1_LE3.git)
+
+### 切り切り舞
+開発期間：4ヶ月　開発人数：4人
+[リンク](https://github.com/TodaYuusuke/TD3.git)
