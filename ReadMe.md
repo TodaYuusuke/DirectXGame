@@ -113,6 +113,6 @@ Resources内のクラスは、コンストラクタにて自動的にエンジ�
 ---
 ### 切り切り舞
 ![SS_kirikirimai_Title](https://github.com/user-attachments/assets/8b3387fc-7fba-4acd-aaf4-b7ed94bc751d)
-![SS_kirikirimai_Play](https://github.com/user-attachments/assets/53d82b1e-2b32-4b85-9f17-0d9dcc643ca1)  
+![SS_kirikirimai_Play](https://github.com/user-attachments/assets/09aab4f1-4cdc-4bf2-9ea8-fd4b3218fe3e)  
 開発期間：4ヶ月　開発人数：4人  
 [Githubリンク](https://github.com/TodaYuusuke/TD3.git)
