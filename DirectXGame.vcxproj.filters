@@ -366,6 +366,7 @@
     </ClCompile>
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
+    <ClCompile Include="Engine\info\DebugCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -821,6 +822,7 @@
     <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\MyString.h" />
+    <ClInclude Include="Engine\info\DebugCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

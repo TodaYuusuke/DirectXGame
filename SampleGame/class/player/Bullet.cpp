@@ -7,7 +7,7 @@ using namespace LWP::Primitive;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainBulletParticle* particle) : capsule_(collision_.SetBroadShape(Collider::Point())) {
+Bullet::Bullet(LWP::Math::Vector3 position, LWP::Math::Vector3 direction, LWP::Object::Terrain* terrain, TerrainParticle* particle) : capsule_(collision_.SetBroadShape(Collider::Point())) {
 	// モデル初期設定
 	model_.LoadSphere();
 	model_.worldTF.translation = position;

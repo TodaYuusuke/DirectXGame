@@ -23,8 +23,10 @@ void Engine::StartUp(std::wstring str) {
 void Engine::Run(IScene* firstScene) {
 	// Sceneはここで生成
 	sceneManager_ = std::make_unique<Scene::Manager>();
-	// Scene初期化
-	sceneManager_->Initialize(firstScene);
+	sceneManager_->Initialize(firstScene);	// Scene初期化
+	// デバッグカメラ用意
+	debugCamera_ = std::make_unique<Information::DebugCamera>();
+	debugCamera_->Init();
 
 	// ウィンドウの×ボタンが押されるまで もしくは　End関数が呼ばれるまでループ
 	while (ProcessMessage()) {
@@ -32,8 +34,15 @@ void Engine::Run(IScene* firstScene) {
 
 		// 更新処理
 		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
+		debugCamera_->Update();	// デバッグカメラ更新はここで
 		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
-		directXCommon_->SetMainCamera(sceneManager_->GetMainCamera());	// BackBufferのレンダリングに使うカメラをセット
+
+		// デバッグカメラのOnOffでレンダリングに使うカメラを切り替える
+		directXCommon_->SetMainCamera(
+			debugCamera_->GetActiveFlag() ?
+			debugCamera_->GetCamera() :
+			sceneManager_->GetMainCamera()
+		);
 
 		resourceManager_->Update();	// リソース更新（アニメーションの更新処理）
 		primitiveManager_->Update();
@@ -133,6 +142,7 @@ void Engine::DebugGUI() {
 		resourceManager_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
+		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->transform);
 		debugTimer_.DebugGUI();
 #else
 		debugTimer_.DebugGUI();

@@ -59,6 +59,8 @@
     <ClCompile Include="class\camera\BlackBelt.cpp" />
     <ClCompile Include="class\player\Bullet.cpp" />
     <ClCompile Include="class\player\Drone.cpp" />
+    <ClCompile Include="scene\Test\ParticleTest.cpp" />
+    <ClCompile Include="class\particle\TerrainParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h">
@@ -67,7 +69,7 @@
     <ClInclude Include="class\particle\DamageParticle.h">
       <Filter>class\particle</Filter>
     </ClInclude>
-    <ClInclude Include="class\particle\TerrainBulletParticle.h">
+    <ClInclude Include="class\particle\TerrainParticle.h">
       <Filter>class\particle</Filter>
     </ClInclude>
     <ClInclude Include="class\player\Player.h">
@@ -107,5 +109,6 @@
     <ClInclude Include="class\player\Bullet.h" />
     <ClInclude Include="class\player\Drone.h" />
     <ClInclude Include="class\enemy\DeadBodyParticle.h" />
+    <ClInclude Include="scene\Test\ParticleTest.h" />
   </ItemGroup>
 </Project>

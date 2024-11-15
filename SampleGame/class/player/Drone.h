@@ -40,7 +40,7 @@ private: // ** メンバ変数 ** //
 	// 弾
 	std::list<Bullet> bullets_;
 	// 弾が使うパーティクル
-	TerrainBulletParticle particle_;
+	TerrainParticle particle_;
 
 
 	// カメラ

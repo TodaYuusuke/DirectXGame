@@ -15,6 +15,8 @@
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
+
+#include "../Engine/info/DebugCamera.h"
 #include "../Engine/info/FrameTracker.h"
 #include "../Engine/info/OutputLog.h"
 
@@ -111,6 +113,8 @@ namespace LWP::System {
 		// シーンマネージャー
 		std::unique_ptr<Scene::Manager> sceneManager_;
 
+		// デバッグカメラ
+		std::unique_ptr<LWP::Information::DebugCamera> debugCamera_;
 		// デバッグ用タイマークラス
 		LWP::Information::FrameTracker debugTimer_;
 		// デバッグ情報の表示切替フラグ
