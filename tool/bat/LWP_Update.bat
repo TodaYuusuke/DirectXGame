@@ -22,10 +22,16 @@ if ERRORLEVEL 1 (
 )
 
 
+REM Debugでビルド（DirectXGameプロジェクトのみ）
+MSBuild "DirectXGame.sln" /t:DirectXGame:clean;DirectXGame:build /p:ConfigurationType=StaticLibrary;Configuration=Debug;MultiProcessorCompilation=true
+REM Releaseでビルド（DirectXGameプロジェクトのみ）
+MSBuild "DirectXGame.sln" /t:DirectXGame:clean;DirectXGame:build /p:ConfigurationType=StaticLibrary;Configuration=Release;MultiProcessorCompilation=true
+
+
 REM Debugでビルド
-MSBuild "DirectXGame.sln" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Debug;MultiProcessorCompilation=true
+REM MSBuild "DirectXGame.sln" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Debug;MultiProcessorCompilation=true
 REM Releaseでビルド
-MSBuild "DirectXGame.sln" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Release;MultiProcessorCompilation=true
+REM MSBuild "DirectXGame.sln" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Release;MultiProcessorCompilation=true
 
 REM 一時ファイルを削除
 rmdir "DirectXGame" /s /q
