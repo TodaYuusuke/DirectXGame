@@ -17,7 +17,7 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 
 	// カメラの初期設定
 	camera_->fov = 120.0f;
-	camera_->transform.translation = level_->catmullRomCurves["Movie0"].GetPosition(0.0f);
+	camera_->worldTF.translation = level_->catmullRomCurves["Movie0"].GetPosition(0.0f);
 
 	// 黒帯初期化
 	blackBelt_.Init();
@@ -48,7 +48,7 @@ void CameraManager::Update() {
 		if (nextT > 1.0f) { nextT = 1.0f; }
 
 		// カメラの座標をセット
-		camera_->transform.translation = catmullRom_->GetPosition();
+		camera_->worldTF.translation = catmullRom_->GetPosition();
 		// 向く方向の座標をセット
 		Vector3 viewDirectionPos = catmullRom_->GetPosition(nextT);
 		if (nextT >= 1.0f) {	// もしnextTがcatmullRomの外側ならば、Z+方向を向く
@@ -56,11 +56,11 @@ void CameraManager::Update() {
 		}
 
 		// カメラの方向をセット
-		Vector3 from = Vector3{ 0.0f,0.0,1.0f } * camera_->transform.rotation;	// 現在向いている方向
-		Vector3 to = viewDirectionPos - camera_->transform.translation;	// 次に向く方向
-		Quaternion q = camera_->transform.rotation * Quaternion::DirectionToDirection(from.Normalize(), to.Normalize());
+		Vector3 from = Vector3{ 0.0f,0.0,1.0f } * camera_->worldTF.rotation;	// 現在向いている方向
+		Vector3 to = viewDirectionPos - camera_->worldTF.translation;	// 次に向く方向
+		Quaternion q = camera_->worldTF.rotation * Quaternion::DirectionToDirection(from.Normalize(), to.Normalize());
 		q.z = 0.0f;	// Z回転は無視
-		camera_->transform.rotation = Interp::SlerpQuaternion(camera_->transform.rotation, q, 0.1f).Normalize();
+		camera_->worldTF.rotation = Interp::SlerpQuaternion(camera_->worldTF.rotation, q, 0.1f).Normalize();
 
 #if DEMO
 		ImGui::Begin("CameraManager");

@@ -24,9 +24,9 @@ void Drone::Init(LWP::Object::Camera* ptr) {
 	anim_.LoadFullPath("resources/model/Drone/Drone.gltf", &model_);
 
 	// 点光源
-	pointLight_.transform.Parent(&model_.worldTF);
-	pointLight_.transform.translation.z = 2.0f;
-	pointLight_.transform.translation.y = 1.75f;
+	pointLight_.worldTF.Parent(&model_.worldTF);
+	pointLight_.worldTF.translation.z = 2.0f;
+	pointLight_.worldTF.translation.y = 1.75f;
 	pointLight_.radius = 13.0f;
 	pointLight_.intensity = 0.7f;
 	pointLight_.isActive = false;
@@ -36,8 +36,8 @@ void Drone::Init(LWP::Object::Camera* ptr) {
 
 	// カメラのポインタをセット
 	cameraPtr_ = ptr;
-	cameraPtr_->transform.Init();	// 座標系を初期化
-	cameraPtr_->transform.Parent(&model_.worldTF);
+	cameraPtr_->worldTF.Init();	// 座標系を初期化
+	cameraPtr_->worldTF.Parent(&model_.worldTF);
 }
 
 // 更新

@@ -19,9 +19,9 @@ void DebugCamera::Update() {
 }
 
 void DebugCamera::Enable(const Object::TransformQuat wtf) {
-	camera_.transform.translation = wtf.GetWorldPosition();
-	camera_.transform.rotation = wtf.rotation;
-	camera_.transform.scale = wtf.scale;
+	camera_.worldTF.translation = wtf.GetWorldPosition();
+	camera_.worldTF.rotation = wtf.rotation;
+	camera_.worldTF.scale = wtf.scale;
 	camera_.isActive = true;
 }
 void DebugCamera::Disable() {
@@ -67,13 +67,13 @@ void DebugCamera::Move() {
 	if (Keyboard::GetPress(DIK_SPACE)) { dir.y += 1.0f; }
 	if (Keyboard::GetPress(DIK_LSHIFT)) { dir.y -= 1.0f; }
 
-	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_.transform.rotation));
+	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_.worldTF.rotation));
 	dir = dir.Normalize();
 	// コントロールキーを押しているなら2倍速で走る
 	if (Keyboard::GetPress(DIK_LCONTROL)) { dir *= 2.0f; }
 
 	// 加算
-	camera_.transform.translation += dir * cameraSpeed_ * Info::GetDeltaTimeF();
+	camera_.worldTF.translation += dir * cameraSpeed_ * Info::GetDeltaTimeF();
 }
 void DebugCamera::Rotate() {
 	// 回転する向き
@@ -86,8 +86,8 @@ void DebugCamera::Rotate() {
 	if (Keyboard::GetPress(DIK_LEFT)) { dir.y -= 1.0f; }
 
 	// カメラを回転させる
-	camera_.transform.rotation =
+	camera_.worldTF.rotation =
 		Quaternion::CreateFromAxisAngle(Vector3::UnitY(), dir.y * cameraRotateSpeed_)
-		* camera_.transform.rotation *
+		* camera_.worldTF.rotation *
 		Quaternion::CreateFromAxisAngle(Vector3::UnitX(), dir.x * cameraRotateSpeed_);
 }

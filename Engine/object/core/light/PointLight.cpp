@@ -41,7 +41,7 @@ void PointLight::Update(Base::RendererManager* manager) {
 	};
 
 	for (int i = 0; i < 6; i++) {
-		Vector3 worldPosition = transform.GetWorldPosition();
+		Vector3 worldPosition = worldTF.GetWorldPosition();
 		Matrix4x4 viewMatrix = (Matrix4x4::CreateRotateXYZMatrix(rotation[i]) * Matrix4x4::CreateTranslateMatrix(worldPosition)).Inverse();
 		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(1.571f, 1.0f, 0.01f, 300.0f);
 		*viewBuffers_[i].data_ = viewMatrix * projectionMatrix;
@@ -61,7 +61,7 @@ void PointLight::Update(Base::RendererManager* manager) {
 
 // デバッグ用GUI
 void PointLight::DebugGUI() {
-	transform.DebugGUI();
+	worldTF.DebugGUI();
 	LWP::Base::ImGuiManager::ColorEdit4("color", color);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::DragFloat("Radius", &radius, 0.01f);

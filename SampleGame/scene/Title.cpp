@@ -28,8 +28,8 @@ void Title::Initialize() {
 	droneAnim_.Play("00_Idle", true);
 	
 	// カメラ位置調整
-	mainCamera.transform.translation = { -397.8f, 185.74f, -431.1f };
-	mainCamera.transform.rotation = { 0.083f, 0.232f, -0.02f, 0.969f };
+	mainCamera.worldTF.translation = { -397.8f, 185.74f, -431.1f };
+	mainCamera.worldTF.rotation = { 0.083f, 0.232f, -0.02f, 0.969f };
 
 	// 演出初期化
 	stagingSprite_.isUI = true;
@@ -37,8 +37,8 @@ void Title::Initialize() {
 	stagingSprite_.material.color = ColorPattern::BLACK;
 	stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
 	// カメラの位置保存
-	endStaging_.startPos = mainCamera.transform.GetWorldPosition();
-	endStaging_.startRotation = mainCamera.transform.rotation;
+	endStaging_.startPos = mainCamera.worldTF.GetWorldPosition();
+	endStaging_.startRotation = mainCamera.worldTF.rotation;
 }
 
 // 更新
@@ -90,8 +90,8 @@ void Title::Update() {
 			// フェードアウト
 			stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
 			// ドローンの位置へカメラをアニメーション
-			mainCamera.transform.translation = Interp::Lerp(e.startPos, drone_.worldTF.GetWorldPosition(), t);
-			mainCamera.transform.rotation = Interp::SlerpQuaternion(e.startRotation, drone_.worldTF.rotation, t / 2.0f);
+			mainCamera.worldTF.translation = Interp::Lerp(e.startPos, drone_.worldTF.GetWorldPosition(), t);
+			mainCamera.worldTF.rotation = Interp::SlerpQuaternion(e.startRotation, drone_.worldTF.rotation, t / 2.0f);
 		}
 	}
 }

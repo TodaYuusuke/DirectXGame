@@ -19,7 +19,7 @@ namespace LWP::Object {
 		// アクティブ切り替え
 		bool isActive = true;
 		// ワールドトランスフォーム
-		TransformQuat transform;
+		TransformQuat worldTF;
 
 	public: // ** 純粋仮想関数 ** //
 

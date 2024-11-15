@@ -142,7 +142,7 @@ void Engine::DebugGUI() {
 		resourceManager_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
-		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->transform);
+		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->worldTF);
 		debugTimer_.DebugGUI();
 #else
 		debugTimer_.DebugGUI();

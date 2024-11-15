@@ -13,8 +13,8 @@ using namespace LWP::Resource;
 
 CameraStruct& CameraStruct::operator=(const Object::Camera& value) {
 	viewProjection = value.GetViewProjection();
-	rotate = value.transform.GetRotateMatrix();
-	position = value.transform.GetWorldPosition();
+	rotate = value.worldTF.GetRotateMatrix();
+	position = value.worldTF.GetWorldPosition();
 	return *this;
 }
 
@@ -66,14 +66,14 @@ void Camera::Update(Base::RendererManager* manager) {
 }
 
 void Camera::DebugGUI() {
-	transform.DebugGUI();
+	worldTF.DebugGUI();
 	pp.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
 	ImGui::Checkbox("isActive", &isActive);
 }
 
 Matrix4x4 Camera::GetViewProjection() const {
-	Matrix4x4 viewMatrix = transform.GetAffineMatrix().Inverse();
+	Matrix4x4 viewMatrix = worldTF.GetAffineMatrix().Inverse();
 	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 300.0f);
 	return viewMatrix * projectionMatrix;
 }

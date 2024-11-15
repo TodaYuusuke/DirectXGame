@@ -11,7 +11,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 	// カメラのポインタをセット
 	camera_ = ptr;
 	// ピストル初期化
-	pistol_.Init(&camera_->transform);
+	pistol_.Init(&camera_->worldTF);
 }
 
 // 更新
@@ -24,7 +24,7 @@ void Player::Update() {
 	// 加速度を加算
 	//velocity.y -= kGravityAcce * Info::GetDeltaTimeF();
 	// 速度を加算
-	camera_->transform.translation += velocity;
+	camera_->worldTF.translation += velocity;
 
 	// 速度を減衰させる
 	velocity.x *= kDecayRate;
@@ -40,8 +40,8 @@ void Player::Update() {
 	// 射撃処理
 	if (Keyboard::GetTrigger(DIK_SPACE) || Controller::GetTrigger(XBOX_RT)) {
 		pistol_.Shot(
-			camera_->transform.GetWorldPosition(),
-			Vector3{ 0.0f,0.0f,1.0f } * camera_->transform.rotation
+			camera_->worldTF.GetWorldPosition(),
+			Vector3{ 0.0f,0.0f,1.0f } * camera_->worldTF.rotation
 		);
 	}
 	// リロード
@@ -85,7 +85,7 @@ void Player::Move() {
 		dir.y += 1.0f;
 	}
 
-	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->transform.rotation));
+	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation));
 	dir = Vector3{ dir.x, 0.0f, dir.z }.Normalize();
 	// シフトを押しているならダッシュ
 	if (Keyboard::GetPress(DIK_LSHIFT)) {
@@ -120,8 +120,8 @@ void Player::CameraRotate() {
 	dir.y += Pad::GetRStick().x;
 
 	// カメラを回転させる
-	camera_->transform.rotation = 
+	camera_->worldTF.rotation = 
 		Quaternion::CreateFromAxisAngle(Vector3::UnitY(), dir.y * kCameraRotationSpeed)
-		* camera_->transform.rotation *
+		* camera_->worldTF.rotation *
 		Quaternion::CreateFromAxisAngle(Vector3::UnitX(), dir.x * kCameraRotationSpeed);
 }

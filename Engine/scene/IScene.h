@@ -9,7 +9,7 @@ public:
 	// 共通の処理
 	void PreInitialize() {
 		// デフォルトのメインカメラを登録
-		mainCamera.transform.translation = { 0.0f,0.0f,-10.0f };
+		mainCamera.worldTF.translation = { 0.0f,0.0f,-10.0f };
 		mainCamera.name = "MainCamera";
 		mainCamera.isActive = false;	// 複数画面描画のときのみtrueにすればいいのでfalse
 		SetMainRenderCamera(&mainCamera);

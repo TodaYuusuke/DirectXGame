@@ -57,7 +57,7 @@ namespace LWP::Object {
 			Base::PointLightStruct result;
 			Math::Vector4 c = color.GetVector4();
 			result.color = { c.x,c.y,c.z };
-			result.position = transform.GetWorldPosition();
+			result.position = worldTF.GetWorldPosition();
 			result.intensity = intensity;
 			result.radius = radius;
 			result.decay = decay;

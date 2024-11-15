@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// 座標を取得
 	/// </summary>
-	LWP::Math::Vector3 GetWorldPosition() { return camera_->transform.GetWorldPosition(); };
+	LWP::Math::Vector3 GetWorldPosition() { return camera_->worldTF.GetWorldPosition(); };
 
 
 private: // ** メンバ定数 ** //
