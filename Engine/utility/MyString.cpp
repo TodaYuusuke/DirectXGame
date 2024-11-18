@@ -1,5 +1,6 @@
 #include "MyString.h"
 #include <dxgidebug.h>
+#include <sstream>
 
 void LWP::Utility::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
@@ -61,6 +62,17 @@ std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) 
 		// '.'が見つからない場合はそのまま返す
 		return "";
 	}
+}
+
+std::vector<std::string> split(std::string& input, char delimiter)
+{
+	std::istringstream stream(input);
+	std::string field;
+	std::vector<std::string> result;
+	while (getline(stream, field, delimiter)) {
+		result.push_back(field);
+	}
+	return result;
 }
 
 std::string LWP::Utility::GetClassNameShort(const std::type_info& type) {

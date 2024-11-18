@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <typeinfo>
 
 /// <summary>
@@ -35,6 +36,13 @@ namespace LWP::Utility {
 	/// <param name="filePath"></param>
 	/// <returns></returns>
 	std::string ConvertToParentDirectory(const std::string& filePath);
+	/// <summary>
+	/// 文字列を特定の文字で分割する関数
+	/// </summary>
+	/// <param name="input">文字列</param>
+	/// <param name="delimiter">分割する文字</param>
+	/// <returns></returns>
+	std::vector<std::string> split(std::string& input, char delimiter);
 
 	/// <summary>
 	/// クラス名をstringで返す関数（クラス名だけver）
