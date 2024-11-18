@@ -64,7 +64,7 @@ std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) 
 	}
 }
 
-std::vector<std::string> split(std::string& input, char delimiter)
+std::vector<std::string> LWP::Utility::Split(std::string& input, char delimiter)
 {
 	std::istringstream stream(input);
 	std::string field;
