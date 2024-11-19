@@ -52,10 +52,19 @@ void TextureResource::Init(GPUDevice* device, HeapManager* heaps, std::string fi
 
 
 void TextureResource::Load(const std::string& filePath) {
+	HRESULT hr;
 	// テクスチャファイルを読み込んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = Utility::ConvertString(filePath);
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+	
+	// 拡張子によって読み込み方を変える
+	if (Utility::GetExtension(filePathW) == L"dds") {
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+	}
+	else {
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+	}
+
 	assert(SUCCEEDED(hr));
 
 	// ミップマップの作成

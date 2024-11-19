@@ -12,8 +12,6 @@ void SkinningTest::Initialize() {
 	for (int i = 0; i < 2; i++) {
 		model[i].LoadShortPath("Player/Robot/Player_Boned_IK.gltf");
 		anim[i].LoadFullPath("resources/model/Player/Robot/Player_Boned_IK.gltf", &model[i]);
-		//model[i].LoadShortPath("Player/Guns/Pistol/Pistol.gltf");
-		//anim[i].LoadFullPath("resources/model/Player/Guns/Pistol/Pistol.gltf", &model[i]);
 		anim[i].name = "Anim" + std::to_string(i);
 
 		model[i].worldTF.translation.y = -1.0f;
@@ -23,8 +21,8 @@ void SkinningTest::Initialize() {
 
 	model[0].worldTF.translation.x = -1.0f;
 	model[0].worldTF.translation.x = 1.0f;
-
-	sp.isUI = true;
+	
+	sp.material.texture = Resource::LoadTexture("uvChecker.dds");
 }
 
 // 更新

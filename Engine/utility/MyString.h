@@ -37,6 +37,13 @@ namespace LWP::Utility {
 	/// <returns></returns>
 	std::string ConvertToParentDirectory(const std::string& filePath);
 	/// <summary>
+	/// 文字列から拡張子だけを取得する処理
+	/// </summary>
+	/// <param name="str">文字列</param>
+	/// <returns></returns>
+	std::string GetExtension(const std::string& str);
+	std::wstring GetExtension(const std::wstring& str);
+	/// <summary>
 	/// 文字列を特定の文字で分割する関数
 	/// </summary>
 	/// <param name="input">文字列</param>

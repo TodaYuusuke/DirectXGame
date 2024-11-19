@@ -34,7 +34,6 @@ std::string LWP::Utility::ConvertString(const std::wstring& str) {
 
 	return result;
 }
-
 std::string LWP::Utility::TrimmingString(const std::string& str, std::size_t n, std::size_t m) {
 	// nが文字列の長さを超える場合は、0から文字列全体を削除する
 	if (n >= str.size()) {
@@ -49,7 +48,6 @@ std::string LWP::Utility::TrimmingString(const std::string& str, std::size_t n, 
 	// 前n文字、後m文字を削除した文字列を返す
 	return str.substr(n, str.size() - n - m);
 }
-
 std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) {
 	// ファイルパスを逆順にして、最初に見つかった'/'の位置を取得
 	size_t dotPos = filePath.rfind('/');
@@ -63,9 +61,29 @@ std::string LWP::Utility::ConvertToParentDirectory(const std::string& filePath) 
 		return "";
 	}
 }
-
-std::vector<std::string> LWP::Utility::Split(std::string& input, char delimiter)
-{
+std::string LWP::Utility::GetExtension(const std::string& str) {
+	// 区切り文字 '.' が出てくる一番最後の部分を検索
+	size_t pos = str.rfind('.');
+	// 検索がヒットしたら
+	if (pos != std::string::npos) {
+		// 区切り文字の後ろをファイル拡張子として返す
+		return str.substr(pos + 1, str.size() - pos - 1);
+	}
+	// 見つからなかったので終了
+	return std::string();
+}
+std::wstring LWP::Utility::GetExtension(const std::wstring& str) {
+	// 区切り文字 '.' が出てくる一番最後の部分を検索
+	size_t pos = str.rfind('.');
+	// 検索がヒットしたら
+	if (pos != std::wstring::npos) {
+		// 区切り文字の後ろをファイル拡張子として返す
+		return str.substr(pos + 1, str.size() - pos - 1);
+	}
+	// 見つからなかったので終了
+	return std::wstring();
+}
+std::vector<std::string> LWP::Utility::Split(std::string& input, char delimiter) {
 	std::istringstream stream(input);
 	std::string field;
 	std::vector<std::string> result;
