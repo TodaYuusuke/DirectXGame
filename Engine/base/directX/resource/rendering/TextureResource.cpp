@@ -59,17 +59,17 @@ void TextureResource::Load(const std::string& filePath) {
 	
 	// 拡張子によって読み込み方を変える
 	if (Utility::GetExtension(filePathW) == L"dds") {
-		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, mipImages_);
+		assert(SUCCEEDED(hr));
+		// ミップマップは生成済みと仮定
 	}
 	else {
 		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+		assert(SUCCEEDED(hr));
+		// ミップマップの作成
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages_);
+		assert(SUCCEEDED(hr));
 	}
-
-	assert(SUCCEEDED(hr));
-
-	// ミップマップの作成
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages_);
-	assert(SUCCEEDED(hr));
 }
 
 ID3D12Resource* TextureResource::CreateResource(GPUDevice* device, size_t size) {
