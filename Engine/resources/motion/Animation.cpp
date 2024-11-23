@@ -53,9 +53,8 @@ void Animation::Update() {
 	float total = GetAnimationTotalTime();
 	// 時間を更新
 	float t = (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
-	//float t = (1.0f / 60.0f) / total;
-	if (!reverseFlag_) { time_ += t; }	// リバースフラグに応じて進行方向を変える
-	else { time_ -= t; }
+	if (!reverseFlag_) { time_ += t * playbackSpeed; }	// リバースフラグに応じて進行方向を変える
+	else { time_ -= t * playbackSpeed; }
 
 	// ループする場合
 	if (loopFlag_) {
@@ -147,6 +146,7 @@ void Animation::DebugGUI() {
 	float temp = time_;
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
 	if (temp != time_) { UpdateJoint(); }	// tの値が変わったらJointを更新する
+	ImGui::DragFloat("PlaybackSpeed", &playbackSpeed, 0.01f);
 	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
 	ImGui::Checkbox("LoopFlag", &loopFlag_);
 	ImGui::Checkbox("ReverseFlag", &reverseFlag_);

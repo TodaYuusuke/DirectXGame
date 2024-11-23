@@ -38,6 +38,8 @@ namespace LWP::Resource {
 		
 		// 固有名詞
 		std::string name = "Animation";
+		// アニメーションの再生速度
+		float playbackSpeed = 1.0f;
 		// deltaTimeの係数影響OnOff
 		bool useDeltaTimeMultiply = true;
 
