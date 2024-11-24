@@ -56,7 +56,9 @@ namespace LWP::Resource {
 		/// モーション開始
 		/// </summary>
 		void Start();
+		void Start(bool loopFlag);
 		void Start(float startSec);
+		void Start(bool loopFlag, float startSec);
 
 		/// <summary>
 		/// 更新（ユーザー呼び出し不要）
@@ -76,10 +78,15 @@ namespace LWP::Resource {
 		// デルタタイム係数の影響をうけるか
 		bool isUseDeltaTimeMultiply_ = true;
 
+		// ループ再生フラグ
+		bool loopFlag_ = false;
 		// 開始フラグ
 		bool isStart_ = false;
 		// モーション経過時間（秒数）
 		float currentSec_ = 0.0f;
+
+		// モーション全体の長さ
+		float totalTime_ = 0.0f;
 
 	private: // ** プライベートなメンバ関数 ** //
 		// 追加処理
