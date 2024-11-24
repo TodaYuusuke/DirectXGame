@@ -13,6 +13,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	LWP::Window::ChangeFullScreenMode();	// フルスクリーン
 	//LWP::Info::ChangeShowDebugGUI();
 #endif
-	LWP::System::Run(new SkinningTest);
+	LWP::System::Run(new AnimationTest);
 	return 0;
 }
