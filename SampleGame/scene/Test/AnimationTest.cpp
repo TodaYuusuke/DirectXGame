@@ -9,21 +9,24 @@ using namespace LWP::Object;
 
 // 初期化
 void AnimationTest::Initialize() {
-	model.LoadShortPath("Player/Robot/Player_Boned_IK.gltf");
-	anim.LoadFullPath("resources/model/Player/Robot/Player_Boned_IK.gltf", &model);
+	for (int i = 0; i < 5; i++) {
+		model[i].LoadShortPath("Player/Robot/Player_Boned_IK.gltf");
+		model[i].worldTF.translation.x = i * 1.5f;
+		motion[i].Add(
+			&model[i].worldTF.translation,
+			{ -2.526f, 0.0f, 0.0f },
+			0.0f, 2.0f
+		);
+		motion[i].Add(
+			&model[i].worldTF.translation,
+			{ 2.526f, 0.0f, 0.0f },
+			2.0f, 2.0f
+		);
+		motion[i].Start(true);
+	}
+	anim.LoadFullPath("resources/model/Player/Robot/Player_Boned_IK.gltf", &model[0]);
 
 
-	motion.Add(
-		&model.worldTF.translation,
-		{ -2.526f, 0.0f, 0.0f },
-		0.0f, 2.0f
-	);
-	motion.Add(
-		&model.worldTF.translation,
-		{ 2.526f, 0.0f, 0.0f },
-		2.0f, 2.0f
-	);
-	motion.Start(true);
 }
 
 // 更新
