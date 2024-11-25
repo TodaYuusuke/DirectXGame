@@ -76,7 +76,7 @@ void AABB::Create(const LWP::Math::Vector3& position, const LWP::Math::Vector3& 
 	max = s + position;
 }
 
-void AABB::Create(const LWP::Resource::RigidModel& model) { 
+void AABB::Create(const LWP::Resource::RigidModel& model) {
 	// 必要なデータを集める
 	Matrix4x4 matrix = model.worldTF.GetAffineMatrix();	// アフィン変換行列
 	std::vector<Vertex> vertices = model.GetModelData()->GetVertices();
@@ -94,6 +94,11 @@ void AABB::Create(const LWP::Resource::RigidModel& model) {
 		max.y = max.y < v.y ? v.y : max.y;
 		max.z = max.z < v.z ? v.z : max.z;
 	}
+
+	// そのモデルを包み込むAABBを生成するだけなので、移動分は戻す
+	Vector3 worldPos = model.worldTF.GetWorldPosition();
+	min -= worldPos;
+	max -= worldPos;
 }
 
 void AABB::DebugGUI() {
