@@ -47,7 +47,7 @@ namespace LWP::Information {
 		LWP::Object::Camera camera_;
 		
 		// カメラの移動速度
-		float cameraSpeed_ = 2.0f;
+		float cameraSpeed_ = 10.0f;
 		// カメラの回転速度
 		float cameraRotateSpeed_ = 0.011f;
 

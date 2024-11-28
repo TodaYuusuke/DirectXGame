@@ -94,7 +94,13 @@ namespace LWP::Object {
 		}
 		// デバッグ用GUI
 		void DebugGUI() override final {
-			model.DebugGUI();
+			if (ImGui::TreeNode("Model")) {
+				model.DebugGUI();
+				ImGui::TreePop();
+			}
+			static int value = 8;
+			ImGui::InputInt("Value", &value);
+			if(ImGui::Button("Particle Generate")) { Add(value); }
 			ImGui::Checkbox("isActive", &isActive);
 			ImGui::Text("Count %d", data_.size());
 		}
