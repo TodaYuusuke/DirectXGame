@@ -15,10 +15,8 @@ enum class BehaviorTitle {
 /// </summary>
 enum class BehaviorGS {
 	FadeIn,
-	Movie0,
-	Play0,
-	Movie1,
-	Play1,
+	Movie,
+	Play,
 	FadeOut,
 	Count
 };

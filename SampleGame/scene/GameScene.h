@@ -9,19 +9,22 @@
 
 class GameScene final
 	: public IScene {
-public:
-	//*** 純粋仮想関数の実体宣言 ***//
+public: // ** 純粋仮想関数の実体宣言 ** //
 
 	// 初期化
 	void Initialize();
 	// 更新
 	void Update();
-	// scene遷移したい場合、ISceneポインタ型のnextSceneに次のシーンの実体を代入
 
-private: //*** これより先に必要な処理や変数を記述 ***//
+
+private: // ** これより先に必要な処理や変数を記述 ** //
 
 	// 状態管理
 	LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)> statePattern_;
+	// 最大ウェーブ数
+	const int kMaxWave_ = 2;
+	// 現在のウェーブ
+	int wave_ = 0;
 
 	// 地形データ
 	Field field_;

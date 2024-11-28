@@ -14,7 +14,9 @@ public:
 	void Init(
 		LWP::Resource::LevelData* level,
 		LWP::Object::Camera* camera,
-		LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)>* state);
+		LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)>* state,
+		int* wave
+	);
 	
 	/// <summary>
 	/// 更新
@@ -23,16 +25,32 @@ public:
 
 
 private: // ** メンバ変数 ** //
-	// 保持するポインタ
-	LWP::Resource::LevelData* level_;
-	LWP::Object::Camera* camera_;
-	LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)>* state_;
 
-	// 使用するアニメーション用の曲線のポインタ
-	LWP::Utility::CatmullRom* catmullRom_ = nullptr;
+	// 保持するポインタ
+	LWP::Resource::LevelData* level_ = nullptr;
+	LWP::Object::Camera* camera_ = nullptr;
+	LWP::Utility::StatePattern<BehaviorGS, size_t(BehaviorGS::Count)>* state_ = nullptr;
+	int* wave_ = nullptr;
+
+	// カメラの移動ルートのポインタ
+	LWP::Utility::CatmullRom* route_ = nullptr;
+	// 移動中に注視するルートのポインタ
+	LWP::Utility::CatmullRom* focus_ = nullptr;
 
 	// 上下の黒帯
 	BlackBelt blackBelt_;
 
-private: // ** メンバ関数 ** //
+
+private: // ** プライベートなメンバ関数 ** //
+
+	/// <summary>
+	/// ウェーブを使い、読み込むルートの曲線名を生成
+	/// </summary>
+	/// <returns></returns>
+	std::string GetRouteName();
+	/// <summary>
+	/// ウェーブを使い、読み込むフォーカスの曲線名を生成
+	/// </summary>
+	/// <returns></returns>
+	std::string GetFocusName();
 };

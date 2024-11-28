@@ -15,7 +15,7 @@ void GameScene::Initialize() {
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
 	// カメラ管理に登録
-	cameraManager_.Init(&levelData, &mainCamera, &statePattern_);
+	cameraManager_.Init(&levelData, &mainCamera, &statePattern_, &wave_);
 	// プレイヤー初期化
 	player_.Init(&mainCamera);
 	// 敵管理クラス初期化
@@ -46,7 +46,7 @@ void GameScene::Initialize() {
 		// 最大時間を超過しないように
 		if (s.time > s.kTime) {
 			s.time = s.kTime;
-			req = BehaviorGS::Movie0;	// 演出終了
+			req = BehaviorGS::Movie;	// 演出終了
 		}
 
 		// tを計算
@@ -78,33 +78,30 @@ void GameScene::Initialize() {
 #pragma endregion
 
 
-	statePattern_.initFunction[int(BehaviorGS::Play0)] = [this](const BehaviorGS& pre) {
-		enemyManager_.StartWave(int(BehaviorGS::Play0) / 2 - 1);
+	statePattern_.initFunction[int(BehaviorGS::Play)] = [this](const BehaviorGS& pre) {
+		enemyManager_.StartWave(wave_);	// ウェーブ開始
 	};
-	statePattern_.initFunction[int(BehaviorGS::Play1)] = [this](const BehaviorGS& pre) {
-		enemyManager_.StartWave(int(BehaviorGS::Play1) / 2 - 1);
+	statePattern_.updateFunction[int(BehaviorGS::Play)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+		if (enemyManager_.GetClearFlag()) {
+			wave_++;	// 次のウェーブへ
+			// ウェーブが最後までいったらフェードアウト
+			if (wave_ >= kMaxWave_) { req = BehaviorGS::FadeOut; }
+			// そうでないなら次のムービーへ
+			else { req = BehaviorGS::Movie; }
+		}
 	};
-	statePattern_.updateFunction[int(BehaviorGS::Play0)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
-		if (enemyManager_.GetClearFlag()) { req = BehaviorGS::Movie1; }	// 敵を倒したら次のムービー開始
-	};
-	statePattern_.updateFunction[int(BehaviorGS::Play1)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
-		if (enemyManager_.GetClearFlag()) { req = BehaviorGS::FadeOut; }	// 敵を倒したらクリア
-	};
-
 
 	// 名前を登録しておく
 	statePattern_.name[int(BehaviorGS::FadeIn)] = "FadeIn";
-	statePattern_.name[int(BehaviorGS::Movie0)] = "Movie0";
-	statePattern_.name[int(BehaviorGS::Play0)] = "Play0";
-	statePattern_.name[int(BehaviorGS::Movie1)] = "Movie1";
-	statePattern_.name[int(BehaviorGS::Play1)] = "Play1";
+	statePattern_.name[int(BehaviorGS::Movie)] = "Movie";
+	statePattern_.name[int(BehaviorGS::Play)] = "Play";
 	statePattern_.name[int(BehaviorGS::FadeOut)] = "FadeOut";
 }
 // 更新
 void GameScene::Update() {
 	statePattern_.Update();
 	// プレイ中の処理
-	if (int(statePattern_.GetCurrentBehavior()) % 2 == 0) {
+	if (statePattern_.GetCurrentBehavior() == BehaviorGS::Play) {
 		player_.Update();
 	}
 	cameraManager_.Update();
@@ -112,6 +109,7 @@ void GameScene::Update() {
 
 #if DEMO
 	ImGui::Begin("State");
+	ImGui::SliderInt("Wave", &wave_, 0, kMaxWave_ - 1);
 	statePattern_.DebugGUI();
 	ImGui::End();
 	enemyManager_.DebugGUI();
