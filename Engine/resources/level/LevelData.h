@@ -103,6 +103,12 @@ namespace LWP::Resource {
 	private: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
+		/// Objectを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadObject(const nlohmann::json& data);
+
+		/// <summary>
 		/// Vector3を解凍
 		/// </summary>
 		/// <param name="data"></param>
@@ -121,17 +127,17 @@ namespace LWP::Resource {
 		/// タイプ：メッシュを解凍
 		/// </summary>
 		/// <param name="data"></param>
-		void LoadMesh(nlohmann::json& data, const std::string& name);
+		void LoadMesh(const nlohmann::json& data, const std::string& name);
 		/// <summary>
 		/// タイプ：コライダーを解凍
 		/// </summary>
 		/// <param name="data"></param>
-		void LoadCollider(nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf);
+		void LoadCollider(const nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf);
 		/// <summary>
 		/// タイプ：Curveを解凍
 		/// </summary>
 		/// <param name="data"></param>
-		void LoadCurve(nlohmann::json& data, const std::string& name);
+		void LoadCurve(const nlohmann::json& data, const std::string& name);
 		/// <summary>
 		/// Terrainを解凍
 		/// </summary>

@@ -4,6 +4,8 @@
 #include "utility/MyUtility.h"
 #include <fstream>
 
+#include <iostream>
+
 
 using namespace LWP;
 using namespace LWP::Base;
@@ -65,32 +67,8 @@ void LevelData::HotReload() {
 	assert(name.compare("scene") == 0);
 
 	// "objects"の全オブジェクトを走査
-	for (nlohmann::json& object : deserialized["objects"]) {
-		assert(object.contains("type"));
-		assert(object.contains("name"));
-		// 各データを受け取る
-		std::string type = object["type"].get<std::string>();	// 種別を取得
-		std::string objName = object["name"].get<std::string>();	// 名前を受け取る
-		
-		// カメラの回転だけ正常に読み込めないのでコメントアウト中
-		// CAMERA（適応対象のカメラの実体がなければ検証しない）
-		//if (cameraPtr && type.compare("CAMERA") == 0) {
-		//	// トランスフォームのパラメータ読み込み
-		//	SetWorldTF(object["transform"], &cameraPtr->transform);
-		//}
-
-		// 地形ならば特殊な処理
-		if (objName == "Terrain") {
-			LoadTerrain(object);
-		}
-		// MESH
-		else if (type.compare("MESH") == 0) {
-			LoadMesh(object, objName);
-		}
-		// CURVE
-		else if (type.compare("CURVE") == 0) {
-			LoadCurve(object, objName);
-		}
+	for (const nlohmann::json& object : deserialized["objects"]) {
+		LoadObject(object);
 	}
 }
 
@@ -131,6 +109,37 @@ void LevelData::DebugGUI() {
 	}
 }
 
+void LevelData::LoadObject(const nlohmann::json& data) {
+	assert(data.contains("type"));
+	assert(data.contains("name"));
+	// 各データを受け取る
+	std::string type = data["type"].get<std::string>();	// 種別を取得
+	std::string objName = data["name"].get<std::string>();	// 名前を受け取る
+
+	// カメラの回転だけ正常に読み込めないのでコメントアウト中
+	// CAMERA（適応対象のカメラの実体がなければ検証しない）
+	//if (cameraPtr && type.compare("CAMERA") == 0) {
+	//	// トランスフォームのパラメータ読み込み
+	//	SetWorldTF(object["transform"], &cameraPtr->transform);
+	//}
+
+	// 地形ならば特殊な処理
+	if (objName == "Terrain") { LoadTerrain(data); }
+	// MESH
+	else if (type.compare("MESH") == 0) { LoadMesh(data, objName); }
+	// CURVE
+	else if (type.compare("CURVE") == 0) { LoadCurve(data, objName); }
+
+	// もし子がいるならそれも読み込む
+	if(data.contains("children")) {
+		// 全ての子を読み込む
+		for (const nlohmann::json& c : data["children"]) {
+			LoadObject(c);
+		}
+	}
+}
+
+
 Vector3 LevelData::LoadVector3(const nlohmann::json& data) {
 	// Blenderの座標系からここで変換
 	return Vector3(static_cast<float>(data[0]), static_cast<float>(data[2]), static_cast<float>(data[1]));
@@ -157,7 +166,7 @@ TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
 
 	return wtf;
 }
-void LevelData::LoadMesh(nlohmann::json& data, const std::string& name) {
+void LevelData::LoadMesh(const nlohmann::json& data, const std::string& name) {
 	// ファイルパスがあればそのパスを読み込み
 	if (data.contains("file_name")) {
 		staticModels[name].LoadShortPath("level/" + data["file_name"].get<std::string>());
@@ -175,10 +184,9 @@ void LevelData::LoadMesh(nlohmann::json& data, const std::string& name) {
 	if (data.contains("collider")) {
 		LoadCollider(data, name, wtf);
 	}
-
 }
-void LevelData::LoadCollider(nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf) {
-	nlohmann::json& collider = data["collider"];
+void LevelData::LoadCollider(const nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf) {
+	const nlohmann::json& collider = data["collider"];
 	if (collider["type"] == "AABB") {	// AABBコライダーを生成
 		Collider::AABB& aabb = collisions[name].SetBroadShape(Collider::AABB());
 		aabb.min = LoadVector3(collider["min"]) * scale;	// 全体のスケールをかける
@@ -198,8 +206,8 @@ void LevelData::LoadCollider(nlohmann::json& data, const std::string& name, cons
 	collisions[name].mask.SetBelongFrag(lwpC::Collider::FieldObject);	// フィールドオブジェクトに分類
 	collisions[name].mask.SetHitFrag(lwpC::Collider::ALL ^ (lwpC::Collider::Terrain | lwpC::Collider::FieldObject));	// Terrainとフィールドオブジェクト以外とのみヒットするように
 }
-void LevelData::LoadCurve(nlohmann::json& data, const std::string& name) {
-	nlohmann::json& curveData = data["curve_data"];
+void LevelData::LoadCurve(const nlohmann::json& data, const std::string& name) {
+	const nlohmann::json& curveData = data["curve_data"];
 	// 全てのポイントデータを取得
 	for (const auto& point : curveData) {
 		Vector3 pos = LoadVector3(point["point"]) * scale;	// 全体の倍率も掛ける
