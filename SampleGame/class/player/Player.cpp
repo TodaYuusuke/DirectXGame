@@ -16,23 +16,8 @@ void Player::Init(LWP::Object::Camera* ptr) {
 
 // 更新
 void Player::Update() {
-	// 移動処理
-	Move();
 	// カメラの計算
 	CameraRotate();
-
-	// 加速度を加算
-	//velocity.y -= kGravityAcce * Info::GetDeltaTimeF();
-	// 速度を加算
-	camera_->worldTF.translation += velocity;
-
-	// 速度を減衰させる
-	velocity.x *= kDecayRate;
-	velocity.z *= kDecayRate;
-	//// 前フレームで地形にヒットしていたなら重力加速度をリセット
-	///*if (terrainPoint->preFrameHit) {
-	//	velocity.y = 0.0f;
-	//}*/
 
 	// 銃更新
 	pistol_.Update();
@@ -60,42 +45,6 @@ void Player::Update() {
 	ImGui::End();
 #endif
 }
-
-void Player::Move() {
-	// 移動する向き
-	Vector3 dir = { 0.0f,0.0f,0.0f };
-
-	// キーボードでの移動
-	if (Keyboard::GetPress(DIK_W)) {
-		dir.z += 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_S)) {
-		dir.z -= 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_D)) {
-		dir.x += 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_A)) {
-		dir.x -= 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_PGUP)) {
-		dir.y -= 1.0f;
-	}
-	if (Keyboard::GetPress(DIK_PGDN)) {
-		dir.y += 1.0f;
-	}
-
-	dir = Vector3(dir * Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation));
-	dir = Vector3{ dir.x, 0.0f, dir.z }.Normalize();
-	// シフトを押しているならダッシュ
-	if (Keyboard::GetPress(DIK_LSHIFT)) {
-		velocity += (dir * 1.9f) * kWalkSpeed * Info::GetDeltaTimeF();
-	}
-	else {
-		velocity += dir * kWalkSpeed * Info::GetDeltaTimeF();
-	}
-}
-
 
 void Player::CameraRotate() {
 	// 回転する向き
