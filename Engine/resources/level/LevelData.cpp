@@ -42,6 +42,7 @@ void LevelData::HotReload() {
 	rigidModels.clear();
 	skinModels.clear();
 	collisions.clear();
+	catmullRomCurves.clear();
 
 	// ファイルストリーム
 	std::ifstream file;

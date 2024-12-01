@@ -52,7 +52,7 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 		Vector3 from = Vector3{ 0.0f,0.0,1.0f } *camera_->worldTF.rotation;	// 現在向いている方向
 		Vector3 to = viewDirectionPos - camera_->worldTF.translation;	// 次に向く方向
 		Quaternion q = camera_->worldTF.rotation * Quaternion::DirectionToDirection(from.Normalize(), to.Normalize());
-		q.z = 0.0f;	// Z回転は無視
+		//q.z = 0.0f;	// Z回転は無視
 		camera_->worldTF.rotation = Interp::SlerpQuaternion(camera_->worldTF.rotation, q, 0.1f).Normalize();
 	};
 }
