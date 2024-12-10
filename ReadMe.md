@@ -1,7 +1,11 @@
 # LWP Engine
-[![DebugBuild](https://github.com/TodaYuusuke/DirectXGame/actions/workflows/DebugBuild.yml/badge.svg)](https://github.com/TodaYuusuke/DirectXGame/actions/workflows/DebugBuild.yml)  
 LWPエンジンは、2023年4月より制作が始まった、3Dゲームを作成するための自作エンジンです。  
 技術力を高めるため、日々開発に励んでいます。  
+
+> [!NOTE]
+> | Branch | Debug | Release |
+> | ------------- | ------------- | ------------- |
+> | master | [![DebugBuild](https://github.com/TodaYuusuke/DirectXGame/actions/workflows/DebugBuild.yml/badge.svg)](https://github.com/TodaYuusuke/DirectXGame/actions/workflows/DebugBuild.yml) | [![ReleaseBuild](https://github.com/TodaYuusuke/DirectXGame/actions/workflows/ReleaseBuild.yml/badge.svg)](https://github.com/TodaYuusuke/DirectXGame/actions/workflows/ReleaseBuild.yml) |
 
 ## エンジン機能
 エンジンの機能は分類ごとに名前空間にまとめられており、フォルダも分けられています。  
