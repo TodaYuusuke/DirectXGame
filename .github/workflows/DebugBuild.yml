@@ -10,9 +10,9 @@ env:
   CONFIGURATION: Debug
 jobs:
   build:
-    rus-on: windows-2022
+    runs-on: windows-2022
 
-    step:
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Add MSBuild to PATH
