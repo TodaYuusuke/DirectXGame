@@ -5,7 +5,7 @@ on:
       - master
 env:
   # リポジトリのルートディレクトリを基点としたソリューションファイルのパス
-  SOLUTION_FILE_PATH: project/DirectXGame.sln
+  SOLUTION_FILE_PATH: DirectXGame.sln
   # Visual Studioの構成（Debug / Release）
   CONFIGURATION: Debug
 jobs:
