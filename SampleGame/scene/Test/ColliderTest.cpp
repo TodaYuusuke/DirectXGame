@@ -12,8 +12,6 @@ using namespace LWP::Object;
 void ColliderTest::Initialize() {
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
-	// プレイヤー初期化
-	drone_.Init(&mainCamera);
 
 	// モデル読み込み
 	mesh.LoadShortPath("test/meshCollider/Rock.gltf");
@@ -27,7 +25,6 @@ void ColliderTest::Initialize() {
 	meshCol.mask.SetBelongFrag(lwpC::Collider::FieldObject);
 	meshCol.mask.SetHitFrag(lwpC::Collider::Bullet | lwpC::Collider::Particle | lwpC::Collider::Player);
 
-	pointCol.SetFollowTarget(drone_.GetWorldTF());
 	pointCol.worldTF.translation = { 0.0f, 0.0f, 10.0f };
 	pointCol.name = "point";
 	pointCol.isMove = true;
@@ -40,8 +37,6 @@ void ColliderTest::Initialize() {
 
 // 更新
 void ColliderTest::Update() {
-	drone_.Update();
-
 	ImGui::Begin("Test");
 	ImGui::Text("point morton : %d", pointCol.GetMortonNumber());
 	ImGui::Text("aabb morton : %d", aabbCol.GetMortonNumber());

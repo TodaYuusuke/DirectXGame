@@ -26,7 +26,7 @@ namespace LWP::Information {
 			localtime_s(&tm, &now);
 
 			// フォルダを生成
-			_mkdir("log");
+			assert(!_mkdir("log"));
 
 			// ファイルパスを生成
 			std::stringstream temp;

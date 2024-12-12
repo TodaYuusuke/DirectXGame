@@ -13,10 +13,9 @@ void Field::Init(LWP::Resource::LevelData* level, LWP::Object::Camera* camera) {
 	level->LoadShortPath("SampleGameScene.json");
 
 	// bloomをON
-	/*camera->pp.use = true;
-	camera->pp.outLine.use = true;
+	camera->pp.use = true;
 	camera->pp.bloom.use = true;
-	camera->pp.CreateShaderFile();*/
+	//camera->pp.CreateShaderFile();
 
 	const float s = 1000.0f;
 	skydome.LoadShortPath("skydome/skydome.obj");

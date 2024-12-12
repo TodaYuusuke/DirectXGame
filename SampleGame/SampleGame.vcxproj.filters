@@ -57,8 +57,6 @@
     <ClCompile Include="class\enemy\Enemy.cpp" />
     <ClCompile Include="class\player\guns\Pistol.cpp" />
     <ClCompile Include="class\camera\BlackBelt.cpp" />
-    <ClCompile Include="class\player\Bullet.cpp" />
-    <ClCompile Include="class\player\Drone.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="class\particle\TerrainParticle.cpp" />
   </ItemGroup>
@@ -106,8 +104,6 @@
     <ClInclude Include="class\player\guns\Pistol.h" />
     <ClInclude Include="class\enemy\BloodParticle.h" />
     <ClInclude Include="class\camera\BlackBelt.h" />
-    <ClInclude Include="class\player\Bullet.h" />
-    <ClInclude Include="class\player\Drone.h" />
     <ClInclude Include="class\enemy\DeadBodyParticle.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
   </ItemGroup>
