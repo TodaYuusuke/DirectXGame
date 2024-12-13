@@ -47,8 +47,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		float kTime = 1.5f;
 
 		// カメラのアニメーション
-		LWP::Math::Vector3 startPos;	// カメラの初期座標
-		LWP::Math::Quaternion startRotation;	// カメラの初期角度
+		LWP::Math::Vector3 startPos{};	// カメラの初期座標
+		LWP::Math::Quaternion startRotation{};	// カメラの初期角度
 
 		// 開始フラグ
 		bool start = false;

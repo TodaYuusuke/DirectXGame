@@ -10,7 +10,10 @@
 
 #include "utility/CatmullRom.h"
 
+#pragma warning(push)
+#pragma warning(disable:26819)
 #include "../Externals/nlohmann/json.hpp"
+#pragma warning(pop)
 
 
 namespace LWP::Resource {

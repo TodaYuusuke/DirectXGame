@@ -23,7 +23,7 @@ namespace LWP::Object {
 			LWP::Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
 			LWP::Object::Collision* collider = nullptr;	// コライダーを設定する場合はインスタンスをここに
 			float elapsedTime = 0.0f;
-			int idNumber;
+			int idNumber = -1;
 
 			// デフォルトコンストラクタ
 			Data() = delete;

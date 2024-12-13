@@ -13,17 +13,17 @@ namespace LWP::Utility {
 	typename = std::enable_if_t<std::is_enum_v<E>>>
 	class StatePattern {
 	public: // ** パブリックなメンバ変数 ** //
-		
+
 		/// <summary>
 		/// 初期化関数群
 		/// </summary>
 		/// <para>前回の状態を貰うため(pre)の引数</para>
-		std::array<std::function<void(const E& pre)>, N> initFunction;
+		std::array<std::function<void([[maybe_unused]] const E& pre)>, N> initFunction;
 		/// <summary>
 		/// 更新関数群
 		/// </summary>
 		/// <para>次の状態をリクエストするため(req)と、前回の状態を貰うため(pre)の引数</para>
-		std::array<std::function<void(std::optional<E>& req, const E& pre)>, N> updateFunction;
+		std::array<std::function<void([[maybe_unused]] std::optional<E>& req, [[maybe_unused]] const E& pre)>, N> updateFunction;
 		
 		/// <summary>
 		/// 次の状態リクエスト
