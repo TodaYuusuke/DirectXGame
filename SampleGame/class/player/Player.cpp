@@ -17,7 +17,7 @@ void Player::Init(LWP::Object::Camera* ptr) {
 // 更新
 void Player::Update() {
 	// 移動処理
-	Move();
+	//Move();
 	// カメラの計算
 	CameraRotate();
 

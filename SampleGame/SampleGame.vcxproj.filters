@@ -59,6 +59,7 @@
     <ClCompile Include="class\camera\BlackBelt.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="class\particle\TerrainParticle.cpp" />
+    <ClCompile Include="scene\Test\TextureLoadTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h">
@@ -106,5 +107,6 @@
     <ClInclude Include="class\camera\BlackBelt.h" />
     <ClInclude Include="class\enemy\DeadBodyParticle.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
+    <ClInclude Include="scene\Test\TextureLoadTest.h" />
   </ItemGroup>
 </Project>

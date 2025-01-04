@@ -153,6 +153,7 @@
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="scene\Test\SkinningTest.cpp" />
+    <ClCompile Include="scene\Test\TextureLoadTest.cpp" />
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="scene\Test\ParticleTest.h" />
     <ClInclude Include="scene\Test\SkinningTest.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
+    <ClInclude Include="scene\Test\TextureLoadTest.h" />
     <ClInclude Include="scene\Title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
