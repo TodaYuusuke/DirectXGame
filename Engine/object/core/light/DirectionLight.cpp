@@ -11,15 +11,9 @@ using namespace LWP::Math;
 using namespace LWP::Object;
 
 DirectionLight::DirectionLight() {
-	// ほんとはよくない設計なので代替案募集
-	// GPUデバイスのポインタ
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	// HeapManagerのポインタ
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
-	
 	// リソースの初期化
-	viewBuffer_.Init(dev);
-	shadowMap_.Init(dev, heaps);
+	viewBuffer_.Init();
+	shadowMap_.Init();
 }
 
 // 初期化

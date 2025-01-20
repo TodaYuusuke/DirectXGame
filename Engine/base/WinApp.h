@@ -2,26 +2,28 @@
 #include <Windows.h>
 #include <cstdint>
 #include <string>
+#include "utility/Singleton.h"
 #include "../../Externals/imgui/imgui.h"
 #include "../../Externals/imgui/imgui_impl_dx12.h"
 #include "../../Externals/imgui/imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace LWP::Base {
-	class WinApp
-	{
-	public: // メンバ関数
+	class WinApp : public Utility::ISingleton<WinApp> {
+		friend class Utility::ISingleton<WinApp>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
-		// コンストラクタ
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
 		WinApp() = default;
-		// デストラクタ
-		~WinApp() = default;
 
+	public:	// ** メンバ関数 ** //
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(std::wstring title, int width, int height);
+		void Init(std::wstring title, int width, int height);
 
 		/// <summary>
 		/// ウィンドウからのイベントをチェックする関数

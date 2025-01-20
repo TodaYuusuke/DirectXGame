@@ -1,14 +1,22 @@
 #pragma once
 #include <chrono>
 
+#include "utility/Singleton.h"
+
 namespace LWP::Information {
 	/// <summary>
 	/// FPSを管理するクラス
 	/// </summary>
-	class FrameTracker final {
-	public: // メンバ関数
+	class FrameTracker : public Utility::ISingleton<FrameTracker> {
+		friend class Utility::ISingleton<FrameTracker>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
 		FrameTracker();
+
+	public:	// ** メンバ関数 ** //
 
 		// 初期化
 		void Initialize();

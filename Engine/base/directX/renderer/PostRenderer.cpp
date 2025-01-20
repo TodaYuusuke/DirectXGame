@@ -8,15 +8,15 @@ using namespace LWP::Base;
 // サイズをここで指定
 PostRenderer::PostRenderer() : sprite_(lwpC::Rendering::kMaxIndex) {}
 
-void PostRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func) {
+void PostRenderer::Init(RootSignature* root, std::function<void()> func) {
 	// StructuredBufferを初期化
-	sprite_.indexBuffer.Init(device, srv);
+	sprite_.indexBuffer.Init();
 
 	// PSOを生成
-	sprite_.pso.Init(*root, dxc)
+	sprite_.pso.Init(*root)
 		.SetVertexShader("Object3d.VS.hlsl")
 		.SetPixelShader("Object3d.PS.hlsl")
-		.Build(device->GetDevice());
+		.Build();
 
 	// 関数セット
 	setViewFunction_ = func;

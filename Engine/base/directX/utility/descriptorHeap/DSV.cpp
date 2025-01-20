@@ -8,10 +8,8 @@ using namespace LWP::Base;
 using namespace LWP::Utility;
 using namespace Microsoft::WRL;
 
-DSV::DSV(ID3D12Device* device) :
-	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, lwpC::Shadow::kMaxShadowMap + lwpC::Rendering::kMaxMultiWindowRendering + 1) {}
-
-void DSV::Init() {
+DSV::DSV() :
+	IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, lwpC::Shadow::kMaxShadowMap + lwpC::Rendering::kMaxMultiWindowRendering + 1) {
 	// DSV用のヒープでディスクリプタの数はシャドウマップ用などで増加する。DSVはShader内で触らないものなので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kMaxSize, false);
 }
@@ -37,7 +35,7 @@ DSVInfo DSV::CreateDepthStencilView(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// DSVを作る
-	device_->CreateDepthStencilView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateDepthStencilView(resource, &info.desc, info.cpuView);
 	return info;
 }
 std::array<DSVInfo, 6> DSV::CreateDepthStencilCubeMap(ID3D12Resource* resource) {
@@ -58,7 +56,7 @@ std::array<DSVInfo, 6> DSV::CreateDepthStencilCubeMap(ID3D12Resource* resource) 
 		info[i].SetView(this);
 
 		// DSVに登録
-		device_->CreateDepthStencilView(resource, &info[i].desc, info[i].cpuView);
+		GPUDevice::GetInstance()->GetDevice()->CreateDepthStencilView(resource, &info[i].desc, info[i].cpuView);
 	}
 
 	return info;
@@ -78,7 +76,7 @@ DSVInfo DSV::CreateShadowMapDir(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// DSVに登録
-	device_->CreateDepthStencilView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateDepthStencilView(resource, &info.desc, info.cpuView);
 	return info;
 }
 
@@ -100,7 +98,7 @@ std::array<DSVInfo, 6> DSV::CreateShadowMapPoint(ID3D12Resource* resource) {
 		info[i].SetView(this);
 
 		// DSVに登録
-		device_->CreateDepthStencilView(resource, &info[i].desc, info[i].cpuView);
+		GPUDevice::GetInstance()->GetDevice()->CreateDepthStencilView(resource, &info[i].desc, info[i].cpuView);
 	}
 
 	return info;

@@ -9,7 +9,7 @@ using namespace LWP::Base::PostProcess;
 void RadialBlur::Init() {
 	center = { 0.5f,0.5f };
 	blurWidth = 0.01f;
-	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
+	buffer_.Init();
 }
 void RadialBlur::Update() {
 	buffer_.data_->center = center;

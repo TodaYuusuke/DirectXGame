@@ -4,7 +4,7 @@
 using namespace LWP;
 using namespace LWP::Base;
 
-void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
+void CubeMap::Init() {
 	HRESULT hr = S_FALSE;
 	width = 1024 / 2;
 	height = 1024 / 2;
@@ -33,7 +33,7 @@ void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	currentBarrierState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 	// 5. Resourceを生成する
-	hr = device->GetDevice()->CreateCommittedResource(
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
@@ -44,9 +44,9 @@ void CubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	assert(SUCCEEDED(hr));
 
 	// RTV上に登録
-	rtvInfos = heaps->rtv()->CreateCubeMapView(resource_.Get());
+	rtvInfos = RTV::GetInstance()->CreateCubeMapView(resource_.Get());
 	// SRV上に登録
-	srvInfo = heaps->srv()->CreateCubeMap(resource_.Get());
+	srvInfo = SRV::GetInstance()->CreateCubeMap(resource_.Get());
 }
 
 void CubeMap::Clear(ID3D12GraphicsCommandList* list) {

@@ -6,11 +6,10 @@
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	LWP::System::StartUp(L"LWP サンプルゲーム");
 #if DEMO
 #else
 	LWP::Window::ChangeFullScreenMode();	// フルスクリーン
 #endif
-	LWP::System::Run(new Title);
+	LWP::System::Run<ColliderTest>(L"LWP サンプルゲーム");
 	return 0;
 }

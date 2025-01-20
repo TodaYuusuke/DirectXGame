@@ -8,25 +8,25 @@ using namespace LWP::Base;
 using namespace LWP::Utility;
 using namespace LWP::Math;
 
-void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon) {
-	dxCommon_ = dxCommon;
+void ImGuiManager::Init() {
+	dxCommon_ = DirectXCommon::GetInstance();
 
 	// ImGuiの初期化、詳細はさして重要ではないので省略
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	// 拡大率を適応
-	int factor = winApp->GetScaleFactor();
+	int factor = WinApp::GetInstance()->GetScaleFactor();
 	if (factor != -1) {
 		ImGui::GetStyle().ScaleAllSizes(static_cast<float>(factor / 100.0f));
 	}
-	ImGui_ImplWin32_Init(winApp->GetHWND());
+	ImGui_ImplWin32_Init(WinApp::GetInstance()->GetHWND());
 	// SRV上に登録してもらう
-	srvInfo = dxCommon_->GetSRV()->CreateImGuiSpace();
-	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
+	srvInfo = SRV::GetInstance()->CreateImGuiSpace();
+	ImGui_ImplDX12_Init(GPUDevice::GetInstance()->GetDevice(),
 		dxCommon_->GetBufferCount(),
 		dxCommon_->GetFormat(),
-		dxCommon_->GetSRV()->GetHeap(),
+		SRV::GetInstance()->GetHeap(),
 		srvInfo.cpuView,
 		srvInfo.gpuView
 	);

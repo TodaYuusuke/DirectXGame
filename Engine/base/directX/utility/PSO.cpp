@@ -5,7 +5,7 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc, Type type) {
+PSO& PSO::Init(ID3D12RootSignature* root, Type type) {
 	// タイプによって使用するdescを変更
 	type_ = type;
 	if (type_ == Type::Vertex) {
@@ -57,8 +57,6 @@ PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc, Type type) {
 		d.SampleDesc.Count = 1;
 		d.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	}
-	// DXCをセットしておく
-	dxc_ = dxc;
 
 	return *this;
 }
@@ -160,7 +158,7 @@ PSO& PSO::SetAmpShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"as_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"as_6_5");
 	assert(blob != nullptr);
 
 	// セット
@@ -175,7 +173,7 @@ PSO& PSO::SetMeshShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ms_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ms_6_5");
 	assert(blob != nullptr);
 
 	// セット
@@ -190,7 +188,7 @@ PSO& PSO::SetComputeShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_6");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_6");
 	assert(blob != nullptr);
 
 	// セット
@@ -205,7 +203,7 @@ PSO& PSO::SetVertexShader(std::string filePath) {
 	
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"vs_6_0");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"vs_6_0");
 	assert(blob != nullptr);
 
 	// セット
@@ -218,7 +216,7 @@ PSO& PSO::SetPixelShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ps_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ps_6_5");
 	assert(blob != nullptr);
 
 	// セット
@@ -268,8 +266,10 @@ PSO& PSO::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
 
 	return *this;
 }
-void PSO::Build(ID3D12Device2* device) {
+void PSO::Build() {
 	HRESULT hr = S_FALSE;
+	ID3D12Device2* device = GPUDevice::GetInstance()->GetDevice();	// デバイスを取得
+
 	// 実際に生成
 	if (type_ == Type::Vertex) {
 		hr = device->CreateGraphicsPipelineState(&desc_.vertex, IID_PPV_ARGS(&state_));

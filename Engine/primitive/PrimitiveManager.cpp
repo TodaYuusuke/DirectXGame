@@ -5,7 +5,7 @@
 
 using namespace LWP::Primitive;
 
-void Manager::Initialize() {
+void Manager::Init() {
 	//for (IPrimitive* p : primitives_.list) {
 	//	delete p;
 	//}

@@ -20,8 +20,7 @@ EMapModel::EMapModel(const EMapModel& other) {
 EMapModel::~EMapModel() {
 	// パスが空じゃなかったら消しに行く
 	if (!filePath.empty()) {
-		// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
-		System::engine->resourceManager_->DeletePointer(this, filePath);
+		Resource::Manager::GetInstance()->DeletePointer(this, filePath);
 	}
 }
 
@@ -50,18 +49,11 @@ void EMapModel::LoadFullPath(const std::string& fp) {
 	modelCenterPosition = (min + max) / 2.0f;;
 
 
-	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
-	System::engine->resourceManager_->SetPointer(this, filePath);
-
-	// バッファ生成のためにデバイスとSRVを取得する
-	GPUDevice* device = System::engine->directXCommon_->GetGPUDevice();
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
-
 	// リソースの初期化
-	cubeMap.Init(device, heaps);
-	depthCubeMap.Init(device, heaps);
+	cubeMap.Init();
+	depthCubeMap.Init();
 	for (int i = 0; i < 6; i++) {
-		viewBuffers[i].Init(device);
+		viewBuffers[i].Init();
 	}
 }
 

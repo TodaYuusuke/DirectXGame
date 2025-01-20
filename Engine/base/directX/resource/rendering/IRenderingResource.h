@@ -12,7 +12,7 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 
 		// 初期化
-		virtual void Init(GPUDevice* device, HeapManager* heaps) = 0;
+		virtual void Init() = 0;
 		// 画面クリア
 		virtual void Clear(ID3D12GraphicsCommandList* list) = 0;
 

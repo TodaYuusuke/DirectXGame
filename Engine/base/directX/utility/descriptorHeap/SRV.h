@@ -84,23 +84,16 @@ namespace LWP::Base {
 	/// <summary>
 	/// ShaderResourceView
 	/// </summary>
-	class SRV : public IDescriptorHeap {
+	class SRV : public IDescriptorHeap, public Utility::ISingleton<SRV> {
+		friend class Utility::ISingleton<SRV>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
+
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
+		SRV();
+
 	public:	// ** メンバ関数 ** //
-
-		/// <summary>
-		/// デフォルトコンストラクタ
-		/// </summary>
-		SRV() = delete;
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		SRV(ID3D12Device* device);
-
-
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Init();
 
 		// コマンドクラスをセット
 		void SetCommand(Command* cmd) { cmd_ = cmd; }

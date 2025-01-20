@@ -12,23 +12,23 @@ namespace LWP {
 		/// <summary>
 		/// エンジンのインスタンス
 		/// </summary>
-		extern std::unique_ptr<Engine> engine;
-		
-		/// <summary>
-		/// エンジン初期起動処理（※二重呼び出し禁止）
-		/// </summary>
-		void StartUp(std::wstring windowTitle);
+		//extern std::unique_ptr<Engine> engine;
 
 		/// <summary>
 		/// エンジン起動（※二重呼び出し禁止）
 		/// </summary>
-		void Run(IScene* firstScene);
+		template<class IsIScene>
+		void Run(std::wstring windowTitle) {
+			// エンジン生成
+			Engine* engine = new Engine();
+			engine->StartUp(windowTitle);
+			// エンジン起動
+			engine->Run(new IsIScene());
+			// エンジン削除
+			delete engine;
 
-		/// <summary>
-		/// プログラム終了
-		/// </summary>
-		void End();
-
-		
+			// シングルトン解放
+			LWP::Utility::Singleton::DestroyAll();
+		}
 	};
 };

@@ -192,7 +192,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\SRV.cpp" />
     <ClCompile Include="Engine\base\directX\utility\DXC.cpp" />
     <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp" />
-    <ClCompile Include="Engine\base\directX\utility\HeapManager.cpp" />
     <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
     <ClCompile Include="Engine\base\directX\utility\RootSignature.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
@@ -268,6 +267,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
+    <ClCompile Include="Engine\utility\Singleton.cpp" />
     <ClCompile Include="Engine\utility\UI.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
@@ -334,7 +334,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h" />
     <ClInclude Include="Engine\base\directX\utility\DXC.h" />
     <ClInclude Include="Engine\base\directX\utility\GPUDevice.h" />
-    <ClInclude Include="Engine\base\directX\utility\HeapManager.h" />
     <ClInclude Include="Engine\base\directX\utility\PSO.h" />
     <ClInclude Include="Engine\base\directX\utility\RootSignature.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
@@ -409,6 +408,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\CatmullRom.h" />
     <ClInclude Include="Engine\utility\Color.h" />

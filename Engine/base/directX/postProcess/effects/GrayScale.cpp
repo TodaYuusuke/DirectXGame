@@ -7,7 +7,7 @@ using namespace LWP::Base::PostProcess;
 
 void GrayScale::Init() {
 	intensity = 1.0f;
-	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
+	buffer_.Init();
 }
 void GrayScale::Update() {
 	*buffer_.data_ = intensity;

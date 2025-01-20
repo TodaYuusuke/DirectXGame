@@ -46,7 +46,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func);
+		void Init(std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令（平行光源）

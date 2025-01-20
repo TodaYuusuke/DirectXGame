@@ -34,7 +34,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, SRV* srv, DXC* dxc, Command* cmd, std::function<void()> func);
+		void Init(Command* cmd, std::function<void()> func);
 
 		/// <summary>
 		/// 描画命令
@@ -60,8 +60,6 @@ namespace LWP::Base {
 
 
 	private: // ** プライベートなメンバ変数 ** //
-		// srvのポインタを保持
-		SRV* srv_;
 		// Commandのポインタを保持
 		Command* cmd_;
 

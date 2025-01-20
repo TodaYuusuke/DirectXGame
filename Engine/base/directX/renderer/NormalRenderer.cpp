@@ -12,31 +12,31 @@ NormalRenderer::NormalRenderer() :
 	billboard2D_(lwpC::Rendering::kMaxIndex),
 	billboard3D_(lwpC::Rendering::kMaxIndex) {}
 
-void NormalRenderer::Init(GPUDevice* device, SRV* srv, RootSignature* root, DXC* dxc, std::function<void()> func) {
+void NormalRenderer::Init(RootSignature* root, std::function<void()> func) {
 	// StructuredBufferを初期化
-	normal_.indexBuffer.Init(device, srv);
-	wireframe_.indexBuffer.Init(device, srv);
-	billboard2D_.indexBuffer.Init(device, srv);
-	billboard3D_.indexBuffer.Init(device, srv);
+	normal_.indexBuffer.Init();
+	wireframe_.indexBuffer.Init();
+	billboard2D_.indexBuffer.Init();
+	billboard3D_.indexBuffer.Init();
 
 	// PSOを生成
-	normal_.pso.Init(*root, dxc)
+	normal_.pso.Init(*root)
 		.SetVertexShader("Object3d.VS.hlsl")
 		.SetPixelShader("Object3d.PS.hlsl")
-		.Build(device->GetDevice());
-	wireframe_.pso.Init(*root, dxc)
+		.Build();
+	wireframe_.pso.Init(*root)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
 		.SetVertexShader("Object3d.VS.hlsl")
 		.SetPixelShader("Object3d.PS.hlsl")
-		.Build(device->GetDevice());
-	billboard2D_.pso.Init(*root, dxc)
+		.Build();
+	billboard2D_.pso.Init(*root)
 		.SetVertexShader("Billboard2D.VS.hlsl")
 		.SetPixelShader("Billboard.PS.hlsl")
-		.Build(device->GetDevice());
-	billboard3D_.pso.Init(*root, dxc)
+		.Build();
+	billboard3D_.pso.Init(*root)
 		.SetVertexShader("Billboard3D.VS.hlsl")
 		.SetPixelShader("Billboard.PS.hlsl")
-		.Build(device->GetDevice());
+		.Build();
 
 	// 関数セット
 	setViewFunction_ = func;

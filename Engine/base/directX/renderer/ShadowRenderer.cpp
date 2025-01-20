@@ -11,15 +11,15 @@ using namespace LWP::Resource;
 // サイズをここで指定
 ShadowRenderer::ShadowRenderer() : indexBuffer_(lwpC::Rendering::kMaxIndex) {}
 
-void ShadowRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func) {
+void ShadowRenderer::Init(std::function<void()> func) {
 	// StructuredBufferを初期化
-	indexBuffer_.Init(device, srv);
+	indexBuffer_.Init();
 	// RootSignatureを生成
 	normal_.root.AddTableParameter(0, SV_Vertex)	// インデックスのデータ
 		.AddCBVParameter(0, SV_Vertex)		// 描画に使うViewprojection
 		.AddTableParameter(1, SV_Vertex)	// 頂点データ
 		.AddTableParameter(2, SV_Vertex)	// トランスフォーム
-		.Build(device->GetDevice());
+		.Build();
 	rigid_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
@@ -27,7 +27,7 @@ void ShadowRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<v
 		.AddCBVParameter(0, SV_All)	// モデル共通データ
 		.AddTableParameter(4, SV_All)	// インデックス
 		.AddCBVParameter(1, SV_All)	// ビュープロジェクション
-		.Build(device->GetDevice());
+		.Build();
 	skinning_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
@@ -36,26 +36,26 @@ void ShadowRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<v
 		.AddTableParameter(4, SV_All)	// インデックス
 		.AddCBVParameter(1, SV_All)	// ビュープロジェクション
 		.AddTableParameter(5, SV_All)	// スキニング用のWell
-		.Build(device->GetDevice());
+		.Build();
 
 	// PSOを生成
-	normal_.pso.Init(normal_.root, dxc)
+	normal_.pso.Init(normal_.root)
 		.SetVertexShader("ShadowMap.VS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
-		.Build(device->GetDevice());
-	rigid_.pso.Init(rigid_.root, dxc, PSO::Type::Mesh)
+		.Build();
+	rigid_.pso.Init(rigid_.root, PSO::Type::Mesh)
 		.SetAmpShader("ms/Meshlet.AS.hlsl")
 		.SetMeshShader("ms/ShadowMap.MS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
-		.Build(device->GetDevice());
-	skinning_.pso.Init(skinning_.root, dxc, PSO::Type::Mesh)
+		.Build();
+	skinning_.pso.Init(skinning_.root, PSO::Type::Mesh)
 		.SetAmpShader("ms/Meshlet.AS.hlsl")
 		.SetMeshShader("ms/SkinningShadowMap.MS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
-		.Build(device->GetDevice());
+		.Build();
 
 	// 関数セット
 	setViewFunction_ = func;
@@ -180,7 +180,7 @@ void ShadowRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GP
 	// ** MeshShader ** //
 
 	// 全モデル分ループ
-	auto models = System::engine->resourceManager_->GetModels();
+	auto models = Resource::Manager::GetInstance()->GetModels();
 
 	// RigidModelをDispatch
 	list->SetGraphicsRootSignature(rigid_.root);	// RootSignatureを設定

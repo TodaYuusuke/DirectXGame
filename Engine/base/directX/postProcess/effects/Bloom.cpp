@@ -7,43 +7,38 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void Bloom::Init() {
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
-	DXC* dxc = System::engine->directXCommon_->GetDXC();
-
 	threshold = 0.95f;
 
+	buffer_.Init();
 
-	buffer_.Init(dev);
-
-	brightnessFilter.rr.Init(dev, heaps);
-	gaussX.rr.Init(dev, heaps);
+	brightnessFilter.rr.Init();
+	gaussX.rr.Init();
 	// 輝度抽出
 	brightnessFilter.root.AddCBVParameter(0, SV_Pixel)
 		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
-		.Build(dev->GetDevice());
-	brightnessFilter.pso.Init(brightnessFilter.root, dxc)
+		.Build();
+	brightnessFilter.pso.Init(brightnessFilter.root)
 		.SetDepthStencilState(false)
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
 		.SetPixelShader("postProcess/bloom/BrightnessFilter.PS.hlsl")
-		.Build(dev->GetDevice());
+		.Build();
 	// X軸ガウシアンブラー
 	gaussX.root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
-		.Build(dev->GetDevice());
-	gaussX.pso.Init(gaussX.root, dxc)
+		.Build();
+	gaussX.pso.Init(gaussX.root)
 		.SetDepthStencilState(false)
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
 		.SetPixelShader("postProcess/bloom/GaussianBlurX.PS.hlsl")
-		.Build(dev->GetDevice());
+		.Build();
 	// Y軸ガウシアンブラー
-	gaussY.Init(gaussX.root, dxc)
+	gaussY.Init(gaussX.root)
 		.SetDepthStencilState(false)
 		.SetBlendState(PSO::BlendMode::Add)
 		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
 		.SetPixelShader("postProcess/bloom/GaussianBlurY.PS.hlsl")
-		.Build(dev->GetDevice());
+		.Build();
 }
 void Bloom::Update() {
 	*buffer_.data_ = threshold;

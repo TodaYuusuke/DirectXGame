@@ -12,11 +12,9 @@ using namespace LWP::Resource;
 
 SkinningModel::SkinningModel() {}
 SkinningModel::~SkinningModel() {
-	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
-
 	// パスが空じゃなかったら消しに行く
 	if (!filePath.empty()) {
-		System::engine->resourceManager_->DeletePointer(this, filePath);
+		Resource::Manager::GetInstance()->DeletePointer(this, filePath);
 	}
 }
 
@@ -25,8 +23,8 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
 	LoadModel(filePath);
-	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
-	System::engine->resourceManager_->SetPointer(this, filePath);
+	// ポインタをエンジンにセット
+	Resource::Manager::GetInstance()->SetPointer(this, filePath);
 	ModelData* data = GetModel(filePath);
 	// マテリアルをコピー
 	materials = data->materials_;
@@ -65,7 +63,7 @@ void SkinningModel::DebugGUI() {
 }
 
 void SkinningModel::ChangeFillMode() {
-	System::engine->resourceManager_->ChangeFillMode(this, filePath);
+	Resource::Manager::GetInstance()->ChangeFillMode(this, filePath);
 }
 
 void SkinningModel::SetAllMaterialLighting(bool flag) {

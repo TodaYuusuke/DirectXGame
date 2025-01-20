@@ -18,11 +18,11 @@ namespace LWP::Base {
 		/// <summary>
 		/// コンストラクタ（IndexManagerの初期化値要求）
 		/// </summary>
-		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size);
+		IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size);
 		/// <summary>
 		/// コンストラクタ（SRV用の特殊なコンストラクタ）
 		/// </summary>
-		IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t DescSize, uint32_t indexSize);
+		IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t DescSize, uint32_t indexSize);
 
 
 		/// <summary>
@@ -57,11 +57,6 @@ namespace LWP::Base {
 		ID3D12DescriptorHeap* GetHeap() const { return heap_.Get(); }
 		// ディスクリプタ1つ分のサイズを受け取る関数
 		uint32_t GetDescriptorSize() const { return kElementSize; }
-
-
-	protected: // ** 外部変数 ** //
-		// デバイスのポインタ
-		ID3D12Device* device_ = nullptr;
 
 
 	protected: // ** プライベートなメンバ関数 ** //

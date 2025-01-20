@@ -32,7 +32,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// ビルダーデザインパターン
 		/// </summary>
-		PSO& Init(ID3D12RootSignature* root, DXC* dxc, Type type = Type::Vertex);
+		PSO& Init(ID3D12RootSignature* root, Type type = Type::Vertex);
 		PSO& SetInputLayout();
 		PSO& SetBlendState(BlendMode mode = BlendMode::Normal);
 		PSO& SetRasterizerState(
@@ -46,7 +46,7 @@ namespace LWP::Base {
 		PSO& SetDepthStencilState(bool enable);
 		PSO& SetDSVFormat(DXGI_FORMAT format);
 		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
-		void Build(ID3D12Device2* device);
+		void Build();
 
 		// PipelineStateを受け取る関数
 		ID3D12PipelineState* GetState() { return state_.Get(); }
@@ -66,8 +66,6 @@ namespace LWP::Base {
 			Desc() {};
 			~Desc() {};
 		}desc_;
-		// DXCのポインタ
-		DXC* dxc_ = nullptr;
 
 
 	private: // ** プライベートな関数 ** //

@@ -18,16 +18,15 @@ using namespace Microsoft::WRL;
 #define cPointS lwpC::Shadow::Point::kMaxCount		// 点光源の数
 #define cPointSOffset cBuf+cTex+cDirS
 
-SRV::SRV(ID3D12Device* device) :
-	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, cBuf + cTex + cDirS + cPointS, cBuf),
+SRV::SRV() :
+	IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, cBuf + cTex + cDirS + cPointS, cBuf),
 	textureIM_(cTex, cTexOffset),
 	dirShadowMapIM_(cDirS, cDirSOffset),
-	pointShadowIM_(cPointS, cPointSOffset) {}
-
-void SRV::Init() {
+	pointShadowIM_(cPointS, cPointSOffset) {
 	// SRV用のヒープでディスクリプタの数は1000。SRVはShader内で触るものなので、ShaderVisibleはtrue
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSize, true);
 }
+
 void SRV::DebugGUI() {
 	if (ImGui::CollapsingHeader("SRV")) {
 		if (ImGui::TreeNode("StructerdBuffer Index")) {
@@ -84,7 +83,7 @@ SRVInfo SRV::CreateTexture(ID3D12Resource* resource, ID3D12Resource* intermediat
 	info.SetView(this);
 
 	// SRVに生成
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 SRVInfo SRV::CreateDepthTexture(ID3D12Resource* resource) {
@@ -105,7 +104,7 @@ SRVInfo SRV::CreateDepthTexture(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// SRVに登録
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource) {
@@ -123,7 +122,7 @@ SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// SRVに生成
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 SRVInfo SRV::CreateCubeMap(ID3D12Resource* resource) {
@@ -145,7 +144,7 @@ SRVInfo SRV::CreateCubeMap(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// SRVに登録
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 
@@ -161,7 +160,7 @@ SRVInfo SRV::CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER
 	info.SetView(this);
 
 	// SRVに登録
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 UAVInfo SRV::CreateRWStructuredBuffer(ID3D12Resource* resource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& desc) {
@@ -176,7 +175,7 @@ UAVInfo SRV::CreateRWStructuredBuffer(ID3D12Resource* resource, const D3D12_UNOR
 	info.SetView(this);
 
 	// SRVに登録
-	device_->CreateUnorderedAccessView(resource, nullptr, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateUnorderedAccessView(resource, nullptr, &info.desc, info.cpuView);
 	return info;
 }
 
@@ -201,7 +200,7 @@ SRVInfo SRV::CreateShadowMapDir(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// SRVに登録
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 
@@ -224,7 +223,7 @@ SRVInfo SRV::CreateShadowMapPoint(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// SRVに登録
-	device_->CreateShaderResourceView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 

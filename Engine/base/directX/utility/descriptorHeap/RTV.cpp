@@ -7,13 +7,12 @@ using namespace LWP::Utility;
 using namespace LWP::Base;
 using namespace Microsoft::WRL;
 
-RTV::RTV(ID3D12Device* device) :
-	IDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, lwpC::Rendering::kMaxMultiWindowRendering + 2) {}
-
-void RTV::Init() {
-	// RTV用のヒープでディスクリプタの数は2。RTVはShader内で触るものではないので、ShaderVisibleはfalse
+RTV::RTV() :
+	IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, lwpC::Rendering::kMaxMultiWindowRendering + 2) {
+	// RTV用のヒープでディスクリプタの数は2 + 複数画面描画数。RTVはShader内で触るものではないので、ShaderVisibleはfalse
 	heap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kMaxSize, false);
 }
+
 void RTV::DebugGUI() {
 	if (ImGui::CollapsingHeader("RTV")) {
 		if (ImGui::TreeNode("Index")) {
@@ -34,7 +33,7 @@ RTVInfo RTV::CreateRenderTargetView(ID3D12Resource* resource) {
 	// viewも設定
 	info.SetView(this);
 
-	device_->CreateRenderTargetView(resource, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateRenderTargetView(resource, &info.desc, info.cpuView);
 	return info;
 }
 
@@ -56,7 +55,7 @@ std::array<RTVInfo, 6> RTV::CreateCubeMapView(ID3D12Resource* resource) {
 		info[i].SetView(this);
 
 		// RTVに登録
-		device_->CreateRenderTargetView(resource, &info[i].desc, info[i].cpuView);
+		GPUDevice::GetInstance()->GetDevice()->CreateRenderTargetView(resource, &info[i].desc, info[i].cpuView);
 	}
 	return info;
 }

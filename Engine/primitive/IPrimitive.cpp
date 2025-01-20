@@ -12,7 +12,7 @@ IPrimitive::IPrimitive() {
 	// 派生クラスに初期化処理を呼び出してもらう
 
 	// 管理クラスにポインタを送信
-	SetInstance(this);
+	Primitive::Manager::GetInstance()->SetPointer(this);
 }
 IPrimitive::IPrimitive(const IPrimitive& other) {
 	name = other.name;
@@ -25,13 +25,13 @@ IPrimitive::IPrimitive(const IPrimitive& other) {
 	isActive = other.isActive;
 
 	// 管理クラスにポインタを送信
-	SetInstance(this);
+	Primitive::Manager::GetInstance()->SetPointer(this);
 }
 
 
 IPrimitive::~IPrimitive() {
 	// 管理クラスのポインタを削除
-	DeleteInstance(this);
+	Primitive::Manager::GetInstance()->DeletePointer(this);
 }
 
 void IPrimitive::Init() {

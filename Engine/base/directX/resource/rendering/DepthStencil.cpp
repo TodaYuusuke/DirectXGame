@@ -2,7 +2,7 @@
 
 using namespace LWP::Base;
 
-void DepthStencil::Init(GPUDevice* device, HeapManager* heaps) {
+void DepthStencil::Init() {
 	HRESULT hr = S_FALSE;
 
 	// 1. Resourceの設定
@@ -26,7 +26,7 @@ void DepthStencil::Init(GPUDevice* device, HeapManager* heaps) {
 	currentBarrierState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
 	// 5. Resourceを生成する
-	hr = device->GetDevice()->CreateCommittedResource(
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
@@ -37,9 +37,9 @@ void DepthStencil::Init(GPUDevice* device, HeapManager* heaps) {
 	assert(SUCCEEDED(hr));
 
 	// DSV上に登録
-	dsvInfo = heaps->dsv()->CreateDepthStencilView(resource_.Get());
+	dsvInfo = DSV::GetInstance()->CreateDepthStencilView(resource_.Get());
 	// SRV上にも登録
-	srvInfo = heaps->srv()->CreateDepthTexture(resource_.Get());
+	srvInfo = SRV::GetInstance()->CreateDepthTexture(resource_.Get());
 }
 
 void DepthStencil::Clear(ID3D12GraphicsCommandList* list) {

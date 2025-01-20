@@ -4,11 +4,11 @@ using namespace LWP::System;
 using namespace LWP;
 
 void Window::ChangeWindowMode() {
-	engine->winApp_->ChangeWindowMode();
+	Base::WinApp::GetInstance()->ChangeWindowMode();
 }
 void Window::ChangeFullScreenMode() {
-	engine->winApp_->ChangeFullScreenMode();
+	Base::WinApp::GetInstance()->ChangeFullScreenMode();
 }
 void Window::ChangeBorderlessWindowMode() {
-	engine->winApp_->ChangeBorderlessWindowMode();
+	Base::WinApp::GetInstance()->ChangeBorderlessWindowMode();
 }

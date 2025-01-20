@@ -12,24 +12,17 @@ using namespace Microsoft::WRL;
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-void DirectXCommon::Initialize(WinApp* winApp) {
+DirectXCommon::DirectXCommon() {}
+
+void DirectXCommon::Init() {
 	HRESULT hr = S_FALSE;
 
-	winApp_ = winApp;
-
-	// デバイス初期化
-	gpuDevice_ = std::make_unique<GPUDevice>();
-	gpuDevice_->Init();
-	device_ = gpuDevice_->GetDevice();
-
-	// HeapManager作成
-	heaps_ = std::make_unique<HeapManager>(gpuDevice_.get());
-	// DirectXコンパイラ作成
-	dxc_ = std::make_unique<DXC>();
+	// デバイスを変数に受け取る
+	GPUDevice* gpu = GPUDevice::GetInstance();
 
 	// レンダラー初期化
 	renderer_ = std::make_unique<RendererManager>();
-	renderer_->Init(gpuDevice_.get(), dxc_.get(), heaps_->srv());
+	renderer_->Init();
 
 	// スワップチェーンを生成する
 	swapChainDesc_.Width = Config::Window::kResolutionWidth;		// 画面の幅。ウィンドウのクライアント領域を同じものにしておく
@@ -41,7 +34,7 @@ void DirectXCommon::Initialize(WinApp* winApp) {
 	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		// モニタにうつしたら、中身を廃棄
 	// コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	ComPtr<IDXGISwapChain1> swapChain1;
-	hr = gpuDevice_->GetFactory()->CreateSwapChainForHwnd(renderer_->GetCommand()->Queue(), winApp->GetHWND(), &swapChainDesc_, nullptr, nullptr, &swapChain1);
+	hr = gpu->GetFactory()->CreateSwapChainForHwnd(renderer_->GetCommand()->Queue(), WinApp::GetInstance()->GetHWND(), &swapChainDesc_, nullptr, nullptr, &swapChain1);
 	assert(SUCCEEDED(hr));
 	// SwapChain4を得る
 	swapChain1->QueryInterface(IID_PPV_ARGS(&swapChain_));
@@ -50,10 +43,10 @@ void DirectXCommon::Initialize(WinApp* winApp) {
 	for (int i = 0; i < 2; i++) {
 		backBuffers_.push_back(BackBuffer(swapChain_.Get(), i));
 		// 初期化
-		backBuffers_.back().Init(gpuDevice_.get(), heaps_.get());
+		backBuffers_.back().Init();
 	}
 	// 深度マップ生成
-	depthStencil_.Init(gpuDevice_.get(), heaps_.get());
+	depthStencil_.Init();
 }
 
 void DirectXCommon::SetMainCamera(Object::Camera* camera) {
@@ -81,5 +74,10 @@ void DirectXCommon::DrawCall() {
 }
 
 void DirectXCommon::DebugGUI() {
-	heaps_->DebugGUI();
+	if (ImGui::BeginTabItem("Base")) {
+		RTV::GetInstance()->DebugGUI();
+		SRV::GetInstance()->DebugGUI();
+		DSV::GetInstance()->DebugGUI();
+		ImGui::EndTabItem();
+	}
 }

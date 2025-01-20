@@ -4,7 +4,7 @@
 using namespace LWP;
 using namespace LWP::Base;
 
-void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
+void RenderResource::Init() {
 	HRESULT hr = S_FALSE;
 	
 	// 1. Resourceの設定
@@ -34,7 +34,7 @@ void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
 	currentBarrierState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 	// 5. Resourceを生成する
-	hr = device->GetDevice()->CreateCommittedResource(
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
@@ -45,9 +45,9 @@ void RenderResource::Init(GPUDevice* device, HeapManager* heaps) {
 	assert(SUCCEEDED(hr));
 
 	// RTV上に登録
-	rtvInfo = heaps->rtv()->CreateRenderTargetView(resource_.Get());
+	rtvInfo = RTV::GetInstance()->CreateRenderTargetView(resource_.Get());
 	// SRV上に登録
-	srvInfo = heaps->srv()->CreateRenderResource(resource_.Get());
+	srvInfo = SRV::GetInstance()->CreateRenderResource(resource_.Get());
 }
 
 void RenderResource::Clear(ID3D12GraphicsCommandList* list) {

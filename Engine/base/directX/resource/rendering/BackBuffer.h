@@ -23,7 +23,7 @@ namespace LWP::Base {
 
 
 		// 初期化
-		void Init(GPUDevice* device, HeapManager* heaps) override;
+		void Init() override;
 		// 画面クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
 

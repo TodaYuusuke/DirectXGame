@@ -163,9 +163,6 @@
     <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\HeapManager.cpp">
-      <Filter>Engine\base\directX\utility</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\RootSignature.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
@@ -367,6 +364,7 @@
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
     <ClCompile Include="Engine\info\DebugCamera.cpp" />
+    <ClCompile Include="Engine\utility\Singleton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -577,9 +575,6 @@
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\GPUDevice.h">
-      <Filter>Engine\base\directX\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\HeapManager.h">
       <Filter>Engine\base\directX\utility</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\RootSignature.h">
@@ -823,6 +818,7 @@
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\MyString.h" />
     <ClInclude Include="Engine\info\DebugCamera.h" />
+    <ClInclude Include="Engine\utility\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

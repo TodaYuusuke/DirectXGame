@@ -85,7 +85,7 @@ RootSignature& RootSignature::AddSampler(int registerNum, ShaderVisibility visib
 	samplers_.push_back(newSampler);
 	return *this;
 }
-void RootSignature::Build(ID3D12Device* device) {
+void RootSignature::Build() {
 	HRESULT hr = S_FALSE;
 
 	// 詳細をセット
@@ -106,7 +106,7 @@ void RootSignature::Build(ID3D12Device* device) {
 		assert(false);
 	}
 	// バイナリを元に生成
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&root_));
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&root_));
 	assert(SUCCEEDED(hr));
 
 	signatureBlob->Release();

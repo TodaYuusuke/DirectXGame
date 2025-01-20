@@ -18,7 +18,9 @@ namespace LWP::Base {
 	class RootSignature final {
 	public: // **　メンバ関数 ** //
 
-		// 初期化
+		/// <summary>
+		/// 初期化
+		/// </summary>
 		void Init();
 
 		/// <summary>
@@ -34,7 +36,7 @@ namespace LWP::Base {
 			D3D12_TEXTURE_ADDRESS_MODE addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP,	// 範囲外をどうするかの設定
 			D3D12_TEXTURE_ADDRESS_MODE addressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP	// 範囲外をどうするかの設定
 			);
-		void Build(ID3D12Device* device);
+		void Build();
 
 		// ID3D12RootSignature型への暗黙の変換演算子をオーバーロード
 		operator ID3D12RootSignature* () {

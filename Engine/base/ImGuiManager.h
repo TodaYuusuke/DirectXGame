@@ -21,7 +21,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
+		void Init();
 
 		/// <summary>
 		/// ImGui受付開始

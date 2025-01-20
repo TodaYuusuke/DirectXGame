@@ -11,10 +11,6 @@ using namespace LWP::Resource;
 
 
 void ModelData::Load(const std::string& filePath) {
-	// バッファ生成のためにデバイスとSRVを取得する
-	GPUDevice* device = System::engine->directXCommon_->GetGPUDevice();
-	SRV* srv = System::engine->directXCommon_->GetSRV();
-
 	Assimp::Importer importer;
 	// ファイル読み込み（三角形の並び順を逆にする | UVをフリップする | 四角形以上のポリゴンを三角形に自動分割）
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
@@ -118,11 +114,11 @@ void ModelData::Load(const std::string& filePath) {
 	buffers_.primitiveIndices = std::make_unique<StructuredBuffer<uint32_t>>(static_cast<int32_t>(primitiveIndices.size()));		// 形状プリミティブ
 	buffers_.materials = std::make_unique<StructuredBuffer<Base::MaterialStruct>>(static_cast<int32_t>(materials.size()));		// マテリアル
 	// バッファの初期化
-	buffers_.meshlet->Init(device, srv);
-	buffers_.vertex->Init(device, srv);
-	buffers_.uniqueVertexIndices->Init(device, srv);
-	buffers_.primitiveIndices->Init(device, srv);
-	buffers_.materials->Init(device, srv);
+	buffers_.meshlet->Init();
+	buffers_.vertex->Init();
+	buffers_.uniqueVertexIndices->Init();
+	buffers_.primitiveIndices->Init();
+	buffers_.materials->Init();
 	// データのコピー
 	std::memcpy(buffers_.meshlet->data_, meshlets.data(), sizeof(DirectX::Meshlet) * meshlets.size());
 	for (VertexStruct& v : vertices) {

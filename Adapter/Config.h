@@ -188,6 +188,15 @@ namespace LWP::Config {
 			ALL = ColMaskALL,
 		};
 	};
+	/// <summary>
+	/// デバッグに関するパラメータ
+	/// </summary>
+	namespace Debug {
+		/// <summary>
+		/// デバッグ用ImGuiの非表示切り替えフラグ
+		/// </summary>
+		static bool kIsShowDebugGUI = true;
+	}
 };
 
 // 短縮形

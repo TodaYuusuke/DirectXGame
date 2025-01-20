@@ -49,7 +49,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(GPUDevice* device, DXC* dxc, SRV* srv);
+		void Init();
 
 		/// <summary>
 		/// レンダリング開始

@@ -11,17 +11,16 @@
 
 using namespace LWP::Base;
 
-void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
-	dxc_ = dxc;
-	srv_ = srv;
+void RendererManager::Init() {
+	srv_ = SRV::GetInstance();	// SRVはよく使うので保持
 
 	// コマンド初期化
-	commander_.Init(device);
+	commander_.Init(GPUDevice::GetInstance());
 	// コマンドをSRVに渡しておく
-	srv->SetCommand(&commander_);
+	SRV::GetInstance()->SetCommand(&commander_);
 	
 	// バッファー達を初期化
-	buffers_.Init(device, srv_);
+	buffers_.Init();
 	// DXCはデフォルトコンストラクタで初期化済み
 
 	// Viewをセットする関数を用意
@@ -56,13 +55,13 @@ void RendererManager::Init(GPUDevice* device, DXC* dxc, SRV* srv) {
 	};
 
 	// シャドウレンダラー初期化
-	shadowRender_.Init(device, srv_, dxc_, shadowFunc);
-	eMapRenderer_.Init(device, srv_, dxc_, meshFunc);
+	shadowRender_.Init(shadowFunc);
+	eMapRenderer_.Init(meshFunc);
 	eMapRenderer_.SetBufferGroup(&buffers_);
 	// ノーマルレンダラー初期化
-	normalRender_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
-	postRenderer_.Init(device, srv_, buffers_.GetRoot(), dxc_, normalFunc);
-	meshRenderer_.Init(device, srv_, dxc_, &commander_, meshFunc);
+	normalRender_.Init(buffers_.GetRoot(), normalFunc);
+	postRenderer_.Init(buffers_.GetRoot(), normalFunc);
+	meshRenderer_.Init(&commander_, meshFunc);
 	meshRenderer_.SetBufferGroup(&buffers_);
 	// ポストプロセスレンダラー初期化
 	ppRender_.Init();

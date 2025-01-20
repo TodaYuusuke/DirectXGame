@@ -11,8 +11,7 @@ using namespace LWP::Resource;
 // サイズをここで指定
 EnvironmentMapRenderer::EnvironmentMapRenderer() {}
 
-void EnvironmentMapRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::function<void()> func) {
-	srv_ = srv;
+void EnvironmentMapRenderer::Init(std::function<void()> func) {
 	setViewFunction_ = func;
 
 	// RootSignatureを生成
@@ -34,7 +33,7 @@ void EnvironmentMapRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::fu
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
-		.Build(device->GetDevice());
+		.Build();
 	skinning_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
@@ -54,7 +53,7 @@ void EnvironmentMapRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::fu
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
 			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
-		.Build(device->GetDevice());
+		.Build();
 	static_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
@@ -71,23 +70,23 @@ void EnvironmentMapRenderer::Init(GPUDevice* device, SRV* srv, DXC* dxc, std::fu
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
-		.Build(device->GetDevice());
+		.Build();
 
 	// PSOを生成
-	rigid_.pso.Init(rigid_.root, dxc, PSO::Type::Mesh)
+	rigid_.pso.Init(rigid_.root, PSO::Type::Mesh)
 		.SetAmpShader("ms/Meshlet.AS.hlsl")
 		.SetMeshShader("ms/Meshlet.MS.hlsl")
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
-		.Build(device->GetDevice());
-	skinning_.pso.Init(skinning_.root, dxc, PSO::Type::Mesh)
+		.Build();
+	skinning_.pso.Init(skinning_.root, PSO::Type::Mesh)
 		.SetAmpShader("ms/Meshlet.AS.hlsl")
 		.SetMeshShader("ms/Skinning.MS.hlsl")
 		.SetPixelShader("ms/Meshlet.PS.hlsl")
-		.Build(device->GetDevice());
-	static_.pso.Init(static_.root, dxc, PSO::Type::Mesh)
+		.Build();
+	static_.pso.Init(static_.root, PSO::Type::Mesh)
 		.SetMeshShader("ms/static/Normal.MS.hlsl")
 		.SetPixelShader("ms/static/Normal.PS.hlsl")
-		.Build(device->GetDevice());
+		.Build();
 }
 
 void EnvironmentMapRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -110,7 +109,7 @@ void EnvironmentMapRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 	scissorRect.bottom = 1024;
 
 	// EMapモデル分ループする
-	for (Models& m : System::engine->resourceManager_->GetModels()) {
+	for (Models& m : Resource::Manager::GetInstance()->GetModels()) {
 		for (EMapModel* e : m.eMaps.ptrs.list) {
 			if (!e->isActive) { continue; }
 
@@ -144,7 +143,7 @@ void EnvironmentMapRenderer::Reset() {}
 
 void EnvironmentMapRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {
 	// 全モデル分ループ
-	auto models = System::engine->resourceManager_->GetModels();
+	auto models = Resource::Manager::GetInstance()->GetModels();
 	
 	// -------------------------------------------------------------- //
 
