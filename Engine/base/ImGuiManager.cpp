@@ -50,3 +50,13 @@ void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColor
 	ImGui::ColorEdit4(label, &v.x, flags);
 	col = *new Color(v);
 }
+
+void ImGuiManager::ShowTexture(const Resource::Texture& texture) {
+	if (texture.GetIndex() != -1) {	// テクスチャが存在するならば表示
+		Math::Vector2 size = texture.GetSize();
+		ImGui::Image((ImTextureID)SRV::GetInstance()->GetGPUHandle(texture.GetIndex()).ptr, ImVec2(size.x, size.y));
+	}
+	else {
+		ImGui::Text("No exist");	// 存在しないので非表示
+	}
+}

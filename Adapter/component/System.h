@@ -10,11 +10,6 @@ namespace LWP {
 	/// </summary>
 	namespace System {
 		/// <summary>
-		/// エンジンのインスタンス
-		/// </summary>
-		//extern std::unique_ptr<Engine> engine;
-
-		/// <summary>
 		/// エンジン起動（※二重呼び出し禁止）
 		/// </summary>
 		template<class IsIScene>

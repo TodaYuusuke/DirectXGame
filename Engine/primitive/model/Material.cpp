@@ -44,12 +44,7 @@ void Material::DebugGUI(const std::string& label) {
 		ImGui::DragFloat("shinines", &shininess);
 		ImGui::Checkbox("enableLighting", &enableLighting);
 		if (ImGui::TreeNode("Texture")) {
-			if (texture.t.GetIndex() != -1) {	// テクスチャが存在するならば表示
-				//ImGui::Image((ImTextureID), ImVec2((float)my_image_width, (float)my_image_height));
-			}
-			else {
-				ImGui::Text("No exist");
-			}
+			ImGuiManager::ShowTexture(texture.t);
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();

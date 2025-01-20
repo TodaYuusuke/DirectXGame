@@ -56,5 +56,12 @@ namespace LWP::Base {
 		/// <param name="col"></param>
 		/// <param name="flags"></param>
 		static void ColorEdit4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0);
+
+		/// <summary>
+		/// リソースの中身を表示する
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		static void ShowTexture(const Resource::Texture& texture);
 	};
 }
