@@ -53,6 +53,13 @@ void RendererManager::Init() {
 		buffers_.SetDirLightView(9, list);
 		buffers_.SetPointLightView(10, list);
 	};
+	std::function<void()> particleFunc = [&]() {
+		ID3D12GraphicsCommandList* list = commander_.List();
+		// 各種Viewをセット
+		buffers_.SetCommonView(6, list);
+		buffers_.SetDirLightView(11, list);
+		buffers_.SetPointLightView(12, list);
+	};
 
 	// シャドウレンダラー初期化
 	shadowRender_.Init(shadowFunc);
@@ -63,6 +70,7 @@ void RendererManager::Init() {
 	postRenderer_.Init(buffers_.GetRoot(), normalFunc);
 	meshRenderer_.Init(&commander_, meshFunc);
 	meshRenderer_.SetBufferGroup(&buffers_);
+	particleRenderer_.Init(&commander_, meshFunc);
 	// ポストプロセスレンダラー初期化
 	ppRender_.Init();
 	// コピーレンダラー初期化
@@ -89,6 +97,8 @@ void RendererManager::DrawCall() {
 	// 通常描画
 	meshRenderer_.DrawCall(list);
 	normalRender_.DrawCall(list);
+	// パーティクル更新＆描画
+	particleRenderer_.DrawCall(list);
 	// ポストプロセス描画
 	ppRender_.DrawCall(list);
 	// スプライト描画
@@ -103,6 +113,7 @@ void RendererManager::DrawCall() {
 	normalRender_.Reset();
 	postRenderer_.Reset();
 	meshRenderer_.Reset();
+	particleRenderer_.Reset();
 	shadowRender_.Reset();
 	ppRender_.Reset();
 	copyRenderer_.Reset();

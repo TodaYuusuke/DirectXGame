@@ -365,6 +365,8 @@
     <ClCompile Include="Engine\utility\MyString.cpp" />
     <ClCompile Include="Engine\info\DebugCamera.cpp" />
     <ClCompile Include="Engine\utility\Singleton.cpp" />
+    <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -819,6 +821,8 @@
     <ClInclude Include="Engine\utility\MyString.h" />
     <ClInclude Include="Engine\info\DebugCamera.h" />
     <ClInclude Include="Engine\utility\Singleton.h" />
+    <ClInclude Include="Engine\object\core\GPUParticle.h" />
+    <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

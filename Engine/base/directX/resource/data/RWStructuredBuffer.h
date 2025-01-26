@@ -75,6 +75,30 @@ namespace LWP::Base {
 			srvInfo = SRV::GetInstance()->CreateStructuredBuffer(resource_.Get(), srvDesc);
 		}
 
+		// バリアを設定
+
+
+		/// <summary>
+		/// リソースバリアを設定
+		/// </summary>
+		void SetResourceBarrier(ID3D12GraphicsCommandList* list) {
+			// バリアを変えるわけではないが、依存関係を設定するためにバリアを張るだけの処理
+
+			// TransitionBarrierの設定
+			D3D12_RESOURCE_BARRIER barrier{};
+			// 今回のバリアはTransition
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+			// Noneにしておく
+			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			// 全てのサブリソースを選択
+			barrier.Transition.Subresource = 0xFFFFFFFF;
+			// バリアを張る対象のリソース
+			barrier.Transition.pResource = resource_.Get();
+
+			// リソースバリア変更
+			list->ResourceBarrier(1, &barrier);
+		}
+
 		/// <summary>
 		/// GPU上のViewを取得
 		/// </summary>

@@ -93,40 +93,40 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 
 	// PSOを生成
 	rigid_.pso.Init(rigid_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/Meshlet.MS.hlsl")
-		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/Meshlet.MS.hlsl")
+		.SetSystemPS("ms/Meshlet.PS.hlsl")
 		.Build();
 	rigid_.wirePso.Init(rigid_.root, PSO::Type::Mesh)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/Meshlet.MS.hlsl")
-		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/Meshlet.MS.hlsl")
+		.SetSystemPS("ms/Meshlet.PS.hlsl")
 		.Build();
 	skinning_.pso.Init(skinning_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/Skinning.MS.hlsl")
-		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/Skinning.MS.hlsl")
+		.SetSystemPS("ms/Meshlet.PS.hlsl")
 		.Build();
 	skinning_.wirePso.Init(skinning_.root, PSO::Type::Mesh)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/Skinning.MS.hlsl")
-		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/Skinning.MS.hlsl")
+		.SetSystemPS("ms/Meshlet.PS.hlsl")
 		.Build();
 	static_.pso.Init(static_.root, PSO::Type::Mesh)
-		.SetMeshShader("ms/static/Normal.MS.hlsl")
-		.SetPixelShader("ms/static/Normal.PS.hlsl")
+		.SetSystemMS("ms/static/Normal.MS.hlsl")
+		.SetSystemPS("ms/static/Normal.PS.hlsl")
 		.Build();
 	static_.wirePso.Init(static_.root, PSO::Type::Mesh)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
-		.SetMeshShader("ms/static/Normal.MS.hlsl")
-		.SetPixelShader("ms/static/Normal.PS.hlsl")
+		.SetSystemMS("ms/static/Normal.MS.hlsl")
+		.SetSystemPS("ms/static/Normal.PS.hlsl")
 		.Build();
 	eMap_.pso.Init(eMap_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/eMap/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/eMap/Meshlet.MS.hlsl")
-		.SetPixelShader("ms/eMap/EMap.PS.hlsl")
+		.SetSystemAS("ms/eMap/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/eMap/Meshlet.MS.hlsl")
+		.SetSystemPS("ms/eMap/EMap.PS.hlsl")
 		.Build();
 
 
@@ -137,7 +137,7 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddSampler(0, SV_All)		// テクスチャ用サンプラー
 		.Build();
 	grassData_.generate.pso.Init(grassData_.generate.root, PSO::Type::Compute)
-		.SetComputeShader("cs/Grass.CS.hlsl")
+		.SetSystemCS("cs/Grass.CS.hlsl")
 		.Build();
 	grassData_.generate.cBuffer.Init();
 	grassData_.generate.rwBuffer = std::make_unique<RWStructuredBuffer<Math::Vector3>>(grassData_.generate.kSize);
@@ -148,8 +148,8 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddTableParameter(0, SV_All)	// 草を生やす座標データ
 		.Build();
 	grassData_.pso.Init(grassData_.root, PSO::Type::Mesh)
-		.SetMeshShader("ms/terrain/TerrainGrass.MS.hlsl")
-		.SetPixelShader("ms/terrain/TerrainGrass.PS.hlsl")
+		.SetSystemMS("ms/terrain/TerrainGrass.MS.hlsl")
+		.SetSystemPS("ms/terrain/TerrainGrass.PS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_NONE)
 		.Build();
 

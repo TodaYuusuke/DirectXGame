@@ -64,3 +64,7 @@ void RigidModel::SetAllMaterialLighting(bool flag) {
 		itr->second.enableLighting = flag;
 	}
 }
+
+ModelData* RigidModel::GetModelData() const {
+	return &*GetModel(filePath);
+}

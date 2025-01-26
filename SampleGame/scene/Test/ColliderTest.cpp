@@ -33,6 +33,9 @@ void ColliderTest::Initialize() {
 	aabbCol.mask.SetBelongFrag(lwpC::Collider::None);
 	aabbCol.name = "aabb";
 	aabbCol.isMove = true;
+
+	particle_.SetShaderPath("DeadBody/Emitter.CS.hlsl", "DeadBody/Update.CS.hlsl");
+	particle_.model.LoadCube();
 }
 
 // 更新

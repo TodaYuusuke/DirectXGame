@@ -1,6 +1,5 @@
 #include "MSStruct.hlsli"
 
-
 // CommonBuffers
 ConstantBuffer<CommonData> cCommonData : register(b1);
 ConstantBuffer<Camera> cCamera : register(b2);

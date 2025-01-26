@@ -175,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
@@ -221,6 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\core\collision\OctreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
+    <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
@@ -308,6 +310,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\IRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
@@ -364,6 +367,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\Camera.h" />
     <ClInclude Include="Engine\object\core\collision\OctreeSpaceDivision.h" />
     <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
+    <ClInclude Include="Engine\object\core\GPUParticle.h" />
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
     <ClInclude Include="Engine\object\core\light\PointLight.h" />
     <ClInclude Include="Engine\object\core\Particle.h" />

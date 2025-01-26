@@ -40,19 +40,19 @@ void ShadowRenderer::Init(std::function<void()> func) {
 
 	// PSOを生成
 	normal_.pso.Init(normal_.root)
-		.SetVertexShader("ShadowMap.VS.hlsl")
+		.SetSystemVS("ShadowMap.VS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
 		.Build();
 	rigid_.pso.Init(rigid_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/ShadowMap.MS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/ShadowMap.MS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
 		.Build();
 	skinning_.pso.Init(skinning_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/SkinningShadowMap.MS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/SkinningShadowMap.MS.hlsl")
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT, D3D12_FILL_MODE_SOLID)
 		.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
 		.Build();

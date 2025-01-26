@@ -20,8 +20,8 @@ void Bloom::Init() {
 		.Build();
 	brightnessFilter.pso.Init(brightnessFilter.root)
 		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/bloom/BrightnessFilter.PS.hlsl")
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/bloom/BrightnessFilter.PS.hlsl")
 		.Build();
 	// X軸ガウシアンブラー
 	gaussX.root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
@@ -29,15 +29,15 @@ void Bloom::Init() {
 		.Build();
 	gaussX.pso.Init(gaussX.root)
 		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/bloom/GaussianBlurX.PS.hlsl")
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/bloom/GaussianBlurX.PS.hlsl")
 		.Build();
 	// Y軸ガウシアンブラー
 	gaussY.Init(gaussX.root)
 		.SetDepthStencilState(false)
 		.SetBlendState(PSO::BlendMode::Add)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/bloom/GaussianBlurY.PS.hlsl")
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/bloom/GaussianBlurY.PS.hlsl")
 		.Build();
 }
 void Bloom::Update() {

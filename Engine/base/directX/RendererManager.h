@@ -6,6 +6,7 @@
 #include "renderer/PostRenderer.h"
 #include "renderer/CopyRenderer.h"
 #include "renderer/MeshRenderer.h"
+#include "renderer/ParticleRenderer.h"
 #include "renderer/EnvironmentMapRenderer.h"
 #include "renderer/BufferGroup.h"
 
@@ -122,6 +123,7 @@ namespace LWP::Base {
 		void AddTarget(const D3D12_GPU_VIRTUAL_ADDRESS& view, BackBuffer* back, DepthStencil* depth) { 
 			normalRender_.AddTarget({ view, back, depth });
 			meshRenderer_.AddTarget({ view, back, depth });
+			particleRenderer_.AddTarget({ view, back, depth });
 		}
 		/// <summary>
 		/// スプライトを描画するターゲット
@@ -182,6 +184,19 @@ namespace LWP::Base {
 		/// <param name="src">コピー元のリソース</param>
 		/// <param name="dst">コピー先のリソース</param>
 		void AddCopyTask(RenderResource* src, RenderResource* dst) { copyRenderer_.AddTarget({src, dst}); }
+#pragma endregion
+
+#pragma region GPUパーティクル
+	private:
+		// レンダラー
+		ParticleRenderer particleRenderer_;
+	public:
+		/// <summary>
+		/// GPUパーティクルクラスをセット
+		/// </summary>
+		/// <param name="src">コピー元のリソース</param>
+		/// <param name="dst">コピー先のリソース</param>
+		void AddParticle(Object::GPUParticle* p) { particleRenderer_.AddParticle(p); }
 #pragma endregion
 	};
 }

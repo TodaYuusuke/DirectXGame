@@ -35,7 +35,7 @@ namespace LWP::Utility {
 
 		// コンストラクタ内でインスタンスを配列に登録
 		ISingleton() { Singleton::ptrs_.push_back(this); }
-		// デストラクタ内でインスタンスを配列に登録
+		// デストラクタ内でインスタンスを配列から削除
 		virtual ~ISingleton() {
 			for (auto itr = Singleton::ptrs_.begin(); itr != Singleton::ptrs_.end(); itr++) {
 				// 一致するアドレスを検索
@@ -89,3 +89,36 @@ namespace LWP::Utility {
 	template<typename T>
 	T* ISingleton<T>::instance_ = nullptr;
 }
+
+/// <summary>
+/// 継承してシングルトンを作るクラス
+/// <para>【継承先で必要なこと（実装例はGPUDeviceを参照）】</para>
+/// <para>１．コンストラクタをプライベートに</para>
+/// <para>２．テンプレートに自身のクラスを渡す</para>
+/// <para>３．コンストラクタをこっちで呼び出すためにフレンドクラスにしてもらう</para>
+/// </summary>
+template<typename T>
+class ISingleton : public Singleton::DeleteObj {
+public: // ** メンバ関数 ** //
+
+	// コピーコンストラクタ削除
+	ISingleton(const ISingleton&) = delete;
+	ISingleton& operator=(const ISingleton&) = delete;
+	// ムーブコンストラクタ削除
+	ISingleton(ISingleton&&) = delete;
+	ISingleton& operator=(ISingleton&&) = delete;
+
+	/// <summary>
+	/// インスタンスのポインタを受け取る関数
+	/// </summary>
+	static T* GetInstance() {
+		assert(instance_);	// インスタンスがないのでエラー
+		return instance_;
+	}
+
+
+protected: // ** メンバ変数 ** //
+
+	// インスタンス
+	static T* instance_;
+};

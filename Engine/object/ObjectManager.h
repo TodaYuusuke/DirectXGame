@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Camera.h"
+#include "core/GPUParticle.h"
 #include "core/Particle.h"
 #include "core/Terrain.h"
 #include "core/light/DirectionLight.h"

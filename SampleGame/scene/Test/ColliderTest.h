@@ -20,6 +20,8 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// 地形データ
 	Field field_;
 
+	LWP::Object::GPUParticle particle_;
+
 	LWP::Resource::StaticModel mesh;
 	LWP::Object::Collision meshCol;
 	LWP::Object::Collision aabbCol;

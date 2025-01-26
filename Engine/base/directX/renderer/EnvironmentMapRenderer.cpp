@@ -74,18 +74,18 @@ void EnvironmentMapRenderer::Init(std::function<void()> func) {
 
 	// PSOを生成
 	rigid_.pso.Init(rigid_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/Meshlet.MS.hlsl")
-		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/Meshlet.MS.hlsl")
+		.SetSystemPS("ms/Meshlet.PS.hlsl")
 		.Build();
 	skinning_.pso.Init(skinning_.root, PSO::Type::Mesh)
-		.SetAmpShader("ms/Meshlet.AS.hlsl")
-		.SetMeshShader("ms/Skinning.MS.hlsl")
-		.SetPixelShader("ms/Meshlet.PS.hlsl")
+		.SetSystemAS("ms/Meshlet.AS.hlsl")
+		.SetSystemMS("ms/Skinning.MS.hlsl")
+		.SetSystemPS("ms/Meshlet.PS.hlsl")
 		.Build();
 	static_.pso.Init(static_.root, PSO::Type::Mesh)
-		.SetMeshShader("ms/static/Normal.MS.hlsl")
-		.SetPixelShader("ms/static/Normal.PS.hlsl")
+		.SetSystemMS("ms/static/Normal.MS.hlsl")
+		.SetSystemPS("ms/static/Normal.PS.hlsl")
 		.Build();
 }
 

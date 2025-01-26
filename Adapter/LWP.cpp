@@ -159,7 +159,7 @@ void Engine::DebugGUI() {
 		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->worldTF);
 		frameTracker_->DebugGUI();
 #else
-		debugTimer_.DebugGUI();
+		frameTracker_->DebugGUI();
 #endif
 		ImGui::EndTabBar();
 	}

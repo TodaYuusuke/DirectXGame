@@ -109,4 +109,7 @@
     <ClInclude Include="scene\Test\ParticleTest.h" />
     <ClInclude Include="scene\Test\TextureLoadTest.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\system\shaders\utility\Particle.hlsli" />
+  </ItemGroup>
 </Project>

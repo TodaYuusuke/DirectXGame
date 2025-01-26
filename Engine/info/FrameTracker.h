@@ -3,6 +3,8 @@
 
 #include "utility/Singleton.h"
 
+#include "base/directX/resource/data/ConstantBuffer.h"
+
 namespace LWP::Information {
 	/// <summary>
 	/// FPSを管理するクラス
@@ -43,6 +45,9 @@ namespace LWP::Information {
 		// ImGuiを用いて情報表示
 		void DebugGUI();
 
+		// バッファーのViewを取得
+		D3D12_GPU_VIRTUAL_ADDRESS GetPreFrameBufferView() { return preFrame_.GetGPUView(); }
+
 
 	private: // ** メンバ定数 ** //
 		
@@ -76,5 +81,12 @@ namespace LWP::Information {
 
 		// デルタタイムに掛ける係数
 		float deltaFactor = 1.0f;
+
+		// 1フレームの情報を格納したコンスタントバッファー
+		struct PerFrame {
+			float time;	// ゲームを起動してからの時間
+			float deltaTime;	// 1フレームの経過時間
+		};
+		Base::ConstantBuffer<PerFrame> preFrame_;
 	};
 }

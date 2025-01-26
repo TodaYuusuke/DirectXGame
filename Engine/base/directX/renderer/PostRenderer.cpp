@@ -14,8 +14,8 @@ void PostRenderer::Init(RootSignature* root, std::function<void()> func) {
 
 	// PSOを生成
 	sprite_.pso.Init(*root)
-		.SetVertexShader("Object3d.VS.hlsl")
-		.SetPixelShader("Object3d.PS.hlsl")
+		.SetSystemVS("Object3d.VS.hlsl")
+		.SetSystemPS("Object3d.PS.hlsl")
 		.Build();
 
 	// 関数セット

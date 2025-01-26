@@ -21,21 +21,21 @@ void NormalRenderer::Init(RootSignature* root, std::function<void()> func) {
 
 	// PSOを生成
 	normal_.pso.Init(*root)
-		.SetVertexShader("Object3d.VS.hlsl")
-		.SetPixelShader("Object3d.PS.hlsl")
+		.SetSystemVS("Object3d.VS.hlsl")
+		.SetSystemPS("Object3d.PS.hlsl")
 		.Build();
 	wireframe_.pso.Init(*root)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
-		.SetVertexShader("Object3d.VS.hlsl")
-		.SetPixelShader("Object3d.PS.hlsl")
+		.SetSystemVS("Object3d.VS.hlsl")
+		.SetSystemPS("Object3d.PS.hlsl")
 		.Build();
 	billboard2D_.pso.Init(*root)
-		.SetVertexShader("Billboard2D.VS.hlsl")
-		.SetPixelShader("Billboard.PS.hlsl")
+		.SetSystemVS("Billboard2D.VS.hlsl")
+		.SetSystemPS("Billboard.PS.hlsl")
 		.Build();
 	billboard3D_.pso.Init(*root)
-		.SetVertexShader("Billboard3D.VS.hlsl")
-		.SetPixelShader("Billboard.PS.hlsl")
+		.SetSystemVS("Billboard3D.VS.hlsl")
+		.SetSystemPS("Billboard.PS.hlsl")
 		.Build();
 
 	// 関数セット

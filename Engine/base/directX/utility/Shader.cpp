@@ -150,7 +150,7 @@ PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode)
 	}
 	return *this;
 }
-PSO& PSO::SetAS(std::string filePath) {
+PSO& PSO::SetAmpShader(std::string filePath) {
 	// Mesh以外ならセットしないのでエラー
 	assert(type_ == Type::Mesh);
 	// 空ならコンパイルしない
@@ -158,15 +158,14 @@ PSO& PSO::SetAS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"as_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"as_6_5");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.mesh.AS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetSystemAS(std::string filePath) { return SetAS(kDirectoryPath + filePath); }
-PSO& PSO::SetMS(std::string filePath) {
+PSO& PSO::SetMeshShader(std::string filePath) {
 	// Mesh以外ならセットしないのでエラー
 	assert(type_ == Type::Mesh);
 	// 空ならコンパイルしない
@@ -174,15 +173,14 @@ PSO& PSO::SetMS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ms_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ms_6_5");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.mesh.MS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetSystemMS(std::string filePath) { return SetMS(kDirectoryPath + filePath); }
-PSO& PSO::SetCS(std::string filePath) {
+PSO& PSO::SetComputeShader(std::string filePath) {
 	// Compute以外ならセットしないのでエラー
 	assert(type_ == Type::Compute);
 	// 空ならコンパイルしない
@@ -190,15 +188,14 @@ PSO& PSO::SetCS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"cs_6_6");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_6");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.compute.CS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetSystemCS(std::string filePath) { return SetCS(kDirectoryPath + filePath); }
-PSO& PSO::SetVS(std::string filePath) {
+PSO& PSO::SetVertexShader(std::string filePath) {
 	// Vertex以外ならセットしないのでエラー
 	assert(type_ == Type::Vertex);
 	// 空ならコンパイルしない
@@ -206,21 +203,20 @@ PSO& PSO::SetVS(std::string filePath) {
 	
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"vs_6_0");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"vs_6_0");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.vertex.VS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetSystemVS(std::string filePath) { return SetVS(kDirectoryPath + filePath); }
-PSO& PSO::SetPS(std::string filePath) {
+PSO& PSO::SetPixelShader(std::string filePath) {
 	// 空ならコンパイルしない
 	if (filePath.empty()) { return *this; }
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ps_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ps_6_5");
 	assert(blob != nullptr);
 
 	// セット
@@ -233,7 +229,6 @@ PSO& PSO::SetPS(std::string filePath) {
 
 	return *this;
 }
-PSO& PSO::SetSystemPS(std::string filePath) { return SetPS(kDirectoryPath + filePath); }
 PSO& PSO::SetDepthStencilState(bool enable) {
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	depthStencilDesc.DepthEnable = enable; // Depthの機能を有効化する

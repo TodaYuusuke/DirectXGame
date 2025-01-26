@@ -103,8 +103,8 @@ float32_t4 main(PSInput input) : SV_TARGET {
 	// シェーダーファイルを元にPSOを作成
 	pso_.Init(root_)
 		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/temp.PS.hlsl")
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/temp.PS.hlsl")
 		.Build();
 }
 
@@ -121,8 +121,8 @@ void PostProcessor::CreatePSO(std::string filePath) {
 	// PSO生成
 	pso_.Init(root_)
 		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader(filePath)
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS(filePath)
 		.Build();
 }
 
