@@ -53,6 +53,10 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 		.SetSystemAS("ms/Particle.AS.hlsl")
 		.SetSystemMS("ms/Particle.MS.hlsl")
 		.SetSystemPS("ms/Particle.PS.hlsl")
+		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
+		.Build();
+	renderingWirePSO_.Copy(renderingShader_.pso);	// PSOをコピー
+	renderingWirePSO_.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
 		.Build();
 }
 

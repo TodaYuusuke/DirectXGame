@@ -25,6 +25,15 @@ namespace LWP::Base {
 			Multiply,
 			Screen
 		};
+		// 設定
+		union Desc {
+			D3D12_GRAPHICS_PIPELINE_STATE_DESC vertex{};
+			D3D12_COMPUTE_PIPELINE_STATE_DESC compute;
+			D3DX12_MESH_SHADER_PIPELINE_STATE_DESC mesh;
+
+			Desc() {};
+			~Desc() {};
+		};
 
 
 	public: // **　メンバ関数 ** //
@@ -48,14 +57,24 @@ namespace LWP::Base {
 		PSO& SetSystemVS(std::string filePath);
 		PSO& SetPS(std::string filePath);
 		PSO& SetSystemPS(std::string filePath);
-		PSO& SetDepthStencilState(bool enable);
+		PSO& SetDepthState(bool enable);
+		PSO& SetStencilState(bool enable,
+			D3D12_DEPTH_STENCILOP_DESC front = D3D12_DEPTH_STENCILOP_DESC(),
+			D3D12_DEPTH_STENCILOP_DESC back = D3D12_DEPTH_STENCILOP_DESC());
 		PSO& SetDSVFormat(DXGI_FORMAT format);
 		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
 		void Build();
 
+		// PSOの設定をコピーする関数
+		void Copy(const PSO& source);
+
 		// PipelineStateを受け取る関数
 		ID3D12PipelineState* GetState() { return state_.Get(); }
 
+		// コピー用の処理
+		Type GetType() const { return type_; }
+		// コピー用の詳細
+		Desc GetDesc() const { return desc_; }
 
 	private: // ** メンバ変数 ** //
 		// グラフィックパイプラインの状態を定義
@@ -63,14 +82,7 @@ namespace LWP::Base {
 		// PSOの種類
 		Type type_ = Type::Vertex;
 		// PSOの詳細
-		union Desc {
-			D3D12_GRAPHICS_PIPELINE_STATE_DESC vertex{};
-			D3D12_COMPUTE_PIPELINE_STATE_DESC compute;
-			D3DX12_MESH_SHADER_PIPELINE_STATE_DESC mesh;
-
-			Desc() {};
-			~Desc() {};
-		}desc_;
+		Desc desc_;
 
 		// ディレクトリパス
 		const std::string kDirectoryPath = "resources/system/shaders/";

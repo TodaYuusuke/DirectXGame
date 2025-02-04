@@ -21,11 +21,18 @@ void main(
 {
     // Meshlet取得
     Meshlet meshlet = mMeshlets[meshPayload.groupID];
-
+    
+    // パーティクルがfalseなら出力しない
+    uint32_t vertexCount = sParticle[gid].isActive ? meshlet.VertCount : 0;
+    uint32_t primitiveCount = sParticle[gid].isActive ? meshlet.PrimCount : 0;
+    
     // メッシュレット出力数を求める
-    SetMeshOutputCounts(meshlet.VertCount, meshlet.PrimCount);
+    SetMeshOutputCounts(vertexCount, primitiveCount);
+    
+    // 早期リターン
+    if (!sParticle[gid].isActive) { return; }
 
-    if (gtid < meshlet.VertCount && sParticle[gid].isActive) {
+    if (gtid < meshlet.VertCount) {
         // 頂点インデックスの取得
         uint32_t vertexIndex = GetVertexIndex(meshlet, gtid);
         

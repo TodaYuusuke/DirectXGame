@@ -19,7 +19,7 @@ void Bloom::Init() {
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
 		.Build();
 	brightnessFilter.pso.Init(brightnessFilter.root)
-		.SetDepthStencilState(false)
+		.SetDepthState(false)
 		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
 		.SetSystemPS("postProcess/bloom/BrightnessFilter.PS.hlsl")
 		.Build();
@@ -28,13 +28,13 @@ void Bloom::Init() {
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
 		.Build();
 	gaussX.pso.Init(gaussX.root)
-		.SetDepthStencilState(false)
+		.SetDepthState(false)
 		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
 		.SetSystemPS("postProcess/bloom/GaussianBlurX.PS.hlsl")
 		.Build();
 	// Y軸ガウシアンブラー
 	gaussY.Init(gaussX.root)
-		.SetDepthStencilState(false)
+		.SetDepthState(false)
 		.SetBlendState(PSO::BlendMode::Add)
 		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
 		.SetSystemPS("postProcess/bloom/GaussianBlurY.PS.hlsl")

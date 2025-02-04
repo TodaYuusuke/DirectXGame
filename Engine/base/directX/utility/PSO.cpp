@@ -234,19 +234,46 @@ PSO& PSO::SetPS(std::string filePath) {
 	return *this;
 }
 PSO& PSO::SetSystemPS(std::string filePath) { return SetPS(kDirectoryPath + filePath); }
-PSO& PSO::SetDepthStencilState(bool enable) {
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	depthStencilDesc.DepthEnable = enable; // Depthの機能を有効化する
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
+PSO& PSO::SetDepthState(bool enable) {
+	D3D12_DEPTH_STENCIL_DESC depthDesc{};
+	// 受け取る
+	if (type_ == Type::Vertex) { depthDesc = desc_.vertex.DepthStencilState; }
+	else if (type_ == Type::Mesh) { depthDesc = desc_.mesh.DepthStencilState; }
+
+	depthDesc.DepthEnable = enable; // Depthの機能を有効化する
+	depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
+	depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
 	
 	// セット
-	if (type_ == Type::Vertex) {
-		desc_.vertex.DepthStencilState = depthStencilDesc;
-	}
-	else if (type_ == Type::Mesh) {
-		desc_.mesh.DepthStencilState = depthStencilDesc;
-	}
+	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = depthDesc; }
+	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = depthDesc; }
+	return *this;
+}
+PSO& PSO::SetStencilState(bool enable,
+	D3D12_DEPTH_STENCILOP_DESC front, D3D12_DEPTH_STENCILOP_DESC back) {
+	D3D12_DEPTH_STENCIL_DESC stencilDesc{};
+	// 受け取る
+	if (type_ == Type::Vertex) { stencilDesc = desc_.vertex.DepthStencilState; }
+	else if (type_ == Type::Mesh) { stencilDesc = desc_.mesh.DepthStencilState; }
+
+	// StencilOP_Descの詳細
+	// D3D12_STENCIL_OP StencilFailOp;		// ステンシルテストが失敗した時の動作
+	// D3D12_STENCIL_OP StencilDepthFailOp; // 深度テストが失敗した時の動作
+	// D3D12_STENCIL_OP StencilPassOp;		// ステンシル＆深度テストが成功した時の動作
+	// D3D12_COMPARISON_FUNC StencilFunc;	// ステンシルテストの比較関数
+	
+	// ステンシルテスト
+	stencilDesc.StencilEnable = enable;
+	stencilDesc.StencilReadMask = 0xFF;
+	stencilDesc.StencilWriteMask = 0xFF;
+	// ステンシルテスト（前面ポリゴン）の設定
+	stencilDesc.FrontFace = front;
+	// ステンシルテスト（背面ポリゴン）の設定
+	stencilDesc.BackFace = back;
+
+	// セット
+	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = stencilDesc; }
+	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = stencilDesc; }
 	return *this;
 }
 PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
@@ -294,6 +321,15 @@ void PSO::Build() {
 		hr = device->CreatePipelineState(&streamDesc, IID_PPV_ARGS(&state_));
 	}
 	assert(SUCCEEDED(hr));
+}
+
+void PSO::Copy(const PSO& source) {
+	// タイプをコピー
+	type_ = source.GetType();
+	// 詳細をコピー
+	desc_ = source.GetDesc();
+	// ビルド
+	Build();
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {

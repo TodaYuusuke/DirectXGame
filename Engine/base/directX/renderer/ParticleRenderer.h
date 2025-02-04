@@ -1,6 +1,6 @@
 #pragma once
 #include "IRenderer.h"
-#include "base/directX/resource/rendering/BackBuffer.h"
+#include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
 
 #include "object/core/GPUParticle.h"
@@ -65,17 +65,22 @@ namespace LWP::Base {
 			PSO pso;
 		};
 
-		// 初期化用
-		Property initShader_;
-		// レンダリング用
-		Property renderingShader_;
+		
+		Property initShader_;	// 初期化用
+		Property renderingShader_;	// 描画用
+		PSO renderingWirePSO_;	// 描画（ワイヤーフレーム）用
 
 		// ターゲット配列
 		std::vector<Target> target_;
-		
 		// 描画に使うGPUパーティクル
 		std::vector<Object::GPUParticle*> particles_;
 
+		// ** 当たり判定用のリソース ** //
+
+		// パーティクルのID書き込み用
+		RenderResource render_;
+		// 検証用深度
+		DepthStencil depth_;
 
 	private: // ** プライベートなメンバ関数 ** //
 
