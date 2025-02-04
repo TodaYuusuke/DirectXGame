@@ -6,8 +6,15 @@
 
 class ColliderTest final
 	: public IScene {
-public:
-	//*** 純粋仮想関数の実体宣言 ***//
+public:	// ** メンバ関数 ** //
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	ColliderTest();
+
+
+public:	// ** 純粋仮想関数の実体宣言 ** //
 
 	// 初期化
 	void Initialize() override;

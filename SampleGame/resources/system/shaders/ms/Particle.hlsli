@@ -1,10 +1,6 @@
 #include "MSStruct.hlsli"
 #include "../utility/Particle.hlsli"
 
-struct ParticleSize {
-    uint32_t s;
-};
-
 // CommonBuffers
 ConstantBuffer<CommonData> cCommonData : register(b1);
 ConstantBuffer<Camera> cCamera : register(b2);

@@ -60,10 +60,15 @@ namespace LWP::Base {
 		// Commandのポインタを保持
 		Command* cmd_;
 
-		// パーティクルレンダリング用のRootSignature
-		RootSignature root_;
-		// PSO
-		PSO pso_;
+		struct Property {
+			RootSignature root;
+			PSO pso;
+		};
+
+		// 初期化用
+		Property initShader_;
+		// レンダリング用
+		Property renderingShader_;
 
 		// ターゲット配列
 		std::vector<Target> target_;

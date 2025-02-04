@@ -20,7 +20,9 @@ namespace LWP::Object {
 			Math::Vector3 translate = { 0.0f,0.0f,0.0f };
 			Math::Vector3 scale = { 0.0f,0.0f,0.0f };
 			Math::Vector3 velocity = { 0.0f,0.0f,0.0f };
+			Math::Vector4 color;
 			float lifeTime = 0;
+			uint32_t isActive;	// 生存フラグ
 		};
 		struct EmitterSphere {
 			Math::Vector3 position;	// 位置
@@ -37,8 +39,15 @@ namespace LWP::Object {
 
 	public: // ** メンバ関数 ** //
 
-		// コンストラクタ
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
 		GPUParticle();
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		/// <param name="capacityMultiply">パーティクル最大量の倍率</param>
+		GPUParticle(int capacityMultiply);
 
 		// 初期化
 		void Initialize() override final;
@@ -46,9 +55,9 @@ namespace LWP::Object {
 		void Update(Base::RendererManager* manager) override final;
 
 		// パーティクルを追加
-		void Add(int value);
+		void Add(uint32_t value);
 		// パーティクルを追加（座標指定）
-		void Add(int value, LWP::Math::Vector3 position);
+		void Add(uint32_t value, LWP::Math::Vector3 position);
 		// シェーダーを設定
 		void SetShaderPath(std::string emitter, std::string update);
 
@@ -66,6 +75,12 @@ namespace LWP::Object {
 		D3D12_GPU_VIRTUAL_ADDRESS GetCountView() { return count_.GetGPUView(); }
 		D3D12_GPU_DESCRIPTOR_HANDLE GetUAVDataView() { return data_.GetUAVGPUView(); }
 		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVDataView() { return data_.GetSRVGPUView(); }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetFreeListIndexView() { return freeListIndex_.GetUAVGPUView(); }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetFreeListView() { return freeList_.GetUAVGPUView(); }
+
+		int GetMultiply() { return multiply; }
+		bool GetIsInit() { return isInit; }
+		void ClearIsInit() { isInit = false; }
 
 		/// <summary>
 		/// リソースバリアを貼らせる処理
@@ -85,8 +100,16 @@ namespace LWP::Object {
 		Base::ConstantBuffer<EmitterSphere> emitterSphere_;
 		// パーティクルのデータ
 		Base::RWStructuredBuffer<Data> data_;
+		// パーティクルの未使用インデックスカウンター
+		Base::RWStructuredBuffer<int> freeListIndex_;
+		Base::RWStructuredBuffer<uint32_t> freeList_;
 		// パーティクルの数
 		Base::ConstantBuffer<uint32_t> count_;
+
+		// パーティクルの最大数
+		int multiply = 1;
+		// 初期化命令を出すフラグ
+		bool isInit = true;
 
 		// ディレクトリパス
 		const std::string kDirectoryPath = "resources/shaders/particle/";

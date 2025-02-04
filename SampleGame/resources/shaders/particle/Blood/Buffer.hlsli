@@ -4,4 +4,7 @@
 
 ConstantBuffer<PerFrame> cPerFrame : register(b0);
 ConstantBuffer<EmitterSphere> cEmitter : register(b1);
+ConstantBuffer<ParticleSize> cParticleSize : register(b2);
 RWStructuredBuffer<ParticleData> rParticleData : register(u0);
+RWStructuredBuffer<int32_t> rFreeListIndex : register(u1);
+RWStructuredBuffer<uint32_t> rFreeList : register(u2);

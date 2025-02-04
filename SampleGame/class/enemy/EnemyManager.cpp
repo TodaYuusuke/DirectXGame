@@ -8,14 +8,16 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace LWP::Info;
 
+EnemyManager::EnemyManager() : PBlood_(5) {
+
+}
 void EnemyManager::Init(LevelData* level, Player* player) {
 	// ポインタを保持
 	player_ = player;
 
 	// パーティクル初期設定
 	PBlood_.model.LoadCube();
-	PBlood_.model.worldTF.scale = { 0.05f, 0.05f ,0.05f };
-	PBlood_.model.materials["Material"].color = ColorPattern::RED;
+	PBlood_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl");
 	PDeadBody_.model.LoadCube();
 	PDeadBody_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
 	PDeadBody_.model.materials["Material"].color = Color(0.463f, 0.592f, 0.318f, 1.0f);
@@ -92,7 +94,7 @@ void EnemyManager::Spawn() {
 	Enemy* e = new Enemy(waveData_[wave_].kSpeedMultiply);
 	e->Init(spawnPoint_[wave_][sp].curve, player_,
 		[this](Vector3 pos) {
-			PBlood_.Add(kParticleSize_, (pos));
+			PBlood_.Add(512, (pos));
 			PDeadBody_.Add(kParticleSize_, (pos));
 		}
 	);	// 死亡時のパーティクルを生成する関数を渡す

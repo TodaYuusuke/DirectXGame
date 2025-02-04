@@ -15,8 +15,19 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 	cmd_ = cmd;
 	setViewFunction_ = func;	// 関数セット
 
-	// RootSignatureを生成
-	root_.AddTableParameter(0, SV_All)	// メッシュレット
+	// 初期化用RootSignatureを生成
+	initShader_.root.AddCBVParameter(0, SV_All)
+		.AddUAVParameter(0, SV_All)	// パーティクルデータ
+		.AddUAVParameter(1, SV_All)	// FreeListIndex
+		.AddUAVParameter(2, SV_All)	// FreeList
+		.Build();
+	// 初期化用PSOを生成
+	initShader_.pso.Init(initShader_.root, PSO::Type::Compute)
+		.SetSystemCS("ms/ParticleInit.CS.hlsl")
+		.Build();
+
+	// 描画用RootSignatureを生成
+	renderingShader_.root.AddTableParameter(0, SV_All)	// メッシュレット
 		.AddTableParameter(1, SV_All)	// 頂点
 		.AddTableParameter(2, SV_All)	// ユニークポインタ
 		.AddTableParameter(3, SV_All)	// プリミティブインデックス
@@ -37,8 +48,8 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
 		.Build();
-	// パーティクル描画用PSOを生成
-	pso_.Init(root_, PSO::Type::Mesh)
+	// 描画用PSOを生成
+	renderingShader_.pso.Init(renderingShader_.root, PSO::Type::Mesh)
 		.SetSystemAS("ms/Particle.AS.hlsl")
 		.SetSystemMS("ms/Particle.MS.hlsl")
 		.SetSystemPS("ms/Particle.PS.hlsl")
@@ -52,12 +63,29 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { SRV::GetInstance()->GetHeap() };
 	list->SetDescriptorHeaps(1, descriptorHeaps);
 	for (GPUParticle* p : particles_) {
+		// 初期化が必要かチェック
+		if (p->GetIsInit()) {
+			// 初期化
+			list->SetComputeRootSignature(initShader_.root);
+			list->SetPipelineState(initShader_.pso.GetState());
+			list->SetComputeRootConstantBufferView(0, p->GetCountView());
+			list->SetComputeRootDescriptorTable(1, p->GetUAVDataView());
+			list->SetComputeRootDescriptorTable(2, p->GetFreeListIndexView());
+			list->SetComputeRootDescriptorTable(3, p->GetFreeListView());
+			list->Dispatch(p->GetMultiply(), 1, 1);	// 1回実行する
+
+			p->ClearIsInit();	// 初期化フラグをfalseに
+		}
+		
 		// 生成処理
 		list->SetComputeRootSignature(*p->GetRoot());
 		list->SetPipelineState(p->GetEmitterPSO()->GetState());
 		list->SetComputeRootConstantBufferView(0, FrameTracker::GetInstance()->GetPreFrameBufferView());
 		list->SetComputeRootConstantBufferView(1, p->GetEmitterView());
-		list->SetComputeRootDescriptorTable(2, p->GetUAVDataView());
+		list->SetComputeRootConstantBufferView(2, p->GetCountView());
+		list->SetComputeRootDescriptorTable(3, p->GetUAVDataView());
+		list->SetComputeRootDescriptorTable(4, p->GetFreeListIndexView());
+		list->SetComputeRootDescriptorTable(5, p->GetFreeListView());
 		list->Dispatch(1, 1, 1);	// 1回実行する
 
 		// 依存関係を設定
@@ -65,11 +93,11 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 
 		// 更新処理
 		list->SetPipelineState(p->GetUpdatePSO()->GetState());
-		list->Dispatch(1, 1, 1);	// 1回実行する
+		list->Dispatch(p->GetMultiply(), 1, 1);	// 倍率回実行する
 
 		// 描画処理（ターゲット分ループする）
-		list->SetGraphicsRootSignature(root_);	// 描画用のRootとPSOに変更
-		list->SetPipelineState(pso_.GetState());
+		list->SetGraphicsRootSignature(renderingShader_.root);	// 描画用のRootとPSOに変更
+		list->SetPipelineState(renderingShader_.pso.GetState());
 		for (std::vector<Target>::iterator it = target_.begin(); it != target_.end(); ++it) {
 
 			// 描画先のRTVとDSVを設定する
@@ -147,7 +175,7 @@ void ParticleRenderer::DispatchAllParticle(ID3D12GraphicsCommandList6* list, GPU
 	list->SetGraphicsRootConstantBufferView(8, p->GetCountView());
 	list->SetGraphicsRootDescriptorTable(9, p->GetSRVDataView());
 	list->SetGraphicsRootDescriptorTable(10, data->buffers_.materials->GetGPUView());
-	//list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());
+	//list->SetGraphicsRootDescriptorTable(5, f.solid.buffer.inst->GetGPUView());	
 	//list->SetGraphicsRootDescriptorTable(8, f.solid.buffer.material->GetGPUView());
 
 	// メッシュレットのプリミティブ数分メッシュシェーダーを実行

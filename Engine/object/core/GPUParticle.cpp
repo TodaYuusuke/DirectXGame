@@ -5,25 +5,32 @@
 using namespace LWP::Object;
 using namespace LWP::Base;
 
-GPUParticle::GPUParticle() : data_(1024) {
+GPUParticle::GPUParticle() : GPUParticle(multiply) {}
+GPUParticle::GPUParticle(int capacityMultiply) : data_(1024 * capacityMultiply), freeListIndex_(1), freeList_(1024 * capacityMultiply) {
 	Initialize();
+	multiply = capacityMultiply;
+	*count_.data_ = 1024 * multiply;
 }
 
 void GPUParticle::Initialize() {
 	emitterSphere_.Init();
 	data_.Init();
+	freeListIndex_.Init();
+	freeList_.Init();
 	count_.Init();
+
+	model.isActive = false;
 }
 void GPUParticle::Update(Base::RendererManager* manager) {
 	if (!isActive) { return; }
 	manager->AddParticle(this);
 }
 
-void GPUParticle::Add(int value) {
+void GPUParticle::Add(uint32_t value) {
 	emitterSphere_.data_->count = value;
 	emitterSphere_.data_->emit = true;
 }
-void GPUParticle::Add(int value, LWP::Math::Vector3 position) {
+void GPUParticle::Add(uint32_t value, LWP::Math::Vector3 position) {
 	emitterSphere_.data_->position = position;
 	Add(value);
 }
@@ -43,7 +50,10 @@ void GPUParticle::DebugGUI() {
 void GPUParticle::SetShaderPath(std::string emitter, std::string update) {
 	root_.AddCBVParameter(0,  SV_All)
 		.AddCBVParameter(1, SV_All)
+		.AddCBVParameter(2, SV_All)
 		.AddUAVParameter(0, SV_All)	// 書き込むリソース
+		.AddUAVParameter(1, SV_All)	// FreeListIndex
+		.AddUAVParameter(2, SV_All)	// FreeList
 		.Build();
 	emitterPSO_.Init(root_, PSO::Type::Compute)
 		.SetCS(kDirectoryPath + emitter)

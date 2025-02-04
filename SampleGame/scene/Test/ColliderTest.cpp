@@ -8,6 +8,8 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Object;
 
+ColliderTest::ColliderTest() : particle_(5) {}
+
 // 初期化
 void ColliderTest::Initialize() {
 	// 地形初期化
@@ -34,14 +36,13 @@ void ColliderTest::Initialize() {
 	aabbCol.name = "aabb";
 	aabbCol.isMove = true;
 
-	particle_.SetShaderPath("DeadBody/Emitter.CS.hlsl", "DeadBody/Update.CS.hlsl");
 	particle_.model.LoadCube();
+	particle_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl");
 }
 
 // 更新
 void ColliderTest::Update() {
-	ImGui::Begin("Test");
-	ImGui::Text("point morton : %d", pointCol.GetMortonNumber());
-	ImGui::Text("aabb morton : %d", aabbCol.GetMortonNumber());
-	ImGui::End();
+	if (Input::Keyboard::GetTrigger(DIK_SPACE)) {
+		particle_.Add(512);
+	}
 }
