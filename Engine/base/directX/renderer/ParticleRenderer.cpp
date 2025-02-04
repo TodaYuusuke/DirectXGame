@@ -76,20 +76,25 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 
 			p->ClearIsInit();	// 初期化フラグをfalseに
 		}
-		
-		// 生成処理
+
+		// 必要なバッファを用意
 		list->SetComputeRootSignature(*p->GetRoot());
-		list->SetPipelineState(p->GetEmitterPSO()->GetState());
 		list->SetComputeRootConstantBufferView(0, FrameTracker::GetInstance()->GetPreFrameBufferView());
 		list->SetComputeRootConstantBufferView(1, p->GetEmitterView());
 		list->SetComputeRootConstantBufferView(2, p->GetCountView());
 		list->SetComputeRootDescriptorTable(3, p->GetUAVDataView());
 		list->SetComputeRootDescriptorTable(4, p->GetFreeListIndexView());
 		list->SetComputeRootDescriptorTable(5, p->GetFreeListView());
-		list->Dispatch(1, 1, 1);	// 1回実行する
+		
+		// 生成が必要かチェック
+		if (p->GetIsEmit()) {
+			list->SetPipelineState(p->GetEmitterPSO()->GetState());
+			list->Dispatch(p->GetEmitCount(), 1, 1);	// 必要分実行する
+			p->SetResourceBarrier(list);	// 依存関係を設定
 
-		// 依存関係を設定
-		p->SetResourceBarrier(list);
+			p->ClearIsEmit();	// 初期化フラグをfalseに
+		}
+
 
 		// 更新処理
 		list->SetPipelineState(p->GetUpdatePSO()->GetState());
@@ -145,10 +150,6 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 
 void ParticleRenderer::Reset() {
 	target_.clear();
-	for (GPUParticle* p : particles_) {
-		// エミッターの生成フラグは初期化しておく
-		p->SetResetEmitterFlag();
-	}
 	particles_.clear();
 }
 

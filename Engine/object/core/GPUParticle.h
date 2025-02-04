@@ -27,10 +27,8 @@ namespace LWP::Object {
 		struct EmitterSphere {
 			Math::Vector3 position;	// 位置
 			float radius;	// 射出半径
-			uint32_t count;	// 射出数
 			float frequency;	// 射出間隔
 			float frequencyTime;	// 射出間隔調整用時間
-			uint32_t emit;	// 射出許可
 		};
 
 		// 基準となるモデルクラス
@@ -64,9 +62,6 @@ namespace LWP::Object {
 		// デバッグ用GUI
 		void DebugGUI() override final;
 
-		// エミッターのフラグをfalseに
-		void SetResetEmitterFlag() { emitterSphere_.data_->emit = false; }
-
 		// レンダラー用のGetter
 		Base::RootSignature* GetRoot() { return &root_; }
 		Base::PSO* GetEmitterPSO() { return &emitterPSO_; }
@@ -79,8 +74,11 @@ namespace LWP::Object {
 		D3D12_GPU_DESCRIPTOR_HANDLE GetFreeListView() { return freeList_.GetUAVGPUView(); }
 
 		int GetMultiply() { return multiply; }
+		int GetEmitCount() { return emitCount; }
 		bool GetIsInit() { return isInit; }
 		void ClearIsInit() { isInit = false; }
+		bool GetIsEmit() { return isEmit; }
+		void ClearIsEmit() { isEmit = false; }
 
 		/// <summary>
 		/// リソースバリアを貼らせる処理
@@ -103,13 +101,17 @@ namespace LWP::Object {
 		// パーティクルの未使用インデックスカウンター
 		Base::RWStructuredBuffer<int> freeListIndex_;
 		Base::RWStructuredBuffer<uint32_t> freeList_;
-		// パーティクルの数
+		// パーティクルの最大数
 		Base::ConstantBuffer<uint32_t> count_;
 
-		// パーティクルの最大数
+		// パーティクルの最大数倍率
 		int multiply = 1;
 		// 初期化命令を出すフラグ
 		bool isInit = true;
+		// 生成命令を出すフラグ
+		bool isEmit = false;
+		// 生成する数
+		int emitCount = 0;
 
 		// ディレクトリパス
 		const std::string kDirectoryPath = "resources/shaders/particle/";

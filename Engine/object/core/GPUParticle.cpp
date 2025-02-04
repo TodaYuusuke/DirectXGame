@@ -27,8 +27,8 @@ void GPUParticle::Update(Base::RendererManager* manager) {
 }
 
 void GPUParticle::Add(uint32_t value) {
-	emitterSphere_.data_->count = value;
-	emitterSphere_.data_->emit = true;
+	emitCount = value;
+	isEmit = true;
 }
 void GPUParticle::Add(uint32_t value, LWP::Math::Vector3 position) {
 	emitterSphere_.data_->position = position;
