@@ -9,8 +9,6 @@ namespace LWP::Base {
 		: public IRenderingResource {
 	public: // ** メンバ関数 ** //
 
-		DepthStencil() = default;
-
 		// 初期化
 		void Init() override;
 		// 画面クリア

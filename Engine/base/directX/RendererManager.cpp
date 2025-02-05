@@ -18,7 +18,10 @@ void RendererManager::Init() {
 	commander_.Init(GPUDevice::GetInstance());
 	// コマンドをSRVに渡しておく
 	SRV::GetInstance()->SetCommand(&commander_);
-	
+
+
+	// デフォルトテクスチャ読み込み
+	defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
 	// バッファー達を初期化
 	buffers_.Init();
 	// DXCはデフォルトコンストラクタで初期化済み
@@ -75,9 +78,6 @@ void RendererManager::Init() {
 	ppRender_.Init();
 	// コピーレンダラー初期化
 	copyRenderer_.Init();
-
-	// テクスチャ読み込み
-	defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
 }
 void RendererManager::DrawCall() {
 	// リストをポインタ化

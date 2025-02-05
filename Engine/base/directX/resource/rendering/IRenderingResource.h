@@ -44,6 +44,34 @@ namespace LWP::Base {
 			currentBarrierState = state;
 		}
 
+		/// <summary>
+		/// リソースのビューポートを返す関数
+		/// </summary>
+		/// <returns></returns>
+		D3D12_VIEWPORT GetViewport() {
+			D3D12_VIEWPORT viewport = {};	// ビューポート
+			// クライアント領域のサイズと一緒にして画面全体に表示
+			viewport.Width = static_cast<float>(width);
+			viewport.Height = static_cast<float>(height);
+			viewport.TopLeftX = 0;
+			viewport.TopLeftY = 0;
+			viewport.MinDepth = 0.0f;
+			viewport.MaxDepth = 1.0f;
+			return viewport;
+		}
+		/// <summary>
+		/// リソースのシザー矩形を返す関数
+		/// </summary>
+		/// <returns></returns>
+		D3D12_RECT GetScissorRect() {
+			D3D12_RECT scissorRect = {};
+			// 基本的にビューポートと同じ矩形が構成されるようにする
+			scissorRect.left = 0;
+			scissorRect.right = width;
+			scissorRect.top = 0;
+			scissorRect.bottom = height;
+			return scissorRect;
+		}
 
 	public: // ** パブリックなメンバ変数 ** //
 		

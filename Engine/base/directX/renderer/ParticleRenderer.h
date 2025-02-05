@@ -68,7 +68,6 @@ namespace LWP::Base {
 		
 		Property initShader_;	// 初期化用
 		Property renderingShader_;	// 描画用
-		PSO renderingWirePSO_;	// 描画（ワイヤーフレーム）用
 
 		// ターゲット配列
 		std::vector<Target> target_;
@@ -77,12 +76,24 @@ namespace LWP::Base {
 
 		// ** 当たり判定用のリソース ** //
 
-		// パーティクルのID書き込み用
-		RenderResource render_;
-		// 検証用深度
-		DepthStencil depth_;
+		struct Collider {
+			// パーティクルのID書き込み用
+			RenderResource render;
+			// 検証用深度
+			DepthStencil depthStencil;
+
+			// 辺の描画用PSO
+			PSO wireFrame;
+			// パーティクルの裏面描画用PSO
+			PSO backFace;
+		}collider_;
 
 	private: // ** プライベートなメンバ関数 ** //
+
+		/// <summary>
+		/// パーティクルの当たり判定を検証するための関数
+		/// </summary>
+		void CheckCollision(ID3D12GraphicsCommandList6* list, Object::GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
 
 		/// <summary>
 		/// 全てのモデルをターゲットに描画する関数

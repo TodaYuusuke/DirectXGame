@@ -323,13 +323,13 @@ void PSO::Build() {
 	assert(SUCCEEDED(hr));
 }
 
-void PSO::Copy(const PSO& source) {
+PSO& PSO::Copy(const PSO& source) {
 	// タイプをコピー
 	type_ = source.GetType();
 	// 詳細をコピー
 	desc_ = source.GetDesc();
-	// ビルド
-	Build();
+
+	return *this;
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {

@@ -80,7 +80,7 @@ void FrameTracker::End() {
 
 	// バッファ更新
 	preFrame_.data_->time = static_cast<float>(GetElapsedTimeMS());
-	preFrame_.data_->deltaTime = GetDefaultDeltaTimeF();
+	preFrame_.data_->deltaTime = GetDeltaTimeF();
 }
 
 double FrameTracker::GetFPS() {
