@@ -35,6 +35,11 @@ namespace LWP::Resource {
 		// CatmullRom曲線
 		std::map<std::string, Utility::CatmullRom> catmullRomCurves;
 
+		// プレイヤーのスポーン地点
+		std::map<std::string, Math::Vector3> playerSpawnPoint;
+		// エネミーのスポーン地点
+		std::map<std::string, Math::Vector3> enemySpawnPoint;
+
 		// 地形
 		std::unique_ptr<Object::Terrain> terrain;	// ない場合もあるのでユニークポインタ
 
@@ -146,6 +151,16 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="data"></param>
 		void LoadTerrain(const nlohmann::json& data);
+		/// <summary>
+		/// タイプ：PlayerSpawnを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadPlayerSpawn(const nlohmann::json& data, const std::string& name);
+		/// <summary>
+		/// タイプ：EnemySpawnを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadEnemySpawn(const nlohmann::json& data, const std::string& name);
 
 
 		/// <summary>

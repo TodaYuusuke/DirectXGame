@@ -43,6 +43,7 @@ void LevelData::HotReload() {
 	skinModels.clear();
 	collisions.clear();
 	catmullRomCurves.clear();
+	playerSpawnPoint.clear();
 
 	// ファイルストリーム
 	std::ifstream file;
@@ -130,6 +131,8 @@ void LevelData::LoadObject(const nlohmann::json& data) {
 	else if (type.compare("MESH") == 0) { LoadMesh(data, objName); }
 	// CURVE
 	else if (type.compare("CURVE") == 0) { LoadCurve(data, objName); }
+	// MESH
+	else if (type.compare("PlayerSpawn") == 0) { LoadMesh(data, objName); }
 
 	// もし子がいるならそれも読み込む
 	if(data.contains("children")) {
@@ -222,6 +225,19 @@ void LevelData::LoadTerrain(const nlohmann::json& data) {
 	TransformQuat wtf = LoadWorldTF(data["transform"]);
 	terrain->LoadModel("level/" + data["file_name"].get<std::string>(), wtf);
 }
+void LevelData::LoadPlayerSpawn(const nlohmann::json& data, const std::string& name) {
+	// トランスフォームのパラメータ読み込み
+	TransformQuat wtf = LoadWorldTF(data["transform"]);
+	// データを保存
+	playerSpawnPoint[name] = wtf.GetWorldPosition();
+}
+void LevelData::LoadEnemySpawn(const nlohmann::json& data, const std::string& name) {
+	// トランスフォームのパラメータ読み込み
+	TransformQuat wtf = LoadWorldTF(data["transform"]);
+	// データを保存
+	enemySpawnPoint[name] = wtf.GetWorldPosition();
+}
+
 
 void LevelData::RigidDebugGUI() {
 	// 読み込み済みのモデル一覧
