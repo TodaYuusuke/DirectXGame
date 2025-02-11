@@ -90,7 +90,7 @@ private: // ** メンバ変数 ** //
 	LWP::Object::GPUParticle PBlood_;
 	DeadBodyParticle PDeadBody_;
 	// パーティクルの数
-	int kParticleSize_ = 32 * 2;
+	int kParticleSize_ = 32 * 4;
 
 private: // ** メンバ関数 ** //
 	

@@ -8,7 +8,7 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace LWP::Info;
 
-EnemyManager::EnemyManager() : PBlood_(5) {
+EnemyManager::EnemyManager() : PBlood_(100) {
 
 }
 void EnemyManager::Init(LevelData* level, Player* player) {
@@ -94,7 +94,7 @@ void EnemyManager::Spawn() {
 	Enemy* e = new Enemy(waveData_[wave_].kSpeedMultiply);
 	e->Init(spawnPoint_[wave_][sp].curve, player_,
 		[this](Vector3 pos) {
-			PBlood_.Add(512, (pos));
+			PBlood_.Add(10, (pos));
 			PDeadBody_.Add(kParticleSize_, (pos));
 		}
 	);	// 死亡時のパーティクルを生成する関数を渡す

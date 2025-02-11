@@ -195,7 +195,11 @@ namespace LWP::Config {
 		/// <summary>
 		/// デバッグ用ImGuiの非表示切り替えフラグ
 		/// </summary>
+#if DEMO
 		static bool kIsShowDebugGUI = true;
+#else
+		static bool kIsShowDebugGUI = false;
+#endif
 	}
 };
 

@@ -1,6 +1,6 @@
 #include "Buffer.hlsli"
 
-[numthreads(1, 1, 1)]
+[numthreads(1024, 1, 1)]
 void main(uint32_t3 DTid : SV_DispatchThreadID) {
     RandomGenerator rand; // 乱数
     rand.seed = (DTid + cPerFrame.time) + cPerFrame.time;
@@ -11,8 +11,8 @@ void main(uint32_t3 DTid : SV_DispatchThreadID) {
     // 最大数よりもパーティクルの数が少なければ射出可能
     if (0 <= freeListIndex && freeListIndex < cParticleSize.s) {
         uint32_t particleIndex = rFreeList[freeListIndex];
-            // パーティクルを生成
-        rParticleData[particleIndex].translate = cEmitter.position;
+        // パーティクルを生成
+        rParticleData[particleIndex].translate = cEmitter.position + (rand.Generate3d() * 0.6f - float32_t3(0.3f, 0.3f, 0.3f));
         rParticleData[particleIndex].velocity = rand.Generate3d() - float32_t3(0.5f, 0.5f, 0.5f);
         rParticleData[particleIndex].scale = float32_t3(0.05f, 0.05f, 0.05f);
         rParticleData[particleIndex].color = float32_t4(1.0f, 0.0f, 0.0f, 1.0f);

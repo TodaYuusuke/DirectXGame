@@ -10,9 +10,9 @@ void main(uint32_t3 DTid : SV_DispatchThreadID) {
         // アクティブならば更新
         if (rParticleData[particleIndex].isActive) {
 			// 重力を加算
-            rParticleData[particleIndex].velocity.y += kGravity_ * cPerFrame.deltaTime;
+            rParticleData[particleIndex].velocity.y += kGravity_;
 			// 速度ベクトルを加算
-            rParticleData[particleIndex].translate += rParticleData[particleIndex].velocity * cPerFrame.deltaTime;
+            rParticleData[particleIndex].translate += rParticleData[particleIndex].velocity;
 			// 速度を弱める
             rParticleData[particleIndex].velocity *= 0.99f;
             
