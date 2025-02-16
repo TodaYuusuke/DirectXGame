@@ -58,7 +58,7 @@ namespace LWP::Object {
 		// パーティクルを追加（座標指定）
 		void Add(uint32_t value, LWP::Math::Vector3 position);
 		// シェーダーを設定
-		void SetShaderPath(std::string emitter, std::string update);
+		void SetShaderPath(std::string emitter, std::string update, std::string hit);
 
 		// デバッグ用GUI
 		void DebugGUI() override final;
@@ -67,6 +67,7 @@ namespace LWP::Object {
 		Base::RootSignature* GetRoot() { return &root_; }
 		Base::PSO* GetEmitterPSO() { return &emitterPSO_; }
 		Base::PSO* GetUpdatePSO() { return &updatePSO_; }
+		Base::PSO* GetHitPSO() { return &hitPSO_; }
 		D3D12_GPU_VIRTUAL_ADDRESS GetEmitterView() { return emitterSphere_.GetGPUView(); }
 		D3D12_GPU_VIRTUAL_ADDRESS GetCountView() { return count_.GetGPUView(); }
 		D3D12_GPU_DESCRIPTOR_HANDLE GetUAVDataView() { return data_.GetUAVGPUView(); }
@@ -86,7 +87,8 @@ namespace LWP::Object {
 		/// <summary>
 		/// リソースバリアを貼らせる処理
 		/// </summary>
-		void SetResourceBarrier(ID3D12GraphicsCommandList* list) { data_.SetResourceBarrier(list); }
+		void SetDataBarrier(ID3D12GraphicsCommandList* list) { data_.SetResourceBarrier(list); }
+		void SetHitListBarrier(ID3D12GraphicsCommandList* list) { data_.SetResourceBarrier(list); }
 
 
 	private: // ** メンバ変数 ** //
@@ -96,6 +98,7 @@ namespace LWP::Object {
 		// PSO
 		Base::PSO emitterPSO_;
 		Base::PSO updatePSO_;
+		Base::PSO hitPSO_;
 
 		// エミッター
 		Base::ConstantBuffer<EmitterSphere> emitterSphere_;

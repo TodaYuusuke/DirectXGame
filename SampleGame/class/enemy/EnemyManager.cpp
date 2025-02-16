@@ -17,7 +17,7 @@ void EnemyManager::Init(LevelData* level, Player* player) {
 
 	// パーティクル初期設定
 	PBlood_.model.LoadCube();
-	PBlood_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl");
+	PBlood_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl", "Blood/Hit.CS.hlsl");
 	PDeadBody_.model.LoadCube();
 	PDeadBody_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
 	PDeadBody_.model.materials["Material"].color = Color(0.463f, 0.592f, 0.318f, 1.0f);

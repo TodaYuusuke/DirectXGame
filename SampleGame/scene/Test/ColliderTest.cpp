@@ -8,7 +8,7 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Object;
 
-ColliderTest::ColliderTest() : particle_(5) {}
+ColliderTest::ColliderTest() : particle_(1) {}
 
 // 初期化
 void ColliderTest::Initialize() {
@@ -37,7 +37,7 @@ void ColliderTest::Initialize() {
 	mesh_.isActive = false;
 
 	particle_.model.LoadCube();
-	particle_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl");
+	particle_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl", "Blood/Hit.CS.hlsl");
 	particle_.Add(1, { 0.0f,2.0f,0.0f });
 }
 

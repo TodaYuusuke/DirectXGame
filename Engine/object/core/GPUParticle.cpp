@@ -55,18 +55,22 @@ void GPUParticle::DebugGUI() {
 	//ImGui::Text("Particle Count %d", data_.size());
 }
 
-void GPUParticle::SetShaderPath(std::string emitter, std::string update) {
+void GPUParticle::SetShaderPath(std::string emitter, std::string update, std::string hit) {
 	root_.AddCBVParameter(0,  SV_All)
 		.AddCBVParameter(1, SV_All)
 		.AddCBVParameter(2, SV_All)
 		.AddUAVParameter(0, SV_All)	// 書き込むリソース
 		.AddUAVParameter(1, SV_All)	// FreeListIndex
 		.AddUAVParameter(2, SV_All)	// FreeList
+		.AddTableParameter(0, SV_All)	// HitList
 		.Build();
 	emitterPSO_.Init(root_, PSO::Type::Compute)
 		.SetCS(kDirectoryPath + emitter)
 		.Build();
 	updatePSO_.Init(root_, PSO::Type::Compute)
 		.SetCS(kDirectoryPath + update)
+		.Build();
+	hitPSO_.Init(root_, PSO::Type::Compute)
+		.SetCS(kDirectoryPath + hit)
 		.Build();
 }

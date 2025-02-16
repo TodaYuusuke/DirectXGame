@@ -157,7 +157,7 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		if (p->GetIsEmit()) {
 			list->SetPipelineState(p->GetEmitterPSO()->GetState());
 			list->Dispatch(p->GetEmitCount(), 1, 1);	// 必要分実行する
-			p->SetResourceBarrier(list);	// 依存関係を設定
+			p->SetDataBarrier(list);	// 依存関係を設定
 
 			p->ClearIsEmit();	// 初期化フラグをfalseに
 		}
@@ -165,6 +165,8 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		// 更新処理
 		list->SetPipelineState(p->GetUpdatePSO()->GetState());
 		list->Dispatch(p->GetMultiply(), 1, 1);	// 倍率回実行する
+
+		p->SetDataBarrier(list);	// 依存関係を設定
 
 		// 当たり判定用の処理
 		CheckCollision(list, p, target_.back().view);
@@ -266,7 +268,7 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	DispatchAllModel(list, cameraView);		// 裏面を描画
 #pragma endregion
 
-#pragma region ステンシルをUAVとして利用するためにコピー
+#pragma region ステンシルからヒットしてるIDを検出（できてない）
 	//バリアを設定
 	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
@@ -277,7 +279,23 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	list->SetComputeRootDescriptorTable(1, collider_.depthStencil.srvInfo.gpuView);
 	list->SetComputeRootDescriptorTable(2, p->GetUAVHiTListView());
 	list->Dispatch(collider_.depthStencil.width, collider_.depthStencil.height, 1);	// 解像度分実行する
+#pragma endregion
+#pragma region ヒットしてるパーティクルの処理を呼び出す
+	p->SetDataBarrier(list);	// 依存関係を設定
+	p->SetHitListBarrier(list);	// 依存関係を設定
 
+	// 必要なバッファを用意
+	list->SetComputeRootSignature(*p->GetRoot());
+	list->SetPipelineState(p->GetHitPSO()->GetState());
+	list->SetComputeRootConstantBufferView(0, FrameTracker::GetInstance()->GetPreFrameBufferView());
+	list->SetComputeRootConstantBufferView(1, p->GetEmitterView());
+	list->SetComputeRootConstantBufferView(2, p->GetCountView());
+	list->SetComputeRootDescriptorTable(3, p->GetUAVDataView());
+	list->SetComputeRootDescriptorTable(4, p->GetFreeListIndexView());
+	list->SetComputeRootDescriptorTable(5, p->GetFreeListView());
+	list->SetComputeRootDescriptorTable(6, p->GetSRVHiTListView());
+
+	list->Dispatch(p->GetMultiply(), 1, 1);	// 倍率回実行する
 #pragma endregion
 }
 
