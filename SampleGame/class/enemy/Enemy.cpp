@@ -29,11 +29,6 @@ void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, std::function<
 		anim_.Play("Death");	// 死亡アニメーション
 		// 弾のコライダーはオフに
 		c->isActive = false;
-
-		// パーティクル生成
-		Vector3 pos = model_.worldTF.GetWorldPosition();
-		pos.y += 1.0f;	// ちょっとだけ上に生成
-		particleFunc_(pos);
 	};
 	Collider::AABB& aabb = collision_.SetBroadShape(Collider::AABB());
 	aabb.min = { -0.2f,0.0f,-0.45f };
@@ -108,5 +103,11 @@ void Enemy::DeathAnimation() {
 			isDead_ = true;
 		}
 		model_.worldTF.scale = Interp::Slerp({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, Easing::InCubic(deathTime_));
+	}
+	else{
+		// パーティクル生成
+		Vector3 pos = model_.worldTF.GetWorldPosition();
+		pos.y += 1.0f;	// ちょっとだけ上に生成
+		particleFunc_(pos);
 	}
 }

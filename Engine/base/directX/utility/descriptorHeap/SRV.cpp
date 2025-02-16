@@ -107,12 +107,14 @@ SRVInfo SRV::CreateDepthTexture(ID3D12Resource* resource) {
 	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
-UAVInfo SRV::CreateStencilUAV(ID3D12Resource* resource) {
-	UAVInfo info;
+SRVInfo SRV::CreateGPUColliderDepthTexture(ID3D12Resource* resource) {
+	SRVInfo info;
 
 	// SRVの設定
-	info.desc.Format = DXGI_FORMAT_R8_UINT;
-	info.desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+	info.desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	info.desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	info.desc.Texture2D.MipLevels = 1;
+	info.desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	// 空きを使用
 	info.index = textureIM_.UseEmpty();
@@ -120,7 +122,7 @@ UAVInfo SRV::CreateStencilUAV(ID3D12Resource* resource) {
 	info.SetView(this);
 
 	// SRVに登録
-	GPUDevice::GetInstance()->GetDevice()->CreateUnorderedAccessView(resource, nullptr, &info.desc, info.cpuView);
+	GPUDevice::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &info.desc, info.cpuView);
 	return info;
 }
 SRVInfo SRV::CreateRenderResource(ID3D12Resource* resource) {

@@ -1,7 +1,7 @@
 #include "../Buffer.hlsli"
 
-const static float32_t kGravity_ = -9.8f / 100.0f;
-const static float32_t kDeleteTime = 3.0f;
+const static float32_t kGravity_ = -9.8f / 50.0f;
+const static float32_t kDeleteTime = 2.0f;
 
 [numthreads(1024, 1, 1)]
 void main(uint32_t3 DTid : SV_DispatchThreadID) {

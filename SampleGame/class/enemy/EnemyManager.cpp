@@ -8,9 +8,8 @@ using namespace LWP::Resource;
 using namespace LWP::Utility;
 using namespace LWP::Info;
 
-EnemyManager::EnemyManager() : PBlood_(100) {
+EnemyManager::EnemyManager() : PBlood_(100), PDeadBody_(100) {}
 
-}
 void EnemyManager::Init(LevelData* level, Player* player) {
 	// ポインタを保持
 	player_ = player;
@@ -19,8 +18,7 @@ void EnemyManager::Init(LevelData* level, Player* player) {
 	PBlood_.model.LoadCube();
 	PBlood_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl", "Blood/Hit.CS.hlsl");
 	PDeadBody_.model.LoadCube();
-	PDeadBody_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
-	PDeadBody_.model.materials["Material"].color = Color(0.463f, 0.592f, 0.318f, 1.0f);
+	PDeadBody_.SetShaderPath("DeadBody/Emitter.CS.hlsl", "DeadBody/Update.CS.hlsl", "DeadBody/Hit.CS.hlsl");
 	
 	// ウェーブデータ設定
 	waveData_[0].kQuota = 15;
@@ -94,8 +92,8 @@ void EnemyManager::Spawn() {
 	Enemy* e = new Enemy(waveData_[wave_].kSpeedMultiply);
 	e->Init(spawnPoint_[wave_][sp].curve, player_,
 		[this](Vector3 pos) {
-			PBlood_.Add(10, (pos));
-			PDeadBody_.Add(kParticleSize_, (pos));
+			PBlood_.Add(1024, (pos));
+			PDeadBody_.Add(1024, (pos));
 		}
 	);	// 死亡時のパーティクルを生成する関数を渡す
 	spawnPoint_[wave_][sp].enemy = e;	// 配列に格納

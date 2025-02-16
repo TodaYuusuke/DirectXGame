@@ -186,7 +186,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Point.cpp" />
-    <ClCompile Include="Engine\base\directX\resource\rendering\Stencil.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\TextureResource.cpp" />
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\DSV.cpp" />
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\IDescriptorHeap.cpp" />
@@ -330,7 +329,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\resource\rendering\shadow\IShadowMap.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\shadow\SM_Point.h" />
-    <ClInclude Include="Engine\base\directX\resource\rendering\Stencil.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\TextureResource.h" />
     <ClInclude Include="Engine\base\directX\utility\Command.h" />
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\DSV.h" />

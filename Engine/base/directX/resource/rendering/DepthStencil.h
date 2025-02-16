@@ -11,6 +11,8 @@ namespace LWP::Base {
 
 		// 初期化
 		void Init() override;
+		// GPUコライダー初期化
+		void InitGPUCollider();
 		// 両方クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
 		// デプスクリア

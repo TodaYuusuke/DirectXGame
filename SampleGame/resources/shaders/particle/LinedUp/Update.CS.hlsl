@@ -1,7 +1,7 @@
 #include "../Buffer.hlsli"
 
-const static float32_t kGravity_ = -9.8f / 100.0f;
-const static float32_t kDeleteTime = 3.0f;
+const static float32_t kGravity_ = -9.8f / 1500.0f;
+const static float32_t kDeleteTime = 2.0f;
 
 [numthreads(1024, 1, 1)]
 void main(uint32_t3 DTid : SV_DispatchThreadID) {
@@ -9,13 +9,6 @@ void main(uint32_t3 DTid : SV_DispatchThreadID) {
     if (particleIndex < cParticleSize.s) {
         // アクティブならば更新
         if (rParticleData[particleIndex].isActive) {
-			// 重力を加算
-            rParticleData[particleIndex].velocity.y += kGravity_;
-			// 速度ベクトルを加算
-            rParticleData[particleIndex].translate += rParticleData[particleIndex].velocity * cPerFrame.deltaTime;
-			// 速度を弱める
-            rParticleData[particleIndex].velocity *= 0.99f;
-            
             // デルタタイム加算
             rParticleData[particleIndex].lifeTime += cPerFrame.deltaTime;
             // 制限時間経過でアクティブ終了

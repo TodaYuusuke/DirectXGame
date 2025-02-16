@@ -8,7 +8,7 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Object;
 
-ColliderTest::ColliderTest() : particle_(1) {}
+ColliderTest::ColliderTest() : particle_(100), deadBodyParticle_(100) {}
 
 // 初期化
 void ColliderTest::Initialize() {
@@ -39,11 +39,15 @@ void ColliderTest::Initialize() {
 	particle_.model.LoadCube();
 	particle_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl", "Blood/Hit.CS.hlsl");
 	particle_.Add(1, { 0.0f,2.0f,0.0f });
+	deadBodyParticle_.model.LoadCube();
+	deadBodyParticle_.SetShaderPath("DeadBody/Emitter.CS.hlsl", "DeadBody/Update.CS.hlsl", "DeadBody/Hit.CS.hlsl");
+	deadBodyParticle_.Add(1, { 0.0f,2.0f,0.0f });
+	
 }
 
 // 更新
 void ColliderTest::Update() {
-	static int particleAmount = 1;
+	static int particleAmount = 1024;
 	// パーティクル用ImGui
 	ImGui::Begin("Test");
 	if (ImGui::TreeNode("Model")) {
@@ -56,11 +60,14 @@ void ColliderTest::Update() {
 	}
 	ImGui::Text("-----------");
 	ImGui::DragInt("ParticleAmount", &particleAmount);
+	ImGui::Checkbox("AddBlood", &addBlood);
+	ImGui::Checkbox("AddDeadBody", &addDeadBody);
 	ImGui::End();
 
 	time++;
-	if (time > 30) {
+	if (time > 1) {
 		time = 0;
-		particle_.Add(particleAmount);
+		if (addBlood) { particle_.Add(particleAmount); }
+		if (addDeadBody) { deadBodyParticle_.Add(particleAmount); }
 	}
 }

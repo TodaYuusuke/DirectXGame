@@ -125,9 +125,9 @@ namespace LWP::Base {
 		/// </summary>
 		SRVInfo CreateDepthTexture(ID3D12Resource* resource);
 		/// <summary>
-		/// StencilをUAVに登録
+		/// DepthStencilをGPUCollider用にSRVに登録
 		/// </summary>
-		UAVInfo CreateStencilUAV(ID3D12Resource* resource);
+		SRVInfo CreateGPUColliderDepthTexture(ID3D12Resource* resource);
 		/// <summary>
 		/// RenderResourceをSRVに登録
 		/// </summary>

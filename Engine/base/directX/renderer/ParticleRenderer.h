@@ -2,7 +2,6 @@
 #include "IRenderer.h"
 #include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
-#include "base/directX/resource/rendering/Stencil.h"
 
 #include "object/core/GPUParticle.h"
 

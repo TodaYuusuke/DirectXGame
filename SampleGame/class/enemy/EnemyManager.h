@@ -87,8 +87,8 @@ private: // ** メンバ変数 ** //
 	int quota_ = 15;
 
 	// パーティクルクラス
-	LWP::Object::GPUParticle PBlood_;
-	DeadBodyParticle PDeadBody_;
+	LWP::Object::GPUParticle PBlood_;	// 血の量だけ10倍出せるように
+	LWP::Object::GPUParticle PDeadBody_;
 	// パーティクルの数
 	int kParticleSize_ = 32 * 4;
 

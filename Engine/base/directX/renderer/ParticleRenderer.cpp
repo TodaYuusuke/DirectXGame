@@ -120,7 +120,7 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 
 	// リソース初期化
 	collider_.id.InitUAV();
-	collider_.depthStencil.Init();
+	collider_.depthStencil.InitGPUCollider();
 }
 
 void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -155,9 +155,13 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		
 		// 生成が必要かチェック
 		if (p->GetIsEmit()) {
-			list->SetPipelineState(p->GetEmitterPSO()->GetState());
-			list->Dispatch(p->GetEmitCount(), 1, 1);	// 必要分実行する
-			p->SetDataBarrier(list);	// 依存関係を設定
+			int c = p->GetEmitCount();
+			// emitが0で実行するとバグるので回避
+			if (c != 0) {
+				list->SetPipelineState(p->GetEmitterPSO()->GetState());
+				list->Dispatch(c, 1, 1);	// 必要分実行する
+				p->SetDataBarrier(list);	// 依存関係を設定
+			}
 
 			p->ClearIsEmit();	// 初期化フラグをfalseに
 		}
@@ -267,7 +271,7 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	list->SetPipelineState(collider_.backFacePSO.GetState());	// PSOセット
 	DispatchAllModel(list, cameraView);		// 裏面を描画
 #pragma endregion
-
+/*
 #pragma region ステンシルからヒットしてるIDを検出（できてない）
 	//バリアを設定
 	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
@@ -297,6 +301,7 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 
 	list->Dispatch(p->GetMultiply(), 1, 1);	// 倍率回実行する
 #pragma endregion
+*/
 }
 
 void ParticleRenderer::DispatchAllParticle(ID3D12GraphicsCommandList6* list, GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {

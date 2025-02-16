@@ -29,8 +29,12 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Object::DirectionLight sun_;
 	LWP::Object::GPUParticle particle_;
+	LWP::Object::GPUParticle deadBodyParticle_;
 	LWP::Resource::StaticModel mesh_;
 	LWP::Resource::StaticModel cube_[2];
+
+	bool addBlood = false;
+	bool addDeadBody = false;
 
 	// パーティクルの継続生成
 	int time = 0;
