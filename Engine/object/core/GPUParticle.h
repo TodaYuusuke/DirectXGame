@@ -73,6 +73,8 @@ namespace LWP::Object {
 		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVDataView() { return data_.GetSRVGPUView(); }
 		D3D12_GPU_DESCRIPTOR_HANDLE GetFreeListIndexView() { return freeListIndex_.GetUAVGPUView(); }
 		D3D12_GPU_DESCRIPTOR_HANDLE GetFreeListView() { return freeList_.GetUAVGPUView(); }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHiTListView() { return hitList_.GetSRVGPUView(); }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetUAVHiTListView() { return hitList_.GetUAVGPUView(); }
 
 		int GetMultiply() { return multiply; }
 		int GetEmitCount() { return emitCount; }
@@ -104,6 +106,9 @@ namespace LWP::Object {
 		Base::RWStructuredBuffer<uint32_t> freeList_;
 		// パーティクルの最大数
 		Base::ConstantBuffer<uint32_t> count_;
+
+		// ぶつかったパーティクルのIDリスト
+		Base::RWStructuredBuffer<uint32_t> hitList_;
 
 		// パーティクルの最大数倍率
 		int multiply = 1;

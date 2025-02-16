@@ -29,6 +29,7 @@ namespace LWP::Base {
 		RootSignature& AddCBVParameter(int registerNum, ShaderVisibility visibility);
 		RootSignature& AddTableParameter(int registerNum, ShaderVisibility visibility, int space = 0, UINT maxSize = 0);
 		RootSignature& AddUAVParameter(int registerNum, ShaderVisibility visibility, int space = 0, UINT maxSize = 0);
+		RootSignature& AddUAVRWTexture(int registerNum, ShaderVisibility visibility, int space = 0);
 		RootSignature& AddSampler(int registerNum, ShaderVisibility visibility = SV_Pixel,
 			D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR,	// フィルター（default:バイオリニアフィルタ）
 			D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_NEVER,	// 比較関数（default:比較しない）

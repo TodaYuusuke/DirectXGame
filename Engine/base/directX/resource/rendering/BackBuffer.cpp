@@ -21,7 +21,7 @@ void BackBuffer::Init() {
 	currentBarrierState = D3D12_RESOURCE_STATE_PRESENT;
 
 	// RTV上に登録
-	rtvInfo = RTV::GetInstance()->CreateRenderTargetView(resource_.Get());
+	rtvInfo = RTV::GetInstance()->CreateBackBufferView(resource_.Get());
 }
 
 

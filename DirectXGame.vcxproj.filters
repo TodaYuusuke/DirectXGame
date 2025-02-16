@@ -367,6 +367,7 @@
     <ClCompile Include="Engine\utility\Singleton.cpp" />
     <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\Stencil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -823,6 +824,7 @@
     <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\object\core\GPUParticle.h" />
     <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\Stencil.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -16,11 +16,17 @@ void ColliderTest::Initialize() {
 	//field_.Init(&levelData, &mainCamera);
 
 	// モデル読み込み
-	cube_.LoadCube();
-	cube_.ApplyWorldTransform({
+	cube_[0].LoadCube();
+	cube_[0].ApplyWorldTransform({
 		{3.300f, -1.110f, 0.0f},
 		{-0.180f, 0.290f, -0.056f, 0.938f},
-		{0.3f, 0.3f, 0.3f},
+		{0.5f, 0.5f, 0.5f},
+	});
+	cube_[1].LoadCube();
+	cube_[1].ApplyWorldTransform({
+		{0.0f, -0.8f, 0.0f},
+		{0.0f, 0.928f, 0.0f, 0.372f},
+		{0.8f, 0.8f, 0.8f},
 	});
 	mesh_.LoadShortPath("level/buildings/4Story_Wide_2Doors_Mat.gltf");
 	mesh_.ApplyWorldTransform({
@@ -28,6 +34,7 @@ void ColliderTest::Initialize() {
 		{0.0f, 0.928f, 0.0f, 0.372f},
 		{0.5f, 0.5f, 0.5f},
 	});
+	mesh_.isActive = false;
 
 	particle_.model.LoadCube();
 	particle_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl");

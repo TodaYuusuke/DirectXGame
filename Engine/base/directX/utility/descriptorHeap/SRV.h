@@ -125,9 +125,17 @@ namespace LWP::Base {
 		/// </summary>
 		SRVInfo CreateDepthTexture(ID3D12Resource* resource);
 		/// <summary>
+		/// StencilをUAVに登録
+		/// </summary>
+		UAVInfo CreateStencilUAV(ID3D12Resource* resource);
+		/// <summary>
 		/// RenderResourceをSRVに登録
 		/// </summary>
 		SRVInfo CreateRenderResource(ID3D12Resource* resource);
+		/// <summary>
+		/// RenderResourceをUAVに登録
+		/// </summary>
+		UAVInfo CreateRenderResourceUAV(ID3D12Resource* resource);
 		/// <summary>
 		/// CubeMapをSRVに登録
 		/// </summary>
@@ -138,7 +146,7 @@ namespace LWP::Base {
 		/// </summary>
 		SRVInfo CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER_RESOURCE_VIEW_DESC& desc);
 		/// <summary>
-		/// RWStructuredBufferをSRVに登録
+		/// RWStructuredBufferをUAVに登録
 		/// </summary>
 		UAVInfo CreateRWStructuredBuffer(ID3D12Resource* resource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& desc);
 

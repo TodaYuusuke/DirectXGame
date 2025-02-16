@@ -60,6 +60,17 @@ PSO& PSO::Init(ID3D12RootSignature* root, Type type) {
 
 	return *this;
 }
+PSO& PSO::SetRTVFormat(DXGI_FORMAT format) {
+	if (type_ == Type::Vertex) {
+		desc_.vertex.RTVFormats[0] = format;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.RTVFormats[0] = format;
+	}
+
+	return *this;
+}
+
 PSO& PSO::SetInputLayout() {
 	if (type_ == Type::Vertex) {
 		/* 頂点はバッファーで送信するので、InputLayoutは不要
@@ -85,12 +96,12 @@ PSO& PSO::SetInputLayout() {
 
 	return *this;
 }
-PSO& PSO::SetBlendState(BlendMode mode) {
+PSO& PSO::SetBlendState(bool enable, BlendMode mode) {
 	// すべての色要素を書き込む
 	D3D12_BLEND_DESC blendDesc{};
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	// 透明度のブレンドを設定
-	blendDesc.RenderTarget[0].BlendEnable = true;
+	blendDesc.RenderTarget[0].BlendEnable = enable;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;

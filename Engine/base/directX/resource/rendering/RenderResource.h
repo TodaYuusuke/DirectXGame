@@ -20,6 +20,9 @@ namespace LWP::Base {
 		// 初期化（クリアカラー指定ver）
 		void Init(Utility::Color clearColor);
 
+		// UAV対応初期化
+		void InitUAV();
+
 		// 画面クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
 
@@ -28,12 +31,15 @@ namespace LWP::Base {
 		// 解像度を返す関数
 		Math::Vector2 GetTextureSize() const { return { static_cast<float>(width), static_cast<float>(height) }; }
 
+		// UAV上の登録インデックス番号を返す
+		int GetUAVIndex() const { return uavInfo.index; }
 
 	public: // ** パブリックなメンバ変数 ** //
 				
 		// SRVの登録情報
 		SRVInfo srvInfo;
-
+		// UAVの登録情報
+		UAVInfo uavInfo;
 
 	public: // ** オペレーターオーバーロード ** //
 

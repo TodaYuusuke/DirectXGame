@@ -51,6 +51,10 @@ namespace LWP::Base {
 		void DebugGUI() override;
 
 		/// <summary>
+		/// BackBufferViewを作成する関数
+		/// </summary>
+		RTVInfo CreateBackBufferView(ID3D12Resource* resource);
+		/// <summary>
 		/// RenderTargetViewを作成する関数
 		/// </summary>
 		RTVInfo CreateRenderTargetView(ID3D12Resource* resource);

@@ -35,7 +35,7 @@ void Bloom::Init() {
 	// Y軸ガウシアンブラー
 	gaussY.Init(gaussX.root)
 		.SetDepthState(false)
-		.SetBlendState(PSO::BlendMode::Add)
+		.SetBlendState(true, PSO::BlendMode::Add)
 		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
 		.SetSystemPS("postProcess/bloom/GaussianBlurY.PS.hlsl")
 		.Build();

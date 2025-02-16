@@ -6,7 +6,7 @@ using namespace LWP::Object;
 using namespace LWP::Base;
 
 GPUParticle::GPUParticle() : GPUParticle(multiply) {}
-GPUParticle::GPUParticle(int capacityMultiply) : data_(1024 * capacityMultiply), freeListIndex_(1), freeList_(1024 * capacityMultiply) {
+GPUParticle::GPUParticle(int capacityMultiply) : data_(1024 * capacityMultiply), freeListIndex_(1), freeList_(1024 * capacityMultiply), hitList_(1024 * capacityMultiply){
 	Initialize();
 	multiply = capacityMultiply;
 	*count_.data_ = 1024 * multiply;
@@ -18,6 +18,7 @@ void GPUParticle::Initialize() {
 	freeListIndex_.Init();
 	freeList_.Init();
 	count_.Init();
+	hitList_.Init();
 
 	model.isActive = false;
 }

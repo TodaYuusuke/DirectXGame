@@ -26,6 +26,14 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 	initShader_.pso.Init(initShader_.root, PSO::Type::Compute)
 		.SetSystemCS("ms/particle/ParticleInit.CS.hlsl")
 		.Build();
+	// 初期化用RootSignatureを生成
+	initHitShader_.root.AddCBVParameter(0, SV_All)
+		.AddUAVParameter(0, SV_All)	// ヒットリスト
+		.Build();
+	// 初期化用PSOを生成
+	initHitShader_.pso.Init(initHitShader_.root, PSO::Type::Compute)
+		.SetSystemCS("ms/particle/ResultInit.CS.hlsl")
+		.Build();
 
 	// 描画用RootSignatureを生成
 	renderingShader_.root.AddTableParameter(0, SV_All)	// メッシュレット
@@ -58,6 +66,8 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 
 	// 当たり判定用のPSOたち
 	collider_.wireFrame.Copy(renderingShader_.pso)	// PSOをコピー
+		.SetRTVFormat(DXGI_FORMAT_R32_SINT)
+		.SetBlendState(false)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)	// ワイヤーフレームに
 		.SetSystemMS("ms/particle/ParticleCollider.MS.hlsl")
 		.SetSystemPS("ms/particle/ParticleCollider.PS.hlsl")
@@ -100,9 +110,16 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 	collider_.backFacePSO.Copy(collider_.frontFacePSO)	// PSOをコピー
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT)	// 裏面のみを描画
 		.Build();
+	collider_.checkResultRoot.AddTableParameter(0, SV_All)
+		.AddTableParameter(1, SV_All)
+		.AddUAVParameter(0, SV_All)
+		.Build();
+	collider_.checkResultPSO.Init(collider_.checkResultRoot, PSO::Type::Compute)
+		.SetSystemCS("ms/particle/ResultCheck.CS.hlsl")
+		.Build();
 
 	// リソース初期化
-	collider_.id.Init(Color(ColorPattern::WHITE));
+	collider_.id.InitUAV();
 	collider_.depthStencil.Init();
 }
 
@@ -204,13 +221,21 @@ void ParticleRenderer::Reset() {
 }
 
 void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {
+#pragma region ヒットしたリストの初期化
+	// 初期化
+	list->SetComputeRootSignature(initHitShader_.root);
+	list->SetPipelineState(initHitShader_.pso.GetState());
+	list->SetComputeRootConstantBufferView(0, p->GetCountView());
+	list->SetComputeRootDescriptorTable(1, p->GetUAVHiTListView());
+	list->Dispatch(p->GetMultiply(), 1, 1);	// 1回実行する
+#pragma endregion
+
 #pragma region 辺の描画
 	list->SetGraphicsRootSignature(renderingShader_.root);	// 描画用のRootとPSOに変更
 	list->SetPipelineState(collider_.wireFrame.GetState());
 	// 描画先のRTVとDSVを設定する
 	list->OMSetRenderTargets(1, &collider_.id.rtvInfo.cpuView, false, &collider_.depthStencil.dsvInfo.cpuView);
 
-	D3D12_RESOURCE_STATES beforeBarrier = collider_.id.GetBarrier();
 	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 	collider_.id.Clear(list);
@@ -230,26 +255,30 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	DispatchAllParticle(list, p, cameraView);
 #pragma endregion
 
+#pragma region その他オブジェクトの両面ステンシルテスト
 	// 描画先のDSVを設定する
 	list->OMSetRenderTargets(0, nullptr, false, &collider_.depthStencil.dsvInfo.cpuView);
 
-#pragma region その他オブジェクトの表面のステンシルテスト
 	list->SetGraphicsRootSignature(collider_.frontFaceRoot);	// Rootセット
 	list->SetPipelineState(collider_.frontFacePSO.GetState());	// PSOセット
-	DispatchAllModel(list, cameraView);	
+	DispatchAllModel(list, cameraView);		// 表面を描画
 	list->SetPipelineState(collider_.backFacePSO.GetState());	// PSOセット
-	DispatchAllModel(list, cameraView);
-#pragma endregion
-#pragma region パーティクルの裏面のステンシルテスト
-	//list->SetGraphicsRootSignature(renderingShader_.root);
-	//list->SetPipelineState(collider_.backFace.GetState());
-	//// GPUパーティクルの辺を描画
-	//DispatchAllParticle(list, p, cameraView);
+	DispatchAllModel(list, cameraView);		// 裏面を描画
 #pragma endregion
 
-	// バリアを読み取り用に戻す
-	collider_.id.ChangeResourceBarrier(beforeBarrier, list);
+#pragma region ステンシルをUAVとして利用するためにコピー
+	//バリアを設定
+	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
+
+	list->SetComputeRootSignature(collider_.checkResultRoot);	// Rootセット
+	list->SetPipelineState(collider_.checkResultPSO.GetState());	// PSOセット
+	list->SetComputeRootDescriptorTable(0, collider_.id.srvInfo.gpuView);
+	list->SetComputeRootDescriptorTable(1, collider_.depthStencil.srvInfo.gpuView);
+	list->SetComputeRootDescriptorTable(2, p->GetUAVHiTListView());
+	list->Dispatch(collider_.depthStencil.width, collider_.depthStencil.height, 1);	// 解像度分実行する
+
+#pragma endregion
 }
 
 void ParticleRenderer::DispatchAllParticle(ID3D12GraphicsCommandList6* list, GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {

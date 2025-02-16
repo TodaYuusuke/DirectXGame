@@ -2,6 +2,7 @@
 #include "IRenderer.h"
 #include "base/directX/resource/rendering/RenderResource.h"
 #include "base/directX/resource/rendering/DepthStencil.h"
+#include "base/directX/resource/rendering/Stencil.h"
 
 #include "object/core/GPUParticle.h"
 
@@ -67,6 +68,7 @@ namespace LWP::Base {
 
 		
 		Property initShader_;	// 初期化用
+		Property initHitShader_;	// 値判定の初期化用
 		Property renderingShader_;	// 描画用
 
 		// ターゲット配列
@@ -88,6 +90,10 @@ namespace LWP::Base {
 			RootSignature frontFaceRoot;
 			PSO frontFacePSO;	// StaticModelの表面描画用
 			PSO backFacePSO;	// StaticModelの裏面描画用
+
+			// ステンシルのみをUAV用のリソースにコピーするためのPSO
+			RootSignature checkResultRoot;
+			PSO checkResultPSO;
 		}collider_;
 
 	private: // ** プライベートなメンバ関数 ** //

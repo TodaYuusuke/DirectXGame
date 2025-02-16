@@ -42,8 +42,9 @@ namespace LWP::Base {
 		/// ビルダーデザインパターン
 		/// </summary>
 		PSO& Init(ID3D12RootSignature* root, Type type = Type::Vertex);
+		PSO& SetRTVFormat(DXGI_FORMAT format);
 		PSO& SetInputLayout();
-		PSO& SetBlendState(BlendMode mode = BlendMode::Normal);
+		PSO& SetBlendState(bool enable, BlendMode mode = BlendMode::Normal);
 		PSO& SetRasterizerState(
 			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
 			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
