@@ -17,6 +17,9 @@ namespace LWP::Base {
 
 		// 初期化
 		void Init() override;
+		// 初期化（クリアカラー指定ver）
+		void Init(Utility::Color clearColor);
+
 		// 画面クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
 

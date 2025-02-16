@@ -15,7 +15,7 @@ void main(
     in uint32_t gid  : SV_GroupID,
     in uint32_t gtid : SV_GroupThreadID,
     in payload PayLoad meshPayload,
-    out vertices VSOutput outVerts[128],
+    out vertices ParticleColliderOutput outVerts[128],
     out indices uint32_t3     outIndices[128]
 )
 {
@@ -47,7 +47,6 @@ void main(
         worldMatrix[2] *= particle.scale.z;
         worldMatrix[3].xyz = particle.translate;
         
-        
         // 出力する頂点のデータを求める
         outVerts[gtid].pos = mul(mul(vertex.position, worldMatrix), cCamera.viewProjection);
         outVerts[gtid].worldPos = mul(vertex.position, worldMatrix).xyz;
@@ -56,6 +55,7 @@ void main(
         //outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3)XMMatrixInverse(worldMatrix))));
         outVerts[gtid].color = particle.color;
         outVerts[gtid].mIndex = vertex.mIndex;
+        outVerts[gtid].id = particle.id;
         //outVerts[gtid].mIndex = vertex.mIndex + (gid * mCommonData.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }
     if (gtid < meshlet.PrimCount)

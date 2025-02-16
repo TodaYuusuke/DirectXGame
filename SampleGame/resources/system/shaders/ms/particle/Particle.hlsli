@@ -1,5 +1,5 @@
-#include "MSStruct.hlsli"
-#include "../utility/Particle.hlsli"
+#include "../MSStruct.hlsli"
+#include "../../utility/Particle.hlsli"
 
 // CommonBuffers
 ConstantBuffer<CommonData> cCommonData : register(b1);

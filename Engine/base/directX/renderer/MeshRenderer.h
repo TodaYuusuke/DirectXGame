@@ -40,7 +40,6 @@ namespace LWP::Base {
 		/// 描画命令
 		/// </summary>
 		/// <param name="list">コマンドリストのポインタ/param>
-		/// <param name="target">ターゲット</param>
 		void DrawCall(ID3D12GraphicsCommandList6* list);
 
 		/// <summary>

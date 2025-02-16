@@ -86,12 +86,10 @@ namespace LWP::Base {
 		// heapの設定
 		D3D12_HEAP_PROPERTIES properties;
 
-
 	protected: // ** プライベートなメンバ変数 ** //
 
 		// 現在のリソースバリア
 		D3D12_RESOURCE_STATES currentBarrierState;
-
 
 	public: // ** オペレーターオーバーロード ** //
 

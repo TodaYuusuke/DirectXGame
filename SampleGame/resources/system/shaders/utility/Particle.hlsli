@@ -10,6 +10,7 @@ struct ParticleData
     float32_t4 color;
     float32_t lifeTime;
     uint32_t isActive;
+    uint32_t id;
 };
 
 struct ParticleSize {

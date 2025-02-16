@@ -40,6 +40,13 @@ void GPUParticle::DebugGUI() {
 		model.DebugGUI();
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Emitter")) {
+		ImGui::DragFloat3("Position", &emitterSphere_.data_->position.x, 0.01f);
+		ImGui::DragFloat("Radius", &emitterSphere_.data_->radius, 0.01f);
+		ImGui::DragFloat("Frequency", &emitterSphere_.data_->frequency, 0.01f);
+		ImGui::DragFloat("FrequencyTime", &emitterSphere_.data_->frequencyTime, 0.01f);
+		ImGui::TreePop();
+	}
 	static int value = 8;
 	ImGui::InputInt("Value", &value);
 	if (ImGui::Button("Particle Generate")) { Add(value); }

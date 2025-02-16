@@ -23,6 +23,7 @@ namespace LWP::Object {
 			Math::Vector4 color;
 			float lifeTime = 0;
 			uint32_t isActive;	// 生存フラグ
+			uint32_t id;	// 当たり判定検知用のID
 		};
 		struct EmitterSphere {
 			Math::Vector3 position;	// 位置

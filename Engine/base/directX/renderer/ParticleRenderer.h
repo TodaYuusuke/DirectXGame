@@ -77,15 +77,17 @@ namespace LWP::Base {
 		// ** 当たり判定用のリソース ** //
 
 		struct Collider {
-			// パーティクルのID書き込み用
-			RenderResource render;
+			// ID書き込み用リソース
+			RenderResource id;
 			// 検証用深度
 			DepthStencil depthStencil;
 
 			// 辺の描画用PSO
 			PSO wireFrame;
-			// パーティクルの裏面描画用PSO
-			PSO backFace;
+			// StaticModelのRootSignature
+			RootSignature frontFaceRoot;
+			PSO frontFacePSO;	// StaticModelの表面描画用
+			PSO backFacePSO;	// StaticModelの裏面描画用
 		}collider_;
 
 	private: // ** プライベートなメンバ関数 ** //
@@ -96,8 +98,13 @@ namespace LWP::Base {
 		void CheckCollision(ID3D12GraphicsCommandList6* list, Object::GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
 
 		/// <summary>
-		/// 全てのモデルをターゲットに描画する関数
+		/// 全てのパーティクルをターゲットに描画する関数
 		/// </summary>
 		void DispatchAllParticle(ID3D12GraphicsCommandList6* list, Object::GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
+
+		/// <summary>
+		/// 全てのモデルをターゲットに描画する関数
+		/// </summary>
+		void DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView);
 	};
 }

@@ -25,12 +25,13 @@ public:	// ** 純粋仮想関数の実体宣言 ** //
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// 地形データ
-	Field field_;
+	//Field field_;
 
+	LWP::Object::DirectionLight sun_;
 	LWP::Object::GPUParticle particle_;
+	LWP::Resource::StaticModel mesh_;
+	LWP::Resource::StaticModel cube_;
 
-	LWP::Resource::StaticModel mesh;
-	LWP::Object::Collision meshCol;
-	LWP::Object::Collision aabbCol;
-	LWP::Object::Collision pointCol;
+	// パーティクルの継続生成
+	int time = 0;
 };

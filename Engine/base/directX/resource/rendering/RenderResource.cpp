@@ -3,8 +3,13 @@
 
 using namespace LWP;
 using namespace LWP::Base;
+using namespace LWP::Utility;
+
 
 void RenderResource::Init() {
+	Init(Color(0.1f, 0.25f, 0.5f, 1.0f));
+}
+void RenderResource::Init(Utility::Color clearColor) {
 	HRESULT hr = S_FALSE;
 	
 	// 1. Resourceの設定
@@ -18,11 +23,12 @@ void RenderResource::Init() {
 	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
 	// 2．クリアカラー
+	Math::Vector4 c = clearColor.GetVector4();
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	clearValue.Color[0] = 0.1f;
-	clearValue.Color[1] = 0.25f;
-	clearValue.Color[2] = 0.5f;
-	clearValue.Color[3] = 1.0f;
+	clearValue.Color[0] = c.x;
+	clearValue.Color[1] = c.y;
+	clearValue.Color[2] = c.z;
+	clearValue.Color[3] = c.w;
 
 	// 3. 利用するHeapの設定。非常に特殊な運用。
 	properties.Type = D3D12_HEAP_TYPE_DEFAULT; // デフォルト

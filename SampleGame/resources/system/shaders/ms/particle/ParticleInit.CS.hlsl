@@ -1,4 +1,4 @@
-#include "../utility/Particle.hlsli"
+#include "../../utility/Particle.hlsli"
 
 ConstantBuffer<ParticleSize> cParticleSize : register(b0);
 RWStructuredBuffer<ParticleData> rParticleData : register(u0);

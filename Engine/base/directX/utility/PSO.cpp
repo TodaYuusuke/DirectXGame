@@ -234,15 +234,15 @@ PSO& PSO::SetPS(std::string filePath) {
 	return *this;
 }
 PSO& PSO::SetSystemPS(std::string filePath) { return SetPS(kDirectoryPath + filePath); }
-PSO& PSO::SetDepthState(bool enable) {
+PSO& PSO::SetDepthState(bool enable, D3D12_DEPTH_WRITE_MASK mask, D3D12_COMPARISON_FUNC func) {
 	D3D12_DEPTH_STENCIL_DESC depthDesc{};
 	// 受け取る
 	if (type_ == Type::Vertex) { depthDesc = desc_.vertex.DepthStencilState; }
 	else if (type_ == Type::Mesh) { depthDesc = desc_.mesh.DepthStencilState; }
 
 	depthDesc.DepthEnable = enable; // Depthの機能を有効化する
-	depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
-	depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
+	depthDesc.DepthWriteMask = mask; // 書き込みします
+	depthDesc.DepthFunc = func; // 比較関数
 	
 	// セット
 	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = depthDesc; }

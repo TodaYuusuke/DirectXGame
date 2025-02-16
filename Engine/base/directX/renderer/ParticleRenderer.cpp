@@ -10,6 +10,7 @@ using namespace LWP::Base;
 using namespace LWP::Object;
 using namespace LWP::Resource;
 using namespace LWP::Information;
+using namespace LWP::Utility;
 
 void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 	cmd_ = cmd;
@@ -23,7 +24,7 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 		.Build();
 	// 初期化用PSOを生成
 	initShader_.pso.Init(initShader_.root, PSO::Type::Compute)
-		.SetSystemCS("ms/ParticleInit.CS.hlsl")
+		.SetSystemCS("ms/particle/ParticleInit.CS.hlsl")
 		.Build();
 
 	// 描画用RootSignatureを生成
@@ -50,17 +51,58 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 		.Build();
 	// 描画用PSOを生成
 	renderingShader_.pso.Init(renderingShader_.root, PSO::Type::Mesh)
-		.SetSystemAS("ms/Particle.AS.hlsl")
-		.SetSystemMS("ms/Particle.MS.hlsl")
-		.SetSystemPS("ms/Particle.PS.hlsl")
+		.SetSystemAS("ms/particle/Particle.AS.hlsl")
+		.SetSystemMS("ms/particle/Particle.MS.hlsl")
+		.SetSystemPS("ms/particle/Particle.PS.hlsl")
 		.Build();
 
 	// 当たり判定用のPSOたち
 	collider_.wireFrame.Copy(renderingShader_.pso)	// PSOをコピー
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)	// ワイヤーフレームに
+		.SetSystemMS("ms/particle/ParticleCollider.MS.hlsl")
+		.SetSystemPS("ms/particle/ParticleCollider.PS.hlsl")
+		.Build();
+	collider_.frontFaceRoot.AddTableParameter(0, SV_All)	// メッシュレット
+		.AddTableParameter(1, SV_All)	// 頂点
+		.AddTableParameter(2, SV_All)	// ユニークポインタ
+		.AddTableParameter(3, SV_All)	// プリミティブインデックス
+		.AddCBVParameter(0, SV_All)	// 共通データ
+		.AddCBVParameter(1, SV_All)	// カメラのView
+		.AddTableParameter(4, SV_Pixel)	// マテリアル
+		.AddTableParameter(5, SV_Pixel)	// 平行光源
+		.AddTableParameter(6, SV_Pixel)	// 点光源
+		.AddTableParameter(7, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
+		.AddTableParameter(507, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
+		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
+		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
+		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL,	// 点光源のシャドウマップ用サンプラー
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
+		.Build();
+	collider_.frontFacePSO.Init(collider_.frontFaceRoot, PSO::Type::Mesh)	// パーティクル以外のモデルを描画するためのPSO
+		.SetRasterizerState(D3D12_CULL_MODE_BACK)	// 表だけ描画
+		.SetDepthState(true,
+			D3D12_DEPTH_WRITE_MASK_ZERO,	// 深度書き込み禁止
+			D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 深度が近いものだけをパス
+		.SetStencilState(true,
+			D3D12_DEPTH_STENCILOP_DESC(
+				D3D12_STENCIL_OP_KEEP,	// ステンシルテスト失敗時、値を保持
+				D3D12_STENCIL_OP_KEEP,	// 深度テスト失敗時、値を保持
+				D3D12_STENCIL_OP_INCR_SAT,	// 深度・ステンシルテスト両方成功時、ステンシル値を加算
+				D3D12_COMPARISON_FUNC_ALWAYS),	// 常にステンシルテストを成功させる
+			D3D12_DEPTH_STENCILOP_DESC(
+				D3D12_STENCIL_OP_KEEP,	// ステンシルテスト失敗時、値を保持
+				D3D12_STENCIL_OP_KEEP,	// 深度テスト失敗時、値を保持
+				D3D12_STENCIL_OP_DECR_SAT,	// 深度・ステンシルテスト両方成功時、ステンシル値を減算
+				D3D12_COMPARISON_FUNC_ALWAYS))	// 常にステンシルテストを成功させる
+		.SetSystemMS("ms/static/Normal.MS.hlsl")
+		.Build();
+	collider_.backFacePSO.Copy(collider_.frontFacePSO)	// PSOをコピー
+		.SetRasterizerState(D3D12_CULL_MODE_FRONT)	// 裏面のみを描画
 		.Build();
 
 	// リソース初期化
+	collider_.id.Init(Color(ColorPattern::WHITE));
 	collider_.depthStencil.Init();
 }
 
@@ -166,11 +208,12 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	list->SetGraphicsRootSignature(renderingShader_.root);	// 描画用のRootとPSOに変更
 	list->SetPipelineState(collider_.wireFrame.GetState());
 	// 描画先のRTVとDSVを設定する
-	list->OMSetRenderTargets(0, nullptr, false, &collider_.depthStencil.dsvInfo.cpuView);
+	list->OMSetRenderTargets(1, &collider_.id.rtvInfo.cpuView, false, &collider_.depthStencil.dsvInfo.cpuView);
 
-	// リソースバリアをセット
+	D3D12_RESOURCE_STATES beforeBarrier = collider_.id.GetBarrier();
+	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
-	// クリア
+	collider_.id.Clear(list);
 	collider_.depthStencil.Clear(list);
 
 	// ビューポート
@@ -183,13 +226,30 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	// Scirssorを設定
 	list->RSSetScissorRects(1, &scissorRect);
 
-	// GPUパーティクル描画
+	// GPUパーティクルの辺を描画
 	DispatchAllParticle(list, p, cameraView);
-
-	// バリアを読み取り用に戻す
-	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 #pragma endregion
 
+	// 描画先のDSVを設定する
+	list->OMSetRenderTargets(0, nullptr, false, &collider_.depthStencil.dsvInfo.cpuView);
+
+#pragma region その他オブジェクトの表面のステンシルテスト
+	list->SetGraphicsRootSignature(collider_.frontFaceRoot);	// Rootセット
+	list->SetPipelineState(collider_.frontFacePSO.GetState());	// PSOセット
+	DispatchAllModel(list, cameraView);	
+	list->SetPipelineState(collider_.backFacePSO.GetState());	// PSOセット
+	DispatchAllModel(list, cameraView);
+#pragma endregion
+#pragma region パーティクルの裏面のステンシルテスト
+	//list->SetGraphicsRootSignature(renderingShader_.root);
+	//list->SetPipelineState(collider_.backFace.GetState());
+	//// GPUパーティクルの辺を描画
+	//DispatchAllParticle(list, p, cameraView);
+#pragma endregion
+
+	// バリアを読み取り用に戻す
+	collider_.id.ChangeResourceBarrier(beforeBarrier, list);
+	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 }
 
 void ParticleRenderer::DispatchAllParticle(ID3D12GraphicsCommandList6* list, GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {
@@ -218,4 +278,40 @@ void ParticleRenderer::DispatchAllParticle(ID3D12GraphicsCommandList6* list, GPU
 
 	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 	list->DispatchMesh(data->GetMeshletCount(), 1, 1);
+}
+
+void ParticleRenderer::DispatchAllModel(ID3D12GraphicsCommandList6* list, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {
+	// 全モデル分ループ
+	auto models = Resource::Manager::GetInstance()->GetModels();
+	SRV* srv = SRV::GetInstance();
+
+	// -------------------------------------------------------------- //
+
+	// StaticModelをDispatch
+	for (Models& m : models) {
+		// ModelのStructerdBufferのViewをセット
+		ModelData& d = m.data;
+		list->SetGraphicsRootDescriptorTable(0, d.buffers_.meshlet->GetGPUView());
+		// VertexはStaticModelが持っているBufferを使う
+		list->SetGraphicsRootDescriptorTable(2, d.buffers_.uniqueVertexIndices->GetGPUView());
+		list->SetGraphicsRootDescriptorTable(3, d.buffers_.primitiveIndices->GetGPUView());
+		buffersPtr_->SetCommonView(4, list);	// 共通
+		list->SetGraphicsRootConstantBufferView(5, cameraView);	// カメラ
+		list->SetGraphicsRootDescriptorTable(6, d.buffers_.materials->GetGPUView());
+		buffersPtr_->SetDirLightView(7, list);	// 平行光源
+		buffersPtr_->SetPointLightView(8, list);	// 点光源
+		list->SetGraphicsRootDescriptorTable(9, srv->GetFirstTexView());	// テクスチャ
+		list->SetGraphicsRootDescriptorTable(10, srv->GetFirstDirShadowView());		// 平行光源シャドウ
+		list->SetGraphicsRootDescriptorTable(11, srv->GetFirstPointShadowView());	// 点光源シャドウ
+
+		// 全要素ループ
+		for (StaticModel* ptr : m.statics.list) {
+			if (!ptr->isActive) { continue; }
+
+			// 頂点のViewをセット
+			list->SetGraphicsRootDescriptorTable(1, ptr->GetVertexBufferView());
+			// メッシュレット数分メッシュシェーダーを実行
+			list->DispatchMesh(d.GetMeshletCount(), 1, 1);
+		}
+	}
 }

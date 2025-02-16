@@ -168,7 +168,7 @@ void MeshRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		// 全画面クリア
 		it->back->Clear(list);
 		// 指定した深度で画面全体をクリアする
-		it->depth->Clear(list);
+		it->depth->ClearDepth(list);
 
 		// ビューポート
 		D3D12_VIEWPORT viewport = {};

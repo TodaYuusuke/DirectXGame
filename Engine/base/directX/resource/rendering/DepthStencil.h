@@ -11,8 +11,12 @@ namespace LWP::Base {
 
 		// 初期化
 		void Init() override;
-		// 画面クリア
+		// 両方クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
+		// デプスクリア
+		void ClearDepth(ID3D12GraphicsCommandList* list);
+		// ステンシルクリア
+		void ClearStencil(ID3D12GraphicsCommandList* list);
 
 	public: // ** パブリックなメンバ変数 ** //
 

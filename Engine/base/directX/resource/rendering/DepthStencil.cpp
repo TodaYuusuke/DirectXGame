@@ -44,6 +44,11 @@ void DepthStencil::Init() {
 
 void DepthStencil::Clear(ID3D12GraphicsCommandList* list) {
 	// 指定した深度で画面全体をクリアする
+	list->ClearDepthStencilView(dsvInfo.cpuView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, clearValue.DepthStencil.Depth, 0, 0, nullptr);
+}
+void DepthStencil::ClearDepth(ID3D12GraphicsCommandList* list) {
 	list->ClearDepthStencilView(dsvInfo.cpuView, D3D12_CLEAR_FLAG_DEPTH, clearValue.DepthStencil.Depth, 0, 0, nullptr);
 }
-
+void DepthStencil::ClearStencil(ID3D12GraphicsCommandList* list) {
+	list->ClearDepthStencilView(dsvInfo.cpuView, D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+}

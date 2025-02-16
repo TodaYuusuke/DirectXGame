@@ -74,6 +74,7 @@ void RendererManager::Init() {
 	meshRenderer_.Init(&commander_, meshFunc);
 	meshRenderer_.SetBufferGroup(&buffers_);
 	particleRenderer_.Init(&commander_, particleFunc);
+	particleRenderer_.SetBufferGroup(&buffers_);
 	// ポストプロセスレンダラー初期化
 	ppRender_.Init();
 	// コピーレンダラー初期化

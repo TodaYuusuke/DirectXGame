@@ -13,36 +13,47 @@ ColliderTest::ColliderTest() : particle_(5) {}
 // 初期化
 void ColliderTest::Initialize() {
 	// 地形初期化
-	field_.Init(&levelData, &mainCamera);
+	//field_.Init(&levelData, &mainCamera);
 
 	// モデル読み込み
-	mesh.LoadShortPath("test/meshCollider/Rock.gltf");
-	mesh.ApplyWorldTransform({
-		{8.0f,8.0f,8.0f},
-		Quaternion(),
-		{10.0f,10.0f,10.0f}
+	cube_.LoadCube();
+	cube_.ApplyWorldTransform({
+		{3.300f, -1.110f, 0.0f},
+		{-0.180f, 0.290f, -0.056f, 0.938f},
+		{0.3f, 0.3f, 0.3f},
 	});
-	Collider::Mesh& m = meshCol.SetBroadShape(Collider::Mesh());
-	m.Create(&mesh);
-	meshCol.mask.SetBelongFrag(lwpC::Collider::FieldObject);
-	meshCol.mask.SetHitFrag(lwpC::Collider::Bullet | lwpC::Collider::Particle | lwpC::Collider::Player);
-
-	pointCol.worldTF.translation = { 0.0f, 0.0f, 10.0f };
-	pointCol.name = "point";
-	pointCol.isMove = true;
-	//aabbCol.SetFollowTarget(&pointCol.worldTF);
-	aabbCol.SetBroadShape(Collider::AABB());
-	aabbCol.mask.SetBelongFrag(lwpC::Collider::None);
-	aabbCol.name = "aabb";
-	aabbCol.isMove = true;
+	mesh_.LoadShortPath("level/buildings/4Story_Wide_2Doors_Mat.gltf");
+	mesh_.ApplyWorldTransform({
+		{0.0f, -1.8f, 0.0f},
+		{0.0f, 0.928f, 0.0f, 0.372f},
+		{0.5f, 0.5f, 0.5f},
+	});
 
 	particle_.model.LoadCube();
 	particle_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl");
+	particle_.Add(1, { 0.0f,2.0f,0.0f });
 }
 
 // 更新
 void ColliderTest::Update() {
-	if (Input::Keyboard::GetTrigger(DIK_SPACE)) {
-		particle_.Add(512);
+	static int particleAmount = 1;
+	// パーティクル用ImGui
+	ImGui::Begin("Test");
+	if (ImGui::TreeNode("Model")) {
+		particle_.model.DebugGUI();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Particle")) {
+		particle_.DebugGUI();
+		ImGui::TreePop();
+	}
+	ImGui::Text("-----------");
+	ImGui::DragInt("ParticleAmount", &particleAmount);
+	ImGui::End();
+
+	time++;
+	if (time > 30) {
+		time = 0;
+		particle_.Add(particleAmount);
 	}
 }

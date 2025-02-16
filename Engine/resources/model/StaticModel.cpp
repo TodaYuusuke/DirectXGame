@@ -52,6 +52,11 @@ void StaticModel::ApplyWorldTransform(const Object::TransformQuat& wtf) {
 }
 
 void StaticModel::DebugGUI() {
+	static Object::TransformQuat wtf;
+	wtf.DebugGUI();
+	if (ImGui::Button("Apply")) {
+		ApplyWorldTransform(wtf);
+	}
 	ImGui::Checkbox("isActive", &isActive);
 	//if(ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
 }
