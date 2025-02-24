@@ -145,7 +145,7 @@ void Engine::EndFrame() {
 
 void Engine::DebugGUI() {
 	// フラグがfalseなら早期リターン
-	if (!Config::Debug::kIsShowDebugGUI) { return; }
+	//if (!Config::Debug::kIsShowDebugGUI) { return; }
 
 	ImGui::Begin("LWP");
 	if (ImGui::BeginTabBar("LWP")) {
@@ -157,10 +157,8 @@ void Engine::DebugGUI() {
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
 		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->worldTF);
-		frameTracker_->DebugGUI();
-#else
-		frameTracker_->DebugGUI();
 #endif
+		frameTracker_->DebugGUI();
 		ImGui::EndTabBar();
 	}
 	ImGui::End();

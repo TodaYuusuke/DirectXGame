@@ -110,6 +110,20 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 	collider_.backFacePSO.Copy(collider_.frontFacePSO)	// PSOをコピー
 		.SetRasterizerState(D3D12_CULL_MODE_FRONT)	// 裏面のみを描画
 		.Build();
+	collider_.stencilMaskRoot.Build();	// 何もいらない
+	collider_.stencilMaskPSO.Init(collider_.stencilMaskRoot)
+		.SetRTVFormat(DXGI_FORMAT_R8_UNORM)
+		.SetBlendState(false)	// ブレンド無し
+		.SetDepthState(false)	// デプス無し
+		.SetStencilState(true,
+			D3D12_DEPTH_STENCILOP_DESC(
+				D3D12_STENCIL_OP_KEEP,	// 値を保持
+				D3D12_STENCIL_OP_KEEP,	// 値を保持
+				D3D12_STENCIL_OP_KEEP,	// 値を保持
+				D3D12_COMPARISON_FUNC_NOT_EQUAL))	// 0 以外なら描画
+		.SetSystemVS("ms/particle/PassThrough.VS.hlsl")
+		.SetSystemPS("ms/particle/StencilMask.PS.hlsl")
+		.Build();
 	collider_.checkResultRoot.AddTableParameter(0, SV_All)
 		.AddTableParameter(1, SV_All)
 		.AddUAVParameter(0, SV_All)
@@ -121,6 +135,7 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 	// リソース初期化
 	collider_.id.InitUAV();
 	collider_.depthStencil.InitGPUCollider();
+	collider_.stencilMask.InitStencilMask();
 }
 
 void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
@@ -186,26 +201,11 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 			D3D12_RESOURCE_STATES beforeBarrier = it->back->GetBarrier();
 			it->back->ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 
-			// ビューポート
-			D3D12_VIEWPORT viewport = {};
-			// クライアント領域のサイズと一緒にして画面全体に表示
-			viewport.Width = static_cast<float>(it->back->width);
-			viewport.Height = static_cast<float>(it->back->height);
-			viewport.TopLeftX = 0;
-			viewport.TopLeftY = 0;
-			viewport.MinDepth = 0.0f;
-			viewport.MaxDepth = 1.0f;
 			// viewportを設定
+			D3D12_VIEWPORT viewport = it->back->GetViewport();
 			list->RSSetViewports(1, &viewport);
-
-			// シザー矩形
-			D3D12_RECT scissorRect = {};
-			// 基本的にビューポートと同じ矩形が構成されるようにする
-			scissorRect.left = 0;
-			scissorRect.right = it->back->width;
-			scissorRect.top = 0;
-			scissorRect.bottom = it->back->height;
 			// Scirssorを設定
+			D3D12_RECT scissorRect = it->back->GetScissorRect();
 			list->RSSetScissorRects(1, &scissorRect);
 
 			// GPUパーティクル描画
@@ -215,10 +215,10 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 			it->back->ChangeResourceBarrier(beforeBarrier, list);
 		}
 	}
-	
-	// 更新処理
-	// 当たり判定
-	// ヒット処理
+
+	ImGui::Begin("GPU Collider");
+	ImGuiManager::ShowRenderResource(collider_.stencilMask, 0.2f);
+	ImGui::End();
 }
 
 void ParticleRenderer::Reset() {
@@ -270,17 +270,31 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 	DispatchAllModel(list, cameraView);		// 表面を描画
 	list->SetPipelineState(collider_.backFacePSO.GetState());	// PSOセット
 	DispatchAllModel(list, cameraView);		// 裏面を描画
-#pragma endregion
-/*
-#pragma region ステンシルからヒットしてるIDを検出（できてない）
-	//バリアを設定
-	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
-	collider_.depthStencil.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 
+	// バリアを戻す
+	collider_.id.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
+#pragma endregion
+
+#pragma region ステンシルを検出するためのマスクされたリソースを生成
+	// バリアを設定
+	collider_.stencilMask.ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
+
+	// 描画先のRTVとDSVを設定する
+	list->OMSetRenderTargets(1, &collider_.stencilMask.rtvInfo.cpuView, false, &collider_.depthStencil.dsvInfo.cpuView);
+	collider_.stencilMask.Clear(list);
+	list->SetGraphicsRootSignature(collider_.stencilMaskRoot);	// Rootセット
+	list->SetPipelineState(collider_.stencilMaskPSO.GetState());	// PSOセット
+	list->DrawInstanced(3, 1, 0, 0);	// 描画
+
+	// バリアを戻す
+	collider_.stencilMask.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
+#pragma endregion
+
+#pragma region ステンシルからヒットしてるIDを検出
 	list->SetComputeRootSignature(collider_.checkResultRoot);	// Rootセット
 	list->SetPipelineState(collider_.checkResultPSO.GetState());	// PSOセット
 	list->SetComputeRootDescriptorTable(0, collider_.id.srvInfo.gpuView);
-	list->SetComputeRootDescriptorTable(1, collider_.depthStencil.srvInfo.gpuView);
+	list->SetComputeRootDescriptorTable(1, collider_.stencilMask.srvInfo.gpuView);
 	list->SetComputeRootDescriptorTable(2, p->GetUAVHiTListView());
 	list->Dispatch(collider_.depthStencil.width, collider_.depthStencil.height, 1);	// 解像度分実行する
 #pragma endregion
@@ -301,7 +315,6 @@ void ParticleRenderer::CheckCollision(ID3D12GraphicsCommandList6* list, Object::
 
 	list->Dispatch(p->GetMultiply(), 1, 1);	// 倍率回実行する
 #pragma endregion
-*/
 }
 
 void ParticleRenderer::DispatchAllParticle(ID3D12GraphicsCommandList6* list, GPUParticle* p, D3D12_GPU_VIRTUAL_ADDRESS cameraView) {

@@ -51,10 +51,19 @@ void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColor
 	col = *new Color(v);
 }
 
-void ImGuiManager::ShowTexture(const Resource::Texture& texture) {
+void ImGuiManager::ShowTexture(const Resource::Texture& texture, float scale) {
 	if (texture.GetIndex() != -1) {	// テクスチャが存在するならば表示
-		Math::Vector2 size = texture.GetSize();
+		Math::Vector2 size = texture.GetSize() * scale;
 		ImGui::Image((ImTextureID)SRV::GetInstance()->GetGPUHandle(texture.GetIndex()).ptr, ImVec2(size.x, size.y));
+	}
+	else {
+		ImGui::Text("No exist");	// 存在しないので非表示
+	}
+}
+void ImGuiManager::ShowRenderResource(const RenderResource& resource, float scale) {
+	if (resource.srvInfo.index != -1) {	// テクスチャが存在するならば表示
+		Math::Vector2 size = resource.GetTextureSize() * scale;
+		ImGui::Image((ImTextureID)resource.srvInfo.gpuView.ptr, ImVec2(size.x, size.y));
 	}
 	else {
 		ImGui::Text("No exist");	// 存在しないので非表示

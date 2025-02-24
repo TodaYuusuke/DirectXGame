@@ -7,9 +7,8 @@ void main(uint32_t3 DTid : SV_DispatchThreadID) {
 	// ヒットしているならば処理を行う
 		if (sHitList[particleIndex] > 0) {
 			// ぶつかったら反転する
-            rParticleData[particleIndex].velocity.x *= 0.8f;
-            rParticleData[particleIndex].velocity.y *= -0.8f;
-            rParticleData[particleIndex].velocity.z *= 0.8f;
+            rParticleData[particleIndex].velocity.y *= -0.99f;
+            rParticleData[particleIndex].color = float32_t4(0.0f, 1.0f, 0.0f, 1.0f);
         }
 	}
 }

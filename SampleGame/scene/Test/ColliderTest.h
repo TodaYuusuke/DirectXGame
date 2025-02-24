@@ -28,13 +28,15 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	//Field field_;
 
 	LWP::Object::DirectionLight sun_;
-	LWP::Object::GPUParticle particle_;
-	LWP::Object::GPUParticle deadBodyParticle_;
+	LWP::Object::GPUParticle blood_;
+	LWP::Object::GPUParticle deadBody_;
+	LWP::Object::GPUParticle bloodFall_;
 	LWP::Resource::StaticModel mesh_;
 	LWP::Resource::StaticModel cube_[2];
 
 	bool addBlood = false;
 	bool addDeadBody = false;
+	bool addBloodFall = true;
 
 	// パーティクルの継続生成
 	int time = 0;

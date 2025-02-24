@@ -1,7 +1,7 @@
 #include "../Buffer.hlsli"
 
 const static float32_t kGravity_ = -9.8f / 50.0f;
-const static float32_t kDeleteTime = 2.0f;
+const static float32_t kDeleteTime = 4.0f;
 
 [numthreads(1024, 1, 1)]
 void main(uint32_t3 DTid : SV_DispatchThreadID) {
@@ -18,6 +18,15 @@ void main(uint32_t3 DTid : SV_DispatchThreadID) {
             
             // デルタタイム加算
             rParticleData[particleIndex].lifeTime += cPerFrame.deltaTime;
+            
+            // 徐々に小さく
+            rParticleData[particleIndex].scale = Lerp(
+                rParticleData[particleIndex].scale,
+                float32_t3(0.0f, 0.0f, 0.0f),
+                InCubic(rParticleData[particleIndex].lifeTime / kDeleteTime)
+            );
+            
+            
             // 制限時間経過でアクティブ終了
             if (rParticleData[particleIndex].lifeTime > kDeleteTime) {
                 rParticleData[particleIndex].isActive = 0;

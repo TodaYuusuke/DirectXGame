@@ -62,6 +62,14 @@ void Camera::DebugGUI() {
 	worldTF.DebugGUI();
 	pp.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
+	if (ImGui::TreeNode("RenderResource")) {
+		ImGuiManager::ShowRenderResource(renderResource_, 0.2f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("TextureResource")) {
+		ImGuiManager::ShowRenderResource(textureResource_, 0.2f);
+		ImGui::TreePop();
+	}
 	ImGui::Checkbox("isActive", &isActive);
 }
 

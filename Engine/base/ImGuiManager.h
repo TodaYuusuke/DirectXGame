@@ -62,6 +62,12 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="index"></param>
 		/// <param name="size"></param>
-		static void ShowTexture(const Resource::Texture& texture);
+		static void ShowTexture(const Resource::Texture& texture, float scale = 1.0f);
+		/// <summary>
+		/// リソースの中身を表示する
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		static void ShowRenderResource(const RenderResource& resource, float scale = 1.0f);
 	};
 }

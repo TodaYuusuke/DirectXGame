@@ -24,6 +24,9 @@ namespace LWP::Base {
 		// UAV対応初期化
 		void InitUAV();
 
+		// GPUコライダーのステンシルマスク用初期化
+		void InitStencilMask();
+
 		// 画面クリア
 		void Clear(ID3D12GraphicsCommandList* list) override;
 

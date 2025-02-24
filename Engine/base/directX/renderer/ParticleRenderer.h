@@ -90,6 +90,12 @@ namespace LWP::Base {
 			PSO frontFacePSO;	// StaticModelの表面描画用
 			PSO backFacePSO;	// StaticModelの裏面描画用
 
+			// ステンシルでマスクされたテクスチャ
+			RenderResource stencilMask;
+			// ステンシルを元にマスクされたテクスチャを描画するためのパイプライン
+			RootSignature stencilMaskRoot;
+			PSO stencilMaskPSO;
+
 			// ステンシルのみをUAV用のリソースにコピーするためのPSO
 			RootSignature checkResultRoot;
 			PSO checkResultPSO;

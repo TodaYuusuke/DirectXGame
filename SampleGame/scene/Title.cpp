@@ -12,7 +12,7 @@ using namespace LWP::Info;
 
 // 初期化
 void Title::Initialize() {
-	//LWP::Window::ChangeFullScreenMode();	// フルスクリーン
+	LWP::Window::ChangeFullScreenMode();	// フルスクリーン
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
 
