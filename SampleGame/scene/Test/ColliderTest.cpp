@@ -44,13 +44,13 @@ void ColliderTest::Initialize() {
 	deadBody_.Add(1, { 0.0f,2.0f,0.0f });
 	bloodFall_.model.LoadCube();
 	bloodFall_.SetShaderPath("BloodFall/Emitter.CS.hlsl", "BloodFall/Update.CS.hlsl", "BloodFall/Hit.CS.hlsl");
-	bloodFall_.Add(1, { 0.0f,2.0f,0.0f });
+	bloodFall_.Add(1, { -0.9f,2.0f,0.0f });
 }
 
 // 更新
 void ColliderTest::Update() {
 	// パーティクルの継続数
-	static int particleAmount = 1024;
+	static int particleAmount = 1;
 	// パーティクルの継続生成間隔
 	static int interval = 10;
 

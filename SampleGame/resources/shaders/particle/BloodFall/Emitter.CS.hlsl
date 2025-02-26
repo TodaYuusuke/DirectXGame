@@ -17,7 +17,7 @@ void main(uint32_t3 DTid : SV_DispatchThreadID) {
         rParticleData[particleIndex].translate = cEmitter.position;
         rParticleData[particleIndex].translate.x += (rand.Generate1d() * 2 - 1) * cEmitter.radius;
         rParticleData[particleIndex].translate.z += (rand.Generate1d() * 2 - 1) * cEmitter.radius;
-        rParticleData[particleIndex].velocity = float32_t3(0.0f, 0.0f, 0.0f);
+        rParticleData[particleIndex].velocity = float32_t3(1.0f, 0.0f, 0.0f);
         rParticleData[particleIndex].scale = float32_t3(0.05f, 0.05f, 0.05f);
         rParticleData[particleIndex].color = float32_t4(1.0f, 0.0f, 0.0f, 1.0f);
         rParticleData[particleIndex].lifeTime = 0.0f;
