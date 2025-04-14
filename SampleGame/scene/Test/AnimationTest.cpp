@@ -26,7 +26,7 @@ void AnimationTest::Initialize() {
 	}
 	anim.LoadFullPath("resources/model/Player/Robot/Player_Boned_IK.gltf", &model[0]);
 
-
+	sprite.material.texture = Resource::LoadTexture("TestSpriteSheet.png");
 }
 
 // 更新
