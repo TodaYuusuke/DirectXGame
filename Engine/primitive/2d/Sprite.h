@@ -3,54 +3,66 @@
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// 2Dテクスチャ
+	/// テクスチャを描画するための形状
 	/// </summary>
-	class Sprite final
-		: public IPrimitive {
+	class Sprite final {
 	public: // ** パブリックなメンバ関数 ** //
 
-		// サイズ
-		LWP::Utility::Observer<LWP::Math::Vector2> size = LWP::Math::Vector2{ 200.0f,200.0f };
+		// テクスチャ
+		Resource::Texture texture;
 		// アンカーポイント
-		LWP::Utility::Observer<LWP::Math::Vector2> anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		Math::Vector2 anchorPoint = Math::Vector2{ 0.0f,0.0f };
 
 
-	public: // ** 関数 ** //
-
-		// 初期化を呼び出す
-		Sprite() { 
-			isUI = true;
-			material.enableLighting = false;
-			Init();
-		}
+	public: // ** メンバ関数 ** //
 
 		/// <summary>
-		/// 更新処理
+		/// コンストラクタ
 		/// </summary>
-		void Update() override;
-
+		Sprite();
 		/// <summary>
-		/// 頂点を生成する関数
+		/// デストラクタ
 		/// </summary>
-		void CreateVertices() override;
+		~Sprite();
 
 		/// <summary>
-		/// 頂点数を返す関数
+		/// 初期化処理
 		/// </summary>
-		int GetVertexCount() const { return 4; }
-
-	private: // ** 派生クラス用の関数をオーバーライド ** //
+		void Init();
+		/// <summary>
+		/// 更新処理（※ユーザー呼び出し不要）
+		/// </summary>
+		void Update();
 
 		/// <summary>
-		/// 独自のメンバ変数用にImGuiを用意
+		/// スプライトとして描画命令
+		/// </summary>
+		/// <param name="pos">描画するスクリーン座標</param>
+		/// <param name="rotateZ">Z軸回転</param>
+		/// <param name="scale">拡大率</param>
+		/// <param name="color">色</param>
+		void Draw(Math::Vector2 pos, float rotateZ = 0.0f, Math::Vector2 scale = { 1.0f,1.0f }, Utility::Color color = Utility::ColorPattern::WHITE);
+		/// <summary>
+		/// Billboard2Dとして描画命令
+		/// </summary>
+		/// <param name="pos">描画するワールド座標</param>
+		/// <param name="rotate">回転</param>
+		/// <param name="scale">拡大率</param>
+		/// <param name="color">色</param>
+		void DrawBillboard2D(Math::Vector3 pos, Math::Vector3 rotate = { 1.0f,1.0f,1.0f }, Math::Vector2 scale = { 1.0f,1.0f }, Utility::Color color = Utility::ColorPattern::WHITE);
+		/// <summary>
+		/// Billboard3Dとして描画命令
+		/// </summary>
+		/// <param name="pos">描画するワールド座標</param>
+		/// <param name="rotate">回転</param>
+		/// <param name="scale">拡大率</param>
+		/// <param name="color">色</param>
+		void DrawBillboard3D(Math::Vector3 pos, Math::Vector3 rotate = { 1.0f,1.0f,1.0f }, Math::Vector2 scale = { 1.0f,1.0f }, Utility::Color color = Utility::ColorPattern::WHITE);
+
+		/// <summary>
+		/// Debug用のImGui
 		/// </summary>
 		/// <param name="label"></param>
-		void DerivedDebugGUI(const std::string& label);
-
-		/// <summary>
-		/// 一部の値のみ見れればいいので元の関数をオーバーライド
-		/// </summary>
-		/// <returns></returns>
-		bool GetChanged() override;
+		void DebugGUI(const std::string& label = "Sprite");
 	};
 }
