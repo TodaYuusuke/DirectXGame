@@ -18,36 +18,43 @@ void DebugCamera::Update() {
 	Rotate();
 }
 
-void DebugCamera::Enable(const Object::TransformQuat wtf) {
-	camera_.worldTF.translation = wtf.GetWorldPosition();
-	camera_.worldTF.rotation = wtf.rotation;
-	camera_.worldTF.scale = wtf.scale;
+void DebugCamera::Enable(LWP::Object::Camera* ptr) {
+	cameraPtr_ = ptr;
+	camera_.worldTF.translation = cameraPtr_->worldTF.GetWorldPosition();
+	camera_.worldTF.rotation = cameraPtr_->worldTF.rotation;
+	camera_.worldTF.scale = cameraPtr_->worldTF.scale;
 	camera_.isActive = true;
 }
 void DebugCamera::Disable() {
+	cameraPtr_ = nullptr;
 	camera_.isActive = false;
 }
 
-void DebugCamera::DebugGUI(const Object::TransformQuat wtf) {
+void DebugCamera::ApplyTransform() {
+	cameraPtr_->worldTF = camera_.worldTF;
+}
+
+void DebugCamera::DebugGUI(LWP::Object::Camera* ptr) {
 	if (ImGui::BeginTabItem("Info")) {
 		if (ImGui::TreeNode("Debug Camera")) {
 			ImGui::Text("WASD : Move  LControl : Dash(Speed 2x)");
 			ImGui::Text("Space : Up  LShift : Down");
 			ImGui::Text("Arrow Key : Rotate");
-			// オフボタン
-			if (camera_.isActive) {
-				if (ImGui::Button("Disable")) { Disable(); }
-			}
 			// オンボタン
-			else {
-				if (ImGui::Button("Enable")) { Enable(wtf); }
+			if (!camera_.isActive) {
+				if (ImGui::Button("Enable")) { Enable(ptr); }
 			}
-			ImGui::Text("-------------");
-			ImGui::DragFloat("Speed", &cameraSpeed_, 0.01f);	// カメラの移動速度
-			ImGui::DragFloat("Rotate Speed", &cameraRotateSpeed_, 0.001f);	// カメラの回転速度
-			if (ImGui::TreeNode("Camera")) {
-				camera_.DebugGUI();
-				ImGui::TreePop();
+			// オフボタン
+			else {
+				if (ImGui::Button("Disable")) { Disable(); }
+				if (ImGui::Button("Apply Transform")) { ApplyTransform(); }
+				ImGui::Text("-------------");
+				ImGui::DragFloat("Speed", &cameraSpeed_, 0.01f);	// カメラの移動速度
+				ImGui::DragFloat("Rotate Speed", &cameraRotateSpeed_, 0.001f);	// カメラの回転速度
+				if (ImGui::TreeNode("Camera")) {
+					camera_.DebugGUI();
+					ImGui::TreePop();
+				}
 			}
 			ImGui::TreePop();
 		}

@@ -56,7 +56,9 @@ namespace LWP::Object {
 		// パーティクルを追加
 		void Add(uint32_t value);
 		// パーティクルを追加（座標指定）
-		void Add(uint32_t value, LWP::Math::Vector3 position);
+		void Add(uint32_t value, const LWP::Math::Vector3& position);
+		// 座標をセット
+		void SetPosition(const LWP::Math::Vector3& position);
 		// シェーダーを設定
 		void SetShaderPath(std::string emitter, std::string update, std::string hit);
 

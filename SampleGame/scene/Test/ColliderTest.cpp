@@ -12,8 +12,9 @@ ColliderTest::ColliderTest() : blood_(100), deadBody_(100), bloodFall_(100) {}
 
 // 初期化
 void ColliderTest::Initialize() {
+	
 	// 地形初期化
-	//field_.Init(&levelData, &mainCamera);
+	field_.Init(&levelData, &mainCamera);
 
 	// モデル読み込み
 	cube_[0].LoadCube();
@@ -45,6 +46,8 @@ void ColliderTest::Initialize() {
 	bloodFall_.model.LoadCube();
 	bloodFall_.SetShaderPath("BloodFall/Emitter.CS.hlsl", "BloodFall/Update.CS.hlsl", "BloodFall/Hit.CS.hlsl");
 	bloodFall_.Add(1, { -0.9f,2.0f,0.0f });
+
+	offset = { 0.0f, 2.0f,15.0f };
 }
 
 // 更新
@@ -83,4 +86,6 @@ void ColliderTest::Update() {
 		if (addDeadBody) { deadBody_.Add(particleAmount); }
 		if (addBloodFall) { bloodFall_.Add(particleAmount); }
 	}
+
+	deadBody_.SetPosition(mainCamera.worldTF.GetWorldPosition() + offset);
 }

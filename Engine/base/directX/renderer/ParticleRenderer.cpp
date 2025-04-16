@@ -171,8 +171,8 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		// 生成が必要かチェック
 		if (p->GetIsEmit()) {
 			int c = p->GetEmitCount();
-			// emitが0で実行するとバグるので回避
-			if (c != 0) {
+			// 生成数が0以下で実行するとバグるので回避
+			if (c > 0) {
 				list->SetPipelineState(p->GetEmitterPSO()->GetState());
 				list->Dispatch(c, 1, 1);	// 必要分実行する
 				p->SetDataBarrier(list);	// 依存関係を設定

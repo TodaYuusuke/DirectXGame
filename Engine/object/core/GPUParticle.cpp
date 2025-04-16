@@ -31,9 +31,12 @@ void GPUParticle::Add(uint32_t value) {
 	emitCount = value;
 	isEmit = true;
 }
-void GPUParticle::Add(uint32_t value, LWP::Math::Vector3 position) {
-	emitterSphere_.data_->position = position;
+void GPUParticle::Add(uint32_t value, const LWP::Math::Vector3& position) {
+	SetPosition(position);
 	Add(value);
+}
+void GPUParticle::SetPosition(const LWP::Math::Vector3& position) {
+	emitterSphere_.data_->position = position;
 }
 // デバッグ用GUI
 void GPUParticle::DebugGUI() {

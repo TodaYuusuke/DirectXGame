@@ -156,8 +156,8 @@ void Engine::DebugGUI() {
 		resource_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
-		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->worldTF);
 #endif
+		debugCamera_->DebugGUI(sceneManager_->GetMainCamera());
 		frameTracker_->DebugGUI();
 		ImGui::EndTabBar();
 	}
