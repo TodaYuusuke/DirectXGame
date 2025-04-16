@@ -26,15 +26,6 @@ namespace LWP::Primitive {
 		~Sprite();
 
 		/// <summary>
-		/// 初期化処理
-		/// </summary>
-		void Init();
-		/// <summary>
-		/// 更新処理（※ユーザー呼び出し不要）
-		/// </summary>
-		void Update();
-
-		/// <summary>
 		/// スプライトとして描画命令
 		/// </summary>
 		/// <param name="pos">描画するスクリーン座標</param>
@@ -64,5 +55,11 @@ namespace LWP::Primitive {
 		/// </summary>
 		/// <param name="label"></param>
 		void DebugGUI(const std::string& label = "Sprite");
+
+
+	private: // ** メンバ変数 ** //
+
+		// レンダリングマネージャーのポインタ
+		Base::RendererManager* manager_ = nullptr;
 	};
 }

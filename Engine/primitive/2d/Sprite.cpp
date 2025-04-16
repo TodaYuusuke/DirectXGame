@@ -1,15 +1,43 @@
 #include "Sprite.h"
+
+#include "primitive/PrimitiveManager.h"
 #include "base/ImGuiManager.h"
 
 #include <algorithm>
 
-
+using namespace LWP;
+using namespace LWP::Base;
+using namespace LWP::Math;
 using namespace LWP::Primitive;
+using namespace LWP::Utility;
+
+Sprite::Sprite() {
+	// 管理クラスからRendererManagerのポインタを受け取る
+	manager_ = Primitive::Manager::GetInstance()->GetRendererManager();
+}
+Sprite::~Sprite() {}
+
+void Sprite::Draw(Vector2 pos, float rotateZ, Vector2 scale, Color color) {
+
+}
+void Sprite::DrawBillboard2D(Vector3 pos, Vector3 rotate, Vector2 scale, Color color) {
+
+}
+void Sprite::DrawBillboard3D(Vector3 pos, Vector3 rotate, Vector2 scale, Color color) {
+
+}
+
+void Sprite::DebugGUI(const std::string& label) {
+	if (ImGui::TreeNode("Texture")) {
+		ImGuiManager::ShowTexture(texture);
+		ImGui::TreePop();
+	}
+	ImGui::SliderFloat2("anchorPoint", &anchorPoint.x, 0.0f, 1.0f);
+}
 
 void Sprite::Update() {
 	// 値が変化した場合にのみ再計算
 	if (!GetChanged()) { return; }
-	
 	// テクスチャのサイズを取得
 	if (material.texture.t.GetIndex() != -1) {
 		size.t = material.texture.t.GetSize();

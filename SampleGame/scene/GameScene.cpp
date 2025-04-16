@@ -22,16 +22,16 @@ void GameScene::Initialize() {
 	enemyManager_.Init(&levelData, &player_);
 
 	// UI描画
-	ui_.material.texture = Resource::LoadTexture("ui/Control.png");
+	//ui_.material.texture = Resource::LoadTexture("ui/Control.png");
 	ui_.anchorPoint = { 0.0f,0.5f };
-	ui_.worldTF.translation.y = 1080.0f / 2.0f;
-	ui_.worldTF.scale = { 0.8f,0.8f,1.0f };
+	//ui_.worldTF.translation.y = 1080.0f / 2.0f;
+	//ui_.worldTF.scale = { 0.8f,0.8f,1.0f };
 
 	// 演出初期化
-	stagingSprite_.isUI = true;
-	stagingSprite_.material.enableLighting = false;
-	stagingSprite_.material.color = ColorPattern::BLACK;
-	stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
+	//stagingSprite_.isUI = true;
+	//stagingSprite_.material.enableLighting = false;
+	//stagingSprite_.material.color = ColorPattern::BLACK;
+	//stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
 
 	// 状態管理クラスにフェードインアウトの処理を渡す
 #pragma region FadeIn
@@ -52,7 +52,7 @@ void GameScene::Initialize() {
 		// tを計算
 		float t = Easing::Liner(s.time / s.kTime);
 		// フェードイン
-		stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
+		//stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
 		};
 #pragma endregion
 #pragma region FadeOut
@@ -73,7 +73,7 @@ void GameScene::Initialize() {
 		// tを計算
 		float t = Easing::InCubic(e.time / e.kTime);
 		// フェードアウト
-		stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
+		//stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
 	};
 #pragma endregion
 

@@ -36,7 +36,12 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Draw(Base::RendererManager* manager);
+		void Draw();
+
+		// レンダリングマネージャーのポイントをセット
+		void SetRendererManager(Base::RendererManager* ptr) { manager_ = ptr; }
+		// レンダリングマネージャーのポイントを渡す（スプライト用）
+		Base::RendererManager* GetRendererManager() { return manager_; }
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetPointer(IPrimitive* ptr);
@@ -45,6 +50,9 @@ namespace LWP::Primitive {
 
 
 	private: // メンバ変数
+
+		// RendererManagerのポインタ
+		Base::RendererManager* manager_ = nullptr;
 
 		// 形状のリスト
 		Utility::PtrManager<IPrimitive*> primitives_;

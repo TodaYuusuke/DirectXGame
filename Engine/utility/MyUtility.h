@@ -10,7 +10,7 @@
 #include "observers/ObserverPtr.h"
 #include "PtrManager.h"
 #include "StatePattern.h"
-#include "UI.h"
+//#include "UI.h"
 
 #include "MyString.h"
 #include <random>

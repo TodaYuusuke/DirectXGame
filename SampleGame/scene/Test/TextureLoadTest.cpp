@@ -4,9 +4,9 @@ using namespace LWP;
 
 // 初期化
 void TextureLoadTest::Initialize() {
-	pngSprite_.material.texture = Resource::LoadTexture("uvChecker.png");
-	ddsSprite_.material.texture = Resource::LoadTexture("uvChecker.dds");
-	ddsSprite_.worldTF.translation.x = 700.0f;
+	//pngSprite_.material.texture = Resource::LoadTexture("uvChecker.png");
+	//ddsSprite_.material.texture = Resource::LoadTexture("uvChecker.dds");
+	//ddsSprite_.worldTF.translation.x = 700.0f;
 }
 
 // 更新

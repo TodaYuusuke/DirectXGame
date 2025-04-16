@@ -1,6 +1,6 @@
 #include <Adapter.h>
-#include "scene/Title.h"
-#include "scene/GameScene.h"
+//#include "scene/Title.h"
+//#include "scene/GameScene.h"
 
 #include "scene/Test/TestIncludes.h"
 

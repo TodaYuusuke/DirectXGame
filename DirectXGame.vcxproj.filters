@@ -136,9 +136,6 @@
     <ClCompile Include="Engine\utility\CatmullRom.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\utility\UI.cpp">
-      <Filter>Engine\utilitiy</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
@@ -536,9 +533,6 @@
     </ClInclude>
     <ClInclude Include="Engine\object\core\Particle.h">
       <Filter>Engine\object\core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\UI.h">
-      <Filter>Engine\utilitiy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\collision\CollisionManager.h">
       <Filter>Engine\object\core\collision</Filter>
