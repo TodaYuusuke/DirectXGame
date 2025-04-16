@@ -25,14 +25,16 @@ public:	// ** 純粋仮想関数の実体宣言 ** //
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// 地形データ
-	//Field field_;
+	Field field_;
 
-	LWP::Object::DirectionLight sun_;
+	//LWP::Object::DirectionLight sun_;
 	LWP::Object::GPUParticle blood_;
 	LWP::Object::GPUParticle deadBody_;
 	LWP::Object::GPUParticle bloodFall_;
 	LWP::Resource::StaticModel mesh_;
 	LWP::Resource::StaticModel cube_[2];
+
+	LWP::Math::Vector3 offset;
 
 	bool addBlood = false;
 	bool addDeadBody = false;
