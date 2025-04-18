@@ -138,7 +138,11 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 		sendTo(indexInfo);
 	}
 }
+void RendererManager::AddSprite() {
+	
 
+	postRenderer_.AddIndexDataSprite(index);
+}
 
 void RendererManager::AddLightData(Object::DirectionLight* light) { buffers_.AddData(*light); }
 
