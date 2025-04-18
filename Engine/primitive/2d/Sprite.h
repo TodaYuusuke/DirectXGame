@@ -10,9 +10,9 @@ namespace LWP::Primitive {
 	public: // ** パブリックなメンバ関数 ** //
 
 		// サイズ
-		LWP::Utility::Observer<LWP::Math::Vector2> size = LWP::Math::Vector2{ 200.0f,200.0f };
+		LWP::Math::Vector2 size = LWP::Math::Vector2{ 200.0f,200.0f };
 		// アンカーポイント
-		LWP::Utility::Observer<LWP::Math::Vector2> anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		LWP::Math::Vector2 anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
 
 
 	public: // ** 関数 ** //
@@ -23,6 +23,12 @@ namespace LWP::Primitive {
 			material.enableLighting = false;
 			Init();
 		}
+
+		/// <summary>
+		/// テクスチャを読み込む関数（resources/texture直下からのパス）
+		/// </summary>
+		/// <param name="fileName"></param>
+		void LoadTexture(const std::string& fileName);
 
 		/// <summary>
 		/// 更新処理

@@ -98,7 +98,12 @@ void TransformQuat::DebugGUI(const std::string& label) {
 void TransformQuat::DebugGUI2D(const std::string& label) {
 	if (ImGui::TreeNode(label.c_str())) {
 		ImGui::DragFloat2("Translation", &translation.x, 1.0f);
-		ImGui::DragFloat("Rotation", &rotation.z, 0.01f);
+		float rot = 0.0f;
+		ImGui::DragFloat("Rotation", &rot, 0.01f);
+		rotation = Quaternion::ConvertEuler({ 0.0f,0.0f,rot }) * rotation;
+		ImGui::DragFloat4("Quaternion", &rotation.x, 0.01f);
+		ImGui::Text("Norm ... %f", rotation.Length());
+		if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
 		ImGui::DragFloat2("Scale", &scale.x, 0.01f);
 		ImGui::TreePop();
 	}

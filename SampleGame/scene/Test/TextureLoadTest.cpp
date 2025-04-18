@@ -4,16 +4,16 @@ using namespace LWP;
 
 // 初期化
 void TextureLoadTest::Initialize() {
-	pngSprite_.material.texture = Resource::LoadTexture("uvChecker.png");
 	ddsSprite_.material.texture = Resource::LoadTexture("uvChecker.dds");
+	pngSprite_.LoadTexture("TestSpriteSheet.png");
 }
 
 // 更新
 void TextureLoadTest::Update() {
-	ImGui::Begin("png (Left Sprite)");
-	pngSprite_.DebugGUI();
-	ImGui::End();
-	ImGui::Begin("dds (Right Sprite)");
+	ImGui::Begin("dds (Left Sprite)");
 	ddsSprite_.DebugGUI();
+	ImGui::End();
+	ImGui::Begin("png (Right Sprite)");
+	pngSprite_.DebugGUI();
 	ImGui::End();
 }
