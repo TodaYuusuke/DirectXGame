@@ -3,66 +3,54 @@
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// テクスチャを描画するための形状
+	/// 2Dテクスチャ
 	/// </summary>
-	class Sprite final {
+	class Sprite final
+		: public IPrimitive {
 	public: // ** パブリックなメンバ関数 ** //
 
-		// 名前
-		std::string name = "Sprite";
-
-		// テクスチャ
-		Resource::Texture texture;
+		// サイズ
+		LWP::Utility::Observer<LWP::Math::Vector2> size = LWP::Math::Vector2{ 200.0f,200.0f };
 		// アンカーポイント
-		Math::Vector2 anchorPoint = Math::Vector2{ 0.0f,0.0f };
+		LWP::Utility::Observer<LWP::Math::Vector2> anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
 
 
-	public: // ** メンバ関数 ** //
+	public: // ** 関数 ** //
+
+		// 初期化を呼び出す
+		Sprite() { 
+			isUI = true;
+			material.enableLighting = false;
+			Init();
+		}
 
 		/// <summary>
-		/// コンストラクタ
+		/// 更新処理
 		/// </summary>
-		Sprite();
-		/// <summary>
-		/// デストラクタ
-		/// </summary>
-		~Sprite();
+		void Update() override;
 
 		/// <summary>
-		/// スプライトとして描画命令
+		/// 頂点を生成する関数
 		/// </summary>
-		/// <param name="pos">描画するスクリーン座標</param>
-		/// <param name="rotateZ">Z軸回転</param>
-		/// <param name="scale">拡大率</param>
-		/// <param name="color">色</param>
-		void Draw(Math::Vector2 pos, float rotateZ = 0.0f, Math::Vector2 scale = { 1.0f,1.0f }, Utility::Color color = Utility::ColorPattern::WHITE);
-		/// <summary>
-		/// Billboard2Dとして描画命令
-		/// </summary>
-		/// <param name="pos">描画するワールド座標</param>
-		/// <param name="rotate">回転</param>
-		/// <param name="scale">拡大率</param>
-		/// <param name="color">色</param>
-		void DrawBillboard2D(Math::Vector3 pos, Math::Vector3 rotate = { 1.0f,1.0f,1.0f }, Math::Vector2 scale = { 1.0f,1.0f }, Utility::Color color = Utility::ColorPattern::WHITE);
-		/// <summary>
-		/// Billboard3Dとして描画命令
-		/// </summary>
-		/// <param name="pos">描画するワールド座標</param>
-		/// <param name="rotate">回転</param>
-		/// <param name="scale">拡大率</param>
-		/// <param name="color">色</param>
-		void DrawBillboard3D(Math::Vector3 pos, Math::Vector3 rotate = { 1.0f,1.0f,1.0f }, Math::Vector2 scale = { 1.0f,1.0f }, Utility::Color color = Utility::ColorPattern::WHITE);
+		void CreateVertices() override;
 
 		/// <summary>
-		/// Debug用のImGui
+		/// 頂点数を返す関数
+		/// </summary>
+		int GetVertexCount() const { return 4; }
+
+	private: // ** 派生クラス用の関数をオーバーライド ** //
+
+		/// <summary>
+		/// 独自のメンバ変数用にImGuiを用意
 		/// </summary>
 		/// <param name="label"></param>
-		void DebugGUI();
+		void DerivedDebugGUI(const std::string& label);
 
-
-	private: // ** メンバ変数 ** //
-
-		// レンダリングマネージャーのポインタ
-		Base::RendererManager* manager_ = nullptr;
+		/// <summary>
+		/// 一部の値のみ見れればいいので元の関数をオーバーライド
+		/// </summary>
+		/// <returns></returns>
+		bool GetChanged() override;
 	};
 }

@@ -61,10 +61,6 @@ namespace LWP::Base {
 		/// Primitiveのデータをセット
 		/// </summary>
 		void AddPrimitiveData(Primitive::IPrimitive* primitive);
-		/// <summary>
-		/// スプライトの情報をセット
-		/// </summary>
-		void AddSprite();
 		
 		/// <summary>
 		/// 平行光源のデータをセット

@@ -122,6 +122,7 @@ void RendererManager::DrawCall() {
 	buffers_.Reset();
 }
 
+
 void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 	// IndexInfo構造体に加工
 	IndexInfoStruct info = ProcessIndexInfo(primitive);
@@ -138,10 +139,7 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 		sendTo(indexInfo);
 	}
 }
-void RendererManager::AddSprite() {
 
-	postRenderer_.AddIndexDataSprite(index);
-}
 
 void RendererManager::AddLightData(Object::DirectionLight* light) { buffers_.AddData(*light); }
 
