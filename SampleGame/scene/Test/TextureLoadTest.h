@@ -19,6 +19,4 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Sprite pngSprite_;
 	// ddsのスプライト
 	LWP::Primitive::Sprite ddsSprite_;
-
-	ImGui::NE::EditorContext* m_Context = nullptr;
 };
