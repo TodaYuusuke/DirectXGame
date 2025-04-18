@@ -8,6 +8,9 @@ namespace LWP::Primitive {
 	class Sprite final {
 	public: // ** パブリックなメンバ関数 ** //
 
+		// 名前
+		std::string name = "Sprite";
+
 		// テクスチャ
 		Resource::Texture texture;
 		// アンカーポイント
@@ -54,7 +57,7 @@ namespace LWP::Primitive {
 		/// Debug用のImGui
 		/// </summary>
 		/// <param name="label"></param>
-		void DebugGUI(const std::string& label = "Sprite");
+		void DebugGUI();
 
 
 	private: // ** メンバ変数 ** //

@@ -46,10 +46,10 @@ void Engine::Run(IScene* firstScene) {
 
 		resource_->Update();	// リソース更新（アニメーションの更新処理）
 		primitive_->Update();
-
 		collision_->Update();	// 当たり判定検証
+
 		// Primitiveの描画処理
-		primitive_->Draw(directXCommon_->GetRendererManager());
+		primitive_->Draw();
 
 		EndFrame();
 	}
@@ -95,6 +95,7 @@ void Engine::Initialize(std::wstring title, int width, int height) {
 	// Primitive
 	Primitive::Manager::Create();
 	primitive_ = Primitive::Manager::GetInstance();
+	primitive_->SetRendererManager(directXCommon_->GetRendererManager());
 	// Resource
 	Resource::Manager::Create();
 	resource_ = Resource::Manager::GetInstance();

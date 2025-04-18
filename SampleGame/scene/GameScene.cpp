@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 		}
 
 		// tを計算
-		float t = Easing::Liner(s.time / s.kTime);
+		//float t = Easing::Liner(s.time / s.kTime);
 		// フェードイン
 		//stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
 		};

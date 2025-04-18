@@ -270,6 +270,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
     <ClCompile Include="Engine\utility\Singleton.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\imgui\imgui_draw.cpp" />
@@ -281,6 +285,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Externals\imgui-node-editor\imgui_bezier_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_extra_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h" />
@@ -428,6 +435,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\PtrManager.h" />
     <ClInclude Include="Engine\utility\MyString.h" />
     <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
+    <ClInclude Include="Externals\imgui-node-editor\crude_json.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_bezier_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_canvas.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_extra_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx12.h" />

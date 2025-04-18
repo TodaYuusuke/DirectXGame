@@ -364,6 +364,10 @@
     <ClCompile Include="Engine\utility\Singleton.cpp" />
     <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -817,9 +821,18 @@
     <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\object\core\GPUParticle.h" />
     <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
+    <ClInclude Include="Externals\imgui-node-editor\crude_json.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_bezier_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_canvas.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_extra_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Externals\imgui-node-editor\imgui_bezier_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_extra_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

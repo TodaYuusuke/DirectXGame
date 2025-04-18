@@ -7,12 +7,13 @@
 #include "../../Externals/imgui/imgui_impl_win32.h"
 #include "../../Externals/imgui/imgui_stdlib.h"
 
+#include "../../Externals/imgui-node-editor/imgui_node_editor.h"
+
 #include "../utility/Color.h"
 
 #include "base/directX/utility/descriptorHeap/SRV.h"
 
 namespace LWP::Base {
-
 	class ImGuiManager {
 	public:
 		ImGuiManager() = default;
@@ -70,4 +71,9 @@ namespace LWP::Base {
 		/// <param name="size"></param>
 		static void ShowRenderResource(const RenderResource& resource, float scale = 1.0f);
 	};
+}
+
+// ノードエディターの別名定義
+namespace ImGui::NE {
+	using namespace ax::NodeEditor;
 }
