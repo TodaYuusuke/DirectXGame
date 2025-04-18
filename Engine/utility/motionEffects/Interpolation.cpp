@@ -49,3 +49,8 @@ Quaternion Interpolation::SlerpQuaternion(const Quaternion& start, const Quatern
 	// それぞれの補間係数を利用して補間後のクォータニオンを求める
 	return scale1 * q1 + scale2 * q2;
 }
+
+Vector3 Interpolation::Exponential(const Vector3& current, const Vector3& target, float damping) {
+	float factor = 1.0f - std::exp(-damping);
+	return current + (target - current) * factor;
+}
