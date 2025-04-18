@@ -71,6 +71,12 @@ namespace LWP::Resource {
 		/// </summary>
 		void SetAllMaterialLighting(bool flag);
 
+		/// <summary>
+		/// このモデルのメッシュレット等が格納されたバッファーを返す関数
+		/// </summary>
+		/// <returns></returns>
+		ModelData* GetModelData() const;
+
 
 	public:	// ** オペレータオーバーロード ** //
 

@@ -33,22 +33,17 @@ namespace LWP::Base {
 	/// <summary>
 	/// RenderTargetView
 	/// </summary>
-	class DSV : public IDescriptorHeap {
+	class DSV : public IDescriptorHeap, public Utility::ISingleton<DSV> {
+		friend class Utility::ISingleton<DSV>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
+
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
+		DSV();
+
 	public:	// ** メンバ関数 ** //
 
-		/// <summary>
-		/// デフォルトコンストラクタ
-		/// </summary>
-		DSV() = delete;
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		DSV(ID3D12Device* device);
-
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Init();
 		/// <summary>
 		/// ImGui
 		/// </summary>

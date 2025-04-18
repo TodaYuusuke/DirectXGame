@@ -65,11 +65,12 @@ namespace LWP::Object {
 		};
 
 	public: // ** パブリックなメンバ変数 ** //
-		// トランスフォーム
-		Object::TransformQuat worldTF;
 
 		// 固有名詞
 		std::string name = "Collider";
+
+		// トランスフォーム
+		Object::TransformQuat worldTF;
 		// マスク
 		Mask mask;
 
@@ -80,7 +81,6 @@ namespace LWP::Object {
 		
 		// Variant
 		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule, Collider::Mesh, Collider::Terrain>;
-
 		// ブロードフェーズのコライダー形状
 		ShapeVariant broad;
 		// ナローフェーズのコライダー形状
@@ -101,6 +101,7 @@ namespace LWP::Object {
 
 
 	public: // ** メンバ関数 ** //
+
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>

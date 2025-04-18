@@ -13,7 +13,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		ConstantBuffer() : kElementSize(sizeof(T)) {}
+		ConstantBuffer() : IDataResource(sizeof(T)) {}
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
@@ -23,19 +23,17 @@ namespace LWP::Base {
 		/// 初期化
 		/// </summary>
 		/// <param name="device"></param>
-		void Init(GPUDevice* device) {
+		void Init() {
 			// リソース作成
-			CreateResource(device, kElementSize);
+			CreateResource(kElementSize_);
 			// リソースをマップ
 			resource_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
-			// viewを保持
-			view_ = resource_->GetGPUVirtualAddress();
 		}
 
 		/// <summary>
 		/// GPU上のViewを取得
 		/// </summary>
-		D3D12_GPU_VIRTUAL_ADDRESS GetGPUView() const { return view_; }
+		D3D12_GPU_VIRTUAL_ADDRESS GetGPUView() const { return resource_->GetGPUVirtualAddress(); }
 
 
 	public: // ** パブリックなメンバ変数 ** //
@@ -45,9 +43,9 @@ namespace LWP::Base {
 	private: // ** メンバ変数 ** //
 
 		// データ1つ分のサイズ定数
-		const uint32_t kElementSize{};
+		//const uint32_t kElementSize{};
 		// リソースへのGPUView
-		D3D12_GPU_VIRTUAL_ADDRESS view_{};
+		//D3D12_GPU_VIRTUAL_ADDRESS view_{};
 
 
 	public: // ** オペレーターオーバーロード ** //

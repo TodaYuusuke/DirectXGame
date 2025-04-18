@@ -67,6 +67,27 @@ RootSignature& RootSignature::AddUAVParameter(int registerNum, ShaderVisibility 
 	parameters_.push_back(newPara);
 	return *this;
 }
+RootSignature& RootSignature::AddUAVRWTexture(int registerNum, ShaderVisibility visibility, int space) {
+	// 新しく登録するTableの設定
+	D3D12_DESCRIPTOR_RANGE newDesc = defaultTableDesc_;
+	newDesc.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	newDesc.BaseShaderRegister = registerNum;	// レジスタ番号を登録
+	newDesc.RegisterSpace = space;	// スペースを設定（デフォは0）
+	newDesc.NumDescriptors = 0;
+	// 設定も登録
+	parametersDesc_.push_back(newDesc);
+
+	// 新しく登録するデータ
+	D3D12_ROOT_PARAMETER newPara{};
+	newPara.ParameterType = D3D12_ROOT_PARAMETER_TYPE_UAV;
+	newPara.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(visibility);
+	newPara.DescriptorTable.pDescriptorRanges = &parametersDesc_.back(); // Tabelの中身の配列を指定
+	newPara.DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
+	// 登録
+	parameters_.push_back(newPara);
+	return *this;
+}
+
 
 RootSignature& RootSignature::AddSampler(int registerNum, ShaderVisibility visibility,
 	D3D12_FILTER filter, D3D12_COMPARISON_FUNC func,
@@ -85,7 +106,7 @@ RootSignature& RootSignature::AddSampler(int registerNum, ShaderVisibility visib
 	samplers_.push_back(newSampler);
 	return *this;
 }
-void RootSignature::Build(ID3D12Device* device) {
+void RootSignature::Build() {
 	HRESULT hr = S_FALSE;
 
 	// 詳細をセット
@@ -106,7 +127,7 @@ void RootSignature::Build(ID3D12Device* device) {
 		assert(false);
 	}
 	// バイナリを元に生成
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&root_));
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&root_));
 	assert(SUCCEEDED(hr));
 
 	signatureBlob->Release();

@@ -7,7 +7,7 @@
 using namespace LWP;
 using namespace LWP::Base;
 	
-void TextureResource::Init(GPUDevice* device, HeapManager* heaps, std::string filepath) {
+void TextureResource::Init(std::string filepath) {
 	HRESULT hr = S_FALSE;
 	// ファイル読み込み
 	Load(filepath);
@@ -30,7 +30,8 @@ void TextureResource::Init(GPUDevice* device, HeapManager* heaps, std::string fi
 	properties.Type = D3D12_HEAP_TYPE_DEFAULT; // デフォルト
 
 	// 3. Resourceを生成する
-	hr = device->GetDevice()->CreateCommittedResource(
+	ID3D12Device2* device = GPUDevice::GetInstance()->GetDevice();
+	hr = device->CreateCommittedResource(
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
@@ -42,12 +43,12 @@ void TextureResource::Init(GPUDevice* device, HeapManager* heaps, std::string fi
 
 	// 4. VRAM配置用の一時リソースも作成
 	std::vector<D3D12_SUBRESOURCE_DATA> subResources;
-	DirectX::PrepareUpload(device->GetDevice(), mipImages_.GetImages(), mipImages_.GetImageCount(), mipImages_.GetMetadata(), subResources);
+	DirectX::PrepareUpload(device, mipImages_.GetImages(), mipImages_.GetImageCount(), mipImages_.GetMetadata(), subResources);
 	uint64_t intermediateSize = GetRequiredIntermediateSize(resource_.Get(), 0, UINT(subResources.size()));
-	intermediateResource_ = CreateResource(device, intermediateSize);
+	intermediateResource_ = CreateResource(intermediateSize);
 
 	// VRAMにアップロード
-	info_ = heaps->srv()->CreateTexture(resource_.Get(), intermediateResource_, &subResources, mipImages_);
+	info_ = SRV::GetInstance()->CreateTexture(resource_.Get(), intermediateResource_, &subResources, mipImages_);
 }
 
 
@@ -72,7 +73,7 @@ void TextureResource::Load(const std::string& filePath) {
 	}
 }
 
-ID3D12Resource* TextureResource::CreateResource(GPUDevice* device, size_t size) {
+ID3D12Resource* TextureResource::CreateResource(size_t size) {
 	HRESULT hr = S_FALSE;
 
 	// ヒープの設定
@@ -92,7 +93,7 @@ ID3D12Resource* TextureResource::CreateResource(GPUDevice* device, size_t size) 
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 実際にリソースを作る
 	ID3D12Resource* resource;
-	hr = device->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource));
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
 
 	return resource;

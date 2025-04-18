@@ -1,14 +1,24 @@
 #pragma once
 #include <chrono>
 
+#include "utility/Singleton.h"
+
+#include "base/directX/resource/data/ConstantBuffer.h"
+
 namespace LWP::Information {
 	/// <summary>
 	/// FPSを管理するクラス
 	/// </summary>
-	class FrameTracker final {
-	public: // メンバ関数
+	class FrameTracker : public Utility::ISingleton<FrameTracker> {
+		friend class Utility::ISingleton<FrameTracker>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
 		FrameTracker();
+
+	public:	// ** メンバ関数 ** //
 
 		// 初期化
 		void Initialize();
@@ -34,6 +44,9 @@ namespace LWP::Information {
 
 		// ImGuiを用いて情報表示
 		void DebugGUI();
+
+		// バッファーのViewを取得
+		D3D12_GPU_VIRTUAL_ADDRESS GetPreFrameBufferView() { return preFrame_.GetGPUView(); }
 
 
 	private: // ** メンバ定数 ** //
@@ -68,5 +81,12 @@ namespace LWP::Information {
 
 		// デルタタイムに掛ける係数
 		float deltaFactor = 1.0f;
+
+		// 1フレームの情報を格納したコンスタントバッファー
+		struct PerFrame {
+			float time;	// ゲームを起動してからの時間
+			float deltaTime;	// 1フレームの経過時間
+		};
+		Base::ConstantBuffer<PerFrame> preFrame_;
 	};
 }

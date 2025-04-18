@@ -84,23 +84,16 @@ namespace LWP::Base {
 	/// <summary>
 	/// ShaderResourceView
 	/// </summary>
-	class SRV : public IDescriptorHeap {
+	class SRV : public IDescriptorHeap, public Utility::ISingleton<SRV> {
+		friend class Utility::ISingleton<SRV>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
+
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
+		SRV();
+
 	public:	// ** メンバ関数 ** //
-
-		/// <summary>
-		/// デフォルトコンストラクタ
-		/// </summary>
-		SRV() = delete;
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		SRV(ID3D12Device* device);
-
-
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Init();
 
 		// コマンドクラスをセット
 		void SetCommand(Command* cmd) { cmd_ = cmd; }
@@ -132,9 +125,17 @@ namespace LWP::Base {
 		/// </summary>
 		SRVInfo CreateDepthTexture(ID3D12Resource* resource);
 		/// <summary>
+		/// DepthStencilをGPUCollider用にSRVに登録
+		/// </summary>
+		SRVInfo CreateGPUColliderDepthTexture(ID3D12Resource* resource);
+		/// <summary>
 		/// RenderResourceをSRVに登録
 		/// </summary>
 		SRVInfo CreateRenderResource(ID3D12Resource* resource);
+		/// <summary>
+		/// RenderResourceをUAVに登録
+		/// </summary>
+		UAVInfo CreateRenderResourceUAV(ID3D12Resource* resource);
 		/// <summary>
 		/// CubeMapをSRVに登録
 		/// </summary>
@@ -145,7 +146,7 @@ namespace LWP::Base {
 		/// </summary>
 		SRVInfo CreateStructuredBuffer(ID3D12Resource* resource, const D3D12_SHADER_RESOURCE_VIEW_DESC& desc);
 		/// <summary>
-		/// RWStructuredBufferをSRVに登録
+		/// RWStructuredBufferをUAVに登録
 		/// </summary>
 		UAVInfo CreateRWStructuredBuffer(ID3D12Resource* resource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& desc);
 

@@ -5,7 +5,7 @@
 
 using namespace LWP::Primitive;
 
-void Manager::Initialize() {
+void Manager::Init() {
 	//for (IPrimitive* p : primitives_.list) {
 	//	delete p;
 	//}
@@ -25,10 +25,10 @@ void Manager::Update() {
 	}
 }
 
-void Manager::Draw(Base::RendererManager* manager) {
+void Manager::Draw() {
 	// 描画
 	for (IPrimitive* p : primitives_.list) {
-		p->Draw(manager);
+		p->Draw(manager_);
 	}
 }
 

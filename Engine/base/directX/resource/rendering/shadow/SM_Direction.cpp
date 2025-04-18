@@ -2,7 +2,7 @@
 
 using namespace LWP::Base;
 	
-void SM_Direction::Init(GPUDevice* device, HeapManager* heaps) {
+void SM_Direction::Init() {
 	HRESULT hr = S_FALSE;
 
 	// 解像度
@@ -31,7 +31,7 @@ void SM_Direction::Init(GPUDevice* device, HeapManager* heaps) {
 	currentBarrierState = D3D12_RESOURCE_STATE_GENERIC_READ;
 
 	// 5. Resourceを生成する
-	hr = device->GetDevice()->CreateCommittedResource(
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
@@ -42,9 +42,9 @@ void SM_Direction::Init(GPUDevice* device, HeapManager* heaps) {
 	assert(SUCCEEDED(hr));
 
 	// SRV上に登録
-	srvInfo = heaps->srv()->CreateShadowMapDir(resource_.Get());
+	srvInfo = SRV::GetInstance()->CreateShadowMapDir(resource_.Get());
 	// DSV上に登録
-	dsvInfo = heaps->dsv()->CreateShadowMapDir(resource_.Get());
+	dsvInfo = DSV::GetInstance()->CreateShadowMapDir(resource_.Get());
 }
 
 void SM_Direction::Clear(ID3D12GraphicsCommandList* list) {

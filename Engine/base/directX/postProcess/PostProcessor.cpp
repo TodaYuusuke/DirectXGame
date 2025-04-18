@@ -1,6 +1,5 @@
 #include "PostProcessor.h"
 
-#include "base/directX/utility/HeapManager.h"
 #include "component/System.h"
 #include <vector>
 
@@ -27,11 +26,6 @@ void PostProcessor::Update() {
 void PostProcessor::CreateShaderFile() {
 	// １つも使用しない場合は帰る
 	//if (!UseFlag()) { return; }
-
-	// GPUデバイスのポインタ
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	// HeapManagerのポインタ
-	DXC* dxc = System::engine->directXCommon_->GetDXC();
 
 	// 共通化してまとめて処理
 	std::vector<IPostProcess*> vec = GetAllProcess();
@@ -80,7 +74,7 @@ SamplerState gPointSampler : register(s1);
 		}
 	}
 	// 最後にrootSignatureをビルド
-	root_.Build(dev->GetDevice());
+	root_.Build();
 
 	shader << R"(
 float32_t4 main(PSInput input) : SV_TARGET {
@@ -107,22 +101,15 @@ float32_t4 main(PSInput input) : SV_TARGET {
 	// シェーダー作成終了
 	shader.close();
 	// シェーダーファイルを元にPSOを作成
-	pso_.Init(root_, dxc)
-		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/temp.PS.hlsl")
-		.Build(dev->GetDevice());
+	pso_.Init(root_)
+		.SetDepthState(false)
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/temp.PS.hlsl")
+		.Build();
 }
 
 void PostProcessor::CreatePSO(std::string filePath) {
 	processes_.clear();
-	// ほんとはよくない設計なので代替案募集
-
-	// GPUデバイスのポインタ
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	// HeapManagerのポインタ
-	DXC* dxc = System::engine->directXCommon_->GetDXC();
-
 
 	// RootSignature生成
 	root_.AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
@@ -130,13 +117,13 @@ void PostProcessor::CreatePSO(std::string filePath) {
 		.AddTableParameter(1, SV_Pixel)	// レンダリングに使う深度マップ
 		.AddSampler(0, SV_Pixel)	// テクスチャのサンプラー
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_MIN_MAG_MIP_POINT)	// デプステクスチャのサンプラー
-	.Build(dev->GetDevice());
+	.Build();
 	// PSO生成
-	pso_.Init(root_, dxc)
-		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader(filePath)
-		.Build(dev->GetDevice());
+	pso_.Init(root_)
+		.SetDepthState(false)
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS(filePath)
+		.Build();
 }
 
 void PostProcessor::PreCommands(ID3D12GraphicsCommandList* list, Base::RenderResource* target) {

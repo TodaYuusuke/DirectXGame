@@ -13,7 +13,7 @@ using namespace LWP::Object::Collider;
 
 CollisionManager::CollisionManager() : indexManager_(lwpC::Collider::kMaxColliderAmount) {};
 
-void CollisionManager::Initialize() {
+void CollisionManager::Init() {
 	for (Collision* c : debugCols) {
 		delete c;
 	}

@@ -17,11 +17,11 @@ using namespace LWP::Math;
 
 Animation::Animation() {
 	// インスタンスをエンジンに送る
-	SetInstance(this);
+	Resource::Manager::GetInstance()->SetPointer(this);
 }
 Animation::~Animation() {
 	// エンジン上のポインタを破棄
-	DeleteInstance(this);
+	Resource::Manager::GetInstance()->DeletePointer(this);
 }
 
 void Animation::Init() {

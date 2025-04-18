@@ -19,13 +19,13 @@ namespace LWP::Base {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		RWStructuredBuffer(uint32_t maxSize) : kElementSize(sizeof(T)), kMaxSize(maxSize) {}
+		RWStructuredBuffer(uint32_t maxSize) : IDataResource(sizeof(T)), kMaxSize(maxSize) {}
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
 		virtual ~RWStructuredBuffer() = default;
 
-		void Init(GPUDevice* device, SRV* srv) {
+		void Init() {
 			// リソース作成(UAV用はフラグが特殊)
 			HRESULT hr = S_FALSE;
 			// ヒープの設定
@@ -34,7 +34,7 @@ namespace LWP::Base {
 			// 設定
 			D3D12_RESOURCE_DESC resourceDesc{};
 			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-			resourceDesc.Width = kElementSize * kMaxSize; // リソースのサイズ
+			resourceDesc.Width = kElementSize_ * kMaxSize; // リソースのサイズ
 			resourceDesc.Height = 1;
 			resourceDesc.DepthOrArraySize = 1;
 			resourceDesc.MipLevels = 1;
@@ -42,7 +42,7 @@ namespace LWP::Base {
 			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 			resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 			// 実際にリソースを作る
-			hr = device->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&resource_));
+			hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&resource_));
 			assert(SUCCEEDED(hr));
 
 			// UAVへの登録設定
@@ -54,10 +54,10 @@ namespace LWP::Base {
 			desc.Buffer.FirstElement = 0;
 			desc.Buffer.CounterOffsetInBytes = 0;
 			desc.Buffer.NumElements = kMaxSize;
-			desc.Buffer.StructureByteStride = kElementSize;
+			desc.Buffer.StructureByteStride = kElementSize_;
 
 			// UAVに登録
-			uavInfo = srv->CreateRWStructuredBuffer(resource_.Get(), desc);
+			uavInfo = SRV::GetInstance()->CreateRWStructuredBuffer(resource_.Get(), desc);
 
 			// 読み取り専用にSRVにも登録する
 
@@ -69,10 +69,34 @@ namespace LWP::Base {
 			srvDesc.Buffer.FirstElement = 0;
 			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 			srvDesc.Buffer.NumElements = kMaxSize;
-			srvDesc.Buffer.StructureByteStride = kElementSize;
+			srvDesc.Buffer.StructureByteStride = kElementSize_;
 
 			// SRVに登録
-			srvInfo = srv->CreateStructuredBuffer(resource_.Get(), srvDesc);
+			srvInfo = SRV::GetInstance()->CreateStructuredBuffer(resource_.Get(), srvDesc);
+		}
+
+		// バリアを設定
+
+
+		/// <summary>
+		/// リソースバリアを設定
+		/// </summary>
+		void SetResourceBarrier(ID3D12GraphicsCommandList* list) {
+			// バリアを変えるわけではないが、依存関係を設定するためにバリアを張るだけの処理
+
+			// TransitionBarrierの設定
+			D3D12_RESOURCE_BARRIER barrier{};
+			// 今回のバリアはTransition
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+			// Noneにしておく
+			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			// 全てのサブリソースを選択
+			barrier.Transition.Subresource = 0xFFFFFFFF;
+			// バリアを張る対象のリソース
+			barrier.Transition.pResource = resource_.Get();
+
+			// リソースバリア変更
+			list->ResourceBarrier(1, &barrier);
 		}
 
 		/// <summary>
@@ -94,7 +118,7 @@ namespace LWP::Base {
 	public: // ** メンバ定数 ** //
 
 		// データ1つ分のサイズ定数
-		const uint32_t kElementSize;
+		//const uint32_t kElementSize;
 		// データの最大数
 		const uint32_t kMaxSize;
 

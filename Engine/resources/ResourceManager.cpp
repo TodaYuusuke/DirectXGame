@@ -39,14 +39,11 @@ InstanceData& InstanceData::operator=(const Resource::EMapModel& value) {
 
 
 void Models::RigidBuffer::Init() {
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	SRV* srv = System::engine->directXCommon_->GetSRV();
-
 	inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
-	inst->Init(dev, srv);
+	inst->Init();
 	material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
-	material->Init(dev, srv);
-	common.Init(dev);
+	material->Init();
+	common.Init();
 }
 void Models::RigidBuffer::Reset(uint32_t mSize) {
 	inst->Reset();
@@ -57,16 +54,13 @@ void Models::RigidBuffer::Reset(uint32_t mSize) {
 }
 
 void Models::SkinBuffer::Init() {
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	SRV* srv = System::engine->directXCommon_->GetSRV();
-
 	inst = std::make_unique<Base::StructuredBuffer<Base::InstanceData>>(lwpC::Rendering::kMaxModelInstance);
-	inst->Init(dev, srv);
+	inst->Init();
 	material = std::make_unique<Base::StructuredBuffer<Base::MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
-	material->Init(dev, srv);
+	material->Init();
 	well = std::make_unique<Base::StructuredBuffer<Primitive::WellForGPU>>(lwpC::Rendering::kMaxSkinJointInstance);
-	well->Init(dev, srv);
-	common.Init(dev);
+	well->Init();
+	common.Init();
 }
 void Models::SkinBuffer::Reset(uint32_t mSize) {
 	inst->Reset();
@@ -92,7 +86,7 @@ Manager::~Manager() {
 	modelDataMap_.clear();
 }
 
-void Manager::Initialize() {
+void Manager::Init() {
 	HRESULT hr;
 
 	// XAudio2初期化
@@ -169,16 +163,16 @@ void Manager::Update() {
 	}
 }
 
-Texture Manager::LoadTexture(Base::DirectXCommon* directX, const std::string& filepath) {
-	return LoadTextureLongPath(directX, textureDirectoryPath_ + filepath);
+Texture Manager::LoadTexture(const std::string& filepath) {
+	return LoadTextureLongPath(textureDirectoryPath_ + filepath);
 }
-Texture Manager::LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath) {
+Texture Manager::LoadTextureLongPath(const std::string& filepath) {
 	// 読み込み済みかをチェック
 	if (!textureMap_.count(filepath)) {
 		// 新しいテクスチャをロード
 		textureMap_[filepath] = TextureStruct();
 		// 読み込み
-		textureMap_[filepath].r.Init(directX->GetGPUDevice(), directX->GetHeaps(), filepath);
+		textureMap_[filepath].r.Init(filepath);
 		// インデックスを保持
 		textureMap_[filepath].tex = textureMap_[filepath].r;
 	}

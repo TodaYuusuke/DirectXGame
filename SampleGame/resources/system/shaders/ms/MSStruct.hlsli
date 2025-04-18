@@ -93,6 +93,16 @@ struct VSOutput {
     float32_t4 color    : COLOR0;
     int32_t mIndex : INDEX0;
 };
+struct ParticleColliderOutput
+{
+    float32_t4 pos : SV_POSITION0;
+    float32_t3 worldPos : POSITION0;
+    float32_t2 texcoord : TEXCOORD0;
+    float32_t3 normal : NORMAL0;
+    float32_t4 color : COLOR0;
+    int32_t mIndex : INDEX0;
+    uint32_t id : INDEX1;
+};
 
 
 // ** Define common binding information here  ** //

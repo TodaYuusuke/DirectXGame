@@ -49,3 +49,9 @@ public:
 	// LevelDataのDebugGUI呼び出し用関数
 	void DebugGUI() { levelData.DebugGUI(); }
 };
+
+/// <summary>
+/// ISceneを継承したクラスのみを選択できるテンプレート
+/// </summary>
+template<class SceneT>
+concept IsIScene = std::is_base_of<IScene, SceneT>::value;

@@ -12,13 +12,14 @@ using namespace LWP::Info;
 
 // 初期化
 void Title::Initialize() {
+	LWP::Window::ChangeFullScreenMode();	// フルスクリーン
 	// 地形初期化
 	field_.Init(&levelData, &mainCamera);
 
-	ui_.material.texture = LWP::Resource::LoadTexture("ui/title.png");
-	ui_.worldTF.translation = { 1176.0f, 800.0f };
-	ui_.material.enableLighting = false;
-	ui_.isUI = true;
+	//ui_.material.texture = LWP::Resource::LoadTexture("ui/title.png");
+	//ui_.worldTF.translation = { 1176.0f, 800.0f };
+	//ui_.material.enableLighting = false;
+	//ui_.isUI = true;
 
 	drone_.LoadShortPath("Drone/Drone.gltf");
 	drone_.worldTF.translation = { -385.6f, 177.48f, -398.39f };
@@ -32,10 +33,10 @@ void Title::Initialize() {
 	mainCamera.worldTF.rotation = { 0.083f, 0.232f, -0.02f, 0.969f };
 
 	// 演出初期化
-	stagingSprite_.isUI = true;
-	stagingSprite_.material.enableLighting = false;
-	stagingSprite_.material.color = ColorPattern::BLACK;
-	stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
+	//stagingSprite_.isUI = true;
+	//stagingSprite_.material.enableLighting = false;
+	//stagingSprite_.material.color = ColorPattern::BLACK;
+	//stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
 	// カメラの位置保存
 	endStaging_.startPos = mainCamera.worldTF.GetWorldPosition();
 	endStaging_.startRotation = mainCamera.worldTF.rotation;
@@ -58,7 +59,7 @@ void Title::Update() {
 		float t = Easing::Liner(s.time / s.kTime);
 
 		// フェードイン
-		stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
+		//stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
 	}
 	// 通常更新処理
 	else if (!endStaging_.start) {
@@ -88,7 +89,7 @@ void Title::Update() {
 			float t = Easing::InCubic(e.time / e.kTime);
 
 			// フェードアウト
-			stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
+			//stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
 			// ドローンの位置へカメラをアニメーション
 			mainCamera.worldTF.translation = Interp::Lerp(e.startPos, drone_.worldTF.GetWorldPosition(), t);
 			mainCamera.worldTF.rotation = Interp::SlerpQuaternion(e.startRotation, drone_.worldTF.rotation, t / 2.0f);

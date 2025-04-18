@@ -7,7 +7,7 @@
 using namespace LWP::Base;
 using namespace LWP::Math;
 
-void BufferGroup::Init(GPUDevice* device, SRV* srv) {
+void BufferGroup::Init() {
 	// RootSignature生成
 	root_ = std::make_unique<RootSignature>();
 	root_->AddTableParameter(0, SV_All)	// インデックスのデータ
@@ -25,22 +25,22 @@ void BufferGroup::Init(GPUDevice* device, SRV* srv) {
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
 		.AddSampler(2, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL		// 点光源のシャドウマップ用サンプラー
 			, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP)
-		.Build(device->GetDevice());
+		.Build();
 
 	common_ = std::make_unique<ConstantBuffer<CommonStruct>>();
-	common_->Init(device);
+	common_->Init();
 	common_->data_->vp2D = Matrix4x4::CreateIdentity4x4() * Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
 	// StructedBuffer
 	vertex_ = std::make_unique<StructuredBuffer<VertexStruct>>(lwpC::Rendering::kMaxVertex);
-	vertex_->Init(device, srv);
+	vertex_->Init();
 	transform_ = std::make_unique<StructuredBuffer<WTFStruct>>(lwpC::Rendering::kMaxMatrix);
-	transform_->Init(device, srv);
+	transform_->Init();
 	material_ = std::make_unique<StructuredBuffer<MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
-	material_->Init(device, srv);
+	material_->Init();
 	directionLight_ = std::make_unique<StructuredBuffer<DirectionalLightStruct>>(lwpC::Shadow::Direction::kMaxCount);
-	directionLight_->Init(device, srv);
+	directionLight_->Init();
 	pointLight_ = std::make_unique<StructuredBuffer<PointLightStruct>>(lwpC::Shadow::Point::kMaxCount);
-	pointLight_->Init(device, srv);
+	pointLight_->Init();
 }
 
 

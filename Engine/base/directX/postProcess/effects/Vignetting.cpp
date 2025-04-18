@@ -8,7 +8,7 @@ using namespace LWP::Base::PostProcess;
 
 void Vignetting::Init() {
 	intensity = 1.0f;
-	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
+	buffer_.Init();
 }
 void Vignetting::Update() {
 	buffer_.data_->intensity = intensity;

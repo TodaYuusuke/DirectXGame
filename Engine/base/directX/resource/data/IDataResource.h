@@ -9,7 +9,8 @@ namespace LWP::Base {
 		: public IResource {
 	public: // ** パブリックなメンバ関数 ** //
 
-		IDataResource() = default;
+		IDataResource() = delete;
+		IDataResource(size_t size) : kElementSize_(uint32_t(size)) {}
 		virtual ~IDataResource() = default;
 
 	protected: // ** プライベートなメンバ関数 ** //
@@ -19,7 +20,7 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="size"></param>
-		void CreateResource(GPUDevice* device, size_t size) {
+		void CreateResource(size_t size) {
 			HRESULT hr = S_FALSE;
 
 			// ヒープの設定
@@ -38,13 +39,13 @@ namespace LWP::Base {
 			// バッファの場合はこれにする決まり
 			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 			// 実際にリソースを作る
-			hr = device->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource_));
+			hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource_));
 			assert(SUCCEEDED(hr));
 		}
 
 	protected: // ** メンバ定数 ** //
 		// データ1つ分のサイズ定数
-		//const uint32_t kElementSize;
+		const uint32_t kElementSize_;
 
 	public: // ** オペレーターオーバーロード ** //
 

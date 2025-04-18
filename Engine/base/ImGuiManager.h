@@ -7,12 +7,13 @@
 #include "../../Externals/imgui/imgui_impl_win32.h"
 #include "../../Externals/imgui/imgui_stdlib.h"
 
+#include "../../Externals/imgui-node-editor/imgui_node_editor.h"
+
 #include "../utility/Color.h"
 
 #include "base/directX/utility/descriptorHeap/SRV.h"
 
 namespace LWP::Base {
-
 	class ImGuiManager {
 	public:
 		ImGuiManager() = default;
@@ -21,7 +22,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
+		void Init();
 
 		/// <summary>
 		/// ImGui受付開始
@@ -56,5 +57,23 @@ namespace LWP::Base {
 		/// <param name="col"></param>
 		/// <param name="flags"></param>
 		static void ColorEdit4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0);
+
+		/// <summary>
+		/// リソースの中身を表示する
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		static void ShowTexture(const Resource::Texture& texture, float scale = 1.0f);
+		/// <summary>
+		/// リソースの中身を表示する
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		static void ShowRenderResource(const RenderResource& resource, float scale = 1.0f);
 	};
+}
+
+// ノードエディターの別名定義
+namespace ImGui::NE {
+	using namespace ax::NodeEditor;
 }

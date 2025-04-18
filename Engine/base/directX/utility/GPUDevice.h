@@ -1,4 +1,5 @@
 #pragma once
+#include "utility/Singleton.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #pragma comment(lib, "d3d12.lib")
@@ -8,16 +9,17 @@
 
 namespace LWP::Base {
 	/// <summary>
-	/// RenderTargetView
+	/// グラボ関連のクラス
 	/// </summary>
-	class GPUDevice {
-	public:
-		// ** メンバ関数 ** //
+	class GPUDevice final : public Utility::ISingleton<GPUDevice> {
+		friend class Utility::ISingleton<GPUDevice>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
 		/// <summary>
-		/// 初期化
+		/// コンストラクタをプライベートに
 		/// </summary>
-		void Init();
+		GPUDevice();
+
 
 	private: // ** プロパティ変数 ** //
 		// DXGIファクトリー

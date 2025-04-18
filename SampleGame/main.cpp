@@ -1,16 +1,12 @@
 #include <Adapter.h>
-#include "scene/Title.h"
-#include "scene/GameScene.h"
+//#include "scene/Title.h"
+//#include "scene/GameScene.h"
 
 #include "scene/Test/TestIncludes.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	LWP::System::StartUp(L"LWP サンプルゲーム");
-#if DEMO
-#else
-	LWP::Window::ChangeFullScreenMode();	// フルスクリーン
-#endif
-	LWP::System::Run(new Title);
+	LWP::Info::ChangeShowDebugGUI();
+	LWP::System::Run<TextureLoadTest>(L"LWP サンプルゲーム");
 	return 0;
 }

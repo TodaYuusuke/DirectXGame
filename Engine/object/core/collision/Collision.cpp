@@ -65,11 +65,11 @@ void Collision::Mask::DebugGUI() {
 Collision::Collision() {
 	// デフォルトの形状にfollowをセット
 	GetBasePtr(broad)->SetFollowPtr(&worldTF);
-	System::engine->collisionManager_->SetPointer(this);
+	CollisionManager::GetInstance()->SetPointer(this);
 }
 
 Collision::~Collision() {
-	System::engine->collisionManager_->DeletePointer(this);
+	CollisionManager::GetInstance()->DeletePointer(this);
 }
 
 void Collision::Update() {

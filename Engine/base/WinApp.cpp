@@ -8,7 +8,7 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-void WinApp::Initialize(std::wstring title, int width, int height) {
+void WinApp::Init(std::wstring title, int width, int height) {
 
 	// 初期化
 	wc_ = {};

@@ -5,7 +5,7 @@
 using namespace LWP::Base;
 using namespace LWP::Utility;
 
-PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc, Type type) {
+PSO& PSO::Init(ID3D12RootSignature* root, Type type) {
 	// タイプによって使用するdescを変更
 	type_ = type;
 	if (type_ == Type::Vertex) {
@@ -57,11 +57,20 @@ PSO& PSO::Init(ID3D12RootSignature* root, DXC* dxc, Type type) {
 		d.SampleDesc.Count = 1;
 		d.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	}
-	// DXCをセットしておく
-	dxc_ = dxc;
 
 	return *this;
 }
+PSO& PSO::SetRTVFormat(DXGI_FORMAT format) {
+	if (type_ == Type::Vertex) {
+		desc_.vertex.RTVFormats[0] = format;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.RTVFormats[0] = format;
+	}
+
+	return *this;
+}
+
 PSO& PSO::SetInputLayout() {
 	if (type_ == Type::Vertex) {
 		/* 頂点はバッファーで送信するので、InputLayoutは不要
@@ -87,12 +96,12 @@ PSO& PSO::SetInputLayout() {
 
 	return *this;
 }
-PSO& PSO::SetBlendState(BlendMode mode) {
+PSO& PSO::SetBlendState(bool enable, BlendMode mode) {
 	// すべての色要素を書き込む
 	D3D12_BLEND_DESC blendDesc{};
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	// 透明度のブレンドを設定
-	blendDesc.RenderTarget[0].BlendEnable = true;
+	blendDesc.RenderTarget[0].BlendEnable = enable;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
@@ -152,7 +161,7 @@ PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode)
 	}
 	return *this;
 }
-PSO& PSO::SetAmpShader(std::string filePath) {
+PSO& PSO::SetAS(std::string filePath) {
 	// Mesh以外ならセットしないのでエラー
 	assert(type_ == Type::Mesh);
 	// 空ならコンパイルしない
@@ -160,14 +169,15 @@ PSO& PSO::SetAmpShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"as_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"as_6_5");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.mesh.AS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetMeshShader(std::string filePath) {
+PSO& PSO::SetSystemAS(std::string filePath) { return SetAS(kDirectoryPath + filePath); }
+PSO& PSO::SetMS(std::string filePath) {
 	// Mesh以外ならセットしないのでエラー
 	assert(type_ == Type::Mesh);
 	// 空ならコンパイルしない
@@ -175,14 +185,15 @@ PSO& PSO::SetMeshShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ms_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ms_6_5");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.mesh.MS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetComputeShader(std::string filePath) {
+PSO& PSO::SetSystemMS(std::string filePath) { return SetMS(kDirectoryPath + filePath); }
+PSO& PSO::SetCS(std::string filePath) {
 	// Compute以外ならセットしないのでエラー
 	assert(type_ == Type::Compute);
 	// 空ならコンパイルしない
@@ -190,14 +201,15 @@ PSO& PSO::SetComputeShader(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"cs_6_6");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"cs_6_6");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.compute.CS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetVertexShader(std::string filePath) {
+PSO& PSO::SetSystemCS(std::string filePath) { return SetCS(kDirectoryPath + filePath); }
+PSO& PSO::SetVS(std::string filePath) {
 	// Vertex以外ならセットしないのでエラー
 	assert(type_ == Type::Vertex);
 	// 空ならコンパイルしない
@@ -205,20 +217,21 @@ PSO& PSO::SetVertexShader(std::string filePath) {
 	
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"vs_6_0");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"vs_6_0");
 	assert(blob != nullptr);
 
 	// セット
 	desc_.vertex.VS = { blob->GetBufferPointer(),blob->GetBufferSize() };
 	return *this;
 }
-PSO& PSO::SetPixelShader(std::string filePath) {
+PSO& PSO::SetSystemVS(std::string filePath) { return SetVS(kDirectoryPath + filePath); }
+PSO& PSO::SetPS(std::string filePath) {
 	// 空ならコンパイルしない
 	if (filePath.empty()) { return *this; }
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = dxc_->CompileShader(Utility::ConvertString("resources/system/shaders/" + filePath), L"ps_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ps_6_5");
 	assert(blob != nullptr);
 
 	// セット
@@ -231,19 +244,47 @@ PSO& PSO::SetPixelShader(std::string filePath) {
 
 	return *this;
 }
-PSO& PSO::SetDepthStencilState(bool enable) {
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	depthStencilDesc.DepthEnable = enable; // Depthの機能を有効化する
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込みします
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 比較関数はLessEqual（近ければ描画される）
+PSO& PSO::SetSystemPS(std::string filePath) { return SetPS(kDirectoryPath + filePath); }
+PSO& PSO::SetDepthState(bool enable, D3D12_DEPTH_WRITE_MASK mask, D3D12_COMPARISON_FUNC func) {
+	D3D12_DEPTH_STENCIL_DESC depthDesc{};
+	// 受け取る
+	if (type_ == Type::Vertex) { depthDesc = desc_.vertex.DepthStencilState; }
+	else if (type_ == Type::Mesh) { depthDesc = desc_.mesh.DepthStencilState; }
+
+	depthDesc.DepthEnable = enable; // Depthの機能を有効化する
+	depthDesc.DepthWriteMask = mask; // 書き込みします
+	depthDesc.DepthFunc = func; // 比較関数
 	
 	// セット
-	if (type_ == Type::Vertex) {
-		desc_.vertex.DepthStencilState = depthStencilDesc;
-	}
-	else if (type_ == Type::Mesh) {
-		desc_.mesh.DepthStencilState = depthStencilDesc;
-	}
+	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = depthDesc; }
+	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = depthDesc; }
+	return *this;
+}
+PSO& PSO::SetStencilState(bool enable,
+	D3D12_DEPTH_STENCILOP_DESC front, D3D12_DEPTH_STENCILOP_DESC back) {
+	D3D12_DEPTH_STENCIL_DESC stencilDesc{};
+	// 受け取る
+	if (type_ == Type::Vertex) { stencilDesc = desc_.vertex.DepthStencilState; }
+	else if (type_ == Type::Mesh) { stencilDesc = desc_.mesh.DepthStencilState; }
+
+	// StencilOP_Descの詳細
+	// D3D12_STENCIL_OP StencilFailOp;		// ステンシルテストが失敗した時の動作
+	// D3D12_STENCIL_OP StencilDepthFailOp; // 深度テストが失敗した時の動作
+	// D3D12_STENCIL_OP StencilPassOp;		// ステンシル＆深度テストが成功した時の動作
+	// D3D12_COMPARISON_FUNC StencilFunc;	// ステンシルテストの比較関数
+	
+	// ステンシルテスト
+	stencilDesc.StencilEnable = enable;
+	stencilDesc.StencilReadMask = 0xFF;
+	stencilDesc.StencilWriteMask = 0xFF;
+	// ステンシルテスト（前面ポリゴン）の設定
+	stencilDesc.FrontFace = front;
+	// ステンシルテスト（背面ポリゴン）の設定
+	stencilDesc.BackFace = back;
+
+	// セット
+	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = stencilDesc; }
+	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = stencilDesc; }
 	return *this;
 }
 PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
@@ -268,8 +309,10 @@ PSO& PSO::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
 
 	return *this;
 }
-void PSO::Build(ID3D12Device2* device) {
+void PSO::Build() {
 	HRESULT hr = S_FALSE;
+	ID3D12Device2* device = GPUDevice::GetInstance()->GetDevice();	// デバイスを取得
+
 	// 実際に生成
 	if (type_ == Type::Vertex) {
 		hr = device->CreateGraphicsPipelineState(&desc_.vertex, IID_PPV_ARGS(&state_));
@@ -289,6 +332,15 @@ void PSO::Build(ID3D12Device2* device) {
 		hr = device->CreatePipelineState(&streamDesc, IID_PPV_ARGS(&state_));
 	}
 	assert(SUCCEEDED(hr));
+}
+
+PSO& PSO::Copy(const PSO& source) {
+	// タイプをコピー
+	type_ = source.GetType();
+	// 詳細をコピー
+	desc_ = source.GetDesc();
+
+	return *this;
 }
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {

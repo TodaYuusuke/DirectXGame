@@ -1,48 +1,49 @@
 #include "Information.h"
 
 using namespace LWP::System;
+using namespace LWP::Base;
 using namespace LWP;
 
 int Information::GetWindowWidth() {
-	return engine->winApp_->GetClientWidth();
+	return WinApp::GetInstance()->GetClientWidth();
 }
 
 int Information::GetWindowHeight() {
-	return engine->winApp_->GetClientHeight();
+	return WinApp::GetInstance()->GetClientHeight();
 }
 
 float Information::GetWindowWidthF() {
-	return static_cast<float>(engine->winApp_->GetClientWidth());
+	return static_cast<float>(WinApp::GetInstance()->GetClientWidth());
 }
 
 float Information::GetWindowHeightF(){
-	return static_cast<float>(engine->winApp_->GetClientHeight());
+	return static_cast<float>(WinApp::GetInstance()->GetClientHeight());
 }
 
 Math::Vector2 Information::GetWindow() {
 	return {
-		static_cast<float>(engine->winApp_->GetClientWidth()),
-		static_cast<float>(engine->winApp_->GetClientHeight())
+		static_cast<float>(WinApp::GetInstance()->GetClientWidth()),
+		static_cast<float>(WinApp::GetInstance()->GetClientHeight())
 	};
 }
 
 void Information::ChangeShowDebugGUI() {
-	engine->isShowDebugGUI = !engine->isShowDebugGUI;
+	Config::Debug::kIsShowDebugGUI =  !Config::Debug::kIsShowDebugGUI;
 }
 
 double Information::GetDeltaTime() {
-	return engine->debugTimer_.GetDeltaTime();
+	return FrameTracker::GetInstance()->GetDeltaTime();
 }
 float Information::GetDeltaTimeF() {
 	return static_cast<float>(GetDeltaTime());
 }
 double Information::GetDefaultDeltaTime() {
-	return engine->debugTimer_.GetDefaultDeltaTime();
+	return FrameTracker::GetInstance()->GetDefaultDeltaTime();
 }
 float Information::GetDefaultDeltaTimeF() {
 	return static_cast<float>(GetDefaultDeltaTime());
 }
 
 void Information::SetDeltaTimeMultiply(float value) {
-	engine->debugTimer_.SetDeltaTimeMultiply(value);
+	FrameTracker::GetInstance()->SetDeltaTimeMultiply(value);
 }

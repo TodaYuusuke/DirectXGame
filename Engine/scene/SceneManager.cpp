@@ -4,7 +4,7 @@
 using namespace LWP::Scene;
 
 // 初期化
-void Manager::Initialize(IScene* firstScene) {
+void Manager::Init(IScene* firstScene) {
 	currentScene_ = firstScene;
 	currentScene_->PreInitialize();
 	currentScene_->Initialize();
@@ -15,7 +15,7 @@ void Manager::Update() {
 	// 次のシーンへ
 	if (currentScene_->nextSceneFunction != nullptr) {
 		// シーンクリア（仮置きなのでそのうち消去する)
-		LWP::System::engine->InitializeForScene();
+		SceneClear();
 
 		// 関数実行
 		IScene* temp = currentScene_->nextSceneFunction();
@@ -27,6 +27,12 @@ void Manager::Update() {
 	}
 
 	currentScene_->Update();
+}
+
+void Manager::SceneClear() {
+	Object::Manager::GetInstance()->Init();			// Objectのオブジェクトをクリア
+	Primitive::Manager::GetInstance()->Init();		// Primitiveのオブジェクトをクリア
+	Object::CollisionManager::GetInstance()->Init();// CollisionManagerのオブジェクトをクリア
 }
 
 void Manager::DebugGUI() {

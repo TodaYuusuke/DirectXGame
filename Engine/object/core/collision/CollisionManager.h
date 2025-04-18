@@ -3,23 +3,28 @@
 
 #include "utility/IndexManager.h"
 #include "utility/PtrManager.h"
+#include "utility/Singleton.h"
 #include <map>
 
 namespace LWP::Object {
 	/// <summary>
 	/// 当たり判定用の管理クラス
 	/// </summary>
-	class CollisionManager {
-	public: // ** パブリックなメンバ関数 ** //
-		// コンストラクタ
+	class CollisionManager : public Utility::ISingleton<CollisionManager> {
+		friend class Utility::ISingleton<CollisionManager>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
+
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
 		CollisionManager();
-		// デストラクタ
-		~CollisionManager() = default;
+
+	public:	// ** メンバ関数 ** //
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize();
+		void Init();
 
 		/// <summary>
 		/// 更新

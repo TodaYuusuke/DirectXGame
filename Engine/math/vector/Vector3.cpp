@@ -92,7 +92,7 @@ Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) {
 }
 
 float Vector3::Distance(const Vector3& v1, const Vector3& v2) {
-	return powf((v2.x - v1.x), 2) + powf((v2.y - v1.y), 2) + powf((v2.z - v1.z), 2);
+	return sqrt(powf((v2.x - v1.x), 2) + powf((v2.y - v1.y), 2) + powf((v2.z - v1.z), 2));
 }
 
 Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t) {

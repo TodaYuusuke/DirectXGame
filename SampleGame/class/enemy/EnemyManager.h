@@ -9,6 +9,11 @@
 /// </summary>
 class EnemyManager final {
 public:
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	EnemyManager();
 	
 	/// <summary>
 	/// 初期化
@@ -82,10 +87,10 @@ private: // ** メンバ変数 ** //
 	int quota_ = 15;
 
 	// パーティクルクラス
-	BloodParticle PBlood_;
-	DeadBodyParticle PDeadBody_;
+	LWP::Object::GPUParticle PBlood_;	// 血の量だけ10倍出せるように
+	LWP::Object::GPUParticle PDeadBody_;
 	// パーティクルの数
-	int kParticleSize_ = 32 * 2;
+	int kParticleSize_ = 32 * 4;
 
 private: // ** メンバ関数 ** //
 	

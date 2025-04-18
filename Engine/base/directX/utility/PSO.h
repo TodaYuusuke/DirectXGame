@@ -25,39 +25,7 @@ namespace LWP::Base {
 			Multiply,
 			Screen
 		};
-
-
-	public: // **　メンバ関数 ** //
-
-		/// <summary>
-		/// ビルダーデザインパターン
-		/// </summary>
-		PSO& Init(ID3D12RootSignature* root, DXC* dxc, Type type = Type::Vertex);
-		PSO& SetInputLayout();
-		PSO& SetBlendState(BlendMode mode = BlendMode::Normal);
-		PSO& SetRasterizerState(
-			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
-			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
-		PSO& SetAmpShader(std::string filePath);
-		PSO& SetMeshShader(std::string filePath);
-		PSO& SetComputeShader(std::string filePath);
-		PSO& SetVertexShader(std::string filePath);
-		PSO& SetPixelShader(std::string filePath);
-		PSO& SetDepthStencilState(bool enable);
-		PSO& SetDSVFormat(DXGI_FORMAT format);
-		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
-		void Build(ID3D12Device2* device);
-
-		// PipelineStateを受け取る関数
-		ID3D12PipelineState* GetState() { return state_.Get(); }
-
-
-	private: // ** メンバ変数 ** //
-		// グラフィックパイプラインの状態を定義
-		Microsoft::WRL::ComPtr<ID3D12PipelineState> state_ = nullptr;
-		// PSOの種類
-		Type type_ = Type::Vertex;
-		// PSOの詳細
+		// 設定
 		union Desc {
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC vertex{};
 			D3D12_COMPUTE_PIPELINE_STATE_DESC compute;
@@ -65,9 +33,70 @@ namespace LWP::Base {
 
 			Desc() {};
 			~Desc() {};
-		}desc_;
-		// DXCのポインタ
-		DXC* dxc_ = nullptr;
+		};
+
+
+	public: // **　メンバ関数 ** //
+
+		/// <summary>
+		/// ビルダーデザインパターン
+		/// </summary>
+		PSO& Init(ID3D12RootSignature* root, Type type = Type::Vertex);
+		PSO& SetRTVFormat(DXGI_FORMAT format);
+		PSO& SetInputLayout();
+		PSO& SetBlendState(bool enable, BlendMode mode = BlendMode::Normal);
+		PSO& SetRasterizerState(
+			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
+			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
+		PSO& SetAS(std::string filePath);
+		PSO& SetSystemAS(std::string filePath);
+		PSO& SetMS(std::string filePath);
+		PSO& SetSystemMS(std::string filePath);
+		PSO& SetCS(std::string filePath);
+		PSO& SetSystemCS(std::string filePath);
+		PSO& SetVS(std::string filePath);
+		PSO& SetSystemVS(std::string filePath);
+		PSO& SetPS(std::string filePath);
+		PSO& SetSystemPS(std::string filePath);
+		PSO& SetDepthState(bool enable,
+			D3D12_DEPTH_WRITE_MASK mask = D3D12_DEPTH_WRITE_MASK_ALL,
+			D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS_EQUAL);	// LessEqual（近ければ描画される）
+		PSO& SetStencilState(bool enable,
+			D3D12_DEPTH_STENCILOP_DESC front = D3D12_DEPTH_STENCILOP_DESC(
+				D3D12_STENCIL_OP_KEEP,
+				D3D12_STENCIL_OP_KEEP,
+				D3D12_STENCIL_OP_KEEP,
+				D3D12_COMPARISON_FUNC_ALWAYS),	// 何もしない設定
+			D3D12_DEPTH_STENCILOP_DESC back = D3D12_DEPTH_STENCILOP_DESC(
+				D3D12_STENCIL_OP_KEEP,
+				D3D12_STENCIL_OP_KEEP,
+				D3D12_STENCIL_OP_KEEP,
+				D3D12_COMPARISON_FUNC_ALWAYS));
+		PSO& SetDSVFormat(DXGI_FORMAT format);
+		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
+		void Build();
+
+		// PSOの設定をコピーする関数
+		PSO& Copy(const PSO& source);
+
+		// PipelineStateを受け取る関数
+		ID3D12PipelineState* GetState() { return state_.Get(); }
+
+		// コピー用の処理
+		Type GetType() const { return type_; }
+		// コピー用の詳細
+		Desc GetDesc() const { return desc_; }
+
+	private: // ** メンバ変数 ** //
+		// グラフィックパイプラインの状態を定義
+		Microsoft::WRL::ComPtr<ID3D12PipelineState> state_ = nullptr;
+		// PSOの種類
+		Type type_ = Type::Vertex;
+		// PSOの詳細
+		Desc desc_;
+
+		// ディレクトリパス
+		const std::string kDirectoryPath = "resources/system/shaders/";
 
 
 	private: // ** プライベートな関数 ** //

@@ -18,7 +18,7 @@ namespace LWP::Utility {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		Index(std::function<void()> f, int value) { 
+		Index(std::function<void()> f, int value) {
 			func = f;
 			i = value;
 		}

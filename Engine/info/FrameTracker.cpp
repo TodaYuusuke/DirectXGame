@@ -43,6 +43,9 @@ void FrameTracker::Initialize() {
 	elapsedFrame_ = 0;
 	// 60フレームごとのFPS
 	frameRate = 0;
+
+	// リソース初期化
+	preFrame_.Init();
 }
 
 void FrameTracker::Start() {
@@ -74,6 +77,10 @@ void FrameTracker::End() {
 	// 経過フレームを足す
 	elapsedFrame_++;
 	frameStartTime_ = frameEndTime_;
+
+	// バッファ更新
+	preFrame_.data_->time = static_cast<float>(GetElapsedTimeMS());
+	preFrame_.data_->deltaTime = GetDeltaTimeF();
 }
 
 double FrameTracker::GetFPS() {
