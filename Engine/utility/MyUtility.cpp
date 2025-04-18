@@ -13,7 +13,7 @@ float LWP::Utility::DegreeToRadian(float degree) {
 }
 
 
-float LWP::Utility::GetRadian(const Vector3& vec1, const Vector3& vec2) {
+float LWP::Utility::GetRadian(const Vector3& vec1, const Vector3& vec2, LWP::Math::Vector3 axis) {
 	Vector3 vec1Norm = vec1.Normalize();
 	Vector3 vec2Norm = vec2.Normalize();
 
@@ -24,7 +24,7 @@ float LWP::Utility::GetRadian(const Vector3& vec1, const Vector3& vec2) {
 
 	Vector3 cross = Vector3::Cross(vec1Norm, vec2Norm);
 
-	if (Vector3::Dot(Vector3::UnitY(), cross) < 0) {
+	if (Vector3::Dot(axis, cross) < 0) {
 		angle = 2.0f * static_cast<float>(std::numbers::pi) - angle;
 	}
 

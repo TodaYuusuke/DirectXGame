@@ -72,8 +72,9 @@ namespace LWP::Utility {
 	/// </summary>
 	/// <param name="vec1"></param>
 	/// <param name="vec2"></param>
+	/// <param name="axis"></param>
 	/// <returns></returns>
-	float GetRadian(const LWP::Math::Vector3& vec1, const LWP::Math::Vector3& vec2);
+	float GetRadian(const LWP::Math::Vector3& vec1, const LWP::Math::Vector3& vec2, LWP::Math::Vector3 axis = LWP::Math::Vector3::UnitY());
 
 
 	// インデックスを指定してstd::listのイテレーターを取得する関数

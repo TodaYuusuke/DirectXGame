@@ -139,7 +139,6 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 	}
 }
 void RendererManager::AddSprite() {
-	
 
 	postRenderer_.AddIndexDataSprite(index);
 }
