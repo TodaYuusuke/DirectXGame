@@ -30,14 +30,9 @@ void Sprite::CreateVertices() {
 	// 頂点の作成
 	vertices.clear();
 	vertices.resize(GetVertexCount());
-	
-	// サイズとアンカーポイントから頂点データ用の値を求める
 
 	// 座標
-	vertices[0].position = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,         0.00f };	// 左上
-	vertices[1].position = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,         0.00f };	// 右上
-	vertices[2].position = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右下
-	vertices[3].position = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左下
+	CreateVerticesPosition();
 
 	// 分割インデックスが0以下の場合
 	if (index < 0) {
@@ -55,7 +50,7 @@ void Sprite::CreateVertices() {
 
 		// 分割画像上のXY座標を求める
 		float x = (index * splitUVx) - static_cast<int>(index * splitUVx);
-		float y = splitUVy * static_cast<int>(index * splitUVx);
+		float y = static_cast<int>(index * splitUVx) * splitUVy;
 
 		// デフォルトのテクスチャ座標
 		vertices[0].texCoord = { x,            y };
@@ -84,4 +79,12 @@ void Sprite::DerivedDebugGUI(const std::string& label) {
 
 bool Sprite::GetChanged() {
 	return material.texture.GetChanged();
+}
+
+void Sprite::CreateVerticesPosition() {
+	// サイズとアンカーポイントから頂点データ用の値を求める
+	vertices[0].position = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,         0.00f };	// 左上
+	vertices[1].position = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,         0.00f };	// 右上
+	vertices[2].position = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右下
+	vertices[3].position = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左下
 }

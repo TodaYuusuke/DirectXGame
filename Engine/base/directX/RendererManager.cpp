@@ -175,10 +175,6 @@ IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primiti
 }
 
 std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction(Primitive::IPrimitive* primitive) {
-	// Spriteのとき
-	if (dynamic_cast<Primitive::Sprite*>(primitive)) {
-		return [this](const IndexInfoStruct& index) { postRenderer_.AddIndexDataSprite(index); };
-	}
 	// ビルボード2Dのとき
 	if (dynamic_cast<Primitive::Billboard2D*>(primitive)) {
 		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataBillboard2D(index); };
@@ -186,6 +182,10 @@ std::function<void(const IndexInfoStruct&)> RendererManager::ProcessSendFunction
 	// ビルボード3Dのとき
 	else if (dynamic_cast<Primitive::Billboard3D*>(primitive)) {
 		return [this](const IndexInfoStruct& index) { normalRender_.AddIndexDataBillboard3D(index); };
+	}
+	// Spriteのとき
+	else if (dynamic_cast<Primitive::Sprite*>(primitive)) {
+		return [this](const IndexInfoStruct& index) { postRenderer_.AddIndexDataSprite(index); };
 	}
 	// ワイヤーフレームのとき
 	else if (primitive->isWireFrame) {

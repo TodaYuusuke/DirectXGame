@@ -368,6 +368,7 @@
     <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">

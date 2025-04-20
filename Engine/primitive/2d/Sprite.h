@@ -5,9 +5,9 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 2Dテクスチャ
 	/// </summary>
-	class Sprite final
+	class Sprite
 		: public IPrimitive {
-	public: // ** パブリックなメンバ関数 ** //
+	public: // ** パブリックなメンバ変数 ** //
 
 		// サイズ
 		Math::Vector2 size = LWP::Math::Vector2{ 200.0f,200.0f };
@@ -20,8 +20,11 @@ namespace LWP::Primitive {
 
 	public: // ** 関数 ** //
 
-		// 初期化を呼び出す
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		Sprite() { 
+			// 初期化を呼び出す
 			isUI = true;
 			material.enableLighting = false;
 			Init();
@@ -53,7 +56,7 @@ namespace LWP::Primitive {
 		/// </summary>
 		int GetVertexCount() const { return 4; }
 
-	private: // ** 派生クラス用の関数をオーバーライド ** //
+	protected: // ** 派生クラス用の関数をオーバーライド ** //
 
 		/// <summary>
 		/// 独自のメンバ変数用にImGuiを用意
@@ -66,5 +69,10 @@ namespace LWP::Primitive {
 		/// </summary>
 		/// <returns></returns>
 		bool GetChanged() override;
+
+		/// <summary>
+		/// 頂点の座標を生成する処理
+		/// </summary>
+		virtual void CreateVerticesPosition();
 	};
 }
