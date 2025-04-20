@@ -10,7 +10,7 @@ using namespace LWP::Object;
 // 初期化
 void AnimationTest::Initialize() {
 	for (int i = 0; i < 5; i++) {
-		model[i].LoadShortPath("Player/Robot/Player_Boned_IK.gltf");
+		model[i].LoadShortPath("Player/Robot/Player_BonImGui::NE_IK.gltf");
 		model[i].worldTF.translation.x = i * 1.5f;
 		motion[i].Add(
 			&model[i].worldTF.translation,
@@ -24,12 +24,11 @@ void AnimationTest::Initialize() {
 		);
 		motion[i].Start(true);
 	}
-	anim.LoadFullPath("resources/model/Player/Robot/Player_Boned_IK.gltf", &model[0]);
+	anim.LoadFullPath("resources/model/Player/Robot/Player_BonImGui::NE_IK.gltf", &model[0]);
 
 	texture = Resource::LoadTexture("TestSpriteSheet.png");
 }
 
 // 更新
 void AnimationTest::Update() {
-
 }

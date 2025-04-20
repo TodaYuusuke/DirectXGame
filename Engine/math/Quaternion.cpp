@@ -129,16 +129,21 @@ Quaternion Quaternion::DirectionToDirection(const Vector3& from, const Vector3& 
         return {0.0f, 0.0f, 0.0f, 1.0f};
     }
 
-	// 完全に逆方向の場合、任意の直交するベクトルを回転軸として180度回転クォータニオンを返す
-	//if (dot < -0.9999f) {
-	//	Vector3 orthogonalAxis = { 1.0f, 0.0f, 0.0f };
-	//	if (std::abs(from.x) > 0.9f) {
-	//		orthogonalAxis = { 0.0f, 1.0f, 0.0f };
-	//	}
-	//	Vector3 axis = Vector3::Cross(from, orthogonalAxis);
-	//	axis.Normalize();
-	//	return Quaternion::CreateFromAxisAngle(axis, std::numbers::pi_v<float>); // 180度回転
-	//}
+	//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
+	if (dot <= -1.0f) {
+		if (from.x != 0.0f || from.y != 0.0f) {
+			axis = { from.y, -from.x,0.0f };
+			axis = axis.Normalize();
+		}
+		else if (from.x != 0.0f || from.z != 0.0f) {
+			axis = { 0.0f, -from.z, from.x };
+			axis = axis.Normalize();
+		}
+
+	}
+	else {
+		axis = Vector3::Cross(from, to).Normalize();
+	}
 
 	// θを求める
 	float theta = std::acos(Vector3::Dot(from, to) / (from.Length() * to.Length()));

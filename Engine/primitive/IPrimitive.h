@@ -45,10 +45,6 @@ namespace LWP::Primitive {
 		bool isActive = true;
 		
 
-	private: // ** プライベートな変数 ** //
-		// ImGui用の変数
-		int vertexNum_ = 0;
-
 	public: // ** 共通関数 ** //
 		
 		/// <summary>

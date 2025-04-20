@@ -25,10 +25,10 @@ void Manager::Update() {
 	}
 }
 
-void Manager::Draw() {
+void Manager::Draw(Base::RendererManager* manager) {
 	// 描画
 	for (IPrimitive* p : primitives_.list) {
-		p->Draw(manager_);
+		p->Draw(manager);
 	}
 }
 

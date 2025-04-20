@@ -75,6 +75,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 	label;	// 形状に固有名詞が付与されたのでラベルは使用しない（長いこと不要と判断したら消す）
 	// 頂点
 	if (ImGui::TreeNode("Vertex")) {
+		static int vertexNum_ = 0;
 		ImGui::SliderInt("vertexNumber", &vertexNum_, 0, GetVertexCount() - 1);
 		ImGui::DragFloat3("position", &vertices[vertexNum_].position.x, 0.01f);
 		ImGui::DragFloat2("texCoord", &vertices[vertexNum_].texCoord.x, 0.01f);

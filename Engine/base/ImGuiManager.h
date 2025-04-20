@@ -77,3 +77,6 @@ namespace LWP::Base {
 namespace ImGui::NE {
 	using namespace ax::NodeEditor;
 }
+namespace ImGuiNE {
+	using namespace ImGui::NE;
+}
