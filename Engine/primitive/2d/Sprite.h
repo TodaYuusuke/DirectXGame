@@ -10,9 +10,12 @@ namespace LWP::Primitive {
 	public: // ** パブリックなメンバ関数 ** //
 
 		// サイズ
-		LWP::Math::Vector2 size = LWP::Math::Vector2{ 200.0f,200.0f };
+		Math::Vector2 size = LWP::Math::Vector2{ 200.0f,200.0f };
 		// アンカーポイント
-		LWP::Math::Vector2 anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		Math::Vector2 anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+
+		// 連番テクスチャの場合に使用するインデックス
+		int index = -1;
 
 
 	public: // ** 関数 ** //
@@ -29,6 +32,11 @@ namespace LWP::Primitive {
 		/// </summary>
 		/// <param name="fileName"></param>
 		void LoadTexture(const std::string& fileName);
+		/// <summary>
+		/// 連番アニメーション用のスプライトの際に設定を行う
+		/// </summary>
+		/// <param name="splitSize">1枚のサイズ</param>
+		void SetSplitSize(Math::Vector2 splitSize);
 
 		/// <summary>
 		/// 更新処理
