@@ -8,6 +8,7 @@
 #include "../../Externals/imgui/imgui_stdlib.h"
 
 #include "../../Externals/imgui-node-editor/imgui_node_editor.h"
+//#include "../../Externals/imgui-node-editor/imgui_node_editor_internal.h"
 
 #include "../utility/Color.h"
 
@@ -51,7 +52,7 @@ namespace LWP::Base {
 		static void ColorPicker4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0, const float* ref_col = (const float*)0);
 
 		/// <summary>
-		/// ColorEdit3 ... Colorクラス対応ver
+		/// ColorEdit4 ... Colorクラス対応ver
 		/// </summary>
 		/// <param name="label"></param>
 		/// <param name="col"></param>

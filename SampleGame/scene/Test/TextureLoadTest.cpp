@@ -37,25 +37,27 @@ void TextureLoadTest::Update() {
 	// Start drawing nodes.
 	ImGuiNE::BeginNode(1);
 	ImGui::Text("Node A");
-	ImGuiNE::BeginPin(2, ImGuiNE::PinKind::Input);
+	ImGuiNE::BeginPin(1, ImGuiNE::PinKind::Input);
 	ImGui::Text("-> In");
 	ImGuiNE::EndPin();
 	ImGui::SameLine();
-	ImGuiNE::BeginPin(3, ImGuiNE::PinKind::Output);
+	ImGuiNE::BeginPin(2, ImGuiNE::PinKind::Output);
 	ImGui::Text("Out ->");
 	ImGuiNE::EndPin();
 	ImGuiNE::EndNode();
 
-	ImGuiNE::BeginNode(4);
+	ImGuiNE::BeginNode(2);
 	ImGui::Text("Node B");
-	ImGuiNE::BeginPin(5, ImGuiNE::PinKind::Input);
+	ImGuiNE::BeginPin(3, ImGuiNE::PinKind::Input);
 	ImGui::Text("-> In");
 	ImGuiNE::EndPin();
 	ImGui::SameLine();
-	ImGuiNE::BeginPin(6, ImGuiNE::PinKind::Output);
+	ImGuiNE::BeginPin(4, ImGuiNE::PinKind::Output);
 	ImGui::Text("Out ->");
 	ImGuiNE::EndPin();
 	ImGuiNE::EndNode();
+
+	//ImGuiNE::Link(7, 3, 5);	// これで繋ぐ
 
 	ImGuiNE::End();
 	ImGuiNE::SetCurrentEditor(nullptr);
