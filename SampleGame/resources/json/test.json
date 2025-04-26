@@ -1,0 +1,28 @@
+{
+    "Group Test": {
+        "test float": 0.0,
+        "test int32_t": 0,
+        "test string": "",
+        "test vector2": [
+            0.0,
+            0.0
+        ],
+        "test vector3": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "test float": 103.0,
+    "test int32_t": 37,
+    "test string": "e123213213123",
+    "test vector2": [
+        0.0,
+        0.0
+    ],
+    "test vector3": [
+        0.0,
+        0.0,
+        0.0
+    ]
+}

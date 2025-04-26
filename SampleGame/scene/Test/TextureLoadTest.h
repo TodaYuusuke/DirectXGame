@@ -23,4 +23,16 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::Billboard3D bill3D;
 
 	ImGui::NE::EditorContext* m_Context = nullptr;
+
+	LWP::Utility::JsonIO jsonIO_;
+
+	struct ValueTest {
+		int32_t i32;
+		float f;
+		LWP::Math::Vector2 v2;
+		LWP::Math::Vector3 v3;
+		std::string str;
+	};
+
+	ValueTest valueTest[2];
 };

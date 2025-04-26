@@ -20,7 +20,22 @@ void TextureLoadTest::Initialize() {
 	ImGui::NE::Config config;
 	config.SettingsFile = "resources/json/Simple.json";
 	m_Context = ImGui::NE::CreateEditor(&config);
-}
+
+	jsonIO_.Begin("test.json")
+		.AddValue<int32_t>("test int32_t", &valueTest[0].i32)
+		.AddValue<float>("test float", &valueTest[0].f)
+		.AddValue<Math::Vector2>("test vector2", &valueTest[0].v2)
+		.AddValue<Math::Vector3>("test vector3", &valueTest[0].v3)
+		.AddValue<std::string>("test string", &valueTest[0].str)
+		.BeginGroup("Group Test")
+		.AddValue<int32_t>("test int32_t", &valueTest[1].i32)
+		.AddValue<float>("test float", &valueTest[1].f)
+		.AddValue<Math::Vector2>("test vector2", &valueTest[1].v2)
+		.AddValue<Math::Vector3>("test vector3", &valueTest[1].v3)
+		.AddValue<std::string>("test string", &valueTest[1].str)
+		.EndGroup()
+		.End();
+;}
 
 // 更新
 void TextureLoadTest::Update() {
@@ -29,6 +44,9 @@ void TextureLoadTest::Update() {
 	ImGui::End();
 	ImGui::Begin("png (Right Sprite)");
 	pngSprite_.DebugGUI();
+	ImGui::End();
+	ImGui::Begin("json");
+	jsonIO_.DebugGUI();
 	ImGui::End();
 
 	ImGuiNE::SetCurrentEditor(m_Context);
