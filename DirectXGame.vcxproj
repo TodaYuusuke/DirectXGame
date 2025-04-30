@@ -265,6 +265,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\utility\CatmullRom.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
+    <ClCompile Include="Engine\utility\JsonIO.cpp" />
     <ClCompile Include="Engine\utility\IndexManager.cpp" />
     <ClCompile Include="Engine\utility\motionEffects\Easing.cpp" />
     <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp" />
@@ -419,6 +420,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\utility\JsonIO.h" />
     <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\CatmullRom.h" />

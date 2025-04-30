@@ -3,6 +3,15 @@
 
 using namespace LWP::Scene;
 
+
+Manager::~Manager() {
+	// 現在のシーンを削除
+	if (currentScene_ != nullptr) {
+		delete currentScene_;
+		currentScene_ = nullptr;
+	}
+}
+
 // 初期化
 void Manager::Init(IScene* firstScene) {
 	currentScene_ = firstScene;
