@@ -2,6 +2,7 @@
 #include "MyString.h"
 #include "base/ImGuiManager.h"
 #include <fstream>
+#include <filesystem>
 
 #define CHECK_BEGIN() assert(filePath_ != "" && "JsonIO is not initialized. Call Init() first.");
 
@@ -21,6 +22,8 @@ JsonIO& JsonIO::Begin(const std::string& filePath) {
 }
 void JsonIO::End() {
 	groupStack_.clear();
+	// jsonが存在しているかチェック
+	CheckJsonFile();
 }
 
 JsonIO& JsonIO::BeginGroup(const std::string& groupName) {
@@ -159,7 +162,19 @@ void JsonIO::Load(nlohmann::json& json, Group& group) {
 	}
 }
 
-
+void JsonIO::CheckJsonFile() {
+	// 書き込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath_ + filePath_;
+	// ファイルの存在チェック
+	if (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath)) {
+		// 既に存在しているならば自動的に読み込み
+		Load();
+	}
+	else {
+		// 存在しないならば新規作成
+		Save();
+	}
+}
 Group::iterator JsonIO::FindGroup(const std::string& name, Group& group) {
 	for (auto itr = group.begin(); itr != group.end(); ++itr) {
 		if (itr->name == name) {

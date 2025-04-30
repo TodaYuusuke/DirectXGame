@@ -66,23 +66,14 @@ namespace LWP::Utility {
 
 		JsonIO& Begin(const std::string& filePath);
 		void End();
-
 		JsonIO& BeginGroup(const std::string& groupName);
 		JsonIO& EndGroup();
-
 		template<JsonSerializableValue T>
 		JsonIO& AddValue(const std::string& name, T* value) {
 			assert(!groupStack_.empty() && "Begin() or BeginGroup() must be called first");
 			groupStack_.back()->push_back(Item{ name, value });
 			return *this;
 		}
-
-		//JsonIO& InsertValue(const std::string& groupPath, const std::string& name, int* value);
-		//JsonIO& InsertValue(const std::string& groupPath, const std::string& name, int32_t* value);
-		//JsonIO& InsertValue(const std::string& groupPath, const std::string& name, float* value);
-		//JsonIO& InsertValue(const std::string& groupPath, const std::string& name, Math::Vector2* value);
-		//JsonIO& InsertValue(const std::string& groupPath, const std::string& name, Math::Vector3* value);
-		//JsonIO& InsertValue(const std::string& groupPath, const std::string& name, std::string* value);
 
 		/// <summary>
 		/// データをファイルに保存
@@ -152,6 +143,10 @@ namespace LWP::Utility {
 		/// </summary>
 		void Load(nlohmann::json& json, Group& group);
 
+		/// <summary>
+		/// jsonファイルの存在を確認
+		/// </summary>
+		void CheckJsonFile();
 		/// <summary>
 		/// Groupから特定の名前のItemを探す
 		/// </summary>
