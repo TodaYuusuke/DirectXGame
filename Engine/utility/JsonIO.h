@@ -11,7 +11,7 @@ namespace LWP::Utility {
 	struct Item;
 
 	// グループ
-	using Group = std::map<std::string, Item>;
+	using Group = std::vector<Item>;
 	using ItemType = std::variant<
 		int32_t*,
 		float*, Math::Vector2*, Math::Vector3*,
@@ -20,6 +20,7 @@ namespace LWP::Utility {
 	>;
 	// 項目
 	struct Item {
+		std::string name;
 		ItemType value;
 	};
 }
@@ -72,7 +73,7 @@ namespace LWP::Utility {
 		template<JsonSerializableValue T>
 		JsonIO& AddValue(const std::string& name, T* value) {
 			assert(!groupStack_.empty() && "Begin() or BeginGroup() must be called first");
-			(*groupStack_.back())[name] = Item{ value };
+			groupStack_.back()->push_back(Item{ name, value });
 			return *this;
 		}
 
@@ -104,7 +105,6 @@ namespace LWP::Utility {
 		// jsonフォルダ直下からのパス
 		std::string filePath_ = "";
 
-
 		// 全データ
 		Group data_;
 		// データを追加するための一時変数
@@ -129,11 +129,36 @@ namespace LWP::Utility {
 		/// <returns></returns>
 		template<JsonSerializableVariantType T>
 		T* VariantGet(Item& item) { return std::get_if<T>(&item.value); }
+		/// <summary>
+		/// jsonから任意の型の変数を読み込む関数
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		template<JsonSerializableValue T>
+		void VariantLoad(const nlohmann::json::iterator& json, Group& group, const T& value) {
+			std::string key = json.key();
+			Group::iterator itr = FindGroup(key, group);
+			assert(itr != group.end() && ("Not Found \"" + key + "\" Item.").c_str());
+			*(*VariantGet<T*>(*itr)) = value;
+		}
 
 		/// <summary>
 		/// データをファイルに保存
 		/// </summary>
 		void Save(nlohmann::json& json, Group& group);
+		/// <summary>
+		/// データをファイルから読み込み
+		/// </summary>
+		void Load(nlohmann::json& json, Group& group);
+
+		/// <summary>
+		/// Groupから特定の名前のItemを探す
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="group"></param>
+		/// <returns></returns>
+		Group::iterator FindGroup(const std::string& name, Group& group);
 
 		/// <summary>
 		/// Debug用のGUI（再起処理用）

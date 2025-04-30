@@ -2,7 +2,7 @@
     "Group Test": {
         "test float": 0.0,
         "test int32_t": 0,
-        "test string": "",
+        "test string": "in group",
         "test vector2": [
             0.0,
             0.0
@@ -13,9 +13,9 @@
             0.0
         ]
     },
-    "test float": 103.0,
-    "test int32_t": 37,
-    "test string": "e123213213123",
+    "test float": 30.0,
+    "test int32_t": 230,
+    "test string": "123434565eddadwa",
     "test vector2": [
         0.0,
         0.0
