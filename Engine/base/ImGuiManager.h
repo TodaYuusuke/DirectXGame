@@ -49,14 +49,22 @@ namespace LWP::Base {
 		/// <param name="flags"></param>
 		/// <param name="ref_col"></param>
 		static void ColorPicker4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0, const float* ref_col = (const float*)0);
-
 		/// <summary>
-		/// ColorEdit3 ... Colorクラス対応ver
+		/// ColorEdit4 ... Colorクラス対応ver
 		/// </summary>
 		/// <param name="label"></param>
 		/// <param name="col"></param>
 		/// <param name="flags"></param>
 		static void ColorEdit4(const char* label, Utility::Color& col, ImGuiColorEditFlags flags = 0);
+		
+		/// <summary>
+		/// 文字列の入出力を手伝う関数
+		/// </summary>
+		/// <param name="label"></param>
+		/// <param name="str"></param>
+		/// <param name="maxSize"></param>
+		/// <param name="flags"></param>
+		static void InputText(const char* label, std::string& str, const int maxSize = 256, ImGuiInputTextFlags flags = 0);
 
 		/// <summary>
 		/// リソースの中身を表示する

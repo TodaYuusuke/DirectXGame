@@ -126,7 +126,7 @@ void Animation::DebugGUI() {
 
 
 void Animation::LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr) {
-	return LoadFullPath(kDirectoryPath + filePath, ptr);
+	return LoadFullPath(kDirectoryPath_ + filePath, ptr);
 }
 void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr) {
 	Assimp::Importer importer;
@@ -274,4 +274,4 @@ float Animation::GetAnimationTotalTime() {
 	return data[playingAnimationName_].totalTime;
 }
 
-const std::string Animation::kDirectoryPath = "resources/animation/";
+const std::string Animation::kDirectoryPath_ = "resources/animation/";
