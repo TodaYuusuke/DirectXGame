@@ -34,5 +34,5 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		std::string str;
 	};
 
-	ValueTest valueTest[2];
+	ValueTest valueTest[3];
 };

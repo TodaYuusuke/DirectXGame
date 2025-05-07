@@ -14,16 +14,11 @@ JsonIO::~JsonIO() {
 	// 何もしない
 }
 
-JsonIO& JsonIO::Begin(const std::string& filePath) {
-	data_.clear();	// データの初期化
+void JsonIO::Init(const std::string& filePath) {
 	filePath_ = filePath;
-	groupStack_ = { &data_ }; // ルートを積む
-	return *this;
-}
-void JsonIO::End() {
+	data_.clear();	// データの初期化
 	groupStack_.clear();
-	// jsonが存在しているかチェック
-	CheckJsonFile();
+	groupStack_ = { &data_ }; // ルートを積む
 }
 
 JsonIO& JsonIO::BeginGroup(const std::string& groupName) {
@@ -70,7 +65,7 @@ void JsonIO::Save() {
 	// ファイルオープン失敗？
 	if (ofs.fail()) {
 		std::string message = "Failed open data file for write";
-		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		MessageBoxA(nullptr, message.c_str(), "JsonIO", 0);
 		assert(0);
 		return;
 	}
@@ -116,7 +111,7 @@ void JsonIO::Load() {
 	// ファイルオープン失敗？
 	if (ifs.fail()) {
 		std::string message = "Failed open data file for write";
-		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		MessageBoxA(nullptr, message.c_str(), "JsonIO", 0);
 		assert(0);
 		return;
 	}
@@ -157,11 +152,17 @@ void JsonIO::Load(nlohmann::json& json, Group& group) {
 		else if (itr->is_structured()) {
 			std::string key = itr.key();
 			Group::iterator gItr = FindGroup(key, group);	// グループを検索
+			if (gItr == group.end()) {
+				// グループが見つからなかったので、onNotFoundFunc_を実行する
+				// 返り値がtrueなら処理を続け、falseなら終了する
+				if (!onNotFoundFunc_(key)) {
+					continue;
+				}
+			}
 			Load(json[key], *VariantGet<Group>(*gItr));	// 再帰的に処理を行う
 		}
 	}
 }
-
 void JsonIO::CheckJsonFile() {
 	// 書き込むJSONファイルのフルパスを合成する
 	std::string filePath = kDirectoryPath_ + filePath_;
@@ -175,6 +176,7 @@ void JsonIO::CheckJsonFile() {
 		Save();
 	}
 }
+
 Group::iterator JsonIO::FindGroup(const std::string& name, Group& group) {
 	for (auto itr = group.begin(); itr != group.end(); ++itr) {
 		if (itr->name == name) {
@@ -223,81 +225,41 @@ void JsonIO::DebugGUI(Group& group) {
 		}
 	}
 }
-/*
 
-void GlobalVariables::LoadFiles() {
-	// ディレクトリがなければスキップする
-	std::filesystem::path dir(kDirectortyPath);
-	if (!std::filesystem::exists(dir)) {
-		return;
-	}
-
-	std::filesystem::directory_iterator dir_it(dir);
-	for (const std::filesystem::directory_entry& entry : dir_it) {
-		// ファイルパスを取得
-		const std::filesystem::path& filePath = entry.path();
-
-		// ファイル拡張子を取得
-		std::string extension = filePath.extension().string();
-		// .jsonファイル以外はスキップ
-		if (extension.compare(".json") != 0) {
-			continue;
-		}
-
-		// ファイル読み込み
-		LoadFile(filePath.stem().string());
-	}
-}
-
-void GlobalVariables::LoadFile(const std::string& groupName) {
+const std::string JsonIO::kDirectoryPath_ = "resources/json/";
+NestedList JsonIO::LoadGroupNames(std::string filePath) {
 	// 書き込むJSONファイルのフルパスを合成する
-	std::string filePath = kDirectortyPath + groupName + ".json";
+	std::string fullPath = kDirectoryPath_ + filePath;
 	// 書き込み用ファイルストリーム
 	std::ifstream ifs;
 	// ファイルを書き込み用に開く
-	ifs.open(filePath);
+	ifs.open(fullPath);
 
-	// ファイルオープン失敗？
+	// ファイルオープン失敗したら 
 	if (ifs.fail()) {
-		std::string message = "Failed open data file for write";
-		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
-		assert(0);
-		return;
+		std::string message = "LoadGroupNames: Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "JsonIO", 0);
+		return {};	// まだ生成していないものなので何も返さない
 	}
 
-	json root;
+	nlohmann::json root;
 	// json文字列からjsonのデータ構造に展開
 	ifs >> root;
 	// ファイルを閉じる
 	ifs.close();
 
-	// グループを検索
-	json::iterator itGroup = root.find(groupName);
-	// 未登録チェック
-	assert(itGroup != root.end());
+	auto lamda = [](auto self, nlohmann::json& json, NestedList& list) -> void {
+			for (auto itr = json.begin(); itr != json.end(); ++itr) {
+				if (itr->is_array() && itr->size() == 2) { /* 何もしない */ }		// Vector2の誤登録を防ぐ
+				else if (itr->is_array() && itr->size() == 3) { /* 何もしない */ }		// Vector3の誤登録を防ぐ
+				else if (itr->is_structured()) {
+					list.push_back({ itr.key(), NestedList() });	// 新しいリストを作成
+					self(self, json[itr.key()], list.back().list);
+				}
+			}
+		};
 
-	for (json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
-		// アイテム名を取得
-		const std::string& itemName = itItem.key();
-
-		// int32_t型の値を保持していれば
-		if (itItem->is_number_integer()) {
-			// int型の値を登録
-			int32_t value = itItem->get<int32_t>();
-			SetValue(groupName, itemName, value);
-		}
-		// float型の値を保持していれば
-		else if (itItem->is_number_float()) {
-			// float型の値を登録
-			double value = itItem->get<double>();
-			SetValue(groupName, itemName, static_cast<float>(value));
-		}
-		// 要素数3の配列であれば
-		else if (itItem->is_array() && itItem->size() == 3) {
-			// float型のjson配列登録
-			Vector3 value = {itItem->at(0), itItem->at(1), itItem->at(2)};
-			SetValue(groupName, itemName, value);
-		}
-	}
+	NestedList nestedList;	// 出力するデータ
+	lamda(lamda, root, nestedList);	// 実行
+	return nestedList;
 }
-*/

@@ -40,72 +40,66 @@ namespace LWP::Resource {
 		std::string name = "Animation";
 		// アニメーションの再生速度
 		float playbackSpeed = 1.0f;
-		// deltaTimeの係数影響OnOff
-		bool useDeltaTimeMultiply = true;
-
+		
 		// アクティブ切り替え
 		bool isActive = true;
 
 	public: // **　メンバ関数 ** //
 
-		// デフォルトコンストラクタ
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
 		Animation();
-		// デストラクタ
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
 		~Animation();
 
 		/// <summary>
 		/// モーション経過時間の初期化
 		/// </summary>
 		void Init();
-
-		/// <summary>
-		/// アニメーション開始
-		/// </summary>
-		/// <param name="name">再生するアニメーション名</param>
-		void Play(const std::string animName);
-		/// <summary>
-		/// アニメーション開始
-		/// </summary>
-		/// <param name="name">再生するアニメーション名</param>
-		/// <param name="loop">ループするかのフラグ</param>
-		void Play(const std::string animName, bool loop);
-		/// <summary>
-		/// アニメーション開始
-		/// </summary>
-		/// <param name="name">再生するアニメーション名</param>
-		/// <param name="loop">ループするかのフラグ</param>
-		/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
-		void Play(const std::string animName, bool loop, float startTime);
-		
-		/// <summary>
-		/// 逆再生フラグ
-		/// </summary>
-		/// <param name="b">逆再生するかのフラグ</param>
-		void Reverse(bool b) { reverseFlag_ = b; }
-
-		/// <summary>
-		/// アニメーション停止
-		/// </summary>
-		void Stop();
-
 		/// <summary>
 		/// 更新（ユーザー呼び出し不要）
 		/// </summary>
 		void Update();
 
 		/// <summary>
-		/// アニメーション中か返す関数
+		/// アニメーション開始
 		/// </summary>
-		bool GetPlaying();
+		/// <param name="name">再生するアニメーション名</param>
+		/// <param name="transitionTime">モーションの遷移にかかる時間(0.0f以上)</param>
+		/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
+		Animation& Play(const std::string animName, float transitionTime = 0.0f, float startTime = 0.0f);
 		/// <summary>
-		/// 指定のアニメーションが再生中か返す関数
+		/// ループ再生するかのフラグを切り替え
 		/// </summary>
-		bool GetPlaying(const std::string& animName);
-		
+		Animation& Loop();
 		/// <summary>
-		/// 全体の進捗を受け取る関数
+		/// ループ再生するかを設定
 		/// </summary>
-		float GetProgress() { return time_; }
+		Animation& Loop(bool b);
+		/// <summary>
+		/// 逆再生するかのフラグを切り替え
+		/// </summary>
+		Animation& Reverse();
+		/// <summary>
+		/// 逆再生するかを設定
+		/// </summary>
+		Animation& Reverse(bool b);
+		/// <summary>
+		/// タイムスケールを使うかのフラグを切り替え
+		/// </summary>
+		Animation& UseTimeScale();
+		/// <summary>
+		/// タイムスケールを使うかを設定
+		/// </summary>
+		Animation& UseTimeScale(bool b);
+
+		/// <summary>
+		/// アニメーション停止
+		/// </summary>
+		void Stop();
 
 		/// <summary>
 		/// ImGui
@@ -128,7 +122,20 @@ namespace LWP::Resource {
 		/// <param name="filePath">読み込むファイルの名前</param>
 		void LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr);
 
-
+		/// <summary>
+		/// <para>指定のアニメーションが再生中か返す関数</para>
+		/// <para>※ 指定しない場合は何かしらが再生しているかを返す</para>
+		/// </summary>
+		bool GetPlaying(const std::string& animName = "");
+		/// <summary>
+		/// 再生できるアニメーションの名前を取得する関数
+		/// </summary>
+		/// <returns></returns>
+		std::vector<std::string> GetAnimationNames() const;
+		/// <summary>
+		/// 全体の進捗を受け取る関数
+		/// </summary>
+		float GetProgress() { return time_; }
 		/// <summary>
 		/// 読み込んだパスを返す関数
 		/// </summary>
@@ -144,6 +151,7 @@ namespace LWP::Resource {
 		};
 		std::map<std::string, AnimationData> data;
 
+		// 
 		// 経過割合(0.0f ~ 1.0f)
 		float time_ = 0.0f;
 		
@@ -151,8 +159,10 @@ namespace LWP::Resource {
 		std::string playingAnimationName_ = "";
 		// ループするかフラグ
 		bool loopFlag_ = false;
-		// 逆再生フラグ
+		// アニメーション逆再生フラグ
 		bool reverseFlag_ = false;
+		// deltaTimeの係数影響OnOff
+		bool useDeltaTimeMultiply_ = true;
 
 		// 適応するModelのポインタ
 		Resource::SkinningModel* modelPtr_ = nullptr;

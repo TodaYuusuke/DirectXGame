@@ -29,9 +29,7 @@ void Animation::Init() {
 	playingAnimationName_ = "";
 }
 
-void Animation::Play(const std::string animName) { Play(animName, false, 0.0f); }
-void Animation::Play(const std::string animName, bool loop) { Play(animName, loop, 0.0f); }
-void Animation::Play(const std::string animName, bool loop, float startTime) {
+Animation& Animation::Play(const std::string animName, float transitionTime, float startTime) {
 	// 存在するアニメーションかチェック
 	if (!data.contains(animName)) {
 		// 存在しないのでエラー
@@ -39,10 +37,19 @@ void Animation::Play(const std::string animName, bool loop, float startTime) {
 	}
 
 	playingAnimationName_ = animName;
-	loopFlag_ = loop;
+	transitionTime;
 	time_ = startTime;
 	isActive = true;
+
+	return *this;
 }
+Animation& Animation::Loop()				{ loopFlag_ = !loopFlag_;							return *this; }
+Animation& Animation::Loop(bool b)			{ loopFlag_ = b;									return *this; }
+Animation& Animation::Reverse()				{ reverseFlag_ = !reverseFlag_;						return *this; }
+Animation& Animation::Reverse(bool b)		{ reverseFlag_ = b;									return *this; }
+Animation& Animation::UseTimeScale()		{ useDeltaTimeMultiply_ = !useDeltaTimeMultiply_;	return *this; }
+Animation& Animation::UseTimeScale(bool b)	{ useDeltaTimeMultiply_ = b;						return *this; }
+
 void Animation::Stop() { isActive = false; }
 
 void Animation::Update() {
@@ -52,7 +59,7 @@ void Animation::Update() {
 	// アニメーションの時間
 	float total = GetAnimationTotalTime();
 	// 時間を更新
-	float t = (useDeltaTimeMultiply ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
+	float t = (useDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
 	if (!reverseFlag_) { time_ += t * playbackSpeed; }	// リバースフラグに応じて進行方向を変える
 	else { time_ -= t * playbackSpeed; }
 
@@ -80,42 +87,6 @@ void Animation::Update() {
 
 	// Joint更新
 	UpdateJoint();
-}
-
-bool Animation::GetPlaying() {
-	// ループする場合
-	if (loopFlag_) {
-		// 再生しているアニメーションの名前があれば再生中
-		return playingAnimationName_ != "";
-	}
-	// ループしない場合
-	else {
-		// 1未満なら再生中
-		if (!reverseFlag_) { return time_ < 1.0f; }
-		// 0以上なら再生中
-		else { return time_ > 0.0f; }
-	}
-}
-bool Animation::GetPlaying(const std::string& animName) {
-	// そもそも再生しているアニメーションが一致しなければfalse
-	if (!(playingAnimationName_ == animName)) {
-		return false;
-	}
-	
-	// ループしない場合のみ追加処理
-	if(!loopFlag_) {
-		// 1未満なら再生中
-		if (!reverseFlag_) {
-			// 再生しているアニメーションの名前が一致し、1未満なら再生中
-			return time_ < 1.0f;
-		}
-		// 0以上なら再生中
-		else {
-			return time_ > 0.0f;
-		}
-	}
-
-	return true;
 }
 
 void Animation::DebugGUI() {
@@ -147,7 +118,7 @@ void Animation::DebugGUI() {
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
 	if (temp != time_) { UpdateJoint(); }	// tの値が変わったらJointを更新する
 	ImGui::DragFloat("PlaybackSpeed", &playbackSpeed, 0.01f);
-	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply);
+	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply_);
 	ImGui::Checkbox("LoopFlag", &loopFlag_);
 	ImGui::Checkbox("ReverseFlag", &reverseFlag_);
 	ImGui::Checkbox("isActive", &isActive);
@@ -205,6 +176,36 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 	loadedPath = filePath;
 }
 
+bool Animation::GetPlaying(const std::string& animName) {
+	// アニメーション名が指定されている場合、それと一致しているか確認
+	if (!animName.empty() && playingAnimationName_ != animName) {
+		return false;
+	}
+
+	// ループ再生の場合
+	if (loopFlag_) {
+		// 何かしらのアニメーション名があれば再生中
+		return !playingAnimationName_.empty();
+	}
+	// 非ループ再生の場合
+	else {
+		// 再生方向によって再生中かどうかを判定
+		if (!reverseFlag_) {
+			return time_ < 1.0f;
+		}
+		else {
+			return time_ > 0.0f;
+		}
+	}
+}
+std::vector<std::string> Animation::GetAnimationNames() const {
+	std::vector<std::string> names;
+	for (const auto& pair : data) {
+		names.push_back(pair.first);
+	}
+	return names;
+}
+
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {
 	assert(!keyframes.empty());	// キーがないものは返す値がわからないのでダメ
 	
@@ -226,7 +227,6 @@ Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframe
 	// ここまで来た場合は一番最後の時刻よりも後ろなので最後の値を返すことにする
 	return (*keyframes.rbegin()).value;
 }
-
 Quaternion Animation::CalculateValue(const std::vector<Keyframe<Quaternion>>& keyframes, float time) {
 	assert(!keyframes.empty());	// キーがないものは返す値がわからないのでダメ
 
