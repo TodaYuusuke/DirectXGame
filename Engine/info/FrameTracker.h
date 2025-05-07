@@ -40,7 +40,7 @@ namespace LWP::Information {
 		double GetDeltaTime();
 		double GetDefaultDeltaTime();
 		// デルタタイムに掛ける係数をセットする関数
-		void SetDeltaTimeMultiply(float value);
+		void SetTimeScale(float value);
 
 		// ImGuiを用いて情報表示
 		void DebugGUI();
@@ -80,7 +80,7 @@ namespace LWP::Information {
 		double frameRate = 0;
 
 		// デルタタイムに掛ける係数
-		float deltaFactor = 1.0f;
+		float timeScale_ = 1.0f;
 
 		// 1フレームの情報を格納したコンスタントバッファー
 		struct PerFrame {

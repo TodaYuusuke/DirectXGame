@@ -45,5 +45,5 @@ float Information::GetDefaultDeltaTimeF() {
 }
 
 void Information::SetDeltaTimeMultiply(float value) {
-	FrameTracker::GetInstance()->SetDeltaTimeMultiply(value);
+	FrameTracker::GetInstance()->SetTimeScale(value);
 }
