@@ -170,7 +170,7 @@ namespace LWP::Resource {
 		std::string loadedPath = "";
 
 		// アニメーションファイルの位置
-		const static std::string kDirectoryPath;
+		const static std::string kDirectoryPath_;
 
 	
 	private: // ** プライベートなメンバ関数 ** //
@@ -188,7 +188,6 @@ namespace LWP::Resource {
 		/// Jointを更新する関数
 		/// </summary>
 		void UpdateJoint();
-
 		/// <summary>
 		/// 再生中のアニメーションの総時間を返す関数
 		/// </summary>

@@ -211,11 +211,7 @@ void JsonIO::DebugGUI(Group& group) {
 			ImGui::DragFloat3(itr->name.c_str(), &(*VariantGet<Vector3*>(*itr))->x, 0.01f);
 		}
 		else if (VariantCheck<std::string*>(*itr)) {
-			char c[256];
-			std::string** str = VariantGet<std::string*>(*itr);
-			strncpy_s(c, sizeof(c), (*str)->c_str(), _TRUNCATE);	// char型に変換
-			ImGui::InputText(itr->name.c_str(), c, sizeof(c));
-			*(*str) = c;	// 文字列を更新
+			Base::ImGuiManager::InputText(itr->name.c_str(), **VariantGet<std::string*>(*itr));
 		}
 		else if (VariantCheck<Group>(*itr)) {
 			if (ImGui::TreeNode(itr->name.c_str())) {

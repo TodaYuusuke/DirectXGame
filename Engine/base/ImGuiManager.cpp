@@ -51,6 +51,12 @@ void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColor
 	col = *new Color(v);
 }
 
+void ImGuiManager::InputText(const char* label, std::string& str, const int maxSize, ImGuiInputTextFlags flags) {
+	char* c = new char[maxSize];
+	strncpy_s(c, sizeof(c), str.c_str(), _TRUNCATE);	// char型に変換
+	ImGui::InputText(label, c, sizeof(c), flags);
+	str = c;	// 文字列を更新
+}
 void ImGuiManager::ShowTexture(const Resource::Texture& texture, float scale) {
 	if (texture.GetIndex() != -1) {	// テクスチャが存在するならば表示
 		Math::Vector2 size = texture.GetSize() * scale;
