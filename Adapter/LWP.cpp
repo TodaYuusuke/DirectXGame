@@ -1,5 +1,6 @@
 ﻿#include "LWP.h"
 #include "Config.h"
+#include "component/Window.h"
 
 using namespace LWP::System;
 
@@ -157,8 +158,12 @@ void Engine::DebugGUI() {
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
 #endif
-		debugCamera_->DebugGUI(sceneManager_->GetMainCamera());
 		frameTracker_->DebugGUI();
+		ImGui::Text("---------------------------");
+		if (ImGui::Button("Change Window Mode")) { Window::ChangeWindowMode(); }
+		if (ImGui::Button("Change FullScreen Mode")) { Window::ChangeFullScreenMode(); }
+		//if (ImGui::Button("Change BorderlessWindow Mode")) { Window::ChangeBorderlessWindowMode(); }
+		debugCamera_->DebugGUI(sceneManager_->GetMainCamera());
 		ImGui::EndTabBar();
 	}
 	ImGui::End();

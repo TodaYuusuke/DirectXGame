@@ -107,7 +107,7 @@ double FrameTracker::GetElapsedTimeH() {
 
 double FrameTracker::GetDeltaTime() {
 	// 係数を掛けて返す
-	return GetDefaultDeltaTime() * deltaFactor;
+	return GetDefaultDeltaTime() * timeScale_;
 }
 double FrameTracker::GetDefaultDeltaTime() {
 	// そのまま返す
@@ -116,8 +116,8 @@ double FrameTracker::GetDefaultDeltaTime() {
 	}
 	return frameDurations_[frameDurationIndex_ - 1];
 }
-void FrameTracker::SetDeltaTimeMultiply(float value) {
-	deltaFactor = value;
+void FrameTracker::SetTimeScale(float value) {
+	timeScale_ = value;
 }
 
 void FrameTracker::DebugGUI() {
@@ -132,8 +132,7 @@ void FrameTracker::DebugGUI() {
 		ImGui::Text("FrameTime ... %.1fms (%.1fms)", 1000.0f / frameRate, 1000.0f / GetFPS());
 		ImGui::Text("DeltaTime ... %lf", GetDeltaTime());
 		ImGui::Text("ElapsedFrame ... %d", elapsedFrame_);
-		ImGui::Text("---------------------------");
-		ImGui::DragFloat("DeltaTimeMultiply", &deltaFactor, 0.01f);
+		ImGui::DragFloat("TimeScale", &timeScale_, 0.01f);
 		
 		ImGui::EndTabItem();
 	}

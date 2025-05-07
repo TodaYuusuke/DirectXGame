@@ -4,7 +4,7 @@
 
 #include <variant>
 #include "math/Math.h"
-#include <string>
+#include "MyString.h"
 
 // 前方宣言
 namespace LWP::Utility {
@@ -22,6 +22,15 @@ namespace LWP::Utility {
 	struct Item {
 		std::string name;
 		ItemType value;
+	};
+
+	// 入れ子構造だけのデータを返す用の宣言
+	struct NestedString;
+	using NestedList = std::vector<NestedString>;
+
+	struct NestedString {
+		std::string name;
+		NestedList list;
 	};
 }
 
@@ -64,8 +73,16 @@ namespace LWP::Utility {
 		/// </summary>
 		~JsonIO();
 
-		JsonIO& Begin(const std::string& filePath);
-		void End();
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Init(const std::string& filePath);
+
+		/// <summary>
+		/// 入れ子構造を開始
+		/// </summary>
+		/// <param name="groupName">入れ子の名前</param>
+		/// <returns></returns>
 		JsonIO& BeginGroup(const std::string& groupName);
 		JsonIO& EndGroup();
 		template<JsonSerializableValue T>
@@ -83,6 +100,10 @@ namespace LWP::Utility {
 		/// データをファイルから読み込み
 		/// </summary>
 		void Load();
+		/// <summary>
+		/// jsonファイルの存在を確認し、存在していればLoad、していなければSaveを呼び出す関数
+		/// </summary>
+		void CheckJsonFile();
 
 		/// <summary>
 		/// Debug用のGUI
@@ -92,7 +113,7 @@ namespace LWP::Utility {
 
 	private: // ** メンバ変数 ** //
 		// グローバル変数の保存先ファイルパス
-		const std::string kDirectoryPath_ = "resources/json/";
+		const static std::string kDirectoryPath_;
 		// jsonフォルダ直下からのパス
 		std::string filePath_ = "";
 
@@ -101,6 +122,13 @@ namespace LWP::Utility {
 		// データを追加するための一時変数
 		std::vector<Group*> groupStack_;
 
+		// 読み込み時にデータが見つからなかった場合に実行する関数（現在変更禁止）
+		std::function<bool(std::string)> onNotFoundFunc_ = [](std::string key) {
+			// デフォルトでは何もしない
+			// グループが見つからなかった場合はログに警告を出して終わらせる
+			Log("Warning: " + key + " is not found.\n");
+			return false;	// 新しくデータを作るならtrueを、そうでないならfalseを返す
+		};
 
 	private: // ** プライベートのメンバ変数 ** //
 		
@@ -130,6 +158,13 @@ namespace LWP::Utility {
 		void VariantLoad(const nlohmann::json::iterator& json, Group& group, const T& value) {
 			std::string key = json.key();
 			Group::iterator itr = FindGroup(key, group);
+			if(itr == group.end()) {
+				// グループが見つからなかったので、onNotFoundFunc_を実行する
+				// 返り値がtrueなら処理を続け、falseなら終了する
+				if (!onNotFoundFunc_(key)) {
+					return;
+				}
+			}
 			assert(itr != group.end() && ("Not Found \"" + key + "\" Item.").c_str());
 			*(*VariantGet<T*>(*itr)) = value;
 		}
@@ -144,10 +179,6 @@ namespace LWP::Utility {
 		void Load(nlohmann::json& json, Group& group);
 
 		/// <summary>
-		/// jsonファイルの存在を確認
-		/// </summary>
-		void CheckJsonFile();
-		/// <summary>
 		/// Groupから特定の名前のItemを探す
 		/// </summary>
 		/// <param name="name"></param>
@@ -159,5 +190,14 @@ namespace LWP::Utility {
 		/// Debug用のGUI（再起処理用）
 		/// </summary>
 		void DebugGUI(Group& group);
+
+
+	public: // ** staticなメンバ関数 ** //
+
+		/// <summary>
+		/// jsonからデータの入れ子構造だけを取得する関数
+		/// </summary>
+		/// <returns></returns>
+		static NestedList LoadGroupNames(std::string filePath);
 	};
 }
