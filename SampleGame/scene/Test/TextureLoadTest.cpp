@@ -38,6 +38,7 @@ void TextureLoadTest::Initialize() {
 			.AddValue<Math::Vector3>("test vector3", &valueTest[1].v3)
 			.AddValue<std::string>("test string", &valueTest[1].str)
 		.EndGroup();
+
 	jsonIO_.CheckJsonFile();
 ;}
 
