@@ -202,13 +202,13 @@ void JsonIO::DebugGUI(Group& group) {
 			ImGui::DragInt(itr->name.c_str(), *VariantGet<int32_t*>(*itr));
 		}
 		else if (VariantCheck<float*>(*itr)) {
-			ImGui::DragFloat(itr->name.c_str(), *VariantGet<float*>(*itr));
+			ImGui::DragFloat(itr->name.c_str(), *VariantGet<float*>(*itr), 0.01f);
 		}
 		else if (VariantCheck<Vector2*>(*itr)) {
-			ImGui::DragFloat2(itr->name.c_str(), &(*VariantGet<Vector2*>(*itr))->x);
+			ImGui::DragFloat2(itr->name.c_str(), &(*VariantGet<Vector2*>(*itr))->x, 0.01f);
 		}
 		else if (VariantCheck<Vector3*>(*itr)) {
-			ImGui::DragFloat3(itr->name.c_str(), &(*VariantGet<Vector3*>(*itr))->x);
+			ImGui::DragFloat3(itr->name.c_str(), &(*VariantGet<Vector3*>(*itr))->x, 0.01f);
 		}
 		else if (VariantCheck<std::string*>(*itr)) {
 			char c[256];
