@@ -211,7 +211,7 @@ void JsonIO::DebugGUI(Group& group) {
 			ImGui::DragFloat3(itr->name.c_str(), &(*VariantGet<Vector3*>(*itr))->x, 0.01f);
 		}
 		else if (VariantCheck<std::string*>(*itr)) {
-			Base::ImGuiManager::InputText(itr->name.c_str(), **VariantGet<std::string*>(*itr));
+			Base::ImGuiManager::InputText(itr->name.c_str(), **VariantGet<std::string*>(*itr), 5);
 		}
 		else if (VariantCheck<Group>(*itr)) {
 			if (ImGui::TreeNode(itr->name.c_str())) {

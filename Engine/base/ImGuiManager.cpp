@@ -52,10 +52,12 @@ void ImGuiManager::ColorEdit4(const char* label, Utility::Color& col, ImGuiColor
 }
 
 void ImGuiManager::InputText(const char* label, std::string& str, const int maxSize, ImGuiInputTextFlags flags) {
-	char* c = new char[maxSize];
-	strncpy_s(c, sizeof(c), str.c_str(), _TRUNCATE);	// char型に変換
-	ImGui::InputText(label, c, sizeof(c), flags);
+	const int bufferSize = maxSize + 1; // 終端文字分の1バイトを追加
+	char* c = new char[bufferSize];
+	strncpy_s(c, bufferSize, str.c_str(), _TRUNCATE);	// char型に変換
+	ImGui::InputText(label, c, bufferSize, flags);
 	str = c;	// 文字列を更新
+	delete[] c;	// char型のメモリを解放
 }
 void ImGuiManager::ShowTexture(const Resource::Texture& texture, float scale) {
 	if (texture.GetIndex() != -1) {	// テクスチャが存在するならば表示
