@@ -124,7 +124,6 @@ void Animation::DebugGUI() {
 	ImGui::Checkbox("isActive", &isActive);
 }
 
-
 void Animation::LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr) {
 	return LoadFullPath(kDirectoryPath_ + filePath, ptr);
 }

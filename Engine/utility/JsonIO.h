@@ -76,7 +76,7 @@ namespace LWP::Utility {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Init(const std::string& filePath);
+		JsonIO& Init(const std::string& filePath);
 
 		/// <summary>
 		/// 入れ子構造を開始

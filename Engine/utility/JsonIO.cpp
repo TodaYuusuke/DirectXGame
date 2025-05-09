@@ -14,11 +14,13 @@ JsonIO::~JsonIO() {
 	// 何もしない
 }
 
-void JsonIO::Init(const std::string& filePath) {
+JsonIO& JsonIO::Init(const std::string& filePath) {
 	filePath_ = filePath;
 	data_.clear();	// データの初期化
 	groupStack_.clear();
 	groupStack_ = { &data_ }; // ルートを積む
+
+	return *this;
 }
 
 JsonIO& JsonIO::BeginGroup(const std::string& groupName) {
