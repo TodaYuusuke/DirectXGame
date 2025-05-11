@@ -16,8 +16,6 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Resource::SkinningModel model[5];
-	LWP::Resource::Animation anim;
+	LWP::Resource::Animation anim[5];
 	LWP::Resource::Motion motion[5];
-
-	LWP::Resource::Texture texture;
 };
