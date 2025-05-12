@@ -32,6 +32,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 		LWP::Math::Vector2 v2;
 		LWP::Math::Vector3 v3;
 		std::string str;
+		LWP::Object::TransformQuat transform;
 	};
 
 	ValueTest valueTest[3];

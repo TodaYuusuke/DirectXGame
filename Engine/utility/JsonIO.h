@@ -4,6 +4,8 @@
 
 #include <variant>
 #include "math/Math.h"
+#include "object/TransformQuat.h"
+#include "Color.h"
 #include "MyString.h"
 
 // 前方宣言
@@ -13,8 +15,13 @@ namespace LWP::Utility {
 	// グループ
 	using Group = std::vector<Item>;
 	using ItemType = std::variant<
+		bool*,
 		int32_t*,
-		float*, Math::Vector2*, Math::Vector3*,
+		float*,
+		Math::Vector2*, Math::Vector3*, Math::Vector4*,
+		Math::Quaternion*,
+		Object::TransformQuat*,
+		Color*,
 		std::string*,
 		Group
 	>;
@@ -37,19 +44,29 @@ namespace LWP::Utility {
 // 値型で保持されるシリアライズ可能型
 template<typename T>
 concept JsonSerializableValue =
+std::same_as<T, bool> ||
 std::same_as<T, int32_t> ||
 std::same_as<T, float> ||
 std::same_as<T, LWP::Math::Vector2> ||
 std::same_as<T, LWP::Math::Vector3> ||
+std::same_as<T, LWP::Math::Vector4> ||
+std::same_as<T, LWP::Math::Quaternion> ||
+std::same_as<T, LWP::Object::TransformQuat> ||
+std::same_as<T, LWP::Utility::Color> ||
 std::same_as<T, std::string>;
 
 // ポインタで保持されるシリアライズ可能型
 template<typename T>
 concept JsonSerializablePointer =
+std::same_as<T, bool*> ||
 std::same_as<T, int32_t*> ||
 std::same_as<T, float*> ||
 std::same_as<T, LWP::Math::Vector2*> ||
 std::same_as<T, LWP::Math::Vector3*> ||
+std::same_as<T, LWP::Math::Vector4*> ||
+std::same_as<T, LWP::Math::Quaternion*> ||
+std::same_as<T, LWP::Object::TransformQuat*> ||
+std::same_as<T, LWP::Utility::Color*> ||
 std::same_as<T, std::string*>;
 
 // variant に入る全体型（Group は唯一の実体型）
@@ -122,6 +139,27 @@ namespace LWP::Utility {
 		// データを追加するための一時変数
 		std::vector<Group*> groupStack_;
 
+		// 型の名前の列挙子
+		enum TypeID {
+			bool_,
+			int32_t_,
+			float_,
+			Vector2_,
+			Vector3_,
+			Vector4_,
+			Quaternion_,
+			TransformQuat_,
+			TransformQuat_T,
+			TransformQuat_R,
+			TransformQuat_S,
+			Color_,
+			string_,
+			Group_,
+			Count
+		};
+		// 型の名前の文字列
+		const static std::string typeNames_[TypeID::Count];
+
 		// 読み込み時にデータが見つからなかった場合に実行する関数（現在変更禁止）
 		std::function<bool(std::string)> onNotFoundFunc_ = [](std::string key) {
 			// デフォルトでは何もしない
@@ -155,17 +193,16 @@ namespace LWP::Utility {
 		/// <param name="item"></param>
 		/// <returns></returns>
 		template<JsonSerializableValue T>
-		void VariantLoad(const nlohmann::json::iterator& json, Group& group, const T& value) {
-			std::string key = json.key();
-			Group::iterator itr = FindGroup(key, group);
+		void VariantLoad(const std::string& name, Group& group, const T& value) {
+			Group::iterator itr = FindGroup(name, group);
 			if(itr == group.end()) {
 				// グループが見つからなかったので、onNotFoundFunc_を実行する
 				// 返り値がtrueなら処理を続け、falseなら終了する
-				if (!onNotFoundFunc_(key)) {
+				if (!onNotFoundFunc_(name)) {
 					return;
 				}
 			}
-			assert(itr != group.end() && ("Not Found \"" + key + "\" Item.").c_str());
+			assert(itr != group.end() && ("Not Found \"" + name + "\" Item.").c_str());
 			*(*VariantGet<T*>(*itr)) = value;
 		}
 

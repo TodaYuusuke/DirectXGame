@@ -83,7 +83,7 @@ std::wstring LWP::Utility::GetExtension(const std::wstring& str) {
 	// 見つからなかったので終了
 	return std::wstring();
 }
-std::vector<std::string> LWP::Utility::Split(std::string& input, char delimiter) {
+std::vector<std::string> LWP::Utility::Split(const std::string& input, char delimiter) {
 	std::istringstream stream(input);
 	std::string field;
 	std::vector<std::string> result;
