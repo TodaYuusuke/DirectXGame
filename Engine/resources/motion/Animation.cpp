@@ -31,42 +31,40 @@ void Animation::Init() {
 
 Animation& Animation::Play(const std::string animName, float transitionTime, float startTime) {
 	// 存在するアニメーションかチェック
-	if (!data.contains(animName)) {
-		// 存在しないのでエラー
-		assert(false);
-	}
+	assert(data.contains(animName) && "animName is Not Found.");
 
 	playingAnimationName_ = animName;
 	transitionTime;
 	time_ = startTime;
-	isActive = true;
+	isPause_ = false;
 
 	return *this;
 }
-Animation& Animation::Loop()				{ loopFlag_ = !loopFlag_;							return *this; }
-Animation& Animation::Loop(bool b)			{ loopFlag_ = b;									return *this; }
-Animation& Animation::Reverse()				{ reverseFlag_ = !reverseFlag_;						return *this; }
-Animation& Animation::Reverse(bool b)		{ reverseFlag_ = b;									return *this; }
-Animation& Animation::UseTimeScale()		{ useDeltaTimeMultiply_ = !useDeltaTimeMultiply_;	return *this; }
-Animation& Animation::UseTimeScale(bool b)	{ useDeltaTimeMultiply_ = b;						return *this; }
+Animation& Animation::Pause()	{ isPause_ = true;	return *this; }
+Animation& Animation::Resume()	{ isPause_ = false;	return *this; }
 
-void Animation::Stop() { isActive = false; }
+Animation& Animation::Loop()				{ isLoop_ = !isLoop_;					return *this; }
+Animation& Animation::Loop(bool b)			{ isLoop_ = b;							return *this; }
+Animation& Animation::Reverse()				{ isReverse_ = !isReverse_;				return *this; }
+Animation& Animation::Reverse(bool b)		{ isReverse_ = b;						return *this; }
+Animation& Animation::UseTimeScale()		{ isUseTimeScale_ = !isUseTimeScale_;	return *this; }
+Animation& Animation::UseTimeScale(bool b)	{ isUseTimeScale_ = b;					return *this; }
 
 void Animation::Update() {
-	// isActiveがfalse、もしくは再生中のアニメーションが""のとき再生しない
-	if (!isActive || playingAnimationName_ == "") { return; }	// 早期リターン
+	// isPause_がtrue、もしくは再生中のアニメーションが""のときは再生しない
+	if (isPause_ || playingAnimationName_ == "") { return; }	// 早期リターン
 
 	// アニメーションの時間
 	float total = GetAnimationTotalTime();
 	// 時間を更新
-	float t = (useDeltaTimeMultiply_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
-	if (!reverseFlag_) { time_ += t * playbackSpeed; }	// リバースフラグに応じて進行方向を変える
+	float t = (isUseTimeScale_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
+	if (!isReverse_) { time_ += t * playbackSpeed; }	// リバースフラグに応じて進行方向を変える
 	else { time_ -= t * playbackSpeed; }
 
 	// ループする場合
-	if (loopFlag_) {
+	if (isLoop_) {
 		// 最後までいったらリピート再生
-		if (!reverseFlag_) {
+		if (!isReverse_) {
 			time_ = std::fmod(time_, 1.0f);
 		}
 		else {
@@ -76,7 +74,7 @@ void Animation::Update() {
 	// ループしない場合
 	else {
 		// リバースしないなら1を超えないように
-		if (!reverseFlag_) {
+		if (!isReverse_) {
 			if (time_ > 1.0f) { time_ = 1.0f; }
 		}
 		// リバースするなら0を超えないように
@@ -101,7 +99,7 @@ void Animation::DebugGUI() {
 		ImGui::Text("Playing Animation : %s", playingAnimationName_.c_str());
 		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
 		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
-		if (ImGui::Button("Stop")) { Stop(); }
+		if (ImGui::Button("Stop")) { Pause(); }
 	}
 	if (ImGui::TreeNode("Node")) {
 		for (Joint& joint : modelPtr_->skeleton.joints) {
@@ -117,13 +115,19 @@ void Animation::DebugGUI() {
 	float temp = time_;
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
 	if (temp != time_) { UpdateJoint(); }	// tの値が変わったらJointを更新する
-	ImGui::DragFloat("PlaybackSpeed", &playbackSpeed, 0.01f);
-	ImGui::Checkbox("DeltaTimeMultiply", &useDeltaTimeMultiply_);
-	ImGui::Checkbox("LoopFlag", &loopFlag_);
-	ImGui::Checkbox("ReverseFlag", &reverseFlag_);
-	ImGui::Checkbox("isActive", &isActive);
+	ImGui::DragFloat("PlaybackSpeed", &playbackSpeed, 0.01f);	// 再生速度倍率
+	if (ImGui::Button("x1.0 >>")) { playbackSpeed = 1.0f; }	// 再生速度を1.0に
+	ImGui::SameLine();
+	if (ImGui::Button("x1.5 >>")) { playbackSpeed = 1.5f; }	// 再生速度を1.5に
+	ImGui::SameLine();
+	if (ImGui::Button("x2.0 >>")) { playbackSpeed = 2.0f; }	// 再生速度を2.0に
+	ImGui::SameLine();
+	if (ImGui::Button("x3.0 >>")) { playbackSpeed = 3.0f; }	// 再生速度を3.0に
+	ImGui::Checkbox("isPause", &isPause_);					// 一時停止フラグ
+	ImGui::Checkbox("isLoop", &isLoop_);					// ループフラグ
+	ImGui::Checkbox("isReverse", &isReverse_);				// 逆再生フラグ
+	ImGui::Checkbox("isUseTimeScale", &isUseTimeScale_);	// タイムスケールフラグ
 }
-
 
 void Animation::LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr) {
 	return LoadFullPath(kDirectoryPath_ + filePath, ptr);
@@ -183,14 +187,14 @@ bool Animation::GetPlaying(const std::string& animName) {
 	}
 
 	// ループ再生の場合
-	if (loopFlag_) {
+	if (isLoop_) {
 		// 何かしらのアニメーション名があれば再生中
 		return !playingAnimationName_.empty();
 	}
 	// 非ループ再生の場合
 	else {
 		// 再生方向によって再生中かどうかを判定
-		if (!reverseFlag_) {
+		if (!isReverse_) {
 			return time_ < 1.0f;
 		}
 		else {

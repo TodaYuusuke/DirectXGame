@@ -23,20 +23,21 @@ void TextureLoadTest::Initialize() {
 
 	jsonIO_.Init("test.json");
 	jsonIO_
-		.AddValue<int32_t>("test int32_t", &valueTest[0].i32)
-		.AddValue<float>("test float", &valueTest[0].f)
-		.AddValue<Math::Vector2>("test vector2", &valueTest[0].v2)
-		.AddValue<Math::Vector3>("test vector3", &valueTest[0].v3)
-		.AddValue<std::string>("test string", &valueTest[0].str)
+		.AddValue("test int32_t", &valueTest[0].i32)
+		.AddValue("test float", &valueTest[0].f)
+		.AddValue("test vector2", &valueTest[0].v2)
+		.AddValue("test vector3", &valueTest[0].v3)
+		.AddValue("test string", &valueTest[0].str)
+		.AddValue("test transform", &valueTest[0].transform)
 		.BeginGroup("Group Test")
 			.BeginGroup("in Group Test")
-				.AddValue<int32_t>("test int32_t", &valueTest[2].i32)
+				.AddValue("test int32_t", &valueTest[2].i32)
 			.EndGroup()
-			.AddValue<int32_t>("test int32_t", &valueTest[1].i32)
+			.AddValue("test int32_t", &valueTest[1].i32)
 			.AddValue<float>("test float", &valueTest[1].f)
-			.AddValue<Math::Vector2>("test vector2", &valueTest[1].v2)
-			.AddValue<Math::Vector3>("test vector3", &valueTest[1].v3)
-			.AddValue<std::string>("test string", &valueTest[1].str)
+			.AddValue("test vector2", &valueTest[1].v2)
+			.AddValue("test vector3", &valueTest[1].v3)
+			.AddValue("test string", &valueTest[1].str)
 		.EndGroup();
 
 	jsonIO_.CheckJsonFile();

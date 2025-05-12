@@ -40,9 +40,7 @@ namespace LWP::Resource {
 		std::string name = "Animation";
 		// アニメーションの再生速度
 		float playbackSpeed = 1.0f;
-		
-		// アクティブ切り替え
-		bool isActive = true;
+
 
 	public: // **　メンバ関数 ** //
 
@@ -65,12 +63,37 @@ namespace LWP::Resource {
 		void Update();
 
 		/// <summary>
+		/// アニメーションのデータを読み込む
+		/// </summary>
+		/// <param name="fileName">読み込むファイルの名前</param>
+		//void Load(const std::string& fileName, Resource::SkinningModel* ptr);
+		/// <summary>
+		/// アニメーションのデータを読み込む（resources/model/を短縮ver）
+		/// </summary>
+		/// <param name="filePath">読み込むファイルの名前</param>
+		void LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr);
+		/// <summary>
+		/// アニメーションのデータを読み込む（exeからのパス指定）
+		/// </summary>
+		/// <param name="filePath">読み込むファイルの名前</param>
+		void LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr);
+
+		/// <summary>
 		/// アニメーション開始
 		/// </summary>
 		/// <param name="name">再生するアニメーション名</param>
 		/// <param name="transitionTime">モーションの遷移にかかる時間(0.0f以上)</param>
 		/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
 		Animation& Play(const std::string animName, float transitionTime = 0.0f, float startTime = 0.0f);
+		/// <summary>
+		/// アニメーション一時停止
+		/// </summary>
+		Animation& Pause();
+		/// <summary>
+		/// アニメーション停止から再生
+		/// </summary>
+		Animation& Resume();
+
 		/// <summary>
 		/// ループ再生するかのフラグを切り替え
 		/// </summary>
@@ -97,30 +120,9 @@ namespace LWP::Resource {
 		Animation& UseTimeScale(bool b);
 
 		/// <summary>
-		/// アニメーション停止
-		/// </summary>
-		void Stop();
-
-		/// <summary>
-		/// ImGui
+		/// Debug用のImGui
 		/// </summary>
 		void DebugGUI();
-
-		/// <summary>
-		/// アニメーションのデータを読み込む
-		/// </summary>
-		/// <param name="fileName">読み込むファイルの名前</param>
-		//void Load(const std::string& fileName, Resource::SkinningModel* ptr);
-		/// <summary>
-		/// アニメーションのデータを読み込む（resources/model/を短縮ver）
-		/// </summary>
-		/// <param name="filePath">読み込むファイルの名前</param>
-		void LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr);
-		/// <summary>
-		/// アニメーションのデータを読み込む（exeからのパス指定）
-		/// </summary>
-		/// <param name="filePath">読み込むファイルの名前</param>
-		void LoadFullPath(const std::string& filePath, Resource::SkinningModel* ptr);
 
 		/// <summary>
 		/// <para>指定のアニメーションが再生中か返す関数</para>
@@ -130,7 +132,6 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 再生できるアニメーションの名前を取得する関数
 		/// </summary>
-		/// <returns></returns>
 		std::vector<std::string> GetAnimationNames() const;
 		/// <summary>
 		/// 全体の進捗を受け取る関数
@@ -151,26 +152,28 @@ namespace LWP::Resource {
 		};
 		std::map<std::string, AnimationData> data;
 
-		// 
 		// 経過割合(0.0f ~ 1.0f)
 		float time_ = 0.0f;
 		
 		// 再生中のアニメーションの名前
 		std::string playingAnimationName_ = "";
-		// ループするかフラグ
-		bool loopFlag_ = false;
-		// アニメーション逆再生フラグ
-		bool reverseFlag_ = false;
-		// deltaTimeの係数影響OnOff
-		bool useDeltaTimeMultiply_ = true;
 
-		// 適応するModelのポインタ
-		Resource::SkinningModel* modelPtr_ = nullptr;
-		// 読み込んだファイル名
-		std::string loadedPath = "";
+		// 停止フラグ
+		bool isPause_ = true;
+		// ループするかフラグ
+		bool isLoop_ = false;
+		// アニメーション逆再生フラグ
+		bool isReverse_ = false;
+		// タイムスケールの影響OnOff
+		bool isUseTimeScale_ = true;
 
 		// アニメーションファイルの位置
 		const static std::string kDirectoryPath_;
+		// 読み込んだファイル名
+		std::string loadedPath = "";
+
+		// 適応するModelのポインタ
+		Resource::SkinningModel* modelPtr_ = nullptr;
 
 	
 	private: // ** プライベートなメンバ関数 ** //

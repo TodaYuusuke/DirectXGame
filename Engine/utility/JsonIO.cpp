@@ -7,18 +7,38 @@
 #define CHECK_BEGIN() assert(filePath_ != "" && "JsonIO is not initialized. Call Init() first.");
 
 using namespace LWP::Math;
+using namespace LWP::Object;
 using namespace LWP::Utility;
+
+const std::string JsonIO::typeNames_[] = {
+	"bool :",
+	"int32_t :",
+	"float :",
+	"Vector2 :",
+	"Vector3 :",
+	"Vector4 :",
+	"Quaternion :",
+	"TransformQuat :",
+	typeNames_[TypeID::Vector3_] + "translation",
+	typeNames_[TypeID::Quaternion_] + "rotation",
+	typeNames_[TypeID::Vector3_] + "scale",
+	"Color :",
+	"string :",
+	"Group :"
+};
 
 JsonIO::~JsonIO() {
 	// デストラクタ
 	// 何もしない
 }
 
-void JsonIO::Init(const std::string& filePath) {
+JsonIO& JsonIO::Init(const std::string& filePath) {
 	filePath_ = filePath;
 	data_.clear();	// データの初期化
 	groupStack_.clear();
 	groupStack_ = { &data_ }; // ルートを積む
+
+	return *this;
 }
 
 JsonIO& JsonIO::BeginGroup(const std::string& groupName) {
@@ -77,26 +97,50 @@ void JsonIO::Save() {
 }
 void JsonIO::Save(nlohmann::json& json, Group& group) {
 	for (auto itr = group.begin(); itr != group.end(); ++itr) {
-		if (VariantCheck<int32_t*>(*itr)) {
-			json[itr->name] = *(*VariantGet<int32_t*>(*itr));
+		if (VariantCheck<bool*>(*itr)) {
+			json[typeNames_[TypeID::bool_] + itr->name] = *(*VariantGet<bool*>(*itr));
+		}
+		else if (VariantCheck<int32_t*>(*itr)) {
+			json[typeNames_[TypeID::int32_t_] + itr->name] = *(*VariantGet<int32_t*>(*itr));
 		}
 		else if (VariantCheck<float*>(*itr)) {
-			json[itr->name] = *(*VariantGet<float*>(*itr));
+			json[typeNames_[TypeID::float_] + itr->name] = *(*VariantGet<float*>(*itr));
 		}
 		else if (VariantCheck<Vector2*>(*itr)) {
 			Vector2* ptr = (*VariantGet<Vector2*>(*itr));
-			json[itr->name] = nlohmann::json::array({ ptr->x, ptr->y });
+			json[typeNames_[TypeID::Vector2_] + itr->name] = nlohmann::json::array({ ptr->x, ptr->y });
 		}
 		else if (VariantCheck<Vector3*>(*itr)) {
 			Vector3* ptr = (*VariantGet<Vector3*>(*itr));
-			json[itr->name] = nlohmann::json::array({ ptr->x, ptr->y, ptr->z });
+			json[typeNames_[TypeID::Vector3_] + itr->name] = nlohmann::json::array({ ptr->x, ptr->y, ptr->z });
+		}
+		else if (VariantCheck<Vector4*>(*itr)) {
+			Vector4* ptr = (*VariantGet<Vector4*>(*itr));
+			json[typeNames_[TypeID::Vector4_] + itr->name] = nlohmann::json::array({ ptr->x, ptr->y, ptr->z, ptr->w });
+		}
+		else if (VariantCheck<Quaternion*>(*itr)) {
+			Quaternion* ptr = (*VariantGet<Quaternion*>(*itr));
+			json[typeNames_[TypeID::Quaternion_] + itr->name] = nlohmann::json::array({ ptr->x, ptr->y, ptr->z, ptr->w });
+		}
+		else if (VariantCheck<TransformQuat*>(*itr)) {
+			TransformQuat* ptr = (*VariantGet<TransformQuat*>(*itr));
+			nlohmann::json& jsonTF = json[typeNames_[TypeID::TransformQuat_] + itr->name];
+			jsonTF = nlohmann::json::object();	// 新しいオブジェクトを作成
+			jsonTF[typeNames_[TypeID::TransformQuat_T]] = nlohmann::json::array({ ptr->translation.x, ptr->translation.y, ptr->translation.z });
+			jsonTF[typeNames_[TypeID::TransformQuat_R]] = nlohmann::json::array({ ptr->rotation.x, ptr->rotation.y, ptr->rotation.z, ptr->rotation.w });
+			jsonTF[typeNames_[TypeID::TransformQuat_S]] = nlohmann::json::array({ ptr->scale.x, ptr->scale.y, ptr->scale.z });
+		}
+		else if (VariantCheck<Color*>(*itr)) {
+			Color* ptr = (*VariantGet<Color*>(*itr));
+			json[typeNames_[TypeID::Color_] + itr->name] = nlohmann::json::array({ ptr->R, ptr->G, ptr->B, ptr->A });
 		}
 		else if (VariantCheck<std::string*>(*itr)) {
-			json[itr->name] = *(*VariantGet<std::string*>(*itr));
+			json[typeNames_[TypeID::string_] + itr->name] = *(*VariantGet<std::string*>(*itr));
 		}
 		else if (VariantCheck<Group>(*itr)) {
-			json[itr->name] = nlohmann::json::object();	// 新しいオブジェクトを作成
-			Save(json[itr->name], *VariantGet<Group>(*itr));	// 再帰的に処理を行う
+			std::string key = typeNames_[TypeID::Group_] + itr->name;
+			json[key] = nlohmann::json::object();	// 新しいオブジェクトを作成
+			Save(json[key], *VariantGet<Group>(*itr));	// 再帰的に処理を行う
 		}
 	}
 }
@@ -127,29 +171,55 @@ void JsonIO::Load() {
 }
 void JsonIO::Load(nlohmann::json& json, Group& group) {
 	for (auto itr = json.begin(); itr != json.end(); ++itr) {
-		// int32_t型の値を保持していれば
-		if (itr->is_number_integer()) {
-			VariantLoad<int32_t>(itr, group, itr->get<int32_t>());
+		// キーから型を取得
+		std::vector<std::string> typeNameSplit = Split(itr.key(), ':');	// 0 : 型名, 1 : 名前
+		std::string type = typeNameSplit[0] + ":";	// 型名の末尾に':'を追加
+		std::string name = typeNameSplit[1];
+
+		if (type == typeNames_[bool_]) {
+			VariantLoad<bool>(name, group, itr->get<bool>());
 		}
-		// float型の値を保持していれば
-		else if (itr->is_number_float()) {
-			VariantLoad<float>(itr, group, static_cast<float>(itr->get<double>()));
+		else if (type == typeNames_[int32_t_]) {
+			VariantLoad<int32_t>(name, group, itr->get<int32_t>());
 		}
-		// 要素数2の配列であれば
-		else if (itr->is_array() && itr->size() == 2) {
+		else if (type == typeNames_[float_]) {
+			VariantLoad<float>(name, group, static_cast<float>(itr->get<double>()));
+		}
+		else if (type == typeNames_[Vector2_]) {
 			Vector2 value = { itr->at(0), itr->at(1) };
-			VariantLoad<Vector2>(itr, group, value);
+			VariantLoad<Vector2>(name, group, value);
 		}
-		// 要素数3の配列であれば
-		else if (itr->is_array() && itr->size() == 3) {
+		else if (type == typeNames_[Vector3_]) {
 			Vector3 value = { itr->at(0), itr->at(1), itr->at(2) };
-			VariantLoad<Vector3>(itr, group, value);
+			VariantLoad<Vector3>(name, group, value);
 		}
-		// 文字列であれば
-		else if (itr->is_string()) {
-			VariantLoad<std::string>(itr, group, itr->get<std::string>());
+		else if (type == typeNames_[Vector4_]) {
+			Vector4 value = { itr->at(0), itr->at(1), itr->at(2), itr->at(3) };
+			VariantLoad<Vector4>(name, group, value);
 		}
-		else if (itr->is_structured()) {
+		else if (type == typeNames_[Quaternion_]) {
+			Quaternion value = { itr->at(0), itr->at(1), itr->at(2), itr->at(3) };
+			VariantLoad<Quaternion>(name, group, value);
+		}
+		else if (type == typeNames_[TransformQuat_]) {
+			TransformQuat value;
+			// TransformQuatの各要素を取得
+			auto itrT = itr->at(typeNames_[TransformQuat_T]);
+			auto itrR = itr->at(typeNames_[TransformQuat_R]);
+			auto itrS = itr->at(typeNames_[TransformQuat_S]);
+			value.translation = { itrT.at(0), itrT.at(1), itrT.at(2) };
+			value.rotation = { itrR.at(0), itrR.at(1), itrR.at(2), itrR.at(3) };
+			value.scale = { itrS.at(0), itrS.at(1), itrS.at(2) };
+			VariantLoad<TransformQuat>(name, group, value);
+		}
+		else if (type == typeNames_[Color_]) {
+			Color value = { static_cast<unsigned char>(itr->at(0)), static_cast<unsigned char>(itr->at(1)), static_cast<unsigned char>(itr->at(2)), static_cast<unsigned char>(itr->at(3)) };
+			VariantLoad<Color>(name, group, value);
+		}	
+		else if (type == typeNames_[string_]) {
+			VariantLoad<std::string>(name, group, itr->get<std::string>());
+		}
+		else if (type == typeNames_[Group_]) {
 			std::string key = itr.key();
 			Group::iterator gItr = FindGroup(key, group);	// グループを検索
 			if (gItr == group.end()) {
@@ -184,7 +254,6 @@ Group::iterator JsonIO::FindGroup(const std::string& name, Group& group) {
 		}
 	}
 	return group.end();
-
 }
 
 void JsonIO::DebugGUI() {
@@ -198,7 +267,10 @@ void JsonIO::DebugGUI() {
 }
 void JsonIO::DebugGUI(Group& group) {
 	for(auto itr = group.begin(); itr != group.end(); ++itr) {
-		if (VariantCheck<int32_t*>(*itr)) {
+		if (VariantCheck<bool*>(*itr)) {
+			ImGui::Checkbox(itr->name.c_str(), *VariantGet<bool*>(*itr));
+		}
+		else if (VariantCheck<int32_t*>(*itr)) {
 			ImGui::DragInt(itr->name.c_str(), *VariantGet<int32_t*>(*itr));
 		}
 		else if (VariantCheck<float*>(*itr)) {
@@ -209,6 +281,18 @@ void JsonIO::DebugGUI(Group& group) {
 		}
 		else if (VariantCheck<Vector3*>(*itr)) {
 			ImGui::DragFloat3(itr->name.c_str(), &(*VariantGet<Vector3*>(*itr))->x, 0.01f);
+		}
+		else if (VariantCheck<Vector4*>(*itr)) {
+			ImGui::DragFloat4(itr->name.c_str(), &(*VariantGet<Vector4*>(*itr))->x, 0.01f);
+		}
+		else if (VariantCheck<Quaternion*>(*itr)) {
+			ImGui::DragFloat4(itr->name.c_str(), &(*VariantGet<Quaternion*>(*itr))->x, 0.01f);
+		}
+		else if (VariantCheck<TransformQuat*>(*itr)) {
+			(*VariantGet<TransformQuat*>(*itr))->DebugGUI(itr->name);
+		}
+		else if (VariantCheck<Color*>(*itr)) {
+			LWP::Base::ImGuiManager::ColorEdit4(itr->name.c_str(), **VariantGet<Color*>(*itr));
 		}
 		else if (VariantCheck<std::string*>(*itr)) {
 			Base::ImGuiManager::InputText(itr->name.c_str(), **VariantGet<std::string*>(*itr), 5);
@@ -246,10 +330,13 @@ NestedList JsonIO::LoadGroupNames(std::string filePath) {
 
 	auto lamda = [](auto self, nlohmann::json& json, NestedList& list) -> void {
 			for (auto itr = json.begin(); itr != json.end(); ++itr) {
-				if (itr->is_array() && itr->size() == 2) { /* 何もしない */ }		// Vector2の誤登録を防ぐ
-				else if (itr->is_array() && itr->size() == 3) { /* 何もしない */ }		// Vector3の誤登録を防ぐ
-				else if (itr->is_structured()) {
-					list.push_back({ itr.key(), NestedList() });	// 新しいリストを作成
+				// キーから型を取得
+				std::vector<std::string> typeNameSplit = Split(itr.key(), ':');	// 0 : 型名, 1 : 名前
+				std::string type = typeNameSplit[0] + ":";	// 型名の末尾に':'を追加
+				std::string name = typeNameSplit[1];
+
+				if (type == typeNames_[Group_]) {
+					list.push_back({ name, NestedList() });	// 新しいリストを作成
 					self(self, json[itr.key()], list.back().list);
 				}
 			}
