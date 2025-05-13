@@ -1,7 +1,7 @@
 {
     "Group :Group Test": {
         "Group :in Group Test": {
-            "int32_t :test int32_t": 0
+            "int32_t :test int32_t": 71
         },
         "Vector2 :test vector2": [
             0.0,
@@ -12,8 +12,8 @@
             0.0,
             0.0
         ],
-        "float :test float": 0.0,
-        "int32_t :test int32_t": 0,
+        "float :test float": 0.5799999833106995,
+        "int32_t :test int32_t": 74,
         "string :test string": ""
     },
     "TransformQuat :test transform": {
