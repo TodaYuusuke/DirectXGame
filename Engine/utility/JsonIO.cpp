@@ -220,16 +220,15 @@ void JsonIO::Load(nlohmann::json& json, Group& group) {
 			VariantLoad<std::string>(name, group, itr->get<std::string>());
 		}
 		else if (type == typeNames_[Group_]) {
-			std::string key = itr.key();
-			Group::iterator gItr = FindGroup(key, group);	// グループを検索
+			Group::iterator gItr = FindGroup(name, group);	// グループを検索
 			if (gItr == group.end()) {
 				// グループが見つからなかったので、onNotFoundFunc_を実行する
 				// 返り値がtrueなら処理を続け、falseなら終了する
-				if (!onNotFoundFunc_(key)) {
+				if (!onNotFoundFunc_(name)) {
 					continue;
 				}
 			}
-			Load(json[key], *VariantGet<Group>(*gItr));	// 再帰的に処理を行う
+			Load(json[itr.key()], *VariantGet<Group>(*gItr));	// 再帰的に処理を行う
 		}
 	}
 }
