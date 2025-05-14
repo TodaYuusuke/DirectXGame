@@ -87,6 +87,9 @@ void Animation::Update() {
 	UpdateJoint();
 }
 
+void Animation::Sync() {
+	tracks_[TrackType::Blend].time = tracks_[TrackType::Main].time;
+}
 void Animation::DebugGUI() {
 	// アニメーション一覧
 	static int currentItem = 0;
@@ -129,7 +132,7 @@ void Animation::DebugGUI() {
 		}
 		ImGui::SliderFloat("Transition T", &transition_.t, 0.0f, 1.0f);
 		ImGui::SliderFloat("Blend T", &blendT, 0.0f, 1.0f);
-		if (ImGui::Button("Sync main & blend")) { tracks_[TrackType::Blend].time = tracks_[TrackType::Main].time; }
+		if (ImGui::Button("Sync main & blend")) { Sync(); }
 	}
 	if (ImGui::TreeNode("Node")) {
 		for (Joint& joint : modelPtr_->skeleton.joints) {
