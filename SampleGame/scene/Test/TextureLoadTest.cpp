@@ -7,8 +7,9 @@ void TextureLoadTest::Initialize() {
 	ddsSprite_.name = "DDS";
 	ddsSprite_.material.texture = Resource::LoadTexture("uvChecker.dds");
 	pngSprite_.name = "PNG";
-	pngSprite_.LoadTexture("TestSpriteSheet.png");
-	pngSprite_.SetSplitSize({ 64.0f,64.0f });
+	pngSprite_.LoadTexture("Rect.png");
+	pngSprite_.SetSplitSize({ 128.0f,32.0f });
+	pngSprite_.Init();
 	bill2D.name = "Bill2D";
 	bill2D.LoadTexture("TestSpriteSheet.png");
 	bill2D.SetSplitSize({ 64.0f,64.0f });

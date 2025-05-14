@@ -18,6 +18,16 @@ void Sprite::SetSplitSize(Vector2 splitSize) {
 	index = 0;	// インデックスを0にセット
 }
 
+
+void Sprite::Init() {
+	// 頂点のクリア
+	vertices.clear();
+	vertices.resize(GetVertexCount());
+	
+	IPrimitive::Init();	// 親クラスの初期化を呼び出す
+	// 座標
+	CreateVerticesPosition();	// 自由に頂点をいじれるようにこの関数はここでのみ呼びだす
+}
 void Sprite::Update() {
 	// 値が変化した場合にのみ再計算
 	//if (!GetChanged()) { return; }
@@ -27,13 +37,6 @@ void Sprite::Update() {
 }
 
 void Sprite::CreateVertices() {
-	// 頂点の作成
-	vertices.clear();
-	vertices.resize(GetVertexCount());
-
-	// 座標
-	CreateVerticesPosition();
-
 	// 分割インデックスが0以下の場合
 	if (index < 0) {
 		// デフォルトのテクスチャ座標

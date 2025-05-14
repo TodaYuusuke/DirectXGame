@@ -42,6 +42,10 @@ namespace LWP::Primitive {
 		void SetSplitSize(Math::Vector2 splitSize);
 
 		/// <summary>
+		/// 初期化処理
+		/// </summary>
+		void Init() override;
+		/// <summary>
 		/// 更新処理
 		/// </summary>
 		void Update() override;
