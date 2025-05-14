@@ -1,4 +1,5 @@
 #pragma once
+#include "primitive/model/Skeleton.h"
 #include "math/vector/Vector3.h"
 #include "math/Quaternion.h"
 #include <string>
@@ -175,7 +176,19 @@ namespace LWP::Resource {
 		// 適応するModelのポインタ
 		Resource::SkinningModel* modelPtr_ = nullptr;
 
-	
+		// モーショントランジションの情報
+		struct Transition {
+			// トランジション用のスケルトン
+			Primitive::Skeleton tempSkeleton;
+			// モーショントランジションにかかる時間
+			float totalTime = 0.0f;
+			// トランジションの経過割合(0.0f ~ 1.0f)
+			float t = 0.0f;
+			
+			// モーショントランジション中かのフラグ
+			bool isActive = false;
+		}transition_;
+
 	private: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
@@ -196,5 +209,11 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <returns></returns>
 		float GetAnimationTotalTime();
+		
+		/// <summary>
+		/// システムからデルタタイムを取得する関数
+		/// </summary>
+		/// <returns></returns>
+		float GetDeltaTime();
 	};
 };

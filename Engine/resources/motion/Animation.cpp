@@ -34,9 +34,18 @@ Animation& Animation::Play(const std::string animName, float transitionTime, flo
 	assert(data.contains(animName) && "animName is Not Found.");
 
 	playingAnimationName_ = animName;
-	transitionTime;
 	time_ = startTime;
 	isPause_ = false;
+
+	// トランジション時間が0.0f以上ならば、トランジションを行う
+	transition_.totalTime = transitionTime;
+	if (transition_.totalTime > 0.0f) {
+		transition_.isActive = true;
+		transition_.t = 0.0f;	// トランジションの経過割合を初期化
+		// スケルトンをコピーしておく
+		transition_.tempSkeleton.joints.resize(modelPtr_->skeleton.joints.size());
+		std::copy(modelPtr_->skeleton.joints.begin(), modelPtr_->skeleton.joints.end(), transition_.tempSkeleton.joints.begin());
+	}
 
 	return *this;
 }
@@ -54,33 +63,24 @@ void Animation::Update() {
 	// isPause_がtrue、もしくは再生中のアニメーションが""のときは再生しない
 	if (isPause_ || playingAnimationName_ == "") { return; }	// 早期リターン
 
-	// アニメーションの時間
-	float total = GetAnimationTotalTime();
 	// 時間を更新
-	float t = (isUseTimeScale_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) / total;	// こちらはデルタタイム更新
-	if (!isReverse_) { time_ += t * playbackSpeed; }	// リバースフラグに応じて進行方向を変える
-	else { time_ -= t * playbackSpeed; }
+	float t = GetDeltaTime() / GetAnimationTotalTime();	// こちらはデルタタイム更新
+	if (!isReverse_) { time_ += t; }	// リバースフラグに応じて進行方向を変える
+	else { time_ -= t; }
 
 	// ループする場合
 	if (isLoop_) {
 		// 最後までいったらリピート再生
-		if (!isReverse_) {
-			time_ = std::fmod(time_, 1.0f);
-		}
-		else {
-			if (time_ < 0.0f) { time_ += 1.0f; }	// リバースなので0を下回ったら1を足して戻す
-		}
+		if (!isReverse_) { time_ = std::fmod(time_, 1.0f); }
+		// リバースするなら0を下回ったら1を足して戻す
+		else { if (time_ < 0.0f) { time_ += 1.0f; } }
 	}
 	// ループしない場合
 	else {
-		// リバースしないなら1を超えないように
-		if (!isReverse_) {
-			if (time_ > 1.0f) { time_ = 1.0f; }
-		}
+		// 1を超えないように
+		if (!isReverse_) { if (time_ > 1.0f) { time_ = 1.0f; } }
 		// リバースするなら0を超えないように
-		else {
-			if (time_ < 0.0f) { time_ = 0.0f; }
-		}
+		else { if (time_ < 0.0f) { time_ = 0.0f; } }
 	}
 
 	// Joint更新
@@ -97,9 +97,10 @@ void Animation::DebugGUI() {
 		}
 		ImGui::ListBox("AnimationList", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
 		ImGui::Text("Playing Animation : %s", playingAnimationName_.c_str());
-		if (ImGui::Button("Play")) { Play(itemText[currentItem]); }
-		if (ImGui::Button("Play (Loop)")) { Play(itemText[currentItem], true); }
-		if (ImGui::Button("Stop")) { Pause(); }
+		static float transitionTime = 0.0f;
+		ImGui::DragFloat("TransitionTime", &transitionTime, 0.01f);
+		if (ImGui::Button("Play")) { Play(itemText[currentItem], transitionTime); }
+		if (ImGui::Button("Pause")) { Pause(); }
 	}
 	if (ImGui::TreeNode("Node")) {
 		for (Joint& joint : modelPtr_->skeleton.joints) {
@@ -114,15 +115,17 @@ void Animation::DebugGUI() {
 	ImGui::Text("--- Parameter ---");
 	float temp = time_;
 	ImGui::SliderFloat("time", &time_, 0.0f, 1.0f);
+	//ImGui::SliderFloat("transition T", &transition_.t, 0.0f, 1.0f);
+	ImGui::DragFloat("transition T", &transition_.t, 0.01f);
 	if (temp != time_) { UpdateJoint(); }	// tの値が変わったらJointを更新する
 	ImGui::DragFloat("PlaybackSpeed", &playbackSpeed, 0.01f);	// 再生速度倍率
+	if (ImGui::Button("x0.5 >>")) { playbackSpeed = 0.5f; }	// 再生速度を0.5に
+	ImGui::SameLine();
 	if (ImGui::Button("x1.0 >>")) { playbackSpeed = 1.0f; }	// 再生速度を1.0に
 	ImGui::SameLine();
 	if (ImGui::Button("x1.5 >>")) { playbackSpeed = 1.5f; }	// 再生速度を1.5に
 	ImGui::SameLine();
 	if (ImGui::Button("x2.0 >>")) { playbackSpeed = 2.0f; }	// 再生速度を2.0に
-	ImGui::SameLine();
-	if (ImGui::Button("x3.0 >>")) { playbackSpeed = 3.0f; }	// 再生速度を3.0に
 	ImGui::Checkbox("isPause", &isPause_);					// 一時停止フラグ
 	ImGui::Checkbox("isLoop", &isLoop_);					// ループフラグ
 	ImGui::Checkbox("isReverse", &isReverse_);				// 逆再生フラグ
@@ -170,13 +173,14 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 				nodeAnimation.scale.keyframes.push_back({
 					static_cast<float>(keyAssimp.mTime / animationAssimp->mTicksPerSecond),	// ここも秒に変換
 					{keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}	// そのまま	
-					});
+				});
 			}
 		}
 	}
 
 	// 追従セット
 	modelPtr_ = ptr;
+	transition_.tempSkeleton = modelPtr_->skeleton;	// スケルトンのコピーを作成しておく
 	loadedPath = filePath;
 }
 
@@ -224,7 +228,7 @@ Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframe
 		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
 			// 範囲内を補完する
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Utility::Interp::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
+			return Interp::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
 	}
 
@@ -245,7 +249,7 @@ Quaternion Animation::CalculateValue(const std::vector<Keyframe<Quaternion>>& ke
 		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
 			// 範囲内を補完する
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Utility::Interp::SlerpQuaternion(keyframes[index].value, keyframes[nextIndex].value, t);
+			return Interp::SlerpQuaternion(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
 	}
 
@@ -259,6 +263,12 @@ void Animation::UpdateJoint() {
 
 	// アニメーションの時間
 	float seconds = GetAnimationTotalTime() * time_;
+	
+	// トランジション用のtを求める
+	transition_.t += GetDeltaTime() / transition_.totalTime;
+	// 1を超えないように
+	if (transition_.t > 1.0f) { transition_.t = 1.0f; }
+
 	for (Joint& joint : modelPtr_->skeleton.joints) {
 		// 対象のJointのあればAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
 		if (auto it = data[playingAnimationName_].node.find(joint.name); it != data[playingAnimationName_].node.end()) {
@@ -266,7 +276,23 @@ void Animation::UpdateJoint() {
 			joint.localTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, seconds);
 			joint.localTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, seconds).Normalize();
 			joint.localTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, seconds);
+
+			// もしトランジションが有効ならば、処理を行う
+			if (transition_.isActive) {
+				// 補完元のスケルトンのトランスフォームを取得	
+				Object::TransformQuat prevTransform = transition_.tempSkeleton.joints[transition_.tempSkeleton.jointMap[joint.name]].localTF;
+				// 線形補間によるアニメーションの補完を行う
+				joint.localTF.translation = Interp::Lerp(prevTransform.translation, joint.localTF.translation, transition_.t);
+				joint.localTF.rotation = Interp::SlerpQuaternion(prevTransform.rotation, joint.localTF.rotation, transition_.t);
+				joint.localTF.scale = Interp::Lerp(prevTransform.scale, joint.localTF.scale, transition_.t);
+			}
 		}
+	}
+
+
+	// あとでfalseにする
+	if (transition_.t >= 1.0f) {
+		transition_.isActive = false;	// トランジションを終了
 	}
 }
 
@@ -276,6 +302,9 @@ float Animation::GetAnimationTotalTime() {
 	
 	// アニメーションの時間
 	return data[playingAnimationName_].totalTime;
+}
+float Animation::GetDeltaTime() {
+	return (isUseTimeScale_ ? Info::GetDeltaTimeF() : Info::GetDefaultDeltaTimeF()) * playbackSpeed;
 }
 
 const std::string Animation::kDirectoryPath_ = "resources/animation/";
