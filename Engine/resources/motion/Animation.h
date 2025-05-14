@@ -1,4 +1,5 @@
 #pragma once
+#include "primitive/model/Skeleton.h"
 #include "math/vector/Vector3.h"
 #include "math/Quaternion.h"
 #include <string>
@@ -38,8 +39,17 @@ namespace LWP::Resource {
 		
 		// 固有名詞
 		std::string name = "Animation";
-		// アニメーションの再生速度
-		float playbackSpeed = 1.0f;
+		// モーションブレンドの度合い（0.0f~1.0f）
+		// 0.0fに近いほどmain　～　1.0fに近いほどblendのアニメーションに近づく
+		float blendT = 0.5f;
+
+		/// <summary>
+		/// アニメーションを再生するトラック
+		/// </summary>
+		enum class TrackType {
+			Main,	// 通常の再生
+			Blend,	// 通常と合わせてブレンドする用
+		};
 
 
 	public: // **　メンバ関数 ** //
@@ -84,40 +94,51 @@ namespace LWP::Resource {
 		/// <param name="name">再生するアニメーション名</param>
 		/// <param name="transitionTime">モーションの遷移にかかる時間(0.0f以上)</param>
 		/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
-		Animation& Play(const std::string animName, float transitionTime = 0.0f, float startTime = 0.0f);
+		/// <param name="track">再生するトラックを指定</param>
+		Animation& Play(const std::string animName, float transitionTime = 0.0f, float startTime = 0.0f, TrackType type = TrackType::Main);
 		/// <summary>
 		/// アニメーション一時停止
 		/// </summary>
-		Animation& Pause();
+		Animation& Pause(TrackType type = TrackType::Main);
 		/// <summary>
 		/// アニメーション停止から再生
 		/// </summary>
-		Animation& Resume();
+		Animation& Resume(TrackType type = TrackType::Main);
+		/// <summary>
+		/// アニメーション完全に停止
+		/// </summary>
+		Animation& Stop(TrackType type = TrackType::Main);
 
 		/// <summary>
 		/// ループ再生するかのフラグを切り替え
 		/// </summary>
-		Animation& Loop();
+		Animation& Loop(TrackType type = TrackType::Main);
 		/// <summary>
 		/// ループ再生するかを設定
 		/// </summary>
-		Animation& Loop(bool b);
+		Animation& Loop(bool b, TrackType type = TrackType::Main);
 		/// <summary>
 		/// 逆再生するかのフラグを切り替え
 		/// </summary>
-		Animation& Reverse();
+		Animation& Reverse(TrackType type = TrackType::Main);
 		/// <summary>
 		/// 逆再生するかを設定
 		/// </summary>
-		Animation& Reverse(bool b);
+		Animation& Reverse(bool b, TrackType type = TrackType::Main);
 		/// <summary>
 		/// タイムスケールを使うかのフラグを切り替え
 		/// </summary>
-		Animation& UseTimeScale();
+		Animation& UseTimeScale(TrackType type = TrackType::Main);
 		/// <summary>
 		/// タイムスケールを使うかを設定
 		/// </summary>
-		Animation& UseTimeScale(bool b);
+		Animation& UseTimeScale(bool b, TrackType type = TrackType::Main);
+		/// <summary>
+		/// 再生速度を設定
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		float& GetPlayBackSpeed(TrackType type = TrackType::Main) { return tracks_[type].playbackSpeed; }
 
 		/// <summary>
 		/// Debug用のImGui
@@ -128,7 +149,7 @@ namespace LWP::Resource {
 		/// <para>指定のアニメーションが再生中か返す関数</para>
 		/// <para>※ 指定しない場合は何かしらが再生しているかを返す</para>
 		/// </summary>
-		bool GetPlaying(const std::string& animName = "");
+		bool GetPlaying(const std::string& animName = "", TrackType type = TrackType::Main) { return tracks_[type].GetPlaying(animName); }
 		/// <summary>
 		/// 再生できるアニメーションの名前を取得する関数
 		/// </summary>
@@ -136,7 +157,7 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 全体の進捗を受け取る関数
 		/// </summary>
-		float GetProgress() { return time_; }
+		float GetProgress(TrackType type = TrackType::Main) { return tracks_[type].time; }
 		/// <summary>
 		/// 読み込んだパスを返す関数
 		/// </summary>
@@ -152,20 +173,69 @@ namespace LWP::Resource {
 		};
 		std::map<std::string, AnimationData> data;
 
-		// 経過割合(0.0f ~ 1.0f)
-		float time_ = 0.0f;
-		
-		// 再生中のアニメーションの名前
-		std::string playingAnimationName_ = "";
+		// 再生するアニメーションごとのデータ
+		struct State {
+			// 再生中のアニメーションの名前
+			std::string playingAnimationName = "";
+			// 経過割合(0.0f ~ 1.0f)
+			float time = 0.0f;
+			// アニメーションの長さ（秒s）
+			float totalSeconds = 0.0f;
 
-		// 停止フラグ
-		bool isPause_ = true;
-		// ループするかフラグ
-		bool isLoop_ = false;
-		// アニメーション逆再生フラグ
-		bool isReverse_ = false;
-		// タイムスケールの影響OnOff
-		bool isUseTimeScale_ = true;
+			// アニメーションの再生速度
+			float playbackSpeed = 1.0f;
+			// 停止フラグ
+			bool isPause = true;	// 最初はなんも再生しないので初期値true
+			// ループするかフラグ
+			bool isLoop = false;
+			// アニメーション逆再生フラグ
+			bool isReverse = false;
+			// タイムスケールの影響OnOff
+			bool isUseTimeScale = true;
+
+			/// <summary>
+			/// 初期化
+			/// </summary>
+			void Init() {
+				time = 0.0f;
+				playingAnimationName = "";
+			}
+			/// <summary>
+			/// 更新
+			/// </summary>
+			void Update();
+
+			/// <summary>
+			/// システムからデルタタイムを取得する関数
+			/// </summary>
+			/// <returns></returns>
+			float GetDeltaTime();
+			/// <summary>
+			/// <para>指定のアニメーションが再生中か返す関数</para>
+			/// <para>※ 指定しない場合は何かしらが再生しているかを返す</para>
+			/// </summary>
+			bool GetPlaying(const std::string& animName = "");
+
+			/// <summary>
+			/// Debug用のImGui
+			/// </summary>
+			bool DebugGUI();
+		};
+		std::map<TrackType, State> tracks_;
+
+		// モーショントランジションの情報
+		struct Transition {
+			// トランジション用のスケルトン
+			Primitive::Skeleton tempSkeleton;
+			// モーショントランジションにかかる時間
+			float totalTime = 0.0f;
+			// トランジションの経過割合(0.0f ~ 1.0f)
+			float t = 0.0f;
+			
+			// モーショントランジション中かのフラグ
+			bool isActive = false;
+		}transition_;
+
 
 		// アニメーションファイルの位置
 		const static std::string kDirectoryPath_;
@@ -175,7 +245,6 @@ namespace LWP::Resource {
 		// 適応するModelのポインタ
 		Resource::SkinningModel* modelPtr_ = nullptr;
 
-	
 	private: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
@@ -191,10 +260,6 @@ namespace LWP::Resource {
 		/// Jointを更新する関数
 		/// </summary>
 		void UpdateJoint();
-		/// <summary>
-		/// 再生中のアニメーションの総時間を返す関数
-		/// </summary>
-		/// <returns></returns>
-		float GetAnimationTotalTime();
+		
 	};
 };

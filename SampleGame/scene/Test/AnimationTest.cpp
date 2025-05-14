@@ -12,17 +12,17 @@ void AnimationTest::Initialize() {
 	for (int i = 0; i < 5; i++) {
 		model[i].LoadShortPath("Player/Hinmin/Player_Simple.gltf");
 		model[i].worldTF.translation.x = i * 1.5f;
-		motion[i].Add(
-			&model[i].worldTF.translation,
-			{ -2.526f, 0.0f, 0.0f },
-			0.0f, 2.0f
-		);
-		motion[i].Add(
-			&model[i].worldTF.translation,
-			{ 2.526f, 0.0f, 0.0f },
-			2.0f, 2.0f
-		);
-		//motion[i].Start(true);
+		//motion[i].Add(
+		//	&model[i].worldTF.translation,
+		//	{ -2.526f, 0.0f, 0.0f },
+		//	0.0f, 2.0f
+		//);
+		//motion[i].Add(
+		//	&model[i].worldTF.translation,
+		//	{ 2.526f, 0.0f, 0.0f },
+		//	2.0f, 2.0f
+		//);
+		////motion[i].Start(true);
 
 		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player_Simple.gltf", &model[i]);
 	}
