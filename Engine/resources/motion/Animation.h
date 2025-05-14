@@ -141,6 +141,10 @@ namespace LWP::Resource {
 		float& GetPlayBackSpeed(TrackType type = TrackType::Main) { return tracks_[type].playbackSpeed; }
 
 		/// <summary>
+		/// mainとblendの進行度を同期する
+		/// </summary>
+		void Sync();
+		/// <summary>
 		/// Debug用のImGui
 		/// </summary>
 		void DebugGUI();

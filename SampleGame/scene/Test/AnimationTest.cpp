@@ -26,6 +26,11 @@ void AnimationTest::Initialize() {
 
 		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player_Simple.gltf", &model[i]);
 	}
+
+	anim[0].Play("Walk")
+		.Loop(true);
+	anim[0].Play("Dash", 0.0f, 0.0f, Resource::Animation::TrackType::Blend)
+		.Loop(true, Resource::Animation::TrackType::Blend);
 }
 
 // 更新

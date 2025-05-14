@@ -40,6 +40,12 @@ Animation& Animation::Play(const std::string animName, float transitionTime, flo
 	s.totalSeconds = data[animName].totalTime;
 	s.isPause = false;
 
+	// Blendだけの特殊な処理
+	//if (type == TrackType::Blend) {
+	//	//float mainSpeed = tracks_[TrackType::Main].playbackSpeed;
+	//	s.playbackSpeed = s.totalSeconds / tracks_[TrackType::Main].totalSeconds;  // 再生速度で同期する
+	//}
+
 	// トランジション時間が0.0f以上ならば、トランジションを行う
 	transition_.totalTime = transitionTime;
 	if (transition_.totalTime > 0.0f) {
@@ -64,13 +70,26 @@ Animation& Animation::UseTimeScale(TrackType type)			{ tracks_[type].isUseTimeSc
 Animation& Animation::UseTimeScale(bool b, TrackType type)	{ tracks_[type].isUseTimeScale = b;								return *this; }
 
 void Animation::Update() {
-	tracks_[TrackType::Main].Update();
-	tracks_[TrackType::Blend].Update();
+	State& main = tracks_[TrackType::Main];
+	State& blend = tracks_[TrackType::Blend];
+
+	// メインとブレンドどちらもアニメーションを再生しているなら
+	if (main.GetPlaying() && blend.GetPlaying()) {
+		// 綺麗に同期してブレンドするためにアニメーションに合わせて速度スケールを計算
+		main.playbackSpeed = Interp::LerpF(1.0f, main.totalSeconds / blend.totalSeconds, blendT);
+		blend.playbackSpeed = Interp::LerpF(1.0f, blend.totalSeconds / main.totalSeconds, 1.0f - blendT);
+	}
+	// 更新
+	main.Update();
+	blend.Update();
 
 	// Joint更新
 	UpdateJoint();
 }
 
+void Animation::Sync() {
+	tracks_[TrackType::Blend].time = tracks_[TrackType::Main].time;
+}
 void Animation::DebugGUI() {
 	// アニメーション一覧
 	static int currentItem = 0;
@@ -113,7 +132,7 @@ void Animation::DebugGUI() {
 		}
 		ImGui::SliderFloat("Transition T", &transition_.t, 0.0f, 1.0f);
 		ImGui::SliderFloat("Blend T", &blendT, 0.0f, 1.0f);
-		if (ImGui::Button("Sync main & blend")) { tracks_[TrackType::Blend].time = tracks_[TrackType::Main].time; }
+		if (ImGui::Button("Sync main & blend")) { Sync(); }
 	}
 	if (ImGui::TreeNode("Node")) {
 		for (Joint& joint : modelPtr_->skeleton.joints) {
