@@ -62,6 +62,14 @@ void SkinningModel::DebugGUI() {
 	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
 }
 
+Primitive::Joint* SkinningModel::GetJoint(const std::string& name) {
+	assert(skeleton.jointMap.contains(name));	// Jointの存在チェック
+	return &skeleton.joints[skeleton.jointMap[name]];
+}
+Vector3 SkinningModel::GetJointWorldPosition(const std::string& name) {
+	Math::Matrix4x4 worldMatrix = GetJoint(name)->skeletonSpaceMatrix * worldTF.GetAffineMatrix();
+	return { worldMatrix.m[3][0],worldMatrix.m[3][1],worldMatrix.m[3][2] };
+}
 void SkinningModel::ChangeFillMode() {
 	Resource::Manager::GetInstance()->ChangeFillMode(this, filePath);
 }
