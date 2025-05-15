@@ -51,6 +51,12 @@ namespace LWP::Resource {
 		void DebugGUI() override;
 
 		/// <summary>
+		/// 指定した名前のJointを取得する
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		Primitive::Joint* GetJoint(const std::string& name);
+		/// <summary>
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
 		void ChangeFillMode();

@@ -62,6 +62,11 @@ void SkinningModel::DebugGUI() {
 	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
 }
 
+Primitive::Joint* SkinningModel::GetJoint(const std::string& name) {
+	assert(skeleton.jointMap.contains(name));	// Jointの存在チェック
+	return &skeleton.joints[skeleton.jointMap[name]];
+}
+
 void SkinningModel::ChangeFillMode() {
 	Resource::Manager::GetInstance()->ChangeFillMode(this, filePath);
 }
