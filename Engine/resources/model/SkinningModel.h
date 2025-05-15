@@ -57,6 +57,12 @@ namespace LWP::Resource {
 		/// <returns></returns>
 		Primitive::Joint* GetJoint(const std::string& name);
 		/// <summary>
+		/// 指定した名前のJointのワールド座標を取得する
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		Math::Vector3 GetJointWorldPosition(const std::string& name);
+		/// <summary>
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
 		void ChangeFillMode();

@@ -33,7 +33,7 @@ void AnimationTest::Initialize() {
 		.Loop(true, Resource::Animation::TrackType::Blend);
 
 	col.SetBroadShape(Collider::AABB());
-	col.SetFollowTarget(&model[0].GetJoint("Hand.R")->localTF);
+	//col.SetFollowTarget(&model[0].GetJoint("Hand.R")->localTF);
 }
 
 // 更新
@@ -57,5 +57,5 @@ void AnimationTest::Update() {
 	}
 	ImGui::End();
 
-	col.worldTF.translation = model[0].GetJoint("Hand.R")->localTF.GetWorldPosition() * model[0].worldTF.GetAffineMatrix();
+	col.worldTF.translation = model[0].GetJointWorldPosition("Hand.R");
 }
