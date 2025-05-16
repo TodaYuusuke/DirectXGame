@@ -21,11 +21,11 @@ namespace LWP::Object {
 
 	private: // ** プロパティ変数 ** //
 		// 親となるワールド変換へのポインタ（読み取り専用）
-		Utility::Observer<TransformQuat*>* parent_ = nullptr;
-		//WorldTransform* parent_ = nullptr;
+		//Utility::Observer<TransformQuat*>* parent_ = nullptr;
+		TransformQuat* parent_ = nullptr;
 	public: // アクセッサ
 		// 親関係を登録
-		void Parent(TransformQuat* parent);
+		void Parent(TransformQuat* parent) { parent_ = parent; }
 		// 親のポインタを受け取る（実装禁止）
 		//WorldTransform* Parent();
 		
@@ -36,7 +36,7 @@ namespace LWP::Object {
 		TransformQuat(Math::Vector3 t, Math::Quaternion r, Math::Vector3 s);
 		TransformQuat(Math::Vector3 t, Math::Quaternion r);
 		TransformQuat(Math::Vector3 t);
-		~TransformQuat() = default;
+		~TransformQuat();
 
 		/// <summary>
 		/// 初期化
@@ -78,6 +78,14 @@ namespace LWP::Object {
 		/// </summary>
 		void DebugGUI2D(const std::string& label = "WorldTransform");
 
+	private: // ** プレイベートなメンバ関数 ** //
+
+		/// <summary>
+		/// ペアレントが存在するかチェック
+		/// </summary>
+		bool CheckParent() const;
+
+
 	public: // ** オペレーターオーバーロード ** //
 
 		// イージングの簡略化のため実装
@@ -90,8 +98,8 @@ namespace LWP::Object {
 		bool operator==(TransformQuat& other) {
 			return translation == other.translation &&
 				rotation == other.rotation &&
-				scale == other.scale &&
-				(!parent_ || !parent_->GetChanged());
+				scale == other.scale;
+				//(!parent_ || !parent_->GetChanged());
 		}
 	};
 }

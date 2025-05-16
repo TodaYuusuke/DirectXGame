@@ -1,10 +1,8 @@
 #pragma once
 #include "Joint.h"
-
 #include <map>
 
 namespace LWP::Primitive {
-
 	/// <summary>
 	/// Jointの階層構造を管理する機構
 	/// </summary>
@@ -40,5 +38,9 @@ namespace LWP::Primitive {
 		/// </summary>
 		/// <param name="material"></param>
 		void Create(const Node& node);
+		/// <summary>
+		/// Joint同士の親子関係をセットする関数
+		/// </summary>
+		void SetParent();
 	};
 }

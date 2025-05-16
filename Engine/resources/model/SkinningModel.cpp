@@ -2,15 +2,17 @@
 
 #include "resources/ResourceManager.h"
 #include "component/Resource.h"
+#include "utility/MyUtility.h"
 
 using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Math;
 using namespace LWP::Resource;
+using namespace LWP::Utility;
 
 
-
-SkinningModel::SkinningModel() {}
+SkinningModel::SkinningModel() {
+}
 SkinningModel::~SkinningModel() {
 	// パスが空じゃなかったら消しに行く
 	if (!filePath.empty()) {
@@ -34,6 +36,7 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 
 	// スケルトンをコピー
 	skeleton = data->skeleton_.value();
+	skeleton.SetParent();
 	// スキンクラスターの参照を保持
 	skinCluster = &data->skinCluster_.value();
 
