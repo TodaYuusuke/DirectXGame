@@ -7,6 +7,8 @@ class AnimationTest final
 public:
 	//*** 純粋仮想関数の実体宣言 ***//
 
+	AnimationTest();
+
 	// 初期化
 	void Initialize() override;
 	// 更新
@@ -22,4 +24,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	//LWP::Resource::Motion motion[5];
 
 	LWP::Object::Collision col;
+	LWP::Object::Collider::Capsule& caps;
+	LWP::Math::Vector3 end = {};
 };

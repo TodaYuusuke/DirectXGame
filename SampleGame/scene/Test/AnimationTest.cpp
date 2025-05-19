@@ -7,6 +7,11 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Object;
 
+AnimationTest::AnimationTest() :
+	caps(col.SetBroadShape(Collider::Capsule())) {
+
+}
+
 // 初期化
 void AnimationTest::Initialize() {
 	for (int i = 0; i < 5; i++) {
@@ -31,9 +36,6 @@ void AnimationTest::Initialize() {
 		.Loop(true);
 	anim[0].Play("Dash", 0.0f, 0.0f, Resource::Animation::TrackType::Blend)
 		.Loop(true, Resource::Animation::TrackType::Blend);
-
-	col.SetBroadShape(Collider::AABB());
-	//col.SetFollowTarget(&model[0].GetJoint("Hand.R")->localTF);
 }
 
 // 更新
@@ -52,10 +54,14 @@ void AnimationTest::Update() {
 			ImGui::TreePop();
 		}
 
-		Vector3 pos = model[0].GetJoint("Hand.R")->localTF.GetWorldPosition();
-		ImGui::DragFloat3("Pos", &pos.x);
+		ImGui::DragFloat3("end", &end.x);
 	}
 	ImGui::End();
 
 	col.worldTF.translation = model[0].GetJointWorldPosition("Hand.R");
+	Matrix4x4 mat = model[0].GetJointWorldMatrix("Hand.R");
+	mat.m[3][0] = 0.0f;
+	mat.m[3][1] = 0.0f;
+	mat.m[3][2] = 0.0f;
+	caps.end = end * mat;
 }

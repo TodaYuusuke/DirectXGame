@@ -57,6 +57,12 @@ namespace LWP::Resource {
 		/// <returns></returns>
 		Primitive::Joint* GetJoint(const std::string& name);
 		/// <summary>
+		/// 指定した名前のJointのワールドマトリックスを取得する
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		Math::Matrix4x4 GetJointWorldMatrix(const std::string& name);
+		/// <summary>
 		/// 指定した名前のJointのワールド座標を取得する
 		/// </summary>
 		/// <param name="name"></param>
