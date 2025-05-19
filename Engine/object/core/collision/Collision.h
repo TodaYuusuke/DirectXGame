@@ -86,7 +86,6 @@ namespace LWP::Object {
 		// ナローフェーズのコライダー形状
 		std::vector<ShapeVariant> narrows;
 
-
 		// - ヒット時のリアクション用の関数 - //
 		typedef std::function<void(Collision* hitTarget)> OnHitFunction;	// ヒット時の関数ポインタの型
 
