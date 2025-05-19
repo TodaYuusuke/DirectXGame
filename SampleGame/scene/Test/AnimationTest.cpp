@@ -11,11 +11,11 @@ AnimationTest::AnimationTest() :
 	caps(col.SetBroadShape(Collider::Capsule())) {
 
 }
-
 // 初期化
 void AnimationTest::Initialize() {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 1; i++) {
 		model[i].LoadShortPath("Player/Hinmin/Player_Simple.gltf");
+		//model[i].LoadShortPath("test/Test.gltf");
 		model[i].worldTF.translation.x = i * 1.5f;
 		//motion[i].Add(
 		//	&model[i].worldTF.translation,
@@ -30,18 +30,23 @@ void AnimationTest::Initialize() {
 		////motion[i].Start(true);
 
 		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player_Simple.gltf", &model[i]);
+		//anim[i].LoadFullPath("resources/model/test/Test.gltf", &model[i]);
 	}
 
 	anim[0].Play("Walk")
 		.Loop(true);
 	anim[0].Play("Dash", 0.0f, 0.0f, Resource::Animation::TrackType::Blend)
-		.Loop(true, Resource::Animation::TrackType::Blend);
+	 	.Loop(true, Resource::Animation::TrackType::Blend);
+
+	caps.radius = 0.05f;
+	col.SetFollowTarget(&model[0].GetJoint("Hand.R")->localTF);
+	//col.SetFollowTarget(&model[0].worldTF);
 }
 
 // 更新
 void AnimationTest::Update() {
 	ImGui::Begin("Test");
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 1; i++) {
 		if (ImGui::TreeNode(std::to_string(i).c_str())) {
 			if(ImGui::TreeNode("Model")) {
 				model[i].DebugGUI();
@@ -53,15 +58,13 @@ void AnimationTest::Update() {
 			}
 			ImGui::TreePop();
 		}
-
-		ImGui::DragFloat3("end", &end.x);
+	}
+	if (ImGui::TreeNode("Collision")) {
+		col.DebugGUI();
+		ImGui::TreePop();
 	}
 	ImGui::End();
 
-	col.worldTF.translation = model[0].GetJointWorldPosition("Hand.R");
-	Matrix4x4 mat = model[0].GetJointWorldMatrix("Hand.R");
-	mat.m[3][0] = 0.0f;
-	mat.m[3][1] = 0.0f;
-	mat.m[3][2] = 0.0f;
-	caps.end = end * mat;
+	//Vector3 v = { 0.0f,0.0f,0.0f };
+	//caps.start = model[0].GetJointWorldPosition("Hand.R");
 }

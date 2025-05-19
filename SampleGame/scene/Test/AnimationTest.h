@@ -25,5 +25,4 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Object::Collision col;
 	LWP::Object::Collider::Capsule& caps;
-	LWP::Math::Vector3 end = {};
 };

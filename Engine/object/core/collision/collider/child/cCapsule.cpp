@@ -88,8 +88,8 @@ void Capsule::Hit() {
 }
 
 Capsule::Data::Data(Capsule& cap) {
-	Vector3 worldPos = cap.follow_->GetWorldPosition();
-	start = cap.start + worldPos;
-	end = cap.end + worldPos;
+	Matrix4x4 wtf = cap.follow_->GetAffineMatrix();
+	start = cap.start * wtf;
+	end = cap.end * wtf;
 	radius = cap.radius;
 }

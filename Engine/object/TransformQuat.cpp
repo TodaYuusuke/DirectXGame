@@ -6,6 +6,7 @@ using namespace LWP::Object;
 using namespace LWP::Math;
 
 TransformQuat::TransformQuat() { Init(); }
+TransformQuat::~TransformQuat() {}
 TransformQuat::TransformQuat(Math::Vector3 t, Math::Quaternion r, Math::Vector3 s) {
 	Init();
 	translation = t;
@@ -32,16 +33,16 @@ void TransformQuat::Init() {
 Matrix4x4 TransformQuat::GetAffineMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
-	if (parent_) {
-		result = result * parent_->t->GetAffineMatrix();
+	if (CheckParent()) {
+		result = result * parent_->GetAffineMatrix();
 	}
 	return result;
 }
 Matrix4x4 TransformQuat::GetAffineMatrix(Primitive::Node* node) const {
 	Math::Matrix4x4 result = node->GetLocalMatrix() * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
-	if (parent_) {
-		result = result * parent_->t->GetAffineMatrix();
+	if (CheckParent()) {
+		result = result * parent_->GetAffineMatrix();
 	}
 	return result;
 }
@@ -49,8 +50,8 @@ Matrix4x4 TransformQuat::GetAffineMatrix(Primitive::Node* node) const {
 Matrix4x4 TransformQuat::GetTranslationMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateTranslateMatrix(translation);
 	// 親があれば親のワールド行列を掛ける
-	if (parent_) {
-		result = result * parent_->t->GetTranslationMatrix();
+	if (CheckParent()) {
+		result = result * parent_->GetTranslationMatrix();
 	}
 	return result;
 }
@@ -61,16 +62,16 @@ Vector3 TransformQuat::GetWorldPosition() const {
 Matrix4x4 TransformQuat::GetRotateMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateRotateXYZMatrix(rotation);
 	// 親があれば親のワールド行列を掛ける
-	if (parent_) {
-		result = result * parent_->t->GetRotateMatrix();
+	if (CheckParent()) {
+		result = result * parent_->GetRotateMatrix();
 	}
 	return result;
 }
 Matrix4x4 TransformQuat::GetScaleMatrix() const {
 	Math::Matrix4x4 result = Math::Matrix4x4::CreateScaleMatrix(scale);
 	// 親があれば親のワールド行列を掛ける
-	if (parent_) {
-		result = result * parent_->t->GetScaleMatrix();
+	if (CheckParent()) {
+		result = result * parent_->GetScaleMatrix();
 	}
 	return result;
 }
@@ -90,7 +91,7 @@ void TransformQuat::DebugGUI(const std::string& label) {
 		if (ImGui::Button("Init Quaternion")) { rotation.Init(); }
 		ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		// ペアレント先を表示
-		if (parent_) { parent_->t->DebugGUI("Parent"); }
+		if (CheckParent()) { parent_->DebugGUI("Parent"); }
 		else { ImGui::Text("Not Parent"); }
 		ImGui::TreePop();
 	}
@@ -109,12 +110,18 @@ void TransformQuat::DebugGUI2D(const std::string& label) {
 	}
 }
 
+bool TransformQuat::CheckParent() const {
+	return parent_;
+}
+
 // ** プロパティ変数 ** //
 
-void TransformQuat::Parent(TransformQuat* parent) {
-	parent_ = new Utility::Observer<TransformQuat*>;
-	parent_->t = parent;
-}
+//void TransformQuat::Parent(TransformQuat* parent) {
+//	if (!parent_) { parent_ = new Utility::Observer<TransformQuat*>; }
+//
+//	if (parent_->t) { parent_->t = nullptr; }
+//	parent_->t = parent;
+//}
 
 TransformQuat TransformQuat::operator+(const TransformQuat& other) const {
 	return {
