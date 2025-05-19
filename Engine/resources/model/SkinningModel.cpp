@@ -21,6 +21,8 @@ SkinningModel::~SkinningModel() {
 }
 
 void SkinningModel::LoadFullPath(const std::string& fp) {
+	assert(filePath.empty() && "The model is already loaded.");	// 既に読み込まれている場合はエラー
+
 	// 名前を保持
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう

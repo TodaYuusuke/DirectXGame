@@ -53,7 +53,7 @@ namespace LWP::Object::Collider {
 	protected: // ** プライベートなメンバ変数 ** //
 
 		// Colliderのトランスフォームのポインタ
-		Object::TransformQuat* follow_ = nullptr;
+		Object::TransformQuat* followTF_ = nullptr;
 
 
 	public: // ** メンバ関数 ** //
@@ -83,7 +83,7 @@ namespace LWP::Object::Collider {
 		/// ポインタをセットする関数
 		/// </summary>
 		/// <param name="ptr"></param>
-		void SetFollowPtr(Object::TransformQuat* ptr) { follow_ = ptr; }
+		void SetFollowPtr(Object::TransformQuat* ptr) { followTF_ = ptr; }
 		/// <summary>
 		/// 自身の形状を返す純粋仮想関数関数
 		/// </summary>

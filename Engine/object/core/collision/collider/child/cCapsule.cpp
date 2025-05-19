@@ -49,7 +49,7 @@ void Capsule::Update() {
 }
 void Capsule::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
 	// 最大値店と最小地点を求める
-	Vector3 worldPos = follow_->GetWorldPosition();
+	Vector3 worldPos = followTF_->GetWorldPosition();
 	Vector3 min = start + worldPos;
 	Vector3 max = end + worldPos;
 	// MinよりMaxのほうが小さくならないように修正
@@ -88,7 +88,7 @@ void Capsule::Hit() {
 }
 
 Capsule::Data::Data(Capsule& cap) {
-	Matrix4x4 wtf = cap.follow_->GetAffineMatrix();
+	Matrix4x4 wtf = cap.followTF_->GetAffineMatrix();
 	start = cap.start * wtf;
 	end = cap.end * wtf;
 	radius = cap.radius;
