@@ -38,7 +38,7 @@ Point::Point(const Point& other) {
 
 void Point::Update() {
 #if DEMO
-	sphere.worldTF.translation = position + followTF_->GetWorldPosition();
+	sphere.worldTF.translation = position + tf_->GetWorldPosition();
 	// isActive切り替え
 	sphere.isActive = isShowWireFrame && isActive;
 	// 色を白に戻す
@@ -50,7 +50,7 @@ void Point::Update() {
 }
 void Point::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
 	// そのまま返すだけ
-	*minPtr = *maxPtr = position + followTF_->GetWorldPosition();
+	*minPtr = *maxPtr = position + tf_->GetWorldPosition();
 }
 
 void Point::DebugGUI() {
@@ -66,5 +66,5 @@ void Point::Hit() {
 }
 
 Point::Data::Data(Point& point) {
-	position = point.position + point.followTF_->GetWorldPosition();
+	position = point.position + point.tf_->GetWorldPosition();
 }

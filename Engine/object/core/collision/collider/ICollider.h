@@ -1,6 +1,11 @@
 #pragma once
 #include "object/TransformQuat.h"
 
+// 前方宣言
+namespace LWP::Resource {
+	class SkinningModel;
+}
+
 namespace LWP::Object::Collider {
 	// 識別子
 	enum class Shape : int {
@@ -34,7 +39,6 @@ namespace LWP::Object::Collider {
 	class Mesh;
 	class Terrain;
 
-
 	/// <summary>
 	/// 当たり判定の形状用の基底クラス
 	/// </summary>
@@ -53,8 +57,7 @@ namespace LWP::Object::Collider {
 	protected: // ** プライベートなメンバ変数 ** //
 
 		// Colliderのトランスフォームのポインタ
-		Object::TransformQuat* followTF_ = nullptr;
-
+		Object::TransformQuat* tf_ = nullptr;
 
 	public: // ** メンバ関数 ** //
 
@@ -83,7 +86,7 @@ namespace LWP::Object::Collider {
 		/// ポインタをセットする関数
 		/// </summary>
 		/// <param name="ptr"></param>
-		void SetFollowPtr(Object::TransformQuat* ptr) { followTF_ = ptr; }
+		void SetFollowPtr(Object::TransformQuat* ptr) { tf_ = ptr; }
 		/// <summary>
 		/// 自身の形状を返す純粋仮想関数関数
 		/// </summary>

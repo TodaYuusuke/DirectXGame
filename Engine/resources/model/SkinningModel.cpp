@@ -61,6 +61,15 @@ void SkinningModel::DebugGUI() {
 		}
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Node")) {
+		for (Primitive::Joint& joint : skeleton.joints) {
+			if (ImGui::TreeNode(joint.name.c_str())) {
+				joint.localTF.DebugGUI();
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
 	ImGui::Checkbox("isActive", &isActive);
 	if (ImGui::Button("Change WireFrame")) { ChangeFillMode(); }
 	if (ImGui::Button("Change All Lighting Flag true")) { SetAllMaterialLighting(true); }

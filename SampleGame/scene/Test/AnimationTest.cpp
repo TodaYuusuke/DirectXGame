@@ -39,8 +39,11 @@ void AnimationTest::Initialize() {
 	anim[0].Play("Dash", 0.0f, 0.0f, Resource::Animation::TrackType::Blend)
 	 	.Loop(true, Resource::Animation::TrackType::Blend);
 
+	weapon.LoadShortPath("Player/Weapon/SimpleWeapon.gltf");
+	weapon.GetJoint("Grip")->localTF.Parent(&model[0], "WeaponAnchor");
+
 	caps.radius = 0.05f;
-	col.SetFollowTarget(&model[0].GetJoint("Hand.R")->localTF);
+	col.SetFollow(&weapon, "Grip");
 	//col.SetFollowTarget(&model[0].worldTF);
 }
 
