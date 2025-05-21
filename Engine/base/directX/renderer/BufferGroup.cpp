@@ -19,7 +19,7 @@ void BufferGroup::Init() {
 		.AddTableParameter(2, SV_Pixel)	// 平行光源
 		.AddTableParameter(3, SV_Pixel)	// 点光源
 		.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// テクスチャ
-		.AddTableParameter(0, SV_Pixel, 2, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(0, SV_Pixel, 2, lwpC::Shadow::Direction::kActiveCount)	// 平行光源のシャドウマップ
 		.AddTableParameter(0, SV_Pixel, 3, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
@@ -37,7 +37,7 @@ void BufferGroup::Init() {
 	transform_->Init();
 	material_ = std::make_unique<StructuredBuffer<MaterialStruct>>(lwpC::Rendering::kMaxMaterial);
 	material_->Init();
-	directionLight_ = std::make_unique<StructuredBuffer<DirectionalLightStruct>>(lwpC::Shadow::Direction::kMaxCount);
+	directionLight_ = std::make_unique<StructuredBuffer<DirectionalLightStruct>>(lwpC::Shadow::Direction::kActiveCount);
 	directionLight_->Init();
 	pointLight_ = std::make_unique<StructuredBuffer<PointLightStruct>>(lwpC::Shadow::Point::kMaxCount);
 	pointLight_->Init();

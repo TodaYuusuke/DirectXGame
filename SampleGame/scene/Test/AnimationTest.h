@@ -18,6 +18,7 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Object::DirectionLight light;
+	LWP::Object::PointLight p;
 
 	LWP::Resource::SkinningModel model[5];
 	LWP::Resource::SkinningModel weapon;
