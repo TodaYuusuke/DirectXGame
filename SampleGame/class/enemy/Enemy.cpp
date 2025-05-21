@@ -21,7 +21,7 @@ void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, std::function<
 	anim_.LoadFullPath("resources/model/Enemy/Zombie_Basic.gltf", &model_);
 	anim_.Play("Walk", true);	// 歩きアニメーション
 	// コライダー初期化
-	collision_.SetFollowTarget(&model_.worldTF);
+	collision_.SetFollow(&model_.worldTF);
 	collision_.mask.SetBelongFrag(MaskLayer::Enemy);
 	collision_.mask.SetHitFrag(MaskLayer::Bullet);
 	collision_.enterLambda = [this](Collision* c) {

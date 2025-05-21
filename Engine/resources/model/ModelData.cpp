@@ -23,17 +23,14 @@ void ModelData::Load(const std::string& filePath) {
 
 	// ノード情報を格納
 	if (scene->mRootNode) {
-		// 新しいノードを生成
-		nodes_.emplace_back();
 		// 読み込む
-		nodes_.back().Load(scene->mRootNode);
+		node_.Load(scene->mRootNode);
 		// スケルトンを作成
 		skeleton_.emplace();
-		skeleton_->Create(nodes_[0]);
+		skeleton_->Create(node_);
 		// skeletonからSkinClusterを生成
 		skinCluster_.emplace(static_cast<uint32_t>(skeleton_->joints.size()));
 	}
-
 
 	// Meshの解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
@@ -129,7 +126,6 @@ void ModelData::Load(const std::string& filePath) {
 		buffers_.primitiveIndices->Add(v.i0 | (v.i1 << 10) | (v.i2 << 20));
 	}
 	std::memcpy(buffers_.materials->data_, materials.data(), sizeof(Base::MaterialStruct) * materials.size());
-
 }
 
 std::vector<Vertex> ModelData::GetVertices() const {

@@ -21,7 +21,7 @@ namespace LWP::Resource {
 		// インデックス
 		std::vector<uint32_t> indexes;
 		// ノード
-		std::vector<Primitive::Node> nodes_;
+		Primitive::Node node_;
 		// マテリアル
 		std::map<std::string, Primitive::Material> materials_;
 		std::vector<std::string> materialOrder_;	// マテリアルの順番を名前で保存しておく

@@ -2,6 +2,7 @@
 
 #include "component/Resource.h"
 #include "component/Information.h"
+#include "utility/MyUtility.h"
 #include "utility/motionEffects/Interpolation.h"
 
 #include "resources/model/SkinningModel.h"
@@ -104,43 +105,40 @@ void Animation::DebugGUI() {
 		static float transitionTime = 0.0f;
 		ImGui::DragFloat("Transition Time", &transitionTime, 0.01f);
 		ImGui::Text("-----------------");
-		if (ImGui::TreeNode("[ Main ]")) {
-			ImGui::Text("Playing Animation : %s", tracks_[TrackType::Main].playingAnimationName.c_str());
-			ImGui::Text("TotalTime %f", tracks_[TrackType::Main].totalSeconds);
-			if (ImGui::Button("Play")) { Play(itemText[currentItem], transitionTime); }
-			ImGui::SameLine();
-			if (ImGui::Button("Pause")) { Pause(); }
-			ImGui::SameLine();
-			if (ImGui::Button("Resume")) { Resume(); }
-			ImGui::SameLine();
-			if (ImGui::Button("Stop")) { Stop(); }
+		ImGui::Text("[ Main ]");
+		ImGui::Text("Playing Animation : %s", tracks_[TrackType::Main].playingAnimationName.c_str());
+		ImGui::Text("TotalTime %f", tracks_[TrackType::Main].totalSeconds);
+		if (ImGui::Button("Play##Main")) { Play(itemText[currentItem], transitionTime); }
+		ImGui::SameLine();
+		if (ImGui::Button("Pause##Main")) { Pause(); }
+		ImGui::SameLine();
+		if (ImGui::Button("Resume##Main")) { Resume(); }
+		ImGui::SameLine();
+		if (ImGui::Button("Stop##Main")) { Stop(); }
+		if (ImGui::TreeNode("Detail##Main")) {
 			isChanged[0] = tracks_[TrackType::Main].DebugGUI();
 			ImGui::TreePop();
 		}
-		if (ImGui::TreeNode("[ Blend ]")) {
-			ImGui::Text("Playing Animation : %s", tracks_[TrackType::Blend].playingAnimationName.c_str());
-			ImGui::Text("TotalTime %f", tracks_[TrackType::Blend].totalSeconds);
-			if (ImGui::Button("Play")) { Play(itemText[currentItem], transitionTime, 0.0f, TrackType::Blend); }
-			ImGui::SameLine();
-			if (ImGui::Button("Pause")) { Pause(TrackType::Blend); }
-			ImGui::SameLine();
-			if (ImGui::Button("Resume")) { Resume(TrackType::Blend); }
-			ImGui::SameLine();
-			if (ImGui::Button("Stop")) { Stop(TrackType::Blend); }
-			isChanged[1] = tracks_[TrackType::Blend].DebugGUI();
-			ImGui::TreePop();
-		}
+		ImGui::Text("[ Blend ]");
+		ImGui::Text("Playing Animation : %s", tracks_[TrackType::Blend].playingAnimationName.c_str());
+		ImGui::Text("TotalTime %f", tracks_[TrackType::Blend].totalSeconds);
+		if (ImGui::Button("Play##Blend")) { Play(itemText[currentItem], transitionTime, 0.0f, TrackType::Blend); }
+		ImGui::SameLine();
+		if (ImGui::Button("Pause##Blend")) { Pause(TrackType::Blend); }
+		ImGui::SameLine();
+		if (ImGui::Button("Resume##Blend")) { Resume(TrackType::Blend); }
+		ImGui::SameLine();
+		if (ImGui::Button("Stop##Blend")) { Stop(TrackType::Blend); }
+		if (ImGui::TreeNode("Blend Detail##Blend")) {
+				isChanged[1] = tracks_[TrackType::Blend].DebugGUI();
+				ImGui::TreePop();
+			}
 		ImGui::SliderFloat("Transition T", &transition_.t, 0.0f, 1.0f);
 		ImGui::SliderFloat("Blend T", &blendT, 0.0f, 1.0f);
 		if (ImGui::Button("Sync main & blend")) { Sync(); }
 	}
-	if (ImGui::TreeNode("Node")) {
-		for (Joint& joint : modelPtr_->skeleton.joints) {
-			if (ImGui::TreeNode(joint.name.c_str())) {
-				joint.localTF.DebugGUI();
-				ImGui::TreePop();
-			}
-		}
+	if (modelPtr_ && ImGui::TreeNode("Model")) {
+		modelPtr_->DebugGUI();
 		ImGui::TreePop();
 	}
 
@@ -315,6 +313,10 @@ void Animation::UpdateJoint() {
 			joint.localTF.rotation = Interp::SlerpQuaternion(prevTransform.rotation, joint.localTF.rotation, transition_.t);
 			joint.localTF.scale = Interp::Lerp(prevTransform.scale, joint.localTF.scale, transition_.t);
 		}
+
+		joint.localTF.translation = joint.localTF.translation;
+		joint.localTF.rotation = joint.localTF.rotation;
+		joint.localTF.scale = joint.localTF.scale;
 	}
 
 
