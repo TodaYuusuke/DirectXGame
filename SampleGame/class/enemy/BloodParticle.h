@@ -38,7 +38,7 @@ protected: // ** 純粋仮想関数のオーバーライド ** //
 		LWP::Object::Collider::Point& p = newData.collider->SetBroadShape(LWP::Object::Collider::Point());
 		p.isShowWireFrame = false;	// Debugがおもすぎるので非表示に
 #endif
-		newData.collider->SetFollowTarget(&newData.m.worldTF);
+		newData.collider->SetFollow(&newData.m.worldTF);
 		newData.collider->mask.SetBelongFrag(lwpC::Collider::Particle);	// フラグ設定
 		newData.collider->mask.SetHitFrag(lwpC::Collider::FieldObject | lwpC::Collider::Terrain);
 		newData.collider->isMove = true;

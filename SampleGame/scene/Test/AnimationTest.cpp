@@ -39,7 +39,7 @@ void AnimationTest::Initialize() {
 	 	.Loop(true, Resource::Animation::TrackType::Blend);
 
 	caps.radius = 0.05f;
-	col.SetFollowTarget(&model[0].GetJoint("Hand.R")->localTF);
+	col.SetFollow(&model[0], "Hand.R");
 	//col.SetFollowTarget(&model[0].worldTF);
 }
 

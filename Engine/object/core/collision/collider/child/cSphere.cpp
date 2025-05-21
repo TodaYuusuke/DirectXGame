@@ -34,7 +34,7 @@ Sphere::Sphere(const Sphere& other) {
 
 void Sphere::Update() {
 #if DEMO
-	sphereModel.CreateFromSphereCol(position + followTF_->GetWorldPosition(), radius);	// Sphere再生成
+	sphereModel.CreateFromSphereCol(position + tf_->GetWorldPosition(), radius);	// Sphere再生成
 	// isActive切り替え
 	sphereModel.isActive = isShowWireFrame && isActive;
 	// 色を白に戻す
@@ -46,7 +46,7 @@ void Sphere::Update() {
 }
 void Sphere::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
 	// 中心から半径分移動した地点がminとmax
-	Vector3 center = position + followTF_->GetWorldPosition();
+	Vector3 center = position + tf_->GetWorldPosition();
 	*minPtr = center - Vector3{ radius, radius, radius };
 	*maxPtr = center + Vector3{ radius, radius, radius };
 }
@@ -94,6 +94,6 @@ void Sphere::Hit() {
 }
 
 Sphere::Data::Data(Sphere& sphere) {
-	position = sphere.position + sphere.followTF_->GetWorldPosition();
+	position = sphere.position + sphere.tf_->GetWorldPosition();
 	radius = sphere.radius;
 }
