@@ -25,7 +25,7 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddTableParameter(6, SV_Pixel)	// 平行光源
 		.AddTableParameter(7, SV_Pixel)	// 点光源
 		.AddTableParameter(8, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
-		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kActiveCount)	// 平行光源のシャドウマップ
 		.AddTableParameter(509, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
 		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
@@ -44,7 +44,7 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddTableParameter(6, SV_Pixel)	// 平行光源
 		.AddTableParameter(7, SV_Pixel)	// 点光源
 		.AddTableParameter(8, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
-		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kActiveCount)	// 平行光源のシャドウマップ
 		.AddTableParameter(509, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
 		.AddTableParameter(517, SV_All)	// スキニング用のWell
 		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
@@ -62,7 +62,7 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddTableParameter(5, SV_Pixel)	// 平行光源
 		.AddTableParameter(6, SV_Pixel)	// 点光源
 		.AddTableParameter(7, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
-		.AddTableParameter(507, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(507, SV_Pixel, 0, lwpC::Shadow::Direction::kActiveCount)	// 平行光源のシャドウマップ
 		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
 		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 平行光源のシャドウマップ用サンプラー
@@ -82,7 +82,7 @@ void MeshRenderer::Init(Command* cmd, std::function<void()> func) {
 		.AddTableParameter(6, SV_Pixel)	// 平行光源
 		.AddTableParameter(7, SV_Pixel)	// 点光源
 		.AddTableParameter(8, SV_Pixel, 0, lwpC::Rendering::kMaxTexture)	// テクスチャ
-		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kMaxCount)	// 平行光源のシャドウマップ
+		.AddTableParameter(508, SV_Pixel, 0, lwpC::Shadow::Direction::kActiveCount)	// 平行光源のシャドウマップ
 		.AddTableParameter(509, SV_Pixel, 0, lwpC::Shadow::Point::kMaxCount)	// 点光源のシャドウマップ
 		.AddTableParameter(517, SV_Pixel)	// 環境マップ
 		.AddSampler(0, SV_Pixel)		// テクスチャ用サンプラー
