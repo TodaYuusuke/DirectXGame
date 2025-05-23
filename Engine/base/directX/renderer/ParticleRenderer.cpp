@@ -216,9 +216,9 @@ void ParticleRenderer::DrawCall(ID3D12GraphicsCommandList6* list) {
 		}
 	}
 
-	//ImGui::Begin("GPU Collider");
-	//ImGuiManager::ShowRenderResource(collider_.stencilMask, 0.2f);
-	//ImGui::End();
+	ImGui::Begin("GPU Collider");
+	ImGuiManager::ShowRenderResource(collider_.stencilMask, 0.2f);
+	ImGui::End();
 }
 
 void ParticleRenderer::Reset() {
