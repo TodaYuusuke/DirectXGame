@@ -257,6 +257,7 @@ Group::iterator JsonIO::FindGroup(const std::string& name, Group& group) {
 
 void JsonIO::DebugGUI() {
 	if (ImGui::Button("Save")) { Save(); }
+	ImGui::SameLine();
 	if (ImGui::Button("Load")) { Load(); }
 	ImGui::Text("---------- Data ----------");
 	if (ImGui::TreeNode(filePath_.c_str())) {
