@@ -142,7 +142,6 @@ void RendererManager::AddPrimitiveData(Primitive::IPrimitive* primitive) {
 
 
 void RendererManager::AddLightData(Object::DirectionLight* light) { buffers_.AddData(*light); }
-
 void RendererManager::AddLightData(Object::PointLight* light) { buffers_.AddData(*light); }
 
 IndexInfoStruct RendererManager::ProcessIndexInfo(Primitive::IPrimitive* primitive) {

@@ -1,6 +1,5 @@
 // ** Standard Structs ** //
-struct WorldTransform
-{
+struct WorldTransform {
     float32_t4x4 m;
     float32_t4x4 translate; // !< translate only Matrix
     float32_t4x4 rotate; // !< rotate only Matrix
