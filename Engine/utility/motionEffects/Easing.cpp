@@ -1,5 +1,7 @@
 #include "Easing.h"
 
+#include "base/ImGuiManager.h"
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
@@ -158,3 +160,13 @@ float Easing::InOutExpo(float x) {
 		std::clamp(x, 0.0f, 1.0f);	// 範囲外ならclamp
 }
 #pragma endregion
+
+float Easing::CallFunction(Easing::Type type, float x) {
+	return kFunction[static_cast<int>(type)](x);
+}
+bool Easing::SelectTypeDebugGUI(Easing::Type* type, std::string label) {
+	int currentType = static_cast<int>(*type);
+	bool b = ImGui::Combo(label.c_str(), &currentType, kTypeNames, static_cast<int>(Easing::Type::EasingCount));
+	*type = static_cast<Easing::Type>(currentType);
+	return b;
+}
