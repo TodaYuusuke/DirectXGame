@@ -1,4 +1,5 @@
 #include "AnimationTest.h"
+#include "LevelLoaderTest.h"
 
 using namespace LWP;
 using namespace LWP::Input;
@@ -70,4 +71,8 @@ void AnimationTest::Update() {
 
 	//Vector3 v = { 0.0f,0.0f,0.0f };
 	//caps.start = model[0].GetJointWorldPosition("Hand.R");
+
+	if (Keyboard::GetTrigger(DIK_P)) {
+		nextSceneFunction = []() { return new LevelLoaderTest(); };
+	}
 }

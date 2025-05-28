@@ -1,4 +1,5 @@
 #include "LevelLoaderTest.h"
+#include "AnimationTest.h"
 
 using namespace LWP::Math;
 
@@ -10,6 +11,10 @@ void LevelLoaderTest::Initialize() {
 
 // 更新
 void LevelLoaderTest::Update() {
+	if (lwp::Keyboard::GetTrigger(DIK_P)) {
+		nextSceneFunction = []() { return new AnimationTest(); };
+	}
+
 	// RキーでHotReload
 	if (lwp::Keyboard::GetTrigger(DIK_R)) {
 		levelData.HotReload();
