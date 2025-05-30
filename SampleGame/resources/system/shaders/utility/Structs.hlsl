@@ -42,6 +42,16 @@ struct Well { // Used during skinning
     float32_t4x4 skeletonSpaceMatrix;
     float32_t4x4 skeletonSpaceInverseTransposeMatrix;
 };
+struct PayLoad { // For AS
+    uint32_t groupID;
+};
+struct ModelMetaData {
+    uint32_t instanceSize; // !< Instance Size
+    uint32_t mSize; // !< Material Size
+    uint32_t jSize; // !< Joint Size
+    uint32_t transformOffset;
+    uint32_t materialOffset;
+};
 
 
 // ** Rendering ** //
@@ -51,7 +61,7 @@ struct Camera {
     float32_t3 worldPos;
 };
 
-// !< Lights
+// ** Lights ** //
 struct DirectionalLight {
     float32_t4x4 m;     // ViewProjection
     float32_t4 color;
@@ -66,7 +76,8 @@ struct PointLight {
     float decay;
 };
 
-// !< Output
+
+// ** Output ** //
 struct VSOutput {
     float32_t4 position : SV_POSITION;
     float32_t3 worldPos : POSITION0;
@@ -76,7 +87,7 @@ struct VSOutput {
     uint32_t id         : SV_InstanceID;
 };
 struct MSOutput {
-    float32_t4 pos      : SV_POSITION0;
+    float32_t4 position : SV_POSITION0;
     float32_t3 worldPos : POSITION0;
     float32_t2 texcoord : TEXCOORD0;
     float32_t3 normal   : NORMAL0;
@@ -84,7 +95,7 @@ struct MSOutput {
     int32_t mIndex      : INDEX0;
 };
 struct ParticleColliderOutput {
-    float32_t4 pos      : SV_POSITION0;
+    float32_t4 position : SV_POSITION0;
     float32_t3 worldPos : POSITION0;
     float32_t2 texcoord : TEXCOORD0;
     float32_t3 normal   : NORMAL0;
