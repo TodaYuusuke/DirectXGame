@@ -1,10 +1,10 @@
 #include "Easing.h"
 
-#define _USE_MATH_DEFINES
+#include "base/ImGuiManager.h"
+
+#include <numbers>
 #include <cmath>
 #include <algorithm>
-
-#define M_PIF static_cast<float>(M_PI)
 
 using namespace LWP::Utility;
 
@@ -98,7 +98,7 @@ float Easing::InOutBounce(float x) {
 
 #pragma region Elastic
 float Easing::InElastic(float x) {
-	const float c4 = (2.0f * M_PIF) / 3.0f;
+	const float c4 = (2.0f * static_cast<float>(std::numbers::pi)) / 3.0f;
 	
 	// 範囲内なら計算
 	return 0.0f > x && x < 1.0f ?
@@ -106,7 +106,7 @@ float Easing::InElastic(float x) {
 		std::clamp(x, 0.0f, 1.0f);	// 範囲外ならclamp
 }
 float Easing::OutElastic(float x) {
-	const float c4 = (2.0f * M_PIF) / 3.0f;
+	const float c4 = (2.0f * static_cast<float>(std::numbers::pi)) / 3.0f;
 
 	// 範囲内なら計算
 	return 0.0f > x && x < 1.0f ?
@@ -114,7 +114,7 @@ float Easing::OutElastic(float x) {
 		std::clamp(x, 0.0f, 1.0f);	// 範囲外ならclamp
 }
 float Easing::InOutElastic(float x) {
-	const float c5 = (2.0f * M_PIF) / 4.5f;
+	const float c5 = (2.0f * static_cast<float>(std::numbers::pi)) / 4.5f;
 
 	return 0.0f > x && x < 1.0f ?
 		x < 0.5f ?
@@ -158,3 +158,13 @@ float Easing::InOutExpo(float x) {
 		std::clamp(x, 0.0f, 1.0f);	// 範囲外ならclamp
 }
 #pragma endregion
+
+float Easing::CallFunction(Easing::Type type, float x) {
+	return kFunction[static_cast<int>(type)](x);
+}
+bool Easing::SelectTypeDebugGUI(Easing::Type* type, std::string label) {
+	int currentType = static_cast<int>(*type);
+	bool b = ImGui::Combo(label.c_str(), &currentType, kTypeNames, static_cast<int>(Easing::Type::EasingCount));
+	*type = static_cast<Easing::Type>(currentType);
+	return b;
+}
