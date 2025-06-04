@@ -7,43 +7,38 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void Bloom::Init() {
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
-	DXC* dxc = System::engine->directXCommon_->GetDXC();
-
 	threshold = 0.95f;
 
+	buffer_.Init();
 
-	buffer_.Init(dev);
-
-	brightnessFilter.rr.Init(dev, heaps);
-	gaussX.rr.Init(dev, heaps);
+	brightnessFilter.rr.Init();
+	gaussX.rr.Init();
 	// 輝度抽出
 	brightnessFilter.root.AddCBVParameter(0, SV_Pixel)
 		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
-		.Build(dev->GetDevice());
-	brightnessFilter.pso.Init(brightnessFilter.root, dxc)
-		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/bloom/BrightnessFilter.PS.hlsl")
-		.Build(dev->GetDevice());
+		.Build();
+	brightnessFilter.pso.Init(brightnessFilter.root)
+		.SetDepthState(false)
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/bloom/BrightnessFilter.PS.hlsl")
+		.Build();
 	// X軸ガウシアンブラー
 	gaussX.root.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
 		.AddSampler(0, SV_Pixel)	// テクスチャ用サンプラー
-		.Build(dev->GetDevice());
-	gaussX.pso.Init(gaussX.root, dxc)
-		.SetDepthStencilState(false)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/bloom/GaussianBlurX.PS.hlsl")
-		.Build(dev->GetDevice());
+		.Build();
+	gaussX.pso.Init(gaussX.root)
+		.SetDepthState(false)
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/bloom/GaussianBlurX.PS.hlsl")
+		.Build();
 	// Y軸ガウシアンブラー
-	gaussY.Init(gaussX.root, dxc)
-		.SetDepthStencilState(false)
-		.SetBlendState(PSO::BlendMode::Add)
-		.SetVertexShader("postProcess/PassThrough.VS.hlsl")
-		.SetPixelShader("postProcess/bloom/GaussianBlurY.PS.hlsl")
-		.Build(dev->GetDevice());
+	gaussY.Init(gaussX.root)
+		.SetDepthState(false)
+		.SetBlendState(true, PSO::BlendMode::Add)
+		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("postProcess/bloom/GaussianBlurY.PS.hlsl")
+		.Build();
 }
 void Bloom::Update() {
 	*buffer_.data_ = threshold;

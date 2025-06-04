@@ -21,11 +21,13 @@ RigidModel::~RigidModel() {
 	// パスが空じゃなかったら消しに行く
 	if (!filePath.empty()) {
 		// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略
-		System::engine->resourceManager_->DeletePointer(this, filePath);
+		Resource::Manager::GetInstance()->DeletePointer(this, filePath);
 	}
 }
 
 void RigidModel::LoadFullPath(const std::string& fp) {
+	assert(filePath.empty() && "The model is already loaded.");	// 既に読み込まれている場合はエラー
+
 	// 名前を保持
 	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
@@ -34,7 +36,7 @@ void RigidModel::LoadFullPath(const std::string& fp) {
 	materials = GetModel(filePath)->materials_;
 
 	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
-	System::engine->resourceManager_->SetPointer(this, filePath);
+	Resource::Manager::GetInstance()->SetPointer(this, filePath);
 }
 
 
@@ -56,11 +58,15 @@ void RigidModel::DebugGUI() {
 }
 
 void RigidModel::ChangeFillMode() {
-	System::engine->resourceManager_->ChangeFillMode(this, filePath);
+	Resource::Manager::GetInstance()->ChangeFillMode(this, filePath);
 }
 
 void RigidModel::SetAllMaterialLighting(bool flag) {
 	for (auto itr = materials.begin(); itr != materials.end(); itr++) {
 		itr->second.enableLighting = flag;
 	}
+}
+
+ModelData* RigidModel::GetModelData() const {
+	return &*GetModel(filePath);
 }

@@ -59,12 +59,5 @@ namespace LWP {
 		/// <param name="filePath">読み込むファイルのフルパス</param>
 		ModelData* GetModel(const std::string& filePath);
 
-
-		// クラスのインスタンスをエンジンにセットする関数群
-		void SetInstance(Animation* ptr);
-		void SetInstance(Motion* ptr);
-		// クラスのインスタンスをエンジンから解放する関数群
-		void DeleteInstance(Animation* ptr);
-		void DeleteInstance(Motion* ptr);
 	};
 };

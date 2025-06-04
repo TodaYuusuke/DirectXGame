@@ -49,7 +49,7 @@ namespace LWP::Utility {
 	/// <param name="input">文字列</param>
 	/// <param name="delimiter">分割する文字</param>
 	/// <returns></returns>
-	std::vector<std::string> Split(std::string& input, char delimiter);
+	std::vector<std::string> Split(const std::string& input, char delimiter);
 
 	/// <summary>
 	/// クラス名をstringで返す関数（クラス名だけver）

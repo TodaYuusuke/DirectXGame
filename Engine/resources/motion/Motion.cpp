@@ -10,11 +10,11 @@ using namespace LWP::Math;
 
 Motion::Motion() {
 	// インスタンスをエンジンに送る
-	SetInstance(this);
+	Resource::Manager::GetInstance()->SetPointer(this);
 }
 Motion::~Motion() {
 	// ここでどうにかしてエンジン上のポインタを破棄させたい！
-	DeleteInstance(this);
+	Resource::Manager::GetInstance()->DeletePointer(this);
 }
 
 Motion& Motion::Add(Vector3* target, const Vector3& move,

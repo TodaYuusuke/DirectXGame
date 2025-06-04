@@ -2,8 +2,8 @@
     "name": "scene",
     "objects": [
         {
-            "type": "MESH",
             "name": "Terrain",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     0.0,
@@ -28,8 +28,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "寸法確認用人間",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -41.01334762573242,
@@ -51,8 +51,8 @@
             "file_name": "human/17cmHuman.gltf",
             "children": [
                 {
-                    "type": "CAMERA",
                     "name": "カメラ",
+                    "type": "CAMERA",
                     "transform": {
                         "translation": [
                             0.0,
@@ -75,8 +75,44 @@
             ]
         },
         {
+            "name": "6Story_Stack_Mat",
             "type": "MESH",
+            "transform": {
+                "translation": [
+                    -38.15413284301758,
+                    -6.530581474304199,
+                    7.882465362548828
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    -0.7071067094802856,
+                    0.7071068286895752
+                ],
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ]
+            },
+            "file_name": "buildings/6Story_Stack_Mat.gltf",
+            "collider": {
+                "type": "AABB",
+                "min": [
+                    -0.426361083984375,
+                    -0.32379722595214844,
+                    -0.0009737014770507812
+                ],
+                "max": [
+                    0.32318878173828125,
+                    0.32379722595214844,
+                    2.340036392211914
+                ]
+            }
+        },
+        {
             "name": "Street_4Way",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.00562286376953,
@@ -98,8 +134,8 @@
             "file_name": "buildings/street/LStreet.gltf"
         },
         {
-            "type": "MESH",
             "name": "4Story_Wide_2Doors_Mat.004",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.88809585571289,
@@ -134,116 +170,8 @@
             }
         },
         {
-            "type": "MESH",
-            "name": "6Story_Stack_Mat_Cube.005",
-            "transform": {
-                "translation": [
-                    -38.18374252319336,
-                    -6.52273416519165,
-                    7.894662857055664
-                ],
-                "rotation": [
-                    0.5000000596046448,
-                    -0.4999999403953552,
-                    -0.4999999403953552,
-                    0.5000000596046448
-                ],
-                "scaling": [
-                    0.30000001192092896,
-                    0.30000001192092896,
-                    0.30000001192092896
-                ]
-            },
-            "file_name": "buildings/6Story_Stack_Mat.gltf",
-            "collider": {
-                "type": "AABB",
-                "min": [
-                    -0.32318878173828125,
-                    -0.32379698753356934,
-                    -0.0009737014770507812
-                ],
-                "max": [
-                    0.31636109948158264,
-                    0.32379692792892456,
-                    2.340036392211914
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "6Story_Stack_Mat_Cube.006",
-            "transform": {
-                "translation": [
-                    -38.18374252319336,
-                    -7.159595489501953,
-                    7.894662857055664
-                ],
-                "rotation": [
-                    0.5000000596046448,
-                    -0.4999999403953552,
-                    -0.4999999403953552,
-                    0.5000000596046448
-                ],
-                "scaling": [
-                    0.30000001192092896,
-                    0.30000001192092896,
-                    0.30000001192092896
-                ]
-            },
-            "file_name": "buildings/6Story_Stack_Mat.gltf",
-            "collider": {
-                "type": "AABB",
-                "min": [
-                    -0.32318878173828125,
-                    -0.32379698753356934,
-                    -0.0009737014770507812
-                ],
-                "max": [
-                    0.31636109948158264,
-                    0.32379692792892456,
-                    2.340036392211914
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "6Story_Stack_Mat_Cube.001",
-            "transform": {
-                "translation": [
-                    -39.83287811279297,
-                    -4.1917338371276855,
-                    7.894662857055664
-                ],
-                "rotation": [
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "scaling": [
-                    0.30000001192092896,
-                    0.30000001192092896,
-                    0.30000001192092896
-                ]
-            },
-            "file_name": "buildings/6Story_Stack_Mat.gltf",
-            "collider": {
-                "type": "AABB",
-                "min": [
-                    -0.32318878173828125,
-                    -0.32379698753356934,
-                    -0.0009737014770507812
-                ],
-                "max": [
-                    0.31636109948158264,
-                    0.32379692792892456,
-                    2.340036392211914
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Sports",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.43259811401367,
@@ -265,8 +193,8 @@
             "file_name": "car/Vehicle_Sports.gltf"
         },
         {
-            "type": "MESH",
             "name": "Truck",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.721099853515625,
@@ -288,8 +216,8 @@
             "file_name": "car/Vehicle_Truck.gltf"
         },
         {
-            "type": "MESH",
             "name": "Sports.001",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.15166091918945,
@@ -324,8 +252,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Rock_4_Cube",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.774269104003906,
@@ -350,8 +278,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Rock_4_Cube.001",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.411094665527344,
@@ -376,8 +304,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "SackTrench",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.02426528930664,
@@ -412,8 +340,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "SackTrench_Small",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -44.06798553466797,
@@ -435,8 +363,8 @@
             "file_name": "other/SackTrench_Small.gltf"
         },
         {
-            "type": "MESH",
             "name": "TrafficBarrier_1",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.35685729980469,
@@ -458,8 +386,8 @@
             "file_name": "other/TrafficBarrier_1.gltf"
         },
         {
-            "type": "MESH",
             "name": "TrafficBarrier_2",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.79206848144531,
@@ -481,8 +409,8 @@
             "file_name": "other/TrafficBarrier_2.gltf"
         },
         {
-            "type": "MESH",
             "name": "Barrel",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.5266227722168,
@@ -517,8 +445,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "CinderBlock",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.080020904541016,
@@ -553,8 +481,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "FireHydrant",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.386444091796875,
@@ -589,8 +517,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Pallet",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.09199905395508,
@@ -625,8 +553,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Pallet_Broken",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.17438507080078,
@@ -661,8 +589,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Pipes",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -37.868717193603516,
@@ -697,8 +625,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "PlasticBarrier",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.293373107910156,
@@ -733,8 +661,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Pipes.001",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -37.868717193603516,
@@ -769,8 +697,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "CinderBlock.001",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.11427307128906,
@@ -805,8 +733,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "CinderBlock.002",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.10068130493164,
@@ -841,8 +769,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "PlasticBarrier.001",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.399356842041016,
@@ -877,8 +805,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "PlasticBarrier.002",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.50566864013672,
@@ -913,8 +841,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "PlasticBarrier.003",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.57901382446289,
@@ -949,8 +877,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Rock_4_Cube.002",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.02108383178711,
@@ -975,8 +903,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "Rock_4_Cube.003",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -39.26713943481445,
@@ -1001,8 +929,8 @@
             }
         },
         {
-            "type": "MESH",
             "name": "TrafficBarrier_1.001",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -38.76956558227539,
@@ -1024,8 +952,8 @@
             "file_name": "other/TrafficBarrier_1.gltf"
         },
         {
-            "type": "MESH",
             "name": "Wall",
+            "type": "MESH",
             "transform": {
                 "translation": [
                     -48.88718032836914,
@@ -1047,8 +975,80 @@
             "file_name": "wall/Wall.gltf"
         },
         {
-            "type": "CURVE",
+            "name": "6Story_Stack_Mat.001",
+            "type": "MESH",
+            "transform": {
+                "translation": [
+                    -38.15413284301758,
+                    -7.206185340881348,
+                    7.882465362548828
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    -0.7071067094802856,
+                    0.7071068286895752
+                ],
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ]
+            },
+            "file_name": "buildings/6Story_Stack_Mat.gltf",
+            "collider": {
+                "type": "AABB",
+                "min": [
+                    -0.426361083984375,
+                    -0.32379722595214844,
+                    -0.0009737014770507812
+                ],
+                "max": [
+                    0.32318878173828125,
+                    0.32379722595214844,
+                    2.340036392211914
+                ]
+            }
+        },
+        {
+            "name": "6Story_Stack_Mat.002",
+            "type": "MESH",
+            "transform": {
+                "translation": [
+                    -39.83846664428711,
+                    -4.184414386749268,
+                    7.882465362548828
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.7071067690849304,
+                    0.7071067690849304
+                ],
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ]
+            },
+            "file_name": "buildings/6Story_Stack_Mat.gltf",
+            "collider": {
+                "type": "AABB",
+                "min": [
+                    -0.426361083984375,
+                    -0.32379722595214844,
+                    -0.0009737014770507812
+                ],
+                "max": [
+                    0.32318878173828125,
+                    0.32379722595214844,
+                    2.340036392211914
+                ]
+            }
+        },
+        {
             "name": "EnemySP0.000",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1095,8 +1095,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP0.001",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1143,8 +1143,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP0.002",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1184,8 +1184,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP0.003",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1232,8 +1232,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP0.004",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1280,8 +1280,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "Movie0",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1349,8 +1349,8 @@
             ],
             "children": [
                 {
-                    "type": "CURVE",
                     "name": "Focus0",
+                    "type": "CURVE",
                     "curve_data": [
                         {
                             "point": [
@@ -1420,8 +1420,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.000",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1454,8 +1454,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "Movie1",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1516,8 +1516,8 @@
             ],
             "children": [
                 {
-                    "type": "CURVE",
                     "name": "Focus1",
+                    "type": "CURVE",
                     "curve_data": [
                         {
                             "point": [
@@ -1580,8 +1580,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.001",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1614,8 +1614,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.002",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1648,8 +1648,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.003",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1682,8 +1682,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.004",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1716,8 +1716,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.005",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [
@@ -1750,8 +1750,8 @@
             ]
         },
         {
-            "type": "CURVE",
             "name": "EnemySP1.006",
+            "type": "CURVE",
             "curve_data": [
                 {
                     "point": [

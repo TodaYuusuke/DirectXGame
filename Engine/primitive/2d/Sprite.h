@@ -5,25 +5,46 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 2Dテクスチャ
 	/// </summary>
-	class Sprite final
+	class Sprite
 		: public IPrimitive {
-	public: // ** パブリックなメンバ関数 ** //
+	public: // ** パブリックなメンバ変数 ** //
 
 		// サイズ
-		LWP::Utility::Observer<LWP::Math::Vector2> size = LWP::Math::Vector2{ 200.0f,200.0f };
+		Math::Vector2 size = LWP::Math::Vector2{ 200.0f,200.0f };
 		// アンカーポイント
-		LWP::Utility::Observer<LWP::Math::Vector2> anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		Math::Vector2 anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+
+		// 連番テクスチャの場合に使用するインデックス
+		int index = -1;
 
 
 	public: // ** 関数 ** //
 
-		// 初期化を呼び出す
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		Sprite() { 
+			// 初期化を呼び出す
 			isUI = true;
 			material.enableLighting = false;
 			Init();
 		}
 
+		/// <summary>
+		/// テクスチャを読み込む関数（resources/texture直下からのパス）
+		/// </summary>
+		/// <param name="fileName"></param>
+		void LoadTexture(const std::string& fileName);
+		/// <summary>
+		/// 連番アニメーション用のスプライトの際に設定を行う
+		/// </summary>
+		/// <param name="splitSize">1枚のサイズ</param>
+		void SetSplitSize(Math::Vector2 splitSize);
+
+		/// <summary>
+		/// 初期化処理
+		/// </summary>
+		void Init() override;
 		/// <summary>
 		/// 更新処理
 		/// </summary>
@@ -39,7 +60,7 @@ namespace LWP::Primitive {
 		/// </summary>
 		int GetVertexCount() const { return 4; }
 
-	private: // ** 派生クラス用の関数をオーバーライド ** //
+	protected: // ** 派生クラス用の関数をオーバーライド ** //
 
 		/// <summary>
 		/// 独自のメンバ変数用にImGuiを用意
@@ -52,5 +73,10 @@ namespace LWP::Primitive {
 		/// </summary>
 		/// <returns></returns>
 		bool GetChanged() override;
+
+		/// <summary>
+		/// 頂点の座標を生成する処理
+		/// </summary>
+		virtual void CreateVerticesPosition();
 	};
 }

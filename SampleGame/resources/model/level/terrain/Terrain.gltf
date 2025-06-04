@@ -64,61 +64,61 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":30198,
+			"count":31596,
 			"max":[
-				50,
+				50.000999450683594,
 				17.93025016784668,
 				50
 			],
 			"min":[
 				-50.000526428222656,
-				-0.00025963783264160156,
-				-50
+				-0.9999990463256836,
+				-50.10235595703125
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":30198,
+			"count":31596,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":30198,
+			"count":31596,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":63402,
+			"count":66960,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":362376,
+			"byteLength":379152,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":241584,
-			"byteOffset":362376,
+			"byteLength":252768,
+			"byteOffset":379152,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":362376,
-			"byteOffset":603960,
+			"byteLength":379152,
+			"byteOffset":631920,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":126804,
-			"byteOffset":966336,
+			"byteLength":133920,
+			"byteOffset":1011072,
 			"target":34963
 		}
 	],
@@ -130,7 +130,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1093140,
+			"byteLength":1144992,
 			"uri":"Terrain.bin"
 		}
 	]

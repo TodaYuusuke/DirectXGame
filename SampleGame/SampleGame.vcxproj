@@ -143,8 +143,6 @@
     <ClCompile Include="class\enemy\EnemyManager.cpp" />
     <ClCompile Include="class\field\Field.cpp" />
     <ClCompile Include="class\particle\TerrainParticle.cpp" />
-    <ClCompile Include="class\player\Bullet.cpp" />
-    <ClCompile Include="class\player\Drone.cpp" />
     <ClCompile Include="class\player\guns\Pistol.cpp" />
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
@@ -155,6 +153,7 @@
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="scene\Test\SkinningTest.cpp" />
+    <ClCompile Include="scene\Test\TextureLoadTest.cpp" />
     <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,8 +167,6 @@
     <ClInclude Include="class\field\Field.h" />
     <ClInclude Include="class\particle\DamageParticle.h" />
     <ClInclude Include="class\particle\TerrainParticle.h" />
-    <ClInclude Include="class\player\Bullet.h" />
-    <ClInclude Include="class\player\Drone.h" />
     <ClInclude Include="class\player\guns\Pistol.h" />
     <ClInclude Include="class\player\Player.h" />
     <ClInclude Include="scene\GameScene.h" />
@@ -180,7 +177,15 @@
     <ClInclude Include="scene\Test\ParticleTest.h" />
     <ClInclude Include="scene\Test\SkinningTest.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
+    <ClInclude Include="scene\Test\TextureLoadTest.h" />
     <ClInclude Include="scene\Title.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\system\shaders\utility\Particle.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='SampleDemo|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

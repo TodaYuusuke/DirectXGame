@@ -10,7 +10,8 @@
 #include "observers/ObserverPtr.h"
 #include "PtrManager.h"
 #include "StatePattern.h"
-#include "UI.h"
+#include "JsonIO.h"
+//#include "UI.h"
 
 #include "MyString.h"
 #include <random>
@@ -62,11 +63,19 @@ namespace LWP::Utility {
 	/// radian から degreeへ
 	/// </summary>
 	float RadianToDegree(float radian);
-
 	/// <summary>
 	/// degree から radian へ
 	/// </summary>
 	float DegreeToRadian(float degree);
+
+	/// <summary>
+	/// 二つの方向ベクトル間のラジアンを求める関数
+	/// </summary>
+	/// <param name="vec1"></param>
+	/// <param name="vec2"></param>
+	/// <param name="axis"></param>
+	/// <returns></returns>
+	float GetRadian(const LWP::Math::Vector3& vec1, const LWP::Math::Vector3& vec2, LWP::Math::Vector3 axis = LWP::Math::Vector3::UnitY());
 
 
 	// インデックスを指定してstd::listのイテレーターを取得する関数

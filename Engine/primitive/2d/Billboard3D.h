@@ -1,16 +1,17 @@
 #pragma once
-#include "Surface.h"
+#include "Billboard2D.h"
 
 namespace LWP::Primitive {
 	/// <summary>
 	/// 平面
 	/// </summary>
 	class Billboard3D final
-		: public Surface {
-	public:
-		// ** 関数 ** //
+		: public Billboard2D {
+	public:	// ** 関数 ** //
 
-		// 初期化を呼び出す
-		Billboard3D() { Init(); }
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Billboard3D() {	Init(); }
 	};
 }

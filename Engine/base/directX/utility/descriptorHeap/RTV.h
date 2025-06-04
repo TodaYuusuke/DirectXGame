@@ -34,27 +34,26 @@ namespace LWP::Base {
 	/// <summary>
 	/// RenderTargetView
 	/// </summary>
-	class RTV : public IDescriptorHeap {
-	public: // ** メンバ関数 ** //
-		
-		/// <summary>
-		/// デフォルトコンストラクタ
-		/// </summary>
-		RTV() = delete;
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		RTV(ID3D12Device* device);
+	class RTV : public IDescriptorHeap, public Utility::ISingleton<RTV> {
+		friend class Utility::ISingleton<RTV>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
 		/// <summary>
-		/// 初期化
+		/// コンストラクタをプライベートに
 		/// </summary>
-		void Init();
+		RTV();
+
+	public: // ** メンバ関数 ** //
+
 		/// <summary>
 		/// ImGui
 		/// </summary>
 		void DebugGUI() override;
 
+		/// <summary>
+		/// BackBufferViewを作成する関数
+		/// </summary>
+		RTVInfo CreateBackBufferView(ID3D12Resource* resource);
 		/// <summary>
 		/// RenderTargetViewを作成する関数
 		/// </summary>

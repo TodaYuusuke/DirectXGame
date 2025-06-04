@@ -1,6 +1,8 @@
 #pragma once
 #include "../utility/GPUDevice.h"
-#include "../utility/HeapManager.h"
+#include "../utility/descriptorHeap/RTV.h"
+#include "../utility/descriptorHeap/SRV.h"
+#include "../utility/descriptorHeap/DSV.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>

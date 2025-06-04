@@ -13,12 +13,24 @@ namespace LWP::Scene {
 	/// シーン管理クラス
 	/// </summary>
 	class Manager final {
-	public: // メンバ関数
+	public: // ** メンバ関数 ** //
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Manager() = default;
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Manager();
 
 		// 初期シーンを指定して初期化
-		void Initialize(IScene* firstScene);
+		void Init(IScene* firstScene);
 		// 更新
 		void Update();
+
+		// シーンをクリアする関数
+		void SceneClear();
 		
 		/// <summary>
 		/// Debug用ImGui

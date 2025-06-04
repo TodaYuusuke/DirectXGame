@@ -42,25 +42,18 @@
     <ClCompile Include="scene\Test\SkinningTest.cpp">
       <Filter>scene\Test</Filter>
     </ClCompile>
-    <ClCompile Include="scene\GameScene.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\NullScene.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="scene\Title.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="class\camera\CameraManager.cpp" />
     <ClCompile Include="class\enemy\EnemyManager.cpp" />
     <ClCompile Include="class\enemy\Enemy.cpp" />
     <ClCompile Include="class\player\guns\Pistol.cpp" />
     <ClCompile Include="class\camera\BlackBelt.cpp" />
-    <ClCompile Include="class\player\Bullet.cpp" />
-    <ClCompile Include="class\player\Drone.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="class\particle\TerrainParticle.cpp" />
+    <ClCompile Include="scene\Test\TextureLoadTest.cpp" />
+    <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="scene\NullScene.cpp" />
+    <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h">
@@ -90,15 +83,6 @@
     <ClInclude Include="scene\Test\TestIncludes.h">
       <Filter>scene\Test</Filter>
     </ClInclude>
-    <ClInclude Include="scene\GameScene.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\NullScene.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Title.h">
-      <Filter>scene</Filter>
-    </ClInclude>
     <ClInclude Include="class\camera\CameraManager.h" />
     <ClInclude Include="class\Behavior.h" />
     <ClInclude Include="class\enemy\EnemyManager.h" />
@@ -106,9 +90,14 @@
     <ClInclude Include="class\player\guns\Pistol.h" />
     <ClInclude Include="class\enemy\BloodParticle.h" />
     <ClInclude Include="class\camera\BlackBelt.h" />
-    <ClInclude Include="class\player\Bullet.h" />
-    <ClInclude Include="class\player\Drone.h" />
     <ClInclude Include="class\enemy\DeadBodyParticle.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
+    <ClInclude Include="scene\Test\TextureLoadTest.h" />
+    <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="scene\NullScene.h" />
+    <ClInclude Include="scene\Title.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\system\shaders\utility\Particle.hlsli" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ using namespace LWP::Base::PostProcess;
 void OutLine::Init() {
 	threshold = 0.5f;
 	color = Utility::ColorPattern::BLACK;
-	buffer_.Init(System::engine->directXCommon_->GetGPUDevice());
+	buffer_.Init();
 }
 void OutLine::Update() {
 	buffer_.data_->color = color.GetVector4();

@@ -12,7 +12,6 @@ ConstantBuffer<CommonData> gCommonData : register(b1);
 StructuredBuffer<Vertex> gVertex : register(t1);
 StructuredBuffer<WorldTransform> gWorldTransform : register(t2);
 
-
 // ** for PS ** //
 
 StructuredBuffer<Material> gMaterial : register(t1);

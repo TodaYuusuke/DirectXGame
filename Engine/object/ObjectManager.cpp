@@ -9,7 +9,7 @@
 using namespace LWP;
 using namespace LWP::Object;
 
-void Manager::Initialize() {
+void Manager::Init() {
 	//for (IObject* o : objects_.list) {
 	//	delete o;
 	//}

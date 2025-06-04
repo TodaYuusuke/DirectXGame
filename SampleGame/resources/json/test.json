@@ -1,0 +1,49 @@
+{
+    "Group :Group Test": {
+        "Group :in Group Test": {
+            "int32_t :test int32_t": 71
+        },
+        "Vector2 :test vector2": [
+            0.0,
+            0.0
+        ],
+        "Vector3 :test vector3": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "float :test float": 0.5799999833106995,
+        "int32_t :test int32_t": 74,
+        "string :test string": ""
+    },
+    "TransformQuat :test transform": {
+        "Quaternion :rotation": [
+            0.25,
+            0.3700000047683716,
+            0.0,
+            1.0
+        ],
+        "Vector3 :scale": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Vector3 :translation": [
+            0.3400000035762787,
+            0.5600000023841858,
+            0.0
+        ]
+    },
+    "Vector2 :test vector2": [
+        0.0,
+        0.0
+    ],
+    "Vector3 :test vector3": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "float :test float": 0.0,
+    "int32_t :test int32_t": 0,
+    "string :test string": "sss"
+}

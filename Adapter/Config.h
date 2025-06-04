@@ -90,9 +90,13 @@ namespace LWP::Config {
 		/// </summary>
 		namespace Direction {
 			/// <summary>
-			/// 平行光源のResourceの最大数（１つにつき1回のレンダリングが起きるので注意）
+			/// 平行光源のResourceの最大数
 			/// </summary>
-			static const UINT kMaxCount = 1;
+			static const UINT kMaxCount = 2;
+			/// <summary>
+			/// シェーダーに渡す平行光源の最大数（１つにつき1回のレンダリングが起きるので注意）
+			/// </summary>
+			static const UINT kActiveCount = 1;
 
 			/// <summary>
 			/// シャドウマッピングの解像度スケール
@@ -188,6 +192,19 @@ namespace LWP::Config {
 			ALL = ColMaskALL,
 		};
 	};
+	/// <summary>
+	/// デバッグに関するパラメータ
+	/// </summary>
+	namespace Debug {
+		/// <summary>
+		/// デバッグ用ImGuiの非表示切り替えフラグ
+		/// </summary>
+#if DEMO
+		static bool kIsShowDebugGUI = true;
+#else
+		static bool kIsShowDebugGUI = false;
+#endif
+	}
 };
 
 // 短縮形

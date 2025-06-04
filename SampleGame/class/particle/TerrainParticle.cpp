@@ -13,7 +13,7 @@ void TerrainParticle::Generate(Data& newData) {
 
 	// 地形との当たり判定を生成
 	newData.collider = new LWP::Object::Collision;
-	newData.collider->SetFollowTarget(&newData.m.worldTF);
+	newData.collider->SetFollow(&newData.m.worldTF);
 	newData.collider->mask.SetBelongFrag(lwpC::Collider::Particle);	// フラグ設定
 	newData.collider->mask.SetHitFrag(lwpC::Collider::FieldObject | lwpC::Collider::Terrain);
 	newData.collider->isMove = true;

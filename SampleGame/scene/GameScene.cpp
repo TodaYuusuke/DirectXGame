@@ -22,24 +22,24 @@ void GameScene::Initialize() {
 	enemyManager_.Init(&levelData, &player_);
 
 	// UI描画
-	ui_.material.texture = Resource::LoadTexture("ui/Control.png");
+	//ui_.material.texture = Resource::LoadTexture("ui/Control.png");
 	ui_.anchorPoint = { 0.0f,0.5f };
-	ui_.worldTF.translation.y = 1080.0f / 2.0f;
-	ui_.worldTF.scale = { 0.8f,0.8f,1.0f };
+	//ui_.worldTF.translation.y = 1080.0f / 2.0f;
+	//ui_.worldTF.scale = { 0.8f,0.8f,1.0f };
 
 	// 演出初期化
-	stagingSprite_.isUI = true;
-	stagingSprite_.material.enableLighting = false;
-	stagingSprite_.material.color = ColorPattern::BLACK;
-	stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
+	//stagingSprite_.isUI = true;
+	//stagingSprite_.material.enableLighting = false;
+	//stagingSprite_.material.color = ColorPattern::BLACK;
+	//stagingSprite_.worldTF.scale = { 10.0f,5.5f,0.0f };
 
 	// 状態管理クラスにフェードインアウトの処理を渡す
 #pragma region FadeIn
-	statePattern_.initFunction[int(BehaviorGS::FadeIn)] = [this](const BehaviorGS& pre) {
+	statePattern_.initFunction[int(BehaviorGS::FadeIn)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		pre;
 		startStaging_.time = 0.0f;	// 時間初期化
 		};
-	statePattern_.updateFunction[int(BehaviorGS::FadeIn)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+	statePattern_.updateFunction[int(BehaviorGS::FadeIn)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		StartStaging& s = startStaging_;
 		// 時間更新
 		s.time += GetDeltaTimeF();
@@ -50,17 +50,17 @@ void GameScene::Initialize() {
 		}
 
 		// tを計算
-		float t = Easing::Liner(s.time / s.kTime);
+		//float t = Easing::Liner(s.time / s.kTime);
 		// フェードイン
-		stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
+		//stagingSprite_.material.color.A = static_cast<unsigned char>(255 - t * 255);
 		};
 #pragma endregion
 #pragma region FadeOut
-	statePattern_.initFunction[int(BehaviorGS::FadeOut)] = [this](const BehaviorGS& pre) {
+	statePattern_.initFunction[int(BehaviorGS::FadeOut)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		pre;
 		endStaging_.time = 0.0f;	// 時間初期化
 		};
-	statePattern_.updateFunction[int(BehaviorGS::FadeOut)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+	statePattern_.updateFunction[int(BehaviorGS::FadeOut)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		EndStaging& e = endStaging_;
 		// 時間更新
 		e.time += GetDeltaTimeF();
@@ -73,15 +73,15 @@ void GameScene::Initialize() {
 		// tを計算
 		float t = Easing::InCubic(e.time / e.kTime);
 		// フェードアウト
-		stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
+		//stagingSprite_.material.color.A = static_cast<unsigned char>(t * 255);
 	};
 #pragma endregion
 
 
-	statePattern_.initFunction[int(BehaviorGS::Play)] = [this](const BehaviorGS& pre) {
+	statePattern_.initFunction[int(BehaviorGS::Play)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		enemyManager_.StartWave(wave_);	// ウェーブ開始
 	};
-	statePattern_.updateFunction[int(BehaviorGS::Play)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+	statePattern_.updateFunction[int(BehaviorGS::Play)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		if (enemyManager_.GetClearFlag()) {
 			wave_++;	// 次のウェーブへ
 			// ウェーブが最後までいったらフェードアウト

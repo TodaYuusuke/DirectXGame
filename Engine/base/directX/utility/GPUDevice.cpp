@@ -6,7 +6,7 @@ using namespace LWP::Base;
 using namespace LWP::Utility;
 using namespace Microsoft::WRL;
 
-void GPUDevice::Init() {
+GPUDevice::GPUDevice() {
 	HRESULT hr = S_FALSE;
 
 #ifdef _DEBUG

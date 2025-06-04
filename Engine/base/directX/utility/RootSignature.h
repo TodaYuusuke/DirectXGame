@@ -18,7 +18,9 @@ namespace LWP::Base {
 	class RootSignature final {
 	public: // **　メンバ関数 ** //
 
-		// 初期化
+		/// <summary>
+		/// 初期化
+		/// </summary>
 		void Init();
 
 		/// <summary>
@@ -27,6 +29,7 @@ namespace LWP::Base {
 		RootSignature& AddCBVParameter(int registerNum, ShaderVisibility visibility);
 		RootSignature& AddTableParameter(int registerNum, ShaderVisibility visibility, int space = 0, UINT maxSize = 0);
 		RootSignature& AddUAVParameter(int registerNum, ShaderVisibility visibility, int space = 0, UINT maxSize = 0);
+		RootSignature& AddUAVRWTexture(int registerNum, ShaderVisibility visibility, int space = 0);
 		RootSignature& AddSampler(int registerNum, ShaderVisibility visibility = SV_Pixel,
 			D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR,	// フィルター（default:バイオリニアフィルタ）
 			D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_NEVER,	// 比較関数（default:比較しない）
@@ -34,7 +37,7 @@ namespace LWP::Base {
 			D3D12_TEXTURE_ADDRESS_MODE addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP,	// 範囲外をどうするかの設定
 			D3D12_TEXTURE_ADDRESS_MODE addressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP	// 範囲外をどうするかの設定
 			);
-		void Build(ID3D12Device* device);
+		void Build();
 
 		// ID3D12RootSignature型への暗黙の変換演算子をオーバーロード
 		operator ID3D12RootSignature* () {

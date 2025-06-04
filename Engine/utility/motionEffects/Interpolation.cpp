@@ -1,4 +1,5 @@
 #include "Interpolation.h"
+#include <algorithm>
 
 // パイのため
 #define _USE_MATH_DEFINES
@@ -16,7 +17,7 @@ Vector3 Interpolation::Lerp(const Vector3& start, const Vector3& end, const floa
 }
 // 球面線形補間
 Vector3 Interpolation::Slerp(const Vector3& start, const Vector3& end, const float& t) {
-	float dot = Vector3::Dot(start, end);
+	float dot = std::clamp(0.0f, 1.0f, Vector3::Dot(start, end));
 	float theta = static_cast<float>(std::acos((dot * M_PI) / 180.0f));
 	float sinTheta = std::sin(theta);
 	float weightStart = std::sin((1.0f - t) * theta) / sinTheta;
@@ -48,4 +49,9 @@ Quaternion Interpolation::SlerpQuaternion(const Quaternion& start, const Quatern
 
 	// それぞれの補間係数を利用して補間後のクォータニオンを求める
 	return scale1 * q1 + scale2 * q2;
+}
+
+Vector3 Interpolation::Exponential(const Vector3& current, const Vector3& target, float damping) {
+	float factor = 1.0f - std::exp(-damping);
+	return current + (target - current) * factor;
 }

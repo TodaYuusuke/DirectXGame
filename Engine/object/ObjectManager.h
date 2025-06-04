@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Camera.h"
+#include "core/GPUParticle.h"
 #include "core/Particle.h"
 #include "core/Terrain.h"
 #include "core/light/DirectionLight.h"
@@ -15,19 +16,21 @@ namespace LWP::Object {
 	/// <summary>
 	/// システム用のオブジェクトをまとめて管理するクラス
 	/// </summary>
-	class Manager {
-	public: // メンバ関数
+	class Manager : public Utility::ISingleton<Manager> {
+		friend class Utility::ISingleton<Manager>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
-		// コンストラクタ
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
 		Manager() = default;
-		// デストラクタ
-		~Manager() = default;
+
+	public:	// ** メンバ関数 ** //
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize();
-
+		void Init();
 		/// <summary>
 		/// 更新
 		/// </summary>

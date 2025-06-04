@@ -35,7 +35,6 @@
 #define ColMask15 0b1 << 15	// 1000000000000000
 #define ColMaskALL (0b1 << 16) - 0b1	// 1111111111111111
 
-
 namespace LWP::Object {
 	/// <summary>
 	/// 当たり判定用のクラス
@@ -65,11 +64,12 @@ namespace LWP::Object {
 		};
 
 	public: // ** パブリックなメンバ変数 ** //
-		// トランスフォーム
-		Object::TransformQuat worldTF;
 
 		// 固有名詞
 		std::string name = "Collider";
+
+		// トランスフォーム
+		Object::TransformQuat worldTF;
 		// マスク
 		Mask mask;
 
@@ -80,12 +80,10 @@ namespace LWP::Object {
 		
 		// Variant
 		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule, Collider::Mesh, Collider::Terrain>;
-
 		// ブロードフェーズのコライダー形状
 		ShapeVariant broad;
 		// ナローフェーズのコライダー形状
 		std::vector<ShapeVariant> narrows;
-
 
 		// - ヒット時のリアクション用の関数 - //
 		typedef std::function<void(Collision* hitTarget)> OnHitFunction;	// ヒット時の関数ポインタの型
@@ -101,6 +99,7 @@ namespace LWP::Object {
 
 
 	public: // ** メンバ関数 ** //
+
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
@@ -113,8 +112,12 @@ namespace LWP::Object {
 		// 更新処理
 		void Update();
 
-		// 追従するトランスフォームをペアレントにセットする関数
-		void SetFollowTarget(Object::TransformQuat* ptr);
+		// 追従を解除
+		void UnSetFollow();
+		// 追従する対象をセット（トランスフォーム）
+		void SetFollow(Object::TransformQuat* ptr);
+		// 追従する対象をセット（スキンモデルのJoint）
+		void SetFollow(Resource::SkinningModel* model, const std::string& jointName);
 		// オクトツリーをセットする関数
 		void SetOctree(Object::OctreeSpaceDivision* octree) { octree_ = octree; }
 		// シリアル番号をセットする関数
@@ -156,8 +159,6 @@ namespace LWP::Object {
 
 	private: // ** メンバ変数 ** //
 
-		// 追従するトランスフォーム
-		Object::TransformQuat* followTF;
 		// オクトツリーのポインタ
 		Object::OctreeSpaceDivision* octree_;
 

@@ -65,11 +65,11 @@ void Collision::Mask::DebugGUI() {
 Collision::Collision() {
 	// デフォルトの形状にfollowをセット
 	GetBasePtr(broad)->SetFollowPtr(&worldTF);
-	System::engine->collisionManager_->SetPointer(this);
+	CollisionManager::GetInstance()->SetPointer(this);
 }
 
 Collision::~Collision() {
-	System::engine->collisionManager_->DeletePointer(this);
+	CollisionManager::GetInstance()->DeletePointer(this);
 }
 
 void Collision::Update() {
@@ -98,16 +98,18 @@ void Collision::Update() {
 	ptr->mortonNumber = mortonNumber;
 }
 
-void Collision::SetFollowTarget(Object::TransformQuat* ptr) {
-	followTF = ptr;	// ポインタを保持
+void Collision::UnSetFollow() {
+	worldTF.ClearParent();
+}
+void Collision::SetFollow(Object::TransformQuat* ptr) {
 	worldTF.Parent(ptr);
+}
+void Collision::SetFollow(Resource::SkinningModel* model, const std::string& jointName) {
+	worldTF.Parent(model, jointName);
 }
 
 void Collision::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
-	// 追従対象がいるなら対象に適応
-	if (followTF) { followTF->translation += fixVector;  }
-	// いないなら自分に適応
-	else { worldTF.translation += fixVector; }
+	fixVector;
 }
 
 bool Collision::CheckMask(Collision* c) { return mask.CheckBelong(c->mask) && c->mask.CheckBelong(mask); }

@@ -3,6 +3,9 @@
 
 #include "utility/MyUtility.h"
 
+// KeyIDが有効な値かチェックする
+#define IsValidKeyID(id) assert(DIK_ESCAPE <= id && id <= DIK_MEDIASELECT && "Invalid keyID. Please check KeyID again.");
+
 using namespace LWP::Input;
 
 void DIKeyboard::Initialize(Base::WinApp* winApp, IDirectInput8* directInput) {
@@ -37,16 +40,19 @@ void DIKeyboard::Update() {
 	}
 }
 
-
 bool DIKeyboard::None(uint8_t keyID) {
+	IsValidKeyID(keyID);
 	return !keys_[keyID];
 }
 bool DIKeyboard::Trigger(uint8_t keyID) {
+	IsValidKeyID(keyID);
 	return !preKeys_[keyID] && keys_[keyID];
 }
 bool DIKeyboard::Press(uint8_t keyID) {
+	IsValidKeyID(keyID);
 	return keys_[keyID];
 }
 bool DIKeyboard::Release(uint8_t keyID) {
+	IsValidKeyID(keyID);
 	return preKeys_[keyID] && !keys_[keyID];
 }

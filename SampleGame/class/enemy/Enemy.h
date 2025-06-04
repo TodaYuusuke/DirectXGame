@@ -10,7 +10,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Enemy(float speed) { kSpeed = speed; }
+	Enemy(float speed) : kSpeed(speed) {}
 
 	/// <summary>
 	/// 初期化
@@ -34,15 +34,15 @@ public:
 
 private: // ** メンバ定数 ** //
 
-	// 12秒で到達するように
-	float kSpeed = (1.0f / 12.0f);
+	// 移動速度
+	float kSpeed;
 
 private: // ** メンバ変数 ** //
 	// 保持するポインタ
-	Player* player_;
+	Player* player_ = nullptr;
 	std::function<void(LWP::Math::Vector3)> particleFunc_;
 	// 自分が追従するカーブのデータ
-	LWP::Utility::CatmullRom* curve_;
+	LWP::Utility::CatmullRom* curve_ = nullptr;
 
 	// モデル
 	LWP::Resource::SkinningModel model_;

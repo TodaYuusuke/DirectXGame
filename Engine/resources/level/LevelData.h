@@ -10,7 +10,10 @@
 
 #include "utility/CatmullRom.h"
 
+#pragma warning(push)
+#pragma warning(disable:26819)
 #include "../Externals/nlohmann/json.hpp"
+#pragma warning(pop)
 
 
 namespace LWP::Resource {
@@ -31,6 +34,11 @@ namespace LWP::Resource {
 		std::map<std::string, Object::Collision> collisions;
 		// CatmullRom曲線
 		std::map<std::string, Utility::CatmullRom> catmullRomCurves;
+
+		// プレイヤーのスポーン地点
+		std::map<std::string, Math::Vector3> playerSpawnPoint;
+		// エネミーのスポーン地点
+		std::map<std::string, Math::Vector3> enemySpawnPoint;
 
 		// 地形
 		std::unique_ptr<Object::Terrain> terrain;	// ない場合もあるのでユニークポインタ
@@ -143,6 +151,16 @@ namespace LWP::Resource {
 		/// </summary>
 		/// <param name="data"></param>
 		void LoadTerrain(const nlohmann::json& data);
+		/// <summary>
+		/// タイプ：PlayerSpawnを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadPlayerSpawn(const nlohmann::json& data, const std::string& name);
+		/// <summary>
+		/// タイプ：EnemySpawnを解凍
+		/// </summary>
+		/// <param name="data"></param>
+		void LoadEnemySpawn(const nlohmann::json& data, const std::string& name);
 
 
 		/// <summary>

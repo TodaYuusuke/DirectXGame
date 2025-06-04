@@ -37,7 +37,7 @@ AABB::AABB(const AABB& other) {
 
 void AABB::Update() {
 #if DEMO
-	Vector3 worldPos = follow_->GetWorldPosition();
+	Vector3 worldPos = tf_->GetWorldPosition();
 	Vector3 worldMin = min + worldPos;
 	Vector3 worldMax = max + worldPos;
 	cube.CreateVertices(worldMin, worldMax);	// cube再生成
@@ -118,7 +118,7 @@ AABB::Data::Data(AABB& aabb) {
 	//Matrix4x4 affine = aabb.follow_->GetScaleMatrix() * aabb.follow_->GetTranslationMatrix();
 	//min = aabb.min * affine;
 	//max = aabb.max * affine;
-	Vector3 worldPos = aabb.follow_->GetWorldPosition();
+	Vector3 worldPos = aabb.tf_->GetWorldPosition();
 	min = aabb.min + worldPos;
 	max = aabb.max + worldPos;
 	center = (min + max) / 2.0f;

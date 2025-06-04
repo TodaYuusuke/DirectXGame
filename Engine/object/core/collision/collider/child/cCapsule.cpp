@@ -1,6 +1,8 @@
 #include "cCapsule.h"
 
 #include "base/ImGuiManager.h"
+#include "resources/model/SkinningModel.h"
+
 
 using namespace LWP::Object::Collider;
 using namespace LWP;
@@ -49,7 +51,7 @@ void Capsule::Update() {
 }
 void Capsule::GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) {
 	// 最大値店と最小地点を求める
-	Vector3 worldPos = follow_->GetWorldPosition();
+	Vector3 worldPos = tf_->GetWorldPosition();
 	Vector3 min = start + worldPos;
 	Vector3 max = end + worldPos;
 	// MinよりMaxのほうが小さくならないように修正
@@ -88,8 +90,19 @@ void Capsule::Hit() {
 }
 
 Capsule::Data::Data(Capsule& cap) {
-	Vector3 worldPos = cap.follow_->GetWorldPosition();
-	start = cap.start + worldPos;
-	end = cap.end + worldPos;
+	Matrix4x4 wtf = cap.tf_->GetAffineMatrix();/*
+	switch (cap.follow_->type) {
+		case FollowTargetType::None:
+			wtf = cap.tf_->GetAffineMatrix();
+			break;
+		case FollowTargetType::Transform:
+			wtf = cap.tf_->GetAffineMatrix();
+			break;
+		case FollowTargetType::Joint:
+			wtf = cap.follow_->transform->GetAffineMatrix() * cap.follow_->model->worldTF.GetAffineMatrix() * cap.tf_->GetAffineMatrix();
+			break;
+	}*/
+	start = cap.start * wtf;
+	end = cap.end * wtf;
 	radius = cap.radius;
 }

@@ -20,11 +20,16 @@ namespace LWP::Information {
 		/// <summary>
 		/// Debugカメラ起動
 		/// </summary>
-		void Enable(const Object::TransformQuat wtf);
+		void Enable(LWP::Object::Camera* ptr);
 		/// <summary>
 		/// Debugカメラ停止
 		/// </summary>
 		void Disable();
+
+		/// <summary>
+		/// DebugカメラのTransformを適応する関数
+		/// </summary>
+		void ApplyTransform();
 		
 		/// <summary>
 		/// Debugカメラの使用フラグを返す関数
@@ -38,16 +43,18 @@ namespace LWP::Information {
 		/// <summary>
 		/// Debug用のImGui
 		/// </summary>
-		void DebugGUI(const Object::TransformQuat wtf);
+		void DebugGUI(LWP::Object::Camera* ptr);
 
 
 	private: // ** メンバ変数 ** //
+		// 起動時のカメラ
+		LWP::Object::Camera* cameraPtr_ = nullptr;
 		
-		// Debugカメラ使用フラグ
+		// Debugカメラ
 		LWP::Object::Camera camera_;
 		
 		// カメラの移動速度
-		float cameraSpeed_ = 10.0f;
+		float cameraSpeed_ = 20.0f;
 		// カメラの回転速度
 		float cameraRotateSpeed_ = 0.011f;
 

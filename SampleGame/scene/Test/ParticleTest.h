@@ -17,5 +17,4 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// パーティクルのクラス
 	TerrainParticle particle_;
-
 };

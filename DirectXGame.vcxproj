@@ -175,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
@@ -192,7 +193,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\SRV.cpp" />
     <ClCompile Include="Engine\base\directX\utility\DXC.cpp" />
     <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp" />
-    <ClCompile Include="Engine\base\directX\utility\HeapManager.cpp" />
     <ClCompile Include="Engine\base\directX\utility\PSO.cpp" />
     <ClCompile Include="Engine\base\directX\utility\RootSignature.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
@@ -222,6 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\Camera.cpp" />
     <ClCompile Include="Engine\object\core\collision\OctreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
+    <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
@@ -230,6 +231,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\TransformEuler.cpp" />
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp" />
     <ClCompile Include="Engine\primitive\2d\Surface.cpp" />
     <ClCompile Include="Engine\primitive\2d\Triangle.cpp" />
@@ -263,12 +265,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\utility\CatmullRom.cpp" />
     <ClCompile Include="Engine\utility\Color.cpp" />
+    <ClCompile Include="Engine\utility\JsonIO.cpp" />
     <ClCompile Include="Engine\utility\IndexManager.cpp" />
     <ClCompile Include="Engine\utility\motionEffects\Easing.cpp" />
     <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
-    <ClCompile Include="Engine\utility\UI.cpp" />
+    <ClCompile Include="Engine\utility\Singleton.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\imgui\imgui_draw.cpp" />
@@ -280,6 +287,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Externals\imgui-node-editor\imgui_bezier_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_extra_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h" />
@@ -308,6 +318,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\IRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
@@ -334,7 +345,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h" />
     <ClInclude Include="Engine\base\directX\utility\DXC.h" />
     <ClInclude Include="Engine\base\directX\utility\GPUDevice.h" />
-    <ClInclude Include="Engine\base\directX\utility\HeapManager.h" />
     <ClInclude Include="Engine\base\directX\utility\PSO.h" />
     <ClInclude Include="Engine\base\directX\utility\RootSignature.h" />
     <ClInclude Include="Engine\base\ImGuiManager.h" />
@@ -365,6 +375,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\Camera.h" />
     <ClInclude Include="Engine\object\core\collision\OctreeSpaceDivision.h" />
     <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
+    <ClInclude Include="Engine\object\core\GPUParticle.h" />
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
     <ClInclude Include="Engine\object\core\light\PointLight.h" />
     <ClInclude Include="Engine\object\core\Particle.h" />
@@ -409,6 +420,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\resources\texture\Texture.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\utility\JsonIO.h" />
+    <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\CatmullRom.h" />
     <ClInclude Include="Engine\utility\Color.h" />
@@ -424,8 +437,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\utility\observers\ObserverPtr.h" />
     <ClInclude Include="Engine\utility\PtrManager.h" />
     <ClInclude Include="Engine\utility\MyString.h" />
-    <ClInclude Include="Engine\utility\UI.h" />
     <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h" />
+    <ClInclude Include="Externals\imgui-node-editor\crude_json.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_bezier_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_canvas.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_extra_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx12.h" />

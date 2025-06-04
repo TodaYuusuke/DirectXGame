@@ -1,0 +1,24 @@
+name: ReleaseBuild
+on:
+  push:
+    branches:
+      - master
+env:
+  # リポジトリのルートディレクトリを基点としたソリューションファイルのパス
+  SOLUTION_FILE_PATH: DirectXGame.sln
+  # Visual Studioの構成（Debug / Release）
+  CONFIGURATION: Release
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Build
+        run: |
+          msbuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CONFIGURATION}}

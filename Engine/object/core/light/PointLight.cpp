@@ -9,17 +9,11 @@ using namespace LWP::Math;
 using namespace LWP::Object;
 
 PointLight::PointLight() {
-	// ほんとはよくない設計なので代替案募集
-	// GPUデバイスのポインタ
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	// HeapManagerのポインタ
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
-
 	// リソースの初期化
 	for (int i = 0; i < 6; i++) {
-		viewBuffers_[i].Init(dev);
+		viewBuffers_[i].Init();
 	}
-	shadowMap_.Init(dev, heaps);
+	shadowMap_.Init();
 }
 
 // 初期化

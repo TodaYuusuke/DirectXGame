@@ -3,3 +3,5 @@
 #include "AnimationTest.h"
 #include "ParticleTest.h"
 #include "SkinningTest.h"
+#include "TextureLoadTest.h"
+

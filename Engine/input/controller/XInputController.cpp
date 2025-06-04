@@ -3,6 +3,9 @@
 
 #include <algorithm>
 
+// KeyIDが有効な値かチェックする
+#define IsValidKeyID(id) assert(XINPUT_GAMEPAD_DPAD_UP <= id && id <= XBOX_RT && "Invalid keyID. Please check KeyID again.");
+
 using namespace LWP::Input::XInput;
 using namespace LWP::Math;
 
@@ -57,21 +60,25 @@ void Controller::Update() {
 
 
 bool Controller::None(int keyID) {
+	IsValidKeyID(keyID);
 	if (keyID == XBOX_LT) { return !LTFlag_; }
 	if (keyID == XBOX_RT) { return !RTFlag_; }
 	return !(state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Trigger(int keyID) {
+	IsValidKeyID(keyID);
 	if (keyID == XBOX_LT) { return !preLTFlag_ && LTFlag_; }
 	if (keyID == XBOX_RT) { return !preRTFlag_ && RTFlag_; }
 	return !(preState_.Gamepad.wButtons & keyID) && (state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Press(int keyID) {
+	IsValidKeyID(keyID);
 	if (keyID == XBOX_LT) { return LTFlag_; }
 	if (keyID == XBOX_RT) { return RTFlag_; }
 	return (state_.Gamepad.wButtons & keyID);
 }
 bool Controller::Release(int keyID) {
+	IsValidKeyID(keyID);
 	if (keyID == XBOX_LT) { return preLTFlag_ && !LTFlag_; }
 	if (keyID == XBOX_RT) { return preRTFlag_ && !RTFlag_; }
 	return (preState_.Gamepad.wButtons & keyID) && !(state_.Gamepad.wButtons & keyID);

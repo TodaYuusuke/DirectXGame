@@ -17,7 +17,7 @@ namespace LWP::Base {
 	public: // ** メンバ関数 ** //
 
 		// 初期化
-		void Init(GPUDevice* device, HeapManager* heaps, std::string filepath);
+		void Init(std::string filepath);
 
 		// SRV上の登録インデックス番号を返す
 		int GetSRVIndex() const { return info_.index; }
@@ -52,7 +52,7 @@ namespace LWP::Base {
 		void Load(const std::string& filePath);
 
 		// リソースを作成する関数
-		ID3D12Resource* CreateResource(GPUDevice* device, size_t size);
+		ID3D12Resource* CreateResource(size_t size);
 
 	public: // ** オペレーターオーバーロード ** //
 

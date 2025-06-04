@@ -22,7 +22,7 @@ void SkinningTest::Initialize() {
 	model[0].worldTF.translation.x = -1.0f;
 	model[0].worldTF.translation.x = 1.0f;
 	
-	sp.material.texture = Resource::LoadTexture("uvChecker.dds");
+	//sp.material.texture = Resource::LoadTexture("uvChecker.dds");
 }
 
 // 更新

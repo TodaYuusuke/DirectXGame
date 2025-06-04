@@ -24,10 +24,10 @@ void Pistol::Init(TransformQuat* wtf) {
 	capsule_.radius = 0.2f;
 
 	// レティクルのスプライト表示
-	reticle_.material.texture = Resource::LoadTexture("Reticle.png");
+	//reticle_.material.texture = Resource::LoadTexture("Reticle.png");
 	reticle_.anchorPoint = { 0.5f,0.5f };
-	reticle_.worldTF.translation.x = 1920.0f / 2.0f;
-	reticle_.worldTF.translation.y = 1080.0f / 2.0f;
+	//reticle_.worldTF.translation.x = 1920.0f / 2.0f;
+	//reticle_.worldTF.translation.y = 1080.0f / 2.0f;
 }
 
 void Pistol::Update() {

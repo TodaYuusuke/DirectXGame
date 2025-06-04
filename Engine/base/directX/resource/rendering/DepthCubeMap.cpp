@@ -4,7 +4,7 @@
 using namespace LWP;
 using namespace LWP::Base;
 
-void DepthCubeMap::Init(GPUDevice* device, HeapManager* heaps) {
+void DepthCubeMap::Init() {
 	HRESULT hr = S_FALSE;
 	width = 1024 / 2;
 	height = 1024 / 2;
@@ -30,7 +30,7 @@ void DepthCubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	currentBarrierState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
 	// 5. Resourceを生成する
-	hr = device->GetDevice()->CreateCommittedResource(
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(
 		&properties,			// Heapの設定
 		D3D12_HEAP_FLAG_NONE,	// Heapの特殊な設定。特になし。
 		&desc,					// Resourceの設定
@@ -40,8 +40,8 @@ void DepthCubeMap::Init(GPUDevice* device, HeapManager* heaps) {
 	);
 	assert(SUCCEEDED(hr));
 
-	// RTV上に登録
-	dsvInfos = heaps->dsv()->CreateDepthStencilCubeMap(resource_.Get());
+	// DSV上に登録
+	dsvInfos = DSV::GetInstance()->CreateDepthStencilCubeMap(resource_.Get());
 }
 
 void DepthCubeMap::Clear(ID3D12GraphicsCommandList* list) {

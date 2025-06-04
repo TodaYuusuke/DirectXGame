@@ -23,13 +23,13 @@ void CameraManager::Init(LevelData* level, Camera* camera,
 	// 黒帯初期化
 	blackBelt_.Init();
 
-	state_->initFunction[int(BehaviorGS::Movie)] = [this](const BehaviorGS& pre) {
+	state_->initFunction[int(BehaviorGS::Movie)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		route_ = &level_->catmullRomCurves[GetRouteName()];	// 使用する曲線を受け取る
 		focus_ = &level_->catmullRomCurves[GetFocusName()];
 		route_->t = 0.0f;	// 初期化
 		blackBelt_.SetIsActive(true);
 	};
-	state_->updateFunction[int(BehaviorGS::Movie)] = [this](std::optional<BehaviorGS>& req, const BehaviorGS& pre) {
+	state_->updateFunction[int(BehaviorGS::Movie)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		// 曲線の処理を行う
 		float& rT = route_->t;	// 現在のt
 		float& fT = focus_->t;

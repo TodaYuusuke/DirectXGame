@@ -12,7 +12,7 @@ IPrimitive::IPrimitive() {
 	// 派生クラスに初期化処理を呼び出してもらう
 
 	// 管理クラスにポインタを送信
-	SetInstance(this);
+	Primitive::Manager::GetInstance()->SetPointer(this);
 }
 IPrimitive::IPrimitive(const IPrimitive& other) {
 	name = other.name;
@@ -25,13 +25,13 @@ IPrimitive::IPrimitive(const IPrimitive& other) {
 	isActive = other.isActive;
 
 	// 管理クラスにポインタを送信
-	SetInstance(this);
+	Primitive::Manager::GetInstance()->SetPointer(this);
 }
 
 
 IPrimitive::~IPrimitive() {
 	// 管理クラスのポインタを削除
-	DeleteInstance(this);
+	Primitive::Manager::GetInstance()->DeletePointer(this);
 }
 
 void IPrimitive::Init() {
@@ -75,6 +75,7 @@ void IPrimitive::DebugGUI(const std::string& label) {
 	label;	// 形状に固有名詞が付与されたのでラベルは使用しない（長いこと不要と判断したら消す）
 	// 頂点
 	if (ImGui::TreeNode("Vertex")) {
+		static int vertexNum_ = 0;
 		ImGui::SliderInt("vertexNumber", &vertexNum_, 0, GetVertexCount() - 1);
 		ImGui::DragFloat3("position", &vertices[vertexNum_].position.x, 0.01f);
 		ImGui::DragFloat2("texCoord", &vertices[vertexNum_].texCoord.x, 0.01f);

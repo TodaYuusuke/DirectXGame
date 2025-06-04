@@ -3,12 +3,11 @@
 using namespace LWP::Base;
 
 
-IDescriptorHeap::IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size)
-	: IDescriptorHeap(device, type, size, size) {}
+IDescriptorHeap::IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t size)
+	: IDescriptorHeap(type, size, size) {}
 
-IDescriptorHeap::IDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t DescSize, uint32_t indexSize)
-	: device_(device),
-	kElementSize(device->GetDescriptorHandleIncrementSize(type)),
+IDescriptorHeap::IDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t DescSize, uint32_t indexSize)
+	: kElementSize(GPUDevice::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(type)),
 	kMaxSize(DescSize),
 	indexManager_(indexSize) {}
 
@@ -33,7 +32,7 @@ ID3D12DescriptorHeap* IDescriptorHeap::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEA
 	descriptorHeapDesc.NumDescriptors = numDescriptors;
 	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-	hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	hr = GPUDevice::GetInstance()->GetDevice()->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
 }

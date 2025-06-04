@@ -48,6 +48,11 @@ Vector3 Vector3::operator*(const Matrix4x4& other) const {
 	result.x = x * other.m[0][0] + y * other.m[1][0] + z * other.m[2][0] + other.m[3][0];
 	result.y = x * other.m[0][1] + y * other.m[1][1] + z * other.m[2][1] + other.m[3][1];
 	result.z = x * other.m[0][2] + y * other.m[1][2] + z * other.m[2][2] + other.m[3][2];
+	float w  = x * other.m[0][3] + y * other.m[1][3] + z * other.m[2][3] + other.m[3][3];
+	assert(w != 0.0f);
+	result.x /= w;
+	result.y /= w;
+	result.z /= w;
 	return result;
 }
 
@@ -92,7 +97,7 @@ Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) {
 }
 
 float Vector3::Distance(const Vector3& v1, const Vector3& v2) {
-	return powf((v2.x - v1.x), 2) + powf((v2.y - v1.y), 2) + powf((v2.z - v1.z), 2);
+	return sqrt(powf((v2.x - v1.x), 2) + powf((v2.y - v1.y), 2) + powf((v2.z - v1.z), 2));
 }
 
 Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t) {

@@ -136,9 +136,6 @@
     <ClCompile Include="Engine\utility\CatmullRom.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\utility\UI.cpp">
-      <Filter>Engine\utilitiy</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
@@ -161,9 +158,6 @@
       <Filter>Engine\object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp">
-      <Filter>Engine\base\directX\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\utility\HeapManager.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\RootSignature.cpp">
@@ -367,6 +361,15 @@
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
     <ClCompile Include="Engine\info\DebugCamera.cpp" />
+    <ClCompile Include="Engine\utility\Singleton.cpp" />
+    <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
+    <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
+    <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
+    <ClCompile Include="Engine\utility\JsonIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -537,9 +540,6 @@
     <ClInclude Include="Engine\object\core\Particle.h">
       <Filter>Engine\object\core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\UI.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\core\collision\CollisionManager.h">
       <Filter>Engine\object\core\collision</Filter>
     </ClInclude>
@@ -577,9 +577,6 @@
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\GPUDevice.h">
-      <Filter>Engine\base\directX\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\utility\HeapManager.h">
       <Filter>Engine\base\directX\utility</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\RootSignature.h">
@@ -823,9 +820,22 @@
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\MyString.h" />
     <ClInclude Include="Engine\info\DebugCamera.h" />
+    <ClInclude Include="Engine\utility\Singleton.h" />
+    <ClInclude Include="Engine\object\core\GPUParticle.h" />
+    <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
+    <ClInclude Include="Externals\imgui-node-editor\crude_json.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_bezier_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_canvas.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_extra_math.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
+    <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
+    <ClInclude Include="Engine\utility\JsonIO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Externals\imgui-node-editor\imgui_bezier_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_extra_math.inl" />
+    <None Include="Externals\imgui-node-editor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

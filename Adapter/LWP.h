@@ -30,6 +30,15 @@ namespace LWP::System {
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Engine() = default;
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Engine() = default;
+
+		/// <summary>
 		/// エンジン起動（※ユーザ呼び出し禁止）
 		/// </summary>
 		void StartUp(std::wstring str);
@@ -93,22 +102,22 @@ namespace LWP::System {
 		std::unique_ptr<D3DResourceLeakChecker> memoryLeakChecker_;
 
 		// ウィンドウ
-		std::unique_ptr<Base::WinApp> winApp_;
+		Base::WinApp* winApp_ = nullptr;
 		// DirectX
-		std::unique_ptr<Base::DirectXCommon> directXCommon_;
+		Base::DirectXCommon* directXCommon_ = nullptr;
 		// IｍGuiManager
 		std::unique_ptr<Base::ImGuiManager> imGuiManager_;
 
 		// InputManager
-		std::unique_ptr<Input::Manager> inputManager_;
+		Input::Manager* input_ = nullptr;
 
 		// オブジェクト管理
-		std::unique_ptr<Object::Manager> objectManager_;
-		std::unique_ptr<Object::CollisionManager> collisionManager_;
+		Object::Manager* object_ = nullptr;
+		Object::CollisionManager* collision_ = nullptr;
 		// 描画管理
-		std::unique_ptr<Primitive::Manager> primitiveManager_;
+		Primitive::Manager* primitive_ = nullptr;
 		// リソース管理
-		std::unique_ptr<Resource::Manager> resourceManager_;
+		Resource::Manager* resource_ = nullptr;
 
 		// シーンマネージャー
 		std::unique_ptr<Scene::Manager> sceneManager_;
@@ -116,12 +125,6 @@ namespace LWP::System {
 		// デバッグカメラ
 		std::unique_ptr<LWP::Information::DebugCamera> debugCamera_;
 		// デバッグ用タイマークラス
-		LWP::Information::FrameTracker debugTimer_;
-		// デバッグ情報の表示切替フラグ
-#if DEMO
-		bool isShowDebugGUI = true;
-#else
-		bool isShowDebugGUI = false;
-#endif
+		LWP::Information::FrameTracker* frameTracker_ = nullptr;
 	};
 }

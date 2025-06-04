@@ -1,5 +1,6 @@
 ﻿#include "LWP.h"
 #include "Config.h"
+#include "component/Window.h"
 
 using namespace LWP::System;
 
@@ -16,14 +17,14 @@ namespace kWind = LWP::Config::Window;
 void Engine::StartUp(std::wstring str) {
 	// COMの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
-	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();
+	memoryLeakChecker_ = std::make_unique<D3DResourceLeakChecker>();	// メモリリークチェック
 	Initialize(str.c_str(), kWind::kResolutionWidth, kWind::kResolutionHeight);
 }
 
 void Engine::Run(IScene* firstScene) {
 	// Sceneはここで生成
 	sceneManager_ = std::make_unique<Scene::Manager>();
-	sceneManager_->Initialize(firstScene);	// Scene初期化
+	sceneManager_->Init(firstScene);	// Scene初期化
 	// デバッグカメラ用意
 	debugCamera_ = std::make_unique<Information::DebugCamera>();
 	debugCamera_->Init();
@@ -35,7 +36,7 @@ void Engine::Run(IScene* firstScene) {
 		// 更新処理
 		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
 		debugCamera_->Update();	// デバッグカメラ更新はここで
-		objectManager_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
+		object_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
 
 		// デバッグカメラのOnOffでレンダリングに使うカメラを切り替える
 		directXCommon_->SetMainCamera(
@@ -44,12 +45,12 @@ void Engine::Run(IScene* firstScene) {
 			sceneManager_->GetMainCamera()
 		);
 
-		resourceManager_->Update();	// リソース更新（アニメーションの更新処理）
-		primitiveManager_->Update();
+		resource_->Update();	// リソース更新（アニメーションの更新処理）
+		primitive_->Update();
+		collision_->Update();	// 当たり判定検証
 
-		collisionManager_->Update();	// 当たり判定検証
 		// Primitiveの描画処理
-		primitiveManager_->Draw(directXCommon_->GetRendererManager());
+		primitive_->Draw(directXCommon_->GetRendererManager());
 
 		EndFrame();
 	}
@@ -60,12 +61,6 @@ void Engine::Run(IScene* firstScene) {
 }
 
 void Engine::InitializeForScene() {
-	// Object
-	objectManager_->Initialize();
-	// Primitive
-	primitiveManager_->Initialize();
-	// Primitive
-	collisionManager_->Initialize();
 	// Resource
 	//resourceManager_->Initialize();
 }
@@ -73,39 +68,59 @@ void Engine::InitializeForScene() {
 void Engine::Initialize(std::wstring title, int width, int height) {
 	// インスタンスを受け取る //
 	
+	
 	// Base
-	winApp_ = std::make_unique<WinApp>();
-	directXCommon_ = std::make_unique<DirectXCommon>();
+	WinApp::Create();
+	winApp_ = WinApp::GetInstance();
+	// デバイス生成
+	GPUDevice::Create();
+	// ヒープ生成
+	RTV::Create();
+	SRV::Create();
+	DSV::Create();
+	// DirectXコンパイラ生成
+	DXC::Create();
+	// DirectXCommon生成
+	DirectXCommon::Create();
+	directXCommon_ = DirectXCommon::GetInstance();
 	imGuiManager_ = std::make_unique<ImGuiManager>();
 	// Input
-	inputManager_ = std::make_unique<Input::Manager>();
+	Input::Manager::Create();
+	input_ = Input::Manager::GetInstance();
 	// Object
-	objectManager_ = std::make_unique<Object::Manager>();
+	Object::Manager::Create();
+	object_ = Object::Manager::GetInstance();
 	// Collider
-	collisionManager_ = std::make_unique<Object::CollisionManager>();
+	Object::CollisionManager::Create();
+	collision_ = Object::CollisionManager::GetInstance();
 	// Primitive
-	primitiveManager_ = std::make_unique<Primitive::Manager>();
+	Primitive::Manager::Create();
+	primitive_ = Primitive::Manager::GetInstance();
 	// Resource
-	resourceManager_ = std::make_unique<Resource::Manager>();
+	Resource::Manager::Create();
+	resource_ = Resource::Manager::GetInstance();
+	// Resource
+	Information::FrameTracker::Create();
+	frameTracker_ = Information::FrameTracker::GetInstance();
 
 	// 初期化
 	
 	// Base
-	winApp_->Initialize(title, width, height);
-	directXCommon_->Initialize(winApp_.get());
-	imGuiManager_->Initialize(winApp_.get(), directXCommon_.get());
+	winApp_->Init(title, width, height);
+	directXCommon_->Init();
+	imGuiManager_->Init();
 	// Input
-	inputManager_->Initialize(winApp_.get());
+	input_->Init();
 	// Object
-	objectManager_->Initialize();
+	object_->Init();
 	// Collider
-	collisionManager_->Initialize();
+	collision_->Init();
 	// Primitive
-	primitiveManager_->Initialize();
+	primitive_->Init();
 	// Resource
-	resourceManager_->Initialize();
+	resource_->Init();
 	// フレームトラッカー
-	debugTimer_.Initialize();
+	frameTracker_->Initialize();
 }
 
 bool Engine::ProcessMessage() {
@@ -114,10 +129,10 @@ bool Engine::ProcessMessage() {
 
 void Engine::BeginFrame() {
 	// タイマー計測開始
-	debugTimer_.Start();
+	frameTracker_->Start();
 
 	imGuiManager_->Begin();
-	inputManager_->Update();
+	input_->Update();
 }
 
 void Engine::EndFrame() {
@@ -126,34 +141,36 @@ void Engine::EndFrame() {
 	directXCommon_->DrawCall();
 
 	// 計測終了
-	debugTimer_.End();
+	frameTracker_->End();
 }
 
 void Engine::DebugGUI() {
 	// フラグがfalseなら早期リターン
-	if (!isShowDebugGUI) { return; }
+	//if (!Config::Debug::kIsShowDebugGUI) { return; }
 
 	ImGui::Begin("LWP");
 	if (ImGui::BeginTabBar("LWP")) {
 #if DEMO
-		primitiveManager_->DebugGUI();
-		objectManager_->DebugGUI();
-		collisionManager_->DebugGUI();
-		resourceManager_->DebugGUI();
+		primitive_->DebugGUI();
+		object_->DebugGUI();
+		collision_->DebugGUI();
+		resource_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
-		debugCamera_->DebugGUI(sceneManager_->GetMainCamera()->worldTF);
-		debugTimer_.DebugGUI();
-#else
-		debugTimer_.DebugGUI();
 #endif
+		frameTracker_->DebugGUI();
+		ImGui::Text("---------------------------");
+		if (ImGui::Button("Change Window Mode")) { Window::ChangeWindowMode(); }
+		if (ImGui::Button("Change FullScreen Mode")) { Window::ChangeFullScreenMode(); }
+		//if (ImGui::Button("Change BorderlessWindow Mode")) { Window::ChangeBorderlessWindowMode(); }
+		debugCamera_->DebugGUI(sceneManager_->GetMainCamera());
 		ImGui::EndTabBar();
 	}
 	ImGui::End();
 }
 
 void Engine::Finalize() {
-
+	
 	CloseWindow(winApp_->GetHWND());
 
 	// リソースリークチェック

@@ -2,6 +2,8 @@
 #include "keyboard/DIKeyboard.h"
 #include "controller/XInputController.h"
 
+#include "utility/Singleton.h"
+
 // 前方宣言
 namespace LWP::Base {
 	class WinApp;
@@ -11,27 +13,34 @@ namespace LWP::Input {
 	/// <summary>
 	/// 入力デバイス管理クラス
 	/// </summary>
-	class Manager final {
-	public: // ** パブリックなメンバ変数 ** //
+	class Manager : public Utility::ISingleton<Manager> {
+		friend class Utility::ISingleton<Manager>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
-		// キーボードオブジェクト
-		DIKeyboard keyboard;
-
-		// コントローラーオブジェクト
-		//DIController controller_;
-		XInput::Controller controller[XBOX_CONTROLLER_MAX];
-
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
+		Manager() = default;
 
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize(Base::WinApp* winApp);
+		void Init();
 		/// <summary>
 		/// 更新
 		/// </summary>
 		void Update();
+
+		/// <summary>
+		/// キーボードオブジェクトを取得
+		/// </summary>
+		DIKeyboard* GetKeyboard() { return &keyboard_; };
+		/// <summary>
+		/// コントローラーオブジェクトを取得
+		/// </summary>
+		XInput::Controller* GetController(int playerNum) { return &controller_[playerNum]; }
 
 
 	private: // ** メンバ変数 ** //
@@ -40,5 +49,10 @@ namespace LWP::Input {
 
 		// DirectInputオブジェクトの生成
 		Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
+
+		// キーボードオブジェクト
+		DIKeyboard keyboard_;
+		// コントローラーオブジェクト
+		XInput::Controller controller_[XBOX_CONTROLLER_MAX];
 	};
 }

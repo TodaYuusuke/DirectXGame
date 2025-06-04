@@ -111,13 +111,24 @@ namespace LWP::Resource {
 	/// <summary>
 	/// 読み込み済みのリソースを管理するクラス
 	/// </summary>
-	class Manager final {
-	public:
+	class Manager : public Utility::ISingleton<Manager> {
+		friend class Utility::ISingleton<Manager>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
+
+		/// <summary>
+		/// コンストラクタをプライベートに
+		/// </summary>
 		Manager() = default;
+
+	public: // メンバ関数
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
 		~Manager();
 
 		// 初期化
-		void Initialize();
+		void Init();
 		// 更新
 		void Update();
 
@@ -129,8 +140,8 @@ namespace LWP::Resource {
 		/// <param name="manager">マテリアル等のリソース作成用</param>
 		/// <param name="filepath">"resources/texture/" より後のファイルパス</param>
 		/// <returns></returns>
-		Texture LoadTexture(Base::DirectXCommon* directX, const std::string& filepath);
-		Texture LoadTextureLongPath(Base::DirectXCommon* directX, const std::string& filepath);
+		Texture LoadTexture(const std::string& filepath);
+		Texture LoadTextureLongPath(const std::string& filepath);
 		AudioData* LoadAudio(const std::string& filepath);
 		AudioData* LoadAudioLongPath(const std::string& filepath);
 		Primitive::OldMeshData* LoadOldMesh(const std::string& filepath);

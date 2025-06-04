@@ -43,6 +43,10 @@ void Material::DebugGUI(const std::string& label) {
 		LWP::Base::ImGuiManager::ColorEdit4("color", color);
 		ImGui::DragFloat("shinines", &shininess);
 		ImGui::Checkbox("enableLighting", &enableLighting);
+		if (ImGui::TreeNode("Texture")) {
+			ImGuiManager::ShowTexture(texture.t);
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 }

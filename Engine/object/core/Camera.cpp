@@ -19,18 +19,11 @@ CameraStruct& CameraStruct::operator=(const Object::Camera& value) {
 }
 
 Camera::Camera() {
-	// ほんとはよくない設計なので代替案募集
-
-	// GPUデバイスのポインタ
-	GPUDevice* dev = System::engine->directXCommon_->GetGPUDevice();
-	// HeapManagerのポインタ
-	HeapManager* heaps = System::engine->directXCommon_->GetHeaps();
-
 	// リソースの初期化
-	constantBuffer_.Init(dev);
-	renderResource_.Init(dev, heaps);
-	textureResource_.Init(dev, heaps);
-	depthStencil_.Init(dev, heaps);
+	constantBuffer_.Init();
+	renderResource_.Init();
+	textureResource_.Init();
+	depthStencil_.Init();
 
 	pp.Init();
 }
@@ -69,6 +62,14 @@ void Camera::DebugGUI() {
 	worldTF.DebugGUI();
 	pp.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
+	if (ImGui::TreeNode("RenderResource")) {
+		ImGuiManager::ShowRenderResource(renderResource_, 0.2f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("TextureResource")) {
+		ImGuiManager::ShowRenderResource(textureResource_, 0.2f);
+		ImGui::TreePop();
+	}
 	ImGui::Checkbox("isActive", &isActive);
 }
 

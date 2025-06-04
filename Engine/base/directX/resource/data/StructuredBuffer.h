@@ -19,15 +19,15 @@ namespace LWP::Base {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		StructuredBuffer(uint32_t maxSize) : kElementSize(sizeof(T)), kMaxSize(maxSize) {}
+		StructuredBuffer(uint32_t maxSize) : IDataResource(sizeof(T)), kMaxSize(maxSize) {}
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
 		virtual ~StructuredBuffer() = default;
 
-		void Init(GPUDevice* device, SRV* srv) {
+		void Init() {
 			// リソース作成
-			CreateResource(device, kElementSize * kMaxSize);
+			CreateResource(kElementSize_ * kMaxSize);
 			// リソースをマップ
 			resource_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
 
@@ -39,10 +39,10 @@ namespace LWP::Base {
 			desc.Buffer.FirstElement = 0;
 			desc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 			desc.Buffer.NumElements = kMaxSize;
-			desc.Buffer.StructureByteStride = kElementSize;
+			desc.Buffer.StructureByteStride = kElementSize_;
 
 			// SRVに登録
-			info = srv->CreateStructuredBuffer(resource_.Get(), desc);
+			info = SRV::GetInstance()->CreateStructuredBuffer(resource_.Get(), desc);
 		}
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace LWP::Base {
 	public: // ** メンバ定数 ** //
 
 		// データ1つ分のサイズ定数
-		const uint32_t kElementSize;
+		//const uint32_t kElementSize;
 		// データの最大数
 		const uint32_t kMaxSize;
 

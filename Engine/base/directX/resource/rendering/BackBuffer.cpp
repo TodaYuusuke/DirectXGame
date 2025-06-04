@@ -10,7 +10,7 @@ BackBuffer::BackBuffer(IDXGISwapChain4* swapChain, int index) {
 	assert(SUCCEEDED(hr));
 }
 
-void BackBuffer::Init(GPUDevice* device, HeapManager* heaps) {
+void BackBuffer::Init() {
 	// クリアカラー設定
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	clearValue.Color[0] = 0.1f;
@@ -20,11 +20,8 @@ void BackBuffer::Init(GPUDevice* device, HeapManager* heaps) {
 	// バリアの初期値セット
 	currentBarrierState = D3D12_RESOURCE_STATE_PRESENT;
 
-	// リソース生成はスワップチェーンから引っ張ってきたので不要
-	device;
-
 	// RTV上に登録
-	rtvInfo = heaps->rtv()->CreateRenderTargetView(resource_.Get());
+	rtvInfo = RTV::GetInstance()->CreateBackBufferView(resource_.Get());
 }
 
 

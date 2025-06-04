@@ -4,24 +4,24 @@
 #pragma comment(lib,"dxcompiler.lib")
 
 #include <string>
+#include "utility/Singleton.h"
 
 namespace LWP::Base {
 	/// <summary>
 	/// DirectXシェーダコンパイラ
 	/// <para>HLSLコードをバイナリ形式のGPUシェーダーに変換する</para>
 	/// </summary>
-	class DXC final {
-	public: // ** メンバ関数 ** //
+	class DXC final : public Utility::ISingleton<DXC> {
+		friend class Utility::ISingleton<DXC>;	// ISingletonをフレンドクラスにしてコンストラクタを呼び出せるように
+	private: // ** シングルトン化に必要な処理 ** //
 
 		/// <summary>
-		/// コンストラクタ
+		/// コンストラクタをプライベートに
 		/// </summary>
 		DXC();
-		/// <summary>
-		/// デストラクタ
-		/// </summary>
-		~DXC() = default;
 
+
+	public:	// ** メンバ関数 ** //
 		
 		/// <summary>
 		/// シェーダーをコンパイルする関数
