@@ -213,6 +213,11 @@ std::vector<std::string> Animation::GetAnimationNames() const {
 	}
 	return names;
 }
+float Animation::GetTotalSeconds(const std::string& animName) {
+	// 存在するアニメーションかチェック
+	assert(data.contains(animName) && "animName is Not Found.");
+	return data[animName].totalTime;
+}
 
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {
 	assert(!keyframes.empty());	// キーがないものは返す値がわからないのでダメ
