@@ -61,7 +61,16 @@ Animation& Animation::Play(const std::string animName, float transitionTime, flo
 }
 Animation& Animation::Pause(TrackType type)	{ tracks_[type].isPause = true;		return *this; }
 Animation& Animation::Resume(TrackType type){ tracks_[type].isPause = false;	return *this; }
-Animation& Animation::Stop(TrackType type)	{ tracks_[type].isPause = true;		tracks_[type].playingAnimationName = "";	return *this; }
+Animation& Animation::Stop(TrackType type)	{
+	tracks_[type].isPause = true;
+	tracks_[type].playingAnimationName = "";
+	if (type == TrackType::Blend) {
+		// ブレンドを停止した場合は再生速度を元に戻す
+		tracks_[TrackType::Main].playbackSpeed = 1.0f;	// メインの再生速度を元に戻す
+		tracks_[TrackType::Blend].playbackSpeed = 1.0f;	// ブレンドの再生速度もついでに戻す
+	}
+	return *this;
+}
 
 Animation& Animation::Loop(TrackType type)					{ tracks_[type].isLoop = !tracks_[type].isLoop;					return *this; }
 Animation& Animation::Loop(bool b, TrackType type)			{ tracks_[type].isLoop = b;										return *this; }
