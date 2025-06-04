@@ -7,6 +7,6 @@
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	LWP::Info::ChangeShowDebugGUI();
-	LWP::System::Run<AnimationTest>(L"LWP サンプルゲーム");
+	LWP::System::Run<ColliderTest>(L"LWP サンプルゲーム");
 	return 0;
 }

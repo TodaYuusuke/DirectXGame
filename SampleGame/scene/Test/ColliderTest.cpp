@@ -77,6 +77,7 @@ void ColliderTest::Update() {
 	ImGui::Checkbox("Add_Blood", &addBlood);
 	ImGui::Checkbox("Add_DeadBody", &addDeadBody);
 	ImGui::Checkbox("Add_BloodFall", &addBloodFall);
+	if (ImGui::Button("ShutDown")) { System::ShutDown(); }
 	ImGui::End();
 
 	time++;
