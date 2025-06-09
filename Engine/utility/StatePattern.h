@@ -15,15 +15,20 @@ namespace LWP::Utility {
 	public: // ** パブリックなメンバ変数 ** //
 
 		/// <summary>
-		/// 初期化関数群
+		/// 初期化処理の関数群
 		/// </summary>
 		/// <para>前回の状態を貰うため(pre)の引数</para>
-		std::array<std::function<void([[maybe_unused]] const E& pre)>, N> initFunction;
+		std::array<std::function<void([[maybe_unused]] const E& pre)>, N> init;
 		/// <summary>
-		/// 更新関数群
+		/// 更新処理の関数群
 		/// </summary>
 		/// <para>次の状態をリクエストするため(req)と、前回の状態を貰うため(pre)の引数</para>
-		std::array<std::function<void([[maybe_unused]] std::optional<E>& req, [[maybe_unused]] const E& pre)>, N> updateFunction;
+		std::array<std::function<void([[maybe_unused]] std::optional<E>& req, [[maybe_unused]] const E& pre)>, N> update;
+		/// <summary>
+		/// 終了時の関数群
+		/// </summary>
+		/// <para>前回の状態を貰うため(pre)の引数</para>
+		std::array<std::function<void([[maybe_unused]] const E& pre)>, N> finalize;
 		
 		/// <summary>
 		/// 次の状態リクエスト
@@ -61,8 +66,9 @@ namespace LWP::Utility {
 			pre_ = static_cast<E>(0);
 			// 関数ポインタに何もしない関数をデフォルトで設定
 			for (int i = 0; i < N; i++) {
-				initFunction[i] = [](const E& pre) { pre; };
-				updateFunction[i] = [](std::optional<E>& req, const E& pre) { req; pre; };
+				init[i] = [](const E& pre) { pre; };
+				update[i] = [](std::optional<E>& req, const E& pre) { req; pre; };
+				finalize[i] = [](const E& pre) { pre; };
 				name[i] = std::to_string(i);
 			}
 		}
@@ -72,14 +78,14 @@ namespace LWP::Utility {
 		void Update() {
 			// 状態リクエストがある時実行
 			if (request) {
+				finalize[static_cast<int>(current_)](pre_);	// 終了処理
 				pre_ = current_;	// 過去の状態を保存
 				current_ = request.value();	// 状態を更新
 				request = std::nullopt;	// リクエストを無に
-				// 初期化処理
-				initFunction[static_cast<int>(current_)](pre_);
+				init[static_cast<int>(current_)](pre_);	// 初期化処理
 			}
 			// 状態更新処理
-			updateFunction[static_cast<int>(current_)](request, pre_);
+			update[static_cast<int>(current_)](request, pre_);
 		}
 
 		/// <summary>
