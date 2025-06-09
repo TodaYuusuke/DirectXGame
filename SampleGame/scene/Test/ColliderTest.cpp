@@ -12,9 +12,8 @@ ColliderTest::ColliderTest() : blood_(100), deadBody_(100), bloodFall_(100) {}
 
 // 初期化
 void ColliderTest::Initialize() {
-	
 	// 地形初期化
-	field_.Init(&levelData, &mainCamera);
+	//field_.Init(&levelData, &mainCamera);
 
 	// モデル読み込み
 	cube_[0].LoadCube();
@@ -36,6 +35,8 @@ void ColliderTest::Initialize() {
 		{0.5f, 0.5f, 0.5f},
 	});
 	mesh_.isActive = false;
+	bill_.LoadShortPath("Building1/Building1.gltf");
+	bill_.isActive = false;
 
 	blood_.model.LoadCube();
 	blood_.SetShaderPath("Blood/Emitter.CS.hlsl", "Blood/Update.CS.hlsl", "Blood/Hit.CS.hlsl");

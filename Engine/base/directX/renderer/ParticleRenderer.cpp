@@ -95,15 +95,15 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 			D3D12_DEPTH_WRITE_MASK_ZERO,	// 深度書き込み禁止
 			D3D12_COMPARISON_FUNC_LESS_EQUAL)	// 深度が近いものだけをパス
 		.SetStencilState(true,
-			D3D12_DEPTH_STENCILOP_DESC(
-				D3D12_STENCIL_OP_KEEP,	// ステンシルテスト失敗時、値を保持
-				D3D12_STENCIL_OP_KEEP,	// 深度テスト失敗時、値を保持
-				D3D12_STENCIL_OP_INCR_SAT,	// 深度・ステンシルテスト両方成功時、ステンシル値を加算
+			D3D12_DEPTH_STENCILOP_DESC(	// 表面のステンシルテスト設定
+				D3D12_STENCIL_OP_KEEP,			// ステンシルテスト失敗時、値を保持
+				D3D12_STENCIL_OP_KEEP,			// 深度テスト失敗時、値を保持
+				D3D12_STENCIL_OP_INCR_SAT,		// 深度・ステンシルテスト両方成功時、ステンシル値を加算
 				D3D12_COMPARISON_FUNC_ALWAYS),	// 常にステンシルテストを成功させる
-			D3D12_DEPTH_STENCILOP_DESC(
-				D3D12_STENCIL_OP_KEEP,	// ステンシルテスト失敗時、値を保持
-				D3D12_STENCIL_OP_KEEP,	// 深度テスト失敗時、値を保持
-				D3D12_STENCIL_OP_DECR_SAT,	// 深度・ステンシルテスト両方成功時、ステンシル値を減算
+			D3D12_DEPTH_STENCILOP_DESC(	// 裏面のステンシルテスト設定
+				D3D12_STENCIL_OP_KEEP,			// ステンシルテスト失敗時、値を保持
+				D3D12_STENCIL_OP_KEEP,			// 深度テスト失敗時、値を保持
+				D3D12_STENCIL_OP_DECR_SAT,		// 深度・ステンシルテスト両方成功時、ステンシル値を減算
 				D3D12_COMPARISON_FUNC_ALWAYS))	// 常にステンシルテストを成功させる
 		.SetSystemMS("ms/static/Normal.MS.hlsl")
 		.Build();

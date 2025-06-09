@@ -7,7 +7,7 @@ void main(
     in uint32_t gtid : SV_GroupThreadID,
     in payload PayLoad meshPayload,
     out vertices VSOutput outVerts[128],
-    out indices uint32_t3     outIndices[128]
+    out indices uint32_t3 outIndices[128]
 )
 {
     // Meshlet取得

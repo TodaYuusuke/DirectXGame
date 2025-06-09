@@ -35,11 +35,11 @@ void GameScene::Initialize() {
 
 	// 状態管理クラスにフェードインアウトの処理を渡す
 #pragma region FadeIn
-	statePattern_.initFunction[int(BehaviorGS::FadeIn)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
+	statePattern_.init[int(BehaviorGS::FadeIn)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		pre;
 		startStaging_.time = 0.0f;	// 時間初期化
 		};
-	statePattern_.updateFunction[int(BehaviorGS::FadeIn)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
+	statePattern_.update[int(BehaviorGS::FadeIn)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		StartStaging& s = startStaging_;
 		// 時間更新
 		s.time += GetDeltaTimeF();
@@ -56,11 +56,11 @@ void GameScene::Initialize() {
 		};
 #pragma endregion
 #pragma region FadeOut
-	statePattern_.initFunction[int(BehaviorGS::FadeOut)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
+	statePattern_.init[int(BehaviorGS::FadeOut)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		pre;
 		endStaging_.time = 0.0f;	// 時間初期化
 		};
-	statePattern_.updateFunction[int(BehaviorGS::FadeOut)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
+	statePattern_.update[int(BehaviorGS::FadeOut)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		EndStaging& e = endStaging_;
 		// 時間更新
 		e.time += GetDeltaTimeF();
@@ -78,10 +78,10 @@ void GameScene::Initialize() {
 #pragma endregion
 
 
-	statePattern_.initFunction[int(BehaviorGS::Play)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
+	statePattern_.init[int(BehaviorGS::Play)] = [this]([[maybe_unused]] const BehaviorGS& pre) {
 		enemyManager_.StartWave(wave_);	// ウェーブ開始
 	};
-	statePattern_.updateFunction[int(BehaviorGS::Play)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
+	statePattern_.update[int(BehaviorGS::Play)] = [this]([[maybe_unused]] std::optional<BehaviorGS>& req, [[maybe_unused]] const BehaviorGS& pre) {
 		if (enemyManager_.GetClearFlag()) {
 			wave_++;	// 次のウェーブへ
 			// ウェーブが最後までいったらフェードアウト
