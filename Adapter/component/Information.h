@@ -19,11 +19,6 @@ namespace LWP {
 		Math::Vector2 GetWindow();
 
 		/// <summary>
-		/// デバッグ情報の表示/非表示を切り替える
-		/// </summary>
-		void ChangeShowDebugGUI();
-
-		/// <summary>
 		/// デルタタイムを取得する関数
 		/// </summary>
 		/// <returns></returns>
@@ -41,6 +36,11 @@ namespace LWP {
 		/// </summary>
 		/// <param name="value">係数の値：default ... 1.0f</param>
 		void SetDeltaTimeMultiply(float value);
+
+		/// <summary>
+		/// DebugGUIの可視性フラグ
+		/// </summary>
+		extern bool isDebugGUIVisible;
 	};
 	namespace Info = Information;
 };

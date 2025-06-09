@@ -27,10 +27,6 @@ Math::Vector2 Information::GetWindow() {
 	};
 }
 
-void Information::ChangeShowDebugGUI() {
-	Config::Debug::kIsShowDebugGUI =  !Config::Debug::kIsShowDebugGUI;
-}
-
 double Information::GetDeltaTime() {
 	return FrameTracker::GetInstance()->GetDeltaTime();
 }
@@ -47,3 +43,10 @@ float Information::GetDefaultDeltaTimeF() {
 void Information::SetDeltaTimeMultiply(float value) {
 	FrameTracker::GetInstance()->SetTimeScale(value);
 }
+
+// 実態を定義
+#if DEMO
+bool Information::isDebugGUIVisible = true;
+#else
+bool Information::isDebugGUIVisible = false;
+#endif

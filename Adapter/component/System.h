@@ -25,5 +25,10 @@ namespace LWP {
 			// シングルトン解放
 			LWP::Utility::Singleton::DestroyAll();
 		}
+
+		/// <summary>
+		/// エンジン停止
+		/// </summary>
+		void ShutDown();
 	};
 };

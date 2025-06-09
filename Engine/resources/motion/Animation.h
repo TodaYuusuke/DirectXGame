@@ -159,9 +159,21 @@ namespace LWP::Resource {
 		/// </summary>
 		std::vector<std::string> GetAnimationNames() const;
 		/// <summary>
+		/// アニメーションに掛かる時間を受け取る関数
+		/// </summary>
+		float GetTotalSeconds(const std::string& animName = "");
+		/// <summary>
+		/// アニメーションに掛かる時間を受け取る関数
+		/// </summary>
+		float GetTotalSeconds(TrackType type = TrackType::Main) { return tracks_[type].totalSeconds; }
+		/// <summary>
 		/// 全体の進捗を受け取る関数
 		/// </summary>
 		float GetProgress(TrackType type = TrackType::Main) { return tracks_[type].time; }
+		/// <summary>
+		/// 進捗を秒で受け取る関数
+		/// </summary>
+		float GetProgressSeconds(TrackType type = TrackType::Main) { return tracks_[type].totalSeconds * tracks_[type].time; }
 		/// <summary>
 		/// 読み込んだパスを返す関数
 		/// </summary>
