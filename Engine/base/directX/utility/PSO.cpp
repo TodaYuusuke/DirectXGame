@@ -169,7 +169,7 @@ PSO& PSO::SetAS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"as_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"as_6_6");
 	assert(blob != nullptr);
 
 	// セット
@@ -185,7 +185,7 @@ PSO& PSO::SetMS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ms_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ms_6_6");
 	assert(blob != nullptr);
 
 	// セット

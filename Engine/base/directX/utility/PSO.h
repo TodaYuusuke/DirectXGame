@@ -17,6 +17,12 @@ namespace LWP::Base {
 			Compute,
 			Mesh
 		};
+		// フィルモード
+		enum class FillMode {
+			Solid,
+			Wireframe,
+			Count
+		};
 		// ブレンドモード
 		enum class BlendMode {
 			Normal,
