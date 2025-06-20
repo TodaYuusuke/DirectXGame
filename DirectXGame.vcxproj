@@ -271,6 +271,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\utility\motionEffects\Interpolation.cpp" />
     <ClCompile Include="Engine\utility\MyUtility.cpp" />
     <ClCompile Include="Engine\utility\MyString.cpp" />
+    <ClCompile Include="Engine\utility\Random.cpp" />
     <ClCompile Include="Engine\utility\Singleton.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
@@ -421,6 +422,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\utility\JsonIO.h" />
+    <ClInclude Include="Engine\utility\Random.h" />
     <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\utility\StatePattern.h" />
     <ClInclude Include="Engine\utility\CatmullRom.h" />

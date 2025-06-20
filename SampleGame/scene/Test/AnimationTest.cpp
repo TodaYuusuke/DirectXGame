@@ -49,6 +49,10 @@ void AnimationTest::Initialize() {
 
 // 更新
 void AnimationTest::Update() {
+	static int I = 0;
+	static float F = 0.0f;
+	static Vector3 V = Vector3();
+
 	ImGui::Begin("Test");
 	for (int i = 0; i < 1; i++) {
 		if (ImGui::TreeNode(std::to_string(i).c_str())) {
@@ -67,6 +71,14 @@ void AnimationTest::Update() {
 		col.DebugGUI();
 		ImGui::TreePop();
 	}
+
+	if (ImGui::Button("Generate Int")) { I = Random::GenerateInt(-100, 100); };
+	if (ImGui::Button("Generate Float")) { F = Random::GenerateFloat(-100.0f, 100.0f); };
+	if (ImGui::Button("Generate Vector3")) { V = Random::GenerateVector3({-100.0f,-100.0f,-100.0f}, { 100.0f,100.0f,100.0f }); };
+	ImGui::Text("Int : %d", I);
+	ImGui::Text("Float : %f", F);
+	ImGui::Text("Vector3 : (%f, %f, %f)", V.x, V.y, V.z);
+
 	ImGui::End();
 
 	//Vector3 v = { 0.0f,0.0f,0.0f };

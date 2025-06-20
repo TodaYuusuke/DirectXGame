@@ -370,6 +370,7 @@
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
     <ClCompile Include="Engine\utility\JsonIO.cpp" />
+    <ClCompile Include="Engine\utility\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -830,6 +831,7 @@
     <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
     <ClInclude Include="Engine\utility\JsonIO.h" />
+    <ClInclude Include="Engine\utility\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
