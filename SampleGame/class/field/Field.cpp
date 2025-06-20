@@ -25,17 +25,17 @@ void Field::Init(LWP::Resource::LevelData* level, LWP::Object::Camera* camera) {
 	for (int i = 0; i < kStarCount; i++) {
 		stars[i].LoadCube();
 		stars[i].worldTF.translation = Vector3{
-			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
-			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
-			LWP::Utility::GenerateRandamNum<int>(-100, 100) / 100.0f,
+			LWP::Utility::Random::GenerateInt(-100, 100) / 100.0f,
+			LWP::Utility::Random::GenerateInt(0, 100) / 100.0f,
+			LWP::Utility::Random::GenerateInt(-100, 100) / 100.0f,
 		}.Normalize() * (s - 1.0f);
 		stars[i].worldTF.rotation = Quaternion{
-			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
-			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
-			LWP::Utility::GenerateRandamNum<int>(0, 100) / 100.0f,
+			LWP::Utility::Random::GenerateInt(0, 100) / 100.0f,
+			LWP::Utility::Random::GenerateInt(0, 100) / 100.0f,
+			LWP::Utility::Random::GenerateInt(0, 100) / 100.0f,
 			1.0f
 		}.Normalize();
-		float scale = LWP::Utility::GenerateRandamNum<int>(50, 100) / 100.0f;
+		float scale = LWP::Utility::Random::GenerateInt(50, 100) / 100.0f;
 		stars[i].worldTF.scale = { scale,scale,scale };
 
 		//stars[i].materials[0].color = Utility::ColorPattern::YELLOW;

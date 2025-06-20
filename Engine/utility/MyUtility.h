@@ -11,6 +11,7 @@
 #include "PtrManager.h"
 #include "StatePattern.h"
 #include "JsonIO.h"
+#include "Random.h"
 //#include "UI.h"
 
 #include "MyString.h"
@@ -37,27 +38,6 @@ namespace LWP::Utility {
 
 		return static_cast<T>(n) / sum;
 	}
-
-	/// <summary>
-	/// 任意の型の最小値から最大値の間の値をランダムに生成する関数
-	/// </summary>
-	/// <typeparam name="T">任意の型</typeparam>
-	/// <param name="minValue">最小値</param>
-	/// <param name="maxValue">最大値</param>
-	/// <returns>最小値と最大値の間のランダムな値</returns>
-	template <typename T>
-	T GenerateRandamNum(const T& minValue, const T& maxValue) {
-		// 使用する乱数生成器
-		std::random_device rd;
-		std::mt19937 generator(rd());
-
-		// 型Tに応じた分布
-		std::uniform_int_distribution<T> distribution(minValue, maxValue);
-
-		// 乱数を生成して返す
-		return distribution(generator);
-	}
-
 
 	/// <summary>
 	/// radian から degreeへ

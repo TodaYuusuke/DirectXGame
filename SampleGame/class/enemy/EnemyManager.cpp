@@ -83,7 +83,7 @@ void EnemyManager::Spawn() {
 	int sp;
 	while (true) {
 		// スポーンさせる場所をランダム選択
-		sp = GenerateRandamNum<int>(0, GetSpawnPointSize() - 1);
+		sp = Random::GenerateInt(0, GetSpawnPointSize() - 1);
 		// そこにスポーン済みでなければ終了
 		if (!spawnPoint_[wave_][sp].enemy) { break; }
 	}
