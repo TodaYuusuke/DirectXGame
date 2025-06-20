@@ -1,6 +1,7 @@
 ﻿#include "LWP.h"
 #include "Config.h"
 #include "component/Window.h"
+#include "component/Information.h"
 
 using namespace LWP::System;
 
@@ -146,23 +147,27 @@ void Engine::EndFrame() {
 
 void Engine::DebugGUI() {
 	// フラグがfalseなら早期リターン
-	//if (!Config::Debug::kIsShowDebugGUI) { return; }
+	if (!Info::isDebugGUIVisible) { return; }
 
 	ImGui::Begin("LWP");
 	if (ImGui::BeginTabBar("LWP")) {
-#if DEMO
 		primitive_->DebugGUI();
 		object_->DebugGUI();
 		collision_->DebugGUI();
 		resource_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
-#endif
 		frameTracker_->DebugGUI();
-		ImGui::Text("---------------------------");
-		if (ImGui::Button("Change Window Mode")) { Window::ChangeWindowMode(); }
-		if (ImGui::Button("Change FullScreen Mode")) { Window::ChangeFullScreenMode(); }
-		//if (ImGui::Button("Change BorderlessWindow Mode")) { Window::ChangeBorderlessWindowMode(); }
+
+		if (ImGui::BeginTabItem("Info")) {
+			ImGui::Text("---------------------------");
+			if (ImGui::Button("Change Window Mode")) { Window::ChangeWindowMode(); }
+			if (ImGui::Button("Change FullScreen Mode")) { Window::ChangeFullScreenMode(); }
+			//if (ImGui::Button("Change BorderlessWindow Mode")) { Window::ChangeBorderlessWindowMode(); }
+			ImGui::Text("---------------------------");
+			ImGui::EndTabItem();
+		}
+
 		debugCamera_->DebugGUI(sceneManager_->GetMainCamera());
 		ImGui::EndTabBar();
 	}

@@ -126,5 +126,8 @@ namespace LWP::System {
 		std::unique_ptr<LWP::Information::DebugCamera> debugCamera_;
 		// デバッグ用タイマークラス
 		LWP::Information::FrameTracker* frameTracker_ = nullptr;
+
+		// DebugGUIの表示フラグ
+		bool isDebugGUIVisible_ = true;
 	};
 }
