@@ -370,6 +370,8 @@
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
     <ClCompile Include="Engine\utility\JsonIO.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\RenderingPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -830,6 +832,13 @@
     <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
     <ClInclude Include="Engine\utility\JsonIO.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\compute\IComputePass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\IGraphicsPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\RenderingPipeline.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\IRenderPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\postprocess\IPostProcessPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\shadow\IShadowPass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -85,7 +85,11 @@ namespace LWP::Base {
 		// PSOの設定をコピーする関数
 		PSO& Copy(const PSO& source);
 
-		// PipelineStateを受け取る関数
+		// ID3D12PipelineState型への暗黙の変換演算子をオーバーロード
+		operator ID3D12PipelineState* () {
+			return state_.Get();
+		}
+		// PipelineStateを受け取る関数（あとで消す）
 		ID3D12PipelineState* GetState() { return state_.Get(); }
 
 		// コピー用の処理
