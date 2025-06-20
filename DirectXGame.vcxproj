@@ -179,6 +179,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\RenderingPipeline.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthCubeMap.cpp" />
@@ -324,6 +326,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\compute\IComputePass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\IGraphicsPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\RenderingPipeline.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\IRenderPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\postprocess\IPostProcessPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\shadow\IShadowPass.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />
     <ClInclude Include="Engine\base\directX\resource\data\IDataResource.h" />
     <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h" />

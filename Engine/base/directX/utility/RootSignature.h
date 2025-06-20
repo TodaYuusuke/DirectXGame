@@ -9,6 +9,8 @@ namespace LWP::Base {
 	enum ShaderVisibility {
 		SV_Vertex = D3D12_SHADER_VISIBILITY_VERTEX,
 		SV_Pixel = D3D12_SHADER_VISIBILITY_PIXEL,
+		SV_Mesh = D3D12_SHADER_VISIBILITY_MESH,
+		SV_Amp = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
 		SV_All = D3D12_SHADER_VISIBILITY_ALL
 	};
 
@@ -39,10 +41,22 @@ namespace LWP::Base {
 			);
 		void Build();
 
+		// PSOの設定をコピーする関数
+		RootSignature& Copy(const RootSignature& source);
+
 		// ID3D12RootSignature型への暗黙の変換演算子をオーバーロード
 		operator ID3D12RootSignature* () {
 			return root_.Get();
 		}
+
+		// コピー用のゲッター
+		D3D12_ROOT_SIGNATURE_DESC GetDesc() const { return desc_; }
+		// パラメータのコピー用
+		void CopyParameters(
+			std::vector<D3D12_ROOT_PARAMETER>* para,
+			std::list<D3D12_DESCRIPTOR_RANGE>* paraDesc,
+			std::vector<D3D12_STATIC_SAMPLER_DESC>* samplers
+		) const;
 
 
 	private: // ** メンバ変数 ** //

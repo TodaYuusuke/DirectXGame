@@ -58,7 +58,8 @@ void main(
         //outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) InstanceData.wtf.inverse)));
         outVerts[gtid].normal = normalize(mul(skinned.normal, transpose((float32_t3x3) InstData[gid].wtf.inverse)));
         outVerts[gtid].color = vertex.color;
-        outVerts[gtid].mIndex = vertex.mIndex;
+        //outVerts[gtid].mIndex = vertex.mIndex;
+        outVerts[gtid].mIndex = vertex.mIndex + (gid * mCommonData.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }
     if (gtid < meshlet.PrimCount)
     {

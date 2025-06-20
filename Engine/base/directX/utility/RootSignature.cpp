@@ -133,3 +133,43 @@ void RootSignature::Build() {
 	signatureBlob->Release();
 	//errorBlob->Release();
 }
+
+RootSignature& RootSignature::Copy(const RootSignature& source) {
+	desc_ = source.desc_;	// 詳細設定をコピー
+	// パラメータのコピー用
+	source.CopyParameters(
+		&parameters_,
+		&parametersDesc_,
+		&samplers_
+	);
+
+
+	return *this;
+}
+
+void RootSignature::CopyParameters(
+	std::vector<D3D12_ROOT_PARAMETER>* para,
+	std::list<D3D12_DESCRIPTOR_RANGE>* paraDesc,
+	std::vector<D3D12_STATIC_SAMPLER_DESC>* samplers
+) const {
+	// パラメータのコピー
+	para->clear();
+	para->resize(parameters_.size());
+	std::copy(parameters_.begin(), parameters_.end(), para->begin());
+	// パラメータのDescのコピー
+	paraDesc->clear();
+	paraDesc->resize(parametersDesc_.size());
+	std::copy(parametersDesc_.begin(), parametersDesc_.end(), paraDesc->begin());
+	// サンプラーのコピー
+	samplers->clear();
+	samplers->resize(samplers_.size());
+	std::copy(samplers_.begin(), samplers_.end(), samplers->begin());
+
+	// Descのポインタを再設定
+	std::list<D3D12_DESCRIPTOR_RANGE>::iterator it = paraDesc->begin();
+	for (int i = 0; i < para->size(); i++) {
+		D3D12_ROOT_PARAMETER& p = (*para)[i];	// 参照で取得
+		if (p.ParameterType == D3D12_ROOT_PARAMETER_TYPE_CBV) { continue; }	// CBVなら登録するものがないので無視
+		p.DescriptorTable.pDescriptorRanges = &(*it); // Tabelの中身の配列を指定
+	}
+}

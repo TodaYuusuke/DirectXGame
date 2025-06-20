@@ -11,6 +11,14 @@
 
 namespace LWP::Resource {
 
+	enum class ModelType {
+		Rigid,
+		Skin,
+		Static,
+		EMap,
+		Count,
+	};
+
 	/// <summary>
 	/// 3Dモデルを扱うアダプターの基底クラス
 	/// </summary>
