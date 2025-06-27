@@ -37,7 +37,11 @@ namespace LWP::Object {
 		/// デフォルトコンストラクタ
 		/// </summary>
 		DirectionLight();
-		
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~DirectionLight();
+
 		// 初期化
 		void Initialize() override;
 		// 更新

@@ -9,11 +9,15 @@ using namespace LWP::Math;
 using namespace LWP::Object;
 
 PointLight::PointLight() {
+	Object::Manager::GetInstance()->SetPtr(this); // ポインタを登録
 	// リソースの初期化
 	for (int i = 0; i < 6; i++) {
 		viewBuffers_[i].Init();
 	}
 	shadowMap_.Init();
+}
+PointLight::~PointLight() {
+	Object::Manager::GetInstance()->DeletePtr(this); // ポインタを解除
 }
 
 // 初期化

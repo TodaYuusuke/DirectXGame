@@ -251,13 +251,13 @@ void Manager::ChangeFillMode(RigidModel* ptr, const std::string& filePath) {
 
 	// solidの方にあればwireframeに
 	if (f.solid.ptrs.Find(ptr)) {
-		f.solid.ptrs.DeletePointer(ptr);
-		f.wireFrame.ptrs.SetPointer(ptr);
+		f.solid.ptrs.DeletePtr(ptr);
+		f.wireFrame.ptrs.SetPtr(ptr);
 	}
 	// wireframeの方にあればsolidに
 	else {
-		f.wireFrame.ptrs.DeletePointer(ptr);
-		f.solid.ptrs.SetPointer(ptr);
+		f.wireFrame.ptrs.DeletePtr(ptr);
+		f.solid.ptrs.SetPtr(ptr);
 	}
 }
 void Manager::ChangeFillMode(SkinningModel* ptr, const std::string& filePath) {
@@ -265,13 +265,13 @@ void Manager::ChangeFillMode(SkinningModel* ptr, const std::string& filePath) {
 
 	// solidの方にあればwireframeに
 	if (f.solid.ptrs.Find(ptr)) {
-		f.solid.ptrs.DeletePointer(ptr);
-		f.wireFrame.ptrs.SetPointer(ptr);
+		f.solid.ptrs.DeletePtr(ptr);
+		f.wireFrame.ptrs.SetPtr(ptr);
 	}
 	// wireframeの方にあればsolidに
 	else {
-		f.wireFrame.ptrs.DeletePointer(ptr);
-		f.solid.ptrs.SetPointer(ptr);
+		f.wireFrame.ptrs.DeletePtr(ptr);
+		f.solid.ptrs.SetPtr(ptr);
 	}
 }
 

@@ -14,6 +14,7 @@ AnimationTest::AnimationTest() :
 }
 // 初期化
 void AnimationTest::Initialize() {
+	cube.LoadCube();
 	for (int i = 0; i < 1; i++) {
 		model[i].LoadShortPath("Player/Hinmin/Player_Simple.gltf");
 		//model[i].LoadShortPath("test/Test.gltf");

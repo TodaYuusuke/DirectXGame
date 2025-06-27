@@ -155,25 +155,25 @@ namespace LWP::Resource {
 		std::vector<std::reference_wrapper<Models>> GetModels();
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
-		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPointer(ptr); }
-		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPointer(ptr); }
-		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPointer(ptr); }
-		void SetPointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.SetPointer(ptr); }
-		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
-		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
+		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPtr(ptr); }
+		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPtr(ptr); }
+		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPtr(ptr); }
+		void SetPointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.SetPtr(ptr); }
+		void SetPointer(Animation* ptr) { animations_.SetPtr(ptr); }
+		void SetPointer(Motion* ptr) { motions_.SetPtr(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
 		void DeletePointer(RigidModel* ptr, const std::string& filePath) {
-			modelDataMap_[filePath].rigid.solid.ptrs.DeletePointer(ptr);
-			modelDataMap_[filePath].rigid.wireFrame.ptrs.DeletePointer(ptr);
+			modelDataMap_[filePath].rigid.solid.ptrs.DeletePtr(ptr);
+			modelDataMap_[filePath].rigid.wireFrame.ptrs.DeletePtr(ptr);
 		}
 		void DeletePointer(SkinningModel* ptr, const std::string& filePath) {
-			modelDataMap_[filePath].skin.solid.ptrs.DeletePointer(ptr);
-			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePointer(ptr);
+			modelDataMap_[filePath].skin.solid.ptrs.DeletePtr(ptr);
+			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePtr(ptr);
 		}
-		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePointer(ptr); }
-		void DeletePointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.DeletePointer(ptr); }
-		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
-		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
+		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePtr(ptr); }
+		void DeletePointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.DeletePtr(ptr); }
+		void DeletePointer(Animation* ptr) { animations_.DeletePtr(ptr); }
+		void DeletePointer(Motion* ptr) { motions_.DeletePtr(ptr); }
 
 		// 特別な関数
 		void ChangeFillMode(RigidModel* ptr, const std::string& filePath);

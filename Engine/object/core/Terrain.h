@@ -11,9 +11,15 @@ namespace LWP::Object {
 	/// </summary>
 	class Terrain final : public IObject {
 	public: // ** メンバ関数 ** //
-
-		// デフォルトコンストラクタ
+		
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
 		Terrain();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Terrain();
 
 		// 初期化
 		void Initialize() override;

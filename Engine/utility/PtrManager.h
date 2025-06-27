@@ -36,13 +36,13 @@ namespace LWP::Utility {
 		/// <summary>
 		/// ポインタをセットする
 		/// </summary>
-		void SetPointer(T ptr) {
+		void SetPtr(T ptr) {
 			list.push_back(ptr);
 		}
 		/// <summary>
 		/// ポインタを解放する
 		/// </summary>
-		void DeletePointer(T ptr) {
+		void DeletePtr(T ptr) {
 			for (typename std::list<T>::iterator i = list.begin(); i != list.end(); i++) {
 				// 一致するアドレスを検索
 				if (*i == ptr) {

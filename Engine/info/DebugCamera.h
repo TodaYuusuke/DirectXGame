@@ -20,7 +20,7 @@ namespace LWP::Information {
 		/// <summary>
 		/// Debugカメラ起動
 		/// </summary>
-		void Enable(LWP::Object::Camera* ptr);
+		void Enable();
 		/// <summary>
 		/// Debugカメラ停止
 		/// </summary>
@@ -43,7 +43,7 @@ namespace LWP::Information {
 		/// <summary>
 		/// Debug用のImGui
 		/// </summary>
-		void DebugGUI(LWP::Object::Camera* ptr);
+		void DebugGUI();
 
 
 	private: // ** メンバ変数 ** //

@@ -37,12 +37,6 @@ namespace LWP::Scene {
 		/// </summary>
 		void DebugGUI();
 
-		/// <summary>
-		/// CommandManagerにビュープロジェクション行列を登録するため、カメラのポインタを返す関数
-		/// </summary>
-		/// <returns>カメラのポインタ</returns>
-		LWP::Object::Camera* GetMainCamera();
-
 	private: // メンバ変数
 		// 現在のシーン
 		IScene* currentScene_;

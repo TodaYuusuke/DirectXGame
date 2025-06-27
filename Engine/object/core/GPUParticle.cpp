@@ -1,16 +1,23 @@
 #include "GPUParticle.h"
 
 #include "base/ImGuiManager.h"
+#include "object/ObjectManager.h"
 
+using namespace LWP;
 using namespace LWP::Object;
 using namespace LWP::Base;
 
 GPUParticle::GPUParticle() : GPUParticle(multiply) {}
 GPUParticle::GPUParticle(int capacityMultiply) : data_(1024 * capacityMultiply), freeListIndex_(1), freeList_(1024 * capacityMultiply), hitList_(1024 * capacityMultiply){
+	Object::Manager::GetInstance()->SetPtr(this);	// ポインタをセット
 	Initialize();
 	multiply = capacityMultiply;
 	*count_.data_ = 1024 * multiply;
 }
+GPUParticle::~GPUParticle() {
+	Object::Manager::GetInstance()->DeletePtr(this); // ポインタを解除
+}
+
 
 void GPUParticle::Initialize() {
 	emitterSphere_.Init();

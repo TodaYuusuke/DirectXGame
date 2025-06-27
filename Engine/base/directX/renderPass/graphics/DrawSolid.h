@@ -16,7 +16,7 @@ namespace LWP::Base {
 	/// <summary>
 	/// MeshShaderでSolidオブジェクトを描画
 	/// </summary>
-	class DrawSolid
+	class DrawSolid final
 		: public IGraphicsPass {
 	public: // ** メンバ関数 ** //
 
@@ -27,7 +27,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		virtual ~DrawSolid() = default;
+		~DrawSolid() override = default;
 
 		/// <summary>
 		/// 初期化
@@ -36,7 +36,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画命令を積み込む
 		/// </summary>
-		void PushCommand(ID3D12GraphicsCommandList6* list, LWP::Object::Camera** cameras, int size);
+		void PushCommand(ID3D12GraphicsCommandList6* list);
 
 
 	private: // ** プライベートなメンバ関数 ** //

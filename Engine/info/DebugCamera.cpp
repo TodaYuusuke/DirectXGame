@@ -18,14 +18,16 @@ void DebugCamera::Update() {
 	Rotate();
 }
 
-void DebugCamera::Enable(LWP::Object::Camera* ptr) {
-	cameraPtr_ = ptr;
+void DebugCamera::Enable() {
+	cameraPtr_ = Object::Manager::GetInstance()->GetMainCamera();
 	camera_.worldTF.translation = cameraPtr_->worldTF.GetWorldPosition();
 	camera_.worldTF.rotation = cameraPtr_->worldTF.rotation;
 	camera_.worldTF.scale = cameraPtr_->worldTF.scale;
 	camera_.isActive = true;
+	camera_.SetMainCamera();
 }
 void DebugCamera::Disable() {
+	cameraPtr_->SetMainCamera();
 	cameraPtr_ = nullptr;
 	camera_.isActive = false;
 }
@@ -34,7 +36,7 @@ void DebugCamera::ApplyTransform() {
 	cameraPtr_->worldTF = camera_.worldTF;
 }
 
-void DebugCamera::DebugGUI(LWP::Object::Camera* ptr) {
+void DebugCamera::DebugGUI() {
 	if (ImGui::BeginTabItem("Info")) {
 		if (ImGui::TreeNode("Debug Camera")) {
 			ImGui::Text("WASD : Move  LControl : Dash(Speed 2x)");
@@ -42,7 +44,7 @@ void DebugCamera::DebugGUI(LWP::Object::Camera* ptr) {
 			ImGui::Text("Arrow Key : Rotate");
 			// オンボタン
 			if (!camera_.isActive) {
-				if (ImGui::Button("Enable")) { Enable(ptr); }
+				if (ImGui::Button("Enable")) { Enable(); }
 			}
 			// オフボタン
 			else {

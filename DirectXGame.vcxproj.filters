@@ -154,9 +154,6 @@
     <ClCompile Include="Adapter\component\Primitive.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\IObject.cpp">
-      <Filter>Engine\object</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\GPUDevice.cpp">
       <Filter>Engine\base\directX\utility</Filter>
     </ClCompile>
@@ -373,6 +370,9 @@
     <ClCompile Include="Engine\utility\Random.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\RenderingPipeline.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\copy\Copy.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\ImGuiRender.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\RenderClear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -841,6 +841,9 @@
     <ClInclude Include="Engine\base\directX\renderPass\IRenderPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\postprocess\IPostProcessPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\IShadowPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\copy\Copy.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\ImGuiRender.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\RenderClear.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

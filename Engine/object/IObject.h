@@ -36,12 +36,11 @@ namespace LWP::Object {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		IObject();
-
+		IObject() = default;
 		/// <summary>
-		/// デフォルトデストラクタ
+		/// デストラクタ
 		/// </summary>
-		~IObject();
+		~IObject() = default;
 	};
 }
 

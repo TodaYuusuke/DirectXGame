@@ -19,6 +19,8 @@ CameraStruct& CameraStruct::operator=(const Object::Camera& value) {
 }
 
 Camera::Camera() {
+	Object::Manager::GetInstance()->SetPtr(this);	// ポインタをセット
+	
 	// リソースの初期化
 	constantBuffer_.Init();
 	renderResource_.Init();
@@ -26,6 +28,9 @@ Camera::Camera() {
 	depthStencil_.Init();
 
 	pp.Init();
+}
+Camera::~Camera() {
+	Object::Manager::GetInstance()->DeletePtr(this); // ポインタを解除
 }
 
 // 初期化
@@ -58,6 +63,8 @@ void Camera::Update(Base::RendererManager* manager) {
 	}
 }
 
+void Camera::SetMainCamera() { Manager::GetInstance()->SetMainCamera(this); }
+
 void Camera::DebugGUI() {
 	worldTF.DebugGUI();
 	pp.DebugGUI();
@@ -79,4 +86,7 @@ Matrix4x4 Camera::GetViewProjection() const {
 	return viewMatrix * projectionMatrix;
 }
 
-Resource::Texture Camera::GetTexture() { return textureResource_; }
+Base::RenderResource* Camera::GetRenderResource() {
+	// レンダリングリソースを返す
+	return &renderResource_;
+}

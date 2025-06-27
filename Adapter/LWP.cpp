@@ -40,11 +40,11 @@ void Engine::Run(IScene* firstScene) {
 		object_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
 
 		// デバッグカメラのOnOffでレンダリングに使うカメラを切り替える
-		directXCommon_->SetMainCamera(
+		/*directXCommon_->SetMainCamera(
 			debugCamera_->GetActiveFlag() ?
 			debugCamera_->GetCamera() :
 			sceneManager_->GetMainCamera()
-		);
+		);*/
 
 		resource_->Update();	// リソース更新（アニメーションの更新処理）
 		primitive_->Update();
@@ -168,7 +168,7 @@ void Engine::DebugGUI() {
 			ImGui::EndTabItem();
 		}
 
-		debugCamera_->DebugGUI(sceneManager_->GetMainCamera());
+		debugCamera_->DebugGUI();
 		ImGui::EndTabBar();
 	}
 	ImGui::End();

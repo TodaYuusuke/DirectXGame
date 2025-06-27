@@ -34,12 +34,12 @@ void Manager::Draw(Base::RendererManager* manager) {
 
 // インスタンスのポインタをセット（ユーザー呼び出し不要）
 void Manager::SetPointer(IPrimitive* ptr) {
-	primitives_.SetPointer(ptr);
+	primitives_.SetPtr(ptr);
 	ptr->name += std::to_string(primitiveCount_++);
 }
 // インスタンスのポインタを解放（ユーザー呼び出し不要）
 void Manager::DeletePointer(IPrimitive* ptr) {
-	primitives_.DeletePointer(ptr);
+	primitives_.DeletePtr(ptr);
 }
 
 

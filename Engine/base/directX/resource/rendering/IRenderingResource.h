@@ -16,12 +16,22 @@ namespace LWP::Base {
 		// 画面クリア
 		virtual void Clear(ID3D12GraphicsCommandList* list) = 0;
 
-		// 現在のバリアを取得
+		/// <summary>
+		/// 現在のバリアを取得
+		/// </summary>
+		/// <returns></returns>
 		D3D12_RESOURCE_STATES GetBarrier() { return currentBarrierState; }
-		// リソースバリアを変更
+		/// <summary>
+		/// リソースバリアを変更
+		/// </summary>
+		/// <param name="state"></param>
+		/// <param name="list"></param>
 		void ChangeResourceBarrier(D3D12_RESOURCE_STATES state, ID3D12GraphicsCommandList* list) {
 			// 変更するバリアと今のバリアが同じ場合は何もしない
 			if (currentBarrierState == state) { return; }
+
+			// previous を保存しておく
+			previousBarrierState = currentBarrierState;
 
 			// TransitionBarrierの設定
 			D3D12_RESOURCE_BARRIER barrier{};
@@ -30,7 +40,7 @@ namespace LWP::Base {
 			// Noneにしておく
 			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 			// 全てのサブリソースを選択
-			barrier.Transition.Subresource = 0xFFFFFFFF;
+			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 			// バリアを張る対象のリソース
 			barrier.Transition.pResource = resource_.Get();
 			// 遷移前（現在）のResourceState
@@ -42,6 +52,39 @@ namespace LWP::Base {
 			list->ResourceBarrier(1, &barrier);
 			// 現在のステータスを変更しておく
 			currentBarrierState = state;
+		}
+		/// <summary>
+		/// バリアを1つ前の状態に戻す関数
+		/// </summary>
+		/// <param name="list"></param>
+		void RevertResourceBarrier(ID3D12GraphicsCommandList* list) {
+			// 不正な状態（まだ一度もバリアを変更していない場合）ならばエラー
+			//assert(previousBarrierState != InvalidState && "RevertResourceBarrier() called before any ChangeResourceBarrier() call.");
+			if (previousBarrierState == InvalidState) { return; }
+			// 変更するバリアと今のバリアが同じ場合は何もしない
+			if (currentBarrierState == previousBarrierState) { return; }
+
+			// TransitionBarrierの設定
+			D3D12_RESOURCE_BARRIER barrier{};
+			// 今回のバリアはTransition
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			// Noneにしておく
+			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			// 全てのサブリソースを選択
+			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+			// バリアを張る対象のリソース
+			barrier.Transition.pResource = resource_.Get();
+			// 遷移前（現在）のResourceState
+			barrier.Transition.StateBefore = currentBarrierState;
+			// 遷移後のResourceState
+			barrier.Transition.StateAfter = previousBarrierState;
+
+			// リソースバリア変更
+			list->ResourceBarrier(1, &barrier);
+			// 現在のステータスと前のステータスを交換しておく
+			D3D12_RESOURCE_STATES tmp = currentBarrierState;
+			currentBarrierState = previousBarrierState;
+			previousBarrierState = tmp;
 		}
 
 		/// <summary>
@@ -72,6 +115,11 @@ namespace LWP::Base {
 			scissorRect.bottom = height;
 			return scissorRect;
 		}
+		/// <summary>
+		/// Mipレベル数を返す 
+		/// </summary>
+		/// <returns></returns>
+		UINT16 GetMipLevels() const { return desc.MipLevels; }
 
 	public: // ** パブリックなメンバ変数 ** //
 		
@@ -88,8 +136,12 @@ namespace LWP::Base {
 
 	protected: // ** プライベートなメンバ変数 ** //
 
+		const D3D12_RESOURCE_STATES InvalidState = static_cast<D3D12_RESOURCE_STATES>(0xFFFFFFFF);	// 無効な状態
+
 		// 現在のリソースバリア
 		D3D12_RESOURCE_STATES currentBarrierState;
+		// 前回のリソースバリア
+		D3D12_RESOURCE_STATES previousBarrierState = InvalidState;
 
 	public: // ** オペレーターオーバーロード ** //
 

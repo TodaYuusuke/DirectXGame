@@ -94,6 +94,7 @@ float32_t4 main(PSInput input) : SV_TARGET {
 	}
 
 	shader << R"(
+	output.a = 1.0f;
 	return output;
 }
 )";

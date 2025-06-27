@@ -11,11 +11,14 @@ using namespace LWP::Math;
 using namespace LWP::Object;
 
 DirectionLight::DirectionLight() {
+	Object::Manager::GetInstance()->SetPtr(this);	// ポインタを解除
 	// リソースの初期化
 	viewBuffer_.Init();
 	shadowMap_.Init();
 }
-
+DirectionLight::~DirectionLight() {
+	Object::Manager::GetInstance()->DeletePtr(this);	// ポインタを解除
+}
 // 初期化
 void DirectionLight::Initialize() {
 	color = Utility::ColorPattern::WHITE;

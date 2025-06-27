@@ -179,7 +179,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\copy\Copy.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\ImGuiRender.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\RenderClear.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\RenderingPipeline.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
@@ -229,7 +232,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
     <ClCompile Include="Engine\object\core\Terrain.cpp" />
-    <ClCompile Include="Engine\object\IObject.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\TransformEuler.cpp" />
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
@@ -327,8 +329,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h" />
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderPass\compute\IComputePass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\copy\Copy.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\IGraphicsPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\ImGuiRender.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\RenderClear.h" />
     <ClInclude Include="Engine\base\directX\renderPass\RenderingPipeline.h" />
     <ClInclude Include="Engine\base\directX\renderPass\IRenderPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\postprocess\IPostProcessPass.h" />

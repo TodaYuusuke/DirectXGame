@@ -76,6 +76,18 @@ namespace LWP::Base {
 		/// </summary>
 		Command* GetCommand() { return &commander_; }
 
+		void Reset() {
+			// 次のフレームのためにリセット
+			normalRender_.Reset();
+			postRenderer_.Reset();
+			meshRenderer_.Reset();
+			particleRenderer_.Reset();
+			shadowRender_.Reset();
+			ppRender_.Reset();
+			copyRenderer_.Reset();
+			// リソースもリセット
+			buffers_.Reset();
+		}
 
 	private: // ** メンバ変数 ** //
 

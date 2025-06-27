@@ -47,6 +47,10 @@ namespace LWP::Object {
 		/// </summary>
 		/// <param name="capacityMultiply">パーティクル最大量の倍率</param>
 		GPUParticle(int capacityMultiply);
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~GPUParticle();
 
 		// 初期化
 		void Initialize() override final;

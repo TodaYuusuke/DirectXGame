@@ -23,10 +23,10 @@ void main(
         Vertex vertex = mVertices[vertexIndex];
         
         // 出力する頂点のデータを求める
-        outVerts[gtid].pos = mul(mul(vertex.position, iWorldTransform[gid].wtf.m), cCamera.m);
-        outVerts[gtid].worldPos = mul(vertex.position, iWorldTransform[gid].wtf.m).xyz;
+        outVerts[gtid].position = mul(mul(vertex.position, iWorldTransform[gid].m), cCamera.m);
+        outVerts[gtid].worldPos = mul(vertex.position, iWorldTransform[gid].m).xyz;
         outVerts[gtid].texcoord = vertex.texcoord;
-        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) iWorldTransform[gid].wtf.inverse)));
+        outVerts[gtid].normal = normalize(mul(vertex.normal, transpose((float32_t3x3) iWorldTransform[gid].inverse)));
         outVerts[gtid].color = vertex.color;
         outVerts[gtid].mIndex = vertex.mIndex + (gid * mMetadata.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }

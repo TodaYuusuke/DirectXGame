@@ -99,12 +99,12 @@ void CollisionManager::Update() {
 }
 
 void CollisionManager::SetPointer(Collision* ptr) {
-	collisions_.SetPointer(ptr);
+	collisions_.SetPtr(ptr);
 	ptr->SetSerial(indexManager_.UseEmpty());	// Indexを与える
 	ptr->SetOctree(&octree_);	// オクトツリーを渡す
 }
 void CollisionManager::DeletePointer(Collision* ptr) {
-	collisions_.DeletePointer(ptr);
+	collisions_.DeletePtr(ptr);
 }
 
 void CollisionManager::DebugGUI() {

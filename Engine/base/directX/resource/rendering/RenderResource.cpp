@@ -15,7 +15,7 @@ void RenderResource::Init(Utility::Color clearColor) {
 	// 1. Resourceの設定
 	desc.Width = UINT(width);
 	desc.Height = UINT(height);
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.DepthOrArraySize = 1;
 	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	desc.SampleDesc.Count = 1;
@@ -61,7 +61,7 @@ void RenderResource::InitUAV(){
 	// 1. Resourceの設定
 	desc.Width = UINT(width);
 	desc.Height = UINT(height);
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.DepthOrArraySize = 1;
 	desc.Format = DXGI_FORMAT_R32_SINT;
 	desc.SampleDesc.Count = 1;
