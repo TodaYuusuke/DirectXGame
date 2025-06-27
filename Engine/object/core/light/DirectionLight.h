@@ -43,9 +43,9 @@ namespace LWP::Object {
 		~DirectionLight();
 
 		// 初期化
-		void Initialize() override;
+		void Init() override;
 		// 更新
-		void Update(Base::RendererManager* manager) override;
+		void Update() override;
 
 		// ビュープロジェクションを返す関数
 		Math::Matrix4x4 GetViewProjection() const;

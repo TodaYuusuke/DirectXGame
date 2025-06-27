@@ -15,32 +15,28 @@ DirectXCommon::DirectXCommon() {}
 void DirectXCommon::Init() {
 	renderingPipeline_ = std::make_unique<RenderingPipeline>();
 	renderingPipeline_->Init();
-	// レンダラー初期化
-	renderer_ = std::make_unique<RendererManager>();
-	renderer_->Init();
 }
 
-void DirectXCommon::SetMainCamera(Object::Camera* camera) {
-	// ポストプロセスを行うか確認
-	if (camera->pp.use) {
-		// カメラのリソースに書き込み
-		//renderer_->AddTarget(camera->GetBufferView(), camera->GetRenderResource(), &depthStencil_);
-		// ポストプロセス用のターゲットセット
-		//renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_, &camera->pp);
-	}
-	// しないならば
-	else {
-		// 直接BackBufferに書き込み
-		//renderer_->AddTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
-	}
-
-	// SpriteをBackBufferに
-	//renderer_->AddSpriteTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
-}
+//void DirectXCommon::SetMainCamera(Object::Camera* camera) {
+//	// ポストプロセスを行うか確認
+//	if (camera->pp.use) {
+//		// カメラのリソースに書き込み
+//		//renderer_->AddTarget(camera->GetBufferView(), camera->GetRenderResource(), &depthStencil_);
+//		// ポストプロセス用のターゲットセット
+//		//renderer_->AddTarget(camera->GetRenderResource(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_, &camera->pp);
+//	}
+//	// しないならば
+//	else {
+//		// 直接BackBufferに書き込み
+//		//renderer_->AddTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
+//	}
+//
+//	// SpriteをBackBufferに
+//	//renderer_->AddSpriteTarget(camera->GetBufferView(), &backBuffers_[swapChain_->GetCurrentBackBufferIndex()], &depthStencil_);
+//}
 
 void DirectXCommon::DrawCall() {
 	renderingPipeline_->DrawCall();
-	renderer_->Reset();
 }
 
 void DirectXCommon::DebugGUI() {

@@ -53,9 +53,9 @@ namespace LWP::Object {
 		~GPUParticle();
 
 		// 初期化
-		void Initialize() override final;
+		void Init() override final;
 		// 更新
-		void Update(Base::RendererManager* manager) override final;
+		void Update() override final;
 
 		// パーティクルを追加
 		void Add(uint32_t value);

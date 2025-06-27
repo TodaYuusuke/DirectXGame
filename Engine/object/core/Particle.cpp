@@ -29,7 +29,7 @@ namespace LWP::Object {
 		Object::Manager::GetInstance()->DeletePtr(this);	// ポインタを解除
 	}
 
-	void Particle::Update(Base::RendererManager* manager) {
+	void Particle::Update() {
 		if (!isActive) { return; }
 		// 必須の設定だがいい感じに設定できるタイミングがないので無理やりここで設定
 		model.isActive = false;
@@ -43,9 +43,6 @@ namespace LWP::Object {
 				it++; // 次の要素に進む
 			}
 		}
-		// パーティクル用のデータ登録関数を呼び出す
-		//manager->AddParticleData(primitive, data);
-		manager;
 	}
 
 		// パーティクルを追加

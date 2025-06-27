@@ -90,7 +90,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		virtual void Draw(Base::RendererManager* manager);
+		virtual void Draw();
 		/// <summary>
 		/// ImGui
 		/// </summary>

@@ -20,18 +20,15 @@ DirectionLight::~DirectionLight() {
 	Object::Manager::GetInstance()->DeletePtr(this);	// ポインタを解除
 }
 // 初期化
-void DirectionLight::Initialize() {
+void DirectionLight::Init() {
 	color = Utility::ColorPattern::WHITE;
 	rotation = { 1.57f,0.0f,0.0f };
 	intensity = 1.0f;
-	name = "DirectionLight";
 }
 // 更新
-void DirectionLight::Update(Base::RendererManager* manager) {
+void DirectionLight::Update() {
 	if (!isActive) { return; }
 
-	// データを登録
-	manager->AddLightData(this);
 	// 平行光源のシャドウマッピングを一時的に停止
 	//*viewBuffer_.data_ = GetViewProjection();
 	//manager->AddTarget(viewBuffer_.GetGPUView(), &shadowMap_);

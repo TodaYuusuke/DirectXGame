@@ -36,7 +36,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Draw(Base::RendererManager* manager);
+		void Draw();
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetPointer(IPrimitive* ptr);

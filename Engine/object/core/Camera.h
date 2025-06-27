@@ -50,9 +50,9 @@ namespace LWP::Object {
 		~Camera();
 
 		// 初期化
-		void Initialize() override;
+		void Init() override;
 		// 更新
-		void Update(Base::RendererManager* manager) override;
+		void Update() override;
 
 		/// <summary>
 		/// このカメラをメインの描画に使用する

@@ -37,7 +37,7 @@ void Engine::Run(IScene* firstScene) {
 		// 更新処理
 		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
 		debugCamera_->Update();	// デバッグカメラ更新はここで
-		object_->Update(directXCommon_->GetRendererManager());	// 描画に必要なデータをRendererManagerに登録している（レンダーターゲットの登録もここで行っている）
+		object_->Update();	// オブジェクトの更新処理
 
 		// デバッグカメラのOnOffでレンダリングに使うカメラを切り替える
 		/*directXCommon_->SetMainCamera(
@@ -51,7 +51,7 @@ void Engine::Run(IScene* firstScene) {
 		collision_->Update();	// 当たり判定検証
 
 		// Primitiveの描画処理
-		primitive_->Draw(directXCommon_->GetRendererManager());
+		primitive_->Draw();
 
 		EndFrame();
 	}

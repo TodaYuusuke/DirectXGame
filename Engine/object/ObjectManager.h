@@ -34,7 +34,7 @@ namespace LWP::Object {
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update(Base::RendererManager* manager);
+		void Update();
 
 		/// <summary>
 		/// メインカメラにセットする関数
@@ -46,12 +46,12 @@ namespace LWP::Object {
 		Camera* GetMainCamera() { return mainCamera_; }
 
 		// 配列にポインタを登録する関数
-		void SetPtr(Camera* ptr) { cameras_.SetPtr(ptr); }
-		void SetPtr(Particle* ptr) { particle_.SetPtr(ptr); }
-		void SetPtr(GPUParticle* ptr) { gpuParticle_.SetPtr(ptr); }
-		void SetPtr(Terrain* ptr) { terrain_.SetPtr(ptr); }
-		void SetPtr(DirectionLight* ptr) { directionLight_.SetPtr(ptr); }
-		void SetPtr(PointLight* ptr) { pointLight_.SetPtr(ptr); }
+		void SetPtr(Camera* ptr);
+		void SetPtr(Particle* ptr);
+		void SetPtr(GPUParticle* ptr);
+		void SetPtr(Terrain* ptr);
+		void SetPtr(DirectionLight* ptr);
+		void SetPtr(PointLight* ptr);
 		// 配列からポインタを削除する関数
 		void DeletePtr(Camera* ptr) { cameras_.DeletePtr(ptr); }
 		void DeletePtr(Particle* ptr) { particle_.DeletePtr(ptr); }

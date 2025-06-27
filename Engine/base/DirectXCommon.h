@@ -5,12 +5,7 @@
 #include "directX/utility/descriptorHeap/RTV.h"
 #include "directX/utility/descriptorHeap/SRV.h"
 #include "directX/utility/descriptorHeap/DSV.h"
-#include "directX/RendererManager.h"
 #include "directX/renderPass/RenderingPipeline.h"
-
-#include "directX/resource/rendering/BackBuffer.h"
-#include "directX/resource/rendering/DepthStencil.h"
-
 
 #include <memory>
 
@@ -40,12 +35,6 @@ namespace LWP::Base {
 		void Init();
 
 		/// <summary>
-		/// メイン描画につかうカメラをセットする
-		/// </summary>
-		/// <param name="camera"></param>
-		void SetMainCamera(Object::Camera* camera);
-
-		/// <summary>
 		/// DrawCall
 		/// </summary>
 		void DrawCall();
@@ -55,9 +44,6 @@ namespace LWP::Base {
 		/// </summary>
 		void DebugGUI();
 
-		// アクセサ
-		RendererManager* GetRendererManager() const { return renderer_.get(); }
-
 		// ImGui用
 		UINT GetBufferCount() { return renderingPipeline_->GetBufferCount(); }
 		DXGI_FORMAT GetFormat() { return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; }
@@ -65,8 +51,6 @@ namespace LWP::Base {
 
 	private: // ** メンバ変数 ** //
 
-		// コマンド管理
-		std::unique_ptr<RendererManager> renderer_;
 		// レンダリングパイプライン
 		std::unique_ptr<RenderingPipeline> renderingPipeline_;
 

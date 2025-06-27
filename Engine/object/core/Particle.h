@@ -50,12 +50,12 @@ namespace LWP::Object {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize() override final {};
+		void Init() override final {};
 		/// <summary>
 		/// 更新
 		/// </summary>
 		/// <param name="manager"></param>
-		void Update(Base::RendererManager* manager) override final;
+		void Update() override final;
 
 		/// <summary>
 		/// パーティクルを生成

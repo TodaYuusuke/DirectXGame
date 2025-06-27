@@ -64,12 +64,7 @@ void IPrimitive::Update() {
 	// 特に何もしない
 }
 
-void IPrimitive::Draw(Base::RendererManager* manager) {
-	// アクティブでなければ描画しない
-	if (!isActive) { return; }
-
-	manager->AddPrimitiveData(this);
-}
+void IPrimitive::Draw() {}
 
 void IPrimitive::DebugGUI(const std::string& label) {
 	label;	// 形状に固有名詞が付与されたのでラベルは使用しない（長いこと不要と判断したら消す）

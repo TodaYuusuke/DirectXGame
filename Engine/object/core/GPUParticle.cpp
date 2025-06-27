@@ -10,7 +10,7 @@ using namespace LWP::Base;
 GPUParticle::GPUParticle() : GPUParticle(multiply) {}
 GPUParticle::GPUParticle(int capacityMultiply) : data_(1024 * capacityMultiply), freeListIndex_(1), freeList_(1024 * capacityMultiply), hitList_(1024 * capacityMultiply){
 	Object::Manager::GetInstance()->SetPtr(this);	// ポインタをセット
-	Initialize();
+	Init();
 	multiply = capacityMultiply;
 	*count_.data_ = 1024 * multiply;
 }
@@ -19,7 +19,7 @@ GPUParticle::~GPUParticle() {
 }
 
 
-void GPUParticle::Initialize() {
+void GPUParticle::Init() {
 	emitterSphere_.Init();
 	data_.Init();
 	freeListIndex_.Init();
@@ -29,9 +29,9 @@ void GPUParticle::Initialize() {
 
 	model.isActive = false;
 }
-void GPUParticle::Update(Base::RendererManager* manager) {
+void GPUParticle::Update() {
 	if (!isActive) { return; }
-	manager->AddParticle(this);
+	//manager->AddParticle(this);
 }
 
 void GPUParticle::Add(uint32_t value) {
