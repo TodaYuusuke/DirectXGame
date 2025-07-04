@@ -61,6 +61,6 @@ namespace LWP::Base {
 		// 光源達のメタデータをセット
 		list->SetGraphicsRootConstantBufferView(4, objManager->GetLightMetadataBuffer().GetGPUView());
 		// 平行光源のデータをセット
-		list->SetGraphicsRootConstantBufferView(5, objManager->GetDirectionLight()->GetLightBuffer().GetGPUView());
+		list->SetGraphicsRootConstantBufferView(5, objManager->GetDirLight()->GetLightBuffer().GetGPUView());
 	}
 }

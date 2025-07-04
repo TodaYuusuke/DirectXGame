@@ -15,6 +15,7 @@ namespace LWP::Object {
 		//}
 		//objects_.clear();
 		objectCount_ = 0;
+		directionLight_.name = "DirectionLight";
 		lightMetadataBuffer_.Init();
 	}
 
@@ -25,7 +26,7 @@ namespace LWP::Object {
 		for (auto& ptr : particle_.list) { ptr->Update(); }
 		for (auto& ptr : gpuParticle_.list) { ptr->Update(); }
 		for (auto& ptr : terrain_.list) { ptr->Update(); }
-		directionLight_->Update();
+		directionLight_.Update();
 		for (auto& ptr : pointLight_.list) { ptr->Update(); }
 	}
 
@@ -45,10 +46,6 @@ namespace LWP::Object {
 		terrain_.SetPtr(ptr);
 		ptr->name = "Terrain" + objectCount_++;
 	}
-	void Manager::SetPtr(DirectionLight* ptr) {
-		directionLight_ = ptr;
-		ptr->name = "DirectionLight" + objectCount_++;
-	}
 	void Manager::SetPtr(PointLight* ptr) {
 		pointLight_.SetPtr(ptr);
 		ptr->name = "PointLight" + objectCount_++;
@@ -63,7 +60,7 @@ namespace LWP::Object {
 			[this]() { /* Particleのクラスは動的生成をオフ */ },
 			[this]() { /* GPUParticleのクラスは動的生成をオフ */ },
 			[this]() { /* Terrainのクラスは動的生成をオフ */ },
-			[this]() { debugObjs_.push_back(new DirectionLight()); },
+			[this]() { /* DirectionLightのクラスは動的生成をオフ */ },
 			[this]() { debugObjs_.push_back(new PointLight()); },
 		};
 		// 選択肢の変数
@@ -106,12 +103,7 @@ namespace LWP::Object {
 					drawListBox(terrain_.list, false);
 					break;
 				case LWP::Object::Manager::Type::DirectionLight:
-					if (directionLight_) {
-						directionLight_->DebugGUI();
-					}
-					else {
-						if (ImGui::Button("Create new Instance")) { functions[selectedClass](); }
-					}
+					directionLight_.DebugGUI();
 					break;
 				case LWP::Object::Manager::Type::PointLight:
 					drawListBox(pointLight_.list, true);
