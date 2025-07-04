@@ -173,20 +173,19 @@ TransformQuat LevelData::LoadWorldTF(const nlohmann::json& data) {
 void LevelData::LoadMesh(const nlohmann::json& data, const std::string& name) {
 	// ファイルパスがあればそのパスを読み込み
 	if (data.contains("file_name")) {
-		staticModels[name].LoadShortPath("level/" + data["file_name"].get<std::string>());
+		rigidModels[name].LoadShortPath("level/" + data["file_name"].get<std::string>());
 	}
 	// ファイルパスが無いので仮でCubeを読み込み
 	else {
-		staticModels[name].LoadCube();
+		rigidModels[name].LoadCube();
 	}
 
 	// トランスフォームのパラメータ読み込み
-	TransformQuat wtf = LoadWorldTF(data["transform"]);
-	staticModels[name].ApplyWorldTransform(wtf);
+	rigidModels[name].worldTF = LoadWorldTF(data["transform"]);
 
 	// コライダーがあれば生成
 	if (data.contains("collider")) {
-		LoadCollider(data, name, wtf);
+		LoadCollider(data, name, rigidModels[name].worldTF);
 	}
 }
 void LevelData::LoadCollider(const nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf) {
@@ -199,9 +198,11 @@ void LevelData::LoadCollider(const nlohmann::json& data, const std::string& name
 		collisions[name].worldTF = wtf;
 	}
 	else if (collider["type"] == "MESH") {
+		assert(false);	// staticModelを使わないようにするので一時的にエラーを吐くようにする
+		
 		// Meshコライダーを生成
-		Collider::Mesh& m = collisions[name].SetBroadShape(Collider::Mesh());
-		m.Create(&staticModels[name]);
+		//Collider::Mesh& m = collisions[name].SetBroadShape(Collider::Mesh());
+		//m.Create(&rigidModels[name]);
 	}
 
 	// 名前を付けておく
