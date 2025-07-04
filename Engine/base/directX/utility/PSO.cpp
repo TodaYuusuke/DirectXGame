@@ -355,6 +355,22 @@ PSO& PSO::Copy(const PSO& source) {
 
 	return *this;
 }
+PSO& PSO::Copy(const PSO& source, ID3D12RootSignature* root) {
+	Copy(source);
+	switch (type_) {
+		case Type::Vertex:
+			desc_.vertex.pRootSignature = root;
+			break;
+		case Type::Compute:
+			desc_.compute.pRootSignature = root;
+			break;
+		case Type::Mesh:
+			desc_.mesh.pRootSignature = root;
+			break;
+	}
+
+	return *this;
+}
 
 D3D12_INPUT_LAYOUT_DESC PSO::CreateInputLayout() {
 	/* 頂点はバッファーで送信するので、InputLayoutは不要

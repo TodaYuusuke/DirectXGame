@@ -53,11 +53,13 @@ namespace LWP::Base {
 
 	private: // ** メンバ変数 ** //
 
-		// 各モデルタイプごとのルートシグネチャ
-		RootSignature root_;
+		RootSignature root_;	// ルートシグネチャは共通で使う
+
+		struct RasterPSO {
+			PSO solid;			// ソリッド描画
+			PSO wireframe;		// ワイヤーフレーム描画
+		};
 		// 各モデルタイプごとのPSO
-		// PSO[0] = Solid
-		// PSO[1] = Wireframe
-		std::map<Resource::ModelType, PSO[2]> psos_;
+		std::map<Resource::ModelType, RasterPSO> raster_;
 	};
 }

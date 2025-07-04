@@ -26,8 +26,7 @@ uint32_t3 GetPrimitive(Meshlet m, uint index) {
     return UnpackPrimitive(mPrimitiveIndices[m.PrimOffset + index]);
 }
 
-uint32_t GetVertexIndex(Meshlet m, uint localIndex) 
-    {
+uint32_t GetVertexIndex(Meshlet m, uint localIndex) {
     // Find the index of the vertex
     localIndex = m.VertOffset + localIndex;
     // Read 4 bytes at a time

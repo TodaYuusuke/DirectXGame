@@ -86,6 +86,8 @@ namespace LWP::Base {
 
 		// PSOの設定をコピーする関数
 		PSO& Copy(const PSO& source);
+		// PSOの設定をコピーする関数（ルートは別のものを指定するver）
+		PSO& Copy(const PSO& source, ID3D12RootSignature* root);
 
 		// ID3D12PipelineState型への暗黙の変換演算子をオーバーロード
 		operator ID3D12PipelineState* () {
