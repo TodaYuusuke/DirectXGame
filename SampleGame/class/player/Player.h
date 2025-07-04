@@ -35,7 +35,7 @@ private: // ** メンバ定数 ** //
 
 
 private: // ** メンバ変数 ** //
-	
+
 	// カメラのポインタ
 	LWP::Object::Camera* camera_ = nullptr;
 	// 速度
