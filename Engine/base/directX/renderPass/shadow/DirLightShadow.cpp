@@ -48,10 +48,14 @@ namespace LWP::Base {
 			if (!camera->isActive) { continue; }	// カメラがアクティブでない場合はスキップ
 
 			GBuffer* g = camera->GetGBuffer();
-			g->SetRenderTarget(list);	// GBufferにレンダーターゲットセット、バリア、ビューポートとシザー矩形を任せる
+
+			g->OMSetRenderTarget(list);	// GBufferにレンダーターゲットセット、バリア、ビューポートとシザー矩形を任せる
 
 			list->SetGraphicsRootConstantBufferView(0, camera->GetBufferView());	// カメラのバッファを登録
 			SetDispatchMesh(list);
+
+			// バリアを元に戻す
+			g->RevertResourceBarrier(list);
 		}
 	}
 

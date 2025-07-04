@@ -57,14 +57,14 @@ namespace LWP::Object {
 		void DeletePtr(Particle* ptr) { particle_.DeletePtr(ptr); }
 		void DeletePtr(GPUParticle* ptr) { gpuParticle_.DeletePtr(ptr); }
 		void DeletePtr(Terrain* ptr) { terrain_.DeletePtr(ptr); }
-		void DeletePtr(DirectionLight* ptr) { directionLight_.DeletePtr(ptr); }
+		void DeletePtr(DirectionLight* ptr) { directionLight_ = nullptr; ptr; }
 		void DeletePtr(PointLight* ptr) { pointLight_.DeletePtr(ptr); }
 		// 配列を描画処理に渡す関数
 		const std::list<Camera*>& GetCameras() const { return cameras_.list; }
 		const std::list<Particle*>& GetParticles() const { return particle_.list; }
 		const std::list<GPUParticle*>& GetGPUParticles() const { return gpuParticle_.list; }
 		const std::list<Terrain*>& GetTerrains() const { return terrain_.list; }
-		const std::list<DirectionLight*>& GetDirectionLights() const { return directionLight_.list; }
+		const DirectionLight* GetDirectionLight() { return directionLight_; }
 		const std::list<PointLight*>& GetPointLights() const { return pointLight_.list; }
 
 	private: // メンバ変数
@@ -82,13 +82,21 @@ namespace LWP::Object {
 		Utility::PtrManager<Particle*> particle_;
 		Utility::PtrManager<GPUParticle*> gpuParticle_;
 		Utility::PtrManager<Terrain*> terrain_;
-		Utility::PtrManager<DirectionLight*> directionLight_;
+		DirectionLight* directionLight_ = nullptr;		// インスタンスは必ず１つなのでポインタで扱う
 		Utility::PtrManager<PointLight*> pointLight_;
 		// カウンター
 		int objectCount_ = 0;
 
 		// メインカメラのポインタ
 		LWP::Object::Camera* mainCamera_ = nullptr;
+		// ライト系のメタデータ用バッファー
+		struct LightMetadata {
+			// 点光源の数
+			int pointLightCount = 0;
+			// 影の濃さ
+			float shadowDensity = 0.2f;
+		};
+		LWP::Base::ConstantBuffer<LightMetadata> lightMetadataBuffer_;
 
 	private:
 		// ImGui用変数
@@ -98,6 +106,10 @@ namespace LWP::Object {
 		std::vector<IObject*> debugObjs_;
 
 	public:
+
+		// ライト系のメタデータを取得する関数
+		const LWP::Base::ConstantBuffer<LightMetadata>& GetLightMetadataBuffer() const { return lightMetadataBuffer_; }
+
 		/// <summary>
 		/// Debug用GUI
 		/// </summary>

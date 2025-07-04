@@ -36,5 +36,6 @@ void BackBuffer::Init() {
 
 
 void BackBuffer::Clear(ID3D12GraphicsCommandList* list) {
+	ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 	list->ClearRenderTargetView(rtvInfo.cpuView, clearValue.Color, 0, nullptr);
 };

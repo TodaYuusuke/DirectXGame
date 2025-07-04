@@ -12,7 +12,6 @@ namespace LWP::Base {
 		// 解像度が同一でない場合はエラー
 		assert((src->width == dst->width) && (src->height == dst->height) && "Source and destination resources must have the same resolution.");	// ソースとデスティネーションの解像度が同じでなければならない
 
-
 		// バリアを設定
 		src->ChangeResourceBarrier(D3D12_RESOURCE_STATE_COPY_SOURCE, list);
 		dst->ChangeResourceBarrier(D3D12_RESOURCE_STATE_COPY_DEST, list);
@@ -40,7 +39,7 @@ namespace LWP::Base {
 		}
 
 		// バリアを戻す
-		src->RevertResourceBarrier(list);
-		dst->RevertResourceBarrier(list);
+		//src->RevertResourceBarrier(list);
+		//dst->RevertResourceBarrier(list);
 	}
 }

@@ -129,7 +129,7 @@ void RenderResource::InitStencilMask() {
 	//properties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0; // プロセッサの近くに配置
 
 	// 4. バリアを設定
-	currentBarrierState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	currentBarrierState = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
 	// 5. Resourceを生成する
 	hr = GPUDevice::GetInstance()->GetDevice()->CreateCommittedResource(
@@ -149,6 +149,7 @@ void RenderResource::InitStencilMask() {
 }
 
 void RenderResource::Clear(ID3D12GraphicsCommandList* list) {
+	ChangeResourceBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, list);
 	list->ClearRenderTargetView(rtvInfo.cpuView, clearValue.Color, 0, nullptr);
 };
 

@@ -41,6 +41,7 @@ namespace LWP::Base {
 
 		// パイプラインの要素を初期化
 		drawSolid_.Init();
+		deferredShading_.Init();
 		imguiRender_.Init();
 	}
 	void RenderingPipeline::DrawCall() {
@@ -54,21 +55,21 @@ namespace LWP::Base {
 		// 形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 		list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// 描画用のSRVのDescriptorHeapを設定
-		ID3D12DescriptorHeap* descriptorHeaps[] = { SRV::GetInstance()->GetHeap()};
+		ID3D12DescriptorHeap* descriptorHeaps[] = { SRV::GetInstance()->GetHeap() };
 		list->SetDescriptorHeaps(1, descriptorHeaps);
-
 
 		renderClear_.ClearAllCamera(list);	// カメラオールクリア
 
 		// コマンドを積み込む
 		drawSolid_.PushCommand(list);
+		deferredShading_.PushCommand(list);
 
 		// メインカメラの描画をバックバッファーにコピー
 		renderClear_.PushCommand(back, list);
-		copy_.PushCommand(Object::Manager::GetInstance()->GetMainCamera()->GetRenderResource(), back, list);
+		copy_.PushCommand(Object::Manager::GetInstance()->GetMainCamera()->GetTextureResource(), back, list);
+		back->ChangeResourceBarrier(D3D12_RESOURCE_STATE_PRESENT, list);	// バリアを元に戻す
 		// ImGuiの描画命令を積み込む
 		imguiRender_.PushCommand(back, list);
-
 
 		// コマンドを実行
 		commander_.Execute();

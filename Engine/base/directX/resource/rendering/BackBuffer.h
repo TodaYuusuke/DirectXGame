@@ -28,7 +28,7 @@ namespace LWP::Base {
 		void Clear(ID3D12GraphicsCommandList* list) override;
 
 	public: // ** パブリックなメンバ変数 ** //
-				
+			
 		// RTVの登録情報
 		RTVInfo rtvInfo;
 

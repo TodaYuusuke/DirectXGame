@@ -73,7 +73,11 @@ struct PointLight {
     float radius;
     float decay;
 };
-
+struct LightMetadata {
+    int32_t pointLightCount; // Point Light Count
+    
+    float32_t shadowDensity; // Shadow Density
+};
 
 // ** Output ** //
 struct VSOutput {
@@ -84,6 +88,11 @@ struct VSOutput {
     float32_t4 color    : COLOR0;
     uint32_t id         : SV_InstanceID;
 };
+struct PassThroughOutput{
+    float32_t4 position : SV_POSITION;
+    float32_t2 texcoord : TEXCOORD0;
+};
+
 struct MSOutput {
     float32_t4 position : SV_POSITION0;
     float32_t3 worldPos : POSITION0;
@@ -91,6 +100,12 @@ struct MSOutput {
     float32_t3 normal   : NORMAL0;
     float32_t4 color    : COLOR0;
     int32_t mIndex      : INDEX0;
+};
+struct GBufferOutput {
+    float32_t4 baseColor : SV_Target0;
+    float32_t4 normal : SV_Target1;     // xyz = normal(0 ~ 1), w = enableLighting Flag
+    float32_t4 pbr : SV_Target2;
+    float32_t4 worldPosition : SV_Target3;
 };
 struct ParticleColliderOutput {
     float32_t4 position : SV_POSITION0;
@@ -101,3 +116,12 @@ struct ParticleColliderOutput {
     int32_t mIndex      : INDEX0;
     uint32_t id         : INDEX1;
 };
+
+
+float32_t3 EncodeNormal(float32_t3 n) {
+    return n * 0.5f + 0.5f;
+}
+
+float32_t3 DecodeNormal(float32_t3 n) {
+    return n * 2.0f - 1.0f;
+}

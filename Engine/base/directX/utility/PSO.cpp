@@ -60,12 +60,25 @@ PSO& PSO::Init(ID3D12RootSignature* root, Type type) {
 
 	return *this;
 }
-PSO& PSO::SetRTVFormat(DXGI_FORMAT format) {
+PSO& PSO::SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats) {
+	const size_t count = formats.size();
+	assert(count > 0 && "At least one RTV format must be specified.");
+	assert(count <= D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT && "Too many RTV formats (maximum 8).");
+
+	UINT size = static_cast<UINT>(count);
+	size_t i = 0;
+
 	if (type_ == Type::Vertex) {
-		desc_.vertex.RTVFormats[0] = format;
+		desc_.vertex.NumRenderTargets = size;
+		for (DXGI_FORMAT fmt : formats) {
+			desc_.vertex.RTVFormats[i++] = fmt;
+		}
 	}
 	else if (type_ == Type::Mesh) {
-		desc_.mesh.RTVFormats[0] = format;
+		desc_.mesh.NumRenderTargets = size;
+		for (DXGI_FORMAT fmt : formats) {
+			desc_.mesh.RTVFormats[i++] = fmt;
+		}
 	}
 
 	return *this;

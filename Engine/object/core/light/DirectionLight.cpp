@@ -13,6 +13,7 @@ using namespace LWP::Object;
 DirectionLight::DirectionLight() {
 	Object::Manager::GetInstance()->SetPtr(this);	// ポインタを解除
 	// リソースの初期化
+	lightBuffer_.Init();
 	viewBuffer_.Init();
 	shadowMap_.Init();
 }
@@ -28,6 +29,12 @@ void DirectionLight::Init() {
 // 更新
 void DirectionLight::Update() {
 	if (!isActive) { return; }
+	Base::DirectionalLightStruct* data = lightBuffer_.data_;
+
+	data->vp = GetViewProjection();	// ビュープロジェクションをセット
+	data->color = color.GetVector4();
+	data->direction = (Math::Vector3{ 0.0f,0.0f,1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
+	data->intensity = intensity;
 
 	// 平行光源のシャドウマッピングを一時的に停止
 	//*viewBuffer_.data_ = GetViewProjection();

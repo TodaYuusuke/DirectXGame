@@ -15,6 +15,7 @@ namespace LWP::Object {
 		//}
 		//objects_.clear();
 		objectCount_ = 0;
+		lightMetadataBuffer_.Init();
 	}
 
 	void Manager::Update() {
@@ -24,7 +25,7 @@ namespace LWP::Object {
 		for (auto& ptr : particle_.list) { ptr->Update(); }
 		for (auto& ptr : gpuParticle_.list) { ptr->Update(); }
 		for (auto& ptr : terrain_.list) { ptr->Update(); }
-		for (auto& ptr : directionLight_.list) { ptr->Update(); }
+		directionLight_->Update();
 		for (auto& ptr : pointLight_.list) { ptr->Update(); }
 	}
 
@@ -45,7 +46,7 @@ namespace LWP::Object {
 		ptr->name = "Terrain" + objectCount_++;
 	}
 	void Manager::SetPtr(DirectionLight* ptr) {
-		directionLight_.SetPtr(ptr);
+		directionLight_ = ptr;
 		ptr->name = "DirectionLight" + objectCount_++;
 	}
 	void Manager::SetPtr(PointLight* ptr) {
@@ -105,7 +106,12 @@ namespace LWP::Object {
 					drawListBox(terrain_.list, false);
 					break;
 				case LWP::Object::Manager::Type::DirectionLight:
-					drawListBox(directionLight_.list, true);
+					if (directionLight_) {
+						directionLight_->DebugGUI();
+					}
+					else {
+						if (ImGui::Button("Create new Instance")) { functions[selectedClass](); }
+					}
 					break;
 				case LWP::Object::Manager::Type::PointLight:
 					drawListBox(pointLight_.list, true);

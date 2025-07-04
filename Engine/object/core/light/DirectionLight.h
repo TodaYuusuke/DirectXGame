@@ -50,23 +50,18 @@ namespace LWP::Object {
 		// ビュープロジェクションを返す関数
 		Math::Matrix4x4 GetViewProjection() const;
 
+		// 平行光源のシェーダー用のバッファーを返す関数
+		const Base::ConstantBuffer<Base::DirectionalLightStruct>& GetLightBuffer() const { return lightBuffer_; }
+
 		// デバッグ用GUI
 		void DebugGUI() override;
 
-
-		// 構造体への暗黙変換
-		operator Base::DirectionalLightStruct() {
-			Base::DirectionalLightStruct result;
-			result.vp = GetViewProjection();
-			result.color = color.GetVector4();
-			result.direction = (Math::Vector3{ 0.0f,0.0f,1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
-			result.intensity = intensity;
-			return result;
-		}
-
 	private: // ** プライベートなメンバ変数 ** //
 
-		// ViewProjection
+		// 平行光源のバッファー
+		Base::ConstantBuffer<Base::DirectionalLightStruct> lightBuffer_;
+
+		// シャドウマッピング用のViewProjectionを送るバッファー
 		Base::ConstantBuffer<Math::Matrix4x4> viewBuffer_;
 		// シャドウマップ
 		Base::SM_Direction shadowMap_;

@@ -1,8 +1,7 @@
 #pragma once
 #include "../IObject.h"
 #include "base/directX/resource/data/ConstantBuffer.h"
-#include "base/directX/resource/rendering/RenderResource.h"
-#include "base/directX/resource/rendering/DepthStencil.h"
+#include "base/directX/resource/rendering/gBuffer/GBuffer.h"
 
 #include "base/directX/postProcess/PostProcessor.h"
 
@@ -67,10 +66,10 @@ namespace LWP::Object {
 		// レンダリング結果のテクスチャのポインタを受け取る関数
 		Resource::Texture GetTexture() { return textureResource_; }
 		
-		// 書き込み用のリソースを返す関数
-		Base::RenderResource* GetRenderResource();
-		// 深度マップを返す関数
-		Base::DepthStencil* GetDepthStencil() { return &depthStencil_; }
+		// GBufferを返す関数
+		Base::GBuffer* GetGBuffer() { return &gBuffer_; }
+		// レンダリング結果を書き込む用のリソースを取得する関数
+		Base::RenderResource* GetTextureResource() { return &textureResource_; }
 		/// <summary>
 		/// カメラのデータのViewを返す関数
 		/// </summary>
@@ -85,10 +84,8 @@ namespace LWP::Object {
 		Base::ConstantBuffer<Base::CameraStruct> constantBuffer_;
 
 		// 書き込むリソース
-		Base::RenderResource renderResource_;
+		Base::GBuffer gBuffer_;
 		// レンダリング結果の画像
 		Base::RenderResource textureResource_;
-		// デプスステンシルのリソース
-		Base::DepthStencil depthStencil_;
 	};
 }

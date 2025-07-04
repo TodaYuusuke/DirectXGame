@@ -169,7 +169,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
-    <ClCompile Include="Engine\base\directX\RendererManager.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\BufferGroup.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp" />
@@ -180,6 +179,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\copy\Copy.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\DeferredShading.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\ImGuiRender.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\RenderClear.cpp" />
@@ -188,6 +188,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\resource\rendering\CubeMap.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthCubeMap.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\DepthStencil.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\GBuffer.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\Albedo.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\Normal.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\PBR.cpp" />
+    <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\WorldPosition.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\RenderResource.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Point.cpp" />
@@ -316,7 +321,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
-    <ClInclude Include="Engine\base\directX\RendererManager.h" />
     <ClInclude Include="Engine\base\directX\renderer\BufferGroup.h" />
     <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h" />
@@ -330,6 +334,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h" />
     <ClInclude Include="Engine\base\directX\renderPass\compute\IComputePass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\copy\Copy.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\DeferredShading.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\IGraphicsPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\ImGuiRender.h" />
@@ -347,6 +352,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\resource\rendering\CubeMap.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\DepthCubeMap.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\DepthStencil.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\GBuffer.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\Albedo.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\Normal.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\PBR.h" />
+    <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\WorldPosition.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\IRenderingResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\RenderResource.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\shadow\IShadowMap.h" />

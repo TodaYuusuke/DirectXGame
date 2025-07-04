@@ -5,6 +5,7 @@
 #include <DirectXTex/d3dx12.h>
 
 #include <string>
+#include <initializer_list>
 
 namespace LWP::Base {
 	/// <summary>
@@ -48,7 +49,8 @@ namespace LWP::Base {
 		/// ビルダーデザインパターン
 		/// </summary>
 		PSO& Init(ID3D12RootSignature* root, Type type = Type::Vertex);
-		PSO& SetRTVFormat(DXGI_FORMAT format);
+		PSO& SetRTVFormats(const DXGI_FORMAT& format) { return SetRTVFormats({ format }); }
+		PSO& SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats);
 		PSO& SetInputLayout();
 		PSO& SetBlendState(bool enable, BlendMode mode = BlendMode::Normal);
 		PSO& SetRasterizerState(

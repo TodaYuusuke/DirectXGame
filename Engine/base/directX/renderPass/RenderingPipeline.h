@@ -4,6 +4,8 @@
 #include "graphics/DrawSolid.h"
 #include "graphics/ImGuiRender.h"
 #include "graphics/RenderClear.h"
+#include "graphics/DeferredShading.h"
+
 #include "copy/Copy.h"
 
 #include "resources/texture/Texture.h"
@@ -63,8 +65,9 @@ namespace LWP::Base {
 		// テクスチャがないときのデフォルトテクスチャ
 		Resource::Texture defaultTexture_;
 
-		DrawSolid drawSolid_;	// Solidオブジェクトを描画するパス
 		RenderClear renderClear_;	// レンダリングをクリアするパス
+		DrawSolid drawSolid_;	// Solidオブジェクトを描画するパス
+		DeferredShading deferredShading_;	// 遅延ライティングを行うパス
 		Copy copy_;		// リソースをコピーするパス
 		ImGuiRender imguiRender_;	// ImGuiを描画するパス
 

@@ -23,9 +23,8 @@ Camera::Camera() {
 	
 	// リソースの初期化
 	constantBuffer_.Init();
-	renderResource_.Init();
+	gBuffer_.Init();
 	textureResource_.Init();
-	depthStencil_.Init();
 
 	pp.Init();
 }
@@ -56,10 +55,6 @@ void Camera::DebugGUI() {
 	worldTF.DebugGUI();
 	pp.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
-	if (ImGui::TreeNode("RenderResource")) {
-		ImGuiManager::ShowRenderResource(renderResource_, 0.2f);
-		ImGui::TreePop();
-	}
 	if (ImGui::TreeNode("TextureResource")) {
 		ImGuiManager::ShowRenderResource(textureResource_, 0.2f);
 		ImGui::TreePop();
@@ -71,9 +66,4 @@ Matrix4x4 Camera::GetViewProjection() const {
 	Matrix4x4 viewMatrix = worldTF.GetAffineMatrix().Inverse();
 	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 300.0f);
 	return viewMatrix * projectionMatrix;
-}
-
-Base::RenderResource* Camera::GetRenderResource() {
-	// レンダリングリソースを返す
-	return &renderResource_;
 }
