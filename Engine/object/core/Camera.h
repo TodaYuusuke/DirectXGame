@@ -5,6 +5,8 @@
 
 #include "base/directX/postProcess/PostProcessor.h"
 
+#include "resources/texture/Texture.h"
+
 
 // データ構造体のためだけに前方宣言しなきゃいけない
 namespace LWP::Object { class Camera; }

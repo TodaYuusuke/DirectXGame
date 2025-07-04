@@ -11,6 +11,8 @@ using namespace LWP;
 
 namespace LWP::Base {
 	void RenderingPipeline::Init() {
+		HRESULT hr;
+
 		// コマンド初期化
 		commander_.Init(GPUDevice::GetInstance());
 		SRV::GetInstance()->SetCommand(&commander_);	// コマンドクラスをセット
@@ -27,7 +29,7 @@ namespace LWP::Base {
 		swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		// モニタにうつしたら、中身を廃棄
 		// コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 		Microsoft::WRL::ComPtr<IDXGISwapChain1> swapChain1;
-		HRESULT hr = GPUDevice::GetInstance()->GetFactory()->CreateSwapChainForHwnd(commander_.Queue(), WinApp::GetInstance()->GetHWND(), &swapChainDesc_, nullptr, nullptr, &swapChain1);
+		hr = GPUDevice::GetInstance()->GetFactory()->CreateSwapChainForHwnd(commander_.Queue(), WinApp::GetInstance()->GetHWND(), &swapChainDesc_, nullptr, nullptr, &swapChain1);
 		assert(SUCCEEDED(hr));
 		// SwapChain4を得る
 		swapChain1->QueryInterface(IID_PPV_ARGS(&swapChain_));
