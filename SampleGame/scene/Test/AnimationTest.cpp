@@ -15,7 +15,7 @@ AnimationTest::AnimationTest() :
 // 初期化
 void AnimationTest::Initialize() {
 	cube.LoadCube();
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 5; i++) {
 		model[i].LoadShortPath("Player/Hinmin/Player_Simple.gltf");
 		//model[i].LoadShortPath("test/Test.gltf");
 		model[i].worldTF.translation.x = i * 1.5f;
@@ -72,14 +72,6 @@ void AnimationTest::Update() {
 		col.DebugGUI();
 		ImGui::TreePop();
 	}
-
-	if (ImGui::Button("Generate Int")) { I = Random::GenerateInt(-100, 100); };
-	if (ImGui::Button("Generate Float")) { F = Random::GenerateFloat(-100.0f, 100.0f); };
-	if (ImGui::Button("Generate Vector3")) { V = Random::GenerateVector3({-100.0f,-100.0f,-100.0f}, { 100.0f,100.0f,100.0f }); };
-	ImGui::Text("Int : %d", I);
-	ImGui::Text("Float : %f", F);
-	ImGui::Text("Vector3 : (%f, %f, %f)", V.x, V.y, V.z);
-
 	ImGui::End();
 
 	//Vector3 v = { 0.0f,0.0f,0.0f };

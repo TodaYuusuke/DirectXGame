@@ -115,7 +115,7 @@ namespace LWP::Base {
 			// ** ---------- SkinModelをDispatch ---------- ** 
 			Models::FillMode<SkinningModel, Models::SkinBuffer>& s = m.skin;
 			// Solidの描画処理
-			if (!r.solid.ptrs.list.empty()) {
+			if (!s.solid.ptrs.list.empty()) {
 				// 各インスンタンスのバッファをセット
 				list->SetGraphicsRootConstantBufferView(2, s.solid.buffer.common.GetGPUView());
 				list->SetGraphicsRootDescriptorTable(7, s.solid.buffer.inst->GetGPUView());
@@ -125,7 +125,7 @@ namespace LWP::Base {
 				list->DispatchMesh(d.GetMeshletCount(), 1, 1);	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			}
 			// WireFrameの描画処理
-			if (!r.wireFrame.ptrs.list.empty()) {
+			if (!s.wireFrame.ptrs.list.empty()) {
 				// 追加のViewをセット
 				list->SetGraphicsRootConstantBufferView(2, s.wireFrame.buffer.common.GetGPUView());
 				list->SetGraphicsRootDescriptorTable(7, s.wireFrame.buffer.inst->GetGPUView());
