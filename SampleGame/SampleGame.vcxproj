@@ -149,6 +149,7 @@
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\NullScene.cpp" />
     <ClCompile Include="scene\Test\AnimationTest.cpp" />
+    <ClCompile Include="scene\Test\AudioTest.cpp" />
     <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\NullScene.h" />
     <ClInclude Include="scene\Test\AnimationTest.h" />
+    <ClInclude Include="scene\Test\AudioTest.h" />
     <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />

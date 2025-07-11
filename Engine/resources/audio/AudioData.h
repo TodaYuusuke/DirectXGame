@@ -25,30 +25,13 @@ namespace LWP::Resource {
 
 
 		/// <summary>
-		/// 再生
+		/// 再生に必要なデータを登録
 		/// </summary>
-		void Play(float volume, UINT loopCount);
-		/// <summary>
-		/// 停止
-		/// </summary>
-		void Stop();
-		/// <summary>
-		/// 一時停止
-		/// </summary>
-		//void Pause();
-
-		/// <summary>
-		/// 音量セット
-		/// </summary>
-		/// <param name="v"></param>
-		void SetVolume(float v);
+		void SubmitSource(UINT loopCount, IXAudio2SourceVoice** pSourceVoice);
 
 	private: // ** メンバ変数 ** //
 		// XAudio2のポインタ
 		IXAudio2* xAudio_ = nullptr;
-
-		// オーディオソース
-		IXAudio2SourceVoice* pSourceVoice = nullptr;
 
 		// Waveデータ
 		WAVEFORMATEX wfex;

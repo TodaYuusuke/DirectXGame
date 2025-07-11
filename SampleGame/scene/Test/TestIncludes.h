@@ -4,4 +4,5 @@
 #include "ParticleTest.h"
 #include "SkinningTest.h"
 #include "TextureLoadTest.h"
+#include "AudioTest.h"
 
