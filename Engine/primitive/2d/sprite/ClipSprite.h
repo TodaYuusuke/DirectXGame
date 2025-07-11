@@ -6,7 +6,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 部分的に切り抜いて描画するスプライト
 	/// </summary>
-	class ClipSprite final
+	class ClipSprite
 		: public ISprite {
 	public: // ** パブリックなメンバ変数 ** //
 

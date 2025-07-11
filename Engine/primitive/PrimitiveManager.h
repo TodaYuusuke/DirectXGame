@@ -66,9 +66,13 @@ namespace LWP::Primitive {
 		void DebugGUI();
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetPtr(ISprite* ptr);
+		void SetSpritePtr(ISprite* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeletePtr(ISprite* ptr) { sprites_.DeletePtr(ptr); }
+		void DeleteSpritePtr(ISprite* ptr) { sprites_.DeletePtr(ptr); }
+		// インスタンスのポインタをセット（ユーザー呼び出し不要）
+		void SetBillboardPtr(IBillboard3D* ptr);
+		// インスタンスのポインタを解放（ユーザー呼び出し不要）
+		void DeleteBillboardPtr(IBillboard3D* ptr) { billboards3D_.DeletePtr(ptr); }
 
 		// Plane系の描画に使うバッファーを送る関数
 		PlaneBuffers* GetPlaneBuffer() { return &spriteBuffers_; }
@@ -83,11 +87,15 @@ namespace LWP::Primitive {
 		
 
 		enum class Type {
-			Sprite,
+			Sprite, Billboard,
 		};
 		// 全Spriteのポインタリスト
 		Utility::PtrManager<ISprite*> sprites_;
 		PlaneBuffers spriteBuffers_;
+
+		// Billboard3Dのポインタリスト
+		Utility::PtrManager<IBillboard3D*> billboards3D_;
+		PlaneBuffers billboard3DBuffers_;
 
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IPrimitive*> debugPris;
@@ -99,5 +107,9 @@ namespace LWP::Primitive {
 		/// スプライト系のDebugGUI
 		/// </summary>
 		void SpriteDebugGUI();
+		/// <summary>
+		/// ビルボード系のDebugGUI
+		/// </summary>
+		void BillboardDebugGUI();
 	};
 }

@@ -6,12 +6,12 @@ using namespace LWP::Math;
 
 namespace LWP::Primitive {
 	ISprite::ISprite() {
-		Primitive::Manager::GetInstance()->SetPtr(this);	// 管理クラスにポインタをセット
+		Primitive::Manager::GetInstance()->SetSpritePtr(this);	// 管理クラスにポインタをセット
 		Init();
 		//material.enableLighting = false;	// そもそもスプライトにライテイングは行わないので関係なし
 	}
 	ISprite::~ISprite() {
-		Primitive::Manager::GetInstance()->DeletePtr(this);	// 管理クラスからポインタを削除
+		Primitive::Manager::GetInstance()->DeleteSpritePtr(this);	// 管理クラスからポインタを削除
 	}
 
 	void ISprite::Init() {

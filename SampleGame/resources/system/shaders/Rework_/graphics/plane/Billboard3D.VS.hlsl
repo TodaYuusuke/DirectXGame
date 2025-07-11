@@ -1,4 +1,4 @@
-#include "Object3d.hlsli"
+#include "Plane.hlsli"
 
 float4x4 DirectionToDirection(float3 from, float3 to) {
     float c = dot(from, to);
@@ -30,30 +30,28 @@ float4x4 DirectionToDirection(float3 from, float3 to) {
     return result;
 }
 
-VertexShaderOutput main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_InstanceID) {
-    // インデックスを抽出
-    uint32_t v = gIndex[vertexID + (instanceID * 3)].vertex;
-    uint32_t w = gIndex[vertexID + (instanceID * 3)].worldTransform;
-
-    VertexShaderOutput output;
+VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_InstanceID) {
+    // 頂点を抽出
+    Vertex v = GetVertexIndex(vertexID, instanceID);
+    // ワールドトランスフォームを抽出
+    WorldTransform wtf = vWorldTransform[instanceID];
     
-    output.worldPos = mul(gVertex[v].position, gWorldTransform[w].wtf).xyz;
+    // 出力
+    VSOutputUnlit output;
     
+    // ビルボードの座標
+    float32_t3 worldPos = mul(v.position, wtf.m).xyz;
     // billboardの向いている方向
-    float3 from = normalize(float3(0.0f, 0.0f, -1.0f));
+    float32_t3 from = normalize(float3(0.0f, 0.0f, -1.0f));
     // ビルボードからカメラ方向のベクトル
-    float3 to = normalize(gCameraData.position - output.worldPos);
-    float4x4 m = DirectionToDirection(from, to);
-    output.position = mul(mul(mul(gVertex[v].position, m), gWorldTransform[w].wtf), gCameraData.m);
+    float32_t3 to = normalize(vCamera.worldPos - worldPos);
+    // 回転行列を求める
+    float32_t4x4 m = DirectionToDirection(from, to);
+    output.position = mul(mul(mul(v.position, m), wtf.m), vCamera.m);
     
-    //float4x4 m = DirectionToDirection(output.worldPos, gCameraData.position);
-    //output.position = mul(mul(gVertex[v].position, gWorldTransform[w].wtf), gCameraData.m);
-    
-    output.texcoord = gVertex[v].texcoord;
-    output.normal = normalize(mul(gVertex[v].normal, (float32_t3x3)gWorldTransform[w].inverse));
-    output.color = gVertex[v].color;
-    
-    output.id = vertexID + (instanceID * 3);
+    output.texcoord = v.texcoord;
+    output.color = v.color;
+    output.id = instanceID;
 
     return output;
 }

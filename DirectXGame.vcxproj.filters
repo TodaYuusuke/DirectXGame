@@ -809,6 +809,10 @@
     <ClInclude Include="Engine\primitive\2d\sprite\SequenceSprite.h" />
     <ClInclude Include="Engine\primitive\2d\sprite\ClipSprite.h" />
     <ClInclude Include="Engine\math\Rectangle.h" />
+    <ClInclude Include="Engine\primitive\2d\billboard3D\NormalBillboard3D.h" />
+    <ClInclude Include="Engine\primitive\2d\billboard3D\ClipBillboard3D.h" />
+    <ClInclude Include="Engine\primitive\2d\billboard3D\SequenceBillboard3D.h" />
+    <ClInclude Include="Engine\primitive\2d\billboard3D\IBillboard3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

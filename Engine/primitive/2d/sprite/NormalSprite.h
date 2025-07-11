@@ -5,7 +5,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 通常のスプライト
 	/// </summary>
-	class NormalSprite final
+	class NormalSprite
 		: public ISprite {
 	public: // ** メンバ関数 ** //
 

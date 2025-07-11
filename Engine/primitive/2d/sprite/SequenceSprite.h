@@ -5,7 +5,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 連番テクスチャ用のスプライト
 	/// </summary>
-	class SequenceSprite final
+	class SequenceSprite
 		: public ISprite {
 	public: // ** パブリックなメンバ変数 ** //
 

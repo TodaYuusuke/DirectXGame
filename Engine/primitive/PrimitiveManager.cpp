@@ -21,9 +21,23 @@ namespace LWP::Primitive {
 	void Manager::Update() {
 		// 全てのバッファーをリセット
 		spriteBuffers_.Reset();
+		billboard3DBuffers_.Reset();
 
-		// 更新処理
+		// 更新処理（スプライト）
 		for (ISprite* p : sprites_.list) {
+			// primitiveを更新
+			p->Update();
+
+			// バッファーにデータをセット
+			if (p->isActive) {
+				for (const Vertex& v : p->vertices) { spriteBuffers_.vertices.Add(v); }
+				spriteBuffers_.materials.Add(p->material);
+				spriteBuffers_.wtf.Add(p->worldTF);
+				spriteBuffers_.count++;
+			}
+		}
+		// 更新処理
+		for (IBillboard3D* p : billboards3D_.list) {
 			// primitiveを更新
 			p->Update();
 
@@ -40,7 +54,7 @@ namespace LWP::Primitive {
 	void Manager::DebugGUI() {
 		// どの種類のPrimitiveのリストを表示するか
 		static std::vector<const char*> typeText = {
-			"Sprite",
+			"Sprite", "Billboard",
 		};
 		static int typeID = 0;
 
@@ -52,16 +66,24 @@ namespace LWP::Primitive {
 				case Type::Sprite:
 					SpriteDebugGUI();
 					break;
+				case Type::Billboard:
+					BillboardDebugGUI();
+					break;
 			}
 
 			ImGui::EndTabItem();
 		}
 	}
 	
-	void Manager::SetPtr(ISprite* ptr) {
-		ptr->name = std::to_string(primitiveCount_++);	// 数字だけ渡す
+	void Manager::SetSpritePtr(ISprite* ptr) {
+		ptr->name = "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
 		sprites_.SetPtr(ptr);
 	}
+	void Manager::SetBillboardPtr(IBillboard3D* ptr) {
+		//ptr->name = "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
+		billboards3D_.SetPtr(ptr);
+	}
+
 
 	Manager::PlaneBuffers::PlaneBuffers() 
 		: vertices(lwpC::Rendering::Primitive::Sprite::kMaxCount * 4),
@@ -70,6 +92,7 @@ namespace LWP::Primitive {
 		vertices.Init();
 		wtf.Init();
 		materials.Init();
+		count = 0;
 	}
 	void Manager::PlaneBuffers::Reset() {
 		vertices.Reset();
@@ -82,10 +105,39 @@ namespace LWP::Primitive {
 		static std::vector<std::function<void()>> functions = {
 			[this]() { debugPris.push_back(new NormalSprite()); },
 			[this]() { debugPris.push_back(new SequenceSprite()); },
+			[this]() { debugPris.push_back(new ClipSprite()); },
 		};
 		// 選択肢の変数
 		static std::vector<const char*> classText = {
-			"NormalSprite","SequenceSprite"
+			"NormalSprite","SequenceSprite","ClipSprite"
+		};
+		static int classID = 0;
+		static int currentItem = 0;
+
+		// 変更されて渡される値は添え字
+		ImGui::Combo("New Instance Type", &classID, classText.data(), static_cast<int>(classText.size()));
+		if (ImGui::Button("Create")) { functions[classID](); }
+
+		// インスタンス一覧
+		if (!sprites_.list.empty()) {
+			std::vector<const char*> itemText;
+			for (ISprite* p : sprites_.list) {
+				itemText.push_back(p->name.c_str());
+			}
+			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+			auto it = Utility::GetIteratorAtIndex(sprites_.list, currentItem);
+			if (it != sprites_.list.end()) { (*it)->DebugGUI(); } // リスト内にあったなら呼び出す
+		}
+	}
+	void Manager::BillboardDebugGUI() {
+		static std::vector<std::function<void()>> functions = {
+			[this]() { debugPris.push_back(new NormalBillboard3D()); },
+			[this]() { debugPris.push_back(new SequenceBillboard3D()); },
+			[this]() { debugPris.push_back(new ClipBillboard3D()); },
+		};
+		// 選択肢の変数
+		static std::vector<const char*> classText = {
+			"NormalBillboard3D","SequenceBillboard3D","ClipBillboard3D"
 		};
 		static int classID = 0;
 		static int currentItem = 0;
