@@ -1,12 +1,12 @@
 #pragma once
-#include "ISprite.h"
+#include "IPlane.h"
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// 連番テクスチャ用のスプライト
+	/// 連番テクスチャ用の機能クラス
 	/// </summary>
-	class SequenceSprite
-		: public ISprite {
+	class ISequence
+		: virtual public IPlane {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// 連番テクスチャのindex
@@ -14,11 +14,15 @@ namespace LWP::Primitive {
 
 
 	public: // ** メンバ関数 ** //
-
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		SequenceSprite();
+		ISequence();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		virtual ~ISequence() = default;
+
 
 		/// <summary>
 		/// 初期化（ユーザー呼び出し不要）
@@ -30,16 +34,17 @@ namespace LWP::Primitive {
 		void Update() override;
 
 		/// <summary>
-		/// スプライトのサイズを読み込まれたテクスチャと一致させる関数
+		/// テクスチャと座標を一致させる関数
 		/// </summary>
-		void FitToTexture() override;
+		/// <param name="fileName"></param>
+		void FitToTexture();
 		/// <summary>
 		///	連番テクスチャの分割サイズを設定する関数
 		/// </summary>
 		void SetSplitSize(Math::Vector2 size);
 
 
-	private: // ** プライベートなメンバ関数 ** //
+	protected: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
 		/// 派生クラス用のImGui

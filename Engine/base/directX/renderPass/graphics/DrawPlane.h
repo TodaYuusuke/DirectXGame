@@ -7,6 +7,9 @@ namespace LWP {
 	namespace Object {
 		class Camera;
 	}
+	namespace Primitive {
+		struct PlaneBuffers;
+	}
 }
 
 namespace LWP::Base {
@@ -47,12 +50,19 @@ namespace LWP::Base {
 		/// </summary>
 		void SetDrawCall(ID3D12GraphicsCommandList6* list);
 
-
 		/// <summary>
 		/// スプライトの描画
 		/// </summary>
 		void DrawSprite(ID3D12GraphicsCommandList6* list);
+		/// <summary>
+		/// ビルボード3Dの描画
+		/// </summary>
+		void DrawBillboard3D(ID3D12GraphicsCommandList6* list);
 
+		/// <summary>
+		/// Viewの設定や描画命令といった共通部分を行う関数
+		/// </summary>
+		void DrawCommon(Primitive::PlaneBuffers* buffers, ID3D12GraphicsCommandList6* list);
 
 	private: // ** メンバ変数 ** //
 
@@ -61,7 +71,6 @@ namespace LWP::Base {
 		// 各種描画用のPSO
 		struct PSOs {
 			PSO sprite;			// スプライトの描画
-			PSO billboard2D;	// ビルボード2Dの描画
 			PSO billboard3D;	// ビルボード3Dの描画
 		}psos_;
 	};

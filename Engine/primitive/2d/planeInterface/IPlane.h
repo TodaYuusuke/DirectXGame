@@ -3,9 +3,9 @@
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// スプライト系の基底クラス
+	/// Sprite & Billboardの共通インターフェース
 	/// </summary>
-	class ISprite :	public IPrimitive {
+	class IPlane : public IPrimitive {
 	public: // ** パブリックなメンバ変数 ** //
 
 		/// <summary>
@@ -16,6 +16,10 @@ namespace LWP::Primitive {
 			TopRight = 1,		// 右上
 			BottomRight = 2,	// 右下
 			BottomLeft = 3		// 左下
+		};
+		enum PlaneType {
+			Sprite,
+			Billboard3D,
 		};
 
 		/// <summary>
@@ -39,11 +43,11 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		ISprite();
+		IPlane();
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		virtual ~ISprite();
+		virtual ~IPlane() = default;
 
 		/// <summary>
 		/// 初期化（ユーザー呼び出し不要）
@@ -52,7 +56,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// 更新（ユーザー呼び出し不要）
 		/// </summary>
-		virtual void Update() override;
+		virtual void Update();
 
 		/// <summary>
 		/// 描画するテクスチャを読み込む関数（resources/texture直下からのパス）
@@ -60,9 +64,10 @@ namespace LWP::Primitive {
 		/// <param name="fileName"></param>
 		virtual void LoadTexture(const std::string& fileName);
 		/// <summary>
-		/// スプライトのサイズを読み込まれたテクスチャと一致させる関数
+		/// テクスチャと座標を一致させる関数
 		/// </summary>
-		virtual void FitToTexture();
+		/// <param name="fileName"></param>
+		virtual void FitToTexture() = 0;
 
 		/// <summary>
 		/// Debug用のImGui
@@ -73,6 +78,11 @@ namespace LWP::Primitive {
 	protected: // ** プロテクトなメンバ関数 ** //
 
 		/// <summary>
+		/// テクスチャと座標を一致させる関数
+		/// </summary>
+		/// <param name="fileName"></param>
+		void FitToTexture(Math::Vector2 size);
+		/// <summary>
 		/// 派生クラス用のImGui
 		/// </summary>
 		virtual void ChildDebugGUI() {};
@@ -81,8 +91,14 @@ namespace LWP::Primitive {
 		/// </summary>
 		void ShowAnchorPointGUI();
 		/// <summary>
-		/// FitToTexture関数を呼び出すImGui
+		/// FitToSizeを呼び出すImGui
 		/// </summary>
-		void CallFitToTextureGUI();
+		void ShowFitToTextureGUI();
+
+
+	protected: // ** プロテクトなメンバ関数 ** //
+
+		// 形状のタイプ
+		PlaneType planeType;
 	};
 }

@@ -5,6 +5,22 @@
 #include "utility/MyUtility.h"
 
 namespace LWP::Primitive {
+	PlaneBuffers::PlaneBuffers()
+		: vertices(lwpC::Rendering::Primitive::Sprite::kMaxCount * 4),
+		wtf(lwpC::Rendering::Primitive::Sprite::kMaxCount),
+		materials(lwpC::Rendering::Primitive::Sprite::kMaxCount) {
+		vertices.Init();
+		wtf.Init();
+		materials.Init();
+		count = 0;
+	}
+	void PlaneBuffers::Reset() {
+		vertices.Reset();
+		wtf.Reset();
+		materials.Reset();
+		count = 0;
+	}
+
 	void Manager::Init() {
 		//for (IPrimitive* p : primitives_.list) {
 		//	delete p;
@@ -24,7 +40,7 @@ namespace LWP::Primitive {
 		billboard3DBuffers_.Reset();
 
 		// 更新処理（スプライト）
-		for (ISprite* p : sprites_.list) {
+		for (IPlane* p : sprites_.list) {
 			// primitiveを更新
 			p->Update();
 
@@ -37,16 +53,16 @@ namespace LWP::Primitive {
 			}
 		}
 		// 更新処理
-		for (IBillboard3D* p : billboards3D_.list) {
+		for (IPlane* p : billboards3D_.list) {
 			// primitiveを更新
 			p->Update();
 
 			// バッファーにデータをセット
 			if (p->isActive) {
-				for (const Vertex& v : p->vertices) { spriteBuffers_.vertices.Add(v); }
-				spriteBuffers_.materials.Add(p->material);
-				spriteBuffers_.wtf.Add(p->worldTF);
-				spriteBuffers_.count++;
+				for (const Vertex& v : p->vertices) { billboard3DBuffers_.vertices.Add(v); }
+				billboard3DBuffers_.materials.Add(p->material);
+				billboard3DBuffers_.wtf.Add(p->worldTF);
+				billboard3DBuffers_.count++;
 			}
 		}
 	}
@@ -74,31 +90,14 @@ namespace LWP::Primitive {
 			ImGui::EndTabItem();
 		}
 	}
-	
-	void Manager::SetSpritePtr(ISprite* ptr) {
-		ptr->name = "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
+
+	void Manager::SetSpritePtr(IPlane* ptr) {
+		ptr->name += "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
 		sprites_.SetPtr(ptr);
 	}
-	void Manager::SetBillboardPtr(IBillboard3D* ptr) {
-		//ptr->name = "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
+	void Manager::SetBillboard3DPtr(IPlane* ptr) {
+		ptr->name += "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
 		billboards3D_.SetPtr(ptr);
-	}
-
-
-	Manager::PlaneBuffers::PlaneBuffers() 
-		: vertices(lwpC::Rendering::Primitive::Sprite::kMaxCount * 4),
-		  wtf(lwpC::Rendering::Primitive::Sprite::kMaxCount),
-		  materials(lwpC::Rendering::Primitive::Sprite::kMaxCount) {
-		vertices.Init();
-		wtf.Init();
-		materials.Init();
-		count = 0;
-	}
-	void Manager::PlaneBuffers::Reset() {
-		vertices.Reset();
-		wtf.Reset();
-		materials.Reset();
-		count = 0;
 	}
 
 	void Manager::SpriteDebugGUI() {
@@ -121,7 +120,7 @@ namespace LWP::Primitive {
 		// インスタンス一覧
 		if (!sprites_.list.empty()) {
 			std::vector<const char*> itemText;
-			for (ISprite* p : sprites_.list) {
+			for (IPlane* p : sprites_.list) {
 				itemText.push_back(p->name.c_str());
 			}
 			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
@@ -147,14 +146,14 @@ namespace LWP::Primitive {
 		if (ImGui::Button("Create")) { functions[classID](); }
 
 		// インスタンス一覧
-		if (!sprites_.list.empty()) {
+		if (!billboards3D_.list.empty()) {
 			std::vector<const char*> itemText;
-			for (ISprite* p : sprites_.list) {
+			for (IPlane* p : billboards3D_.list) {
 				itemText.push_back(p->name.c_str());
 			}
 			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-			auto it = Utility::GetIteratorAtIndex(sprites_.list, currentItem);
-			if (it != sprites_.list.end()) { (*it)->DebugGUI(); } // リスト内にあったなら呼び出す
+			auto it = Utility::GetIteratorAtIndex(billboards3D_.list, currentItem);
+			if (it != billboards3D_.list.end()) { (*it)->DebugGUI(); } // リスト内にあったなら呼び出す
 		}
 	}
 }

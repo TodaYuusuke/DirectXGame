@@ -1,22 +1,22 @@
-#include "ClipSprite.h"
+#include "IClip.h"
 #include "base/ImGuiManager.h"
 
 using namespace LWP::Math;
 
 namespace LWP::Primitive {
-	ClipSprite::ClipSprite() {
-		// 名前を変更（nameには番号がついているのでそれも添付）
-		name = "ClipSprite" + name;
+	IClip::IClip() {
+		name += "Clip";
+		Init();
 	}
 
-	void ClipSprite::Init() {
-		ISprite::Init();
+	void IClip::Init() {
+		IPlane::Init();
 
 		clipRect.min = { 0.0f,0.0f };
 		clipRect.max = material.texture.t.GetSize();
 	}
-	void ClipSprite::Update() {
-		ISprite::Update();
+	void IClip::Update() {
+		IPlane::Update();
 
 		// MinよりMaxのほうが小さくならないように修正
 		clipRect.min.x = std::min<float>(clipRect.min.x, clipRect.max.x);
@@ -42,8 +42,8 @@ namespace LWP::Primitive {
 		vertices[QuadCorner::BottomRight].texCoord = { uv.max.x, uv.max.y };
 		vertices[QuadCorner::BottomLeft].texCoord  = { uv.min.x, uv.max.y };
 	}
-	void ClipSprite::LoadTexture(const std::string& fileName) {
-		ISprite::LoadTexture(fileName);
+	void IClip::LoadTexture(const std::string& fileName) {
+		IPlane::LoadTexture(fileName);
 		// 読み込み後にサイズ調整
 		clipRect.min = { 0.0f,0.0f };
 		clipRect.max = material.texture.t.GetSize();
@@ -51,17 +51,12 @@ namespace LWP::Primitive {
 	}
 
 
-	void ClipSprite::FitToTexture() {
+	void IClip::FitToTexture() {
 		Vector2 size = clipRect.max - clipRect.min;
-
-		// 切り抜く領域に合わせる
-		vertices[QuadCorner::TopLeft].position     = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,         0.00f };	// 左上
-		vertices[QuadCorner::TopRight].position    = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,         0.00f };	// 右上
-		vertices[QuadCorner::BottomRight].position = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右下
-		vertices[QuadCorner::BottomLeft].position  = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左下
+		IPlane::FitToTexture(size);
 	}
 	
-	void ClipSprite::ChildDebugGUI() {
+	void IClip::ChildDebugGUI() {
 		ImGui::DragFloat2("clipSize min", &clipRect.min.x, 1.0f);
 		ImGui::DragFloat2("clipSize max", &clipRect.max.x, 1.0f);
 	}

@@ -26,12 +26,15 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::Animation anim[5];
 	//LWP::Resource::Motion motion[5];
 
-	// 通常のスプライト
-	LWP::Primitive::NormalSprite normalSprite;
-	// 連番テクスチャ用のスプライト
-	LWP::Primitive::SequenceSprite sequenceSprite;
-	// 切り抜き描画用のスプライト
-	LWP::Primitive::ClipSprite clipSprite;
+	// スプライト
+	LWP::Primitive::NormalSprite normalSprite;		// 通常
+	LWP::Primitive::SequenceSprite sequenceSprite;	// シーケンス
+	LWP::Primitive::ClipSprite clipSprite;			// クリップ
+
+	// ビルボード
+	LWP::Primitive::NormalBillboard3D normalBill;		// 通常
+	LWP::Primitive::SequenceBillboard3D sequenceBill;	// シーケンス
+	LWP::Primitive::ClipBillboard3D clipBill;			// クリップ
 
 	LWP::Object::Collision col;
 	LWP::Object::Collider::Capsule& caps;

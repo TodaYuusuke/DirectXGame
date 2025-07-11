@@ -1,25 +1,30 @@
 #pragma once
-#include "ISprite.h"
+#include "IPlane.h"
 #include "math/Rectangle.h"
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// 部分的に切り抜いて描画するスプライト
+	/// 部分的切り抜き用の機能クラス
 	/// </summary>
-	class ClipSprite
-		: public ISprite {
+	class IClip
+		: virtual public IPlane {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// 切り抜く範囲
 		Math::Rectangle2D clipRect;
 
-	public: // ** メンバ関数 ** //
 
+	public: // ** メンバ関数 ** //
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		ClipSprite();
+		IClip();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		virtual ~IClip() = default;
 
+		
 		/// <summary>
 		/// 初期化（ユーザー呼び出し不要）
 		/// </summary>

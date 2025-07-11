@@ -32,7 +32,7 @@ float4x4 DirectionToDirection(float3 from, float3 to) {
 
 VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_InstanceID) {
     // 頂点を抽出
-    Vertex v = GetVertexIndex(vertexID, instanceID);
+    Vertex v = GetSpriteVertexIndex(vertexID, instanceID);
     // ワールドトランスフォームを抽出
     WorldTransform wtf = vWorldTransform[instanceID];
     
@@ -47,8 +47,8 @@ VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_Ins
     float32_t3 to = normalize(vCamera.worldPos - worldPos);
     // 回転行列を求める
     float32_t4x4 m = DirectionToDirection(from, to);
-    output.position = mul(mul(mul(v.position, m), wtf.m), vCamera.m);
     
+    output.position = mul(mul(mul(v.position, m), wtf.m), vCamera.m);
     output.texcoord = v.texcoord;
     output.color = v.color;
     output.id = instanceID;

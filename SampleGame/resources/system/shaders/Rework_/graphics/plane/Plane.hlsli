@@ -14,10 +14,16 @@ SamplerState pSampler : register(s0);
 
 
 static const uint32_t kNumInstance = 6;
-static const uint32_t kVertexID[kNumInstance] = {
+static const uint32_t kSpriteVertexID[kNumInstance] = {
     0, 1, 2, 0, 2, 3
 };
+static const uint32_t kBillboardVertexID[kNumInstance] = {
+    0, 2, 1, 0, 3, 2
+};
 
-Vertex GetVertexIndex(uint32_t vertexID, uint32_t instanceID) {
-    return vVertex[(instanceID * 4) + kVertexID[vertexID]];
+Vertex GetSpriteVertexIndex(uint32_t vertexID, uint32_t instanceID) {
+    return vVertex[(instanceID * 4) + kSpriteVertexID[vertexID]];
+}
+Vertex GetBillboardIndex(uint32_t vertexID, uint32_t instanceID) {
+    return vVertex[(instanceID * 4) + kBillboardVertexID[vertexID]];
 }

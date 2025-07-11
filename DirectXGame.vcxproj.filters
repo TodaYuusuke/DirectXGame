@@ -118,9 +118,6 @@
     <ClCompile Include="Engine\input\controller\XInputController.cpp">
       <Filter>Engine\input\controller</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\sprite\NormalSprite.cpp">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClCompile>
     <ClCompile Include="Adapter\component\Window.cpp">
       <Filter>Adapter\component</Filter>
     </ClCompile>
@@ -354,11 +351,14 @@
     <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\PBR.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\WorldPosition.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DeferredShading.cpp" />
-    <ClCompile Include="Engine\primitive\2d\sprite\ISprite.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawPlane.cpp" />
-    <ClCompile Include="Engine\primitive\2d\sprite\SequenceSprite.cpp" />
-    <ClCompile Include="Engine\primitive\2d\sprite\ClipSprite.cpp" />
+    <ClCompile Include="Engine\primitive\2d\planeInterface\IClip.cpp" />
+    <ClCompile Include="Engine\primitive\2d\planeInterface\INormal.cpp" />
+    <ClCompile Include="Engine\primitive\2d\planeInterface\IPlane.cpp" />
+    <ClCompile Include="Engine\primitive\2d\planeInterface\ISequence.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Billboard3D.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -504,9 +504,6 @@
     </ClInclude>
     <ClInclude Include="Engine\utility\Counter.h">
       <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\sprite\NormalSprite.h">
-      <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Window.h">
       <Filter>Adapter\component</Filter>
@@ -803,16 +800,15 @@
     <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\PBR.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\WorldPosition.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DeferredShading.h" />
-    <ClInclude Include="Engine\primitive\2d\sprite\ISprite.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawPlane.h" />
-    <ClInclude Include="Engine\primitive\2d\sprite\SequenceSprite.h" />
-    <ClInclude Include="Engine\primitive\2d\sprite\ClipSprite.h" />
     <ClInclude Include="Engine\math\Rectangle.h" />
-    <ClInclude Include="Engine\primitive\2d\billboard3D\NormalBillboard3D.h" />
-    <ClInclude Include="Engine\primitive\2d\billboard3D\ClipBillboard3D.h" />
-    <ClInclude Include="Engine\primitive\2d\billboard3D\SequenceBillboard3D.h" />
-    <ClInclude Include="Engine\primitive\2d\billboard3D\IBillboard3D.h" />
+    <ClInclude Include="Engine\primitive\2d\Billboard3D.h" />
+    <ClInclude Include="Engine\primitive\2d\Sprite.h" />
+    <ClInclude Include="Engine\primitive\2d\planeInterface\IClip.h" />
+    <ClInclude Include="Engine\primitive\2d\planeInterface\INormal.h" />
+    <ClInclude Include="Engine\primitive\2d\planeInterface\IPlane.h" />
+    <ClInclude Include="Engine\primitive\2d\planeInterface\ISequence.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

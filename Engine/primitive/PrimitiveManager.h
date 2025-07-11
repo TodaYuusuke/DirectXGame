@@ -12,6 +12,26 @@
 #include <map>
 
 namespace LWP::Primitive {
+	// スプライトやビルボードの描画に使うデータ
+	struct PlaneBuffers {
+		Base::StructuredBuffer<Base::VertexStruct> vertices;		// 頂点
+		Base::StructuredBuffer<Base::WTFStruct> wtf;				// ワールドトランスフォーム
+		Base::StructuredBuffer<Base::MaterialStruct> materials;		// マテリアル
+
+		// インスタンス数
+		int count;
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		PlaneBuffers();
+
+		/// <summary>
+		/// リセットを呼び出す関数
+		/// </summary>
+		void Reset();
+	};
+
 	/// <summary>
 	/// 描画用の形状をすべて管理するクラス
 	/// </summary>
@@ -23,29 +43,6 @@ namespace LWP::Primitive {
 		/// コンストラクタをプライベートに
 		/// </summary>
 		Manager() = default;
-
-
-	public: // ** 内包構造体 ** //
-
-		// スプライトやビルボードの描画に使うデータ
-		struct PlaneBuffers {
-			Base::StructuredBuffer<Base::VertexStruct> vertices;		// 頂点
-			Base::StructuredBuffer<Base::WTFStruct> wtf;				// ワールドトランスフォーム
-			Base::StructuredBuffer<Base::MaterialStruct> materials;		// マテリアル
-
-			// インスタンス数
-			int count;
-
-			/// <summary>
-			/// デフォルトコンストラクタ
-			/// </summary>
-			PlaneBuffers();
-
-			/// <summary>
-			/// リセットを呼び出す関数
-			/// </summary>
-			void Reset();
-		};
 
 
 	public: // ** メンバ関数 ** //
@@ -66,16 +63,16 @@ namespace LWP::Primitive {
 		void DebugGUI();
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetSpritePtr(ISprite* ptr);
+		void SetSpritePtr(IPlane* ptr);
+		void SetBillboard3DPtr(IPlane* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeleteSpritePtr(ISprite* ptr) { sprites_.DeletePtr(ptr); }
-		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetBillboardPtr(IBillboard3D* ptr);
-		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeleteBillboardPtr(IBillboard3D* ptr) { billboards3D_.DeletePtr(ptr); }
+		void DeleteSpritePtr(IPlane* ptr) { sprites_.DeletePtr(ptr); }
+		void DeleteBillboard3DPtr(IPlane* ptr) { billboards3D_.DeletePtr(ptr); }
 
 		// Plane系の描画に使うバッファーを送る関数
-		PlaneBuffers* GetPlaneBuffer() { return &spriteBuffers_; }
+		PlaneBuffers* GetSpriteBuffer() { return &spriteBuffers_; }
+		// Plane系の描画に使うバッファーを送る関数
+		PlaneBuffers* GetBillboard3DBuffer() { return &billboard3DBuffers_; }
 
 
 	private: // ** メンバ変数 ** //
@@ -90,11 +87,11 @@ namespace LWP::Primitive {
 			Sprite, Billboard,
 		};
 		// 全Spriteのポインタリスト
-		Utility::PtrManager<ISprite*> sprites_;
+		Utility::PtrManager<IPlane*> sprites_;
 		PlaneBuffers spriteBuffers_;
 
 		// Billboard3Dのポインタリスト
-		Utility::PtrManager<IBillboard3D*> billboards3D_;
+		Utility::PtrManager<IPlane*> billboards3D_;
 		PlaneBuffers billboard3DBuffers_;
 
 		// デバッグ用の生成したインスンタンスを格納しておく配列

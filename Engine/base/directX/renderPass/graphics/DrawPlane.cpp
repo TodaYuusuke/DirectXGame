@@ -22,7 +22,11 @@ namespace LWP::Base {
 			.SetSystemVS("Rework_/graphics/plane/Sprite.VS.hlsl")
 			.SetSystemPS("Rework_/graphics/plane/Plane.PS.hlsl")
 			.Build();
-	} 
+		// ビルボード3Dの描画
+		psos_.billboard3D.Copy(psos_.sprite)
+			.SetSystemVS("Rework_/graphics/plane/Billboard3D.VS.hlsl")
+			.Build();
+	}
 
 	void DrawPlane::PushCommand(ID3D12GraphicsCommandList6* list) {
 		// ルートシグネチャをセット
@@ -67,20 +71,26 @@ namespace LWP::Base {
 	void DrawPlane::SetDrawCall(ID3D12GraphicsCommandList6* list) {
 		// Spriteの描画
 		DrawSprite(list);
+		DrawBillboard3D(list);
 	}
 
 	void DrawPlane::DrawSprite(ID3D12GraphicsCommandList6* list) {
-		Primitive::Manager::PlaneBuffers* buffer = Primitive::Manager::GetInstance()->GetPlaneBuffer();
+		list->SetPipelineState(psos_.sprite);	// PSOを設定
+		DrawCommon(Primitive::Manager::GetInstance()->GetSpriteBuffer(), list);
+	}
+	void DrawPlane::DrawBillboard3D(ID3D12GraphicsCommandList6* list) {
+		list->SetPipelineState(psos_.billboard3D);	// PSOを設定
+		DrawCommon(Primitive::Manager::GetInstance()->GetBillboard3DBuffer(), list);
+	}
 
-		// スプライトのインスタンスがないなら描画を行わない
-		if (buffer->count <= 0) { return; }
+	void DrawPlane::DrawCommon(Primitive::PlaneBuffers* buffers, ID3D12GraphicsCommandList6* list) {
+		// インスタンスがないなら描画を行わない
+		if (buffers->count <= 0) { return; }
 
 		// Viewを設定
-		list->SetGraphicsRootDescriptorTable(0, buffer->vertices.GetGPUView());		// 頂点
-		list->SetGraphicsRootDescriptorTable(1, buffer->wtf.GetGPUView());			// ワールドトランスフォーム
-		list->SetGraphicsRootDescriptorTable(3, buffer->materials.GetGPUView());	// マテリアル
-		list->SetPipelineState(psos_.sprite);	// PSOを設定
-		list->DrawInstanced(6, buffer->count, 0, 0);
-
+		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());		// 頂点
+		list->SetGraphicsRootDescriptorTable(1, buffers->wtf.GetGPUView());			// ワールドトランスフォーム
+		list->SetGraphicsRootDescriptorTable(3, buffers->materials.GetGPUView());	// マテリアル
+		list->DrawInstanced(6, buffers->count, 0, 0);
 	}
 }
