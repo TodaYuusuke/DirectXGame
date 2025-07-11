@@ -1,5 +1,3 @@
-#include "Triangle.h"
-#include "Surface.h"
-#include "Sprite.h"
-#include "Billboard2D.h"
-#include "Billboard3D.h"
+#include "sprite/NormalSprite.h"
+#include "sprite/SequenceSprite.h"
+#include "sprite/ClipSprite.h"

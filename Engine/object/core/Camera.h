@@ -14,6 +14,7 @@ namespace LWP::Object { class Camera; }
 namespace LWP::Base {
 	struct CameraStruct {
 		Math::Matrix4x4 viewProjection;
+		Math::Matrix4x4 vp2D;
 		Math::Matrix4x4 rotate;
 		Math::Vector3 position;
 

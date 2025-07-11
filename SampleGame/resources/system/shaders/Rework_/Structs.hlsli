@@ -55,6 +55,7 @@ struct ModelMetadata {
 // ** Rendering ** //
 struct Camera {
     float32_t4x4 m;         // ViewProjection
+    float32_t4x4 vp2D;      // ViewProjection for Sprite 
     float32_t4x4 rotate;    // RotateMatrix for Billboard
     float32_t3 worldPos;
 };
@@ -86,6 +87,12 @@ struct VSOutput {
     float32_t2 texcoord : TEXCOORD0;
     float32_t3 normal   : NORMAL0;
     float32_t4 color    : COLOR0;
+    uint32_t id         : SV_InstanceID;
+};
+struct VSOutputUnlit {  // No lighting
+    float32_t4 position : SV_POSITION;
+    float32_t2 texcoord : TEXCOORD0;
+    float32_t4 color : COLOR0;
     uint32_t id         : SV_InstanceID;
 };
 struct PassThroughOutput{

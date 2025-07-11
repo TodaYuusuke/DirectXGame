@@ -18,9 +18,9 @@ Capsule::Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end,
 
 #if DEMO
 	// カプセルモデルを生成
-	capsuleModel.Set();
-	capsuleModel.material.enableLighting = false;
-	capsuleModel.isWireFrame = true;
+	//capsuleModel.Set();
+	//capsuleModel.material.enableLighting = false;
+	//capsuleModel.isWireFrame = true;
 #endif
 };
 // コピーコンストラクタ
@@ -28,22 +28,22 @@ Capsule::Capsule(const Capsule& other) {
 	*this = other;
 
 #if DEMO
-	// カプセルモデルを生成
-	capsuleModel.Set();
-	capsuleModel.material.enableLighting = false;
-	capsuleModel.isWireFrame = true;
+	//// カプセルモデルを生成
+	//capsuleModel.Set();
+	//capsuleModel.material.enableLighting = false;
+	//capsuleModel.isWireFrame = true;
 #endif
 }
 
 
 void Capsule::Update() {
 #if DEMO
-	Data d(*this);
-	capsuleModel.CreateFromCapsuleCol(d.start, d.end, d.radius);
-	// isActive切り替え
-	capsuleModel.isActive = isShowWireFrame && isActive;
-	// 色を白に戻す
-	capsuleModel.material.color = Utility::Color(Utility::ColorPattern::WHITE);
+	//Data d(*this);
+	//capsuleModel.CreateFromCapsuleCol(d.start, d.end, d.radius);
+	//// isActive切り替え
+	//capsuleModel.isActive = isShowWireFrame && isActive;
+	//// 色を白に戻す
+	//capsuleModel.material.color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
@@ -85,7 +85,7 @@ void Capsule::DebugGUI() {
 void Capsule::Hit() {
 #if DEMO
 	// hitしているときは色を変える
-	capsuleModel.material.color = Utility::Color(Utility::ColorPattern::RED);
+	//capsuleModel.material.color = Utility::Color(Utility::ColorPattern::RED);
 #endif
 }
 

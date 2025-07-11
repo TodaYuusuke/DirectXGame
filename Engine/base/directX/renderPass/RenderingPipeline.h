@@ -2,6 +2,7 @@
 #include "utility/Singleton.h"
 
 #include "graphics/DrawSolid.h"
+#include "graphics/DrawPlane.h"
 #include "graphics/ImGuiRender.h"
 #include "graphics/RenderClear.h"
 #include "graphics/DeferredShading.h"
@@ -66,7 +67,9 @@ namespace LWP::Base {
 		Resource::Texture defaultTexture_;
 
 		RenderClear renderClear_;	// レンダリングをクリアするパス
+
 		DrawSolid drawSolid_;	// Solidオブジェクトを描画するパス
+		DrawPlane drawPlane_;	// Planeオブジェクトを描画するパス
 		DeferredShading deferredShading_;	// 遅延ライティングを行うパス
 		Copy copy_;		// リソースをコピーするパス
 		ImGuiRender imguiRender_;	// ImGuiを描画するパス

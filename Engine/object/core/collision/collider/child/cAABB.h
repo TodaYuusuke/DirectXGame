@@ -2,7 +2,7 @@
 #include "../ICollider.h"
 
 #if DEMO
-#include "primitive/3d/Cube.h"
+//#include "primitive/3d/Cube.h"
 #endif
 
 // 前方宣言
@@ -49,7 +49,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Cube cube;
+		//LWP::Primitive::Cube cube;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

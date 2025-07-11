@@ -9,7 +9,6 @@
 #include "motion/Motion.h"
 
 // 3Dモデル
-#include "primitive/3d/OldMesh.h"
 #include "model/RigidModel.h"
 #include "model/SkinningModel.h"
 #include "model/StaticModel.h"
@@ -144,8 +143,6 @@ namespace LWP::Resource {
 		Texture LoadTextureLongPath(const std::string& filepath);
 		AudioData* LoadAudio(const std::string& filepath);
 		AudioData* LoadAudioLongPath(const std::string& filepath);
-		Primitive::OldMeshData* LoadOldMesh(const std::string& filepath);
-		Primitive::OldMeshData* LoadOldMeshLongPath(const std::string& filepath);
 
 		// モデルのデータを読み込む関数
 		void LoadModelData(const std::string& filePath);
@@ -198,7 +195,6 @@ namespace LWP::Resource {
 		std::map<std::string, AudioData> audioMap_;
 		// 古いmeshの配列
 		const std::string oldMeshDirectoryPath_ = "resources/model/";
-		std::map<std::string, Primitive::OldMeshData> oldMeshMap_;
 
 		// 3Dモデルの配列
 		std::map<std::string, Models> modelDataMap_;
@@ -210,7 +206,6 @@ namespace LWP::Resource {
 
 
 	private:
-		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
 
 		void RigidGUI(Models& m);
 		void SkinningGUI(Models& m);

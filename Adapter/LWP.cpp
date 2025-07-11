@@ -50,9 +50,6 @@ void Engine::Run(IScene* firstScene) {
 		primitive_->Update();
 		collision_->Update();	// 当たり判定検証
 
-		// Primitiveの描画処理
-		primitive_->Draw();
-
 		EndFrame();
 	}
 	Finalize();

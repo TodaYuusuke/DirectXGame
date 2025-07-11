@@ -22,7 +22,7 @@ namespace LWP::Base {
 		pso_.Init(root_, PSO::Type::Vertex)
 			.SetDepthState(false)
 			.SetSystemVS("Rework_/utility/PassThrough.VS.hlsl")
-			.SetSystemPS("Rework_/graphics/SolidLighting.PS.hlsl")
+			.SetSystemPS("Rework_/graphics/solid/DeferredShading.PS.hlsl")
 			.Build();
 	} 
 

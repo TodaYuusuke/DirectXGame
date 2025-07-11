@@ -30,9 +30,9 @@ namespace LWP::Base {
 				DXGI_FORMAT_R8G8B8A8_UNORM,
 				DXGI_FORMAT_R16G16B16A16_FLOAT,
 			})
-			.SetSystemAS("Rework_/graphics/Solid.AS.hlsl")
-			.SetSystemMS("Rework_/graphics/Rigid.MS.hlsl")
-			.SetSystemPS("Rework_/graphics/Solid.PS.hlsl")
+			.SetSystemAS("Rework_/graphics/solid/Solid.AS.hlsl")
+			.SetSystemMS("Rework_/graphics/solid/Rigid.MS.hlsl")
+			.SetSystemPS("Rework_/graphics/solid/Solid.PS.hlsl")
 			.Build();
 		raster_[ModelType::Rigid].wireframe.Copy(raster_[ModelType::Rigid].solid)
 			.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)
@@ -40,15 +40,16 @@ namespace LWP::Base {
 #pragma endregion
 #pragma region Skin描画
 		raster_[ModelType::Skin].solid.Init(root_, PSO::Type::Mesh)
+			.SetRasterizerState(D3D12_CULL_MODE_NONE)
 			.SetRTVFormats({
 				DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 				DXGI_FORMAT_R10G10B10A2_UNORM,
 				DXGI_FORMAT_R8G8B8A8_UNORM,
 				DXGI_FORMAT_R16G16B16A16_FLOAT,
 			})
-			.SetSystemAS("Rework_/graphics/Solid.AS.hlsl")
-			.SetSystemMS("Rework_/graphics/Skin.MS.hlsl")
-			.SetSystemPS("Rework_/graphics/Solid.PS.hlsl")
+			.SetSystemAS("Rework_/graphics/solid/Solid.AS.hlsl")
+			.SetSystemMS("Rework_/graphics/solid/Skin.MS.hlsl")
+			.SetSystemPS("Rework_/graphics/solid/Solid.PS.hlsl")
 			.Build();
 		raster_[ModelType::Skin].wireframe.Copy(raster_[ModelType::Skin].solid)
 			.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)

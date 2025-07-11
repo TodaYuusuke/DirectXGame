@@ -3,9 +3,9 @@
 #include <DirectXMesh/DirectXMesh.h>
 #include "base/directX/resource/data/StructuredBuffer.h"
 
-#include "primitive/model/Mesh.h"
-#include "primitive/model/Node.h"
-#include "primitive/model/Material.h"
+#include "primitive/component/Mesh.h"
+#include "primitive/component/Node.h"
+#include "primitive/component/Material.h"
 
 namespace LWP::Resource {
 	/// <summary>

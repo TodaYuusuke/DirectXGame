@@ -2,7 +2,7 @@
 #include "../ICollider.h"
 
 #if DEMO
-#include "primitive/3d/Sphere.h"
+//#include "primitive/3d/Sphere.h"
 #endif
 
 // 前方宣言
@@ -40,7 +40,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Sphere sphere;
+		//LWP::Primitive::Sphere sphere;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

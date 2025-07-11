@@ -18,9 +18,9 @@ AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	cube.CreateFromAABB(*this);
-	cube.material.enableLighting = false;
-	cube.isWireFrame = true;
+	//cube.CreateFromAABB(*this);
+	//cube.material.enableLighting = false;
+	//cube.isWireFrame = true;
 #endif
 }
 
@@ -29,23 +29,23 @@ AABB::AABB(const AABB& other) {
 
 #if DEMO
 	// 立方体のインスタンスを作成
-	cube.CreateFromAABB(*this);
-	cube.material.enableLighting = false;
-	cube.isWireFrame = true;
+	//cube.CreateFromAABB(*this);
+	//cube.material.enableLighting = false;
+	//cube.isWireFrame = true;
 #endif
 }
 
 void AABB::Update() {
 #if DEMO
-	Vector3 worldPos = tf_->GetWorldPosition();
-	Vector3 worldMin = min + worldPos;
-	Vector3 worldMax = max + worldPos;
-	cube.CreateVertices(worldMin, worldMax);	// cube再生成
-	//follow_->rotation.Init();
-	// isActive切り替え
-	cube.isActive = isShowWireFrame && isActive;
-	// 色を白に戻す
-	cube.material.color = Utility::Color(Utility::ColorPattern::WHITE);
+	//Vector3 worldPos = tf_->GetWorldPosition();
+	//Vector3 worldMin = min + worldPos;
+	//Vector3 worldMax = max + worldPos;
+	//cube.CreateVertices(worldMin, worldMax);	// cube再生成
+	////follow_->rotation.Init();
+	//// isActive切り替え
+	//cube.isActive = isShowWireFrame && isActive;
+	//// 色を白に戻す
+	//cube.material.color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
@@ -110,7 +110,7 @@ void AABB::DebugGUI() {
 void AABB::Hit() {
 #if DEMO
 	// hitしているときは色を変える
-	cube.material.color = Utility::Color(Utility::ColorPattern::RED);
+	//cube.material.color = Utility::Color(Utility::ColorPattern::RED);
 #endif
 }
 

@@ -1,9 +1,8 @@
 #pragma once
-#include "primitive/model/Vertex.h"
-#include "primitive/model/Material.h"
+#include "primitive/component/Vertex.h"
+#include "primitive/component/Material.h"
 
 #include "../Engine/primitive/IPrimitive.h"
-#include "../Engine/primitive/model/Node.h"
 
 #include <memory>
 
@@ -62,6 +61,11 @@ namespace LWP::Base {
 			scale = value.worldTF.GetScaleMatrix();
 			inverse = value.worldTF.GetAffineMatrix().Inverse();
 			return *this;
+		}
+
+		WTFStruct() = default;
+		WTFStruct(const Object::TransformQuat& value) {
+			*this = value;
 		}
 	};
 

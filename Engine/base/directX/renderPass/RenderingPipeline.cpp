@@ -43,6 +43,7 @@ namespace LWP::Base {
 
 		// パイプラインの要素を初期化
 		drawSolid_.Init();
+		drawPlane_.Init();
 		deferredShading_.Init();
 		imguiRender_.Init();
 	}
@@ -65,6 +66,7 @@ namespace LWP::Base {
 		// コマンドを積み込む
 		drawSolid_.PushCommand(list);
 		deferredShading_.PushCommand(list);
+		drawPlane_.PushCommand(list);
 
 		// メインカメラの描画をバックバッファーにコピー
 		renderClear_.PushCommand(back, list);

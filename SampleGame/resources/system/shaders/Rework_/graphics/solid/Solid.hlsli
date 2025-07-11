@@ -1,4 +1,4 @@
-#include "../Structs.hlsli"
+#include "../../Structs.hlsli"
 
 // Common
 ConstantBuffer<Camera> cCamera : register(b0);

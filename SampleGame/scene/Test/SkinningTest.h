@@ -20,5 +20,5 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Object::PointLight pl;
 	LWP::Object::DirectionLight dl;
-	LWP::Primitive::Sprite sp;
+	LWP::Primitive::NormalSprite sp;
 };

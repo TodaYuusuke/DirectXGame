@@ -79,15 +79,6 @@
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp">
       <Filter>Engine\primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\IPrimitive.cpp">
-      <Filter>Engine\primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Triangle.cpp">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Surface.cpp">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\resources\ResourceManager.cpp">
       <Filter>Engine\resources</Filter>
     </ClCompile>
@@ -127,7 +118,7 @@
     <ClCompile Include="Engine\input\controller\XInputController.cpp">
       <Filter>Engine\input\controller</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\2d\Sprite.cpp">
+    <ClCompile Include="Engine\primitive\2d\sprite\NormalSprite.cpp">
       <Filter>Engine\primitive\2d</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Window.cpp">
@@ -292,41 +283,29 @@
     <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp">
       <Filter>Engine\object\core\collision\collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\JointWeight.cpp">
+    <ClCompile Include="Engine\primitive\component\JointWeight.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Joint.cpp">
+    <ClCompile Include="Engine\primitive\component\Joint.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Mesh.cpp">
+    <ClCompile Include="Engine\primitive\component\Mesh.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Node.cpp">
+    <ClCompile Include="Engine\primitive\component\Node.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Skeleton.cpp">
+    <ClCompile Include="Engine\primitive\component\Skeleton.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\SkinCluster.cpp">
+    <ClCompile Include="Engine\primitive\component\SkinCluster.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Vertex.cpp">
+    <ClCompile Include="Engine\primitive\component\Vertex.cpp">
       <Filter>Engine\primitive\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\primitive\model\Material.cpp">
+    <ClCompile Include="Engine\primitive\component\Material.cpp">
       <Filter>Engine\primitive\model</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Capsule.cpp">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Cube.cpp">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\OldMesh.cpp">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\primitive\3d\Sphere.cpp">
-      <Filter>Engine\primitive\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\motion\Animation.cpp">
       <Filter>Engine\resources\motion</Filter>
@@ -362,7 +341,6 @@
     <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
-    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
     <ClCompile Include="Engine\utility\JsonIO.cpp" />
     <ClCompile Include="Engine\utility\Random.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
@@ -376,6 +354,11 @@
     <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\PBR.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\gBuffer\target\WorldPosition.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DeferredShading.cpp" />
+    <ClCompile Include="Engine\primitive\2d\sprite\ISprite.cpp" />
+    <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawPlane.cpp" />
+    <ClCompile Include="Engine\primitive\2d\sprite\SequenceSprite.cpp" />
+    <ClCompile Include="Engine\primitive\2d\sprite\ClipSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -456,19 +439,7 @@
     <ClInclude Include="Engine\primitive\PrimitiveManager.h">
       <Filter>Engine\primitive</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\IPrimitive.h">
-      <Filter>Engine\primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\3dList.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\primitive\2d\2dList.h">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Triangle.h">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Surface.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\resources\ResourceManager.h">
@@ -534,7 +505,7 @@
     <ClInclude Include="Engine\utility\Counter.h">
       <Filter>Engine\utilitiy</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Sprite.h">
+    <ClInclude Include="Engine\primitive\2d\sprite\NormalSprite.h">
       <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Adapter\component\Window.h">
@@ -575,12 +546,6 @@
     </ClInclude>
     <ClInclude Include="Adapter\component\Primitive.h">
       <Filter>Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Billboard2D.h">
-      <Filter>Engine\primitive\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\2d\Billboard3D.h">
-      <Filter>Engine\primitive\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\GPUDevice.h">
       <Filter>Engine\base\directX\utility</Filter>
@@ -753,41 +718,29 @@
     <ClInclude Include="Engine\object\core\collision\collider\ICollider.h">
       <Filter>Engine\object\core\collision\collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\JointWeight.h">
+    <ClInclude Include="Engine\primitive\component\JointWeight.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Joint.h">
+    <ClInclude Include="Engine\primitive\component\Joint.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Mesh.h">
+    <ClInclude Include="Engine\primitive\component\Mesh.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Node.h">
+    <ClInclude Include="Engine\primitive\component\Node.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Skeleton.h">
+    <ClInclude Include="Engine\primitive\component\Skeleton.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\SkinCluster.h">
+    <ClInclude Include="Engine\primitive\component\SkinCluster.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Vertex.h">
+    <ClInclude Include="Engine\primitive\component\Vertex.h">
       <Filter>Engine\primitive\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\primitive\model\Material.h">
+    <ClInclude Include="Engine\primitive\component\Material.h">
       <Filter>Engine\primitive\model</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Capsule.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Cube.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\OldMesh.h">
-      <Filter>Engine\primitive\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\primitive\3d\Sphere.h">
-      <Filter>Engine\primitive\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\resources\motion\Animation.h">
       <Filter>Engine\resources\motion</Filter>
@@ -850,6 +803,12 @@
     <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\PBR.h" />
     <ClInclude Include="Engine\base\directX\resource\rendering\gBuffer\target\WorldPosition.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DeferredShading.h" />
+    <ClInclude Include="Engine\primitive\2d\sprite\ISprite.h" />
+    <ClInclude Include="Engine\primitive\IPrimitive.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawPlane.h" />
+    <ClInclude Include="Engine\primitive\2d\sprite\SequenceSprite.h" />
+    <ClInclude Include="Engine\primitive\2d\sprite\ClipSprite.h" />
+    <ClInclude Include="Engine\math\Rectangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -1,82 +1,108 @@
 #include "PrimitiveManager.h"
 #include "base/ImGuiManager.h"
 
+#include "Config.h"
 #include "utility/MyUtility.h"
 
-using namespace LWP::Primitive;
+namespace LWP::Primitive {
+	void Manager::Init() {
+		//for (IPrimitive* p : primitives_.list) {
+		//	delete p;
+		//}
+		//primitives_.list.clear();
+		primitiveCount_ = 0;
 
-void Manager::Init() {
-	//for (IPrimitive* p : primitives_.list) {
-	//	delete p;
-	//}
-	//primitives_.list.clear();
-	primitiveCount_ = 0;
+		for (IPrimitive* p : debugPris) {
+			delete p;
+		}
+		debugPris.clear();
+	}
+
+	void Manager::Update() {
+		// 全てのバッファーをリセット
+		spriteBuffers_.Reset();
+
+		// 更新処理
+		for (ISprite* p : sprites_.list) {
+			// primitiveを更新
+			p->Update();
+
+			// バッファーにデータをセット
+			if (p->isActive) {
+				for (const Vertex& v : p->vertices) { spriteBuffers_.vertices.Add(v); }
+				spriteBuffers_.materials.Add(p->material);
+				spriteBuffers_.wtf.Add(p->worldTF);
+				spriteBuffers_.count++;
+			}
+		}
+	}
+
+	void Manager::DebugGUI() {
+		// どの種類のPrimitiveのリストを表示するか
+		static std::vector<const char*> typeText = {
+			"Sprite",
+		};
+		static int typeID = 0;
+
+		if (ImGui::BeginTabItem("Primitive")) {
+			// 変更されて渡される値は添え字
+			ImGui::Combo("Select Type", &typeID, typeText.data(), static_cast<int>(typeText.size()));
+
+			switch (Type(typeID)) {
+				case Type::Sprite:
+					SpriteDebugGUI();
+					break;
+			}
+
+			ImGui::EndTabItem();
+		}
+	}
 	
-	for (IPrimitive* p : debugPris) {
-		delete p;
+	void Manager::SetPtr(ISprite* ptr) {
+		ptr->name = std::to_string(primitiveCount_++);	// 数字だけ渡す
+		sprites_.SetPtr(ptr);
 	}
-	debugPris.clear();
-}
 
-void Manager::Update() {
-	// 更新
-	for (IPrimitive* p : primitives_.list) {
-		p->Update();
+	Manager::PlaneBuffers::PlaneBuffers() 
+		: vertices(lwpC::Rendering::Primitive::Sprite::kMaxCount * 4),
+		  wtf(lwpC::Rendering::Primitive::Sprite::kMaxCount),
+		  materials(lwpC::Rendering::Primitive::Sprite::kMaxCount) {
+		vertices.Init();
+		wtf.Init();
+		materials.Init();
 	}
-}
-
-void Manager::Draw() {
-	// 描画
-	for (IPrimitive* p : primitives_.list) {
-		p->Draw();
+	void Manager::PlaneBuffers::Reset() {
+		vertices.Reset();
+		wtf.Reset();
+		materials.Reset();
+		count = 0;
 	}
-}
 
-// インスタンスのポインタをセット（ユーザー呼び出し不要）
-void Manager::SetPointer(IPrimitive* ptr) {
-	primitives_.SetPtr(ptr);
-	ptr->name += std::to_string(primitiveCount_++);
-}
-// インスタンスのポインタを解放（ユーザー呼び出し不要）
-void Manager::DeletePointer(IPrimitive* ptr) {
-	primitives_.DeletePtr(ptr);
-}
+	void Manager::SpriteDebugGUI() {
+		static std::vector<std::function<void()>> functions = {
+			[this]() { debugPris.push_back(new NormalSprite()); },
+			[this]() { debugPris.push_back(new SequenceSprite()); },
+		};
+		// 選択肢の変数
+		static std::vector<const char*> classText = {
+			"NormalSprite","SequenceSprite"
+		};
+		static int classID = 0;
+		static int currentItem = 0;
 
-
-void Manager::DebugGUI() {
-	// ImGuiを表示
-
-	// 生成用の関数ポインタ
-	static std::vector<std::function<void()>> functions = {
-		[this]() { debugPris.push_back(new Billboard2D()); },
-		[this]() { debugPris.push_back(new Billboard3D()); },
-		[this]() { debugPris.push_back(new Surface()); },
-		//[this]() { debugPris.push_back(new Sprite()); },
-		[this]() { debugPris.push_back(new Triangle()); },
-		[this]() { debugPris.push_back(new Capsule()); },
-		[this]() { debugPris.push_back(new Cube()); },
-		//[this]() { debugPris.push_back(new Mesh()); },
-		[this]() { debugPris.push_back(new Sphere()); }
-	};
-	// 選択肢の変数
-	static std::vector<const char*> classText = {
-		"Billboard2D","Billboard3D","Surface",/*"Sprite",*/"Triangle", "Capsule", "Cube",/*"Mesh",*/ "Sphere"
-	};
-
-	if (ImGui::BeginTabItem("Primitive")) {
 		// 変更されて渡される値は添え字
-		ImGui::Combo("new Instance", &selectedClass, classText.data(), static_cast<int>(classText.size()));
-		if (ImGui::Button("Create")) { functions[selectedClass](); }
+		ImGui::Combo("New Instance Type", &classID, classText.data(), static_cast<int>(classText.size()));
+		if (ImGui::Button("Create")) { functions[classID](); }
 
-		// 形状一覧
-		if (!primitives_.list.empty()) {
+		// インスタンス一覧
+		if (!sprites_.list.empty()) {
 			std::vector<const char*> itemText;
-			for (IPrimitive* p : primitives_.list) {
+			for (ISprite* p : sprites_.list) {
 				itemText.push_back(p->name.c_str());
 			}
 			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-			(*Utility::GetIteratorAtIndex<IPrimitive*>(primitives_.list, currentItem))->DebugGUI();
+			auto it = Utility::GetIteratorAtIndex(sprites_.list, currentItem);
+			if (it != sprites_.list.end()) { (*it)->DebugGUI(); } // リスト内にあったなら呼び出す
 		}
-		ImGui::EndTabItem();
 	}
 }

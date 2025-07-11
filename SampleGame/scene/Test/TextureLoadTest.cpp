@@ -8,15 +8,15 @@ void TextureLoadTest::Initialize() {
 	ddsSprite_.material.texture = Resource::LoadTexture("uvChecker.dds");
 	pngSprite_.name = "PNG";
 	pngSprite_.LoadTexture("Rect.png");
-	pngSprite_.SetSplitSize({ 128.0f,32.0f });
+	//pngSprite_.SetSplitSize({ 128.0f,32.0f });
 	pngSprite_.Init();
-	bill2D.name = "Bill2D";
-	bill2D.LoadTexture("TestSpriteSheet.png");
-	bill2D.SetSplitSize({ 64.0f,64.0f });
-	bill2D.anchorPoint = { 0.5f,0.5f };
-	bill3D.name = "Bill3D";
-	bill3D.LoadTexture("TestSpriteSheet.png");
-	bill3D.SetSplitSize({ 64.0f,64.0f });
+	//bill2D.name = "Bill2D";
+	//bill2D.LoadTexture("TestSpriteSheet.png");
+	//bill2D.SetSplitSize({ 64.0f,64.0f });
+	//bill2D.anchorPoint = { 0.5f,0.5f };
+	//bill3D.name = "Bill3D";
+	//bill3D.LoadTexture("TestSpriteSheet.png");
+	//bill3D.SetSplitSize({ 64.0f,64.0f });
 
 	ImGui::NE::Config config;
 	config.SettingsFile = "resources/json/Simple.json";

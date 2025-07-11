@@ -1,11 +1,13 @@
 #pragma once
 #include "2d/2dList.h"
-#include "3d/3dList.h"
+//#include "3d/3dList.h"
 
-#include "IPrimitive.h"
 #include "utility/PtrManager.h"
-
 #include "utility/Singleton.h"
+
+#include "base/directX/resource/data/StructuredBuffer.h"
+#include "base/directX/renderer/ResourceStruct.h"
+
 #include <vector>
 #include <map>
 
@@ -22,7 +24,31 @@ namespace LWP::Primitive {
 		/// </summary>
 		Manager() = default;
 
-	public: // メンバ関数
+
+	public: // ** 内包構造体 ** //
+
+		// スプライトやビルボードの描画に使うデータ
+		struct PlaneBuffers {
+			Base::StructuredBuffer<Base::VertexStruct> vertices;		// 頂点
+			Base::StructuredBuffer<Base::WTFStruct> wtf;				// ワールドトランスフォーム
+			Base::StructuredBuffer<Base::MaterialStruct> materials;		// マテリアル
+
+			// インスタンス数
+			int count;
+
+			/// <summary>
+			/// デフォルトコンストラクタ
+			/// </summary>
+			PlaneBuffers();
+
+			/// <summary>
+			/// リセットを呼び出す関数
+			/// </summary>
+			void Reset();
+		};
+
+
+	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// 初期化
@@ -33,36 +59,45 @@ namespace LWP::Primitive {
 		/// 更新
 		/// </summary>
 		void Update();
+
 		/// <summary>
-		/// 描画
+		/// Debug用のImGUI
 		/// </summary>
-		void Draw();
+		void DebugGUI();
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetPointer(IPrimitive* ptr);
+		void SetPtr(ISprite* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeletePointer(IPrimitive* ptr);
+		void DeletePtr(ISprite* ptr) { sprites_.DeletePtr(ptr); }
+
+		// Plane系の描画に使うバッファーを送る関数
+		PlaneBuffers* GetPlaneBuffer() { return &spriteBuffers_; }
 
 
-	private: // メンバ変数
+	private: // ** メンバ変数 ** //
 
 		// 形状のリスト
-		Utility::PtrManager<IPrimitive*> primitives_;
+		//Utility::PtrManager<IPrimitive*> primitives_;
 		// カウンター
 		int primitiveCount_ = 0;
 		
 
-	private:
-		// ImGui用変数
-		int selectedClass = 0;
-		int currentItem = 0;
+		enum class Type {
+			Sprite,
+		};
+		// 全Spriteのポインタリスト
+		Utility::PtrManager<ISprite*> sprites_;
+		PlaneBuffers spriteBuffers_;
+
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IPrimitive*> debugPris;
 
-	public:
+
+	private: // ** プライベートなメンバ関数 ** //
+
 		/// <summary>
-		/// Debug用GUI
+		/// スプライト系のDebugGUI
 		/// </summary>
-		void DebugGUI();
+		void SpriteDebugGUI();
 	};
 }

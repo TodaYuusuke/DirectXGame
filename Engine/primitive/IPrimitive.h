@@ -1,156 +1,85 @@
 #pragma once
-#include "object/TransformEuler.h"
+#include "object/TransformQuat.h"
 
-#include "model/Vertex.h"
-#include "model/Material.h"
-#include "utility/observers/Observer.h"
-#include "utility/observers/ObserverPtr.h"
-
-#include "model/Node.h"
-#include <wrl.h>
-#include <d3d12.h>
-#include <stdexcept>
-
-#include <vector>
-
-// 前方宣言
-namespace LWP::Base {
-	class RendererManager;
-}
+#include "component/Vertex.h"
+#include "component/Material.h"
 
 namespace LWP::Primitive {
+	/// <summary>
+	/// 全Primitiveの基底クラス
+	/// </summary>
 	class IPrimitive {
-	public:
-		// ** 共通の変数 ** //
+	public: // ** パブリックなメンバ変数 ** //
 
 		// 識別用の形状名
 		std::string name = "primitive";
-
 		
-		std::vector<Vertex> vertices;	// 描画する頂点
-		std::vector<uint32_t> indexes;	// インデックス
-
+		// 頂点（頂点は固定、可変長のパターンがあるので派生先で定義させる）
+		// std::vector<Vertex> vertices;
+		
 		// ワールドトランスフォーム
 		Object::TransformQuat worldTF;
-
 		// マテリアル
 		Material material;
-
-
-		// UIとして描画するか
-		bool isUI = false;
-		// ワイヤーフレームで描画する
-		bool isWireFrame = false;
+		
 		// アクティブ切り替え
 		bool isActive = true;
 		
 
-	public: // ** 共通関数 ** //
+	public: // ** メンバ関数 ** //
 		
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		IPrimitive();
-		/// <summary>
-		/// コピーコンストラクタ
-		/// </summary>
-		IPrimitive(const IPrimitive& other);
+		IPrimitive() = default;
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~IPrimitive();
+		virtual ~IPrimitive() = default;
 
 		/// <summary>
-		/// Observerクラス用のオペレーターオーバーロード
-		/// </summary>
-		bool operator==(const IPrimitive& other) const = delete;
-		bool operator==(IPrimitive& other) {
-			return { vertices == other.vertices && indexes == other.indexes && worldTF == other.worldTF };
-		}
-
-		/// <summary>
-		/// 初期化
+		/// 初期化（ユーザー呼び出し不要）
 		/// </summary>
 		virtual void Init();
+		/// <summary>
+		/// 更新（ユーザー呼び出し不要）
+		/// </summary>
+		virtual void Update() = 0;
 
 		/// <summary>
-		/// 頂点を生成する関数（ユーザ呼び出し禁止）
+		/// Debug用のImGui
 		/// </summary>
-		virtual void CreateVertices();
-		/// <summary>
-		/// インデックスを生成する関数（ユーザ呼び出し禁止）
-		/// </summary>
-		virtual void CreateIndexes();
-
-		/// <summary>
-		/// 更新処理
-		/// </summary>
-		virtual void Update();
-
-		/// <summary>
-		/// 描画
-		/// </summary>
-		virtual void Draw();
-		/// <summary>
-		/// ImGui
-		/// </summary>
-		void DebugGUI(const std::string& label = "IPrimitive");
-
-		/// <summary>
-		/// 頂点数を返す関数
-		/// </summary>
-		virtual int GetVertexCount() const;
-		/// <summary>
-		/// インデックスの数を返す関数
-		/// </summary>
-		virtual int GetIndexCount() const;
-
-		/// <summary>
-		/// 値が変化したかを検知する関数
-		/// </summary>
-		virtual bool GetChanged();
-
-	protected: // ** 派生クラス用の関数 ** //
-		/// <summary>
-		/// 派生クラスで追加のImGuiを実装するとき用の関数
-		/// </summary>
-		virtual void DerivedDebugGUI(const std::string& label = "Derived");
-
-		/// <summary>
-		/// 派生クラスで追加された変数の値が変化したかを検知する用の関数
-		/// </summary>
-		virtual bool DerivedGetChanged();
-	};
+		virtual void DebugGUI() = 0;
 
 
-	// IPrimitiveのデータのみ（Observerクラス用）
-	struct IPrimitiveStruct {
-		std::string name;
-		std::vector<Vertex> vertices;
-		std::vector<uint32_t> indexes;
-		Object::TransformQuat worldTF;
-		Material material;
+	protected: // ** プロテクトなメンバ関数 ** //
 
-		IPrimitiveStruct& operator=(const IPrimitive& other) {
-			name = other.name;
-			vertices = other.vertices;
-			indexes = other.indexes;
-			worldTF = other.worldTF;
-			material = other.material;
-			return *this;
-		}
-		bool operator==(IPrimitive& other) {
-			return {
-				name == other.name &&
-				vertices == other.vertices &&
-				indexes == other.indexes &&
-				worldTF == other.worldTF &&
-				material == other.material
-			};
-		}
+		/// <summary>
+		/// 名前のImGui
+		/// </summary>
+		void ShowNameGUI();
+		/// <summary>
+		/// 頂点のImGui
+		/// </summary>
+		void ShowVertexGUI(Vertex* v, int size);
+		/// <summary>
+		/// トランスフォームのImGui
+		/// </summary>
+		void ShowTransformGUI();
+		/// <summary>
+		/// マテリアルのImGui
+		/// </summary>
+		void ShowMaterialGUI();
+		/// <summary>
+		/// isActiveのImGui
+		/// </summary>
+		void ShowIsActiveGUI();
+		/// <summary>
+		/// Init関数を呼び出すImGui
+		/// </summary>
+		void CallInitGUI();
 	};
 }
-
 
 /// <summary>
 /// IPrimitiveを継承したクラスのみを選択できるテンプレート

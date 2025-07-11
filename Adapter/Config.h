@@ -41,6 +41,20 @@ namespace LWP::Config {
 	/// レンダリング系パラメータ
 	/// </summary>
 	namespace Rendering {
+		/// <summary>
+		/// Primitiveに関するパラメータ
+		/// </summary>
+		namespace Primitive {
+			/// <summary>
+			/// スプライトに関するパラメータ
+			/// </summary>
+			namespace Sprite {
+				/// <summary>
+				/// 全タイプのスプライトの合計最大数
+				/// </summary>
+				static const UINT kMaxCount = 1024;
+			}
+		}
 
 		// 複数描画の最大数（メインの描画はカウントしない）
 		static const UINT kMaxMultiWindowRendering = 50;

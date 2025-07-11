@@ -14,9 +14,19 @@ AnimationTest::AnimationTest() :
 }
 // 初期化
 void AnimationTest::Initialize() {
+	sprite.LoadTexture("uvChecker.dds");
+	sprite.FitToTexture();
+	sprite.worldTF.translation = { 100.0f, 400.0f, 0.0f };
+	sprite1.LoadTexture("TestSpriteSheet.png");
+	sprite1.SetSplitSize({ 64.0f, 64.0f });
+	sprite1.worldTF.translation = { 400.0f, 200.0f, 0.0f };
+	sprite2.LoadTexture("Attack.png");
+	sprite2.FitToTexture();
+	sprite2.worldTF.translation = { 1000.0f, 600.0f, 0.0f };
+
 	cube.LoadCube();
 	for (int i = 0; i < 5; i++) {
-		model[i].LoadShortPath("Player/Hinmin/Player_Simple.gltf");
+		model[i].LoadShortPath("Player/Hinmin/Player.gltf");
 		//model[i].LoadShortPath("test/Test.gltf");
 		model[i].worldTF.translation.x = i * 1.5f;
 		//motion[i].Add(
@@ -31,7 +41,7 @@ void AnimationTest::Initialize() {
 		//);
 		////motion[i].Start(true);
 
-		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player_Simple.gltf", &model[i]);
+		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player.gltf", &model[i]);
 		//anim[i].LoadFullPath("resources/model/test/Test.gltf", &model[i]);
 	}
 

@@ -18,13 +18,6 @@ Resource::AudioData* Resource::LoadAudioLongPath(const std::string& filePath) {
 	return Resource::Manager::GetInstance()->LoadAudioLongPath(filePath);
 }
 
-Primitive::OldMeshData* Resource::LoadMesh(const std::string& filePath) {
-	return Resource::Manager::GetInstance()->LoadOldMesh(filePath);
-}
-Primitive::OldMeshData* Resource::LoadMeshLongPath(const std::string& filePath) {
-	return Resource::Manager::GetInstance()->LoadOldMeshLongPath(filePath);
-}
-
 void Resource::LoadModel(const std::string& filePath) {
 	Resource::Manager::GetInstance()->LoadModelData(filePath);
 }

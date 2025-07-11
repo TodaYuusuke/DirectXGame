@@ -1,4 +1,4 @@
-#include "../Structs.hlsli"
+#include "../../Structs.hlsli"
 
 Texture2D<float32_t4> tAlbedo : register(t0);
 Texture2D<float32_t4> tNormal : register(t1);

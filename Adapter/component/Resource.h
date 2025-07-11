@@ -36,19 +36,6 @@ namespace LWP {
 		AudioData* LoadAudioLongPath(const std::string& filePath);
 
 		/// <summary>
-		/// オーディオファイルの読み込み（resources/audio/を短縮ver）
-		/// </summary>
-		/// <param name="filePath">読み込むファイルパス</param>
-		/// <returns>オーディオのインスタンス</returns>
-		Primitive::OldMeshData* LoadMesh(const std::string& filePath);
-		/// <summary>
-		/// オーディオファイルの読み込み（exeからのパスで指定）
-		/// </summary>
-		/// <param name="filePath">読み込むファイルパス</param>
-		/// <returns>オーディオのインスタンス</returns>
-		Primitive::OldMeshData* LoadMeshLongPath(const std::string& filePath);
-
-		/// <summary>
 		/// 3Dモデルの読み込み（exeからのフルパス指定）（ユーザー呼び出し禁止）
 		/// </summary>
 		/// <param name="filePath">読み込むファイルのフルパス</param>
