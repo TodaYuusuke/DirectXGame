@@ -1,4 +1,4 @@
-#include "Billboard3D.h"
+#include "Sprite.h"
 
 #include "primitive/PrimitiveManager.h"
 

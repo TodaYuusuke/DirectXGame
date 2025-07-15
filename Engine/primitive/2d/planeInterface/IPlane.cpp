@@ -21,6 +21,15 @@ namespace LWP::Primitive {
 		FitToTexture();
 	}
 
+	Math::Vector3 IPlane::GetCenterPosition() {
+		Math::Vector3 center = { 0.0f,0.0f,0.0f };
+		Math::Matrix4x4 mat = worldTF.GetAffineMatrix();
+		for (Vertex& v : vertices) {
+			center += v.position * mat;
+		}
+		return center / 4.0f;
+	}
+
 	void IPlane::LoadTexture(const std::string& fileName) {
 		material.texture = Resource::LoadTexture(fileName);
 	}

@@ -42,7 +42,7 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// コンストラクタをプライベートに
 		/// </summary>
-		Manager() = default;
+		Manager();
 
 
 	public: // ** メンバ関数 ** //
@@ -71,8 +71,10 @@ namespace LWP::Primitive {
 
 		// Plane系の描画に使うバッファーを送る関数
 		PlaneBuffers* GetSpriteBuffer() { return &spriteBuffers_; }
-		// Plane系の描画に使うバッファーを送る関数
-		PlaneBuffers* GetBillboard3DBuffer() { return &billboard3DBuffers_; }
+		PlaneBuffers* GetBillboard2DBuffer() { return &billboard3DBuffers_; }
+
+		// Zソートの結果のバッファを返す関数
+		Base::StructuredBuffer<int32_t>* GetZSortBuffer() { return &sorted_; }
 
 
 	private: // ** メンバ変数 ** //
@@ -93,6 +95,13 @@ namespace LWP::Primitive {
 		// Billboard3Dのポインタリスト
 		Utility::PtrManager<IPlane*> billboards3D_;
 		PlaneBuffers billboard3DBuffers_;
+
+		struct BillboardIndex {
+			int index;
+			float distance;
+		};
+		// ビルボードのZソート
+		Base::StructuredBuffer<int32_t> sorted_;	// 頂点
 
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IPrimitive*> debugPris;

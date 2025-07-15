@@ -19,7 +19,7 @@ namespace LWP::Primitive {
 		};
 		enum PlaneType {
 			Sprite,
-			Billboard3D,
+			Billboard2D,
 		};
 
 		/// <summary>
@@ -57,6 +57,12 @@ namespace LWP::Primitive {
 		/// 更新（ユーザー呼び出し不要）
 		/// </summary>
 		virtual void Update();
+
+		/// <summary>
+		/// 4頂点の中心を求める関数
+		/// </summary>
+		Math::Vector3 GetCenterPosition();
+
 
 		/// <summary>
 		/// 描画するテクスチャを読み込む関数（resources/texture直下からのパス）

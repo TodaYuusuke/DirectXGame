@@ -2,7 +2,7 @@
 
 VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_InstanceID) {
     // 頂点を抽出
-    Vertex v = GetSpriteVertexIndex(vertexID, instanceID);
+    Vertex v = GetVertexIndex(vertexID, instanceID);
     // ワールドトランスフォームを抽出
     WorldTransform wtf = vWorldTransform[instanceID];
 

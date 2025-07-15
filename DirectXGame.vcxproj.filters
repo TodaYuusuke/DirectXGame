@@ -357,7 +357,7 @@
     <ClCompile Include="Engine\primitive\2d\planeInterface\INormal.cpp" />
     <ClCompile Include="Engine\primitive\2d\planeInterface\IPlane.cpp" />
     <ClCompile Include="Engine\primitive\2d\planeInterface\ISequence.cpp" />
-    <ClCompile Include="Engine\primitive\2d\Billboard3D.cpp" />
+    <ClCompile Include="Engine\primitive\2d\Billboard2D.cpp" />
     <ClCompile Include="Engine\primitive\2d\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -803,7 +803,7 @@
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawPlane.h" />
     <ClInclude Include="Engine\math\Rectangle.h" />
-    <ClInclude Include="Engine\primitive\2d\Billboard3D.h" />
+    <ClInclude Include="Engine\primitive\2d\Billboard2D.h" />
     <ClInclude Include="Engine\primitive\2d\Sprite.h" />
     <ClInclude Include="Engine\primitive\2d\planeInterface\IClip.h" />
     <ClInclude Include="Engine\primitive\2d\planeInterface\INormal.h" />

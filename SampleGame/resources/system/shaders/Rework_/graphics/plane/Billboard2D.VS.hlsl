@@ -1,25 +1,22 @@
-#include "Object3d.hlsli"
+#include "Plane.hlsli"
 
-VertexShaderOutput main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_InstanceID) {
-    // インデックスを抽出
-    uint32_t v = gIndex[vertexID + (instanceID * 3)].vertex;
-    uint32_t w = gIndex[vertexID + (instanceID * 3)].worldTransform;
-
-    VertexShaderOutput output;
-    // 掛けるためのtransformを生成
-    //float32_t4x4 mat = mul(mul(gWorldTransform[w].scale, view), gWorldTransform[w].translate);
-    // 最後に掛ける
-    //output.position = mul(gVertex[v].position, mul(gCameraData.inverse, gWorldTransform[w].wtf));
+VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_InstanceID) {
+    // ソートされた順番に描画する
+    int32_t index = vSortIndex[instanceID];
     
-    float32_t4x4 mat = mul(mul(gWorldTransform[w].scale, gCameraData.rotate), gWorldTransform[w].translate);
-    output.position = mul(mul(gVertex[v].position, mat), gCameraData.m);
+    // 頂点を抽出
+    Vertex v = GetVertexIndex(vertexID, index);
+    // ワールドトランスフォームを抽出
+    WorldTransform wtf = vWorldTransform[index];
     
-    output.worldPos = mul(gVertex[v].position, gWorldTransform[w].wtf).xyz;
-    output.texcoord = gVertex[v].texcoord;
-    output.normal = normalize(mul(gVertex[v].normal, (float32_t3x3)gWorldTransform[w].inverse));
-    output.color = gVertex[v].color;
+    // 出力
+    VSOutputUnlit output;
     
-    output.id = vertexID + (instanceID * 3);
+    float32_t4x4 mat = mul(mul(wtf.scale, vCamera.rotate), wtf.translate);
+    output.position = mul(mul(v.position, mat), vCamera.m);
+    output.texcoord = v.texcoord;
+    output.color = v.color;
+    output.id = index;
 
     return output;
 }

@@ -7,22 +7,22 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// 通常のビルボード3D
 	/// </summary>
-	class NormalBillboard3D final : public INormal {
+	class NormalBillboard2D final : public INormal {
 	public:
-		NormalBillboard3D();
+		NormalBillboard2D();
 	};
 	/// <summary>
 	/// 連番テクスチャ用のビルボード3D
 	/// </summary>
-	class SequenceBillboard3D final : public ISequence {
+	class SequenceBillboard2D final : public ISequence {
 	public:
-		SequenceBillboard3D();
+		SequenceBillboard2D();
 	};
 	/// <summary>
 	/// 切り抜き描画用のビルボード3D
 	/// </summary>
-	class ClipBillboard3D final : public IClip {
+	class ClipBillboard2D final : public IClip {
 	public:
-		ClipBillboard3D();
+		ClipBillboard2D();
 	};
 }

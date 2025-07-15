@@ -1,8 +1,11 @@
 #include "PrimitiveManager.h"
 #include "base/ImGuiManager.h"
 
+#include "object/ObjectManager.h"
 #include "Config.h"
 #include "utility/MyUtility.h"
+
+using namespace LWP::Math;
 
 namespace LWP::Primitive {
 	PlaneBuffers::PlaneBuffers()
@@ -21,6 +24,12 @@ namespace LWP::Primitive {
 		count = 0;
 	}
 
+	Manager::Manager() :
+		sorted_(lwpC::Rendering::Primitive::Billboaed::kMaxCount) {
+		sorted_.Init();
+	}
+
+
 	void Manager::Init() {
 		//for (IPrimitive* p : primitives_.list) {
 		//	delete p;
@@ -38,6 +47,11 @@ namespace LWP::Primitive {
 		// 全てのバッファーをリセット
 		spriteBuffers_.Reset();
 		billboard3DBuffers_.Reset();
+		sorted_.Reset();
+
+		int i = 0;
+		std::vector<BillboardIndex> indexes;
+		Math::Vector3 cameraPos = Object::Manager::GetInstance()->GetMainCamera()->worldTF.GetWorldPosition();
 
 		// 更新処理（スプライト）
 		for (IPlane* p : sprites_.list) {
@@ -52,7 +66,7 @@ namespace LWP::Primitive {
 				spriteBuffers_.count++;
 			}
 		}
-		// 更新処理
+		// 更新処理（ビルボード）
 		for (IPlane* p : billboards3D_.list) {
 			// primitiveを更新
 			p->Update();
@@ -63,8 +77,20 @@ namespace LWP::Primitive {
 				billboard3DBuffers_.materials.Add(p->material);
 				billboard3DBuffers_.wtf.Add(p->worldTF);
 				billboard3DBuffers_.count++;
+
+				float d = Vector3::Distance(p->GetCenterPosition(), cameraPos);
+				indexes.push_back({ i++, d });
 			}
 		}
+
+		// Zソート
+		std::sort(indexes.begin(), indexes.end(), 
+			[](const BillboardIndex& a, const BillboardIndex& b) {
+				return a.distance > b.distance;
+			}
+		);
+		// ソート結果をバッファに格納
+		for (BillboardIndex& b : indexes) { sorted_.Add(b.index); }
 	}
 
 	void Manager::DebugGUI() {
@@ -130,13 +156,13 @@ namespace LWP::Primitive {
 	}
 	void Manager::BillboardDebugGUI() {
 		static std::vector<std::function<void()>> functions = {
-			[this]() { debugPris.push_back(new NormalBillboard3D()); },
-			[this]() { debugPris.push_back(new SequenceBillboard3D()); },
-			[this]() { debugPris.push_back(new ClipBillboard3D()); },
+			[this]() { debugPris.push_back(new NormalBillboard2D()); },
+			[this]() { debugPris.push_back(new SequenceBillboard2D()); },
+			[this]() { debugPris.push_back(new ClipBillboard2D()); },
 		};
 		// 選択肢の変数
 		static std::vector<const char*> classText = {
-			"NormalBillboard3D","SequenceBillboard3D","ClipBillboard3D"
+			"NormalBillboard2D","SequenceBillboard2D","ClipBillboard2D"
 		};
 		static int classID = 0;
 		static int currentItem = 0;

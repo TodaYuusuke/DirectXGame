@@ -32,9 +32,9 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Primitive::ClipSprite clipSprite;			// クリップ
 
 	// ビルボード
-	LWP::Primitive::NormalBillboard3D normalBill;		// 通常
-	LWP::Primitive::SequenceBillboard3D sequenceBill;	// シーケンス
-	LWP::Primitive::ClipBillboard3D clipBill;			// クリップ
+	LWP::Primitive::NormalBillboard2D normalBill;		// 通常
+	LWP::Primitive::SequenceBillboard2D sequenceBill;	// シーケンス
+	LWP::Primitive::ClipBillboard2D clipBill;			// クリップ
 
 	LWP::Object::Collision col;
 	LWP::Object::Collider::Capsule& caps;

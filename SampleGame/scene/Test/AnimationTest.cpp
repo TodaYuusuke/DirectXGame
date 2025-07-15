@@ -22,10 +22,15 @@ void AnimationTest::Initialize() {
 	// ClipSpriteの初期化
 	clipSprite.LoadTexture("Attack.png");
 
-	normalBill.LoadTexture("uvChecker.dds");		// 通常
-	sequenceBill.LoadTexture("TestSpriteSheet.png");	// シーケンス
+	normalBill.LoadTexture("Particle.png");		// 通常
+	sequenceBill.LoadTexture("Particle.png");	// シーケンス
 	sequenceBill.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
-	clipBill.LoadTexture("Attack.png");// クリップ
+	clipBill.LoadTexture("Particle.png");// クリップ
+	
+	//normalBill.LoadTexture("uvChecker.dds");		// 通常
+	//sequenceBill.LoadTexture("TestSpriteSheet.png");	// シーケンス
+	//sequenceBill.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
+	//clipBill.LoadTexture("Attack.png");// クリップ
 
 	normalSprite.worldTF.translation = { 100.0f, 400.0f, 0.0f };
 	sequenceSprite.worldTF.translation = { 400.0f, 200.0f, 0.0f };

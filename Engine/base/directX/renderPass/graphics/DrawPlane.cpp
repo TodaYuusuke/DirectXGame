@@ -4,7 +4,7 @@
 #include "object/ObjectManager.h"
 #include "primitive/PrimitiveManager.h"
 
-using namespace LWP::Resource;
+using namespace LWP::Primitive;
 
 namespace LWP::Base {
 	void DrawPlane::Init() {
@@ -12,8 +12,9 @@ namespace LWP::Base {
 		root_.AddTableParameter(0, SV_Vertex)	// 0 頂点
 			.AddTableParameter(1, SV_Vertex)	// 1 ワールドトランスフォーム
 			.AddCBVParameter(0, SV_Vertex)		// 2 カメラ
-			.AddTableParameter(0, SV_Pixel)		// 3 マテリアル
-			.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// 4 テクスチャ
+			.AddTableParameter(2, SV_Vertex)		// 3 Zソートインデックス
+			.AddTableParameter(0, SV_Pixel)		// 4 マテリアル
+			.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// 5 テクスチャ
 			.AddSampler(0, SV_Pixel)			// x テクスチャ用サンプラー
 			.Build();
 
@@ -24,7 +25,7 @@ namespace LWP::Base {
 			.Build();
 		// ビルボード3Dの描画
 		psos_.billboard3D.Copy(psos_.sprite)
-			.SetSystemVS("Rework_/graphics/plane/Billboard3D.VS.hlsl")
+			.SetSystemVS("Rework_/graphics/plane/Billboard2D.VS.hlsl")
 			.Build();
 	}
 
@@ -66,7 +67,7 @@ namespace LWP::Base {
 
 	void DrawPlane::SetBuffers(ID3D12GraphicsCommandList6* list) {
 		SRV* srv = SRV::GetInstance();
-		list->SetGraphicsRootDescriptorTable(4, srv->GetFirstTexView());	// テクスチャのバッファを登録
+		list->SetGraphicsRootDescriptorTable(5, srv->GetFirstTexView());	// テクスチャのバッファを登録
 	}
 	void DrawPlane::SetDrawCall(ID3D12GraphicsCommandList6* list) {
 		// Spriteの描画
@@ -80,7 +81,7 @@ namespace LWP::Base {
 	}
 	void DrawPlane::DrawBillboard3D(ID3D12GraphicsCommandList6* list) {
 		list->SetPipelineState(psos_.billboard3D);	// PSOを設定
-		DrawCommon(Primitive::Manager::GetInstance()->GetBillboard3DBuffer(), list);
+		DrawCommon(Primitive::Manager::GetInstance()->GetBillboard2DBuffer(), list);
 	}
 
 	void DrawPlane::DrawCommon(Primitive::PlaneBuffers* buffers, ID3D12GraphicsCommandList6* list) {
@@ -90,7 +91,8 @@ namespace LWP::Base {
 		// Viewを設定
 		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());		// 頂点
 		list->SetGraphicsRootDescriptorTable(1, buffers->wtf.GetGPUView());			// ワールドトランスフォーム
-		list->SetGraphicsRootDescriptorTable(3, buffers->materials.GetGPUView());	// マテリアル
+		list->SetGraphicsRootDescriptorTable(4, buffers->materials.GetGPUView());	// マテリアル
+		list->SetGraphicsRootDescriptorTable(3, Primitive::Manager::GetInstance()->GetZSortBuffer()->GetGPUView());	// マテリアル
 		list->DrawInstanced(6, buffers->count, 0, 0);
 	}
 }
