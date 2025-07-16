@@ -78,13 +78,10 @@ AudioData::~AudioData() {
 	//pBuffer_ = 0;
 }
 
-void AudioData::Play(float volume, UINT loopCount) {
-	HRESULT hr;
-
+void AudioData::SubmitSource(UINT loopCount, IXAudio2SourceVoice** pSourceVoice) {
 	// 波形フォーマットを元にSourceVoiceの生成
-	hr = xAudio_->CreateSourceVoice(&pSourceVoice, &wfex, 0, 2.0f);
+	HRESULT hr = xAudio_->CreateSourceVoice(pSourceVoice, &wfex, 0, 2.0f);
 	assert(SUCCEEDED(hr));
-
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
@@ -94,26 +91,7 @@ void AudioData::Play(float volume, UINT loopCount) {
 	buf.LoopCount = loopCount;
 
 	// 波形データの再生
-	pSourceVoice->SubmitSourceBuffer(&buf);
-	// 音量セット
-	pSourceVoice->SetVolume(volume);
-	// 再生
-	hr = pSourceVoice->Start();
-}
-void AudioData::Stop() {
-	// そもそも再生してないなら止めない
-	if (!pSourceVoice) { return; }
-
-	// 再生中でなければ止めない
-	XAUDIO2_VOICE_STATE state{};
-	pSourceVoice->GetState(&state);
-	if (state.SamplesPlayed != 0) {
-		pSourceVoice->Stop();
-	}
-}
-
-void AudioData::SetVolume(float v) {
-	pSourceVoice->SetVolume(v);
+	(*pSourceVoice)->SubmitSourceBuffer(&buf);
 }
 
 /*
