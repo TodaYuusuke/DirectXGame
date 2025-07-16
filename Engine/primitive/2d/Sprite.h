@@ -10,6 +10,7 @@ namespace LWP::Primitive {
 	class NormalSprite final : public INormal {
 	public:
 		NormalSprite();
+		~NormalSprite();
 	};
 	/// <summary>
 	/// 連番テクスチャ用のビルボード3D
@@ -17,6 +18,7 @@ namespace LWP::Primitive {
 	class SequenceSprite final : public ISequence {
 	public:
 		SequenceSprite();
+		~SequenceSprite();
 	};
 	/// <summary>
 	/// 切り抜き描画用のビルボード3D
@@ -24,5 +26,6 @@ namespace LWP::Primitive {
 	class ClipSprite final : public IClip {
 	public:
 		ClipSprite();
+		~ClipSprite();
 	};
 }

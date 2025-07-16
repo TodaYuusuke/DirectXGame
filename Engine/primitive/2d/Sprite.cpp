@@ -8,14 +8,17 @@ namespace LWP::Primitive {
 		name = "NormalSprite";
 		Primitive::Manager::GetInstance()->SetSpritePtr(this);
 	};
+	NormalSprite::~NormalSprite() { Primitive::Manager::GetInstance()->DeleteSpritePtr(this); }
 	SequenceSprite::SequenceSprite() {
 		planeType = Sprite;
 		name = "SequenceSprite";
 		Primitive::Manager::GetInstance()->SetSpritePtr(this);
 	};
+	SequenceSprite::~SequenceSprite() { Primitive::Manager::GetInstance()->DeleteSpritePtr(this); }
 	ClipSprite::ClipSprite() {
 		planeType = Sprite;
 		name = "ClipSprite";
 		Primitive::Manager::GetInstance()->SetSpritePtr(this);
 	};
+	ClipSprite::~ClipSprite() { Primitive::Manager::GetInstance()->DeleteSpritePtr(this); }
 }

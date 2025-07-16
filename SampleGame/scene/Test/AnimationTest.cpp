@@ -1,5 +1,5 @@
 #include "AnimationTest.h"
-#include "LevelLoaderTest.h"
+#include "TextureLoadTest.h"
 
 using namespace LWP;
 using namespace LWP::Input;
@@ -100,6 +100,8 @@ void AnimationTest::Update() {
 	//caps.start = model[0].GetJointWorldPosition("Hand.R");
 
 	if (Keyboard::GetTrigger(DIK_P)) {
-		nextSceneFunction = []() { return new LevelLoaderTest(); };
+		nextSceneFunction = []() {
+			return new TextureLoadTest();
+		};
 	}
 }

@@ -121,7 +121,7 @@ namespace LWP::Primitive {
 		ptr->name += "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
 		sprites_.SetPtr(ptr);
 	}
-	void Manager::SetBillboard3DPtr(IPlane* ptr) {
+	void Manager::SetBillboard2DPtr(IPlane* ptr) {
 		ptr->name += "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
 		billboards3D_.SetPtr(ptr);
 	}

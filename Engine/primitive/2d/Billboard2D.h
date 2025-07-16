@@ -10,6 +10,7 @@ namespace LWP::Primitive {
 	class NormalBillboard2D final : public INormal {
 	public:
 		NormalBillboard2D();
+		~NormalBillboard2D();
 	};
 	/// <summary>
 	/// 連番テクスチャ用のビルボード3D
@@ -17,6 +18,7 @@ namespace LWP::Primitive {
 	class SequenceBillboard2D final : public ISequence {
 	public:
 		SequenceBillboard2D();
+		~SequenceBillboard2D();
 	};
 	/// <summary>
 	/// 切り抜き描画用のビルボード3D
@@ -24,5 +26,6 @@ namespace LWP::Primitive {
 	class ClipBillboard2D final : public IClip {
 	public:
 		ClipBillboard2D();
+		~ClipBillboard2D();
 	};
 }

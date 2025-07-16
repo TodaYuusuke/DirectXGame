@@ -64,10 +64,10 @@ namespace LWP::Primitive {
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetSpritePtr(IPlane* ptr);
-		void SetBillboard3DPtr(IPlane* ptr);
+		void SetBillboard2DPtr(IPlane* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
 		void DeleteSpritePtr(IPlane* ptr) { sprites_.DeletePtr(ptr); }
-		void DeleteBillboard3DPtr(IPlane* ptr) { billboards3D_.DeletePtr(ptr); }
+		void DeleteBillboard2DPtr(IPlane* ptr) { billboards3D_.DeletePtr(ptr); }
 
 		// Plane系の描画に使うバッファーを送る関数
 		PlaneBuffers* GetSpriteBuffer() { return &spriteBuffers_; }
