@@ -23,8 +23,6 @@ void AnimationTest::Initialize() {
 	clipSprite.LoadTexture("Attack.png");
 
 	normalBill.LoadTexture("Particle.png");		// 通常
-	sequenceBill.LoadTexture("Particle.png");	// シーケンス
-	sequenceBill.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
 	clipBill.LoadTexture("Particle.png");// クリップ
 	
 	//normalBill.LoadTexture("uvChecker.dds");		// 通常

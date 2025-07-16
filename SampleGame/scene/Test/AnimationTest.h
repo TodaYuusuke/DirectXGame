@@ -33,7 +33,6 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// ビルボード
 	LWP::Primitive::NormalBillboard2D normalBill;		// 通常
-	LWP::Primitive::SequenceBillboard2D sequenceBill;	// シーケンス
 	LWP::Primitive::ClipBillboard2D clipBill;			// クリップ
 
 	LWP::Object::Collision col;

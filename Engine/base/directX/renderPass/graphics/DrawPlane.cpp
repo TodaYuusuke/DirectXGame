@@ -25,6 +25,8 @@ namespace LWP::Base {
 			.Build();
 		// ビルボード3Dの描画
 		psos_.billboard3D.Copy(psos_.sprite)
+			.SetRasterizerState(D3D12_CULL_MODE_NONE)	// 両面描画するように
+			.SetDepthState(true, D3D12_DEPTH_WRITE_MASK_ZERO)	// デプスを書き込まないように
 			.SetSystemVS("Rework_/graphics/plane/Billboard2D.VS.hlsl")
 			.Build();
 	}
