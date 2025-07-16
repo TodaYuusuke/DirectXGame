@@ -29,7 +29,7 @@ namespace LWP::Resource {
 		/// オーディオのデータを読み込む（exeからのパス指定）
 		/// </summary>
 		/// <param name="path">exeからのパス</param>
-		void LoadLongPath(const std::string& path);
+		void LoadFullPath(const std::string& path);
     
 		/// <summary>
 		/// 1回再生
