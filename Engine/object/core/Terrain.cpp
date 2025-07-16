@@ -11,19 +11,21 @@ using namespace LWP::Math;
 using namespace LWP::Resource;
 
 Terrain::Terrain() : collider_(collision.SetBroadShape(Collider::Terrain())) {
-	Initialize();
+	Object::Manager::GetInstance()->SetPtr(this);	// ポインタをセット
+	Init();
 }
-
+Terrain::~Terrain() {
+	// 特に何もしない
+	Object::Manager::GetInstance()->DeletePtr(this);	// ポインタを解除
+}
 // 初期化
-void Terrain::Initialize() {
+void Terrain::Init() {
 	collision.mask.SetBelongFrag(lwpC::Collider::Terrain);
 	collision.mask.SetHitFrag(lwpC::Collider::ALL ^ lwpC::Collider::FieldObject);
 	collision.name = "Terrain";
 }
 // 更新
-void Terrain::Update(Base::RendererManager* manager) {
-	manager;
-
+void Terrain::Update() {
 	// 自身のisActiveをモデルとコライダーに適応
 	model_.isActive = isActive;
 	collision.isActive = isActive;

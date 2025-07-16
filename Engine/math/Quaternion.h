@@ -58,13 +58,15 @@ namespace LWP::Math {
 		/// </summary>
 		/// <param name="axis">軸周り</param>
 		/// <param name="radian">角度(ラジアン)</param>
-		/// <returns></returns>
 		static Quaternion CreateFromAxisAngle(const Vector3& axis, float radian);
 		/// <summary>
 		/// ある方向からある方向への回転
 		/// </summary>
-		/// <returns></returns>
 		static Quaternion DirectionToDirection(const Vector3& from, const Vector3& to);
+		/// <summary>
+		/// 方向ベクトルを向くクォータニオンを生成する
+		/// </summary>
+		static Quaternion LookRotation(const Vector3& dirVec);
 
 		/// <summary>
 		/// 内積を求める

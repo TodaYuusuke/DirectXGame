@@ -199,7 +199,6 @@ void LevelData::LoadCollider(const nlohmann::json& data, const std::string& name
 	}
 	else if (collider["type"] == "MESH") {
 		assert(false);	// staticModelを使わないようにするので一時的にエラーを吐くようにする
-
 		// Meshコライダーを生成
 		//Collider::Mesh& m = collisions[name].SetBroadShape(Collider::Mesh());
 		//m.Create(&rigidModels[name]);

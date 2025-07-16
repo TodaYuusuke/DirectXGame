@@ -24,9 +24,9 @@ namespace LWP::Object {
 	public: // ** 純粋仮想関数 ** //
 
 		// 初期化
-		virtual void Initialize() = 0;
+		virtual void Init() = 0;
 		// 更新
-		virtual void Update(Base::RendererManager* manager) = 0;
+		virtual void Update() = 0;
 
 		// デバッグ用GUI
 		virtual void DebugGUI() = 0;
@@ -36,12 +36,11 @@ namespace LWP::Object {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		IObject();
-
+		IObject() = default;
 		/// <summary>
-		/// デフォルトデストラクタ
+		/// デストラクタ
 		/// </summary>
-		~IObject();
+		~IObject() = default;
 	};
 }
 

@@ -1,35 +1,28 @@
 #pragma once
-#include "Sprite.h"
+#include "planeInterface/INormal.h"
+#include "planeInterface/ISequence.h"
+#include "planeInterface/IClip.h"
 
 namespace LWP::Primitive {
 	/// <summary>
-	/// 平面
+	/// 通常のビルボード3D
 	/// </summary>
-	class Billboard2D
-		: public Sprite {
-	public: // ** パブリックなメンバ変数 ** //
-
-		// サイズ
-		Math::Vector2 billboardSize = LWP::Math::Vector2{ 0.7f,0.7f };
-
-
-	public: // ** 関数 ** //
-
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		Billboard2D();
-
-	protected: // ** 派生クラス用の関数をオーバーライド ** //
-
-		/// <summary>
-		/// 独自のメンバ変数用にImGuiを用意
-		/// </summary>
-		/// <param name="label"></param>
-		void DerivedDebugGUI(const std::string& label) override;
-		/// <summary>
-		/// 頂点の座標を生成する処理
-		/// </summary>
-		void CreateVerticesPosition() override;
+	class NormalBillboard2D final : public INormal {
+	public:
+		NormalBillboard2D();
+	};
+	/// <summary>
+	/// 連番テクスチャ用のビルボード3D
+	/// </summary>
+	class SequenceBillboard2D final : public ISequence {
+	public:
+		SequenceBillboard2D();
+	};
+	/// <summary>
+	/// 切り抜き描画用のビルボード3D
+	/// </summary>
+	class ClipBillboard2D final : public IClip {
+	public:
+		ClipBillboard2D();
 	};
 }

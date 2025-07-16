@@ -19,5 +19,5 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Sprite sprite_;
+	LWP::Primitive::NormalSprite sprite_;
 };

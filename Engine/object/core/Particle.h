@@ -6,11 +6,6 @@
 #include "resources/model/RigidModel.h"
 #include "collision/Collision.h"
 
-#include "../Externals/imgui/imgui.h"
-#include "../Externals/imgui/imgui_impl_dx12.h"
-#include "../Externals/imgui/imgui_impl_win32.h"
-#include "../Externals/imgui/imgui_stdlib.h"
-
 namespace LWP::Object {
 	/// <summary>
 	/// パーティクル
@@ -27,25 +22,12 @@ namespace LWP::Object {
 
 			// デフォルトコンストラクタ
 			Data() = delete;
-			Data(const Resource::RigidModel& m) {
-				this->m = m;
-			}
-
+			Data(const Resource::RigidModel& m);
 			// デストラクタ
-			~Data() {
-				if (collider) { delete collider; }
-			};
+			~Data();
 
-
-			Data& operator=(const Data& other) {
-				if (this != &other) {
-					m = other.m;
-					velocity = other.velocity;
-					collider = other.collider;
-					elapsedTime = other.elapsedTime;
-				}
-				return *this;
-			}
+			// コピー演算子
+			Data& operator=(const Data& other);
 		};
 
 		// 基準となるモデルクラス
@@ -53,57 +35,43 @@ namespace LWP::Object {
 		// 識別番号
 		int IDNumber = 0;	// 21億個生成したらバグるけどいったん放置
 
+
 	public: // ** メンバ関数 ** //
-		// デストラクタ
-		~Particle() = default;
+		
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Particle();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Particle();
+		
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Init() override final {};
+		/// <summary>
+		/// 更新
+		/// </summary>
+		/// <param name="manager"></param>
+		void Update() override final;
 
-		// 初期化
-		void Initialize() override final {};
-		// 更新
-		void Update(Base::RendererManager* manager) override final {
-			if (!isActive) { return; }
-			// 必須の設定だがいい感じに設定できるタイミングがないので無理やりここで設定
-			model.isActive = false;
+		/// <summary>
+		/// パーティクルを生成
+		/// </summary>
+		/// <param name="value">生成する個数</param>
+		void Add(int value);
+		/// <summary>
+		/// 場所を指定してパーティクルを生成
+		/// </summary>
+		/// <param name="value">生成する個数</param>
+		void Add(int value, LWP::Math::Vector3 position);
 
-			// イテレータを使用してリストを走査しながら要素を削除
-			for (auto it = data_.begin(); it != data_.end(); ) {
-				if (UpdateParticle(*it)) {
-					it = data_.erase(it); // 要素を削除し、新しいイテレータを取得
-				}
-				else {
-					it++; // 次の要素に進む
-				}
-			}
-			// パーティクル用のデータ登録関数を呼び出す
-			//manager->AddParticleData(primitive, data);
-			manager;
-		}
-
-		// パーティクルを追加
-		void Add(int value) {
-			for (int i = 0; i < value; i++) {
-				data_.emplace_back(model);
-				data_.back().m.isActive = true;
-				data_.back().idNumber = IDNumber++;	// 識別番号を付与
-				Generate(data_.back());
-			}
-		}
-		void Add(int value, LWP::Math::Vector3 position) {
-			model.worldTF.translation = position;
-			Add(value);
-		}
-		// デバッグ用GUI
-		void DebugGUI() override final {
-			if (ImGui::TreeNode("Model")) {
-				model.DebugGUI();
-				ImGui::TreePop();
-			}
-			static int value = 8;
-			ImGui::InputInt("Value", &value);
-			if(ImGui::Button("Particle Generate")) { Add(value); }
-			ImGui::Checkbox("isActive", &isActive);
-			ImGui::Text("Count %d", data_.size());
-		}
+		/// <summary>
+		/// デバッグ用GUI
+		/// </summary>
+		void DebugGUI() override final;
 
 	protected: // ** 派生先で定義してもらう関数 ** //
 		// コンストラクタとデストラクタの定義は禁止

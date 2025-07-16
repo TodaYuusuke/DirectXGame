@@ -13,7 +13,7 @@ namespace LWP::Primitive {
 		// 初期化を呼び出す
 		Surface() { Init(); }
 
-		void Create(const Math::Vector3& leftDown, const Math::Vector3& rightUp);
+		void Create(const Math::Vector3& rightDown);
 		void Create(const Math::Vector3& leftUp, const Math::Vector3& rightUp, const Math::Vector3& rightDown, const Math::Vector3& leftDown);
 
 		/// <summary>

@@ -41,12 +41,15 @@ namespace LWP::Object {
 		/// デフォルトコンストラクタ
 		/// </summary>
 		PointLight();
-
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~PointLight();
 
 		// 初期化
-		void Initialize() override;
+		void Init() override;
 		// 更新
-		void Update(Base::RendererManager* manager) override;
+		void Update() override;
 
 		// デバッグ用GUI
 		void DebugGUI() override;

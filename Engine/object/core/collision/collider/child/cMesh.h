@@ -6,10 +6,6 @@
 
 #include "math/vector/Vector3.h"
 
-#if DEMO
-#include "primitive/2d/Triangle.h"
-#endif
-
 // 前方宣言
 namespace LWP::Resource {
 	class RigidModel;

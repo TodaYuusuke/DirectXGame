@@ -11,14 +11,20 @@ namespace LWP::Object {
 	/// </summary>
 	class Terrain final : public IObject {
 	public: // ** メンバ関数 ** //
-
-		// デフォルトコンストラクタ
+		
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
 		Terrain();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Terrain();
 
 		// 初期化
-		void Initialize() override;
+		void Init() override;
 		// 更新
-		void Update(Base::RendererManager* manager) override;
+		void Update() override;
 
 		// 地形に使うモデルデータを読み込む
 		void LoadModel(std::string filePath, const TransformQuat& wtf);

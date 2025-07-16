@@ -23,7 +23,7 @@ public:
 
 private: // ** メンバ変数 ** //
 	// 上下の黒帯用スプライト
-	LWP::Primitive::Sprite blackBelt_[2];
+	LWP::Primitive::NormalSprite blackBelt_[2];
 
 	// 黒帯の縦のスケール
 	float scale_ = 0.7f;

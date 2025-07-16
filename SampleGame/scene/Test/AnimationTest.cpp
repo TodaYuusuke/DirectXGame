@@ -14,8 +14,31 @@ AnimationTest::AnimationTest() :
 }
 // 初期化
 void AnimationTest::Initialize() {
-	for (int i = 0; i < 1; i++) {
-		model[i].LoadShortPath("Player/Hinmin/Player_Simple.gltf");
+	// NormalSpriteの初期化
+	normalSprite.LoadTexture("uvChecker.dds");
+	// SequenceSpriteの初期化
+	sequenceSprite.LoadTexture("TestSpriteSheet.png");
+	sequenceSprite.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
+	// ClipSpriteの初期化
+	clipSprite.LoadTexture("Attack.png");
+
+	normalBill.LoadTexture("Particle.png");		// 通常
+	sequenceBill.LoadTexture("Particle.png");	// シーケンス
+	sequenceBill.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
+	clipBill.LoadTexture("Particle.png");// クリップ
+	
+	//normalBill.LoadTexture("uvChecker.dds");		// 通常
+	//sequenceBill.LoadTexture("TestSpriteSheet.png");	// シーケンス
+	//sequenceBill.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
+	//clipBill.LoadTexture("Attack.png");// クリップ
+
+	normalSprite.worldTF.translation = { 100.0f, 400.0f, 0.0f };
+	sequenceSprite.worldTF.translation = { 400.0f, 200.0f, 0.0f };
+	clipSprite.worldTF.translation = { 1000.0f, 600.0f, 0.0f };
+
+	cube.LoadCube();
+	for (int i = 0; i < 5; i++) {
+		model[i].LoadShortPath("Player/Hinmin/Player.gltf");
 		//model[i].LoadShortPath("test/Test.gltf");
 		model[i].worldTF.translation.x = i * 1.5f;
 		//motion[i].Add(
@@ -30,7 +53,7 @@ void AnimationTest::Initialize() {
 		//);
 		////motion[i].Start(true);
 
-		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player_Simple.gltf", &model[i]);
+		anim[i].LoadFullPath("resources/model/Player/Hinmin/Player.gltf", &model[i]);
 		//anim[i].LoadFullPath("resources/model/test/Test.gltf", &model[i]);
 	}
 
@@ -71,14 +94,6 @@ void AnimationTest::Update() {
 		col.DebugGUI();
 		ImGui::TreePop();
 	}
-
-	if (ImGui::Button("Generate Int")) { I = Random::GenerateInt(-100, 100); };
-	if (ImGui::Button("Generate Float")) { F = Random::GenerateFloat(-100.0f, 100.0f); };
-	if (ImGui::Button("Generate Vector3")) { V = Random::GenerateVector3({-100.0f,-100.0f,-100.0f}, { 100.0f,100.0f,100.0f }); };
-	ImGui::Text("Int : %d", I);
-	ImGui::Text("Float : %f", F);
-	ImGui::Text("Vector3 : (%f, %f, %f)", V.x, V.y, V.z);
-
 	ImGui::End();
 
 	//Vector3 v = { 0.0f,0.0f,0.0f };

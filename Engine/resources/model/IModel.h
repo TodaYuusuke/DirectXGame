@@ -1,8 +1,8 @@
 #pragma once
 #include "object/TransformEuler.h"
 
-#include "primitive/model/Skeleton.h"
-#include "primitive/model/SkinCluster.h"
+#include "primitive/component/Skeleton.h"
+#include "primitive/component/SkinCluster.h"
 
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/renderer/ResourceStruct.h"
@@ -10,6 +10,14 @@
 #include "ModelData.h"
 
 namespace LWP::Resource {
+
+	enum class ModelType {
+		Rigid,
+		Skin,
+		Static,
+		EMap,
+		Count,
+	};
 
 	/// <summary>
 	/// 3Dモデルを扱うアダプターの基底クラス

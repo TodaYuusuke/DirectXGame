@@ -36,11 +36,11 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	EnemyManager enemyManager_;
 
 	// 操作表示
-	LWP::Primitive::Sprite ui_;
+	LWP::Primitive::NormalSprite ui_;
 
 
 	// 画面遷移用UI
-	LWP::Primitive::Sprite stagingSprite_;
+	LWP::Primitive::NormalSprite stagingSprite_;
 	// シーン開始演出用
 	struct StartStaging {
 		// 経過時間

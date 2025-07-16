@@ -2,7 +2,7 @@
 #include "../ICollider.h"
 
 #if DEMO
-#include "primitive/3d/Capsule.h"
+//#include "primitive/3d/Capsule.h"
 #endif
 
 namespace LWP::Object::Collider {
@@ -47,7 +47,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Capsule capsuleModel;
+		//LWP::Primitive::Capsule capsuleModel;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

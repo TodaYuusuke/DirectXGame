@@ -1,5 +1,5 @@
 #pragma once
-#include "primitive/model/Skeleton.h"
+#include "primitive/component/Skeleton.h"
 #include "math/vector/Vector3.h"
 #include "math/Quaternion.h"
 #include <string>

@@ -83,6 +83,7 @@ void DepthStencil::InitGPUCollider() {
 
 void DepthStencil::Clear(ID3D12GraphicsCommandList* list) {
 	// 指定した深度で画面全体をクリアする
+	ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);
 	list->ClearDepthStencilView(dsvInfo.cpuView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, clearValue.DepthStencil.Depth, 0, 0, nullptr);
 }
 void DepthStencil::ClearDepth(ID3D12GraphicsCommandList* list) {

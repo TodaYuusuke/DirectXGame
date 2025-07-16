@@ -16,8 +16,8 @@ Sphere::Sphere(const LWP::Math::Vector3& pos, const float& rad) {
 
 #if DEMO
 	// モデルの初期設定
-	sphereModel.material.enableLighting = false;
-	sphereModel.isWireFrame = true;
+	//sphereModel.material.enableLighting = false;
+	//sphereModel.isWireFrame = true;
 #endif
 }
 
@@ -26,19 +26,19 @@ Sphere::Sphere(const Sphere& other) {
 
 #if DEMO
 	// モデルの初期設定
-	sphereModel.material.enableLighting = false;
-	sphereModel.isWireFrame = true;
+	//sphereModel.material.enableLighting = false;
+	//sphereModel.isWireFrame = true;
 #endif
 }
 
 
 void Sphere::Update() {
 #if DEMO
-	sphereModel.CreateFromSphereCol(position + tf_->GetWorldPosition(), radius);	// Sphere再生成
-	// isActive切り替え
-	sphereModel.isActive = isShowWireFrame && isActive;
-	// 色を白に戻す
-	sphereModel.material.color = Utility::Color(Utility::ColorPattern::WHITE);
+	//sphereModel.CreateFromSphereCol(position + tf_->GetWorldPosition(), radius);	// Sphere再生成
+	//// isActive切り替え
+	//sphereModel.isActive = isShowWireFrame && isActive;
+	//// 色を白に戻す
+	//sphereModel.material.color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
@@ -89,7 +89,7 @@ void Sphere::DebugGUI() {
 void Sphere::Hit() {
 #if DEMO
 	// hitしているときは色を変える
-	sphereModel.material.color = Utility::Color(Utility::ColorPattern::RED);
+	//sphereModel.material.color = Utility::Color(Utility::ColorPattern::RED);
 #endif
 }
 

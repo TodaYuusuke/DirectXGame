@@ -66,7 +66,7 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 
 	// 当たり判定用のPSOたち
 	collider_.wireFrame.Copy(renderingShader_.pso)	// PSOをコピー
-		.SetRTVFormat(DXGI_FORMAT_R32_SINT)
+		.SetRTVFormats(DXGI_FORMAT_R32_SINT)
 		.SetBlendState(false)
 		.SetRasterizerState(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME)	// ワイヤーフレームに
 		.SetSystemMS("ms/particle/ParticleCollider.MS.hlsl")
@@ -112,7 +112,7 @@ void ParticleRenderer::Init(Command* cmd, std::function<void()> func) {
 		.Build();
 	collider_.stencilMaskRoot.Build();	// 何もいらない
 	collider_.stencilMaskPSO.Init(collider_.stencilMaskRoot)
-		.SetRTVFormat(DXGI_FORMAT_R8_UNORM)
+		.SetRTVFormats(DXGI_FORMAT_R8_UNORM)
 		.SetBlendState(false)	// ブレンド無し
 		.SetDepthState(false)	// デプス無し
 		.SetStencilState(true,

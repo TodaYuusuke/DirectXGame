@@ -47,7 +47,7 @@ private: // ** メンバ変数 ** //
 	LWP::Object::Collider::Capsule& capsule_;
 
 	// レティクル
-	LWP::Primitive::Sprite reticle_;
+	LWP::Primitive::NormalSprite reticle_;
 
 	// 装填数
 	int ammo_ = 10;

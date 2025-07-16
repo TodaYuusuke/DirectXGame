@@ -12,19 +12,19 @@
 using namespace LWP::Base;
 
 void RendererManager::Init() {
-	srv_ = SRV::GetInstance();	// SRVはよく使うので保持
+	//srv_ = SRV::GetInstance();	// SRVはよく使うので保持
 
-	// コマンド初期化
-	commander_.Init(GPUDevice::GetInstance());
-	// コマンドをSRVに渡しておく
-	SRV::GetInstance()->SetCommand(&commander_);
+	//// コマンド初期化
+	//commander_.Init(GPUDevice::GetInstance());
+	//// コマンドをSRVに渡しておく
+	//SRV::GetInstance()->SetCommand(&commander_);
 
 
-	// デフォルトテクスチャ読み込み
-	defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
+	//// デフォルトテクスチャ読み込み
+	//defaultTexture_ = Resource::LoadTextureLongPath("resources/system/texture/white.png");
 	// バッファー達を初期化
 	buffers_.Init();
-	// DXCはデフォルトコンストラクタで初期化済み
+	//// DXCはデフォルトコンストラクタで初期化済み
 
 	// Viewをセットする関数を用意
 	std::function<void()> shadowFunc = [&]() {

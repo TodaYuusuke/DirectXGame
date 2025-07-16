@@ -9,19 +9,21 @@ using namespace LWP::Math;
 using namespace LWP::Object;
 
 PointLight::PointLight() {
+	Object::Manager::GetInstance()->SetPtr(this); // ポインタを登録
 	// リソースの初期化
 	for (int i = 0; i < 6; i++) {
 		viewBuffers_[i].Init();
 	}
 	shadowMap_.Init();
 }
+PointLight::~PointLight() {
+	Object::Manager::GetInstance()->DeletePtr(this); // ポインタを解除
+}
 
 // 初期化
-void PointLight::Initialize() {
-	name = "PointLight";
-}
+void PointLight::Init() {}
 // 更新
-void PointLight::Update(Base::RendererManager* manager) {
+void PointLight::Update() {
 	if (!isActive) { return; }
 		
 	// 6方向のビュープロジェクション
@@ -42,15 +44,15 @@ void PointLight::Update(Base::RendererManager* manager) {
 	}
 
 	// CommandManagerにデータを登録
-	manager->AddLightData(this);
-	manager->AddTarget({
-		viewBuffers_[0].GetGPUView(),
-		viewBuffers_[1].GetGPUView(),
-		viewBuffers_[2].GetGPUView(),
-		viewBuffers_[3].GetGPUView(),
-		viewBuffers_[4].GetGPUView(),
-		viewBuffers_[5].GetGPUView()
-		}, &shadowMap_);
+	//manager->AddLightData(this);
+	//manager->AddTarget({
+	//	viewBuffers_[0].GetGPUView(),
+	//	viewBuffers_[1].GetGPUView(),
+	//	viewBuffers_[2].GetGPUView(),
+	//	viewBuffers_[3].GetGPUView(),
+	//	viewBuffers_[4].GetGPUView(),
+	//	viewBuffers_[5].GetGPUView()
+	//	}, &shadowMap_);
 }
 
 // デバッグ用GUI

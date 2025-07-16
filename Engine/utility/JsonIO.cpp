@@ -274,7 +274,7 @@ void JsonIO::DebugGUI(Group& group) {
 			ImGui::DragInt(itr->name.c_str(), *VariantGet<int32_t*>(*itr));
 		}
 		else if (VariantCheck<float*>(*itr)) {
-			ImGui::DragFloat(itr->name.c_str(), *VariantGet<float*>(*itr), 0.01f);
+			ImGui::DragFloat(itr->name.c_str(), *VariantGet<float*>(*itr), 0.01f, 0.0f,0.0f, "%0.6f");
 		}
 		else if (VariantCheck<Vector2*>(*itr)) {
 			ImGui::DragFloat2(itr->name.c_str(), &(*VariantGet<Vector2*>(*itr))->x, 0.01f);

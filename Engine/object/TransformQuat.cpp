@@ -1,5 +1,5 @@
 #include "TransformQuat.h"
-#include "primitive/model/Node.h"
+#include "primitive/component/Node.h"
 #include "resources/model/SkinningModel.h"
 #include "../base/ImGuiManager.h"
 

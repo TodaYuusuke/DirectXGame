@@ -15,10 +15,10 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	LWP::Primitive::Triangle tri_[2];
-	LWP::Primitive::Surface sur_[2];
+	//LWP::Primitive::Triangle tri_[2];
+	//LWP::Primitive::Surface sur_[2];
 
-	LWP::Primitive::Surface box_[3];
+	//LWP::Primitive::Surface box_[3];
 
 	LWP::Object::PointLight light_;
 };

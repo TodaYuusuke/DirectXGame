@@ -5,11 +5,7 @@
 #include "directX/utility/descriptorHeap/RTV.h"
 #include "directX/utility/descriptorHeap/SRV.h"
 #include "directX/utility/descriptorHeap/DSV.h"
-#include "directX/RendererManager.h"
-
-#include "directX/resource/rendering/BackBuffer.h"
-#include "directX/resource/rendering/DepthStencil.h"
-
+#include "directX/renderPass/RenderingPipeline.h"
 
 #include <memory>
 
@@ -39,12 +35,6 @@ namespace LWP::Base {
 		void Init();
 
 		/// <summary>
-		/// メイン描画につかうカメラをセットする
-		/// </summary>
-		/// <param name="camera"></param>
-		void SetMainCamera(Object::Camera* camera);
-
-		/// <summary>
 		/// DrawCall
 		/// </summary>
 		void DrawCall();
@@ -54,27 +44,15 @@ namespace LWP::Base {
 		/// </summary>
 		void DebugGUI();
 
-		// アクセサ
-		RendererManager* GetRendererManager() const { return renderer_.get(); }
-
 		// ImGui用
-		UINT GetBufferCount() { return swapChainDesc_.BufferCount; }
+		UINT GetBufferCount() { return renderingPipeline_->GetBufferCount(); }
 		DXGI_FORMAT GetFormat() { return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; }
 
 
 	private: // ** メンバ変数 ** //
 
-		// スワップチェーン
-		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
-		// Desc
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
-		// バッファー配列
-		std::vector<BackBuffer> backBuffers_;
-		// バックバッファの深度ステンシル
-		DepthStencil depthStencil_;
-
-		// コマンド管理
-		std::unique_ptr<RendererManager> renderer_;
+		// レンダリングパイプライン
+		std::unique_ptr<RenderingPipeline> renderingPipeline_;
 
 
 	private: // 非公開のメンバ関数

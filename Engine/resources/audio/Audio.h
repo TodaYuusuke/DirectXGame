@@ -14,22 +14,23 @@ namespace LWP::Resource {
 		// デストラクタ
 		~Audio() = default;
 
+
 		/// <summary>
-		/// ファイル読み込み
+		/// オーディオのデータを読み込む
 		/// </summary>
-		/// <param name="path">resources/直下からのパス</param>
-		void Load(const std::string& path);
+		/// <param name="fileName">読み込むファイルの名前</param>
+		void Load(const std::string& fileName);
 		/// <summary>
-		/// ファイル読み込み
+		/// オーディオのデータを読み込む（resources/model/を短縮ver）
 		/// </summary>
-		/// <param name="path">exeからのパス</param>
-		void LoadShortPath(const std::string& path);
+		/// <param name="filePath">読み込むファイルの名前</param>
+		void LoadShortPath(const std::string& filePath);
 		/// <summary>
-		/// ファイル読み込み
+		/// オーディオのデータを読み込む（exeからのパス指定）
 		/// </summary>
 		/// <param name="path">exeからのパス</param>
 		void LoadLongPath(const std::string& path);
-
+    
 		/// <summary>
 		/// 1回再生
 		/// </summary>

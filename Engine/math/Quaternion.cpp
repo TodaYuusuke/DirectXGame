@@ -150,6 +150,24 @@ Quaternion Quaternion::DirectionToDirection(const Vector3& from, const Vector3& 
 
 	return CreateFromAxisAngle(axis, theta);
 }
+Quaternion Quaternion::LookRotation(const Vector3& dirVec) {
+	// 向かせたい方向ベクトル
+	Vector3 dir = dirVec.Normalize();
+	// デフォルトの方向ベクトル
+	Vector3 norm = { 0,0,1 };
+	// 二つの方向ベクトルから角度算出
+	float theta = std::acosf(Vector3::Dot(norm, dir)) / 2.0f;
+	Vector3 cross = Vector3::Cross(norm, dir).Normalize();
+
+	// 計算結果
+	Quaternion q = {
+		cross.x * std::sin(theta),
+		cross.y * std::sin(theta),
+		cross.z * std::sin(theta),
+		std::cos(theta)
+	};
+	return q;
+}
 
 
 float Quaternion::Dot(const Quaternion& q1, const Quaternion& q2) {

@@ -1,5 +1,5 @@
 #include "TransformEuler.h"
-#include "primitive/model/Node.h"
+#include "primitive/component/Node.h"
 #include "../base/ImGuiManager.h"
 
 using namespace LWP::Object;

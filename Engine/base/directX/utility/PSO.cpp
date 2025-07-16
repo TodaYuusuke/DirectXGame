@@ -60,12 +60,25 @@ PSO& PSO::Init(ID3D12RootSignature* root, Type type) {
 
 	return *this;
 }
-PSO& PSO::SetRTVFormat(DXGI_FORMAT format) {
+PSO& PSO::SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats) {
+	const size_t count = formats.size();
+	assert(count > 0 && "At least one RTV format must be specified.");
+	assert(count <= D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT && "Too many RTV formats (maximum 8).");
+
+	UINT size = static_cast<UINT>(count);
+	size_t i = 0;
+
 	if (type_ == Type::Vertex) {
-		desc_.vertex.RTVFormats[0] = format;
+		desc_.vertex.NumRenderTargets = size;
+		for (DXGI_FORMAT fmt : formats) {
+			desc_.vertex.RTVFormats[i++] = fmt;
+		}
 	}
 	else if (type_ == Type::Mesh) {
-		desc_.mesh.RTVFormats[0] = format;
+		desc_.mesh.NumRenderTargets = size;
+		for (DXGI_FORMAT fmt : formats) {
+			desc_.mesh.RTVFormats[i++] = fmt;
+		}
 	}
 
 	return *this;
@@ -169,7 +182,7 @@ PSO& PSO::SetAS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"as_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"as_6_6");
 	assert(blob != nullptr);
 
 	// セット
@@ -185,7 +198,7 @@ PSO& PSO::SetMS(std::string filePath) {
 
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
-	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ms_6_5");
+	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"ms_6_6");
 	assert(blob != nullptr);
 
 	// セット
@@ -339,6 +352,22 @@ PSO& PSO::Copy(const PSO& source) {
 	type_ = source.GetType();
 	// 詳細をコピー
 	desc_ = source.GetDesc();
+
+	return *this;
+}
+PSO& PSO::Copy(const PSO& source, ID3D12RootSignature* root) {
+	Copy(source);
+	switch (type_) {
+		case Type::Vertex:
+			desc_.vertex.pRootSignature = root;
+			break;
+		case Type::Compute:
+			desc_.compute.pRootSignature = root;
+			break;
+		case Type::Mesh:
+			desc_.mesh.pRootSignature = root;
+			break;
+	}
 
 	return *this;
 }

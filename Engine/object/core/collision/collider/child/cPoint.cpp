@@ -1,6 +1,6 @@
 #include "cPoint.h"
 
-#include "primitive/3d/Sphere.h"
+//#include "primitive/3d/Sphere.h"
 #include "base/ImGuiManager.h"
 
 using namespace LWP::Object::Collider;
@@ -17,10 +17,10 @@ Point::Point(const LWP::Math::Vector3& pos) {
 
 #if DEMO
 	// モデルの初期設定
-	sphere.subdivision = 4;
-	sphere.radius = 0.02f;
-	sphere.material.enableLighting = false;
-	sphere.isWireFrame = true;
+	//sphere.subdivision = 4;
+	//sphere.radius = 0.02f;
+	//sphere.material.enableLighting = false;
+	//sphere.isWireFrame = true;
 #endif
 }
 
@@ -29,20 +29,20 @@ Point::Point(const Point& other) {
 
 #if DEMO
 	// モデルの初期設定
-	sphere.subdivision = 4;
-	sphere.radius = 0.02f;
-	sphere.material.enableLighting = false;
-	sphere.isWireFrame = true;
+	//sphere.subdivision = 4;
+	//sphere.radius = 0.02f;
+	//sphere.material.enableLighting = false;
+	//sphere.isWireFrame = true;
 #endif
 }
 
 void Point::Update() {
 #if DEMO
-	sphere.worldTF.translation = position + tf_->GetWorldPosition();
-	// isActive切り替え
-	sphere.isActive = isShowWireFrame && isActive;
-	// 色を白に戻す
-	sphere.material.color = Utility::Color(Utility::ColorPattern::WHITE);
+	//sphere.worldTF.translation = position + tf_->GetWorldPosition();
+	//// isActive切り替え
+	//sphere.isActive = isShowWireFrame && isActive;
+	//// 色を白に戻す
+	//sphere.material.color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
@@ -61,7 +61,7 @@ void Point::DebugGUI() {
 void Point::Hit() {
 #if DEMO
 	// hitしているときは色を変える
-	sphere.material.color = Utility::Color(Utility::ColorPattern::RED);
+	//sphere.material.color = Utility::Color(Utility::ColorPattern::RED);
 #endif
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "core/Camera.h"
-#include "core/GPUParticle.h"
 #include "core/Particle.h"
+#include "core/GPUParticle.h"
 #include "core/Terrain.h"
 #include "core/light/DirectionLight.h"
 #include "core/light/PointLight.h"
@@ -34,30 +34,84 @@ namespace LWP::Object {
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update(Base::RendererManager* manager);
+		void Update();
 
-		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetPointer(IObject* ptr);
-		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeletePointer(IObject* ptr);
+		/// <summary>
+		/// メインカメラにセットする関数
+		/// </summary>
+		void SetMainCamera(Camera* camera) { mainCamera_ = camera; }
+		/// <summary>
+		/// メインカメラを取得する関数
+		/// </summary>
+		Camera* GetMainCamera() { return mainCamera_; }
 
+		// 配列にポインタを登録する関数
+		void SetPtr(Camera* ptr);
+		void SetPtr(Particle* ptr);
+		void SetPtr(GPUParticle* ptr);
+		void SetPtr(Terrain* ptr);
+		void SetPtr(PointLight* ptr);
+		// 配列からポインタを削除する関数
+		void DeletePtr(Camera* ptr) { cameras_.DeletePtr(ptr); }
+		void DeletePtr(Particle* ptr) { particle_.DeletePtr(ptr); }
+		void DeletePtr(GPUParticle* ptr) { gpuParticle_.DeletePtr(ptr); }
+		void DeletePtr(Terrain* ptr) { terrain_.DeletePtr(ptr); }
+		void DeletePtr(PointLight* ptr) { pointLight_.DeletePtr(ptr); }
+		// 配列を描画処理に渡す関数
+		const std::list<Camera*>& GetCameras() const { return cameras_.list; }
+		const std::list<Particle*>& GetParticles() const { return particle_.list; }
+		const std::list<GPUParticle*>& GetGPUParticles() const { return gpuParticle_.list; }
+		const std::list<Terrain*>& GetTerrains() const { return terrain_.list; }
+		const std::list<PointLight*>& GetPointLights() const { return pointLight_.list; }
+
+		/// <summary>
+		/// 平行光源のポインタを返す関数
+		/// </summary>
+		DirectionLight* GetDirLight() { return &directionLight_; }
 
 	private: // メンバ変数
 
+		enum class Type {
+			Camera,
+			Particle,
+			GPUParticle,
+			Terrain,
+			DirectionLight,
+			PointLight
+		};
 		// オブジェクトのリスト
-		Utility::PtrManager<IObject*> objects_;
+		Utility::PtrManager<Camera*> cameras_;
+		Utility::PtrManager<Particle*> particle_;
+		Utility::PtrManager<GPUParticle*> gpuParticle_;
+		Utility::PtrManager<Terrain*> terrain_;
+		DirectionLight directionLight_;		// インスタンスは必ず１つなので直で持つ
+		Utility::PtrManager<PointLight*> pointLight_;
 		// カウンター
 		int objectCount_ = 0;
 
+		// メインカメラのポインタ
+		LWP::Object::Camera* mainCamera_ = nullptr;
+		// ライト系のメタデータ用バッファー
+		struct LightMetadata {
+			// 点光源の数
+			int pointLightCount = 0;
+			// 影の濃さ
+			float shadowDensity = 0.2f;
+		};
+		LWP::Base::ConstantBuffer<LightMetadata> lightMetadataBuffer_;
 
 	private:
 		// ImGui用変数
 		int selectedClass = 0;
 		int currentItem = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
-		std::vector<IObject*> debugPris;
+		std::vector<IObject*> debugObjs_;
 
 	public:
+
+		// ライト系のメタデータを取得する関数
+		const LWP::Base::ConstantBuffer<LightMetadata>& GetLightMetadataBuffer() const { return lightMetadataBuffer_; }
+
 		/// <summary>
 		/// Debug用GUI
 		/// </summary>

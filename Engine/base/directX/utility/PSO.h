@@ -5,6 +5,7 @@
 #include <DirectXTex/d3dx12.h>
 
 #include <string>
+#include <initializer_list>
 
 namespace LWP::Base {
 	/// <summary>
@@ -16,6 +17,12 @@ namespace LWP::Base {
 			Vertex,
 			Compute,
 			Mesh
+		};
+		// フィルモード
+		enum class FillMode {
+			Solid,
+			Wireframe,
+			Count
 		};
 		// ブレンドモード
 		enum class BlendMode {
@@ -42,7 +49,8 @@ namespace LWP::Base {
 		/// ビルダーデザインパターン
 		/// </summary>
 		PSO& Init(ID3D12RootSignature* root, Type type = Type::Vertex);
-		PSO& SetRTVFormat(DXGI_FORMAT format);
+		PSO& SetRTVFormats(const DXGI_FORMAT& format) { return SetRTVFormats({ format }); }
+		PSO& SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats);
 		PSO& SetInputLayout();
 		PSO& SetBlendState(bool enable, BlendMode mode = BlendMode::Normal);
 		PSO& SetRasterizerState(
@@ -78,8 +86,14 @@ namespace LWP::Base {
 
 		// PSOの設定をコピーする関数
 		PSO& Copy(const PSO& source);
+		// PSOの設定をコピーする関数（ルートは別のものを指定するver）
+		PSO& Copy(const PSO& source, ID3D12RootSignature* root);
 
-		// PipelineStateを受け取る関数
+		// ID3D12PipelineState型への暗黙の変換演算子をオーバーロード
+		operator ID3D12PipelineState* () {
+			return state_.Get();
+		}
+		// PipelineStateを受け取る関数（あとで消す）
 		ID3D12PipelineState* GetState() { return state_.Get(); }
 
 		// コピー用の処理

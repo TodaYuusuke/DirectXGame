@@ -9,7 +9,6 @@
 #include "motion/Motion.h"
 
 // 3Dモデル
-#include "primitive/3d/OldMesh.h"
 #include "model/RigidModel.h"
 #include "model/SkinningModel.h"
 #include "model/StaticModel.h"
@@ -144,8 +143,6 @@ namespace LWP::Resource {
 		Texture LoadTextureLongPath(const std::string& filepath);
 		AudioData* LoadAudio(const std::string& filepath);
 		AudioData* LoadAudioLongPath(const std::string& filepath);
-		Primitive::OldMeshData* LoadOldMesh(const std::string& filepath);
-		Primitive::OldMeshData* LoadOldMeshLongPath(const std::string& filepath);
 
 		// モデルのデータを読み込む関数
 		void LoadModelData(const std::string& filePath);
@@ -155,25 +152,25 @@ namespace LWP::Resource {
 		std::vector<std::reference_wrapper<Models>> GetModels();
 
 		// インスタンスのポインタをセットする関数群（ユーザー呼び出し不要）
-		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPointer(ptr); }
-		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPointer(ptr); }
-		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPointer(ptr); }
-		void SetPointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.SetPointer(ptr); }
-		void SetPointer(Animation* ptr) { animations_.SetPointer(ptr); }
-		void SetPointer(Motion* ptr) { motions_.SetPointer(ptr); }
+		void SetPointer(RigidModel* ptr, const std::string& filePath) { modelDataMap_[filePath].rigid.solid.ptrs.SetPtr(ptr); }
+		void SetPointer(SkinningModel* ptr, const std::string& filePath) { modelDataMap_[filePath].skin.solid.ptrs.SetPtr(ptr); }
+		void SetPointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.SetPtr(ptr); }
+		void SetPointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.SetPtr(ptr); }
+		void SetPointer(Animation* ptr) { animations_.SetPtr(ptr); }
+		void SetPointer(Motion* ptr) { motions_.SetPtr(ptr); }
 		// インスタンスのポインタを解放する関数群（ユーザー呼び出し不要）
 		void DeletePointer(RigidModel* ptr, const std::string& filePath) {
-			modelDataMap_[filePath].rigid.solid.ptrs.DeletePointer(ptr);
-			modelDataMap_[filePath].rigid.wireFrame.ptrs.DeletePointer(ptr);
+			modelDataMap_[filePath].rigid.solid.ptrs.DeletePtr(ptr);
+			modelDataMap_[filePath].rigid.wireFrame.ptrs.DeletePtr(ptr);
 		}
 		void DeletePointer(SkinningModel* ptr, const std::string& filePath) {
-			modelDataMap_[filePath].skin.solid.ptrs.DeletePointer(ptr);
-			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePointer(ptr);
+			modelDataMap_[filePath].skin.solid.ptrs.DeletePtr(ptr);
+			modelDataMap_[filePath].skin.wireFrame.ptrs.DeletePtr(ptr);
 		}
-		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePointer(ptr); }
-		void DeletePointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.DeletePointer(ptr); }
-		void DeletePointer(Animation* ptr) { animations_.DeletePointer(ptr); }
-		void DeletePointer(Motion* ptr) { motions_.DeletePointer(ptr); }
+		void DeletePointer(StaticModel* ptr, const std::string& filePath) { modelDataMap_[filePath].statics.DeletePtr(ptr); }
+		void DeletePointer(EMapModel* ptr, const std::string& filePath) { modelDataMap_[filePath].eMaps.ptrs.DeletePtr(ptr); }
+		void DeletePointer(Animation* ptr) { animations_.DeletePtr(ptr); }
+		void DeletePointer(Motion* ptr) { motions_.DeletePtr(ptr); }
 
 		// 特別な関数
 		void ChangeFillMode(RigidModel* ptr, const std::string& filePath);
@@ -198,7 +195,6 @@ namespace LWP::Resource {
 		std::map<std::string, AudioData> audioMap_;
 		// 古いmeshの配列
 		const std::string oldMeshDirectoryPath_ = "resources/model/";
-		std::map<std::string, Primitive::OldMeshData> oldMeshMap_;
 
 		// 3Dモデルの配列
 		std::map<std::string, Models> modelDataMap_;
@@ -210,7 +206,6 @@ namespace LWP::Resource {
 
 
 	private:
-		Primitive::OldMeshData LoadAssimp(const std::string& filepath);
 
 		void RigidGUI(Models& m);
 		void SkinningGUI(Models& m);
