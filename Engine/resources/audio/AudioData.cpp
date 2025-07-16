@@ -80,7 +80,8 @@ AudioData::~AudioData() {
 
 void AudioData::SubmitSource(UINT loopCount, IXAudio2SourceVoice** pSourceVoice) {
 	// 波形フォーマットを元にSourceVoiceの生成
-	HRESULT hr = xAudio_->CreateSourceVoice(pSourceVoice, &wfex, 0, 2.0f);
+	HRESULT hr;
+	hr = xAudio_->CreateSourceVoice(pSourceVoice, &wfex, 0, 2.0f);
 	assert(SUCCEEDED(hr));
 
 	// 再生する波形データの設定

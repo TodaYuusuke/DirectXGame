@@ -33,7 +33,8 @@ void Audio::PlayAnyLoop(const UINT& loopCount) {
 	pSourceVoice_->SetVolume(volume_);	// 音量は再生後にここでセット
 
 	// 再生
-	HRESULT hr = pSourceVoice_->Start();
+	HRESULT hr;
+	hr = pSourceVoice_->Start();
 	assert(SUCCEEDED(hr));
 }
 
