@@ -55,9 +55,9 @@ namespace LWP::Base {
 		/// </summary>
 		void DrawSprite(ID3D12GraphicsCommandList6* list);
 		/// <summary>
-		/// ビルボード3Dの描画
+		/// ビルボード2Dの描画
 		/// </summary>
-		void DrawBillboard3D(ID3D12GraphicsCommandList6* list);
+		void DrawBillboard2D(ID3D12GraphicsCommandList6* list);
 
 		/// <summary>
 		/// Viewの設定や描画命令といった共通部分を行う関数

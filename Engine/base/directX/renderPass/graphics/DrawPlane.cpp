@@ -72,14 +72,14 @@ namespace LWP::Base {
 	void DrawPlane::SetDrawCall(ID3D12GraphicsCommandList6* list) {
 		// Spriteの描画
 		DrawSprite(list);
-		DrawBillboard3D(list);
+		DrawBillboard2D(list);
 	}
 
 	void DrawPlane::DrawSprite(ID3D12GraphicsCommandList6* list) {
 		list->SetPipelineState(psos_.sprite);	// PSOを設定
 		DrawCommon(Primitive::Manager::GetInstance()->GetSpriteBuffer(), list);
 	}
-	void DrawPlane::DrawBillboard3D(ID3D12GraphicsCommandList6* list) {
+	void DrawPlane::DrawBillboard2D(ID3D12GraphicsCommandList6* list) {
 		list->SetPipelineState(psos_.billboard3D);	// PSOを設定
 		DrawCommon(Primitive::Manager::GetInstance()->GetBillboard2DBuffer(), list);
 	}
