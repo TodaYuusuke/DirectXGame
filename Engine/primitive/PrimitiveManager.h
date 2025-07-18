@@ -5,33 +5,10 @@
 #include "utility/PtrManager.h"
 #include "utility/Singleton.h"
 
-#include "base/directX/resource/data/StructuredBuffer.h"
-#include "base/directX/renderer/ResourceStruct.h"
-
 #include <vector>
 #include <map>
 
 namespace LWP::Primitive {
-	// スプライトやビルボードの描画に使うデータ
-	struct PlaneBuffers {
-		Base::StructuredBuffer<Base::VertexStruct> vertices;		// 頂点
-		Base::StructuredBuffer<Base::WTFStruct> wtf;				// ワールドトランスフォーム
-		Base::StructuredBuffer<Base::MaterialStruct> materials;		// マテリアル
-
-		// インスタンス数
-		int count;
-
-		/// <summary>
-		/// デフォルトコンストラクタ
-		/// </summary>
-		PlaneBuffers();
-
-		/// <summary>
-		/// リセットを呼び出す関数
-		/// </summary>
-		void Reset();
-	};
-
 	/// <summary>
 	/// 描画用の形状をすべて管理するクラス
 	/// </summary>
@@ -63,18 +40,18 @@ namespace LWP::Primitive {
 		void DebugGUI();
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetSpritePtr(IPlane* ptr);
-		void SetBillboard2DPtr(IPlane* ptr);
+		void SetSpritePtr(ISprite* ptr);
+		void SetBillboardPtr(IBillboard2D* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeleteSpritePtr(IPlane* ptr) { sprites_.DeletePtr(ptr); }
-		void DeleteBillboard2DPtr(IPlane* ptr) { billboards3D_.DeletePtr(ptr); }
+		void DeleteSpritePtr(ISprite* ptr) { sprites_.DeletePtr(ptr); }
+		void DeleteBillboardPtr(IBillboard2D* ptr) { billboards_.DeletePtr(ptr); }
 
 		// Plane系の描画に使うバッファーを送る関数
-		PlaneBuffers* GetSpriteBuffer() { return &spriteBuffers_; }
-		PlaneBuffers* GetBillboard2DBuffer() { return &billboard3DBuffers_; }
+		SpriteBuffers* GetSpriteBuffer() { return &spriteBuffers_; }
+		SpriteBuffers* GetBillboard2DBuffer() { return &billboardBuffers_; }
 
 		// Zソートの結果のバッファを返す関数
-		Base::StructuredBuffer<int32_t>* GetZSortBuffer() { return &sorted_; }
+		Base::StructuredBuffer<int32_t>* GetZSortBuffer() { return &zSort_; }
 
 
 	private: // ** メンバ変数 ** //
@@ -89,19 +66,24 @@ namespace LWP::Primitive {
 			Sprite, Billboard,
 		};
 		// 全Spriteのポインタリスト
-		Utility::PtrManager<IPlane*> sprites_;
-		PlaneBuffers spriteBuffers_;
+		Utility::PtrManager<ISprite*> sprites_;
+		SpriteBuffers spriteBuffers_;
 
-		// Billboard3Dのポインタリスト
-		Utility::PtrManager<IPlane*> billboards3D_;
-		PlaneBuffers billboard3DBuffers_;
+		// Billboardのポインタリスト
+		Utility::PtrManager<IBillboard2D*> billboards_;
+		SpriteBuffers billboardBuffers_;
 
 		struct BillboardIndex {
 			int index;
 			float distance;
 		};
 		// ビルボードのZソート
-		Base::StructuredBuffer<int32_t> sorted_;	// 頂点
+		Base::StructuredBuffer<int32_t> zSort_;
+		// ビルボードの種類
+		//Base::StructuredBuffer<int32_t> type_;
+		// ストレッチビルボード用の速度
+		//Base::StructuredBuffer<int32_t> velocities_;
+
 
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IPrimitive*> debugPris;

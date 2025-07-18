@@ -50,7 +50,7 @@
     <ClCompile Include="class\camera\BlackBelt.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="class\particle\TerrainParticle.cpp" />
-    <ClCompile Include="scene\Test\TextureLoadTest.cpp" />
+    <ClCompile Include="scene\Test\NoneScene.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\NullScene.cpp" />
     <ClCompile Include="scene\Title.cpp" />
@@ -93,7 +93,7 @@
     <ClInclude Include="class\camera\BlackBelt.h" />
     <ClInclude Include="class\enemy\DeadBodyParticle.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
-    <ClInclude Include="scene\Test\TextureLoadTest.h" />
+    <ClInclude Include="scene\Test\NoneScene.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\NullScene.h" />
     <ClInclude Include="scene\Title.h" />

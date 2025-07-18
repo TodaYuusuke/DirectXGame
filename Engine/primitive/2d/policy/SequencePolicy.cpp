@@ -1,26 +1,17 @@
-#include "ISequence.h"
+#include "SequencePolicy.h"
 
 #include "base/ImGuiManager.h"
 
 using namespace LWP::Math;
 
 namespace LWP::Primitive {
-	ISequence::ISequence() {
-		name += "Sequence";
-		Init();
-	}
-
-	void ISequence::Init() {
-		IPlane::Init();
-
+	void SequencePolicy::InitImpl(Material* material) {
 		index = 0;
-		splitSize_ = material.texture.t.GetSize();
+		splitSize_ = material->texture.t.GetSize();
 	}
-	void ISequence::Update() {
-		IPlane::Update();
-
+	void SequencePolicy::UpdateImpl(Vertex* vertices, Material* material) {
 		// 分割されたUV座標を計算
-		Vector2 textureSize = material.texture.t.GetSize();	// テクスチャのサイズを取得
+		Vector2 textureSize = material->texture.t.GetSize();	// テクスチャのサイズを取得
 		float splitUVx = splitSize_.x / textureSize.x;
 		float splitUVy = splitSize_.y / textureSize.y;
 
@@ -35,14 +26,7 @@ namespace LWP::Primitive {
 		vertices[QuadCorner::BottomLeft].texCoord  = { x,            y + splitUVy };
 	}
 
-	void ISequence::FitToTexture() {
-		IPlane::FitToTexture(splitSize_);
-	}
-	void ISequence::SetSplitSize(Math::Vector2 size) {
-		splitSize_ = size;
-	}
-
-	void ISequence::ChildDebugGUI() {
+	void SequencePolicy::DebugGUIImpl() {
 		// インデックス
 		ImGui::InputInt("index", &index);
 		// 分割サイズ

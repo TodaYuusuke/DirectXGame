@@ -86,12 +86,12 @@ namespace LWP::Base {
 		DrawCommon(Primitive::Manager::GetInstance()->GetBillboard2DBuffer(), list);
 	}
 
-	void DrawPlane::DrawCommon(Primitive::PlaneBuffers* buffers, ID3D12GraphicsCommandList6* list) {
+	void DrawPlane::DrawCommon(Primitive::SpriteBuffers* buffers, ID3D12GraphicsCommandList6* list) {
 		// インスタンスがないなら描画を行わない
 		if (buffers->count <= 0) { return; }
 
 		// Viewを設定
-		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());		// 頂点
+		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());	// 頂点
 		list->SetGraphicsRootDescriptorTable(1, buffers->wtf.GetGPUView());			// ワールドトランスフォーム
 		list->SetGraphicsRootDescriptorTable(4, buffers->materials.GetGPUView());	// マテリアル
 		list->SetGraphicsRootDescriptorTable(3, Primitive::Manager::GetInstance()->GetZSortBuffer()->GetGPUView());	// マテリアル

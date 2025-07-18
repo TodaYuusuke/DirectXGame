@@ -8,7 +8,7 @@ namespace LWP {
 		class Camera;
 	}
 	namespace Primitive {
-		struct PlaneBuffers;
+		struct SpriteBuffers;
 	}
 }
 
@@ -62,7 +62,7 @@ namespace LWP::Base {
 		/// <summary>
 		/// Viewの設定や描画命令といった共通部分を行う関数
 		/// </summary>
-		void DrawCommon(Primitive::PlaneBuffers* buffers, ID3D12GraphicsCommandList6* list);
+		void DrawCommon(Primitive::SpriteBuffers* buffers, ID3D12GraphicsCommandList6* list);
 
 	private: // ** メンバ変数 ** //
 
