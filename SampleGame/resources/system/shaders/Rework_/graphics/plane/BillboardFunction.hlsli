@@ -114,7 +114,7 @@ float32_t4 VerticalBillboard(Vertex v, WorldTransform wtf, int32_t instanceID) {
 }
 
 float32_t4 StretchedBillboard(Vertex v, WorldTransform wtf, float32_t3 velocity, int32_t instanceID) {
-    // Get Rotate
+    // Culc Rotate
     float32_t3 right = float32_t3(1.0f, 0.0f, 0.0f);
     float32_t4x4 velocityMatrix = DirectionToDirection(right, normalize(velocity));
     
@@ -123,8 +123,8 @@ float32_t4 StretchedBillboard(Vertex v, WorldTransform wtf, float32_t3 velocity,
     float32_t3 localToCamera = mul(toCamera, (float32_t3x3) transpose(velocityMatrix));
     float32_t pitch = atan2(localToCamera.y, -localToCamera.z);
     
-    // Get Scale
-    float32_t baseScaleX = 1.0;
+    // Culc Scale
+    float32_t baseScaleX = 1.0f;
     float32_t stretchFactor = 0.1;
     float32_t scaleX = baseScaleX + length(velocity) * stretchFactor;
 
