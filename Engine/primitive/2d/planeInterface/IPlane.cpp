@@ -7,7 +7,7 @@ using namespace LWP::Math;
 namespace LWP::Primitive {
 	void IPlane::Init() {
 		IPrimitive::Init();
-		anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		anchorPoint = LWP::Math::Vector2{ 0.5f,0.5f };
 
 		// デフォルトのUV座標
 		vertices[QuadCorner::TopLeft].texCoord     = { 0.0f,0.0f };

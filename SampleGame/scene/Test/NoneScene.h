@@ -15,4 +15,9 @@ public:
 	// 更新
 	void Update() override;
 
+
+private: // ** メンバ変数 ** //
+
+	LWP::Resource::RigidModel axis;
+	LWP::Primitive::NormalStretchedBillboard test;
 };

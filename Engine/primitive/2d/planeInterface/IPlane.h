@@ -8,10 +8,14 @@ namespace LWP::Primitive {
 	class IPlane : public IPrimitive {
 	public: // ** パブリックなメンバ変数 ** //
 		// 形状
-		enum PlaneType {
+		enum Type {
 			Sprite,
-			Billboard2D,
-			StretchedBillboard,
+			Surface,		// 平面（ビルボードではない）
+			Billboard2D,	// ビルボード2D（カメラの'面'を見る）
+			HorizontalBillboard,	// 水平ビルボード（XZ平面に対して水平）
+			VerticalBillboard,		// 垂直ビルボード（XZ平面に対して垂直）
+			StretchedBillboard,		// 伸縮ビルボード
+			Count
 		};
 
 		/// <summary>
@@ -28,7 +32,7 @@ namespace LWP::Primitive {
 		/// <para>range : 0.0f ~ 1.0f</para>
 		/// <para>0なら左上、1なら右下</para>
 		/// </summary>
-		Math::Vector2 anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		Math::Vector2 anchorPoint = LWP::Math::Vector2{ 0.5f,0.5f };
 
 
 	public: // ** メンバ関数 ** //
@@ -66,10 +70,15 @@ namespace LWP::Primitive {
 		/// <param name="fileName"></param>
 		virtual void FitToTexture() = 0;
 		/// <summary>
-		/// 型の名前w返す関数（自動命名用）
+		/// 型の名前を返す関数（自動命名用）
 		/// </summary>
 		/// <returns></returns>
 		virtual std::string GetName() = 0;
+		/// <summary>
+		/// 型の列挙子を返す関数（レンダリング別のバッファ仕分け用）
+		/// </summary>
+		/// <returns></returns>
+		virtual Type GetType() = 0;
 
 		/// <summary>
 		/// Debug用のImGui
@@ -106,6 +115,6 @@ namespace LWP::Primitive {
 	protected: // ** プロテクトなメンバ関数 ** //
 
 		// 形状のタイプ
-		PlaneType planeType;
+		Type planeType;
 	};
 }

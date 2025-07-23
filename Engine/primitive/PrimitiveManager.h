@@ -4,11 +4,32 @@
 
 #include "utility/PtrManager.h"
 #include "utility/Singleton.h"
+#include "base/directX/resource/data/StructuredBuffer.h"
+#include "base/directX/renderer/BufferGroup.h"
 
 #include <vector>
 #include <map>
 
 namespace LWP::Primitive {
+	// 描画に使うデータ
+	struct PlaneBuffers {
+		Base::StructuredBuffer<Base::VertexStruct> vertices;		// 頂点
+		Base::StructuredBuffer<Base::WTFStruct> wtf;				// ワールドトランスフォーム
+		Base::StructuredBuffer<Base::MaterialStruct> materials;		// マテリアル
+
+		// インスタンス数
+		int count;
+
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		PlaneBuffers();
+		/// <summary>
+		/// リセットを呼び出す関数
+		/// </summary>
+		void Reset();
+	};
+
 	/// <summary>
 	/// 描画用の形状をすべて管理するクラス
 	/// </summary>
@@ -40,64 +61,46 @@ namespace LWP::Primitive {
 		void DebugGUI();
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
-		void SetSpritePtr(ISprite* ptr);
-		void SetBillboardPtr(IBillboard2D* ptr);
+		void SetPlanePtr(IPlane* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeleteSpritePtr(ISprite* ptr) { sprites_.DeletePtr(ptr); }
-		void DeleteBillboardPtr(IBillboard2D* ptr) { billboards_.DeletePtr(ptr); }
+		void DeletePlanePtr(ISprite* ptr) { planes_.DeletePtr(ptr); }
 
 		// Plane系の描画に使うバッファーを送る関数
-		SpriteBuffers* GetSpriteBuffer() { return &spriteBuffers_; }
-		SpriteBuffers* GetBillboard2DBuffer() { return &billboardBuffers_; }
+		PlaneBuffers* GetSpriteBuffer() { return &planeBuffers_[PlaneRenderType::Sprite]; }
+		PlaneBuffers* GetBillboardBuffer() { return &planeBuffers_[PlaneRenderType::Billboard]; }
 
 		// Zソートの結果のバッファを返す関数
-		Base::StructuredBuffer<int32_t>* GetZSortBuffer() { return &zSort_; }
+		D3D12_GPU_DESCRIPTOR_HANDLE GetZSortBuffer() { return zSort_.GetGPUView(); }
+		// ビルボードの種類のバッファを返す関数
+		D3D12_GPU_DESCRIPTOR_HANDLE GetTypeBuffer() { return type_.GetGPUView(); }
+		// ストレッチビルボードの速度バッファを返す関数
+		D3D12_GPU_DESCRIPTOR_HANDLE GetVelocitiesBuffer() { return velocities_.GetGPUView(); }
 
 
 	private: // ** メンバ変数 ** //
 
-		// 形状のリスト
-		//Utility::PtrManager<IPrimitive*> primitives_;
 		// カウンター
 		int primitiveCount_ = 0;
-		
 
-		enum class Type {
-			Sprite, Billboard,
+		enum PlaneRenderType {
+			Sprite,
+			Billboard,
+			Count
 		};
-		// 全Spriteのポインタリスト
-		Utility::PtrManager<ISprite*> sprites_;
-		SpriteBuffers spriteBuffers_;
 
-		// Billboardのポインタリスト
-		Utility::PtrManager<IBillboard2D*> billboards_;
-		SpriteBuffers billboardBuffers_;
+		// Planeのポインタリスト
+		Utility::PtrManager<IPlane*> planes_;
+		PlaneBuffers planeBuffers_[PlaneRenderType::Count];
 
-		struct BillboardIndex {
-			int index;
-			float distance;
-		};
 		// ビルボードのZソート
 		Base::StructuredBuffer<int32_t> zSort_;
-		// ビルボードの種類
-		//Base::StructuredBuffer<int32_t> type_;
+		// ビルボードの種類（シェーダー内で描画切り替え用）
+		Base::StructuredBuffer<int32_t> type_;
 		// ストレッチビルボード用の速度
-		//Base::StructuredBuffer<int32_t> velocities_;
+		Base::StructuredBuffer<Math::Vector3> velocities_;
 
 
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IPrimitive*> debugPris;
-
-
-	private: // ** プライベートなメンバ関数 ** //
-
-		/// <summary>
-		/// スプライト系のDebugGUI
-		/// </summary>
-		void SpriteDebugGUI();
-		/// <summary>
-		/// ビルボード系のDebugGUI
-		/// </summary>
-		void BillboardDebugGUI();
 	};
 }

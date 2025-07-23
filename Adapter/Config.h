@@ -50,7 +50,7 @@ namespace LWP::Config {
 			/// </summary>
 			namespace Sprite {
 				/// <summary>
-				/// スプライトの合計最大数（3種類の合計）
+				/// 全種類のスプライトの合計最大数
 				/// </summary>
 				static const UINT kMaxCount = 1024;
 			}
@@ -59,9 +59,14 @@ namespace LWP::Config {
 			/// </summary>
 			namespace Billboaed {
 				/// <summary>
-				/// ビルボードの合計最大数
+				/// 全種類のビルボードの合計最大数（ストレッチビルボード抜き）
 				/// </summary>
-				static const UINT kMaxCount = 1024;
+				static const UINT kMaxCount = 1024 + kMaxCount;
+
+				/// <summary>
+				/// ストレッチビルボードの最大数（専用のバッファが必要なため別定義）
+				/// </summary>
+				static const UINT kStretchedMaxCount = 128;
 			}
 		}
 

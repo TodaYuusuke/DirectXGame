@@ -1,2 +1,2 @@
-#include "Sprite.h"
-#include "Billboard2D.h"
+#include "planeInterface/Sprite.h"
+#include "Billboards.h"

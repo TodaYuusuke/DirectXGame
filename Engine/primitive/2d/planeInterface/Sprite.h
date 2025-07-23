@@ -8,10 +8,12 @@ namespace LWP::Primitive {
     // 前方宣言
     class Manager;
 
-	// タグ用
-	struct ISprite : virtual IPlane {
-        std::string GetName() { return "Sprite"; }
+    // タグ用
+    struct ISprite : virtual IPlane {
+        std::string GetName() override { return "Sprite"; }
+        IPlane::Type GetType() override { return Type::Sprite; }
     };
+
 
     template<typename UpdatePolicy>
     class SpriteTemplate : public ISprite, public UpdatePolicy {
@@ -25,23 +27,30 @@ namespace LWP::Primitive {
 
         SpriteTemplate() {
             this->name = ISprite::GetName() + "_" + GetNameImpl();
-            Primitive::Manager::GetInstance()->SetSpritePtr(this);
+            Primitive::Manager::GetInstance()->SetPlanePtr(this);
             Init();
         }
         ~SpriteTemplate() {
-            Primitive::Manager::GetInstance()->DeleteSpritePtr(this);
+            Primitive::Manager::GetInstance()->DeletePlanePtr(this);
         }
 
         void Init() override {
             ISprite::Init();
             InitImpl(&material);
-            this->anchorPoint = { 0.5f, 0.5f }; // デフォルトのアンカーポイントを中央に設定
         }
         void Update() override {
             ISprite::Update();
             UpdateImpl(this->vertices, &material);
         }
-        void ChildDebugGUI() override { DebugGUIImpl(); }
+        void ChildDebugGUI() override {
+            ISprite::ChildDebugGUI();
+            DebugGUIImpl();
+        }
         void FitToTexture() { FitToTextureSprite(GetFitSizeImpl(&material)); }
     };
+
+
+    using NormalSprite = SpriteTemplate<NormalPolicy>;
+    using SequenceSprite = SpriteTemplate<SequencePolicy>;
+    using ClipSprite = SpriteTemplate<ClipPolicy>;
 }
