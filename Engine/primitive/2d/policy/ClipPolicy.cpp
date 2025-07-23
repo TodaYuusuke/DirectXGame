@@ -1,23 +1,14 @@
-#include "IClip.h"
+#include "ClipPolicy.h"
 #include "base/ImGuiManager.h"
 
 using namespace LWP::Math;
 
 namespace LWP::Primitive {
-	IClip::IClip() {
-		name += "Clip";
-		Init();
-	}
-
-	void IClip::Init() {
-		IPlane::Init();
-
+	void ClipPolicy::InitImpl(Material* material) {
 		clipRect.min = { 0.0f,0.0f };
-		clipRect.max = material.texture.t.GetSize();
+		clipRect.max = material->texture.t.GetSize();
 	}
-	void IClip::Update() {
-		IPlane::Update();
-
+	void ClipPolicy::UpdateImpl(Vertex* vertices, Material* material) {
 		// MinよりMaxのほうが小さくならないように修正
 		clipRect.min.x = std::min<float>(clipRect.min.x, clipRect.max.x);
 		clipRect.min.y = std::min<float>(clipRect.min.y, clipRect.max.y);
@@ -25,7 +16,7 @@ namespace LWP::Primitive {
 		clipRect.max.y = std::max<float>(clipRect.min.y, clipRect.max.y);
 
 		// 切り抜かれたUV座標を計算
-		Vector2 textureSize = material.texture.t.GetSize();	// テクスチャのサイズを取得
+		Vector2 textureSize = material->texture.t.GetSize();	// テクスチャのサイズを取得
 		Rectangle2D uv = {
 			{
 				clipRect.min.x / textureSize.x,
@@ -42,22 +33,15 @@ namespace LWP::Primitive {
 		vertices[QuadCorner::BottomRight].texCoord = { uv.max.x, uv.max.y };
 		vertices[QuadCorner::BottomLeft].texCoord  = { uv.min.x, uv.max.y };
 	}
-	void IClip::LoadTexture(const std::string& fileName) {
-		IPlane::LoadTexture(fileName);
-		// 読み込み後にサイズ調整
-		clipRect.min = { 0.0f,0.0f };
-		clipRect.max = material.texture.t.GetSize();
-		FitToTexture();
-	}
 
-
-	void IClip::FitToTexture() {
-		Vector2 size = clipRect.max - clipRect.min;
-		IPlane::FitToTexture(size);
-	}
-	
-	void IClip::ChildDebugGUI() {
+	void ClipPolicy::DebugGUIImpl() {
+		// 切り抜き領域
 		ImGui::DragFloat2("clipSize min", &clipRect.min.x, 1.0f);
 		ImGui::DragFloat2("clipSize max", &clipRect.max.x, 1.0f);
 	}
+
+	void ClipPolicy::PostLoadTextureImpl(Material* material) {
+		InitImpl(material);	// 読み込まれたテクスチャに合わせて切り抜き領域を調整
+	}
+
 }

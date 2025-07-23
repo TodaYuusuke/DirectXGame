@@ -13,8 +13,10 @@ namespace LWP::Base {
 			.AddTableParameter(1, SV_Vertex)	// 1 ワールドトランスフォーム
 			.AddCBVParameter(0, SV_Vertex)		// 2 カメラ
 			.AddTableParameter(2, SV_Vertex)		// 3 Zソートインデックス
-			.AddTableParameter(0, SV_Pixel)		// 4 マテリアル
-			.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// 5 テクスチャ
+			.AddTableParameter(3, SV_Vertex)		// 4 ビルボードタイプ
+			.AddTableParameter(4, SV_Vertex)		// 5 速度（ストレッチビルボード用）
+			.AddTableParameter(0, SV_Pixel)		// 6 マテリアル
+			.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// 7 テクスチャ
 			.AddSampler(0, SV_Pixel)			// x テクスチャ用サンプラー
 			.Build();
 
@@ -27,7 +29,7 @@ namespace LWP::Base {
 		psos_.billboard3D.Copy(psos_.sprite)
 			.SetRasterizerState(D3D12_CULL_MODE_NONE)	// 両面描画するように
 			.SetDepthState(true, D3D12_DEPTH_WRITE_MASK_ZERO)	// デプスを書き込まないように
-			.SetSystemVS("Rework_/graphics/plane/Billboard2D.VS.hlsl")
+			.SetSystemVS("Rework_/graphics/plane/Billboards.VS.hlsl")
 			.Build();
 	}
 
@@ -69,7 +71,7 @@ namespace LWP::Base {
 
 	void DrawPlane::SetBuffers(ID3D12GraphicsCommandList6* list) {
 		SRV* srv = SRV::GetInstance();
-		list->SetGraphicsRootDescriptorTable(5, srv->GetFirstTexView());	// テクスチャのバッファを登録
+		list->SetGraphicsRootDescriptorTable(7, srv->GetFirstTexView());	// テクスチャのバッファを登録
 	}
 	void DrawPlane::SetDrawCall(ID3D12GraphicsCommandList6* list) {
 		// Spriteの描画
@@ -83,7 +85,7 @@ namespace LWP::Base {
 	}
 	void DrawPlane::DrawBillboard2D(ID3D12GraphicsCommandList6* list) {
 		list->SetPipelineState(psos_.billboard3D);	// PSOを設定
-		DrawCommon(Primitive::Manager::GetInstance()->GetBillboard2DBuffer(), list);
+		DrawCommon(Primitive::Manager::GetInstance()->GetBillboardBuffer(), list);
 	}
 
 	void DrawPlane::DrawCommon(Primitive::PlaneBuffers* buffers, ID3D12GraphicsCommandList6* list) {
@@ -91,10 +93,12 @@ namespace LWP::Base {
 		if (buffers->count <= 0) { return; }
 
 		// Viewを設定
-		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());		// 頂点
+		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());	// 頂点
 		list->SetGraphicsRootDescriptorTable(1, buffers->wtf.GetGPUView());			// ワールドトランスフォーム
-		list->SetGraphicsRootDescriptorTable(4, buffers->materials.GetGPUView());	// マテリアル
-		list->SetGraphicsRootDescriptorTable(3, Primitive::Manager::GetInstance()->GetZSortBuffer()->GetGPUView());	// マテリアル
+		list->SetGraphicsRootDescriptorTable(6, buffers->materials.GetGPUView());	// マテリアル
+		list->SetGraphicsRootDescriptorTable(3, Primitive::Manager::GetInstance()->GetZSortBuffer());		// Zソートの結果
+		list->SetGraphicsRootDescriptorTable(4, Primitive::Manager::GetInstance()->GetTypeBuffer());		// ビルボードタイプ
+		list->SetGraphicsRootDescriptorTable(5, Primitive::Manager::GetInstance()->GetVelocitiesBuffer());	// 速度（ストレッチビルボード用）
 		list->DrawInstanced(6, buffers->count, 0, 0);
 	}
 }

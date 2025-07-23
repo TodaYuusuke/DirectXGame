@@ -1,5 +1,5 @@
 #include "AnimationTest.h"
-#include "TextureLoadTest.h"
+#include "NoneScene.h"
 
 using namespace LWP;
 using namespace LWP::Input;
@@ -24,11 +24,6 @@ void AnimationTest::Initialize() {
 
 	normalBill.LoadTexture("Particle.png");		// 通常
 	clipBill.LoadTexture("Particle.png");// クリップ
-	
-	//normalBill.LoadTexture("uvChecker.dds");		// 通常
-	//sequenceBill.LoadTexture("TestSpriteSheet.png");	// シーケンス
-	//sequenceBill.SetSplitSize({ 64.0f, 64.0f });		// 分割するサイズを設定する
-	//clipBill.LoadTexture("Attack.png");// クリップ
 
 	normalSprite.worldTF.translation = { 100.0f, 400.0f, 0.0f };
 	sequenceSprite.worldTF.translation = { 400.0f, 200.0f, 0.0f };
@@ -99,7 +94,7 @@ void AnimationTest::Update() {
 
 	if (Keyboard::GetTrigger(DIK_P)) {
 		nextSceneFunction = []() {
-			return new TextureLoadTest();
+			return new NoneScene();
 		};
 	}
 }

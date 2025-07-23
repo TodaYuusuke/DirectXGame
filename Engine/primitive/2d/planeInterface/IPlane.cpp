@@ -1,15 +1,13 @@
 #include "IPlane.h"
-#include "component/Primitive.h"
+#include "../policy/IPolicy.h"
 #include "component/Resource.h"	// テクスチャ読み込み用
 
 using namespace LWP::Math;
 
 namespace LWP::Primitive {
-	IPlane::IPlane() { name = ""; }
-
 	void IPlane::Init() {
 		IPrimitive::Init();
-		anchorPoint = LWP::Math::Vector2{ 0.0f,0.0f };
+		anchorPoint = LWP::Math::Vector2{ 0.5f,0.5f };
 
 		// デフォルトのUV座標
 		vertices[QuadCorner::TopLeft].texCoord     = { 0.0f,0.0f };
@@ -34,22 +32,20 @@ namespace LWP::Primitive {
 		material.texture = Resource::LoadTexture(fileName);
 	}
 
-	void IPlane::FitToTexture(Math::Vector2 size) {
-		if (planeType != Sprite) {
-			size /= 100.0f;	// サイズを調整
-			// ビルボード用：XY平面に対してサイズを等倍で展開
-			vertices[QuadCorner::TopLeft].position     = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左上
-			vertices[QuadCorner::TopRight].position    = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右上
-			vertices[QuadCorner::BottomRight].position = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,          0.00f };	// 右下
-			vertices[QuadCorner::BottomLeft].position  = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,          0.00f };	// 左下
-		}
-		else {
-			// Sprite（スクリーン座標系）用
-			vertices[QuadCorner::TopLeft].position     = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,         0.00f };	// 左上
-			vertices[QuadCorner::TopRight].position    = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,         0.00f };	// 右上
-			vertices[QuadCorner::BottomRight].position = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右下
-			vertices[QuadCorner::BottomLeft].position  = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左下
-		}
+
+	void IPlane::FitToTextureSprite(Math::Vector2 size) {
+		// Sprite（スクリーン座標系）用
+		vertices[QuadCorner::TopLeft].position     = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,         0.00f };	// 左上
+		vertices[QuadCorner::TopRight].position    = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,         0.00f };	// 右上
+		vertices[QuadCorner::BottomRight].position = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右下
+		vertices[QuadCorner::BottomLeft].position  = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左下
+	}
+	void IPlane::FitToTextureBillboard(Math::Vector2 size) {
+		size /= 100.0f;	// サイズを調整
+		vertices[QuadCorner::TopLeft].position     = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左上
+		vertices[QuadCorner::TopRight].position    = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右上
+		vertices[QuadCorner::BottomRight].position = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,          0.00f };	// 右下
+		vertices[QuadCorner::BottomLeft].position  = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,          0.00f };	// 左下
 	}
 
 	void IPlane::DebugGUI() {
