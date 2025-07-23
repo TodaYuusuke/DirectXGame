@@ -2,7 +2,7 @@
 #include "base/ImGuiManager.h"
 
 namespace LWP::Primitive {
-	void StretchedBillboard::ChildDebugGUI() {
+	void IStretchedBillboard::ChildDebugGUI() {
 		ImGui::DragFloat3("Velocity", &velocity.x, 0.01f);
 	}
 }

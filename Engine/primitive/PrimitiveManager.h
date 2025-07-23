@@ -63,7 +63,7 @@ namespace LWP::Primitive {
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetPlanePtr(IPlane* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
-		void DeletePlanePtr(ISprite* ptr) { planes_.DeletePtr(ptr); }
+		void DeletePlanePtr(IPlane* ptr) { planes_.DeletePtr(ptr); }
 
 		// Plane系の描画に使うバッファーを送る関数
 		PlaneBuffers* GetSpriteBuffer() { return &planeBuffers_[PlaneRenderType::Sprite]; }

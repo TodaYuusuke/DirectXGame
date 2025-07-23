@@ -97,7 +97,7 @@ namespace LWP::Primitive {
 				// ストレッチビルボードの場合
 				if(type == IPlane::Type::StretchedBillboard){
 					// ストレッチビルボードの速度を登録
-					StretchedBillboard* sb = dynamic_cast<StretchedBillboard*>(p);
+					IStretchedBillboard* sb = dynamic_cast<IStretchedBillboard*>(p);
 					velocities_.Add(sb->velocity);
 				}
 			}
