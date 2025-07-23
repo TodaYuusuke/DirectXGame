@@ -1,5 +1,5 @@
 #pragma once
-#include "IGraphicsPass.h"
+#include "IShadowPass.h"
 
 #include <map>
 
@@ -14,20 +14,20 @@ namespace LWP {
 
 namespace LWP::Base {
 	/// <summary>
-	/// MeshShaderでSolidオブジェクトを描画
+	/// MeshShaderで平行光源の影を描画
 	/// </summary>
-	class DrawSolid final
-		: public IGraphicsPass {
+	class DirLightShadow final
+		: public IShadowPass {
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		DrawSolid() = default;
+		DirLightShadow() = default;
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~DrawSolid() override = default;
+		~DirLightShadow() override = default;
 
 		/// <summary>
 		/// 初期化
@@ -53,11 +53,8 @@ namespace LWP::Base {
 
 	private: // ** メンバ変数 ** //
 
-		// 各モデルタイプごとのルートシグネチャ
-		RootSignature root_;
+		RootSignature root_;	// ルートシグネチャは共通で使う
 		// 各モデルタイプごとのPSO
-		// PSO[0] = Solid
-		// PSO[1] = Wireframe
-		std::map<Resource::ModelType, PSO[2]> psos_;
+		std::map<Resource::ModelType, PSO> raster_;
 	};
 }

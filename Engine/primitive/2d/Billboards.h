@@ -49,7 +49,7 @@ namespace LWP::Primitive {
 	/// <summary>
 	/// ストレッチ（伸縮）ビルボード
 	/// </summary>
-	struct StretchedBillboard : virtual IPlane {
+	struct IStretchedBillboard : virtual IPlane {
 		// 速度（描画計算用　※自動で加算されるわけではないので注意）
 		Math::Vector3 velocity = { 1.0f, 0.0f, 0.0f };
 
@@ -58,7 +58,7 @@ namespace LWP::Primitive {
 		void ChildDebugGUI() override;
 	};
 
-	using NormalStretchedBillboard = BillboardTemplate<NormalPolicy, StretchedBillboard>;
-	using SequenceStretchedBillboard = BillboardTemplate<SequencePolicy, StretchedBillboard>;
-	using ClipStretchedBillboard = BillboardTemplate<ClipPolicy, StretchedBillboard>;
+	using NormalStretchedBillboard = BillboardTemplate<NormalPolicy, IStretchedBillboard>;
+	using SequenceStretchedBillboard = BillboardTemplate<SequencePolicy, IStretchedBillboard>;
+	using ClipStretchedBillboard = BillboardTemplate<ClipPolicy, IStretchedBillboard>;
 }

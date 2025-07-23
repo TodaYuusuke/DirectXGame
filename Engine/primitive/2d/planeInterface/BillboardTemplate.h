@@ -25,7 +25,7 @@ namespace LWP::Primitive {
             Init();
         }
         ~BillboardTemplate() {
-            Primitive::Manager::GetInstance()->SetPlanePtr(this);
+            Primitive::Manager::GetInstance()->DeletePlanePtr(this);
         }
 
         void Init() override {
