@@ -4,9 +4,6 @@
 #include <map>
 
 namespace LWP {
-	namespace Object {
-		class Camera;
-	}
 	namespace Resource {
 		enum class ModelType;
 	}

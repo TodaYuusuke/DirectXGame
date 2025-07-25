@@ -1,9 +1,11 @@
-#include "../../Structs.hlsli"
+#include "../Structs.hlsli"
+
+struct ViewProjection {
+    float32_t4x4 m;
+};
 
 // Common
-ConstantBuffer<Camera> cCamera : register(b0);
-Texture2D<float32_t4> cTexture[] : register(t0, space1);
-SamplerState cTexSmp : register(s0);
+ConstantBuffer<ViewProjection> cViewProjection : register(b0);  // light view
 
 // ModelData
 ConstantBuffer<ModelMetadata> mMetadata : register(b1);
@@ -14,4 +16,3 @@ StructuredBuffer<uint32_t> mPrimitiveIndices : register(t3);
 
 // InstanceBuffers
 StructuredBuffer<WorldTransform> iWorldTransform : register(t4);
-StructuredBuffer<Material> iMaterials : register(t5);

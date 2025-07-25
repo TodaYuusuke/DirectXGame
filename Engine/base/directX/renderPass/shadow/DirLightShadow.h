@@ -4,9 +4,6 @@
 #include <map>
 
 namespace LWP {
-	namespace Object {
-		class Camera;
-	}
 	namespace Resource {
 		enum class ModelType;
 	}
@@ -42,10 +39,6 @@ namespace LWP::Base {
 	private: // ** プライベートなメンバ関数 ** //
 
 		/// <summary>
-		/// 共通で利用するレンダリング用のバッファーを設定する
-		/// </summary>
-		void SetBuffers(ID3D12GraphicsCommandList6* list);
-		/// <summary>
 		/// 実際の描画命令を積み込む
 		/// </summary>
 		void SetDispatchMesh(ID3D12GraphicsCommandList6* list);
@@ -55,6 +48,6 @@ namespace LWP::Base {
 
 		RootSignature root_;	// ルートシグネチャは共通で使う
 		// 各モデルタイプごとのPSO
-		std::map<Resource::ModelType, PSO> raster_;
+		std::map<Resource::ModelType, PSO> psos_;
 	};
 }

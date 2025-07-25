@@ -1,4 +1,6 @@
-#include "Skin.hlsli"
+#include "Solid.hlsli"
+
+StructuredBuffer<Well> Wells : register(t5);
 
 [NumThreads(128, 1, 1)]      // スレッド数最大128
 [OutputTopology("triangle")] // 出力形状は三角形
@@ -17,12 +19,12 @@ void main(
 
     if (gtid < meshlet.VertCount) {
         // 頂点インデックスの取得
-        uint32_t vertexIndex = GetVertexIndex(meshlet, gtid);
+        uint32_t vertexIndex = GetVertexIndex(meshlet, gtid, mUniqueVertexIndices);
         
         // 取得したインデックスから頂点座標を求める
         Vertex vertex = mVertices[vertexIndex];
         // 出力する頂点のデータを求める
-        Skinned skinned = Skinning(vertex, gid);
+        Skinned skinned = Skinning(vertex, gid, mMetadata.jSize, Wells);
 
         outVerts[gtid].position = mul(mul(skinned.position, iWorldTransform[gid].m), cCamera.m);
         outVerts[gtid].worldPos = mul(skinned.position, iWorldTransform[gid].m).xyz;
@@ -32,10 +34,7 @@ void main(
         outVerts[gtid].mIndex = vertex.mIndex + (gid * mMetadata.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }
     if (gtid < meshlet.PrimCount) {
-        // プリミティブ情報のインデックス情報を取得
-        uint32_t3 packedIndices = GetPrimitive(meshlet, gtid);
-        
-        // 出力するプリミティブを求める
-        outIndices[gtid] = packedIndices;
+        // プリミティブ情報のインデックス情報を取得し、出力するプリミティブを求める
+        outIndices[gtid] = GetPrimitive(meshlet, gtid, mPrimitiveIndices);
     }
 }

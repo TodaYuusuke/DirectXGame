@@ -52,6 +52,11 @@ namespace LWP::Object {
 
 		// 平行光源のシェーダー用のバッファーを返す関数
 		const Base::ConstantBuffer<Base::DirectionalLightStruct>& GetLightBuffer() const { return lightBuffer_; }
+		// ビュープロジェクションのViewを返す関数
+		D3D12_GPU_VIRTUAL_ADDRESS GetMatrixBufferView() { return viewBuffer_.GetGPUView(); }
+		// シャドウマップを書き込む用のリソースを返す関数
+		Base::SM_Direction* GetShadowMap() { return &shadowMap_; }
+
 
 		// デバッグ用GUI
 		void DebugGUI() override;

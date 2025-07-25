@@ -6,127 +6,96 @@
 
 using namespace LWP::Resource;
 
+#define RS_SLOT_LightView			0   // ライトのビュー投影行列 (b0)
+#define RS_SLOT_MetaData			1   // モデルのメタデータ (b1)
+#define RS_SLOT_Meshlet				2   // メッシュレット構造体 (t0)
+#define RS_SLOT_Vertex				3   // 頂点情報 (t1)
+#define RS_SLOT_UniqueVertexIndices 4   // ユニーク頂点インデックス (t2)
+#define RS_SLOT_PrimitiveIndices	5   // プリミティブインデックス (t3)
+#define RS_SLOT_WorldTF				6   // ワールドトランスフォーム (t4)
+#define RS_SLOT_Well				7   // Skinning用のウェル (t5)
+
 namespace LWP::Base {
 	void DirLightShadow::Init() {
 		// ルートシグネチャを設定
-		root_.AddCBVParameter(0, SV_Mesh)	// 0 カメラ
-			.AddTableParameter(0, SV_Pixel, 1, lwpC::Rendering::kMaxTexture)	// 1 テクスチャ
-			.AddSampler(0, SV_Pixel)		// x テクスチャ用サンプラー
-			.AddCBVParameter(1, SV_All)		// 2 メタデータ
-			.AddTableParameter(0, SV_All)	// 3 メッシュレット
-			.AddTableParameter(1, SV_All)	// 4 頂点
-			.AddTableParameter(2, SV_All)	// 5 ユニーク頂点
-			.AddTableParameter(3, SV_All)	// 6 プリミティブインデックス
-			.AddTableParameter(4, SV_Mesh)	// 7 ワールドトランスフォーム
-			.AddTableParameter(5, SV_Pixel)	// 8 マテリアル
-			.AddTableParameter(5, SV_Mesh)	// 9 Well（Skin用）
+		root_.AddCBVParameter(0, SV_Mesh)	// 0 ライトのビュー投影行列
+			.AddCBVParameter(1, SV_All)		// 1 メタデータ
+			.AddTableParameter(0, SV_Mesh)	// 2 メッシュレット
+			.AddTableParameter(1, SV_Mesh)	// 3 頂点
+			.AddTableParameter(2, SV_Mesh)	// 4 ユニーク頂点
+			.AddTableParameter(3, SV_Mesh)	// 5 プリミティブインデックス
+			.AddTableParameter(4, SV_Mesh)	// 6 ワールドトランスフォーム
+			.AddTableParameter(5, SV_Mesh)	// 7 Well（Skin用）
 			.Build();
 
-#pragma region Rigid描画
-		raster_[ModelType::Rigid].Init(root_, PSO::Type::Mesh)
-			.SetRTVFormats({
-				DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-				DXGI_FORMAT_R10G10B10A2_UNORM,
-				DXGI_FORMAT_R8G8B8A8_UNORM,
-				DXGI_FORMAT_R16G16B16A16_FLOAT,
-			})
-			.SetSystemAS("Rework_/graphics/solid/Solid.AS.hlsl")
-			.SetSystemMS("Rework_/graphics/solid/Rigid.MS.hlsl")
+		// psoの設定
+		psos_[ModelType::Rigid].Init(root_, PSO::Type::Mesh)
+			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
+			.SetSystemMS("Rework_/shadow/RigidShadow.MS.hlsl")
 			.Build();
-#pragma endregion
-#pragma region Skin描画
-		raster_[ModelType::Skin].Init(root_, PSO::Type::Mesh)
-			.SetRasterizerState(D3D12_CULL_MODE_NONE)
-			.SetRTVFormats({
-				DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-				DXGI_FORMAT_R10G10B10A2_UNORM,
-				DXGI_FORMAT_R8G8B8A8_UNORM,
-				DXGI_FORMAT_R16G16B16A16_FLOAT,
-			})
-			.SetSystemAS("Rework_/graphics/solid/Solid.AS.hlsl")
-			.SetSystemMS("Rework_/graphics/solid/Skin.MS.hlsl")
+		psos_[ModelType::Skin].Init(root_, PSO::Type::Mesh)
+			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
+			.SetSystemMS("Rework_/shadow/SkinShadow.MS.hlsl")
 			.Build();
-#pragma endregion
 	}
 
 	void DirLightShadow::PushCommand(ID3D12GraphicsCommandList6* list) {
 		// ルートシグネチャをセット
 		list->SetGraphicsRootSignature(root_);
-		// 共通のバッファを登録する
-		SetBuffers(list);
 
-		// 各カメラに対しての描画命令を積み込む
-		for (Object::Camera* camera : Object::Manager::GetInstance()->GetCameras()) {
-			if (!camera->isActive) { continue; }	// カメラがアクティブでない場合はスキップ
+		// 平行光源のシャドウマッピングを行う
+		Object::DirectionLight* dir = Object::Manager::GetInstance()->GetDirLight();
+		SM_Direction* shadowMap = dir->GetShadowMap();
+		
+		list->OMSetRenderTargets(0, nullptr, false, &shadowMap->dsvInfo.cpuView);	// レンダーターゲットに指定
+		shadowMap->ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);	// バリアを書き込み用に
+		shadowMap->Clear(list);									// 画面クリア
+		D3D12_VIEWPORT viewport = shadowMap->GetViewport();		// ビューポートを取得して設定
+		list->RSSetViewports(1, &viewport);
+		D3D12_RECT scissorRect = shadowMap->GetScissorRect();	// シザー矩形を取得して設定
+		list->RSSetScissorRects(1, &scissorRect);
 
-			GBuffer* g = camera->GetGBuffer();
-			g->SetRenderTarget(list);	// GBufferにレンダーターゲットセット、バリア、ビューポートとシザー矩形を任せる
-			list->SetGraphicsRootConstantBufferView(0, camera->GetBufferView());	// カメラのバッファを登録
+		list->SetGraphicsRootConstantBufferView(RS_SLOT_LightView, dir->GetMatrixBufferView());	// 光源のビュープロジェクションを登録
 
-			// 描画！
-			SetDispatchMesh(list);
-		}
+		// 描画！
+		SetDispatchMesh(list);
 	}
 
-
-	void DirLightShadow::SetBuffers(ID3D12GraphicsCommandList6* list) {
-		SRV* srv = SRV::GetInstance();
-		list->SetGraphicsRootDescriptorTable(1, srv->GetFirstTexView());	// テクスチャのバッファを登録
-	}
 	void DirLightShadow::SetDispatchMesh(ID3D12GraphicsCommandList6* list) {
 		// 全モデル分ループ
 		auto models = Resource::Manager::GetInstance()->GetModels();
 		for (Models& m : models) {
 			// ModelのメッシュレットのViewをセット
 			ModelData& d = m.data;
-			list->SetGraphicsRootDescriptorTable(3, d.buffers_.meshlet->GetGPUView());
-			list->SetGraphicsRootDescriptorTable(4, d.buffers_.vertex->GetGPUView());
-			list->SetGraphicsRootDescriptorTable(5, d.buffers_.uniqueVertexIndices->GetGPUView());
-			list->SetGraphicsRootDescriptorTable(6, d.buffers_.primitiveIndices->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(RS_SLOT_Meshlet, d.buffers_.meshlet->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(RS_SLOT_Vertex, d.buffers_.vertex->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(RS_SLOT_UniqueVertexIndices, d.buffers_.uniqueVertexIndices->GetGPUView());
+			list->SetGraphicsRootDescriptorTable(RS_SLOT_PrimitiveIndices, d.buffers_.primitiveIndices->GetGPUView());
 
 			// ** ---------- RigidModelをDispatch ---------- ** //
 			Models::FillMode<RigidModel, Models::RigidBuffer>& r = m.rigid;
 			// Solidの描画処理
 			if (!r.solid.ptrs.list.empty()) {
 				// 各インスンタンスのバッファをセット
-				list->SetGraphicsRootConstantBufferView(2, r.solid.buffer.common.GetGPUView());
-				list->SetGraphicsRootDescriptorTable(7, r.solid.buffer.inst->GetGPUView());
-				list->SetGraphicsRootDescriptorTable(8, r.solid.buffer.material->GetGPUView());
-				list->SetPipelineState(raster_[ModelType::Rigid].solid);	// PSOセット
+				list->SetGraphicsRootConstantBufferView(RS_SLOT_MetaData, r.solid.buffer.common.GetGPUView());
+				list->SetGraphicsRootDescriptorTable(RS_SLOT_WorldTF, r.solid.buffer.inst->GetGPUView());
+				list->SetPipelineState(psos_[ModelType::Rigid]);	// PSOセット
 				list->DispatchMesh(d.GetMeshletCount(), 1, 1);	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			}
-			// WireFrameの描画処理
-			if (!r.wireFrame.ptrs.list.empty()) {
-				// 追加のViewをセット
-				list->SetGraphicsRootConstantBufferView(2, r.wireFrame.buffer.common.GetGPUView());
-				list->SetGraphicsRootDescriptorTable(7, r.wireFrame.buffer.inst->GetGPUView());
-				list->SetGraphicsRootDescriptorTable(8, r.wireFrame.buffer.material->GetGPUView());
-				list->SetPipelineState(raster_[ModelType::Rigid].wireframe);	// PSOセット
-				list->DispatchMesh(d.GetMeshletCount(), 1, 1);	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-			}
+			// WireFrameは描画しない
 
 			// ** ---------- SkinModelをDispatch ---------- ** 
 			Models::FillMode<SkinningModel, Models::SkinBuffer>& s = m.skin;
 			// Solidの描画処理
 			if (!s.solid.ptrs.list.empty()) {
 				// 各インスンタンスのバッファをセット
-				list->SetGraphicsRootConstantBufferView(2, s.solid.buffer.common.GetGPUView());
-				list->SetGraphicsRootDescriptorTable(7, s.solid.buffer.inst->GetGPUView());
-				list->SetGraphicsRootDescriptorTable(8, s.solid.buffer.material->GetGPUView());
-				list->SetGraphicsRootDescriptorTable(9, s.solid.buffer.well->GetGPUView());
-				list->SetPipelineState(raster_[ModelType::Skin].solid);	// PSOセット
+				list->SetGraphicsRootConstantBufferView(RS_SLOT_MetaData, s.solid.buffer.common.GetGPUView());
+				list->SetGraphicsRootDescriptorTable(RS_SLOT_WorldTF, s.solid.buffer.inst->GetGPUView());
+				list->SetGraphicsRootDescriptorTable(RS_SLOT_Well, s.solid.buffer.well->GetGPUView());
+				list->SetPipelineState(psos_[ModelType::Skin]);	// PSOセット
 				list->DispatchMesh(d.GetMeshletCount(), 1, 1);	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
 			}
-			// WireFrameの描画処理
-			if (!s.wireFrame.ptrs.list.empty()) {
-				// 追加のViewをセット
-				list->SetGraphicsRootConstantBufferView(2, s.wireFrame.buffer.common.GetGPUView());
-				list->SetGraphicsRootDescriptorTable(7, s.wireFrame.buffer.inst->GetGPUView());
-				list->SetGraphicsRootDescriptorTable(8, s.wireFrame.buffer.material->GetGPUView());
-				list->SetGraphicsRootDescriptorTable(9, s.wireFrame.buffer.well->GetGPUView());
-				list->SetPipelineState(raster_[ModelType::Skin].wireframe);	// PSOセット
-				list->DispatchMesh(d.GetMeshletCount(), 1, 1);	// メッシュレットのプリミティブ数分メッシュシェーダーを実行
-			}
+			// WireFrameは描画しない
 		}
 	}
 }
