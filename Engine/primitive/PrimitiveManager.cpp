@@ -8,28 +8,33 @@
 using namespace LWP::Math;
 
 namespace LWP::Primitive {
-	PlaneBuffers::PlaneBuffers() :
-		vertices(lwpC::Rendering::Primitive::Sprite::kMaxCount * 4),
-		wtf(lwpC::Rendering::Primitive::Sprite::kMaxCount),
-		materials(lwpC::Rendering::Primitive::Sprite::kMaxCount) {
+	PlaneBuffers::PlaneBuffers(int bufferSize) :
+		vertices(bufferSize * 4),
+		wtf(bufferSize),
+		materials(bufferSize),
+		zSort(bufferSize) {
 		vertices.Init();
 		wtf.Init();
 		materials.Init();
+		zSort.Init();
 		count = 0;
 	}
 	void PlaneBuffers::Reset() {
 		vertices.Reset();
 		wtf.Reset();
 		materials.Reset();
+		zSort.Reset();
 		count = 0;
 	}
 
 
 	Manager::Manager() :
-		zSort_(lwpC::Rendering::Primitive::Billboaed::kMaxCount),
+		planeBuffers_{
+			PlaneBuffers(lwpC::Rendering::Primitive::Sprite::kMaxCount),
+			PlaneBuffers(lwpC::Rendering::Primitive::Billboaed::kMaxCount)
+		}, 
 		type_(lwpC::Rendering::Primitive::Billboaed::kMaxCount),
 		velocities_(lwpC::Rendering::Primitive::Billboaed::kStretchedMaxCount) {
-		zSort_.Init();
 		type_.Init();
 		velocities_.Init();
 	}
@@ -50,16 +55,17 @@ namespace LWP::Primitive {
 		// 全てのバッファーをリセット
 		planeBuffers_[PlaneRenderType::Sprite].Reset();
 		planeBuffers_[PlaneRenderType::Billboard].Reset();
-		zSort_.Reset();
 		type_.Reset();
 		velocities_.Reset();
 
-		int i = 0;
-		struct BillboardIndex {
+		int sI = 0;
+		int bI = 0;
+		struct SortIndex {
 			int index;
 			float distance;
 		};
-		std::vector<BillboardIndex> indexes;
+		std::vector<SortIndex> spriteIndex;
+		std::vector<SortIndex> billIndex;
 		Math::Vector3 cameraPos = Object::Manager::GetInstance()->GetMainCamera()->worldTF.GetWorldPosition();
 
 		// 全更新処理
@@ -78,11 +84,13 @@ namespace LWP::Primitive {
 					type_.Add(static_cast<int>(type));	// タイプを登録
 					// Zソート用にデータを登録
 					float d = Vector3::Distance(p->GetCenterPosition(), cameraPos);
-					indexes.push_back({ i++, d });
+					billIndex.push_back({ bI++, d });
 				}
 				else {
 					// スプライトのバッファを指定
 					b = &planeBuffers_[PlaneRenderType::Sprite];
+					// Zソート用にデータを登録
+					spriteIndex.push_back({ sI++, p->worldTF.GetWorldPosition().z });	// 奥行だけを考慮する
 				}
 
 				// 指定のタイプのバッファにデータを登録
@@ -104,13 +112,15 @@ namespace LWP::Primitive {
 		}
 
 		// Zソート
-		std::sort(indexes.begin(), indexes.end(), 
-			[](const BillboardIndex& a, const BillboardIndex& b) {
-				return a.distance > b.distance;
-			}
+		std::sort(spriteIndex.begin(), spriteIndex.end(),
+			[](const SortIndex& a, const SortIndex& b) { return a.distance > b.distance; }
+		);
+		std::sort(billIndex.begin(), billIndex.end(),
+			[](const SortIndex& a, const SortIndex& b) { return a.distance > b.distance; }
 		);
 		// ソート結果をバッファに格納
-		for (BillboardIndex& b : indexes) { zSort_.Add(b.index); }
+		for (SortIndex& b : spriteIndex) { planeBuffers_[PlaneRenderType::Sprite].zSort.Add(b.index); }
+		for (SortIndex& b : billIndex) { planeBuffers_[PlaneRenderType::Billboard].zSort.Add(b.index); }
 	}
 
 	void Manager::DebugGUI() {

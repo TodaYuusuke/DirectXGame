@@ -85,6 +85,8 @@ namespace LWP::Base {
 	}
 	void DrawPlane::DrawBillboard2D(ID3D12GraphicsCommandList6* list) {
 		list->SetPipelineState(psos_.billboard3D);	// PSOを設定
+		list->SetGraphicsRootDescriptorTable(4, Primitive::Manager::GetInstance()->GetTypeBuffer());		// ビルボードタイプ
+		list->SetGraphicsRootDescriptorTable(5, Primitive::Manager::GetInstance()->GetVelocitiesBuffer());	// 速度（ストレッチビルボード用）
 		DrawCommon(Primitive::Manager::GetInstance()->GetBillboardBuffer(), list);
 	}
 
@@ -96,9 +98,7 @@ namespace LWP::Base {
 		list->SetGraphicsRootDescriptorTable(0, buffers->vertices.GetGPUView());	// 頂点
 		list->SetGraphicsRootDescriptorTable(1, buffers->wtf.GetGPUView());			// ワールドトランスフォーム
 		list->SetGraphicsRootDescriptorTable(6, buffers->materials.GetGPUView());	// マテリアル
-		list->SetGraphicsRootDescriptorTable(3, Primitive::Manager::GetInstance()->GetZSortBuffer());		// Zソートの結果
-		list->SetGraphicsRootDescriptorTable(4, Primitive::Manager::GetInstance()->GetTypeBuffer());		// ビルボードタイプ
-		list->SetGraphicsRootDescriptorTable(5, Primitive::Manager::GetInstance()->GetVelocitiesBuffer());	// 速度（ストレッチビルボード用）
+		list->SetGraphicsRootDescriptorTable(3, buffers->zSort.GetGPUView());		// Zソートの結果
 		list->DrawInstanced(6, buffers->count, 0, 0);
 	}
 }

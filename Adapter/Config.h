@@ -59,14 +59,13 @@ namespace LWP::Config {
 			/// </summary>
 			namespace Billboaed {
 				/// <summary>
-				/// 全種類のビルボードの合計最大数（ストレッチビルボード抜き）
-				/// </summary>
-				static const UINT kMaxCount = 1024 + kMaxCount;
-
-				/// <summary>
 				/// ストレッチビルボードの最大数（専用のバッファが必要なため別定義）
 				/// </summary>
-				static const UINT kStretchedMaxCount = 128;
+				static const UINT kStretchedMaxCount = 1024;
+				/// <summary>
+				/// 全種類のビルボードの合計最大数（ストレッチビルボード抜き）
+				/// </summary>
+				static const UINT kMaxCount = 4096 + kStretchedMaxCount;
 			}
 		}
 

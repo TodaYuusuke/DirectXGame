@@ -6,7 +6,7 @@ VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_Ins
     
     // 頂点を抽出
     Vertex v = GetVertexIndex(vertexID, index);
-    // ワールドトランスフォームを抽出
+    // ワールドトランスフォームを抽出q
     WorldTransform wtf = vWorldTransform[index];
     // ビルボードの種類を求める
     int32_t type = vBillboardType[index];
