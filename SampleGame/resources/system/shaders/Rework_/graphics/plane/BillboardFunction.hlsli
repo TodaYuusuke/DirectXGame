@@ -125,22 +125,23 @@ float32_t4 StretchedBillboard(Vertex v, WorldTransform wtf, float32_t3 velocity,
     
     // Culc Scale
     float32_t baseScaleX = 1.0f;
-    float32_t stretchFactor = 0.1;
+    float32_t stretchFactor = 0.1f;
     float32_t scaleX = baseScaleX + length(velocity) * stretchFactor;
 
-    float32_t4x4 scaleMatrix = float32_t4x4(
+    float32_t4x4 stretchMatrix = float32_t4x4(
         scaleX, 0.0f, 0.0f, 0.0f,
         0.0f,   1.0f, 0.0f, 0.0f,
         0.0f,   0.0f, 1.0f, 0.0f,
         0.0f,   0.0f, 0.0f, 1.0f
     );
     
-    // vertex -> wtf -> scale -> velocityMatrix -> toCamera
-    return mul(
-        float32_t4(VectorMulQuaternion(
-            mul(mul(mul(v.position, wtf.m), scaleMatrix), velocityMatrix).xyz,
-            CreateQuaternionFromAxisAngle(velocity, pitch)
-        ), 1.0f),
-        vCamera.m
-    );
+    float32_t4x4 s = mul(wtf.scale, stretchMatrix);
+    float32_t4x4 r = mul(wtf.rotate, velocityMatrix);
+    
+    float32_t4 rotated = float32_t4(
+                            VectorMulQuaternion(mul(mul(v.position, s), r).xyz, CreateQuaternionFromAxisAngle(velocity, pitch)),
+                            1.0f
+                         );
+    return mul(mul(rotated, wtf.translate), vCamera.m);
+
 }
