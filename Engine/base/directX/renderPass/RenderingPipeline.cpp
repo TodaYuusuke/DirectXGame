@@ -46,6 +46,7 @@ namespace LWP::Base {
 		drawPlane_.Init();
 		deferredShading_.Init();
 		imguiRender_.Init();
+		dirShadow_.Init();
 	}
 	void RenderingPipeline::DrawCall() {
 		// 命令積み込み開始
@@ -65,6 +66,7 @@ namespace LWP::Base {
 
 		// コマンドを積み込む
 		drawSolid_.PushCommand(list);
+		//dirShadow_.PushCommand(list);
 		deferredShading_.PushCommand(list);
 		drawPlane_.PushCommand(list);
 

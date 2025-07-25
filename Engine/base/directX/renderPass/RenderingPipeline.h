@@ -7,6 +7,8 @@
 #include "graphics/RenderClear.h"
 #include "graphics/DeferredShading.h"
 
+#include "shadow/DirLightShadow.h"
+
 #include "copy/Copy.h"
 
 #include "resources/texture/Texture.h"
@@ -74,5 +76,6 @@ namespace LWP::Base {
 		Copy copy_;		// リソースをコピーするパス
 		ImGuiRender imguiRender_;	// ImGuiを描画するパス
 
+		DirLightShadow dirShadow_;	// 平行光源のシャドウを描画するパス
 	};
 }

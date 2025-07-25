@@ -358,6 +358,7 @@
     <ClCompile Include="Engine\primitive\2d\policy\SequencePolicy.cpp" />
     <ClCompile Include="Engine\primitive\2d\Billboards.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\shadow\DirLightShadow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -810,6 +811,7 @@
     <ClInclude Include="Engine\primitive\2d\planeInterface\BillboardTemplate.h" />
     <ClInclude Include="Engine\primitive\2d\planeInterface\Sprite.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\shadow\DirLightShadow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

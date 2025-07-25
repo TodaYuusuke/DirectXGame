@@ -108,6 +108,9 @@ struct MSOutput {
     float32_t4 color    : COLOR0;
     int32_t mIndex      : INDEX0;
 };
+struct MSShadowOutput {
+    float32_t4 position : SV_POSITION0;
+};
 struct GBufferOutput {
     float32_t4 baseColor : SV_Target0;
     float32_t4 normal : SV_Target1;     // xyz = normal(0 ~ 1), w = enableLighting Flag
@@ -128,7 +131,53 @@ struct ParticleColliderOutput {
 float32_t3 EncodeNormal(float32_t3 n) {
     return n * 0.5f + 0.5f;
 }
-
 float32_t3 DecodeNormal(float32_t3 n) {
     return n * 2.0f - 1.0f;
+}
+
+
+///
+///  Mesh Shader Functions
+///
+
+uint32_t3 UnpackPrimitive(uint primitive) {
+    // Read the index of the primitive every 10 bits
+    return uint32_t3(primitive & 0x3FF, (primitive >> 10) & 0x3FF, (primitive >> 20) & 0x3FF);
+}
+uint32_t3 GetPrimitive(Meshlet m, uint index, StructuredBuffer<uint32_t> primitiveIndices) {
+    // Get surface information
+    return UnpackPrimitive(primitiveIndices[m.PrimOffset + index]);
+}
+uint32_t GetVertexIndex(Meshlet m, uint localIndex, ByteAddressBuffer uniqueVertexIndices) {
+    // Find the index of the vertex
+    localIndex = m.VertOffset + localIndex;
+    // Read 4 bytes at a time
+    return uniqueVertexIndices.Load(localIndex * 4);
+}
+
+
+///
+/// Skin Functions
+///
+
+struct Skinned {
+    float32_t4 position;
+    float32_t3 normal;
+};
+Skinned Skinning(Vertex v, uint32_t instanceIndex, uint32_t jSize, StructuredBuffer<Well> wells) {
+    Skinned skinned;
+    
+    skinned.position = mul(v.position, wells[v.jIndex.x + (instanceIndex * jSize)].skeletonSpaceMatrix) * v.weight.x;
+    skinned.position += mul(v.position, wells[v.jIndex.y + (instanceIndex * jSize)].skeletonSpaceMatrix) * v.weight.y;
+    skinned.position += mul(v.position, wells[v.jIndex.z + (instanceIndex * jSize)].skeletonSpaceMatrix) * v.weight.z;
+    skinned.position += mul(v.position, wells[v.jIndex.w + (instanceIndex * jSize)].skeletonSpaceMatrix) * v.weight.w;
+    skinned.position.w = 1.0f;
+    
+    skinned.normal = mul(v.normal, (float32_t3x3) wells[v.jIndex.x + (instanceIndex * jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.x;
+    skinned.normal += mul(v.normal, (float32_t3x3) wells[v.jIndex.y + (instanceIndex * jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.y;
+    skinned.normal += mul(v.normal, (float32_t3x3) wells[v.jIndex.z + (instanceIndex * jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.z;
+    skinned.normal += mul(v.normal, (float32_t3x3) wells[v.jIndex.w + (instanceIndex * jSize)].skeletonSpaceInverseTransposeMatrix) * v.weight.w;
+    skinned.normal = normalize(skinned.normal);
+    
+    return skinned;
 }

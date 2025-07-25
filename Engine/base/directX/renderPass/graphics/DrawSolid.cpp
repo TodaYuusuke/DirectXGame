@@ -40,7 +40,6 @@ namespace LWP::Base {
 #pragma endregion
 #pragma region Skin描画
 		raster_[ModelType::Skin].solid.Init(root_, PSO::Type::Mesh)
-			.SetRasterizerState(D3D12_CULL_MODE_NONE)
 			.SetRTVFormats({
 				DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 				DXGI_FORMAT_R10G10B10A2_UNORM,
