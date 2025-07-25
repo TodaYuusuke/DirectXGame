@@ -46,6 +46,11 @@ namespace LWP::Base {
 		normal.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 		pbr.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 		worldPosition.ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
+
+		D3D12_VIEWPORT viewport = albedo.GetViewport();	// ビューポートを取得して設定
+		list->RSSetViewports(1, &viewport);
+		D3D12_RECT scissorRect = albedo.GetScissorRect();	// シザー矩形を取得して設定
+		list->RSSetScissorRects(1, &scissorRect);
 	}
 
 	void GBuffer::RevertResourceBarrier(ID3D12GraphicsCommandList* list) {

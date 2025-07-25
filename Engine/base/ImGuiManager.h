@@ -14,6 +14,9 @@
 #include "base/directX/utility/descriptorHeap/SRV.h"
 
 namespace LWP::Base {
+	// 前方宣言
+	class SM_Direction;
+
 	class ImGuiManager {
 	public:
 		ImGuiManager() = default;
@@ -78,6 +81,12 @@ namespace LWP::Base {
 		/// <param name="index"></param>
 		/// <param name="size"></param>
 		static void ShowRenderResource(const RenderResource& resource, float scale = 1.0f);
+		/// <summary>
+		/// リソースの中身を表示する
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		static void ShowShadowMap(const Base::SM_Direction& sm, float scale = 1.0f);
 	};
 }
 

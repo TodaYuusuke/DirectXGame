@@ -33,8 +33,7 @@ void DirectionLight::Update() {
 	data->direction = (Math::Vector3{ 0.0f,0.0f,1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
 	data->intensity = intensity;
 
-	// 平行光源のシャドウマッピングを一時的に停止
-	//*viewBuffer_.data_ = GetViewProjection();
+	*viewBuffer_.data_ = GetViewProjection();
 	//manager->AddTarget(viewBuffer_.GetGPUView(), &shadowMap_);
 }
 
@@ -63,4 +62,5 @@ void DirectionLight::DebugGUI() {
 	ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::Checkbox("isActive", &isActive);
+	ImGuiManager::ShowShadowMap(shadowMap_, 0.5f);
 }
