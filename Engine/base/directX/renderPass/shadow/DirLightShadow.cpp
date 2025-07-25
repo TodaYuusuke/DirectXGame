@@ -45,6 +45,7 @@ namespace LWP::Base {
 
 		// 平行光源のシャドウマッピングを行う
 		Object::DirectionLight* dir = Object::Manager::GetInstance()->GetDirLight();
+		if (!dir->isActive) { return; }
 		SM_Direction* shadowMap = dir->GetShadowMap();
 		
 		list->OMSetRenderTargets(0, nullptr, false, &shadowMap->dsvInfo.cpuView);	// レンダーターゲットに指定

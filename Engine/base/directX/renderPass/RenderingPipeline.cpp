@@ -66,7 +66,7 @@ namespace LWP::Base {
 
 		// コマンドを積み込む
 		drawSolid_.PushCommand(list);
-		//dirShadow_.PushCommand(list);
+		dirShadow_.PushCommand(list);
 		deferredShading_.PushCommand(list);
 		drawPlane_.PushCommand(list);
 

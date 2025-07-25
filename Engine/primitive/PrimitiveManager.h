@@ -16,6 +16,7 @@ namespace LWP::Primitive {
 		Base::StructuredBuffer<Base::VertexStruct> vertices;		// 頂点
 		Base::StructuredBuffer<Base::WTFStruct> wtf;				// ワールドトランスフォーム
 		Base::StructuredBuffer<Base::MaterialStruct> materials;		// マテリアル
+		Base::StructuredBuffer<int32_t> zSort;
 
 		// インスタンス数
 		int count;
@@ -23,7 +24,11 @@ namespace LWP::Primitive {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		PlaneBuffers();
+		PlaneBuffers() = delete;
+		/// <summary>
+		/// デフォルトコンストラクタ
+		/// </summary>
+		PlaneBuffers(int bufferSize);
 		/// <summary>
 		/// リセットを呼び出す関数
 		/// </summary>
@@ -69,8 +74,6 @@ namespace LWP::Primitive {
 		PlaneBuffers* GetSpriteBuffer() { return &planeBuffers_[PlaneRenderType::Sprite]; }
 		PlaneBuffers* GetBillboardBuffer() { return &planeBuffers_[PlaneRenderType::Billboard]; }
 
-		// Zソートの結果のバッファを返す関数
-		D3D12_GPU_DESCRIPTOR_HANDLE GetZSortBuffer() { return zSort_.GetGPUView(); }
 		// ビルボードの種類のバッファを返す関数
 		D3D12_GPU_DESCRIPTOR_HANDLE GetTypeBuffer() { return type_.GetGPUView(); }
 		// ストレッチビルボードの速度バッファを返す関数
@@ -92,8 +95,6 @@ namespace LWP::Primitive {
 		Utility::PtrManager<IPlane*> planes_;
 		PlaneBuffers planeBuffers_[PlaneRenderType::Count];
 
-		// ビルボードのZソート
-		Base::StructuredBuffer<int32_t> zSort_;
 		// ビルボードの種類（シェーダー内で描画切り替え用）
 		Base::StructuredBuffer<int32_t> type_;
 		// ストレッチビルボード用の速度
