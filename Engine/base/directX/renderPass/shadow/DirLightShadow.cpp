@@ -32,10 +32,14 @@ namespace LWP::Base {
 		psos_[ModelType::Rigid].Init(root_, PSO::Type::Mesh)
 			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
 			.SetSystemMS("Rework_/shadow/RigidShadow.MS.hlsl")
+			.SetRasterizerState(D3D12_CULL_MODE_FRONT)
+			.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
 			.Build();
 		psos_[ModelType::Skin].Init(root_, PSO::Type::Mesh)
 			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
 			.SetSystemMS("Rework_/shadow/SkinShadow.MS.hlsl")
+			.SetRasterizerState(D3D12_CULL_MODE_FRONT)
+			.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
 			.Build();
 	}
 
@@ -60,6 +64,9 @@ namespace LWP::Base {
 
 		// 描画！
 		SetDispatchMesh(list);
+
+		// このあとシャドウマッピングに使うのでバリアを変更
+		shadowMap->ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
 	}
 
 	void DirLightShadow::SetDispatchMesh(ID3D12GraphicsCommandList6* list) {

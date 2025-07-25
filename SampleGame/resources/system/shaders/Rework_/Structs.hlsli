@@ -109,7 +109,7 @@ struct MSOutput {
     int32_t mIndex      : INDEX0;
 };
 struct MSShadowOutput {
-    float32_t4 position : SV_POSITION0;
+    float32_t4 position : SV_POSITION;
 };
 struct GBufferOutput {
     float32_t4 baseColor : SV_Target0;

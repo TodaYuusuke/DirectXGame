@@ -77,3 +77,12 @@ void ImGuiManager::ShowRenderResource(const RenderResource& resource, float scal
 		ImGui::Text("No exist");	// 存在しないので非表示
 	}
 }
+void ImGuiManager::ShowShadowMap(const SM_Direction& sm, float scale) {
+	if (sm.srvInfo.index != -1) {	// テクスチャが存在するならば表示
+		Math::Vector2 size = Vector2{ static_cast<float>(sm.width), static_cast<float>(sm.height) } * scale;
+		ImGui::Image((ImTextureID)SRV::GetInstance()->GetGPUHandle(sm.srvInfo.index).ptr, ImVec2(size.x, size.y));
+	}
+	else {
+		ImGui::Text("No exist");	// 存在しないので非表示
+	}
+}
