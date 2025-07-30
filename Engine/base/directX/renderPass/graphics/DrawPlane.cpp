@@ -74,9 +74,8 @@ namespace LWP::Base {
 		list->SetGraphicsRootDescriptorTable(7, srv->GetFirstTexView());	// テクスチャのバッファを登録
 	}
 	void DrawPlane::SetDrawCall(ID3D12GraphicsCommandList6* list) {
-		// Spriteの描画
+		DrawBillboard2D(list);	// ビルボードが先
 		DrawSprite(list);
-		DrawBillboard2D(list);
 	}
 
 	void DrawPlane::DrawSprite(ID3D12GraphicsCommandList6* list) {

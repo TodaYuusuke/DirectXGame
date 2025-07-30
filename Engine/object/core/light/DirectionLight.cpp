@@ -50,7 +50,7 @@ Matrix4x4 DirectionLight::GetViewProjection() const {
 	Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
 
 	// ViewProjectionを生成
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -5000.0f, 5000.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
 	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
 
 	return viewMatrix * projectionMatrix * viewportMatrix;

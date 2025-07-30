@@ -1,10 +1,11 @@
 #pragma once
+#include "../vector/Vector3.h"
+
 #include <cmath>
 #include <assert.h>
 
 namespace LWP::Math {
 	// 前方宣言
-	class Vector3;
 	class Quaternion;
 
 	/// <summary>
@@ -84,5 +85,7 @@ namespace LWP::Math {
 		static Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix);
 		// ある方向からある方向への回転
 		static Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+		// 視点位置から指定方向を向いたビュー行列を返す
+		static Matrix4x4 LookAt(const Vector3& eye, const Vector3& target, const Vector3& up = Vector3::UnitY());
 	};
 }

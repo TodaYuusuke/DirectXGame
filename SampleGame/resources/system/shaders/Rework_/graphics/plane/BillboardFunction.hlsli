@@ -91,8 +91,9 @@ float32_t4 HorizontalBillboard(Vertex v, WorldTransform wtf, int32_t instanceID)
         float32_t4(forward, 0.0f),
         float32_t4(0.0f, 0.0f, 0.0f, 1.0f)
     );
-
-    return mul(mul(mul(v.position, wtf.m), billboardMatrix), vCamera.m);
+    
+    float32_t4x4 mat = mul(mul(mul(wtf.scale, wtf.rotate), billboardMatrix), wtf.translate);
+    return mul(mul(v.position, mat), vCamera.m);
 }
 float32_t4 VerticalBillboard(Vertex v, WorldTransform wtf, int32_t instanceID) {
     float32_t3 center = GetWorldCenterPosition(instanceID);
@@ -110,7 +111,8 @@ float32_t4 VerticalBillboard(Vertex v, WorldTransform wtf, int32_t instanceID) {
         float32_t4(0.0f, 0.0f, 0.0f, 1.0f)
     );
 
-    return mul(mul(mul(v.position, wtf.m), billboardMatrix), vCamera.m);
+    float32_t4x4 mat = mul(mul(mul(wtf.scale, wtf.rotate), billboardMatrix), wtf.translate);
+    return mul(mul(v.position, mat), vCamera.m);
 }
 
 float32_t4 StretchedBillboard(Vertex v, WorldTransform wtf, float32_t3 velocity, int32_t instanceID) {
