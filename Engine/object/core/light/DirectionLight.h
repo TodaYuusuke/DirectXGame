@@ -5,6 +5,7 @@
 #include "utility/Color.h"
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/resource/rendering/shadow/SM_Direction.h"
+#include "base/directX/resource/rendering/DepthStencil.h"
 
 // 平行光源の構造体
 namespace LWP::Base {
@@ -61,7 +62,6 @@ namespace LWP::Object {
 		D3D12_GPU_VIRTUAL_ADDRESS GetMatrixBufferView() { return viewBuffer_.GetGPUView(); }
 		// シャドウマップを書き込む用のリソースを返す関数
 		Base::SM_Direction* GetShadowMap() { return &shadowMap_; }
-
 
 		// デバッグ用GUI
 		void DebugGUI() override;

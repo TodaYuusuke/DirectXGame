@@ -1,4 +1,3 @@
-#pragma once
 #include "DirLightShadow.h"
 
 #include "object/ObjectManager.h"
