@@ -160,15 +160,6 @@
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\SRV.cpp">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\BufferGroup.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\NormalRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\ShadowRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\utility\IndexManager.cpp">
       <Filter>Engine\utilitiy</Filter>
     </ClCompile>
@@ -207,21 +198,6 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp">
       <Filter>Engine\base\directX\postProcess\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\CopyRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\EnvironmentMapRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\MeshRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\PostRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\directX\renderer\PPRenderer.cpp">
-      <Filter>Engine\base\directX\renderer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp">
       <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
@@ -333,7 +309,6 @@
     <ClCompile Include="Engine\info\DebugCamera.cpp" />
     <ClCompile Include="Engine\utility\Singleton.cpp" />
     <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
-    <ClCompile Include="Engine\base\directX\renderer\ParticleRenderer.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
@@ -574,21 +549,6 @@
     <ClInclude Include="Engine\base\directX\utility\Command.h">
       <Filter>Engine\base\directX\utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\BufferGroup.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\IRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\NormalRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\ShadowRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\ResourceStruct.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\info\OutputLog.h">
       <Filter>Engine\info</Filter>
     </ClInclude>
@@ -642,21 +602,6 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h">
       <Filter>Engine\base\directX\postProcess\effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\CopyRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\EnvironmentMapRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\MeshRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\PostRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\directX\renderer\PPRenderer.h">
-      <Filter>Engine\base\directX\renderer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h">
       <Filter>Engine\base\directX\resource\data</Filter>
@@ -775,7 +720,6 @@
     <ClInclude Include="Engine\info\DebugCamera.h" />
     <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\object\core\GPUParticle.h" />
-    <ClInclude Include="Engine\base\directX\renderer\ParticleRenderer.h" />
     <ClInclude Include="Externals\imgui-node-editor\crude_json.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_bezier_math.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_canvas.h" />
