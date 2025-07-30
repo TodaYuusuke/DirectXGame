@@ -21,10 +21,16 @@ if ERRORLEVEL 1 (
     exit /b
 )
 
+REM Releaseビルドを行うか確認
+set /p DO_RELEASE=Releaseビルドも行いますか？ [Y/N]：
+
 REM Debugでビルド
 MSBuild "DirectXGame.vcxproj" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Debug;Platform=x64;MultiProcessorCompilation=true
-REM Releaseでビルド
-MSBuild "DirectXGame.vcxproj" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Release;Platform=x64;MultiProcessorCompilation=true
+
+if /i "%DO_RELEASE%"=="Y" (
+    REM Releaseでビルド
+    MSBuild "DirectXGame.vcxproj" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Release;Platform=x64;MultiProcessorCompilation=true
+)
 
 REM 一時ファイルを削除
 rmdir "DirectXGame" /s /q

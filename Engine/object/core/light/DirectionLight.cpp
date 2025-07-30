@@ -39,21 +39,21 @@ void DirectionLight::Update() {
 
 // ビュープロジェクションを返す関数
 Matrix4x4 DirectionLight::GetViewProjection() const {
-	// 回転行列を取得
-	Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
-	// 正規化された方向ベクトルを取得
-	Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
-	// ライトの向きの逆ベクトルがtranslation
-	Vector3 v = -1 * norVec;
-	Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
-	// Viewを計算
-	Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
+	//// 回転行列を取得
+	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
+	//// 正規化された方向ベクトルを取得
+	//Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
+	//// ライトの向きの逆ベクトルがtranslation
+	//Vector3 v = -1 * norVec;
+	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
+	//// Viewを計算
+	//Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
 
-	// ViewProjectionを生成
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
-	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
+	//// ViewProjectionを生成
+	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
+	//Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
 
-	return viewMatrix * projectionMatrix * viewportMatrix;
+	//return viewMatrix * projectionMatrix * viewportMatrix;
 }
 
 // デバッグ用GUI
