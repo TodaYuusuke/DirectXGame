@@ -4,12 +4,11 @@ struct WorldMatrix {
 };
 ConstantBuffer<WorldMatrix> gWorldMatrix : register(b0);
 
-// 平行光源
 struct DirectionalLight {
     float32_t4x4 viewProjection;
-    float32_t4 color;       // !< ライトの色
-    float32_t3 direction;   // !< ライトの向き
-    float intensity;        // !< 輝度
+    float32_t4 color;       // !<
+    float32_t3 direction;   // !< 
+    float intensity;        // !<
 };
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 

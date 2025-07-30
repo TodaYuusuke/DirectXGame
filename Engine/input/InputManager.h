@@ -67,7 +67,7 @@ namespace LWP::Input {
 		DIKeyboard keyboard_;
 
 		// コントローラーオブジェクト
-		DIController controller_;
+		//DIController controller_;
 		// コントローラー読み込み済みフラグ
 		bool isLoaded_ = false;
 	};

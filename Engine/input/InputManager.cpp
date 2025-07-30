@@ -20,7 +20,7 @@ void Manager::Initialize(WinApp* winApp) {
 
 	// キーボードデバイスの生成
 	keyboard_.Initialize(winApp_, directInput_.Get());
-	controller_.Initialize(winApp_, directInput_.Get());
+	//controller_.Initialize(winApp_, directInput_.Get());
 }
 
 void Manager::Update() {
@@ -48,7 +48,7 @@ void Manager::Update() {
 	// デバイスの情報更新
 	keyboard_.Update();
 	if (!isLoaded_) {
-		controller_.Update();
+		//controller_.Update();
 
 		
 	/*ImGui::Begin("Input");
@@ -79,25 +79,36 @@ bool Manager::GetKeyboardStateRelease(uint8_t keyID) {
 }
 
 bool Manager::GetControllerStateNone(uint8_t keyID) {
-	return controller_.None(keyID);
+	//return controller_.None(keyID);
+	keyID;
+	return false;
 }
 bool Manager::GetControllerStateTrigger(uint8_t keyID) {
-	return controller_.Trigger(keyID);
+	//return controller_.Trigger(keyID);
+	keyID;
+	return false;
 }
 bool Manager::GetControllerStatePress(uint8_t keyID) {
-	return controller_.Press(keyID);
+	//return controller_.Press(keyID);
+	keyID;
+	return false;
 }
 bool Manager::GetControllerStateRelease(uint8_t keyID) {
-	return controller_.Release(keyID);
+	//return controller_.Release(keyID);
+	keyID;
+	return false;
 }
 
 Vector2 Manager::GetControllerLStick() {
-	return controller_.GetLStick();
+	//return controller_.GetLStick();
+	return { 0.0f,0.0f };
 }
 Vector2 Manager::GetControllerRStick() {
-	return controller_.GetRStick();
+	//return controller_.GetRStick();
+	return { 0.0f,0.0f };
 }
 
 Vector2 Manager::GetControllerCrossKey() {
-	return controller_.GetCrossKey();
+	//return controller_.GetCrossKey();
+	return { 0.0f,0.0f };
 }
