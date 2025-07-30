@@ -5,4 +5,5 @@
 #include "SkinningTest.h"
 #include "NoneScene.h"
 #include "AudioTest.h"
+#include "ShadowTest.h"
 

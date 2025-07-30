@@ -30,6 +30,11 @@ namespace LWP::Object {
 		// 輝度
 		float intensity = 1.0f;
 
+		float distance = 100.0f;
+		float range = 512.0f;
+		float nearZ = 0.0f;
+		float farZ = 1000.0f;
+
 
 	public: // ** メンバ関数 ** //
 

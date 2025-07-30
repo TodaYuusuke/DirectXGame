@@ -39,28 +39,59 @@ void DirectionLight::Update() {
 
 // ビュープロジェクションを返す関数
 Matrix4x4 DirectionLight::GetViewProjection() const {
-	//// 回転行列を取得
+	// 回転行列を取得
+	Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
+	// 正規化された方向ベクトルを取得
+	Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
+	// ライトの向きの逆ベクトルがtranslation
+	Vector3 v = -1 * norVec;
+	Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
+	// Viewを計算
+	Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
+
+	// ViewProjectionを生成
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
+
+	return viewMatrix * projectionMatrix * viewportMatrix;
+
+	//// 影を落とす対象の中心（カメラ位置やプレイヤー位置など）
+	//Vector3 shadowCenter = worldTF.GetWorldPosition();
+
+	//// ライト方向（正規化済み）
 	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
-	//// 正規化された方向ベクトルを取得
-	//Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
-	//// ライトの向きの逆ベクトルがtranslation
-	//Vector3 v = -1 * norVec;
-	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
-	//// Viewを計算
-	//Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
+	//Vector3 lightDir = (Vector3{ 0.0f, 0.0f, 1.0f } *rotateMatrix).Normalize();
 
-	//// ViewProjectionを生成
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
-	//Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
+	//// シャドウマップの視点をライトの方向にオフセット
+	//Vector3 eye = shadowCenter - lightDir * distance;
+	//Vector3 target = shadowCenter;
+	//Vector3 up = Vector3{ 0.0f, 1.0f, 0.0f };
 
-	//return viewMatrix * projectionMatrix * viewportMatrix;
+	//// View行列をLookAtで作成
+	//Matrix4x4 viewMatrix = Matrix4x4::LookAt(eye, target, up);
+
+	//// Projection行列を正射影で作成（範囲は動的に調整可能）
+	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(
+	//	-range, range, -range, range, nearZ, farZ
+	//);
+
+	////// Viewport行列は**描画パスでは使わない**
+	//return viewMatrix * projectionMatrix;
 }
 
 // デバッグ用GUI
 void DirectionLight::DebugGUI() {
+	worldTF.DebugGUI();
 	LWP::Base::ImGuiManager::ColorEdit4("color", color);
 	ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
+	ImGui::DragFloat("distance", &distance, 0.01f);
+	ImGui::DragFloat("range", &range, 0.01f);
+	ImGui::DragFloat("nearZ", &nearZ, 0.01f);
+	ImGui::DragFloat("farZ", &farZ, 0.01f);
 	ImGui::Checkbox("isActive", &isActive);
-	ImGuiManager::ShowShadowMap(shadowMap_, 0.5f);
+	if (ImGui::TreeNode("ShadowMap")) {
+		ImGuiManager::ShowShadowMap(shadowMap_, 0.5f);
+		ImGui::TreePop();
+	}
 }

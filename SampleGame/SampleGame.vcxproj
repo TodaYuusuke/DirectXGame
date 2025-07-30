@@ -153,6 +153,7 @@
     <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
+    <ClCompile Include="scene\Test\ShadowTest.cpp" />
     <ClCompile Include="scene\Test\SkinningTest.cpp" />
     <ClCompile Include="scene\Test\NoneScene.cpp" />
     <ClCompile Include="scene\Title.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
+    <ClInclude Include="scene\Test\ShadowTest.h" />
     <ClInclude Include="scene\Test\SkinningTest.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
     <ClInclude Include="scene\Test\NoneScene.h" />

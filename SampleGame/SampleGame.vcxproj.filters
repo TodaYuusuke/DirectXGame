@@ -55,6 +55,7 @@
     <ClCompile Include="scene\NullScene.cpp" />
     <ClCompile Include="scene\Title.cpp" />
     <ClCompile Include="scene\Test\AudioTest.cpp" />
+    <ClCompile Include="scene\Test\ShadowTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h">
@@ -98,6 +99,7 @@
     <ClInclude Include="scene\NullScene.h" />
     <ClInclude Include="scene\Title.h" />
     <ClInclude Include="scene\Test\AudioTest.h" />
+    <ClInclude Include="scene\Test\ShadowTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\system\shaders\utility\Particle.hlsli" />
