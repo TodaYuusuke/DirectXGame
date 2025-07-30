@@ -28,33 +28,36 @@ void DirectionLight::Update() {
 	if (!isActive) { return; }
 	Base::DirectionalLightStruct* data = lightBuffer_.data_;
 
-	data->vp = Object::Manager::GetInstance()->GetMainCamera()->GetViewProjection();	// ビュープロジェクションをセット
-	//data->vp = GetViewProjection();	// ビュープロジェクションをセット
+	//data->vp = Object::Manager::GetInstance()->GetMainCamera()->GetViewProjection();	// ビュープロジェクションをセット
+	data->vp = GetViewProjection();	// ビュープロジェクションをセット
 	data->color = color.GetVector4();
 	data->direction = (Math::Vector3{ 0.0f,0.0f,1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
 	data->intensity = intensity;
 
-	*viewBuffer_.data_ = Object::Manager::GetInstance()->GetMainCamera()->GetViewProjection();
-	//*viewBuffer_.data_ = GetViewProjection();
+	//*viewBuffer_.data_ = Object::Manager::GetInstance()->GetMainCamera()->GetViewProjection();
+	*viewBuffer_.data_ = GetViewProjection();
 }
 
 // ビュープロジェクションを返す関数
 Matrix4x4 DirectionLight::GetViewProjection() const {
 	// 回転行列を取得
-	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
+	Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
 	// 正規化された方向ベクトルを取得
-	//Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
+	Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
 	// ライトの向きの逆ベクトルがtranslation
-	//Vector3 v = -1 * norVec;
-	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
+	Vector3 v = -1 * norVec;
+	Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
 	// Viewを計算
-	//Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
+	Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
 
 	// ViewProjectionを生成
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
-	//Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
+	Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
 
-	//return viewMatrix * projectionMatrix * viewportMatrix;
+	return viewMatrix * projectionMatrix * viewportMatrix;
+
+	// ↑　以前平行光源のシャドウマップを実装した際とまったく同じコード ↑
+	// ↓　試行錯誤の跡 ↓
 
 	//// 影を落とす対象の中心（カメラ位置やプレイヤー位置など）
 	//Vector3 shadowCenter = worldTF.GetWorldPosition();
@@ -79,19 +82,19 @@ Matrix4x4 DirectionLight::GetViewProjection() const {
 	////// Viewport行列は**描画パスでは使わない**
 	//return viewMatrix * projectionMatrix;
 
-	Vector3 eye = { 0, 10, 0 };      // 上空10mの位置
-	Vector3 target = { 0, 0, 0 };    // 原点を見る
-	// View行列をLookAtで作成
-	Matrix4x4 viewMatrix = Matrix4x4::LookAt(eye, target);
+	//Vector3 eye = { 0, 10, 0 };      // 上空10mの位置
+	//Vector3 target = { 0, 0, 0 };    // 原点を見る
+	//// View行列をLookAtで作成
+	//Matrix4x4 viewMatrix = Matrix4x4::LookAt(eye, target);
 
-	// 直交投影のサイズ：20x20、深度範囲：0.0～50.0
-	float width = 20.0f;
-	float height = 20.0f;
-	float n = 0.0f;
-	float f = 50.0f;
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(-width, height, width, -height, n, f);
-	// Viewport行列は**描画パスでは使わない**
-	return viewMatrix * projectionMatrix;
+	//// 直交投影のサイズ：20x20、深度範囲：0.0～50.0
+	//float width = 20.0f;
+	//float height = 20.0f;
+	//float n = 0.0f;
+	//float f = 50.0f;
+	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(-width, height, width, -height, n, f);
+	//// Viewport行列は**描画パスでは使わない**
+	//return viewMatrix * projectionMatrix;
 }
 
 // デバッグ用GUI
