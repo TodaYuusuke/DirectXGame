@@ -34,7 +34,7 @@ namespace LWP::Primitive {
 			PlaneBuffers(lwpC::Rendering::Primitive::Billboaed::kMaxCount)
 		}, 
 		type_(lwpC::Rendering::Primitive::Billboaed::kMaxCount),
-		velocities_(lwpC::Rendering::Primitive::Billboaed::kStretchedMaxCount) {
+		velocities_(lwpC::Rendering::Primitive::Billboaed::kMaxCount) {
 		type_.Init();
 		velocities_.Init();
 	}
@@ -107,6 +107,11 @@ namespace LWP::Primitive {
 					// ストレッチビルボードの速度を登録
 					IStretchedBillboard* sb = dynamic_cast<IStretchedBillboard*>(p);
 					velocities_.Add(sb->velocity);
+				}
+				// ストレッチビルボードでない　かつ　スプライトでない場合
+				else if(type != IPlane::Type::Sprite){
+					// 速度に空のベクトルを登録
+					velocities_.Add({ 0.0f,0.0f,0.0f });
 				}
 			}
 		}

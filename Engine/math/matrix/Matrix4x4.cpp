@@ -394,3 +394,32 @@ Matrix4x4 Matrix4x4::DirectionToDirection(const Vector3& from, const Vector3& to
 	return result;
 }
 
+Matrix4x4 Matrix4x4::LookAt(const Vector3& eye, const Vector3& target, const Vector3& up) {
+	Vector3 zaxis = (target - eye).Normalize();				// Forward
+	Vector3 xaxis = Vector3::Cross(up, zaxis).Normalize();	// Right
+	Vector3 yaxis = Vector3::Cross(zaxis, xaxis);			// Up
+
+	Matrix4x4 result;
+
+	result.m[0][0] = xaxis.x;
+	result.m[0][1] = yaxis.x;
+	result.m[0][2] = zaxis.x;
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = xaxis.y;
+	result.m[1][1] = yaxis.y;
+	result.m[1][2] = zaxis.y;
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = xaxis.z;
+	result.m[2][1] = yaxis.z;
+	result.m[2][2] = zaxis.z;
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = Vector3::Dot((xaxis * -1.0f), eye);
+	result.m[3][1] = Vector3::Dot((yaxis * -1.0f), eye);
+	result.m[3][2] = Vector3::Dot((zaxis * -1.0f), eye);
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
