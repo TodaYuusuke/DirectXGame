@@ -84,11 +84,9 @@ void LevelData::DebugGUI() {
 		ImGui::SameLine();
 		ImGui::RadioButton("Skinning", &radioValue, 1);
 		ImGui::SameLine();
-		ImGui::RadioButton("Static", &radioValue, 2);
+		ImGui::RadioButton("Collider", &radioValue, 2);
 		ImGui::SameLine();
-		ImGui::RadioButton("Collider", &radioValue, 3);
-		ImGui::SameLine();
-		ImGui::RadioButton("CatmullRom", &radioValue, 4);
+		ImGui::RadioButton("CatmullRom", &radioValue, 3);
 
 		switch (radioValue) {
 			case 0:
@@ -98,12 +96,9 @@ void LevelData::DebugGUI() {
 				SkinDebugGUI();
 				break;
 			case 2:
-				StaticDebugGUI();
-				break;
-			case 3:
 				ColliderDebugGUI();
 				break;
-			case 4:
+			case 3:
 				CatmullRomDebugGUI();
 				break;
 		}
@@ -125,10 +120,8 @@ void LevelData::LoadObject(const nlohmann::json& data) {
 	//	SetWorldTF(object["transform"], &cameraPtr->transform);
 	//}
 
-	// 地形ならば特殊な処理
-	if (objName == "Terrain") { LoadTerrain(data); }
 	// MESH
-	else if (type.compare("MESH") == 0) { LoadMesh(data, objName); }
+	if (type.compare("MESH") == 0) { LoadMesh(data, objName); }
 	// CURVE
 	else if (type.compare("CURVE") == 0) { LoadCurve(data, objName); }
 	// MESH
@@ -218,13 +211,6 @@ void LevelData::LoadCurve(const nlohmann::json& data, const std::string& name) {
 		catmullRomCurves[name].controlPoints.push_back(pos);
 	}
 }
-void LevelData::LoadTerrain(const nlohmann::json& data) {
-	terrain = std::make_unique<Terrain>();
-	terrain->name = "Terrain";
-	// トランスフォームのパラメータ読み込み
-	TransformQuat wtf = LoadWorldTF(data["transform"]);
-	terrain->LoadModel("level/" + data["file_name"].get<std::string>(), wtf);
-}
 void LevelData::LoadPlayerSpawn(const nlohmann::json& data, const std::string& name) {
 	// トランスフォームのパラメータ読み込み
 	TransformQuat wtf = LoadWorldTF(data["transform"]);
@@ -273,24 +259,6 @@ void LevelData::SkinDebugGUI() {
 
 		// 選択された番号のDebugGUIを呼び出す
 		(*Utility::GetIteratorAtIndex<std::string, SkinningModel>(skinModels, currentItem)).second.DebugGUI();
-	}
-}
-void LevelData::StaticDebugGUI() {
-	// 読み込み済みのモデル一覧
-	if (!staticModels.empty()) {
-		std::vector<const char*> itemText;
-		float maxSize = 0;	// Textの中で一番長いサイズを保持する
-		// 一覧のパス取得
-		for (const auto& m : staticModels) {
-			itemText.push_back(m.first.c_str());
-			maxSize = std::max<float>(maxSize, static_cast<float>(m.first.size()));	// 現在の長さより大きければ更新
-		}
-		ImGui::PushItemWidth(maxSize * 8.5f);	// 最大サイズにUIを合わせる
-		static int currentItem = 0;
-		ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-
-		// 選択された番号のDebugGUIを呼び出す
-		(*Utility::GetIteratorAtIndex<std::string, StaticModel>(staticModels, currentItem)).second.DebugGUI();
 	}
 }
 void LevelData::ColliderDebugGUI() {

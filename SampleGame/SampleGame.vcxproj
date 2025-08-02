@@ -146,17 +146,14 @@
     <ClCompile Include="class\player\guns\Pistol.cpp" />
     <ClCompile Include="class\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\NullScene.cpp" />
     <ClCompile Include="scene\Test\AnimationTest.cpp" />
     <ClCompile Include="scene\Test\AudioTest.cpp" />
-    <ClCompile Include="scene\Test\ColliderTest.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="scene\Test\ShadowTest.cpp" />
     <ClCompile Include="scene\Test\SkinningTest.cpp" />
     <ClCompile Include="scene\Test\NoneScene.cpp" />
-    <ClCompile Include="scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\Behavior.h" />
@@ -171,18 +168,15 @@
     <ClInclude Include="class\particle\TerrainParticle.h" />
     <ClInclude Include="class\player\guns\Pistol.h" />
     <ClInclude Include="class\player\Player.h" />
-    <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\NullScene.h" />
     <ClInclude Include="scene\Test\AnimationTest.h" />
     <ClInclude Include="scene\Test\AudioTest.h" />
-    <ClInclude Include="scene\Test\ColliderTest.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
     <ClInclude Include="scene\Test\ShadowTest.h" />
     <ClInclude Include="scene\Test\SkinningTest.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />
     <ClInclude Include="scene\Test\NoneScene.h" />
-    <ClInclude Include="scene\Title.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\system\shaders\utility\Particle.hlsli">

@@ -212,13 +212,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
     <ClCompile Include="Engine\math\vector\Vector3.cpp" />
     <ClCompile Include="Engine\math\vector\Vector4.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cTerrain.cpp" />
     <ClCompile Include="Engine\object\core\collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\object\core\collision\Collision.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\cAABB.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\cCapsule.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\CheckCollisions.cpp" />
-    <ClCompile Include="Engine\object\core\collision\collider\child\cMesh.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\cPoint.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp" />
@@ -229,7 +227,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\light\DirectionLight.cpp" />
     <ClCompile Include="Engine\object\core\light\PointLight.cpp" />
     <ClCompile Include="Engine\object\core\Particle.cpp" />
-    <ClCompile Include="Engine\object\core\Terrain.cpp" />
     <ClCompile Include="Engine\object\ObjectManager.cpp" />
     <ClCompile Include="Engine\object\TransformEuler.cpp" />
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
@@ -247,7 +244,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\component\Vertex.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\resources\level\LevelData.cpp" />
-    <ClCompile Include="Engine\resources\model\EMapModel.cpp" />
     <ClCompile Include="Engine\resources\model\IModel.cpp" />
     <ClCompile Include="Engine\resources\model\ModelData.cpp" />
     <ClCompile Include="Engine\primitive\PrimitiveManager.cpp" />
@@ -256,7 +252,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\component\Material.cpp" />
     <ClCompile Include="Engine\resources\model\RigidModel.cpp" />
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp" />
-    <ClCompile Include="Engine\resources\model\StaticModel.cpp" />
     <ClCompile Include="Engine\resources\motion\Animation.cpp" />
     <ClCompile Include="Engine\resources\motion\Motion.cpp" />
     <ClCompile Include="Engine\resources\ResourceManager.cpp" />
@@ -370,12 +365,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\vector\Vector2.h" />
     <ClInclude Include="Engine\math\vector\Vector3.h" />
     <ClInclude Include="Engine\math\vector\Vector4.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cTerrain.h" />
     <ClInclude Include="Engine\object\core\collision\CollisionManager.h" />
     <ClInclude Include="Engine\object\core\collision\Collision.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child\cAABB.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child\cCapsule.h" />
-    <ClInclude Include="Engine\object\core\collision\collider\child\cMesh.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child\cPoint.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h" />
     <ClInclude Include="Engine\object\core\collision\collider\ICollider.h" />
@@ -386,7 +379,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\light\DirectionLight.h" />
     <ClInclude Include="Engine\object\core\light\PointLight.h" />
     <ClInclude Include="Engine\object\core\Particle.h" />
-    <ClInclude Include="Engine\object\core\Terrain.h" />
     <ClInclude Include="Engine\object\IObject.h" />
     <ClInclude Include="Engine\object\ObjectManager.h" />
     <ClInclude Include="Engine\object\TransformEuler.h" />
@@ -408,7 +400,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\component\SkinCluster.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\resources\level\LevelData.h" />
-    <ClInclude Include="Engine\resources\model\EMapModel.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />
     <ClInclude Include="Engine\resources\model\ModelData.h" />
     <ClInclude Include="Engine\primitive\component\Vertex.h" />
@@ -418,7 +409,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\component\Material.h" />
     <ClInclude Include="Engine\resources\model\RigidModel.h" />
     <ClInclude Include="Engine\resources\model\SkinningModel.h" />
-    <ClInclude Include="Engine\resources\model\StaticModel.h" />
     <ClInclude Include="Engine\resources\motion\Animation.h" />
     <ClInclude Include="Engine\resources\motion\Motion.h" />
     <ClInclude Include="Engine\resources\ResourceManager.h" />

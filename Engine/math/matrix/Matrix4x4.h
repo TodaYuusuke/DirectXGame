@@ -73,8 +73,8 @@ namespace LWP::Math {
 		// ビューポート変換行列
 		static Matrix4x4 CreateViewportMatrix(const float& left, const float& top, const float& width, const float& height, const float& minDepth, const float& maxDepth);
 
-		// ライトのビュー行列
-		static Matrix4x4 CreateLookAtMatrix(const Vector3& eye, const Vector3& at, const Vector3& up);
+		// 視点位置から指定方向を向いたビュー行列を返す
+		static Matrix4x4 CreateLookAtMatrix(const Vector3& eye, const Vector3& at, const Vector3& up = Vector3::UnitY());
 
 #pragma endregion
 
@@ -85,7 +85,5 @@ namespace LWP::Math {
 		static Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix);
 		// ある方向からある方向への回転
 		static Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
-		// 視点位置から指定方向を向いたビュー行列を返す
-		static Matrix4x4 LookAt(const Vector3& eye, const Vector3& target, const Vector3& up = Vector3::UnitY());
 	};
 }

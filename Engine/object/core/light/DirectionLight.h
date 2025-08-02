@@ -10,10 +10,12 @@
 // 平行光源の構造体
 namespace LWP::Base {
 	struct DirectionalLightStruct {
-		Math::Matrix4x4 vp;		// ViewProjectionをこっちにも登録
+		Math::Matrix4x4 vp;			// ViewProjectionをこっちにも登録
 		Math::Vector4 color;		// ライトの色
 		Math::Vector3 direction;	// ライトの向き
-		float intensity;	// 輝度
+		float intensity;			// 輝度
+		float shadowIntensity;		// 影の濃さ
+		float distance;
 	};
 }
 
@@ -30,11 +32,13 @@ namespace LWP::Object {
 		Math::Vector3 rotation = { 1.57f,0.0f,0.0f };
 		// 輝度
 		float intensity = 1.0f;
+		// 影の濃さ
+		float shadowIntensity = 0.5f;
 
-		float distance = 100.0f;
-		float range = 512.0f;
-		float nearZ = 0.0f;
-		float farZ = 1000.0f;
+		float distance = 0.00005f;
+		float range = 128.0f;
+		float nearZ = 0.01f;
+		float farZ = 300.0f;
 
 
 	public: // ** メンバ関数 ** //

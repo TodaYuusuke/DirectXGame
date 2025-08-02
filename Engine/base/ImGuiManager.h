@@ -86,7 +86,7 @@ namespace LWP::Base {
 		/// </summary>
 		/// <param name="index"></param>
 		/// <param name="size"></param>
-		static void ShowShadowMap(const Base::SM_Direction& sm, float scale = 1.0f);
+		static void ShowShadowMap(const Base::SM_Direction& sm);
 	};
 }
 

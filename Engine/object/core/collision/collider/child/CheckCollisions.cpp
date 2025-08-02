@@ -2,8 +2,6 @@
 #include "cAABB.h"
 #include "cSphere.h"
 #include "cCapsule.h"
-#include "cMesh.h"
-#include "cTerrain.h"
 
 #include "base/ImGuiManager.h"
 
@@ -83,8 +81,6 @@ bool Point::CheckCollision(Sphere& c, Math::Vector3* fixVec) {
 	return result;
 }
 bool Point::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Point::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-bool Point::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
@@ -156,8 +152,6 @@ bool AABB::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
 	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool AABB::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-bool AABB::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
@@ -207,8 +201,6 @@ bool Sphere::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
 	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Sphere::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-bool Sphere::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 
 #pragma endregion
 
@@ -218,116 +210,5 @@ bool Capsule::CheckCollision(Point& c, Math::Vector3* fixVec) { return c.CheckCo
 bool Capsule::CheckCollision(AABB& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Capsule::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-bool Capsule::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-
-#pragma endregion
-
-#pragma region Mesh * other
-// ほぼ未実装（点のみ実装済み）
-bool Mesh::CheckCollision(Point& c, Math::Vector3* fixVec) {
-	Point::Data point(c);
-	// 結果
-	struct Result {
-		bool b = false;
-		int index = -1;
-		
-	}result;
-	// 移動方向のベクトル
-	Vector3 fixNormal = { 0.0f,0.0f,0.0f };
-	// 面と点の距離
-	float fixDist = 999999999.0f;
-
-	// ※凹み形状には未対応
-
-	// 全三角形検証
-	for (const TriangleData& d : data) {
-		// 三角形の法線と中心点の内積
-		float dot = Vector3::Dot(d.normal ,d.center);
-		// 平面に対する符号付距離
-		float dist = (Vector3::Dot(d.normal, point.position) - dot) / Vector3::Dot(d.normal, d.normal);
-
-		// 距離が0以上の場合は内部にないとして早期終了
-		if (dist < 0.0f) {
-			return false;
-		}
-
-		// 距離がより小さい場合
-		if (dist < fixDist) {
-			// 修正ベクトル計算用に保持
-			fixNormal = d.normal;
-			fixDist = dist;
-		}
-	}
-
-	CallHit(this, &c, true);
-	*fixVec = fixNormal * (-fixDist);
-	return true;
-}
-bool Mesh::CheckCollision(AABB& c, Math::Vector3* fixVec) {	return NotImplementedFunc(this, &c, fixVec); }
-bool Mesh::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Mesh::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Mesh::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Mesh::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-
-#pragma endregion
-
-#pragma region Terrain * other
-// ALL 未実装
-bool Terrain::CheckCollision(Point& c, Math::Vector3* fixVec) {
-	Point::Data pos(c);
-
-	// 検索するモートン番号
-	const uint32_t kTargetMorton = quadtree_.GetMortonNumber(pos.position);
-	if (kTargetMorton == -1) { return false; }	// -1だった場合早期終了
-	uint32_t currentMorton = kTargetMorton;	// 現在のモートン番号（下位レベルから検証）
-	uint32_t currentSpaceLevel = quadtree_.divisionLevel;	// 現在の空間レベル（下位レベルから検証）
-	
-	while (true) {
-		// 現在の空間内の全オブジェクトと検証
-		for (const Polygon& p : polygonMap_[currentMorton]) {
-			// 平面のパラメータ
-			float distance = p.normal.x * p.pos[0].x + p.normal.y * p.pos[0].y + p.normal.z * p.pos[0].z;
-			// 垂直の場合はヒットしていない
-			if (Vector3::Dot(p.normal, Vector3::UnitY()) == 0.0f) { continue; }
-
-			// 媒介変数tを求める
-			float t = (distance - Vector3::Dot(pos.position, p.normal)) / Vector3::Dot(Vector3::UnitY(), p.normal);
-			// 衝突点を求める
-			Vector3 hitPosition = pos.position + (t * Vector3::UnitY());
-
-			// 各辺を結んだベクトルと頂点と衝突点pを結んだベクトルのクロス積を取る
-			Vector3 cross01 = Vector3::Cross((p.pos[0] - p.pos[1]), (p.pos[1] - hitPosition));
-			Vector3 cross12 = Vector3::Cross((p.pos[1] - p.pos[2]), (p.pos[2] - hitPosition));
-			Vector3 cross20 = Vector3::Cross((p.pos[2] - p.pos[0]), (p.pos[0] - hitPosition));
-
-			// すべての小三角形のクロス積と法線が同じ方向を向いていたら衝突可能
-			if (Vector3::Dot(cross01, p.normal) >= 0.0f && Vector3::Dot(cross12, p.normal) >= 0.0f && Vector3::Dot(cross20, p.normal) >= 0.0f) {
-				// 衝突点がposより上だった場合 -> 座標を修正
-				if (hitPosition.y > pos.position.y) {
-					*fixVec = hitPosition - pos.position;
-					// 命中したので戻る
-					CallHit(this, &c, true);
-					return true;
-				}
-			}
-		}
-		// 検証したモートン番号が0だった場合終了
-		if (currentMorton == 0) {
-			break;
-		}
-		// 検証が終わったので上の空間レベルへ
-		currentMorton = (currentMorton - quadtree_.GetSpaceLevelObjectsSum(currentSpaceLevel--)) >> 2;
-		currentMorton += quadtree_.GetSpaceLevelObjectsSum(currentSpaceLevel);
-	};
-	
-	// 命中しなかったのでfalse
-	return false;
-}
-bool Terrain::CheckCollision(AABB& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Terrain::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Terrain::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Terrain::CheckCollision(Mesh& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
-bool Terrain::CheckCollision(Terrain& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
 
 #pragma endregion

@@ -25,7 +25,6 @@ namespace LWP::Object {
 		for (auto& ptr : gpuParticle_.list) { ptr->Update(); }
 		for (auto& ptr : particle_.list) { ptr->Update(); }
 		for (auto& ptr : gpuParticle_.list) { ptr->Update(); }
-		for (auto& ptr : terrain_.list) { ptr->Update(); }
 		directionLight_.Update();
 		for (auto& ptr : pointLight_.list) { ptr->Update(); }
 	}
@@ -41,10 +40,6 @@ namespace LWP::Object {
 	void Manager::SetPtr(GPUParticle* ptr) {
 		gpuParticle_.SetPtr(ptr);
 		ptr->name = "GPUParticle" + objectCount_++;
-	}
-	void Manager::SetPtr(Terrain* ptr) {
-		terrain_.SetPtr(ptr);
-		ptr->name = "Terrain" + objectCount_++;
 	}
 	void Manager::SetPtr(PointLight* ptr) {
 		pointLight_.SetPtr(ptr);
@@ -98,9 +93,6 @@ namespace LWP::Object {
 					break;
 				case LWP::Object::Manager::Type::GPUParticle:
 					drawListBox(gpuParticle_.list, false);
-					break;
-				case LWP::Object::Manager::Type::Terrain:
-					drawListBox(terrain_.list, false);
 					break;
 				case LWP::Object::Manager::Type::DirectionLight:
 					directionLight_.DebugGUI();

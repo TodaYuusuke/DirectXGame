@@ -29,13 +29,18 @@ float3 DirLightingSpecular(PassThroughOutput input, float3 toEye, uint32_t m) {
     float specularPow = pow(saturate(NdotH), cMaterials[m].shinines); // 反射強度
     return cDLights[n].color.rgb * cDLights[n].intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 }*/
-float3 DirLightingShadow(float32_t3 worldPosition) {
+float3 DirLightingShadow(float32_t3 worldPosition, float32_t3 normal) {
     // シャドウマッピング
-    float3 posSM = mul(float4(worldPosition, 1.0f), cDirLight.m).xyz;
-    posSM.x = (1.0f + posSM.x) / 2.0f;
-    posSM.y = (1.0f - posSM.y) / 2.0f;
-    float depth = tDirLightShadowMap.Sample(sDirLightSampler, posSM.xy);
-    return (posSM.z - 0.00005f < depth) ? 1.0f : cLightMeta.shadowDensity;
+    float32_t4 lightClip = mul(float4(worldPosition, 1.0f), cDirLight.m);
+    lightClip.x = (1.0f + lightClip.x) / 2.0f;
+    lightClip.y = (1.0f - lightClip.y) / 2.0f;
+    float32_t3 posSM = lightClip.xyz / lightClip.w;
+    //posSM.x = posSM.x * 0.5f + 0.5f;
+    //posSM.y = 1.0f - (posSM.y * 0.5f + 0.5f); // DirectXのUVに合わせてY反転
+    posSM.z = posSM.z * 0.5f + 0.5f; // NDCのZを[0,1]へ
+    float32_t depth = tDirLightShadowMap.Sample(sDirLightSampler, lightClip.xy);
+    
+    return (posSM.z - cDirLight.distance < depth) ? 1.0f : cDirLight.shadowIntensity;
 }
 
 // -- 点光源のライティング -- //
@@ -99,7 +104,7 @@ float32_t4 main(PassThroughOutput input) : SV_TARGET {
     // -- 平行光源 -- //
     diffuse += DirLightingDiffuse(normal.xyz);
     //specular += DirectionLightingSpecular(input, toEye, m);
-    shadow += DirLightingShadow(worldPosition.xyz);
+    shadow += DirLightingShadow(worldPosition.xyz, normal.xyz);
         
     // -- 点光源 -- //
     /*for (n = 0; n < cCommonData.pointLightCount; n++) {

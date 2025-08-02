@@ -220,9 +220,6 @@
     <ClCompile Include="Engine\object\TransformQuat.cpp">
       <Filter>Engine\object</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\core\Terrain.cpp">
-      <Filter>Engine\object\core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\core\Particle.cpp">
       <Filter>Engine\object\core</Filter>
     </ClCompile>
@@ -241,16 +238,10 @@
     <ClCompile Include="Engine\object\core\collision\collider\child\CheckCollisions.cpp">
       <Filter>Engine\object\core\collision\collider\child</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\object\core\collision\collider\child\cMesh.cpp">
-      <Filter>Engine\object\core\collision\collider\child</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\object\core\collision\collider\child\cPoint.cpp">
       <Filter>Engine\object\core\collision\collider\child</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp">
-      <Filter>Engine\object\core\collision\collider\child</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\object\core\collision\collider\child\cTerrain.cpp">
       <Filter>Engine\object\core\collision\collider\child</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp">
@@ -289,9 +280,6 @@
     <ClCompile Include="Engine\resources\model\ModelData.cpp">
       <Filter>Engine\resources\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\resources\model\EMapModel.cpp">
-      <Filter>Engine\resources\model</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\resources\model\IModel.cpp">
       <Filter>Engine\resources\model</Filter>
     </ClCompile>
@@ -299,9 +287,6 @@
       <Filter>Engine\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\resources\model\SkinningModel.cpp">
-      <Filter>Engine\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\resources\model\StaticModel.cpp">
       <Filter>Engine\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
@@ -630,9 +615,6 @@
     <ClInclude Include="Engine\object\TransformQuat.h">
       <Filter>Engine\object</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\core\Terrain.h">
-      <Filter>Engine\object\core</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\core\collision\Collision.h">
       <Filter>Engine\object\core\collision</Filter>
     </ClInclude>
@@ -645,16 +627,10 @@
     <ClInclude Include="Engine\object\core\collision\collider\child\cCapsule.h">
       <Filter>Engine\object\core\collision\collider\child</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\object\core\collision\collider\child\cMesh.h">
-      <Filter>Engine\object\core\collision\collider\child</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\object\core\collision\collider\child\cPoint.h">
       <Filter>Engine\object\core\collision\collider\child</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h">
-      <Filter>Engine\object\core\collision\collider\child</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\object\core\collision\collider\child\cTerrain.h">
       <Filter>Engine\object\core\collision\collider\child</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\collision\collider\ICollider.h">
@@ -693,9 +669,6 @@
     <ClInclude Include="Engine\resources\model\ModelData.h">
       <Filter>Engine\resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\resources\model\EMapModel.h">
-      <Filter>Engine\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\resources\model\IModel.h">
       <Filter>Engine\resources\model</Filter>
     </ClInclude>
@@ -703,9 +676,6 @@
       <Filter>Engine\resources\model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\resources\model\SkinningModel.h">
-      <Filter>Engine\resources\model</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\resources\model\StaticModel.h">
       <Filter>Engine\resources\model</Filter>
     </ClInclude>
     <ClInclude Include="Externals\DirectXMesh\DirectXMesh.h">

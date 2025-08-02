@@ -1,6 +1,5 @@
 #include "IModel.h"
 
-#include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
 
 #include "component/Resource.h"

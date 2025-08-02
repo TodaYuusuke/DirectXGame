@@ -2,7 +2,6 @@
 #include "core/Camera.h"
 #include "core/Particle.h"
 #include "core/GPUParticle.h"
-#include "core/Terrain.h"
 #include "core/light/DirectionLight.h"
 #include "core/light/PointLight.h"
 
@@ -49,19 +48,16 @@ namespace LWP::Object {
 		void SetPtr(Camera* ptr);
 		void SetPtr(Particle* ptr);
 		void SetPtr(GPUParticle* ptr);
-		void SetPtr(Terrain* ptr);
 		void SetPtr(PointLight* ptr);
 		// 配列からポインタを削除する関数
 		void DeletePtr(Camera* ptr) { cameras_.DeletePtr(ptr); }
 		void DeletePtr(Particle* ptr) { particle_.DeletePtr(ptr); }
 		void DeletePtr(GPUParticle* ptr) { gpuParticle_.DeletePtr(ptr); }
-		void DeletePtr(Terrain* ptr) { terrain_.DeletePtr(ptr); }
 		void DeletePtr(PointLight* ptr) { pointLight_.DeletePtr(ptr); }
 		// 配列を描画処理に渡す関数
 		const std::list<Camera*>& GetCameras() const { return cameras_.list; }
 		const std::list<Particle*>& GetParticles() const { return particle_.list; }
 		const std::list<GPUParticle*>& GetGPUParticles() const { return gpuParticle_.list; }
-		const std::list<Terrain*>& GetTerrains() const { return terrain_.list; }
 		const std::list<PointLight*>& GetPointLights() const { return pointLight_.list; }
 
 		/// <summary>
@@ -83,7 +79,6 @@ namespace LWP::Object {
 		Utility::PtrManager<Camera*> cameras_;
 		Utility::PtrManager<Particle*> particle_;
 		Utility::PtrManager<GPUParticle*> gpuParticle_;
-		Utility::PtrManager<Terrain*> terrain_;
 		DirectionLight directionLight_;		// インスタンスは必ず１つなので直で持つ
 		Utility::PtrManager<PointLight*> pointLight_;
 		// カウンター
@@ -95,8 +90,6 @@ namespace LWP::Object {
 		struct LightMetadata {
 			// 点光源の数
 			int pointLightCount = 0;
-			// 影の濃さ
-			float shadowDensity = 0.2f;
 		};
 		LWP::Base::ConstantBuffer<LightMetadata> lightMetadataBuffer_;
 

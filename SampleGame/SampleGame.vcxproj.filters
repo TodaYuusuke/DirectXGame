@@ -33,9 +33,6 @@
     <ClCompile Include="scene\Test\AnimationTest.cpp">
       <Filter>scene\Test</Filter>
     </ClCompile>
-    <ClCompile Include="scene\Test\ColliderTest.cpp">
-      <Filter>scene\Test</Filter>
-    </ClCompile>
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp">
       <Filter>scene\Test</Filter>
     </ClCompile>
@@ -51,9 +48,7 @@
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="class\particle\TerrainParticle.cpp" />
     <ClCompile Include="scene\Test\NoneScene.cpp" />
-    <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\NullScene.cpp" />
-    <ClCompile Include="scene\Title.cpp" />
     <ClCompile Include="scene\Test\AudioTest.cpp" />
     <ClCompile Include="scene\Test\ShadowTest.cpp" />
   </ItemGroup>
@@ -71,9 +66,6 @@
       <Filter>class\player</Filter>
     </ClInclude>
     <ClInclude Include="scene\Test\AnimationTest.h">
-      <Filter>scene\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="scene\Test\ColliderTest.h">
       <Filter>scene\Test</Filter>
     </ClInclude>
     <ClInclude Include="scene\Test\LevelLoaderTest.h">
@@ -95,9 +87,7 @@
     <ClInclude Include="class\enemy\DeadBodyParticle.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
     <ClInclude Include="scene\Test\NoneScene.h" />
-    <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\NullScene.h" />
-    <ClInclude Include="scene\Title.h" />
     <ClInclude Include="scene\Test\AudioTest.h" />
     <ClInclude Include="scene\Test\ShadowTest.h" />
   </ItemGroup>

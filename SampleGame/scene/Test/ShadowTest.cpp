@@ -1,5 +1,8 @@
 #include "ShadowTest.h"
 
+using namespace LWP::Object;
+using namespace LWP::Math;
+
 // 初期化
 void ShadowTest::Initialize() {
 	axis.LoadShortPath("axis.obj");
@@ -15,6 +18,7 @@ void ShadowTest::Initialize() {
 	}
 
 	mainCamera.worldTF.translation = { 0.0f, 5.0f, -40.0f };
+	//GetDirLight()->worldTF.rotation *= Quaternion::CreateFromAxisAngle(Vector3::UnitX(), 1.57f);
 }
 
 // 更新

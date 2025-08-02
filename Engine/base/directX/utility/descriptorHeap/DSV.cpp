@@ -68,7 +68,7 @@ DSVInfo DSV::CreateShadowMapDir(ID3D12Resource* resource) {
 	// DSVの設定
 	info.desc.Format = DXGI_FORMAT_D32_FLOAT; // Format。基本敵にはResourceに合わせる
 	info.desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
-	info.desc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH;
+	info.desc.Flags = D3D12_DSV_FLAG_NONE;
 
 	// 空きを使用
 	info.index = indexManager_.UseEmpty();
