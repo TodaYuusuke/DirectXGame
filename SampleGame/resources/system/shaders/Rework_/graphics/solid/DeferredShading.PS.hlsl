@@ -34,13 +34,17 @@ float3 DirLightingShadow(float32_t3 worldPosition, float32_t3 normal) {
     float32_t4 lightClip = mul(float4(worldPosition, 1.0f), cDirLight.m);
     lightClip.x = (1.0f + lightClip.x) / 2.0f;
     lightClip.y = (1.0f - lightClip.y) / 2.0f;
-    float32_t3 posSM = lightClip.xyz / lightClip.w;
+    lightClip.z = (1.0f - lightClip.z) / 2.0f;
+    //float32_t3 posSM = lightClip.xyz / lightClip.w;
     //posSM.x = posSM.x * 0.5f + 0.5f;
     //posSM.y = 1.0f - (posSM.y * 0.5f + 0.5f); // DirectXのUVに合わせてY反転
-    posSM.z = posSM.z * 0.5f + 0.5f; // NDCのZを[0,1]へ
-    float32_t depth = tDirLightShadowMap.Sample(sDirLightSampler, lightClip.xy);
+    //posSM.z = posSM.z * 0.5f + 0.5f; // NDCのZを[0,1]へ
+   
+    float32_t ndcDepth = tDirLightShadowMap.Sample(sDirLightSampler, lightClip.xy);
+    //float32_t4 viewSpace = mul(float32_t4(0.0f,0.0f, ndcDepth, 0.0f), cDirLight.projectionInverse); // NDCからView Spaceへ変換
+    //float32_t viewZ = viewSpace.z * rcp(viewSpace.w);
     
-    return (posSM.z - cDirLight.distance < depth) ? 1.0f : cDirLight.shadowIntensity;
+    return (lightClip.z - cDirLight.distance > ndcDepth) ? 1.0f : cDirLight.shadowIntensity;
 }
 
 // -- 点光源のライティング -- //

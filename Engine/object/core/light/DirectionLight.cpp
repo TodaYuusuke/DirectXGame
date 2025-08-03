@@ -30,6 +30,12 @@ void DirectionLight::Update() {
 	Base::DirectionalLightStruct* data = lightBuffer_.data_;
 
 	data->vp = GetViewProjection();	// ビュープロジェクションをセット
+	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(
+		-range, -range,
+		range, range,
+		nearZ, farZ
+	);
+	data-> projectionInverse = projectionMatrix.Inverse();	// 深度値の修正用に逆行列をセット
 	data->color = color.GetVector4();
 	//data->direction = (Math::Vector3{ 0.0f,0.0f,1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
 	data->direction = (Vector3{ 0.0f,0.0f,-1.0f } * worldTF.rotation).Normalize();	// ライトの向き
@@ -86,8 +92,8 @@ void DirectionLight::DebugGUI() {
 	ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::DragFloat("ShadowIntensity", &shadowIntensity, 0.01f);
-	//ImGui::DragFloat("distance", &distance, 0.0000001f, 0.0f, 1.0f, "%.8f");
-	ImGui::SliderFloat("distance", &distance, 0.0f, 1.0f, "%.8f");
+	ImGui::DragFloat("distance", &distance, 0.0000001f, 0.0f, 1.0f, "%.8f");
+	//ImGui::SliderFloat("distance", &distance, 0.0f, 1.0f, "%.8f");
 	ImGui::DragFloat("range", &range, 0.01f);
 	ImGui::DragFloat("nearZ", &nearZ, 0.01f);
 	ImGui::DragFloat("farZ", &farZ, 0.01f);
