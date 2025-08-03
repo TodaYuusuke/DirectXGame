@@ -1,8 +1,9 @@
-#pragma once
 #include "DirLightShadow.h"
 
 #include "object/ObjectManager.h"
 #include "resources/ResourceManager.h"
+
+#include "base/ImGuiManager.h"
 
 using namespace LWP::Resource;
 
@@ -32,18 +33,37 @@ namespace LWP::Base {
 		psos_[ModelType::Rigid].Init(root_, PSO::Type::Mesh)
 			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
 			.SetSystemMS("Rework_/shadow/RigidShadow.MS.hlsl")
-			.SetRasterizerState(D3D12_CULL_MODE_FRONT)
+			.SetRTVFormats({})	// レンダーターゲットは不要
 			.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
+			.SetRasterizerDepthState(100, 0.0f, 1.5f)
 			.Build();
 		psos_[ModelType::Skin].Init(root_, PSO::Type::Mesh)
 			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
 			.SetSystemMS("Rework_/shadow/SkinShadow.MS.hlsl")
-			.SetRasterizerState(D3D12_CULL_MODE_FRONT)
+			.SetRTVFormats({})	// レンダーターゲットは不要
 			.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
+			.SetRasterizerDepthState(100, 0.0f, 1.5f)
 			.Build();
 	}
 
 	void DirLightShadow::PushCommand(ID3D12GraphicsCommandList6* list) {
+		static int bias = 100;
+		static float biasClamp = 0.0f;
+		static float slopeScaledDepthBias = 1.5f;
+		ImGui::Begin("Shadow Depth bias");
+		ImGui::DragInt("Bias", &bias);
+		ImGui::DragFloat("BiasClamp", &biasClamp, 0.01f);
+		ImGui::DragFloat("SlopeScaledDepthBias", &slopeScaledDepthBias, 0.01f);
+		if (ImGui::Button("Create PSO")) {
+			psos_[ModelType::Rigid]
+				.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
+				.Build();
+			psos_[ModelType::Skin]
+				.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
+				.Build();
+		}
+		ImGui::End();
+
 		// ルートシグネチャをセット
 		list->SetGraphicsRootSignature(root_);
 
@@ -66,7 +86,7 @@ namespace LWP::Base {
 		SetDispatchMesh(list);
 
 		// このあとシャドウマッピングに使うのでバリアを変更
-		shadowMap->ChangeResourceBarrier(D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, list);
+		shadowMap->ChangeResourceBarrier(D3D12_RESOURCE_STATE_GENERIC_READ, list);
 	}
 
 	void DirLightShadow::SetDispatchMesh(ID3D12GraphicsCommandList6* list) {

@@ -104,8 +104,6 @@ namespace LWP::Object::Collider {
 		virtual bool CheckCollision(AABB& c, Math::Vector3* resVec) = 0;
 		virtual bool CheckCollision(Sphere& c, Math::Vector3* resVec) = 0;
 		virtual bool CheckCollision(Capsule& c, Math::Vector3* resVec) = 0;
-		virtual bool CheckCollision(Mesh& c, Math::Vector3* resVec) = 0;
-		virtual bool CheckCollision(Terrain& c, Math::Vector3* resVec) = 0;
 
 		// ヒット時の処理をまとめた関数
 		virtual void Hit() {};

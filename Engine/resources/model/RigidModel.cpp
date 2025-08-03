@@ -1,6 +1,5 @@
 #include "RigidModel.h"
 
-#include "base/directX/RendererManager.h"
 #include "resources/ResourceManager.h"
 #include "component/Resource.h"
 #include "component/System.h"

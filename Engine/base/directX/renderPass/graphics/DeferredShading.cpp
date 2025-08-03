@@ -17,6 +17,8 @@ namespace LWP::Base {
 			.AddSampler(0, SV_Pixel)			// x 各リソース用のサンプラー
 			.AddCBVParameter(0, SV_Pixel)		// 4 ライト系のメタデータ
 			.AddCBVParameter(1, SV_Pixel)		// 5 平行光源のデータ
+			.AddTableParameter(4, SV_Pixel)		// 6 平行光源のシャドウマップ
+			.AddSampler(1, SV_Pixel, D3D12_FILTER_MIN_MAG_MIP_POINT)			// x 平行光源のシャドウマップ用サンプラー
 			.Build();
 		// パススルー描画の後、遅延ライテイング描画
 		pso_.Init(root_, PSO::Type::Vertex)
@@ -62,5 +64,7 @@ namespace LWP::Base {
 		list->SetGraphicsRootConstantBufferView(4, objManager->GetLightMetadataBuffer().GetGPUView());
 		// 平行光源のデータをセット
 		list->SetGraphicsRootConstantBufferView(5, objManager->GetDirLight()->GetLightBuffer().GetGPUView());
+		// 平行光源のシャドウマップをセット
+		list->SetGraphicsRootDescriptorTable(6, objManager->GetDirLight()->GetShadowMap()->srvInfo.gpuView);
 	}
 }

@@ -6,8 +6,8 @@ void SM_Point::Init() {
 	HRESULT hr = S_FALSE;
 
 	// 解像度
-	width = static_cast<int>(1024.0f * lwpC::Shadow::kResolutionScale);
-	height = static_cast<int>(1024.0f * lwpC::Shadow::kResolutionScale);
+	width = static_cast<int>(1024.0f * lwpC::Shadow::Point::kResolution);
+	height = static_cast<int>(1024.0f * lwpC::Shadow::Point::kResolution);
 
 	// 1. Resourceの設定
 	desc.Width = width; // Textureの幅

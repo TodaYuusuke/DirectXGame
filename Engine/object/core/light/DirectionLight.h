@@ -5,14 +5,18 @@
 #include "utility/Color.h"
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/resource/rendering/shadow/SM_Direction.h"
+#include "base/directX/resource/rendering/DepthStencil.h"
 
 // 平行光源の構造体
 namespace LWP::Base {
 	struct DirectionalLightStruct {
-		Math::Matrix4x4 vp;		// ViewProjectionをこっちにも登録
+		Math::Matrix4x4 vp;			// ViewProjectionをこっちにも登録
+		Math::Matrix4x4 projectionInverse;	// 深度値の修正用
 		Math::Vector4 color;		// ライトの色
 		Math::Vector3 direction;	// ライトの向き
-		float intensity;	// 輝度
+		float intensity;			// 輝度
+		float shadowIntensity;		// 影の濃さ
+		float bias;
 	};
 }
 
@@ -26,9 +30,19 @@ namespace LWP::Object {
 		// ライトの色
 		Utility::Color color = Utility::ColorPattern::WHITE;
 		// ライトの向き
-		Math::Vector3 rotation = { 1.57f,0.0f,0.0f };
+		Math::Vector3 rotation = { 1.57f,0.0f,0.0f };	// 現在はworldTF.rotationを使用しているので未使用
 		// 輝度
 		float intensity = 1.0f;
+		// 影の濃さ
+		float shadowIntensity = 0.5f;
+		// 平行光源の距離
+		float distance = 50.0f;
+
+		float bias = 0.00015f;
+		//float bias = 0.001f;
+		float range = 128.0f;
+		float nearZ = 0.0f;
+		float farZ = 500.0f;
 
 
 	public: // ** メンバ関数 ** //
@@ -56,7 +70,6 @@ namespace LWP::Object {
 		D3D12_GPU_VIRTUAL_ADDRESS GetMatrixBufferView() { return viewBuffer_.GetGPUView(); }
 		// シャドウマップを書き込む用のリソースを返す関数
 		Base::SM_Direction* GetShadowMap() { return &shadowMap_; }
-
 
 		// デバッグ用GUI
 		void DebugGUI() override;

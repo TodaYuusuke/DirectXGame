@@ -63,9 +63,12 @@ struct Camera {
 // ** Lights ** //
 struct DirectionalLight {
     float32_t4x4 m;     // ViewProjection
+    float32_t4x4 projectionInverse;
     float32_t4 color;
     float32_t3 direction;
     float intensity;
+    float shadowIntensity;
+    float bias;
 };
 struct PointLight {
     float32_t4 color;
@@ -76,8 +79,6 @@ struct PointLight {
 };
 struct LightMetadata {
     int32_t pointLightCount; // Point Light Count
-    
-    float32_t shadowDensity; // Shadow Density
 };
 
 // ** Output ** //

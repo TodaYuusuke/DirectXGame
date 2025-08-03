@@ -50,8 +50,6 @@ namespace LWP::Object::Collider {
 		//bool CheckCollision(OBB& c, Math::Vector3* fixVec)  override;
 		bool CheckCollision(Sphere& c, Math::Vector3* fixVec)  override;
 		bool CheckCollision(Capsule& c, Math::Vector3* fixVec)  override;
-		bool CheckCollision(Mesh& c, Math::Vector3* fixVec)  override;
-		bool CheckCollision(Terrain& c, Math::Vector3* fixVec)  override;
 
 		// ヒット時の処理をまとめた関数
 		void Hit() override;

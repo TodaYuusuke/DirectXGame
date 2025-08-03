@@ -122,13 +122,12 @@ namespace LWP::Config {
 			static const UINT kActiveCount = 1;
 
 			/// <summary>
-			/// シャドウマッピングの解像度スケール
-			/// <para>default = 5</para>
-			/// <para>Range = 1 ~ ∞</para>
+			/// シャドウマッピングの解像度
+			/// <para>default = 1024</para>
 			/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
-			//static const float kResolutionScale = 1.0f;
+			static const float kResolution = 4096.0f;
 		}
 
 		/// <summary>
@@ -141,28 +140,18 @@ namespace LWP::Config {
 			static const UINT kMaxCount = 8;
 
 			/// <summary>
-			/// シャドウマッピングの解像度スケール
-			/// <para>default = 5</para>
-			/// <para>Range = 1 ~ ∞</para>
+			/// シャドウマッピングの解像度
+			/// <para>default = 1024</para>
 			/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
 			/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
 			/// </summary>
-			//static const float kResolutionScale = 1.0f;
+			static const float kResolution = 1024.0f;
 		}
 
 		/// <summary>
 		/// シャドウマップの最大数
 		/// </summary>
 		static const UINT kMaxShadowMap = Direction::kMaxCount + (Point::kMaxCount * 6);
-
-		/// <summary>
-		/// シャドウマッピングの解像度スケール（現在は共通のスケールを使う）
-		/// <para>default = 5</para>
-		/// <para>Range = 1 ~ ∞</para>
-		/// <para>値が大きい .... 影のふちがより鮮明になるが、レンダリングが重くなる</para>
-		/// <para>値が小さい .... 影のふちがギザギザしてしまうが、レンダリングが軽くなる</para>
-		/// </summary>
-		static const float kResolutionScale = 1.0f;
 
 		/// <summary>
 		/// アンチエイリアスを有効にするか（未実装）

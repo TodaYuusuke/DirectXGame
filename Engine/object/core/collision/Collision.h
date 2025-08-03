@@ -3,8 +3,6 @@
 #include "collider/child/cAABB.h"
 #include "collider/child/cSphere.h"
 #include "collider/child/cCapsule.h"
-#include "collider/child/cMesh.h"
-#include "collider/child/cTerrain.h"
 
 #include "OctreeSpaceDivision.h"
 
@@ -79,7 +77,7 @@ namespace LWP::Object {
 		bool isActive = true;
 		
 		// Variant
-		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule, Collider::Mesh, Collider::Terrain>;
+		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule>;
 		// ブロードフェーズのコライダー形状
 		ShapeVariant broad;
 		// ナローフェーズのコライダー形状

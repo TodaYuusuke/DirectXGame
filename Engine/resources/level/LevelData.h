@@ -1,8 +1,6 @@
 #pragma once
 #include "../model/RigidModel.h"
 #include "../model/SkinningModel.h"
-#include "../model/StaticModel.h"
-#include "object/core/Terrain.h"
 
 #include "object/core/Camera.h"
 
@@ -27,8 +25,6 @@ namespace LWP::Resource {
 		std::map<std::string, RigidModel> rigidModels;
 		// スキンモデル
 		std::map<std::string, SkinningModel> skinModels;
-		// スタティックモデル
-		std::map<std::string, StaticModel> staticModels;
 
 		// 当たり判定
 		std::map<std::string, Object::Collision> collisions;
@@ -40,8 +36,6 @@ namespace LWP::Resource {
 		// エネミーのスポーン地点
 		std::map<std::string, Math::Vector3> enemySpawnPoint;
 
-		// 地形
-		std::unique_ptr<Object::Terrain> terrain;	// ない場合もあるのでユニークポインタ
 
 	public: // ** メンバ関数 ** //
 
@@ -147,11 +141,6 @@ namespace LWP::Resource {
 		/// <param name="data"></param>
 		void LoadCurve(const nlohmann::json& data, const std::string& name);
 		/// <summary>
-		/// Terrainを解凍
-		/// </summary>
-		/// <param name="data"></param>
-		void LoadTerrain(const nlohmann::json& data);
-		/// <summary>
 		/// タイプ：PlayerSpawnを解凍
 		/// </summary>
 		/// <param name="data"></param>
@@ -171,10 +160,6 @@ namespace LWP::Resource {
 		/// SkinModel用ImGui
 		/// </summary>
 		void SkinDebugGUI();
-		/// <summary>
-		/// StaticModel用ImGui
-		/// </summary>
-		void StaticDebugGUI();
 		/// <summary>
 		/// Collider用ImGui
 		/// </summary>

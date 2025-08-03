@@ -198,7 +198,6 @@ void Collision::DebugGUI() {
 			if (ImGui::MenuItem("Sphere")) { SetBroadShape(Sphere()); }
 			if (ImGui::MenuItem("Capsule")) { SetBroadShape(Capsule()); }
 			//if (ImGui::MenuItem("Mesh")) { SetBroadShape(Mesh()); }	// Meshの動的生成は厳しいので廃止
-			//if (ImGui::MenuItem("Terrain")) { SetBroadShape(Terrain()); }	// Terrainの動的生成は厳しいので廃止
 			ImGui::EndMenu();
 		}
 		GetBasePtr(broad)->DebugGUI();

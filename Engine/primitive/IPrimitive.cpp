@@ -1,5 +1,4 @@
 #include "IPrimitive.h"
-#include "base/directX/RendererManager.h"
 #include "base/ImGuiManager.h"
 #include "component/Primitive.h"
 

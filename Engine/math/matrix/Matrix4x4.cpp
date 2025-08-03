@@ -287,17 +287,13 @@ Matrix4x4 Matrix4x4::CreateOrthographicMatrix(const float& left, const float& to
 	Matrix4x4 result{};
 
 	result.m[0][0] = 2.0f / (right - left);
-	result.m[1][1] = 2.0f / (top - bottom);
+	result.m[1][1] = 2.0f / (bottom - top); // ←修正
 	result.m[2][2] = 1.0f / (farClip - nearClip);
 
 	result.m[3][0] = (left + right) / (left - right);
-	result.m[3][1] = (top + bottom) / (bottom - top);
+	result.m[3][1] = (top + bottom) / (top - bottom); // ←修正
 	result.m[3][2] = nearClip / (nearClip - farClip);
 	result.m[3][3] = 1;
-	//result.m[3][0] = - ((right + left) / (right - left));
-	//result.m[3][1] = (top + bottom) / (top - bottom);
-	//result.m[3][2] =  - ((farClip + nearClip) / (farClip - nearClip));
-	//result.m[3][3] = 1;
 
 	return result;
 }
@@ -319,29 +315,29 @@ Matrix4x4 Matrix4x4::CreateViewportMatrix(const float& left, const float& top, c
 
 Matrix4x4 Matrix4x4::CreateLookAtMatrix(const Vector3& eye, const Vector3& at, const Vector3& up) {
 	Vector3 forward = (at - eye).Normalize();
-	Vector3 right = Vector3::Cross(up, forward).Normalize();
-	Vector3 newUp = Vector3::Cross(forward, right).Normalize();
+	Vector3 right = Vector3::Cross(forward, up).Normalize();
+	Vector3 newUp = Vector3::Cross(right, forward).Normalize();
 
 	Matrix4x4 result;
 
 	result.m[0][0] = right.x;
-	result.m[0][1] = newUp.x;
-	result.m[0][2] = -forward.x;
+	result.m[0][1] = right.y;
+	result.m[0][2] = right.z;
 	result.m[0][3] = 0.0f;
 
-	result.m[1][0] = right.y;
+	result.m[1][0] = newUp.x;
 	result.m[1][1] = newUp.y;
-	result.m[1][2] = -forward.y;
+	result.m[1][2] = newUp.z;
 	result.m[1][3] = 0.0f;
 
-	result.m[2][0] = right.z;
-	result.m[2][1] = newUp.z;
-	result.m[2][2] = -forward.z;
+	result.m[2][0] = forward.x;
+	result.m[2][1] = forward.y;
+	result.m[2][2] = forward.z;
 	result.m[2][3] = 0.0f;
 
-	result.m[3][0] = Vector3::Dot(-1 * right, eye);
-	result.m[3][1] = Vector3::Dot(-1 * newUp, eye);
-	result.m[3][2] = Vector3::Dot(forward, eye);
+	result.m[3][0] = -Vector3::Dot(right, eye);
+	result.m[3][1] = -Vector3::Dot(newUp, eye);
+	result.m[3][2] = -Vector3::Dot(forward, eye);
 	result.m[3][3] = 1.0f;
 
 	return result;
@@ -389,36 +385,6 @@ Matrix4x4 Matrix4x4::DirectionToDirection(const Vector3& from, const Vector3& to
 	result.m[2][1] = (n.z * n.y) * (1.0f - c) - n.x * s;
 	result.m[2][2] = (n.z * n.z) * (1.0f - c) + c;
 
-	result.m[3][3] = 1.0f;
-
-	return result;
-}
-
-Matrix4x4 Matrix4x4::LookAt(const Vector3& eye, const Vector3& target, const Vector3& up) {
-	Vector3 zaxis = (target - eye).Normalize();				// Forward
-	Vector3 xaxis = Vector3::Cross(up, zaxis).Normalize();	// Right
-	Vector3 yaxis = Vector3::Cross(zaxis, xaxis);			// Up
-
-	Matrix4x4 result;
-
-	result.m[0][0] = xaxis.x;
-	result.m[0][1] = yaxis.x;
-	result.m[0][2] = zaxis.x;
-	result.m[0][3] = 0.0f;
-
-	result.m[1][0] = xaxis.y;
-	result.m[1][1] = yaxis.y;
-	result.m[1][2] = zaxis.y;
-	result.m[1][3] = 0.0f;
-
-	result.m[2][0] = xaxis.z;
-	result.m[2][1] = yaxis.z;
-	result.m[2][2] = zaxis.z;
-	result.m[2][3] = 0.0f;
-
-	result.m[3][0] = Vector3::Dot((xaxis * -1.0f), eye);
-	result.m[3][1] = Vector3::Dot((yaxis * -1.0f), eye);
-	result.m[3][2] = Vector3::Dot((zaxis * -1.0f), eye);
 	result.m[3][3] = 1.0f;
 
 	return result;

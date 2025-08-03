@@ -10,8 +10,8 @@ ConstantBuffer<LightMetadata> cLightMeta : register(b0);
 ConstantBuffer<DirectionalLight> cDirLight : register(b1);
 //StructuredBuffer<PointLight> sPointLights : register(t4);
 
-//Texture2D<float> tDirLightShadowMap : register(t4);
-//SamplerState sDirLightSampler : register(s1);
+Texture2D<float> tDirLightShadowMap : register(t4);
+SamplerState sDirLightSampler : register(s1);
 //TextureCube<float> tPointLightShadowMaps[] : register(t0, space1);
 //SamplerState sPointLightSampler : register(s2);
 
@@ -29,14 +29,18 @@ float3 DirLightingSpecular(PassThroughOutput input, float3 toEye, uint32_t m) {
     float specularPow = pow(saturate(NdotH), cMaterials[m].shinines); // 反射強度
     return cDLights[n].color.rgb * cDLights[n].intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 }*/
-//float3 DirLightingShadow(float32_t3 worldPosition) {
-//    // シャドウマッピング
-//    float3 posSM = mul(float4(worldPosition, 1.0f), cDirLight.m).xyz;
-//    posSM.x = (1.0f + posSM.x) / 2.0f;
-//    posSM.y = (1.0f - posSM.y) / 2.0f;
-//    float depth = tDirLightShadowMap.Sample(sDirLightSampler, posSM.xy);
-//    return (posSM.z - 0.00005f < depth) ? 1.0f : cLightMeta.shadowDensity;
-//}
+float3 DirLightingShadow(float32_t3 worldPosition, float32_t3 normal) {
+    // シャドウマッピング
+    float32_t4 lightClip = mul(float4(worldPosition, 1.0f), cDirLight.m);
+    
+    float32_t2 shadowUV = (lightClip.xy / lightClip.w) * float32_t2(0.5f, -0.5f) + 0.5f;
+    float32_t litDepth = lightClip.z / lightClip.w;
+   
+    float32_t ndcDepth = tDirLightShadowMap.Sample(sDirLightSampler, shadowUV);
+    
+    // 比較自体がなにか間違えている？
+    return (litDepth - cDirLight.bias < ndcDepth) ? 1.0f : cDirLight.shadowIntensity;
+}
 
 // -- 点光源のライティング -- //
 /*float3 PointLightingDiffuse(PassThroughOutput input, uint32_t n, float3 dir)
@@ -99,7 +103,7 @@ float32_t4 main(PassThroughOutput input) : SV_TARGET {
     // -- 平行光源 -- //
     diffuse += DirLightingDiffuse(normal.xyz);
     //specular += DirectionLightingSpecular(input, toEye, m);
-    //shadow += DirLightingShadow(normal);
+    shadow += DirLightingShadow(worldPosition.xyz, normal.xyz);
         
     // -- 点光源 -- //
     /*for (n = 0; n < cCommonData.pointLightCount; n++) {
@@ -109,7 +113,7 @@ float32_t4 main(PassThroughOutput input) : SV_TARGET {
         shadow += PointLightingShadow(input, n, dir);
     }*/
     
-    output.rgb = ((albedo.rgb * diffuse) + specular)/* * shadow*/;
+    output.rgb = ((albedo.rgb * diffuse) + specular) * shadow;
     output.a = albedo.a; // 透明度を保持
     
     if (albedo.a <= 0.0f) { discard; }  // 透明度が0以下ならdiscord

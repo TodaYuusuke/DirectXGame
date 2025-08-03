@@ -60,30 +60,8 @@ PSO& PSO::Init(ID3D12RootSignature* root, Type type) {
 
 	return *this;
 }
-PSO& PSO::SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats) {
-	const size_t count = formats.size();
-	assert(count > 0 && "At least one RTV format must be specified.");
-	assert(count <= D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT && "Too many RTV formats (maximum 8).");
 
-	UINT size = static_cast<UINT>(count);
-	size_t i = 0;
-
-	if (type_ == Type::Vertex) {
-		desc_.vertex.NumRenderTargets = size;
-		for (DXGI_FORMAT fmt : formats) {
-			desc_.vertex.RTVFormats[i++] = fmt;
-		}
-	}
-	else if (type_ == Type::Mesh) {
-		desc_.mesh.NumRenderTargets = size;
-		for (DXGI_FORMAT fmt : formats) {
-			desc_.mesh.RTVFormats[i++] = fmt;
-		}
-	}
-
-	return *this;
-}
-
+#pragma region 入力形状設定
 PSO& PSO::SetInputLayout() {
 	if (type_ == Type::Vertex) {
 		/* 頂点はバッファーで送信するので、InputLayoutは不要
@@ -93,7 +71,7 @@ PSO& PSO::SetInputLayout() {
 			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
-		
+
 		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
 		inputLayoutDesc.pInputElementDescs = inputElementDescs;
 		inputLayoutDesc.NumElements = _countof(inputElementDescs);
@@ -106,6 +84,97 @@ PSO& PSO::SetInputLayout() {
 		// ComputeかMeshのときは使わないのでエラー
 		assert(false);
 	}
+
+	return *this;
+}
+PSO& PSO::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
+	// セット
+	if (type_ == Type::Vertex) {
+		desc_.vertex.PrimitiveTopologyType = type;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.PrimitiveTopologyType = type;
+	}
+
+	return *this;
+}
+#pragma endregion
+
+#pragma region フォーマット指定
+PSO& PSO::SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats) {
+	const size_t count = formats.size();
+	assert(count >= 0 && "The value cannot be negative.");
+	assert(count <= D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT && "Too many RTV formats (maximum 8).");
+
+	UINT size = static_cast<UINT>(count);
+	size_t i = 0;
+
+	if (type_ == Type::Vertex) {
+		desc_.vertex.NumRenderTargets = size;
+		if (size == 0) {
+			desc_.vertex.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+		}
+		else {
+			for (DXGI_FORMAT fmt : formats) {
+				desc_.vertex.RTVFormats[i++] = fmt;
+			}
+		}
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.NumRenderTargets = size;
+		if (size == 0) {
+			desc_.mesh.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+		}
+		else {
+			for (DXGI_FORMAT fmt : formats) {
+				desc_.mesh.RTVFormats[i++] = fmt;
+			}
+		}
+	}
+
+	return *this;
+}
+PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
+	// セット
+	if (type_ == Type::Vertex) {
+		desc_.vertex.DSVFormat = format;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.DSVFormat = format;
+	}
+
+	return *this;
+}
+#pragma endregion
+
+#pragma region モードの設定
+PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {
+	D3D12_RASTERIZER_DESC rasterizerDesc{};
+	rasterizerDesc.CullMode = cullMode;	// カリング指定
+	rasterizerDesc.FillMode = fillMode;	// 埋め立てモード
+
+	// セット
+	if (type_ == Type::Vertex) {
+		desc_.vertex.RasterizerState = rasterizerDesc;
+	}
+	else if (type_ == Type::Mesh) {
+		desc_.mesh.RasterizerState = rasterizerDesc;
+	}
+	return *this;
+}
+PSO& PSO::SetRasterizerDepthState(bool enable) {
+	desc_.mesh.RasterizerState.DepthClipEnable = enable;
+	return *this;
+}
+PSO& PSO::SetRasterizerDepthState(int bias, float biasClamp, float SlopeScaledDepthBias) {
+	// メッシュシェーダー時のみ有効
+	assert(type_ == Type::Mesh && "This setting is for MeshShader only.");
+
+	D3D12_RASTERIZER_DESC& desc = desc_.mesh.RasterizerState;
+	desc.DepthClipEnable = true;
+	desc.DepthBias = bias;                  // 固定バイアス
+	desc.DepthBiasClamp = biasClamp;
+	desc.SlopeScaledDepthBias = SlopeScaledDepthBias;      // 法線角度に依存したバイアス
 
 	return *this;
 }
@@ -158,22 +227,50 @@ PSO& PSO::SetBlendState(bool enable, BlendMode mode) {
 
 	return *this;
 }
-PSO& PSO::SetRasterizerState(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {
-	D3D12_RASTERIZER_DESC rasterizerDesc{};
-	// 裏面（時計回り）を表示しない
-	rasterizerDesc.CullMode = cullMode;
-	// 埋め立てモード
-	rasterizerDesc.FillMode = fillMode;
+PSO& PSO::SetDepthState(bool enable, D3D12_DEPTH_WRITE_MASK mask, D3D12_COMPARISON_FUNC func) {
+	D3D12_DEPTH_STENCIL_DESC depthDesc{};
+	// 受け取る
+	if (type_ == Type::Vertex) { depthDesc = desc_.vertex.DepthStencilState; }
+	else if (type_ == Type::Mesh) { depthDesc = desc_.mesh.DepthStencilState; }
+
+	depthDesc.DepthEnable = enable; // Depthの機能を有効化する
+	depthDesc.DepthWriteMask = mask; // 書き込みします
+	depthDesc.DepthFunc = func; // 比較関数
 
 	// セット
-	if (type_ == Type::Vertex) {
-		desc_.vertex.RasterizerState = rasterizerDesc;
-	}
-	else if (type_ == Type::Mesh) {
-		desc_.mesh.RasterizerState = rasterizerDesc;
-	}
+	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = depthDesc; }
+	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = depthDesc; }
 	return *this;
 }
+PSO& PSO::SetStencilState(bool enable, D3D12_DEPTH_STENCILOP_DESC front, D3D12_DEPTH_STENCILOP_DESC back) {
+	D3D12_DEPTH_STENCIL_DESC stencilDesc{};
+	// 受け取る
+	if (type_ == Type::Vertex) { stencilDesc = desc_.vertex.DepthStencilState; }
+	else if (type_ == Type::Mesh) { stencilDesc = desc_.mesh.DepthStencilState; }
+
+	// StencilOP_Descの詳細
+	// D3D12_STENCIL_OP StencilFailOp;		// ステンシルテストが失敗した時の動作
+	// D3D12_STENCIL_OP StencilDepthFailOp; // 深度テストが失敗した時の動作
+	// D3D12_STENCIL_OP StencilPassOp;		// ステンシル＆深度テストが成功した時の動作
+	// D3D12_COMPARISON_FUNC StencilFunc;	// ステンシルテストの比較関数
+
+	// ステンシルテスト
+	stencilDesc.StencilEnable = enable;
+	stencilDesc.StencilReadMask = 0xFF;
+	stencilDesc.StencilWriteMask = 0xFF;
+	// ステンシルテスト（前面ポリゴン）の設定
+	stencilDesc.FrontFace = front;
+	// ステンシルテスト（背面ポリゴン）の設定
+	stencilDesc.BackFace = back;
+
+	// セット
+	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = stencilDesc; }
+	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = stencilDesc; }
+	return *this;
+}
+#pragma endregion
+
+#pragma region シェーダー指定
 PSO& PSO::SetAS(std::string filePath) {
 	// Mesh以外ならセットしないのでエラー
 	assert(type_ == Type::Mesh);
@@ -227,7 +324,7 @@ PSO& PSO::SetVS(std::string filePath) {
 	assert(type_ == Type::Vertex);
 	// 空ならコンパイルしない
 	if (filePath.empty()) { return *this; }
-	
+
 	// シェーダーをコンパイルする
 	IDxcBlob* blob = nullptr;
 	blob = DXC::GetInstance()->CompileShader(Utility::ConvertString(filePath), L"vs_6_0");
@@ -258,70 +355,14 @@ PSO& PSO::SetPS(std::string filePath) {
 	return *this;
 }
 PSO& PSO::SetSystemPS(std::string filePath) { return SetPS(kDirectoryPath + filePath); }
-PSO& PSO::SetDepthState(bool enable, D3D12_DEPTH_WRITE_MASK mask, D3D12_COMPARISON_FUNC func) {
-	D3D12_DEPTH_STENCIL_DESC depthDesc{};
-	// 受け取る
-	if (type_ == Type::Vertex) { depthDesc = desc_.vertex.DepthStencilState; }
-	else if (type_ == Type::Mesh) { depthDesc = desc_.mesh.DepthStencilState; }
+#pragma endregion
 
-	depthDesc.DepthEnable = enable; // Depthの機能を有効化する
-	depthDesc.DepthWriteMask = mask; // 書き込みします
-	depthDesc.DepthFunc = func; // 比較関数
-	
-	// セット
-	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = depthDesc; }
-	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = depthDesc; }
-	return *this;
-}
-PSO& PSO::SetStencilState(bool enable,
-	D3D12_DEPTH_STENCILOP_DESC front, D3D12_DEPTH_STENCILOP_DESC back) {
-	D3D12_DEPTH_STENCIL_DESC stencilDesc{};
-	// 受け取る
-	if (type_ == Type::Vertex) { stencilDesc = desc_.vertex.DepthStencilState; }
-	else if (type_ == Type::Mesh) { stencilDesc = desc_.mesh.DepthStencilState; }
 
-	// StencilOP_Descの詳細
-	// D3D12_STENCIL_OP StencilFailOp;		// ステンシルテストが失敗した時の動作
-	// D3D12_STENCIL_OP StencilDepthFailOp; // 深度テストが失敗した時の動作
-	// D3D12_STENCIL_OP StencilPassOp;		// ステンシル＆深度テストが成功した時の動作
-	// D3D12_COMPARISON_FUNC StencilFunc;	// ステンシルテストの比較関数
-	
-	// ステンシルテスト
-	stencilDesc.StencilEnable = enable;
-	stencilDesc.StencilReadMask = 0xFF;
-	stencilDesc.StencilWriteMask = 0xFF;
-	// ステンシルテスト（前面ポリゴン）の設定
-	stencilDesc.FrontFace = front;
-	// ステンシルテスト（背面ポリゴン）の設定
-	stencilDesc.BackFace = back;
 
-	// セット
-	if (type_ == Type::Vertex) { desc_.vertex.DepthStencilState = stencilDesc; }
-	else if (type_ == Type::Mesh) { desc_.mesh.DepthStencilState = stencilDesc; }
-	return *this;
-}
-PSO& PSO::SetDSVFormat(DXGI_FORMAT format) {
-	// セット
-	if (type_ == Type::Vertex) {
-		desc_.vertex.DSVFormat = format;
-	}
-	else if (type_ == Type::Mesh) {
-		desc_.mesh.DSVFormat = format;
-	}
 
-	return *this;
-}
-PSO& PSO::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
-	// セット
-	if (type_ == Type::Vertex) {
-		desc_.vertex.PrimitiveTopologyType = type;
-	}
-	else if (type_ == Type::Mesh) {
-		desc_.mesh.PrimitiveTopologyType = type;
-	}
 
-	return *this;
-}
+
+
 void PSO::Build() {
 	HRESULT hr = S_FALSE;
 	ID3D12Device2* device = GPUDevice::GetInstance()->GetDevice();	// デバイスを取得
