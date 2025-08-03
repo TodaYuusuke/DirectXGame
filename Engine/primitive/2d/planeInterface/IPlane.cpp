@@ -41,11 +41,6 @@ namespace LWP::Primitive {
 		vertices[QuadCorner::TopRight].position    = { max.x, min.y, 0.00f };	// 右上
 		vertices[QuadCorner::BottomRight].position = { max.x, max.y, 0.00f };	// 右下
 		vertices[QuadCorner::BottomLeft].position  = { min.x, max.y, 0.00f };	// 左下
-		// Sprite（スクリーン座標系）用
-		//vertices[QuadCorner::TopLeft].position     = { size.x * -anchorPoint.x,         size.y * -anchorPoint.y,         0.00f };	// 左上
-		//vertices[QuadCorner::TopRight].position    = { size.x * (1.0f - anchorPoint.x), size.y * -anchorPoint.y,         0.00f };	// 右上
-		//vertices[QuadCorner::BottomRight].position = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y), 0.00f };	// 右下
-		//vertices[QuadCorner::BottomLeft].position  = { size.x * -anchorPoint.x,         size.y * (1.0f - anchorPoint.y), 0.00f };	// 左下
 	}
 	void IPlane::FitToTextureBillboard(Math::Vector2 size) {
 		size /= 100.0f;	// サイズを調整
