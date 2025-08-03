@@ -113,7 +113,7 @@ float32_t4 main(PassThroughOutput input) : SV_TARGET {
         shadow += PointLightingShadow(input, n, dir);
     }*/
     
-    output.rgb = ((albedo.rgb * diffuse) + specular);
+    output.rgb = ((albedo.rgb * diffuse) + specular) * shadow;
     output.a = albedo.a; // 透明度を保持
     
     if (albedo.a <= 0.0f) { discard; }  // 透明度が0以下ならdiscord
