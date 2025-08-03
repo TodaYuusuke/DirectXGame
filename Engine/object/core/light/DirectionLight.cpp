@@ -42,7 +42,7 @@ void DirectionLight::Update() {
 	//data->direction = (Vector3{ 0.0f,0.0f,-1.0f } *Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
 	data->intensity = intensity;
 	data->shadowIntensity = shadowIntensity;
-	data->distance = distance;
+	data->bias = bias;
 
 	*viewBuffer_.data_ = GetViewProjection();
 }
@@ -92,7 +92,7 @@ void DirectionLight::DebugGUI() {
 	ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::DragFloat("ShadowIntensity", &shadowIntensity, 0.01f);
-	ImGui::DragFloat("distance", &distance, 0.0000001f, 0.0f, 1.0f, "%.8f");
+	ImGui::DragFloat("distance", &bias, 0.0000001f, 0.0f, 1.0f, "%.8f");
 	//ImGui::SliderFloat("distance", &distance, 0.0f, 1.0f, "%.8f");
 	ImGui::DragFloat("range", &range, 0.01f);
 	ImGui::DragFloat("nearZ", &nearZ, 0.01f);

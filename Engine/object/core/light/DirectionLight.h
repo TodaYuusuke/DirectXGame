@@ -16,7 +16,7 @@ namespace LWP::Base {
 		Math::Vector3 direction;	// ライトの向き
 		float intensity;			// 輝度
 		float shadowIntensity;		// 影の濃さ
-		float distance;
+		float bias;
 	};
 }
 
@@ -30,13 +30,13 @@ namespace LWP::Object {
 		// ライトの色
 		Utility::Color color = Utility::ColorPattern::WHITE;
 		// ライトの向き
-		Math::Vector3 rotation = { 1.57f,0.0f,0.0f };
+		Math::Vector3 rotation = { 1.57f,0.0f,0.0f };	// 現在はworldTF.rotationを使用しているので未使用
 		// 輝度
 		float intensity = 1.0f;
 		// 影の濃さ
 		float shadowIntensity = 0.5f;
 
-		float distance = 0.00005f;
+		float bias = 0.00005f;
 		float range = 128.0f;
 		float nearZ = 0.0f;
 		float farZ = 1000.0f;

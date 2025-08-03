@@ -68,7 +68,7 @@ struct DirectionalLight {
     float32_t3 direction;
     float intensity;
     float shadowIntensity;
-    float distance;
+    float bias;
 };
 struct PointLight {
     float32_t4 color;
