@@ -21,4 +21,6 @@ private: // ** メンバ変数 ** //
 	LWP::Resource::RigidModel axis;
 	LWP::Resource::RigidModel field;
 	LWP::Resource::RigidModel build[5];
+
+	LWP::Resource::RigidModel sphere;
 };

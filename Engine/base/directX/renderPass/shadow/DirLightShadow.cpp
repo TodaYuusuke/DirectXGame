@@ -47,22 +47,22 @@ namespace LWP::Base {
 	}
 
 	void DirLightShadow::PushCommand(ID3D12GraphicsCommandList6* list) {
-		static int bias = 100;
-		static float biasClamp = 0.0f;
-		static float slopeScaledDepthBias = 1.5f;
-		ImGui::Begin("Shadow Depth bias");
-		ImGui::DragInt("Bias", &bias);
-		ImGui::DragFloat("BiasClamp", &biasClamp, 0.01f);
-		ImGui::DragFloat("SlopeScaledDepthBias", &slopeScaledDepthBias, 0.01f);
-		if (ImGui::Button("Create PSO")) {
-			psos_[ModelType::Rigid]
-				.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
-				.Build();
-			psos_[ModelType::Skin]
-				.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
-				.Build();
-		}
-		ImGui::End();
+		//static int bias = 100;
+		//static float biasClamp = 0.0f;
+		//static float slopeScaledDepthBias = 1.5f;
+		//ImGui::Begin("Shadow Depth bias");
+		//ImGui::DragInt("Bias", &bias);
+		//ImGui::DragFloat("BiasClamp", &biasClamp, 0.01f);
+		//ImGui::DragFloat("SlopeScaledDepthBias", &slopeScaledDepthBias, 0.01f);
+		//if (ImGui::Button("Create PSO")) {
+		//	psos_[ModelType::Rigid]
+		//		.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
+		//		.Build();
+		//	psos_[ModelType::Skin]
+		//		.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
+		//		.Build();
+		//}
+		//ImGui::End();
 
 		// ルートシグネチャをセット
 		list->SetGraphicsRootSignature(root_);

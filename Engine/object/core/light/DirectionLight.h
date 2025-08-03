@@ -36,7 +36,7 @@ namespace LWP::Object {
 		float distance = 50.0f;
 
 		// シャドウマップを行うかどうか
-		bool enableShadowMap = true;
+		bool enableShadowMap = false;
 
 		float bias = 0.00015f;
 		float range = 128.0f;

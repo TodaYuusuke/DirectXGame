@@ -11,7 +11,7 @@ ConstantBuffer<DirectionalLight> cDirLight : register(b1);
 //StructuredBuffer<PointLight> sPointLights : register(t4);
 
 Texture2D<float> tDirLightShadowMap : register(t4);
-SamplerComparisonState sDirLightSampler : register(s1);
+SamplerState sDirLightSampler : register(s1);
 //TextureCube<float> tPointLightShadowMaps[] : register(t0, space1);
 //SamplerState sPointLightSampler : register(s2);
 
@@ -36,12 +36,10 @@ float3 DirLightingShadow(float32_t3 worldPosition, float32_t3 normal) {
     float32_t2 shadowUV = (lightClip.xy / lightClip.w) * float32_t2(0.5f, -0.5f) + 0.5f;
     float32_t litDepth = lightClip.z / lightClip.w;
    
-    //float32_t ndcDepth = tDirLightShadowMap.Sample(sDirLightSampler, shadowUV);
-    float32_t ndcDepth = tDirLightShadowMap.SampleCmp(sDirLightSampler, shadowUV, litDepth - cDirLight.bias);
+    float32_t ndcDepth = tDirLightShadowMap.Sample(sDirLightSampler, shadowUV);
     
     // 比較自体がなにか間違えている？
-    //return (litDepth - cDirLight.bias < ndcDepth) ? 1.0f : cDirLight.shadowIntensity;
-    return lerp(cDirLight.shadowIntensity, 1.0f, ndcDepth);
+    return (litDepth - cDirLight.bias < ndcDepth) ? 1.0f : cDirLight.shadowIntensity;
 }
 
 // -- 点光源のライティング -- //
