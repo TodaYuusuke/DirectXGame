@@ -49,23 +49,30 @@ namespace LWP::Base {
 		/// ビルダーデザインパターン
 		/// </summary>
 		PSO& Init(ID3D12RootSignature* root, Type type = Type::Vertex);
+
+		/// <summary>
+		/// 入力形状設定
+		/// </summary>
+		/// <returns></returns>
+		PSO& SetInputLayout();
+		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
+
+		/// <summary>
+		/// フォーマット指定
+		/// </summary>
 		PSO& SetRTVFormats(const DXGI_FORMAT& format) { return SetRTVFormats({ format }); }
 		PSO& SetRTVFormats(std::initializer_list<DXGI_FORMAT> formats);
-		PSO& SetInputLayout();
-		PSO& SetBlendState(bool enable, BlendMode mode = BlendMode::Normal);
+		PSO& SetDSVFormat(DXGI_FORMAT format);
+
+		/// <summary>
+		/// モードの設定
+		/// </summary>
 		PSO& SetRasterizerState(
 			D3D12_CULL_MODE cullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK,
 			D3D12_FILL_MODE fillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID);
-		PSO& SetAS(std::string filePath);
-		PSO& SetSystemAS(std::string filePath);
-		PSO& SetMS(std::string filePath);
-		PSO& SetSystemMS(std::string filePath);
-		PSO& SetCS(std::string filePath);
-		PSO& SetSystemCS(std::string filePath);
-		PSO& SetVS(std::string filePath);
-		PSO& SetSystemVS(std::string filePath);
-		PSO& SetPS(std::string filePath);
-		PSO& SetSystemPS(std::string filePath);
+		PSO& SetRasterizerDepthState(bool enable);
+		PSO& SetRasterizerDepthState(int bias, float biasClamp, float SlopeScaledDepthBias);
+		PSO& SetBlendState(bool enable, BlendMode mode = BlendMode::Normal);
 		PSO& SetDepthState(bool enable,
 			D3D12_DEPTH_WRITE_MASK mask = D3D12_DEPTH_WRITE_MASK_ALL,
 			D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS_EQUAL);	// LessEqual（近ければ描画される）
@@ -80,8 +87,21 @@ namespace LWP::Base {
 				D3D12_STENCIL_OP_KEEP,
 				D3D12_STENCIL_OP_KEEP,
 				D3D12_COMPARISON_FUNC_ALWAYS));
-		PSO& SetDSVFormat(DXGI_FORMAT format);
-		PSO& SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
+
+		/// <summary>
+		/// シェーダー指定
+		/// </summary>
+		PSO& SetAS(std::string filePath);
+		PSO& SetSystemAS(std::string filePath);
+		PSO& SetMS(std::string filePath);
+		PSO& SetSystemMS(std::string filePath);
+		PSO& SetCS(std::string filePath);
+		PSO& SetSystemCS(std::string filePath);
+		PSO& SetVS(std::string filePath);
+		PSO& SetSystemVS(std::string filePath);
+		PSO& SetPS(std::string filePath);
+		PSO& SetSystemPS(std::string filePath);
+
 		void Build();
 
 		// PSOの設定をコピーする関数

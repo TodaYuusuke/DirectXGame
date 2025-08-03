@@ -35,11 +35,14 @@ namespace LWP::Object {
 		float intensity = 1.0f;
 		// 影の濃さ
 		float shadowIntensity = 0.5f;
+		// 平行光源の距離
+		float distance = 50.0f;
 
-		float bias = 0.00005f;
+		float bias = 0.00015f;
+		//float bias = 0.001f;
 		float range = 128.0f;
 		float nearZ = 0.0f;
-		float farZ = 1000.0f;
+		float farZ = 500.0f;
 
 
 	public: // ** メンバ関数 ** //

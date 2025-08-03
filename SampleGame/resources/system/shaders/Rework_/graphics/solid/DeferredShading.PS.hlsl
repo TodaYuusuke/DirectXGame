@@ -34,23 +34,9 @@ float3 DirLightingShadow(float32_t3 worldPosition, float32_t3 normal) {
     float32_t4 lightClip = mul(float4(worldPosition, 1.0f), cDirLight.m);
     
     float32_t2 shadowUV = (lightClip.xy / lightClip.w) * float32_t2(0.5f, -0.5f) + 0.5f;
-    float32_t litDepth = lightClip.z / lightClip.w;     // この深度を使うと本来影が出るべき方向と逆に影が出る。しかも回転すると奇妙な挙動になる
-    // ※↑ でも参考資料ではこんな感じの計算方法だった。
-    
-    //lightClip.x = (1.0f + lightClip.x) / 2.0f;
-    //lightClip.y = (1.0f - lightClip.y) / 2.0f;
-    //lightClip.z = (1.0f - lightClip.z) / 2.0f;    // この深度を使って求めるとオブジェクトの前後に影が出るが、回転自体は正常に行われる
-    // ※↑ 回転自体は正常に行われるが、オブジェクトの前後に出る影響で、少しでも上から見た角度にすると前面に影がでる（床のせい）
-    
-    // 実験の名残（ChatGPT産）
-    //float32_t3 posSM = lightClip.xyz / lightClip.w;
-    //posSM.x = posSM.x * 0.5f + 0.5f;
-    //posSM.y = 1.0f - (posSM.y * 0.5f + 0.5f); // DirectXのUVに合わせてY反転
-    //posSM.z = posSM.z * 0.5f + 0.5f; // NDCのZを[0,1]へ
+    float32_t litDepth = lightClip.z / lightClip.w;
    
     float32_t ndcDepth = tDirLightShadowMap.Sample(sDirLightSampler, shadowUV);
-    //float32_t4 viewSpace = mul(float32_t4(0.0f,0.0f, ndcDepth, 0.0f), cDirLight.projectionInverse); // NDCからView Spaceへ変換するのも試した
-    //float32_t viewZ = viewSpace.z * rcp(viewSpace.w);
     
     // 比較自体がなにか間違えている？
     return (litDepth - cDirLight.bias < ndcDepth) ? 1.0f : cDirLight.shadowIntensity;

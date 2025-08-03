@@ -37,9 +37,7 @@ void DirectionLight::Update() {
 	);
 	data-> projectionInverse = projectionMatrix.Inverse();	// 深度値の修正用に逆行列をセット
 	data->color = color.GetVector4();
-	//data->direction = (Math::Vector3{ 0.0f,0.0f,1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
-	data->direction = (Vector3{ 0.0f,0.0f,-1.0f } * worldTF.rotation).Normalize();	// ライトの向き
-	//data->direction = (Vector3{ 0.0f,0.0f,-1.0f } *Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
+	data->direction = (Vector3{ 0.0f,0.0f,1.0f } * worldTF.rotation).Normalize();	// ライトの向き
 	data->intensity = intensity;
 	data->shadowIntensity = shadowIntensity;
 	data->bias = bias;
@@ -49,40 +47,14 @@ void DirectionLight::Update() {
 
 // ビュープロジェクションを返す関数
 Matrix4x4 DirectionLight::GetViewProjection() const {
-	//// 回転行列を取得
-	//Matrix4x4 rotateMatrix = Matrix4x4::CreateRotateXYZMatrix(rotation);
-	//// 正規化された方向ベクトルを取得
-	//Vector3 norVec = (Vector3{ 0.0f,0.0f,1.0f } *rotateMatrix).Normalize();
-	//// ライトの向きの逆ベクトルがtranslation
-	//Vector3 v = -1 * norVec;
-	//Matrix4x4 translateMatrix = Matrix4x4::CreateTranslateMatrix(v);
-	//// Viewを計算
-	//Matrix4x4 viewMatrix = (rotateMatrix * translateMatrix).Inverse();
-
-	//// ViewProjectionを生成
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, 10240.0f * lwpC::Shadow::kResolutionScale, 10240.0f * lwpC::Shadow::kResolutionScale, -1000.0f, 1000.0f);
-	//Matrix4x4 viewportMatrix = Matrix4x4::CreateViewportMatrix(0.0f, 0.0f, 1024.0f * lwpC::Shadow::kResolutionScale, 1024.0f * lwpC::Shadow::kResolutionScale, 0.0f, 1.0f);
-
-	//return viewMatrix * projectionMatrix * viewportMatrix;
-
-	// ↑　以前平行光源のシャドウマップを実装した際とまったく同じコード ↑
-	// ↓　試行錯誤の跡 ↓
-
-	//Matrix4x4 viewMatrix = worldTF.GetAffineMatrix().Inverse();
-	
-	//Vector3 dir = (Vector3{ 0.0f,0.0f,-1.0f } *Matrix4x4::CreateRotateXYZMatrix(rotation)).Normalize();	// ライトの向き
-	Vector3 dir = (Vector3{ 0.0f,0.0f,-1.0f } *worldTF.rotation).Normalize();	// ライトの向き
-	Matrix4x4 viewMatrix = Matrix4x4::CreateLookAtMatrix({ 0.0f,0.0f,0.0f }, dir);
+	Vector3 dir = (Vector3{ 0.0f,0.0f,1.0f } *worldTF.rotation).Normalize();	// ライトの向き
+	Matrix4x4 viewMatrix = Matrix4x4::CreateLookAtMatrix((dir * -1.0f) * distance, dir);
 	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(
 		-range, -range,
 		range, range,
 		nearZ, farZ
 	);
 	return viewMatrix * projectionMatrix;
-
-	//Matrix4x4 viewMatrix = worldTF.GetAffineMatrix().Inverse();
-	//Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 300.0f);
-	//return viewMatrix * projectionMatrix;
 }
 
 // デバッグ用GUI
@@ -92,7 +64,8 @@ void DirectionLight::DebugGUI() {
 	ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::DragFloat("ShadowIntensity", &shadowIntensity, 0.01f);
-	ImGui::DragFloat("distance", &bias, 0.0000001f, 0.0f, 1.0f, "%.8f");
+	ImGui::DragFloat("distance", &distance, 0.01f);
+	ImGui::DragFloat("bias", &bias, 0.0000001f, 0.0f, 1.0f, "%.8f");
 	//ImGui::SliderFloat("distance", &distance, 0.0f, 1.0f, "%.8f");
 	ImGui::DragFloat("range", &range, 0.01f);
 	ImGui::DragFloat("nearZ", &nearZ, 0.01f);

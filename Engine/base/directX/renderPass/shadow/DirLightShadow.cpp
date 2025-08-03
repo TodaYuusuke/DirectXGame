@@ -3,6 +3,8 @@
 #include "object/ObjectManager.h"
 #include "resources/ResourceManager.h"
 
+#include "base/ImGuiManager.h"
+
 using namespace LWP::Resource;
 
 #define RS_SLOT_LightView			0   // ライトのビュー投影行列 (b0)
@@ -31,16 +33,37 @@ namespace LWP::Base {
 		psos_[ModelType::Rigid].Init(root_, PSO::Type::Mesh)
 			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
 			.SetSystemMS("Rework_/shadow/RigidShadow.MS.hlsl")
+			.SetRTVFormats({})	// レンダーターゲットは不要
 			.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
+			.SetRasterizerDepthState(100, 0.0f, 1.5f)
 			.Build();
 		psos_[ModelType::Skin].Init(root_, PSO::Type::Mesh)
 			.SetSystemAS("Rework_/shadow/Shadow.AS.hlsl")
 			.SetSystemMS("Rework_/shadow/SkinShadow.MS.hlsl")
+			.SetRTVFormats({})	// レンダーターゲットは不要
 			.SetDSVFormat(DXGI_FORMAT_D32_FLOAT)
+			.SetRasterizerDepthState(100, 0.0f, 1.5f)
 			.Build();
 	}
 
 	void DirLightShadow::PushCommand(ID3D12GraphicsCommandList6* list) {
+		static int bias = 100;
+		static float biasClamp = 0.0f;
+		static float slopeScaledDepthBias = 1.5f;
+		ImGui::Begin("Shadow Depth bias");
+		ImGui::DragInt("Bias", &bias);
+		ImGui::DragFloat("BiasClamp", &biasClamp, 0.01f);
+		ImGui::DragFloat("SlopeScaledDepthBias", &slopeScaledDepthBias, 0.01f);
+		if (ImGui::Button("Create PSO")) {
+			psos_[ModelType::Rigid]
+				.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
+				.Build();
+			psos_[ModelType::Skin]
+				.SetRasterizerDepthState(bias, biasClamp, slopeScaledDepthBias)
+				.Build();
+		}
+		ImGui::End();
+
 		// ルートシグネチャをセット
 		list->SetGraphicsRootSignature(root_);
 
