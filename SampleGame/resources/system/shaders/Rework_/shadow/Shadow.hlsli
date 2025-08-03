@@ -2,7 +2,6 @@
 
 struct ViewProjection {
     float32_t4x4 m;
-    float32_t3 cameraPosition;
 };
 
 // Common

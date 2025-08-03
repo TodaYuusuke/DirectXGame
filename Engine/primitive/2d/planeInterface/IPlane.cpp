@@ -35,7 +35,7 @@ namespace LWP::Primitive {
 
 	void IPlane::FitToTextureSprite(Math::Vector2 size) {
 		Vector2 min = { size.x * -anchorPoint.x, size.y * -anchorPoint.y };
-		Vector2 max = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.x) };
+		Vector2 max = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y) };
 
 		vertices[QuadCorner::TopLeft].position	   = { min.x, min.y, 0.00f };	// 左上
 		vertices[QuadCorner::TopRight].position    = { max.x, min.y, 0.00f };	// 右上
@@ -50,7 +50,7 @@ namespace LWP::Primitive {
 	void IPlane::FitToTextureBillboard(Math::Vector2 size) {
 		size /= 100.0f;	// サイズを調整
 		Vector2 min = { size.x * -anchorPoint.x, size.y * -anchorPoint.y };
-		Vector2 max = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.x) };
+		Vector2 max = { size.x * (1.0f - anchorPoint.x), size.y * (1.0f - anchorPoint.y) };
 		vertices[QuadCorner::TopLeft].position     = { min.x, max.y, 0.00f };	// 左上
 		vertices[QuadCorner::TopRight].position    = { max.x, max.y, 0.00f };	// 右上
 		vertices[QuadCorner::BottomRight].position = { max.x, min.y, 0.00f };	// 右下

@@ -90,15 +90,17 @@ RootSignature& RootSignature::AddUAVRWTexture(int registerNum, ShaderVisibility 
 
 
 RootSignature& RootSignature::AddSampler(int registerNum, ShaderVisibility visibility,
-	D3D12_FILTER filter, D3D12_COMPARISON_FUNC func,
-	D3D12_TEXTURE_ADDRESS_MODE addressU, D3D12_TEXTURE_ADDRESS_MODE addressV, D3D12_TEXTURE_ADDRESS_MODE addressW) {
+	D3D12_FILTER filter, D3D12_COMPARISON_FUNC func, D3D12_TEXTURE_ADDRESS_MODE address,
+	D3D12_STATIC_BORDER_COLOR borderColor, int maxAnisotropy) {
 	// Samplerの設定
 	D3D12_STATIC_SAMPLER_DESC newSampler{};
 	newSampler.Filter = filter;
-	newSampler.AddressU = addressU;
-	newSampler.AddressV = addressV;
-	newSampler.AddressW = addressW;
+	newSampler.AddressU = address;
+	newSampler.AddressV = address;
+	newSampler.AddressW = address;
 	newSampler.ComparisonFunc = func;
+	newSampler.BorderColor = borderColor;
+	newSampler.MaxAnisotropy = maxAnisotropy;
 	newSampler.MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMipmapを使う
 	newSampler.ShaderRegister = registerNum;
 	newSampler.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(visibility); // 基本的にPixelShaderで使う

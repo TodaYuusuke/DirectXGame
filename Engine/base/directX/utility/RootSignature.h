@@ -35,10 +35,10 @@ namespace LWP::Base {
 		RootSignature& AddSampler(int registerNum, ShaderVisibility visibility = SV_Pixel,
 			D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR,	// フィルター（default:バイオリニアフィルタ）
 			D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_NEVER,	// 比較関数（default:比較しない）
-			D3D12_TEXTURE_ADDRESS_MODE addressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP,	// 範囲外をどうするかの設定
-			D3D12_TEXTURE_ADDRESS_MODE addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP,	// 範囲外をどうするかの設定
-			D3D12_TEXTURE_ADDRESS_MODE addressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP	// 範囲外をどうするかの設定
-			);
+			D3D12_TEXTURE_ADDRESS_MODE address = D3D12_TEXTURE_ADDRESS_MODE_WRAP,	// 範囲外をどうするかの設定
+			D3D12_STATIC_BORDER_COLOR borderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK,	// ボーダーカラー（default:透明黒)
+			int maxAnisotropy = 0
+ 		);
 		void Build();
 
 		// PSOの設定をコピーする関数

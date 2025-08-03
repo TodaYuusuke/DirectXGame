@@ -11,7 +11,6 @@
 namespace LWP::Base {
 	struct DirectionalLightStruct {
 		Math::Matrix4x4 vp;			// ViewProjectionをこっちにも登録
-		Math::Matrix4x4 projectionInverse;	// 深度値の修正用
 		Math::Vector4 color;		// ライトの色
 		Math::Vector3 direction;	// ライトの向き
 		float intensity;			// 輝度
@@ -37,10 +36,7 @@ namespace LWP::Object {
 		float distance = 50.0f;
 
 		float bias = 0.00015f;
-		//float bias = 0.001f;
 		float range = 128.0f;
-		float nearZ = 0.0f;
-		float farZ = 500.0f;
 
 
 	public: // ** メンバ関数 ** //
@@ -78,11 +74,7 @@ namespace LWP::Object {
 		Base::ConstantBuffer<Base::DirectionalLightStruct> lightBuffer_;
 
 		// シャドウマッピング用のViewProjectionを送るバッファー
-		struct ViewProj {
-			Math::Matrix4x4 vp;
-			Math::Vector3 cameraPosition;
-		};
-		Base::ConstantBuffer<ViewProj> viewBuffer_;
+		Base::ConstantBuffer<Math::Matrix4x4> viewBuffer_;
 		// シャドウマップ
 		Base::SM_Direction shadowMap_;
 	};

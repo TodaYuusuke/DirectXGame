@@ -29,22 +29,13 @@ void DirectionLight::Update() {
 	Base::DirectionalLightStruct* data = lightBuffer_.data_;
 
 	data->vp = GetViewProjection();	// ビュープロジェクションをセット
-	Matrix4x4 projectionMatrix = Matrix4x4::CreateOrthographicMatrix(
-		-range, -range,
-		range, range,
-		nearZ, farZ
-	);
-	data-> projectionInverse = projectionMatrix.Inverse();	// 深度値の修正用に逆行列をセット
 	data->color = color.GetVector4();
 	data->direction = (Vector3{ 0.0f,0.0f,1.0f } * worldTF.rotation).Normalize();	// ライトの向き
 	data->intensity = intensity;
 	data->shadowIntensity = shadowIntensity;
 	data->bias = bias;
 
-	viewBuffer_.data_->vp = GetViewProjection();
-	viewBuffer_.data_->cameraPosition = { 0.0f,0.0f,0.0f };
-	//viewBuffer_.data_->cameraPosition = Object::Manager::GetInstance()->GetMainCamera()->worldTF.GetWorldPosition();
-	//viewBuffer_.data_->cameraPosition.y = 0.0f;
+	*viewBuffer_.data_ = GetViewProjection();
 }
 
 // ビュープロジェクションを返す関数
@@ -123,10 +114,7 @@ void DirectionLight::DebugGUI() {
 	ImGui::DragFloat("ShadowIntensity", &shadowIntensity, 0.01f);
 	ImGui::DragFloat("distance", &distance, 0.01f);
 	ImGui::DragFloat("bias", &bias, 0.0000001f, 0.0f, 1.0f, "%.8f");
-	//ImGui::SliderFloat("distance", &distance, 0.0f, 1.0f, "%.8f");
 	ImGui::DragFloat("range", &range, 0.01f);
-	ImGui::DragFloat("nearZ", &nearZ, 0.01f);
-	ImGui::DragFloat("farZ", &farZ, 0.01f);
 	ImGui::Checkbox("isActive", &isActive);
 	if (ImGui::TreeNode("ShadowMap")) {
 		ImGuiManager::ShowShadowMap(shadowMap_);
