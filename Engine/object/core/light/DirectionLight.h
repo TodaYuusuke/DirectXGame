@@ -78,7 +78,11 @@ namespace LWP::Object {
 		Base::ConstantBuffer<Base::DirectionalLightStruct> lightBuffer_;
 
 		// シャドウマッピング用のViewProjectionを送るバッファー
-		Base::ConstantBuffer<Math::Matrix4x4> viewBuffer_;
+		struct ViewProj {
+			Math::Matrix4x4 vp;
+			Math::Vector3 cameraPosition;
+		};
+		Base::ConstantBuffer<ViewProj> viewBuffer_;
 		// シャドウマップ
 		Base::SM_Direction shadowMap_;
 	};

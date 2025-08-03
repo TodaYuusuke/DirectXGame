@@ -108,6 +108,16 @@ namespace LWP::Math {
 		// 球面線形補間
 		[[nodiscard]] static Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
 
+		/// <summary>
+		/// 2つのベクトルの各要素ごとに最小値を求める回数
+		/// </summary>
+		static Vector3 Min(const Vector3& v1, const Vector3& v2);
+		/// <summary>
+		/// 2つのベクトルの各要素ごとに最大値を求める回数
+		/// </summary>
+		static Vector3 Max(const Vector3& v1, const Vector3& v2);
+
+
 		// 方向ベクトル
 		static const Vector3 UnitX() { return Vector3(1.0f, 0.0f, 0.0f); }
 		static const Vector3 UnitY() { return Vector3(0.0f, 1.0f, 0.0f); }

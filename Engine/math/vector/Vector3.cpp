@@ -106,3 +106,18 @@ Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t) {
 Vector3 Vector3::Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	return v1 * (1 - t) + v2 * t;
 }
+
+Vector3 Vector3::Min(const Vector3& v1, const Vector3& v2) {
+	return {
+		std::min(v1.x, v2.x),
+		std::min(v1.y, v2.y),
+		std::min(v1.z, v2.z)
+	};
+}
+Vector3 Vector3::Max(const Vector3& v1, const Vector3& v2) {
+	return {
+		std::max(v1.x, v2.x),
+		std::max(v1.y, v2.y),
+		std::max(v1.z, v2.z)
+	};
+}
