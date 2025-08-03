@@ -5,6 +5,8 @@ using namespace LWP::Math;
 
 // 初期化
 void ShadowTest::Initialize() {
+	LWP::Object::Manager::GetInstance()->GetDirLight()->enableShadowMap = true;
+
 	axis.LoadShortPath("axis.obj");
 	axis.worldTF.translation = { 0.0f, 1.0f, -3.0f };
 	axis.worldTF.scale = { 0.5f, 0.5f, 0.5f };
