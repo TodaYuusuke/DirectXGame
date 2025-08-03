@@ -7,8 +7,6 @@ class AnimationTest final
 public:
 	//*** 純粋仮想関数の実体宣言 ***//
 
-	AnimationTest();
-
 	// 初期化
 	void Initialize() override;
 	// 更新
@@ -18,7 +16,6 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Object::DirectionLight light;
-	LWP::Object::PointLight p;
 
 	LWP::Resource::RigidModel cube;
 	LWP::Resource::SkinningModel model[5];
@@ -34,7 +31,4 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	// ビルボード
 	LWP::Primitive::NormalBillboard2D normalBill;		// 通常
 	LWP::Primitive::ClipBillboard2D clipBill;			// クリップ
-
-	LWP::Object::Collision col;
-	LWP::Object::Collider::Capsule& caps;
 };

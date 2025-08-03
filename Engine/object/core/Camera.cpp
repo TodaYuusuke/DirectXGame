@@ -14,7 +14,7 @@ using namespace LWP::Resource;
 CameraStruct& CameraStruct::operator=(const Object::Camera& value) {
 	viewProjection = value.GetViewProjection();
 	// ※ あとでカメラに解像度を持たせる
-	vp2D = Matrix4x4::CreateIdentity4x4() * Matrix4x4::CreateOrthographicMatrix(0.0f, 0.0f, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 100.0f);
+	vp2D = Matrix4x4::CreateIdentity4x4() * Matrix4x4::CreateOrthographicMatrix(0.0f, LWP::Info::GetWindowHeightF(), LWP::Info::GetWindowWidthF(), 0.0f, 0.0f, 100.0f);
 	rotate = value.worldTF.GetAffineMatrix();
 	rotate.m[3][0] = { 0.0f };	// 平行移動の成分はいらない
 	rotate.m[3][1] = { 0.0f };

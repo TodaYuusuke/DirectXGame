@@ -41,6 +41,4 @@ void Field::Init(LWP::Resource::LevelData* level, LWP::Object::Camera* camera) {
 		//stars[i].materials[0].color = Utility::ColorPattern::YELLOW;
 		stars[i].SetAllMaterialLighting(false);
 	}
-
-	sun.rotation.x = 0.0f;
 }

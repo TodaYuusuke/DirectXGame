@@ -295,7 +295,7 @@ void JsonIO::DebugGUI(Group& group) {
 			LWP::Base::ImGuiManager::ColorEdit4(itr->name.c_str(), **VariantGet<Color*>(*itr));
 		}
 		else if (VariantCheck<std::string*>(*itr)) {
-			Base::ImGuiManager::InputText(itr->name.c_str(), **VariantGet<std::string*>(*itr), 5);
+			Base::ImGuiManager::InputText(itr->name.c_str(), **VariantGet<std::string*>(*itr));
 		}
 		else if (VariantCheck<Group>(*itr)) {
 			if (ImGui::TreeNode(itr->name.c_str())) {

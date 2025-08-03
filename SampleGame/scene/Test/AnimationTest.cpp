@@ -8,10 +8,6 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Object;
 
-AnimationTest::AnimationTest() :
-	caps(col.SetBroadShape(Collider::Capsule())) {
-
-}
 // 初期化
 void AnimationTest::Initialize() {
 	// NormalSpriteの初期化
@@ -23,7 +19,7 @@ void AnimationTest::Initialize() {
 	clipSprite.LoadTexture("Attack.png");
 
 	normalBill.LoadTexture("Particle.png");		// 通常
-	clipBill.LoadTexture("Particle.png");// クリップ
+	clipBill.LoadTexture("Particle.png");		// クリップ
 
 	normalSprite.worldTF.translation = { 100.0f, 400.0f, 0.0f };
 	sequenceSprite.worldTF.translation = { 400.0f, 200.0f, 0.0f };
@@ -57,10 +53,6 @@ void AnimationTest::Initialize() {
 
 	weapon.LoadShortPath("Player/Weapon/SimpleWeapon.gltf");
 	weapon.GetJoint("Grip")->localTF.Parent(&model[0], "WeaponAnchor");
-
-	caps.radius = 0.05f;
-	col.SetFollow(&weapon, "Grip");
-	//col.SetFollowTarget(&model[0].worldTF);
 }
 
 // 更新
@@ -82,10 +74,6 @@ void AnimationTest::Update() {
 			}
 			ImGui::TreePop();
 		}
-	}
-	if (ImGui::TreeNode("Collision")) {
-		col.DebugGUI();
-		ImGui::TreePop();
 	}
 	ImGui::End();
 

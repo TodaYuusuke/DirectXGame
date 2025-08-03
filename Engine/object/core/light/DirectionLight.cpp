@@ -21,7 +21,6 @@ DirectionLight::~DirectionLight() {}
 void DirectionLight::Init() {
 	worldTF.Init();
 	color = Utility::ColorPattern::WHITE;
-	rotation = { 1.57f,0.0f,0.0f };
 	intensity = 1.0f;
 }
 // 更新
@@ -61,7 +60,6 @@ Matrix4x4 DirectionLight::GetViewProjection() const {
 void DirectionLight::DebugGUI() {
 	worldTF.DebugGUI();
 	LWP::Base::ImGuiManager::ColorEdit4("color", color);
-	ImGui::DragFloat3("Rotation", &rotation.x, 0.01f);
 	ImGui::DragFloat("Intensity", &intensity, 0.01f);
 	ImGui::DragFloat("ShadowIntensity", &shadowIntensity, 0.01f);
 	ImGui::DragFloat("distance", &distance, 0.01f);
