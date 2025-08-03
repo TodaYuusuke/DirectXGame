@@ -69,21 +69,22 @@ namespace LWP::Base {
 
 		// 平行光源のシャドウマッピングを行う
 		Object::DirectionLight* dir = Object::Manager::GetInstance()->GetDirLight();
-		if (!dir->isActive) { return; }
 		SM_Direction* shadowMap = dir->GetShadowMap();
-		
-		list->OMSetRenderTargets(0, nullptr, false, &shadowMap->dsvInfo.cpuView);	// レンダーターゲットに指定
+
 		shadowMap->ChangeResourceBarrier(D3D12_RESOURCE_STATE_DEPTH_WRITE, list);	// バリアを書き込み用に
-		shadowMap->Clear(list);									// 画面クリア
-		D3D12_VIEWPORT viewport = shadowMap->GetViewport();		// ビューポートを取得して設定
-		list->RSSetViewports(1, &viewport);
-		D3D12_RECT scissorRect = shadowMap->GetScissorRect();	// シザー矩形を取得して設定
-		list->RSSetScissorRects(1, &scissorRect);
+		shadowMap->Clear(list);									// 画面クリアはしておく
+		if (dir->enableShadowMap) {
+			list->OMSetRenderTargets(0, nullptr, false, &shadowMap->dsvInfo.cpuView);	// レンダーターゲットに指定
+			D3D12_VIEWPORT viewport = shadowMap->GetViewport();		// ビューポートを取得して設定
+			list->RSSetViewports(1, &viewport);
+			D3D12_RECT scissorRect = shadowMap->GetScissorRect();	// シザー矩形を取得して設定
+			list->RSSetScissorRects(1, &scissorRect);
 
-		list->SetGraphicsRootConstantBufferView(RS_SLOT_LightView, dir->GetMatrixBufferView());	// 光源のビュープロジェクションを登録
+			list->SetGraphicsRootConstantBufferView(RS_SLOT_LightView, dir->GetMatrixBufferView());	// 光源のビュープロジェクションを登録
 
-		// 描画！
-		SetDispatchMesh(list);
+			// 描画！
+			SetDispatchMesh(list);
+		}
 
 		// このあとシャドウマッピングに使うのでバリアを変更
 		shadowMap->ChangeResourceBarrier(D3D12_RESOURCE_STATE_GENERIC_READ, list);

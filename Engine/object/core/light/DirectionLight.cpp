@@ -115,6 +115,7 @@ void DirectionLight::DebugGUI() {
 	ImGui::DragFloat("distance", &distance, 0.01f);
 	ImGui::DragFloat("bias", &bias, 0.0000001f, 0.0f, 1.0f, "%.8f");
 	ImGui::DragFloat("range", &range, 0.01f);
+	ImGui::Checkbox("enableShadowMap", &enableShadowMap);
 	ImGui::Checkbox("isActive", &isActive);
 	if (ImGui::TreeNode("ShadowMap")) {
 		ImGuiManager::ShowShadowMap(shadowMap_);

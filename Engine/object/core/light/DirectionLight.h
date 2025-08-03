@@ -35,6 +35,9 @@ namespace LWP::Object {
 		// 平行光源の距離
 		float distance = 50.0f;
 
+		// シャドウマップを行うかどうか
+		bool enableShadowMap = true;
+
 		float bias = 0.00015f;
 		float range = 128.0f;
 
