@@ -9,7 +9,7 @@ cd "../../"
 REM ブランチ名を入力させる
 set /p branchName=チェックアウトするブランチ名を入力してください（例: feature/new-ui）:
 
-REM 入力が空ならエラー扱い
+REM 入力が空ならエラー扱い 
 if "%branchName%"=="" (
     echo.
     echo ブランチ名が入力されていません。
