@@ -3,6 +3,8 @@
 #include "../matrix/Matrix4x4.h"
 #include "../Quaternion.h"
 
+#include <algorithm>
+
 using namespace LWP::Math;
 
 // *** オペーレーターオーバーロード *** //
