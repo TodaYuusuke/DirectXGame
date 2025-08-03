@@ -1,53 +1,43 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Visual Studio Developer Command Prompt ‚ğg—p‚·‚éiŠÂ‹«‚É‰‚¶‚Ä’²®j
+REM Visual Studio Developer Command Prompt ã‚’ä½¿ç”¨ã™ã‚‹ï¼ˆç’°å¢ƒã«å¿œã˜ã¦èª¿æ•´ï¼‰
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
 
 cd "../../"
 
-REM ƒuƒ‰ƒ“ƒ`–¼‚ğ“ü—Í‚³‚¹‚é
-set /p branchName=ƒ`ƒFƒbƒNƒAƒEƒg‚·‚éƒuƒ‰ƒ“ƒ`–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢i—á: feature/new-uij:
+REM ãƒ–ãƒ©ãƒ³ãƒåã‚’å…¥åŠ›ã•ã›ã‚‹
+set /p branchName=ãƒã‚§ãƒƒã‚¯ã‚¢ã‚¦ãƒˆã™ã‚‹ãƒ–ãƒ©ãƒ³ãƒåã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼ˆä¾‹: feature/new-uiï¼‰:
 
-REM “ü—Í‚ª‹ó‚È‚çƒGƒ‰[ˆµ‚¢
+REM å…¥åŠ›ãŒç©ºãªã‚‰ã‚¨ãƒ©ãƒ¼æ‰±ã„
 if "%branchName%"=="" (
     echo.
-    echo ƒuƒ‰ƒ“ƒ`–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB
+    echo ãƒ–ãƒ©ãƒ³ãƒåãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
     pause
     exit /b
 )
 
-REM •ÏX‚ğ‚·‚×‚Äæ‚èÁ‚·
+REM å¤‰æ›´ã‚’ã™ã¹ã¦å–ã‚Šæ¶ˆã™
 git reset --hard
-
-REM w’è‚µ‚½ƒuƒ‰ƒ“ƒ`‚Éƒ`ƒFƒbƒNƒAƒEƒg
-git checkout %branchName%
-if ERRORLEVEL 1 (
-    echo.
-    echo ƒuƒ‰ƒ“ƒ` %branchName% ‚Ìƒ`ƒFƒbƒNƒAƒEƒg‚É¸”s‚µ‚Ü‚µ‚½B
-    pause
-    exit /b
-)
-
-REM w’è‚µ‚½ƒuƒ‰ƒ“ƒ`‚ğƒvƒ‹
+REM æŒ‡å®šã—ãŸãƒ–ãƒ©ãƒ³ãƒã‚’ãƒ—ãƒ«
 git pull origin %branchName%
 if ERRORLEVEL 1 (
     echo.
-    echo git pull ‚É¸”s‚µ‚Ü‚µ‚½Bƒuƒ‰ƒ“ƒ`–¼‚âƒlƒbƒgƒ[ƒN‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B
+    echo git pull ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ–ãƒ©ãƒ³ãƒåã‚„ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚
     pause
     exit /b
 )
 
-REM Debug ƒrƒ‹ƒh
+REM Debug ãƒ“ãƒ«ãƒ‰
 MSBuild "DirectXGame.vcxproj" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Debug;Platform=x64;MultiProcessorCompilation=true
 
-REM Release ƒrƒ‹ƒh
+REM Release ãƒ“ãƒ«ãƒ‰
 MSBuild "DirectXGame.vcxproj" /t:clean;rebuild /p:ConfigurationType=StaticLibrary;Configuration=Release;Platform=x64;MultiProcessorCompilation=true
 
-REM ƒrƒ‹ƒhŒã‚É•s—v‚ÈƒfƒBƒŒƒNƒgƒŠ‚ğíœ
+REM ãƒ“ãƒ«ãƒ‰å¾Œã«ä¸è¦ãªãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å‰Šé™¤
 rmdir "DirectXGame" /s /q
 
-REM ƒŠƒ\[ƒX‚ğƒRƒs[
+REM ãƒªã‚½ãƒ¼ã‚¹ã‚’ã‚³ãƒ”ãƒ¼
 xcopy "SampleGame/resources/system" "../resources/system\" /e /y
 
 pause
