@@ -152,6 +152,7 @@ void Engine::DebugGUI() {
 		object_->DebugGUI();
 		collision_->DebugGUI();
 		resource_->DebugGUI();
+		input_->DebugGUI();
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
 		frameTracker_->DebugGUI();

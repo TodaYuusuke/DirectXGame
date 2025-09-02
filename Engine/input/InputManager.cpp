@@ -18,6 +18,8 @@ void Manager::Init() {
 
 	// キーボードデバイスの生成
 	keyboard_.Initialize(WinApp::GetInstance(), directInput_.Get());
+	// マウスデバイスの生成
+	mouse_.Initialize(WinApp::GetInstance(), directInput_.Get());
 	// コントローラーデバイスの生成
 	for (int i = 0; i < XBOX_CONTROLLER_MAX; i++) {
 		controller_[i].Initialize(i);
@@ -27,7 +29,15 @@ void Manager::Init() {
 void Manager::Update() {
 	// デバイスの情報更新
 	keyboard_.Update();
+	mouse_.Update();
 	for (int i = 0; i < XBOX_CONTROLLER_MAX; i++) {
 		controller_[i].Update();
+	}
+}
+
+void Manager::DebugGUI() {
+	if (ImGui::BeginTabItem("Input")) {
+		mouse_.DebugGUI();
+		ImGui::EndTabItem();
 	}
 }

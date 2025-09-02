@@ -319,6 +319,7 @@
     <ClCompile Include="Engine\primitive\2d\Billboards.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\shadow\DirLightShadow.cpp" />
+    <ClCompile Include="Engine\input\mouse\DIMouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -726,6 +727,7 @@
     <ClInclude Include="Engine\primitive\2d\planeInterface\Sprite.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\DirLightShadow.h" />
+    <ClInclude Include="Engine\input\mouse\DIMouse.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
