@@ -86,10 +86,7 @@ void DIMouse::DebugGUI() {
 std::string DIMouse::GetKeyStateString(uint8_t keyID) {
 	IsValidKeyID(keyID);
 	
-	if (None(keyID)) {
-		return "None";
-	}
-	else if (Trigger(keyID)) {
+	if (Trigger(keyID)) {
 		return "Trigger";
 	}
 	else if (Press(keyID)) {
@@ -97,6 +94,9 @@ std::string DIMouse::GetKeyStateString(uint8_t keyID) {
 	}
 	else if (Release(keyID)) {
 		return "Release";
+	}
+	else if (None(keyID)) {
+		return "None";
 	}
 	return "Error";
 }

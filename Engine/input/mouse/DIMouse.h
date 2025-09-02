@@ -56,7 +56,7 @@ namespace LWP::Input {
 		// キーが離された瞬間の場合 -> true
 		bool Release(uint8_t keyID);
 
-		// マウスの座標を取得
+		// マウスのスクリーン座標を取得
 		Math::Vector2 GetPosition() { return position_; }
 		// マウスの移動量を取得
 		Math::Vector2 GetMove() { return position_ - prePosition_; }
