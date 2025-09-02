@@ -1,5 +1,6 @@
 #pragma once
 #include "keyboard/DIKeyboard.h"
+#include "mouse/DIMouse.h"
 #include "controller/XInputController.h"
 
 #include "utility/Singleton.h"
@@ -32,11 +33,20 @@ namespace LWP::Input {
 		/// 更新
 		/// </summary>
 		void Update();
+		
+		/// <summary>
+		/// Debug用のGUI
+		/// </summary>
+		void DebugGUI();
 
 		/// <summary>
 		/// キーボードオブジェクトを取得
 		/// </summary>
 		DIKeyboard* GetKeyboard() { return &keyboard_; };
+		/// <summary>
+		/// マウスオブジェクトを取得
+		/// </summary>
+		DIMouse* GetMouse() { return &mouse_; };
 		/// <summary>
 		/// コントローラーオブジェクトを取得
 		/// </summary>
@@ -52,6 +62,8 @@ namespace LWP::Input {
 
 		// キーボードオブジェクト
 		DIKeyboard keyboard_;
+		// マウスオブジェクト
+		DIMouse mouse_;
 		// コントローラーオブジェクト
 		XInput::Controller controller_[XBOX_CONTROLLER_MAX];
 	};

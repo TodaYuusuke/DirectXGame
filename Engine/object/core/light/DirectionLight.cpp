@@ -19,7 +19,6 @@ DirectionLight::DirectionLight() {
 DirectionLight::~DirectionLight() {}
 // 初期化
 void DirectionLight::Init() {
-	worldTF.Init();
 	color = Utility::ColorPattern::WHITE;
 	intensity = 1.0f;
 }

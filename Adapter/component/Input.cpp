@@ -19,6 +19,25 @@ bool Input::Keyboard::GetRelease(uint8_t keyID) {
 	return Input::Manager::GetInstance()->GetKeyboard()->Release(keyID);
 }
 
+bool Input::Mouse::GetNone(uint8_t keyID) {
+	return Input::Manager::GetInstance()->GetMouse()->None(keyID);
+}
+bool Input::Mouse::GetTrigger(uint8_t keyID) {
+	return Input::Manager::GetInstance()->GetMouse()->Trigger(keyID);
+}
+bool Input::Mouse::GetPress(uint8_t keyID) {
+	return Input::Manager::GetInstance()->GetMouse()->Press(keyID);
+}
+bool Input::Mouse::GetRelease(uint8_t keyID) {
+	return Input::Manager::GetInstance()->GetMouse()->Release(keyID);
+}
+Math::Vector2 Input::Mouse::GetPosition() {
+	return Input::Manager::GetInstance()->GetMouse()->GetPosition();
+}
+Math::Vector2 Input::Mouse::GetMove() {
+	return Input::Manager::GetInstance()->GetMouse()->GetMove();
+}
+
 
 bool Input::Controller::GetNone(int keyID, int playerNum) {
 	return Input::Manager::GetInstance()->GetController(playerNum)->None(keyID);
