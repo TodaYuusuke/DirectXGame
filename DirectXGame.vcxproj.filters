@@ -320,6 +320,7 @@
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\shadow\DirLightShadow.cpp" />
     <ClCompile Include="Engine\input\mouse\DIMouse.cpp" />
+    <ClCompile Include="Engine\object\core\collision\CollisionMask.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -728,6 +729,7 @@
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\DirLightShadow.h" />
     <ClInclude Include="Engine\input\mouse\DIMouse.h" />
+    <ClInclude Include="Engine\object\core\collision\CollisionMask.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

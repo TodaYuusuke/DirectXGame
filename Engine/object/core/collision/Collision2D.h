@@ -1,19 +1,11 @@
 #pragma once
-#include "collider/child/cPoint.h"
-#include "collider/child/cAABB.h"
-#include "collider/child/cSphere.h"
-#include "collider/child/cCapsule.h"
-
-#include "OctreeSpaceDivision.h"
-
 #include "utility/Index.h"
 
 #include <variant>
 #include <functional>
 #include <map>
-#include "CollisionMask.h"
 
-
+#include <cstdint>
 // 当たり判定マスク用のビット値
 #define ColMaskNone 0b0		// 0000000000000000
 #define ColMask0 0b1		// 0000000000000001
@@ -36,18 +28,19 @@
 
 namespace LWP::Object {
 	/// <summary>
-	/// 当たり判定用のクラス
+	/// 2Dの当たり判定用のクラス
 	/// </summary>
-	class Collision {
+	class Collision2D {
+
 	public: // ** パブリックなメンバ変数 ** //
 
 		// 固有名詞
 		std::string name = "Collider";
 
 		// トランスフォーム
-		TransformQuat worldTF;
+		Object::TransformQuat worldTF;
 		// マスク
-		CollisionMask mask;
+		Mask mask;
 
 		// 動くかのフラグ
 		bool isMove = false;

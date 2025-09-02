@@ -222,6 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\core\collision\collider\child\cSphere.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\ICollider.cpp" />
     <ClCompile Include="Engine\object\core\Camera.cpp" />
+    <ClCompile Include="Engine\object\core\collision\CollisionMask.cpp" />
     <ClCompile Include="Engine\object\core\collision\OctreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
     <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
@@ -375,6 +376,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\object\core\collision\collider\child\cSphere.h" />
     <ClInclude Include="Engine\object\core\collision\collider\ICollider.h" />
     <ClInclude Include="Engine\object\core\Camera.h" />
+    <ClInclude Include="Engine\object\core\collision\CollisionMask.h" />
     <ClInclude Include="Engine\object\core\collision\OctreeSpaceDivision.h" />
     <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
     <ClInclude Include="Engine\object\core\GPUParticle.h" />
