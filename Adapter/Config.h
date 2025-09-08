@@ -52,7 +52,7 @@ namespace LWP::Config {
 				/// <summary>
 				/// 全種類のスプライトの合計最大数
 				/// </summary>
-				static const UINT kMaxCount = 1024;
+				static const UINT kMaxCount = 4096;
 			}
 			/// <summary>
 			/// ビルボードに関するパラメータ
