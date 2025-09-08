@@ -320,6 +320,13 @@
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\shadow\DirLightShadow.cpp" />
     <ClCompile Include="Engine\input\mouse\DIMouse.cpp" />
+    <ClCompile Include="Engine\object\core\collision\CollisionMask.cpp" />
+    <ClCompile Include="Engine\object\core\collision\Collision2D.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\ICollider2D.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child2D\cRectangle.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child2D\CheckCollisions2D.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child2D\cCircle.cpp" />
+    <ClCompile Include="Engine\primitive\2d\planeInterface\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -728,6 +735,11 @@
     <ClInclude Include="Engine\base\directX\renderPass\graphics\DrawSolid.h" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\DirLightShadow.h" />
     <ClInclude Include="Engine\input\mouse\DIMouse.h" />
+    <ClInclude Include="Engine\object\core\collision\CollisionMask.h" />
+    <ClInclude Include="Engine\object\core\collision\Collision2D.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\ICollider2D.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child2D\cRectangle.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child2D\cCircle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

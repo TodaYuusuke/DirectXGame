@@ -42,6 +42,12 @@ Vector2& Vector2::operator/=(const float& other) {
 float Vector2::Length() {
 	return sqrtf(x * x + y * y);
 }
+float Vector2::Dot(const Vector2& v1, const Vector2& v2) {
+	return v1.x * v2.x + v1.y * v2.y;
+}
+Vector2 Vector2::Perp() {
+	return Vector2(-y, x); // 90度回転させたベクトル
+}
 Vector2 Vector2::Normalize() {
 	Vector2 norm = { x,y };
 	float length = Length();
@@ -51,6 +57,10 @@ Vector2 Vector2::Normalize() {
 	}
 	return norm;
 }
+float Vector2::Distance(const Vector2& v1, const Vector2& v2) {
+	return sqrt(powf((v2.x - v1.x), 2) + powf((v2.y - v1.y), 2));
+}
+
 Vector2 Vector2::Rotate(float radian) {
 	Vector2 result;
 	result.x = x * cosf(radian) - y * sinf(radian);

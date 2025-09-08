@@ -1,31 +1,30 @@
 #pragma once
-#include "collider/child/cPoint.h"
-#include "collider/child/cAABB.h"
-#include "collider/child/cSphere.h"
-#include "collider/child/cCapsule.h"
-
-#include "OctreeSpaceDivision.h"
+#include "collider/child2D/cCircle.h"
+#include "collider/child2D/cRectangle.h"
 
 #include "utility/Index.h"
 
+#include "QuadtreeSpaceDivision.h"
+
+#include <string>
 #include <variant>
 #include <functional>
 #include <map>
 #include "CollisionMask.h"
 
-
 namespace LWP::Object {
 	/// <summary>
-	/// 当たり判定用のクラス
+	/// 2Dの当たり判定用のクラス
 	/// </summary>
-	class Collision {
+	class Collision2D {
+
 	public: // ** パブリックなメンバ変数 ** //
 
 		// 固有名詞
-		std::string name = "Collider";
+		std::string name = "Collider2D";
 
 		// トランスフォーム
-		TransformQuat worldTF;
+		Object::TransformQuat worldTF;
 		// マスク
 		CollisionMask mask;
 
@@ -35,23 +34,23 @@ namespace LWP::Object {
 		bool isActive = true;
 		
 		// Variant
-		using ShapeVariant = std::variant<Collider::Point, Collider::AABB, Collider::Sphere, Collider::Capsule>;
+		using ShapeVariant2D = std::variant<Collider2D::Circle, Collider2D::Rectangle>;
 		// ブロードフェーズのコライダー形状
-		ShapeVariant broad;
+		ShapeVariant2D broad;
 		// ナローフェーズのコライダー形状
-		std::vector<ShapeVariant> narrows;
+		std::vector<ShapeVariant2D> narrows;
 
 		// - ヒット時のリアクション用の関数 - //
-		typedef std::function<void(Collision* hitTarget)> OnHitFunction;	// ヒット時の関数ポインタの型
+		typedef std::function<void(Collision2D* hitTarget)> OnHitFunction;	// ヒット時の関数ポインタの型
 
 		// フレーム中になにともヒットしていないとき
-		//OnHitFunction noHitLambda = [](Collider* hitTarget) { hitTarget; };
+		//OnHitFunction noHitLambda = [](ICollider* hitTarget) { hitTarget; };
 		// ヒットした瞬間のとき
-		OnHitFunction enterLambda = [](Collision* hitTarget) { hitTarget; };
+		OnHitFunction enterLambda = [](Collision2D* hitTarget) { hitTarget; };
 		// ヒットし続けているとき
-		OnHitFunction stayLambda = [](Collision* hitTarget) { hitTarget; };
+		OnHitFunction stayLambda = [](Collision2D* hitTarget) { hitTarget; };
 		// ヒットが離れたとき
-		OnHitFunction exitLambda = [](Collision* hitTarget) { hitTarget; };
+		OnHitFunction exitLambda = [](Collision2D* hitTarget) { hitTarget; };
 
 
 	public: // ** メンバ関数 ** //
@@ -59,11 +58,11 @@ namespace LWP::Object {
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		Collision();
+		Collision2D();
 		/// <summary>
 		/// デフォルトデストラクタ
 		/// </summary>
-		~Collision();
+		~Collision2D();
 
 		// 更新処理
 		void Update();
@@ -72,30 +71,28 @@ namespace LWP::Object {
 		void UnSetFollow();
 		// 追従する対象をセット（トランスフォーム）
 		void SetFollow(Object::TransformQuat* ptr);
-		// 追従する対象をセット（スキンモデルのJoint）
-		void SetFollow(Resource::SkinningModel* model, const std::string& jointName);
 		// オクトツリーをセットする関数
-		void SetOctree(Object::OctreeSpaceDivision* octree) { octree_ = octree; }
+		void SetQuadTree(Object::QuadtreeSpaceDivision* quadTree) { quadTree_ = quadTree; }
 		// シリアル番号をセットする関数
 		int GetMortonNumber() { return mortonNumber; }
 		// ヒット時に正常な位置に修正するベクトルを加算
-		void ApplyFixVector(const LWP::Math::Vector3& fixVector);
+		void ApplyFixVector(const Math::Vector3& fixVector);
 
 		// マスクチェック
-		bool CheckMask(Collision* c);
+		bool CheckMask(Collision2D* c);
 		// 渡された形との当たり判定を確認する関数
-		void CheckCollision(Collision* c);
+		void CheckCollision(Collision2D* c);
 		// ヒット時の処理（受け身のとき相手に呼び出してもらうためにpublic）
-		void Hit(Collision* c);
+		void Hit(Collision2D* c);
 		// ヒットしていなかった時の処理（受け身のとき相手に呼び出してもらうためにpublic）
-		void NoHit(Collision* c);
+		void NoHit(Collision2D* c);
 		// シリアル番号をセットする関数
 		void SetSerial(Utility::Index&& s) { serialNum = std::move(s); }
 		// シリアル番号を返す関数
 		int GetSerial() { return serialNum; }
 
-		// ワールド座標を取得
-		LWP::Math::Vector3 GetWorldPosition() { return worldTF.GetWorldPosition(); }
+		// スクリーン座標を取得
+		LWP::Math::Vector2 GetScreenPosition();
 		// ImGui
 		void DebugGUI();
 
@@ -106,9 +103,9 @@ namespace LWP::Object {
 		/// <typeparam name="T">IColliderShapeを継承したクラスのみ</typeparam>
 		/// <param name="t">代入する実態</param>
 		/// <returns>代入された実体への参照を返す</returns>
-		template<IsICollider T>
-		T& SetBroadShape(const T& t) {
-			broad = t;
+		template<IsICollider2D T>
+		T& SetBroadShape() {
+			broad.emplace<T>();
 			GetBasePtr(broad)->SetFollowPtr(&worldTF);
 			return std::get<T>(broad);
 		}
@@ -116,7 +113,7 @@ namespace LWP::Object {
 	private: // ** メンバ変数 ** //
 
 		// オクトツリーのポインタ
-		Object::OctreeSpaceDivision* octree_;
+		Object::QuadtreeSpaceDivision* quadTree_;
 
 		// モートン序列番号
 		int mortonNumber = -1;
@@ -133,22 +130,22 @@ namespace LWP::Object {
 		/// </summary>
 		/// <param name="variant">共通化された型</param>
 		/// <returns>基底クラス型のポインタ</returns>
-		Collider::ICollider* GetBasePtr(ShapeVariant& variant);
+		Collider2D::ICollider* GetBasePtr(ShapeVariant2D& variant);
 		
 		/// <summary>
 		/// 現在の型名を取得する関数
 		/// </summary>
 		/// <param name="variant">共通化された型</param>
 		/// <returns>現在入っているクラス名</returns>
-		std::string GetCurrentTypeName(const ShapeVariant& variant);
+		std::string GetCurrentTypeName(const ShapeVariant2D& variant);
 
 		/// <summary>
 		/// 共通化変数同士の当たり判定チェックの関数（ブロードフェーズ）
 		/// </summary>
-		bool CheckBroadCollision(ShapeVariant& c, Math::Vector3* fixVec);
+		bool CheckBroadCollision(ShapeVariant2D& c, Math::Vector3* fixVec);
 		/// <summary>
 		/// 共通化変数同士の当たり判定チェックの関数（ナローフェーズ
 		/// </summary>
-		bool CheckNarrowsCollision(Collision* c, Math::Vector3* fixVec);
+		bool CheckNarrowsCollision(Collision2D* c, Math::Vector3* fixVec);
 	};
 };
