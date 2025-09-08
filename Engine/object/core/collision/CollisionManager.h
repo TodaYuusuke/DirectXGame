@@ -1,5 +1,6 @@
 #pragma once
 #include "Collision.h"
+#include "Collision2D.h"
 
 #include "utility/IndexManager.h"
 #include "utility/PtrManager.h"
@@ -33,8 +34,10 @@ namespace LWP::Object {
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetPointer(Collision* ptr);
+		void SetPointer(Collision2D* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
 		void DeletePointer(Collision* ptr);
+		void DeletePointer(Collision2D* ptr);
 
 		/// <summary>
 		/// Debug用GUI
@@ -45,11 +48,14 @@ namespace LWP::Object {
 
 		// オクトツリー
 		Object::OctreeSpaceDivision octree_;
-
+		// クアッドツリー
+		Object::QuadtreeSpaceDivision quadTree_;
+	
 		// Colliderに割り振るシリアル番号管理
 		Utility::IndexManager indexManager_;
 		// コライダーのリスト
 		Utility::PtrManager<Collision*> collisions_;
+		Utility::PtrManager<Collision2D*> collisions2D_;
 
 
 	private:
@@ -58,6 +64,7 @@ namespace LWP::Object {
 		int currentItem = 0;
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<Collision*> debugCols;
+		std::vector<Collision2D*> debugCols2D;
 	private: // ** プライベートなメンバ関数 ** //
 	};
 };

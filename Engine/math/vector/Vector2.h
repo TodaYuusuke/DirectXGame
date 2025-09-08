@@ -44,6 +44,16 @@ namespace LWP::Math {
 		/// <param name="v">... ベクトル</param>
 		/// <returns>ベクトルの長さ</returns>
 		float Length();
+		/// <summary>
+		/// 内積
+		/// </summary>
+		/// <returns></returns>
+		static float Dot(const Vector2& v1, const Vector2& v2);
+		/// <summary>
+		/// 90度回転させたベクトルを返す
+		/// </summary>
+		/// <returns></returns>
+		Vector2 Perp();
 
 		/// <summary>
 		/// 2次元ベクトルの正規化を求める
@@ -51,6 +61,13 @@ namespace LWP::Math {
 		/// <param name="v">... ベクトル</param>
 		/// <returns>正規化されたベクトル</returns>
 		Vector2 Normalize();
+		/// <summary>
+		/// 二つのベクトル間の距離を求める
+		/// </summary>
+		/// <param name="v1">... ベクトル１</param>
+		/// <param name="v2">... ベクトル２</param>
+		/// <returns></returns>
+		[[nodiscard]] static float Distance(const Vector2& v1, const Vector2& v2);
 		
 
 		/// <summary>

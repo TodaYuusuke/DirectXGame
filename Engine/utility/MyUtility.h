@@ -57,6 +57,15 @@ namespace LWP::Utility {
 	/// <returns></returns>
 	float GetRadian(const LWP::Math::Vector3& vec1, const LWP::Math::Vector3& vec2, LWP::Math::Vector3 axis = LWP::Math::Vector3::UnitY());
 
+	/// <summary>
+	/// 指定の範囲内に値を収める関数
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="min"></param>
+	/// <param name="max"></param>
+	/// <returns></returns>
+	float ClampOnRange(float value, float min, float max);
+
 
 	// インデックスを指定してstd::listのイテレーターを取得する関数
 	template<typename T>

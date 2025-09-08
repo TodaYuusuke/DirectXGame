@@ -213,6 +213,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\vector\Vector2.cpp" />
     <ClCompile Include="Engine\math\vector\Vector3.cpp" />
     <ClCompile Include="Engine\math\vector\Vector4.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child2D\cCircle.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child2D\CheckCollisions2D.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\child2D\cRectangle.cpp" />
+    <ClCompile Include="Engine\object\core\collision\collider\ICollider2D.cpp" />
+    <ClCompile Include="Engine\object\core\collision\Collision2D.cpp" />
     <ClCompile Include="Engine\object\core\collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\object\core\collision\Collision.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child\cAABB.cpp" />
@@ -233,6 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\object\TransformEuler.cpp" />
     <ClCompile Include="Engine\object\TransformQuat.cpp" />
     <ClCompile Include="Engine\primitive\2d\Billboards.cpp" />
+    <ClCompile Include="Engine\primitive\2d\planeInterface\Sprite.cpp" />
     <ClCompile Include="Engine\primitive\2d\policy\ClipPolicy.cpp" />
     <ClCompile Include="Engine\primitive\2d\policy\NormalPolicy.cpp" />
     <ClCompile Include="Engine\primitive\2d\planeInterface\IPlane.cpp" />
@@ -368,6 +374,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\vector\Vector2.h" />
     <ClInclude Include="Engine\math\vector\Vector3.h" />
     <ClInclude Include="Engine\math\vector\Vector4.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child2D\cCircle.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\child2D\cRectangle.h" />
+    <ClInclude Include="Engine\object\core\collision\collider\ICollider2D.h" />
+    <ClInclude Include="Engine\object\core\collision\Collision2D.h" />
     <ClInclude Include="Engine\object\core\collision\CollisionManager.h" />
     <ClInclude Include="Engine\object\core\collision\Collision.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child\cAABB.h" />

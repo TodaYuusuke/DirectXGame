@@ -4,10 +4,8 @@
 #include "../policy/SequencePolicy.h"
 #include "../policy/ClipPolicy.h"
 
-namespace LWP::Primitive {
-    // 前方宣言
-    class Manager;
 
+namespace LWP::Primitive {
     // タグ用
     struct ISprite : virtual IPlane {
         std::string GetName() override { return "Sprite"; }
@@ -25,14 +23,8 @@ namespace LWP::Primitive {
         using UpdatePolicy::GetNameImpl;
         //using UpdatePolicy::PostLoadTextureImpl;
 
-        SpriteTemplate() {
-            this->name = ISprite::GetName() + "_" + GetNameImpl();
-            Primitive::Manager::GetInstance()->SetPlanePtr(this);
-            Init();
-        }
-        ~SpriteTemplate() {
-            Primitive::Manager::GetInstance()->DeletePlanePtr(this);
-        }
+        SpriteTemplate();
+        ~SpriteTemplate();
 
         void Init() override {
             ISprite::Init();

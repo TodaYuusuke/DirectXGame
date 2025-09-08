@@ -6,6 +6,8 @@
 #include <windows.h>
 
 namespace LWP::Object {
+	class Collision;	// 前方宣言
+
 	/// <summary>
 	/// 8分木空間分割クラス
 	/// </summary>
@@ -26,6 +28,11 @@ namespace LWP::Object {
 		/// 初期化
 		/// </summary>
 		void Init();
+		/// <summary>
+		/// リストに含まれる当たり判定をチェック
+		/// </summary>
+		/// <param name="list"></param>
+		void CheckAllCollisions(std::list<Object::Collision*>* list);
 
 		/// <summary>
 		/// モートン序列番号を取得

@@ -30,3 +30,10 @@ float LWP::Utility::GetRadian(const Vector3& vec1, const Vector3& vec2, LWP::Mat
 
 	return angle;
 }
+
+
+float LWP::Utility::ClampOnRange(float value, float min, float max) {
+	if (value < min) { return min; }
+	else if (value > max) { return max; }
+	else { return value; }
+}
