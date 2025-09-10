@@ -9,32 +9,17 @@ using namespace LWP::Object;
 
 // 初期化
 void ParticleTest::Initialize() {
-	// レベルデータ読み込み
-	levelData.SetScaleMultiply(10.0f);	// 地形は10倍サイズに
-	levelData.LoadShortPath("SampleGameScene.json");
-
-	// パーティクルのモデル設定
-	particle_.model.LoadCube();
-	particle_.model.worldTF.scale = { 0.1f, 0.1f ,0.1f };
+	dirt_.sprite.worldTF.translation = { 100.0f,100.0f,0.0f };
 }
 
 // 更新
 void ParticleTest::Update() {
 	// パーティクル用ImGui
 	ImGui::Begin("Test");
-	if (ImGui::TreeNode("Model")) {
-		particle_.model.DebugGUI();
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Particle")) {
-		particle_.DebugGUI();
-		ImGui::TreePop();
-	}
 	ImGui::Text("-----------");
-	static int particleAmount = 1;
-	ImGui::DragInt("ParticleAmount", &particleAmount);
-	if (ImGui::Button("Generate Particle")) {
-		particle_.Add(particleAmount);
+	if (ImGui::TreeNode("Dirt")) {
+		dirt_.DebugGUI();
+		ImGui::TreePop();
 	}
 	ImGui::End();
 }

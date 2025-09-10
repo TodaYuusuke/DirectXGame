@@ -152,6 +152,7 @@
     <ClCompile Include="scene\Test\Collision2DTest.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
+    <ClCompile Include="scene\Test\particle\DirtSplash.cpp" />
     <ClCompile Include="scene\Test\ShadowTest.cpp" />
     <ClCompile Include="scene\Test\SkinningTest.cpp" />
     <ClCompile Include="scene\Test\NoneScene.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="scene\Test\Collision2DTest.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
+    <ClInclude Include="scene\Test\particle\DirtSplash.h" />
     <ClInclude Include="scene\Test\ShadowTest.h" />
     <ClInclude Include="scene\Test\SkinningTest.h" />
     <ClInclude Include="scene\Test\TestIncludes.h" />

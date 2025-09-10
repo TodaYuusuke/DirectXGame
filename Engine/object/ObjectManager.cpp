@@ -22,6 +22,7 @@ namespace LWP::Object {
 	void Manager::Update() {
 		for (auto& ptr : cameras_.list) { ptr->Update(); }
 		for (auto& ptr : particle_.list) { ptr->Update(); }
+		for (auto& ptr : spriteParticle_.list) { ptr->Update(); }
 		for (auto& ptr : gpuParticle_.list) { ptr->Update(); }
 		for (auto& ptr : particle_.list) { ptr->Update(); }
 		for (auto& ptr : gpuParticle_.list) { ptr->Update(); }
@@ -36,6 +37,10 @@ namespace LWP::Object {
 	void Manager::SetPtr(Particle* ptr) {
 		particle_.SetPtr(ptr);
 		ptr->name = "Particle" + objectCount_++;
+	}
+	void Manager::SetPtr(SpriteParticle* ptr) {
+		spriteParticle_.SetPtr(ptr);
+		ptr->name = "SpriteParticle" + objectCount_++;
 	}
 	void Manager::SetPtr(GPUParticle* ptr) {
 		gpuParticle_.SetPtr(ptr);
@@ -53,6 +58,7 @@ namespace LWP::Object {
 		static std::vector<std::function<void()>> functions = {
 			[this]() { debugObjs_.push_back(new Camera()); },
 			[this]() { /* Particleのクラスは動的生成をオフ */ },
+			[this]() { /* SpriteParticleのクラスは動的生成をオフ */ },
 			[this]() { /* GPUParticleのクラスは動的生成をオフ */ },
 			[this]() { /* Terrainのクラスは動的生成をオフ */ },
 			[this]() { /* DirectionLightのクラスは動的生成をオフ */ },
@@ -60,7 +66,7 @@ namespace LWP::Object {
 		};
 		// 選択肢の変数
 		static std::vector<const char*> classText = {
-			"Camera","Particle","GPUParticle","Terrain","DirectionLight","PointLight"
+			"Camera","Particle","SpriteParticle","GPUParticle","Terrain","DirectionLight","PointLight"
 		};
 		static auto drawListBox = [this](auto& list, bool allowCreate) {
 			using T = std::remove_pointer_t<typename std::decay_t<decltype(list)>::value_type>;
@@ -90,6 +96,9 @@ namespace LWP::Object {
 					break;
 				case LWP::Object::Manager::Type::Particle:
 					drawListBox(particle_.list, false);
+					break;
+				case LWP::Object::Manager::Type::SpriteParticle:
+					drawListBox(spriteParticle_.list, false);
 					break;
 				case LWP::Object::Manager::Type::GPUParticle:
 					drawListBox(gpuParticle_.list, false);

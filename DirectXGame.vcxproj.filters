@@ -327,6 +327,7 @@
     <ClCompile Include="Engine\object\core\collision\collider\child2D\CheckCollisions2D.cpp" />
     <ClCompile Include="Engine\object\core\collision\collider\child2D\cCircle.cpp" />
     <ClCompile Include="Engine\primitive\2d\planeInterface\Sprite.cpp" />
+    <ClCompile Include="Engine\object\core\SpriteParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -740,6 +741,7 @@
     <ClInclude Include="Engine\object\core\collision\collider\ICollider2D.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child2D\cRectangle.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child2D\cCircle.h" />
+    <ClInclude Include="Engine\object\core\SpriteParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

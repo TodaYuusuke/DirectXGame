@@ -1,5 +1,5 @@
 #pragma once
-#include "class/particle/TerrainParticle.h"
+#include "particle/DirtSplash.h"
 #include "scene/IScene.h"
 
 class ParticleTest final
@@ -16,5 +16,5 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	// パーティクルのクラス
-	TerrainParticle particle_;
+	DirtSplash dirt_;
 };

@@ -63,9 +63,21 @@ namespace LWP::Utility {
 			return i;
 		}
 
-
 		// コピー操作を禁止
 		Index(const Index&) = delete;
 		Index& operator=(const Index&) = delete;
+
+		//Index(Index& other) noexcept {
+		//	func = std::exchange(other.func, nullptr);
+		//	i = std::exchange(other.i, -1);
+		//}
+		//Index& operator=(Index& other) noexcept {
+		//	if (this != &other) {
+		//		// ムーブ代入の実装
+		//		func = std::exchange(other.func, nullptr);
+		//		i = std::exchange(other.i, -1);
+		//	}
+		//	return *this;
+		//}
 	};
 }
