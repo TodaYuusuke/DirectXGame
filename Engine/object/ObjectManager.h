@@ -1,6 +1,7 @@
 #pragma once
 #include "core/Camera.h"
 #include "core/Particle.h"
+#include "core/SpriteParticle.h"
 #include "core/GPUParticle.h"
 #include "core/light/DirectionLight.h"
 #include "core/light/PointLight.h"
@@ -47,11 +48,13 @@ namespace LWP::Object {
 		// 配列にポインタを登録する関数
 		void SetPtr(Camera* ptr);
 		void SetPtr(Particle* ptr);
+		void SetPtr(SpriteParticle* ptr);
 		void SetPtr(GPUParticle* ptr);
 		void SetPtr(PointLight* ptr);
 		// 配列からポインタを削除する関数
 		void DeletePtr(Camera* ptr) { cameras_.DeletePtr(ptr); }
 		void DeletePtr(Particle* ptr) { particle_.DeletePtr(ptr); }
+		void DeletePtr(SpriteParticle* ptr) { spriteParticle_.DeletePtr(ptr); }
 		void DeletePtr(GPUParticle* ptr) { gpuParticle_.DeletePtr(ptr); }
 		void DeletePtr(PointLight* ptr) { pointLight_.DeletePtr(ptr); }
 		// 配列を描画処理に渡す関数
@@ -70,6 +73,7 @@ namespace LWP::Object {
 		enum class Type {
 			Camera,
 			Particle,
+			SpriteParticle,
 			GPUParticle,
 			Terrain,
 			DirectionLight,
@@ -78,6 +82,7 @@ namespace LWP::Object {
 		// オブジェクトのリスト
 		Utility::PtrManager<Camera*> cameras_;
 		Utility::PtrManager<Particle*> particle_;
+		Utility::PtrManager<SpriteParticle*> spriteParticle_;
 		Utility::PtrManager<GPUParticle*> gpuParticle_;
 		DirectionLight directionLight_;		// インスタンスは必ず１つなので直で持つ
 		Utility::PtrManager<PointLight*> pointLight_;

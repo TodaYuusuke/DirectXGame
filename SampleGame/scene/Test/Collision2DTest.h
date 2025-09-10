@@ -15,10 +15,9 @@ public:
 
 private: //*** これより先に必要な処理や変数を記述 ***//
 
-	// 当たり判定
-	LWP::Object::Collision2D circle[2];
-	// 当たり判定
-	LWP::Object::Collision2D rectangle[2];
+	LWP::Object::Collision2D rectCol[2];	// 矩形コリジョン
 
-	LWP::Primitive::NormalSprite sp_;
+	// 当たり判定
+	std::list<LWP::Object::Collision2D> cols;
+	std::list<LWP::Math::Vector3> velocities;
 };
