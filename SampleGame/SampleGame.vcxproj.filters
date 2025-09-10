@@ -53,6 +53,7 @@
     <ClCompile Include="scene\Test\ShadowTest.cpp" />
     <ClCompile Include="scene\Test\Collision2DTest.cpp" />
     <ClCompile Include="scene\Test\particle\DirtSplash.cpp" />
+    <ClCompile Include="scene\Test\particle\TracesofDirt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\field\Field.h">
@@ -94,6 +95,7 @@
     <ClInclude Include="scene\Test\ShadowTest.h" />
     <ClInclude Include="scene\Test\Collision2DTest.h" />
     <ClInclude Include="scene\Test\particle\DirtSplash.h" />
+    <ClInclude Include="scene\Test\particle\TracesofDirt.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\system\shaders\utility\Particle.hlsli" />
