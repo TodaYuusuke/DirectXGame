@@ -16,7 +16,14 @@ namespace LWP::Utility::Random {
 		std::uniform_real_distribution<float> dist(min, max);	// 整数の一様分布を定義
 		return dist(gRandomEngine);								// 乱数を生成して返す
 	}
-
+	Math::Vector2 GenerateVector2(Math::Vector2 min, Math::Vector2 max) {
+		assert(min.x <= max.x || min.y <= max.y && "[min] is greater than [max].");
+		// 各成分ごとに乱数を生成してVector2を返す
+		return Math::Vector2{
+			GenerateFloat(min.x, max.x),
+			GenerateFloat(min.y, max.y)
+		};
+	}
 	Math::Vector3 GenerateVector3(Math::Vector3 min, Math::Vector3 max) {
 		assert(min.x <= max.x || min.y <= max.y || min.z <= max.z && "[min] is greater than [max].");
 		// 各成分ごとに乱数を生成してVector3を返す

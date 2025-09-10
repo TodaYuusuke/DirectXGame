@@ -13,11 +13,10 @@ TracesofDirt::TracesofDirt() {
 
 void TracesofDirt::Generate(Data& newData) {
 	newData.s.index = Random::GenerateInt(0, 4);
-	newData.s.worldTF.translation = Random::GenerateVector3(
-		{ kGenerateMinPoint.x, kGenerateMinPoint.y, 0.0f },
-		{ kGenerateMaxPoint.x, kGenerateMaxPoint.y, 0.1f }
-	);
-	newData.s.worldTF.translation += Random::GenerateVector3({ -1.0f,-1.0f,-1.0f }, { 1.0f,0.0f,1.0f }).Normalize() * kGenerateRange;
+	Vector2 pos = Random::GenerateVector2(kGenerateMinPoint, kGenerateMaxPoint);
+	newData.s.worldTF.translation.x = pos.x;
+	newData.s.worldTF.translation.y = pos.y;
+	newData.s.worldTF.translation += Random::GenerateVector3({ -1.0f,-1.0f,-1.0f }, { 1.0f,1.0f,1.0f }).Normalize() * kGenerateRange;
 }
 bool TracesofDirt::UpdateParticle(Data& data) {
 	// 経過フレーム加算
