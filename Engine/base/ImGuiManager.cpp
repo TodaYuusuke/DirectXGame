@@ -37,6 +37,7 @@ void ImGuiManager::Init() {
 void ImGuiManager::Release() {
 	// ImNodeの解放
 	ImNodes::DestroyContext();
+	//ImGui::DestroyContext();
 }
 
 void ImGuiManager::Begin() {
