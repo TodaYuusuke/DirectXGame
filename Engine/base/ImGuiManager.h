@@ -8,6 +8,7 @@
 #include "../../Externals/imgui/imgui_stdlib.h"
 
 #include "../../Externals/imgui-node-editor/imgui_node_editor.h"
+#include "../../Externals/imnodes/imnodes.h"
 
 #include "../utility/Color.h"
 
@@ -26,6 +27,10 @@ namespace LWP::Base {
 		/// 初期化
 		/// </summary>
 		void Init();
+		/// <summary>
+		/// 解放処理
+		/// </summary>
+		void Release();
 
 		/// <summary>
 		/// ImGui受付開始

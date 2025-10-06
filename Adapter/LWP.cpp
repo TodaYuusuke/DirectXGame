@@ -173,7 +173,8 @@ void Engine::DebugGUI() {
 }
 
 void Engine::Finalize() {
-	
+	// 各種解放
+	imGuiManager_->Release();
 	CloseWindow(winApp_->GetHWND());
 
 	// リソースリークチェック
