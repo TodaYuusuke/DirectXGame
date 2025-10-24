@@ -1,5 +1,5 @@
 #pragma once
-#include "MyString.h"
+#include "../functions/StringFunctions.h"
 #include <array>
 #include <functional>
 #include <optional>

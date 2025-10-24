@@ -6,7 +6,7 @@
 #include "core/light/DirectionLight.h"
 #include "core/light/PointLight.h"
 
-#include "utility/PtrManager.h"
+#include "utility/other/PtrManager.h"
 
 #include <vector>
 #include <map>

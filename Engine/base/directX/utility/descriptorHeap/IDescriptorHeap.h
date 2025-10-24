@@ -1,7 +1,7 @@
 #pragma once
 #include "../GPUDevice.h"
 
-#include "utility/IndexManager.h"
+#include "utility/other/IndexManager.h"
 #include <utility>
 
 namespace LWP::Base {

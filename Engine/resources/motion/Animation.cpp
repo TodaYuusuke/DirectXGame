@@ -2,7 +2,6 @@
 
 #include "component/Resource.h"
 #include "component/Information.h"
-#include "utility/MyUtility.h"
 #include "utility/motionEffects/Interpolation.h"
 
 #include "resources/model/SkinningModel.h"
@@ -11,6 +10,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+using namespace LWP;
 using namespace LWP::Resource;
 using namespace LWP::Primitive;
 using namespace LWP::Utility;

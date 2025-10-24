@@ -1,7 +1,7 @@
 #include "CollisionManager.h"
 #include <algorithm>
 
-#include "utility/MyUtility.h"
+#include "utility/functions/ArrayFunctions.h"
 
 #include "base/ImGuiManager.h"
 #include "Config.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include "BackBuffer.h"
 #include "math/vector/Vector2.h"
-#include "utility/Color.h"
+#include "utility/other/Color.h"
 
 // 前方宣言
 namespace LWP::Resource {

@@ -1,5 +1,5 @@
 #include "GPUDevice.h"
-#include "utility/MyUtility.h"
+#include "utility/functions/StringFunctions.h"
 #include <format>
 
 using namespace LWP::Base;

@@ -1,7 +1,7 @@
 #pragma once
 #include "IDataResource.h"
 #include "base/directX/utility/descriptorHeap/SRV.h"
-#include "utility/Counter.h"
+#include "utility/other/Counter.h"
 
 namespace LWP::Base {
 	/// <summary>

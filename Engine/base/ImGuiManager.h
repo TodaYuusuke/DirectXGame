@@ -10,7 +10,7 @@
 #include "../../Externals/imgui-node-editor/imgui_node_editor.h"
 #include "../../Externals/imnodes/imnodes.h"
 
-#include "../utility/Color.h"
+#include "utility/other/Color.h"
 
 #include "base/directX/utility/descriptorHeap/SRV.h"
 

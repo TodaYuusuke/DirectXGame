@@ -38,6 +38,7 @@ void Engine::Run(IScene* firstScene) {
 		sceneManager_->Update();	// シーンの更新処理（当たり判定の登録もここで行う）
 		debugCamera_->Update();	// デバッグカメラ更新はここで
 		object_->Update();	// オブジェクトの更新処理
+		utility_->Update(); // 便利系の更新処理（タイマーなど）
 
 		// デバッグカメラのOnOffでレンダリングに使うカメラを切り替える
 		/*directXCommon_->SetMainCamera(
@@ -97,9 +98,12 @@ void Engine::Initialize(std::wstring title, int width, int height) {
 	// Resource
 	Resource::Manager::Create();
 	resource_ = Resource::Manager::GetInstance();
-	// Resource
+	// Info
 	Information::FrameTracker::Create();
 	frameTracker_ = Information::FrameTracker::GetInstance();
+	// Utility
+	Utility::Manager::Create();
+	utility_ = Utility::Manager::GetInstance();
 
 	// 初期化
 	
@@ -119,6 +123,8 @@ void Engine::Initialize(std::wstring title, int width, int height) {
 	resource_->Init();
 	// フレームトラッカー
 	frameTracker_->Initialize();
+	// Utility
+	utility_->Init();
 }
 
 bool Engine::ProcessMessage() {
@@ -156,6 +162,7 @@ void Engine::DebugGUI() {
 		directXCommon_->DebugGUI();
 		sceneManager_->DebugGUI();
 		frameTracker_->DebugGUI();
+		utility_->DebugGUI();
 
 		if (ImGui::BeginTabItem("Info")) {
 			ImGui::Text("---------------------------");

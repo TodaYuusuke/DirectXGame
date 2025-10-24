@@ -2,7 +2,6 @@
 
 #include "resources/ResourceManager.h"
 #include "component/Resource.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP;
 using namespace LWP::Base;

@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <cstdint>
 #include <string>
-#include "utility/Singleton.h"
+#include "utility/other/Singleton.h"
 #include "../../Externals/imgui/imgui.h"
 #include "../../Externals/imgui/imgui_impl_dx12.h"
 #include "../../Externals/imgui/imgui_impl_win32.h"

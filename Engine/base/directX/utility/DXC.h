@@ -4,7 +4,7 @@
 #pragma comment(lib,"dxcompiler.lib")
 
 #include <string>
-#include "utility/Singleton.h"
+#include "utility/other/Singleton.h"
 
 namespace LWP::Base {
 	/// <summary>

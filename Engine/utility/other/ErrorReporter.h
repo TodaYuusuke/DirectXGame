@@ -1,12 +1,12 @@
 #pragma once
-#include <string>
+#include "../functions/StringFunctions.h"
 #include <iostream>
-#include "MyUtility.h"
+#include <Windows.h>
 
 namespace LWP::Utility {
 	namespace Exception {
 		// 読み込みの際に発生するエラー
-		void Load(const std::string& filename,	_In_z_ wchar_t const* file, _In_ unsigned line) {
+		inline void Load(const std::string& filename, _In_z_ wchar_t const* file, _In_ unsigned line) {
 			std::wstring message =
 				L"\"" + ConvertString(filename) + L"\" が見つかりませんでした。\n"
 				L"\n"

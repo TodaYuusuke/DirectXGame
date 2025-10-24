@@ -2,7 +2,6 @@
 #include <assimp/scene.h>
 
 #include "base/ImGuiManager.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP;
 using namespace LWP::Math;

@@ -2,7 +2,7 @@
 #include "../Externals/DirectXTex/DirectXTex.h"
 #include "../Externals/DirectXTex/d3dx12.h"
 
-#include "utility/MyUtility.h"
+#include "utility/functions/StringFunctions.h"
 
 using namespace LWP;
 using namespace LWP::Base;

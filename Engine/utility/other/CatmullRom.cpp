@@ -1,5 +1,5 @@
 #include "CatmullRom.h"
-#include "../base/ImGuiManager.h"
+#include "base/ImGuiManager.h"
 #include <algorithm>
 
 using namespace LWP::Math;

@@ -3,7 +3,7 @@
 
 #include "math/matrix/Matrix4x4.h"
 
-#include "utility/Color.h"
+#include "utility/other/Color.h"
 
 namespace LWP::Base::PostProcess {
 	/// <summary>

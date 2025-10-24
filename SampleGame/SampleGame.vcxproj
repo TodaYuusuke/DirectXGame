@@ -150,6 +150,7 @@
     <ClCompile Include="scene\Test\AnimationTest.cpp" />
     <ClCompile Include="scene\Test\AudioTest.cpp" />
     <ClCompile Include="scene\Test\Collision2DTest.cpp" />
+    <ClCompile Include="scene\Test\Collision3DTest.cpp" />
     <ClCompile Include="scene\Test\LevelLoaderTest.cpp" />
     <ClCompile Include="scene\Test\ParticleTest.cpp" />
     <ClCompile Include="scene\Test\particle\DirtSplash.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="scene\Test\AnimationTest.h" />
     <ClInclude Include="scene\Test\AudioTest.h" />
     <ClInclude Include="scene\Test\Collision2DTest.h" />
+    <ClInclude Include="scene\Test\Collision3DTest.h" />
     <ClInclude Include="scene\Test\LevelLoaderTest.h" />
     <ClInclude Include="scene\Test\ParticleTest.h" />
     <ClInclude Include="scene\Test\particle\DirtSplash.h" />

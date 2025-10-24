@@ -2,7 +2,7 @@
 #include "object/TransformEuler.h"
 #include "resources/texture/Texture.h"
 
-#include "utility/Color.h"
+#include "utility/other/Color.h"
 
 // assimpの読み込み
 #include <assimp/Importer.hpp>

@@ -2,7 +2,7 @@
 #include "collider/child2D/cCircle.h"
 #include "collider/child2D/cRectangle.h"
 
-#include "utility/Index.h"
+#include "utility/other/Index.h"
 
 #include "QuadtreeSpaceDivision.h"
 

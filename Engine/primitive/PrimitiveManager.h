@@ -1,9 +1,9 @@
 #pragma once
 #include "2d/2dList.h"
-//#include "3d/3dList.h"
+#include "3d/3dList.h"
 
-#include "utility/PtrManager.h"
-#include "utility/Singleton.h"
+#include "utility/other/PtrManager.h"
+#include "utility/other/Singleton.h"
 #include "base/directX/resource/data/StructuredBuffer.h"
 #include "base/directX/renderer/BufferGroup.h"
 
@@ -67,9 +67,11 @@ namespace LWP::Primitive {
 
 		// インスタンスのポインタをセット（ユーザー呼び出し不要）
 		void SetPlanePtr(IPlane* ptr);
+		void SetPri3DPtr(IPrimitive3D* ptr);
 		// インスタンスのポインタを解放（ユーザー呼び出し不要）
 		void DeletePlanePtr(IPlane* ptr) { planes_.DeletePtr(ptr); }
-
+		void DeletePri3DPtr(IPrimitive3D* ptr) { pris3D_.DeletePtr(ptr); }
+		
 		// Plane系の描画に使うバッファーを送る関数
 		PlaneBuffers* GetSpriteBuffer() { return &planeBuffers_[PlaneRenderType::Sprite]; }
 		PlaneBuffers* GetBillboardBuffer() { return &planeBuffers_[PlaneRenderType::Billboard]; }
@@ -79,6 +81,12 @@ namespace LWP::Primitive {
 		// ストレッチビルボードの速度バッファを返す関数
 		D3D12_GPU_DESCRIPTOR_HANDLE GetVelocitiesBuffer() { return velocities_.GetGPUView(); }
 
+	private: // ** プライベートなメンバ関数 ** //
+
+		// Plane用のDebugGUI
+		void DebugGUIPlane();
+		// 3DPrimitive用のDebugGUI
+		void DebugGUI3DPrimitive();
 
 	private: // ** メンバ変数 ** //
 
@@ -95,6 +103,8 @@ namespace LWP::Primitive {
 		Utility::PtrManager<IPlane*> planes_;
 		PlaneBuffers planeBuffers_[PlaneRenderType::Count];
 
+		Utility::PtrManager<IPrimitive3D*> pris3D_;
+
 		// ビルボードの種類（シェーダー内で描画切り替え用）
 		Base::StructuredBuffer<int32_t> type_;
 		// ストレッチビルボード用の速度
@@ -103,5 +113,6 @@ namespace LWP::Primitive {
 
 		// デバッグ用の生成したインスンタンスを格納しておく配列
 		std::vector<IPrimitive*> debugPris;
+		std::vector<IPrimitive3D*> debug3DPris;
 	};
 }

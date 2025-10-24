@@ -1,12 +1,12 @@
 #pragma once
 #include <map>
 #include <../Externals/nlohmann/Json.hpp>
-
 #include <variant>
+
 #include "math/Math.h"
 #include "object/TransformQuat.h"
 #include "Color.h"
-#include "MyString.h"
+#include "../functions/StringFunctions.h"
 
 // 前方宣言
 namespace LWP::Utility {

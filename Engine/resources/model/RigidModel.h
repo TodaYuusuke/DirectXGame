@@ -13,21 +13,6 @@ namespace LWP::Resource {
 		// マテリアル
 		std::map<std::string, Primitive::Material> materials;
 
-		// トランスフォームのバッファー
-		//Base::ConstantBuffer<Base::InstanceRigidData> buffer;
-		// マテリアルバッファー
-		//std::unique_ptr<Base::StructuredBuffer<Base::MaterialStruct>> mBuffers;
-
-
-	public:	// ** 列挙子 ** //
-		/// <summary>
-		/// 標準の形
-		/// </summary>
-		enum class Standard {
-			Cube,
-			Sphere
-		};
-
 
 	public: // ** メンバ関数 ** //
 

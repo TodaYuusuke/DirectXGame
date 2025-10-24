@@ -7,7 +7,6 @@
 #include "component/Resource.h"
 #include "component/Window.h"
 #include "component/Information.h"
-#include "../Engine/utility/MyUtility.h"
 
 /// <summary>
 /// アダプター

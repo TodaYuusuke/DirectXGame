@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <cassert>
-#include "utility/MyUtility.h"
+#include "utility/functions/StringFunctions.h"
 
 using namespace LWP;
 using namespace LWP::Resource;

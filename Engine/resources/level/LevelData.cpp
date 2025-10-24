@@ -1,9 +1,8 @@
 #include "LevelData.h"
 
+#include "utility/functions/ArrayFunctions.h"
 #include "base/ImGuiManager.h"
-#include "utility/MyUtility.h"
 #include <fstream>
-
 #include <iostream>
 
 

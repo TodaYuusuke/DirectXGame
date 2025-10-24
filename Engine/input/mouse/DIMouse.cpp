@@ -1,7 +1,6 @@
 #include "DIMouse.h"
 #include "../../base/WinApp.h"
 
-#include "utility/MyUtility.h"
 
 // KeyIDが有効な値かチェックする
 #define IsValidKeyID(id) assert(DIM_LEFT <= id && id < DIM_COUNT && "Invalid keyID. Please check KeyID again.");

@@ -4,8 +4,7 @@
 #include "cCapsule.h"
 
 #include "base/ImGuiManager.h"
-
-#include "utility/MyUtility.h"
+#include <algorithm>
 
 using namespace LWP::Object::Collider;
 using namespace LWP::Math;

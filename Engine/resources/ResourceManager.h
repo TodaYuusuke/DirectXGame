@@ -15,7 +15,7 @@
 
 #include "level/LevelData.h"
 
-#include "utility/PtrManager.h"
+#include "utility/other/PtrManager.h"
 
 
 namespace LWP::Base {

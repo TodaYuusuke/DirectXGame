@@ -1,5 +1,5 @@
 #include "Color.h"
-#include "../base/ImGuiManager.h"
+#include "base/ImGuiManager.h"
 
 using namespace LWP::Math;
 using namespace LWP::Utility;

@@ -6,7 +6,7 @@
 
 #include "object/core/collision/Collision.h"
 
-#include "utility/CatmullRom.h"
+#include "utility/other/CatmullRom.h"
 
 #pragma warning(push)
 #pragma warning(disable:26819)

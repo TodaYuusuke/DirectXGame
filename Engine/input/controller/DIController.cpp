@@ -1,6 +1,6 @@
 #include "DIController.h"
 #include "../../base/WinApp.h"
-#include "../../utility/MyUtility.h"
+#include "utility/functions/MathFunctions.h"
 
 
 using namespace LWP::Input;
