@@ -2,7 +2,7 @@
 #include "../../IObject.h"
 
 #include "math/vector/Vector3.h"
-#include "utility/Color.h"
+#include "utility/other/Color.h"
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include "base/directX/resource/rendering/shadow/SM_Direction.h"
 #include "base/directX/resource/rendering/DepthStencil.h"

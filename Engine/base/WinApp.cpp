@@ -1,6 +1,5 @@
 #include "WinApp.h"
 #include <cstdint>
-#include "../utility/MyUtility.h"
 
 #include <ShellScalingApi.h>
 #pragma comment(lib,"Shcore.lib")

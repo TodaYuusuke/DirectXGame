@@ -3,7 +3,7 @@
 #include "mouse/DIMouse.h"
 #include "controller/XInputController.h"
 
-#include "utility/Singleton.h"
+#include "utility/other/Singleton.h"
 
 // 前方宣言
 namespace LWP::Base {

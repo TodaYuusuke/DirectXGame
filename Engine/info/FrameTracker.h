@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
 
-#include "utility/Singleton.h"
+#include "utility/other/Singleton.h"
 
 #include "base/directX/resource/data/ConstantBuffer.h"
 

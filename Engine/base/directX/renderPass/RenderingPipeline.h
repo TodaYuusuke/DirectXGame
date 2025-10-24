@@ -1,5 +1,5 @@
 #pragma once
-#include "utility/Singleton.h"
+#include "utility/other/Singleton.h"
 
 #include "graphics/DrawSolid.h"
 #include "graphics/DrawPlane.h"

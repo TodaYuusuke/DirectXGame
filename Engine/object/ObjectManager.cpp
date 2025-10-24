@@ -1,12 +1,9 @@
 #include "ObjectManager.h"
 #include "base/ImGuiManager.h"
+#include "utility/functions/ArrayFunctions.h"
 
 #include <vector>
 #include <functional>
-
-#include "utility/MyUtility.h"
-
-using namespace LWP;
 
 namespace LWP::Object {
 	void Manager::Init() {

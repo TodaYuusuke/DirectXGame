@@ -3,7 +3,7 @@
 
 #include "base/ImGuiManager.h"
 
-#include "utility/MyUtility.h"
+#include "utility/functions/MathFunctions.h"
 
 using namespace LWP::Object::Collider2D;
 using namespace LWP::Math;

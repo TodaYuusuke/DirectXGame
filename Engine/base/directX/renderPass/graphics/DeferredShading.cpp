@@ -3,7 +3,6 @@
 
 #include "object/ObjectManager.h"
 #include "resources/ResourceManager.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP::Resource;
 

@@ -3,7 +3,6 @@
 
 #include "object/ObjectManager.h"
 #include "Config.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP::Math;
 
@@ -129,6 +128,26 @@ namespace LWP::Primitive {
 	}
 
 	void Manager::DebugGUI() {
+		static int mode = 0;
+
+		if (ImGui::BeginTabItem("Primitive")) {
+			ImGui::RadioButton("Plane", &mode, 0);
+			ImGui::SameLine();
+			ImGui::RadioButton("3DPrimitive", &mode, 1);
+			ImGui::Text("---------- Create New Instance ----------");
+
+			if (mode == 0) {
+				DebugGUIPlane();
+			}
+			else {
+				DebugGUI3DPrimitive();
+			}
+
+			ImGui::EndTabItem();
+		}
+	}
+
+	void Manager::DebugGUIPlane() {
 		// 指定の種類のPrimitiveを絞り込む選択肢
 		static std::vector<const char*> filterText = {
 			"All", "Sprite", "Surface", "Billboard2D", "HorizontalBillboard", "VerticalBillboard", "StretchedBillboard"
@@ -178,60 +197,118 @@ namespace LWP::Primitive {
 			},
 		};
 		static int currentItem = 0;
-		
-		if (ImGui::BeginTabItem("Primitive")) {
-			// インスタンス生成用のUI
-			if (ImGui::BeginTable("ComboTable", 2, ImGuiTableFlags_SizingFixedFit)) {
-				ImGui::TableSetupColumn("Type Select", ImGuiTableColumnFlags_WidthStretch);   // ラベル列
-				ImGui::TableSetupColumn("Policy Select", ImGuiTableColumnFlags_WidthStretch);        // Combo列 (Stretch or Fixed with wider width)
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Type Select");
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("Policy Select");
+		// インスタンス生成用のUI
+		if (ImGui::BeginTable("ComboTable", 2, ImGuiTableFlags_SizingFixedFit)) {
+			ImGui::TableSetupColumn("Type Select", ImGuiTableColumnFlags_WidthStretch);   // ラベル列
+			ImGui::TableSetupColumn("Policy Select", ImGuiTableColumnFlags_WidthStretch);        // Combo列 (Stretch or Fixed with wider width)
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::SetNextItemWidth(-FLT_MIN); // セルの左端から右端まで広げる
-				ImGui::Combo("##TypeCombo", &typeID, typeText.data(), static_cast<int>(typeText.size()));
-				ImGui::TableSetColumnIndex(1);
-				ImGui::SetNextItemWidth(-FLT_MIN); // セルの左端から右端まで広げる
-				ImGui::Combo("##PolicyCombo", &policyID, policyText.data(), static_cast<int>(policyText.size()));
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Type Select");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("Policy Select");
 
-				ImGui::EndTable();
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::SetNextItemWidth(-FLT_MIN); // セルの左端から右端まで広げる
+			ImGui::Combo("##TypeCombo", &typeID, typeText.data(), static_cast<int>(typeText.size()));
+			ImGui::TableSetColumnIndex(1);
+			ImGui::SetNextItemWidth(-FLT_MIN); // セルの左端から右端まで広げる
+			ImGui::Combo("##PolicyCombo", &policyID, policyText.data(), static_cast<int>(policyText.size()));
+
+			ImGui::EndTable();
+		}
+		if (ImGui::Button("Create")) { functions[typeID][policyID](); }
+		ImGui::Text("---------- Instance List ----------");
+		ImGui::Combo("Filter by Type", &filterID, filterText.data(), static_cast<int>(filterText.size()));
+		// インスタンス一覧
+		if (!planes_.list.empty()) {
+			std::vector<const char*> itemText;
+			std::vector<IPlane*> ptr;
+			for (IPlane* p : planes_.list) {
+				if (filterID != 0) {	// All以外の時
+					// 選択されたタイプ以外は表示しない
+					if (p->GetType() != static_cast<IPlane::Type>(filterID - 1)) { continue; }
+				}
+				itemText.push_back(p->name.c_str());
+				ptr.push_back(p);
 			}
-			if (ImGui::Button("Create New Instance")) { functions[typeID][policyID](); }
-			ImGui::Text("-------------------------");
-			ImGui::Combo("Filter by Type", &filterID, filterText.data(), static_cast<int>(filterText.size()));
-			// インスタンス一覧
-			if (!planes_.list.empty()) {
-				std::vector<const char*> itemText;
-				std::vector<IPlane*> ptr;
-				for (IPlane* p : planes_.list) {
-					if (filterID != 0) {	// All以外の時
-						// 選択されたタイプ以外は表示しない
-						if (p->GetType() != static_cast<IPlane::Type>(filterID - 1)) { continue; }
-					}
-					itemText.push_back(p->name.c_str());
-					ptr.push_back(p);
-				}
-				ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-				
-				if (!ptr.empty() && 0 <= currentItem && currentItem < ptr.size()) {
-					ptr[currentItem]->DebugGUI();
-				}
-				else {
-					ImGui::Text("No Primitive selected.");
-				}
-			}
+			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
 
-			ImGui::EndTabItem();
+			if (!ptr.empty() && 0 <= currentItem && currentItem < ptr.size()) {
+				ptr[currentItem]->DebugGUI();
+			}
+			else {
+				ImGui::Text("No Primitive selected.");
+			}
+		}
+	}
+	void Manager::DebugGUI3DPrimitive() {
+		// 指定の種類のPrimitiveを絞り込む選択肢
+		static std::vector<const char*> filterText = {
+			"All", "Cube"
+		};
+		static int filterID = 0;
+		// 選択肢の変数
+		static std::vector<const char*> typeText = {
+			"Cube",
+		};
+		static int typeID = 0;
+
+		// 新規生成用のインスタンスを作成する関数のリスト
+		static std::vector<std::function<void()>> functions = {
+			[this]() { debug3DPris.push_back(new Cube()); },
+		};
+		static int currentItem = 0;
+
+		// インスタンス生成用のUI
+		if (ImGui::BeginTable("ComboTable", 1, ImGuiTableFlags_SizingFixedFit)) {
+			ImGui::TableSetupColumn("Type Select", ImGuiTableColumnFlags_WidthStretch);   // ラベル列
+
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Type Select");
+
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::SetNextItemWidth(-FLT_MIN); // セルの左端から右端まで広げる
+			ImGui::Combo("##TypeCombo", &typeID, typeText.data(), static_cast<int>(typeText.size()));
+
+			ImGui::EndTable();
+		}
+		if (ImGui::Button("Create")) { functions[typeID](); }
+		ImGui::Text("---------- Instance List ----------");
+		ImGui::Combo("Filter by Type", &filterID, filterText.data(), static_cast<int>(filterText.size()));
+		// インスタンス一覧
+		if (!pris3D_.list.empty()) {
+			std::vector<const char*> itemText;
+			std::vector<IPrimitive3D*> ptr;
+			for (IPrimitive3D* p : pris3D_.list) {
+				if (filterID != 0) {	// All以外の時
+					// 選択されたタイプ以外は表示しない
+					if (p->GetType() != static_cast<IPrimitive3D::Type>(filterID - 1)) { continue; }
+				}
+				itemText.push_back(p->name.c_str());
+				ptr.push_back(p);
+			}
+			ImGui::ListBox("List", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+
+			if (!ptr.empty() && 0 <= currentItem && currentItem < ptr.size()) {
+				ptr[currentItem]->DebugGUI();
+			}
+			else {
+				ImGui::Text("No Primitive selected.");
+			}
 		}
 	}
 
 	void Manager::SetPlanePtr(IPlane* ptr) {
 		ptr->name += "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
 		planes_.SetPtr(ptr);
+	}
+	void Manager::SetPri3DPtr(IPrimitive3D* ptr) {
+		ptr->name += "_" + std::to_string(primitiveCount_++);	// 数字だけ渡す
+		pris3D_.SetPtr(ptr);
 	}
 }

@@ -1,5 +1,5 @@
 #include "RootSignature.h"
-#include "utility/MyUtility.h"
+#include "utility/functions/StringFunctions.h"
 
 using namespace LWP::Base;
 

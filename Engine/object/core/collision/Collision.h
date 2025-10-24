@@ -6,7 +6,7 @@
 
 #include "OctreeSpaceDivision.h"
 
-#include "utility/Index.h"
+#include "utility/other/Index.h"
 
 #include <variant>
 #include <functional>

@@ -1,6 +1,5 @@
 #include "Collision.h"
 #include "base/ImGuiManager.h"
-#include "utility/MyUtility.h"
 #include "component/System.h"
 
 #include <typeinfo>

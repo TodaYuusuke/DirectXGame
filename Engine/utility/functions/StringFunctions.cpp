@@ -1,4 +1,4 @@
-#include "MyString.h"
+#include "StringFunctions.h"
 #include <dxgidebug.h>
 #include <sstream>
 

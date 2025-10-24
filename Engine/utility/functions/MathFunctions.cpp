@@ -1,5 +1,4 @@
-#include "MyUtility.h"
-
+#include "MathFunctions.h"
 #include <numbers>
 
 using namespace LWP::Math;
@@ -7,12 +6,9 @@ using namespace LWP::Math;
 float LWP::Utility::RadianToDegree(float radian) {
 	return radian * (180.0f / static_cast<float>(std::numbers::pi));
 }
-
 float LWP::Utility::DegreeToRadian(float degree) {
 	return degree * (static_cast<float>(std::numbers::pi) / 180.0f);
 }
-
-
 float LWP::Utility::GetRadian(const Vector3& vec1, const Vector3& vec2, LWP::Math::Vector3 axis) {
 	Vector3 vec1Norm = vec1.Normalize();
 	Vector3 vec2Norm = vec2.Normalize();
@@ -30,7 +26,6 @@ float LWP::Utility::GetRadian(const Vector3& vec1, const Vector3& vec2, LWP::Mat
 
 	return angle;
 }
-
 
 float LWP::Utility::ClampOnRange(float value, float min, float max) {
 	if (value < min) { return min; }

@@ -2,9 +2,9 @@
 #include "Collision.h"
 #include "Collision2D.h"
 
-#include "utility/IndexManager.h"
-#include "utility/PtrManager.h"
-#include "utility/Singleton.h"
+#include "utility/other/IndexManager.h"
+#include "utility/other/PtrManager.h"
+#include "utility/other/Singleton.h"
 #include <map>
 
 namespace LWP::Object {

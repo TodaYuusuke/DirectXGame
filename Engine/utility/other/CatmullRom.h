@@ -1,6 +1,5 @@
 #pragma once
-#include "../math/vector/Vector3.h"
-#include <string>
+#include "math/vector/Vector3.h"
 #include <vector>
 
 namespace LWP::Utility {
@@ -12,7 +11,7 @@ namespace LWP::Utility {
 		// 補間
 		float t = 0.0f;
 		// スプライン曲線制御点
-		std::vector<LWP::Math::Vector3> controlPoints;
+		std::vector<Math::Vector3> controlPoints;
 
 
 	public: // ** メンバ関数 ** //
@@ -52,6 +51,6 @@ namespace LWP::Utility {
 	private: // ** プライベートなメンバ関数 ** //
 
 		// 補間
-		LWP::Math::Vector3 Interpolation(LWP::Math::Vector3 p0, LWP::Math::Vector3 p1, LWP::Math::Vector3 p2, LWP::Math::Vector3 p3, float calcT);
+		LWP::Math::Vector3 Interpolation(Math::Vector3 p0, Math::Vector3 p1, Math::Vector3 p2, Math::Vector3 p3, float calcT);
 	};
 }

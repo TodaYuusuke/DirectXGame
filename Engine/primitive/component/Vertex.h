@@ -3,7 +3,7 @@
 #include "math/vector/Vector3.h"
 #include "math/matrix/Matrix4x4.h"
 
-#include "utility/Color.h"
+#include "utility/other/Color.h"
 #include <array>
 
 // assimpの読み込み

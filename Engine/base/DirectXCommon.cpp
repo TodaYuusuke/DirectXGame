@@ -1,6 +1,5 @@
 #include "DirectXCommon.h"
 #include "object/core/Camera.h"
-#include "../utility/MyUtility.h"
 
 
 #include <cassert>

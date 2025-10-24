@@ -1,5 +1,5 @@
 #pragma once
-#include "../math/vector/Vector4.h"
+#include "math/vector/Vector4.h"
 #include <string>
 
 namespace LWP::Utility {

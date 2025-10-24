@@ -15,24 +15,10 @@ AABB::AABB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {}
 AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 	min = min_;
 	max = max_;
-
-#if DEMO
-	// 立方体のインスタンスを作成
-	//cube.CreateFromAABB(*this);
-	//cube.material.enableLighting = false;
-	//cube.isWireFrame = true;
-#endif
 }
 
 AABB::AABB(const AABB& other) {
 	*this = other;
-
-#if DEMO
-	// 立方体のインスタンスを作成
-	//cube.CreateFromAABB(*this);
-	//cube.material.enableLighting = false;
-	//cube.isWireFrame = true;
-#endif
 }
 
 void AABB::Update() {

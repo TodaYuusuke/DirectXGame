@@ -88,12 +88,6 @@
     <ClCompile Include="Engine\scene\SceneManager.cpp">
       <Filter>Engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\utility\Color.cpp">
-      <Filter>Engine\utilitiy</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\utility\MyUtility.cpp">
-      <Filter>Engine\utilitiy</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\info\FrameTracker.cpp">
       <Filter>Engine\info</Filter>
     </ClCompile>
@@ -120,9 +114,6 @@
     </ClCompile>
     <ClCompile Include="Adapter\component\Window.cpp">
       <Filter>Adapter\component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\utility\CatmullRom.cpp">
-      <Filter>Engine\utilitiy</Filter>
     </ClCompile>
     <ClCompile Include="Adapter\component\Common.cpp">
       <Filter>Adapter\component</Filter>
@@ -159,9 +150,6 @@
     </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\descriptorHeap\SRV.cpp">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\utility\IndexManager.cpp">
-      <Filter>Engine\utilitiy</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\directX\utility\DXC.cpp">
       <Filter>Engine\base\directX\utility</Filter>
@@ -290,16 +278,12 @@
       <Filter>Engine\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\object\core\collision\QuadtreeSpaceDivision.cpp" />
-    <ClCompile Include="Engine\utility\MyString.cpp" />
     <ClCompile Include="Engine\info\DebugCamera.cpp" />
-    <ClCompile Include="Engine\utility\Singleton.cpp" />
     <ClCompile Include="Engine\object\core\GPUParticle.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\crude_json.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_canvas.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor.cpp" />
     <ClCompile Include="Externals\imgui-node-editor\imgui_node_editor_api.cpp" />
-    <ClCompile Include="Engine\utility\JsonIO.cpp" />
-    <ClCompile Include="Engine\utility\Random.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\RenderingPipeline.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\copy\Copy.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\ImGuiRender.cpp" />
@@ -328,6 +312,21 @@
     <ClCompile Include="Engine\object\core\collision\collider\child2D\cCircle.cpp" />
     <ClCompile Include="Engine\primitive\2d\planeInterface\Sprite.cpp" />
     <ClCompile Include="Engine\object\core\SpriteParticle.cpp" />
+    <ClCompile Include="Externals\imnodes\imnodes.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
+    <ClCompile Include="Engine\primitive\3d\IPrimitive3D.cpp" />
+    <ClCompile Include="Engine\utility\functions\MathFunctions.cpp" />
+    <ClCompile Include="Engine\utility\functions\ArrayFunctions.cpp" />
+    <ClCompile Include="Engine\utility\functions\StringFunctions.cpp" />
+    <ClCompile Include="Engine\utility\IUtility.cpp" />
+    <ClCompile Include="Engine\utility\other\CatmullRom.cpp" />
+    <ClCompile Include="Engine\utility\other\Color.cpp" />
+    <ClCompile Include="Engine\utility\other\JsonIO.cpp" />
+    <ClCompile Include="Engine\utility\other\IndexManager.cpp" />
+    <ClCompile Include="Engine\utility\other\Random.cpp" />
+    <ClCompile Include="Engine\utility\other\Singleton.cpp" />
+    <ClCompile Include="Engine\utility\child\Timer.cpp" />
+    <ClCompile Include="Engine\utility\UtilityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -435,15 +434,6 @@
     <ClInclude Include="Engine\scene\IScene.h">
       <Filter>Engine\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\Color.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\MyUtility.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\ErrorReporter.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\info\FrameTracker.h">
       <Filter>Engine\info</Filter>
     </ClInclude>
@@ -471,14 +461,8 @@
     <ClInclude Include="Engine\input\controller\XInputController.h">
       <Filter>Engine\input\controller</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\Counter.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
     <ClInclude Include="Adapter\component\Window.h">
       <Filter>Adapter\component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\CatmullRom.h">
-      <Filter>Engine\utilitiy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\Particle.h">
       <Filter>Engine\object\core</Filter>
@@ -507,9 +491,6 @@
     <ClInclude Include="Engine\utility\motionEffects\Interpolation.h">
       <Filter>Engine\utilitiy\motionEffects</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\utility\PtrManager.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
     <ClInclude Include="Adapter\component\Primitive.h">
       <Filter>Adapter\component</Filter>
     </ClInclude>
@@ -527,12 +508,6 @@
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\RTV.h">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\IndexManager.h">
-      <Filter>Engine\utilitiy</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\utility\Index.h">
-      <Filter>Engine\utilitiy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\utility\descriptorHeap\SRV.h">
       <Filter>Engine\base\directX\utility\descriptorHeap</Filter>
@@ -694,10 +669,7 @@
       <Filter>Externals\nlohmann</Filter>
     </ClInclude>
     <ClInclude Include="Engine\object\core\collision\QuadtreeSpaceDivision.h" />
-    <ClInclude Include="Engine\utility\StatePattern.h" />
-    <ClInclude Include="Engine\utility\MyString.h" />
     <ClInclude Include="Engine\info\DebugCamera.h" />
-    <ClInclude Include="Engine\utility\Singleton.h" />
     <ClInclude Include="Engine\object\core\GPUParticle.h" />
     <ClInclude Include="Externals\imgui-node-editor\crude_json.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_bezier_math.h" />
@@ -705,8 +677,6 @@
     <ClInclude Include="Externals\imgui-node-editor\imgui_extra_math.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor.h" />
     <ClInclude Include="Externals\imgui-node-editor\imgui_node_editor_internal.h" />
-    <ClInclude Include="Engine\utility\JsonIO.h" />
-    <ClInclude Include="Engine\utility\Random.h" />
     <ClInclude Include="Engine\base\directX\renderPass\compute\IComputePass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\IGraphicsPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\RenderingPipeline.h" />
@@ -742,6 +712,36 @@
     <ClInclude Include="Engine\object\core\collision\collider\child2D\cRectangle.h" />
     <ClInclude Include="Engine\object\core\collision\collider\child2D\cCircle.h" />
     <ClInclude Include="Engine\object\core\SpriteParticle.h" />
+    <ClInclude Include="Externals\imnodes\imnodes.h" />
+    <ClInclude Include="Externals\imnodes\imnodes_internal.h" />
+    <ClInclude Include="Engine\primitive\3d\3dList.h" />
+    <ClInclude Include="Engine\primitive\3d\Cube.h" />
+    <ClInclude Include="Engine\primitive\3d\IPrimitive3D.h" />
+    <ClInclude Include="Engine\object\core\Timer.h" />
+    <ClInclude Include="Engine\utility\functions\MathFunctions.h" />
+    <ClInclude Include="Engine\utility\functions\ArrayFunctions.h" />
+    <ClInclude Include="Engine\utility\functions\StringFunctions.h" />
+    <ClInclude Include="Engine\utility\IUtility.h" />
+    <ClInclude Include="Engine\utility\other\JsonIO.h" />
+    <ClInclude Include="Engine\utility\other\Random.h" />
+    <ClInclude Include="Engine\utility\other\Singleton.h" />
+    <ClInclude Include="Engine\utility\other\StatePattern.h" />
+    <ClInclude Include="Engine\utility\other\CatmullRom.h" />
+    <ClInclude Include="Engine\utility\other\Color.h" />
+    <ClInclude Include="Engine\utility\other\Counter.h" />
+    <ClInclude Include="Engine\utility\other\ErrorReporter.h" />
+    <ClInclude Include="Engine\utility\other\Index.h" />
+    <ClInclude Include="Engine\utility\other\IndexManager.h" />
+    <ClInclude Include="Engine\utility\other\MyUtility.h" />
+    <ClInclude Include="Engine\utility\other\PtrManager.h" />
+    <ClInclude Include="Engine\utility\other\MyString.h" />
+    <ClInclude Include="Engine\utility\child\Timer.h" />
+    <ClInclude Include="Engine\utility\UtilityManager.h" />
+    <ClInclude Include="Engine\utility\functions\IncludeFunctions.h" />
+    <ClInclude Include="Engine\utility\motionEffects\IncludeEffects.h" />
+    <ClInclude Include="Engine\utility\observers\IncludeObservers.h" />
+    <ClInclude Include="Engine\utility\other\IncludeOthers.h" />
+    <ClInclude Include="Engine\utility\child\IncludeChild.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

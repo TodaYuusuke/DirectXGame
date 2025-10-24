@@ -30,6 +30,14 @@ void ImGuiManager::Init() {
 		srvInfo.cpuView,
 		srvInfo.gpuView
 	);
+
+	// ImNodeの初期化
+	ImNodes::CreateContext();
+}
+void ImGuiManager::Release() {
+	// ImNodeの解放
+	ImNodes::DestroyContext();
+	//ImGui::DestroyContext();
 }
 
 void ImGuiManager::Begin() {

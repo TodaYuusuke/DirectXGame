@@ -15,6 +15,7 @@
 #include "../Engine/primitive/PrimitiveManager.h"
 #include "../Engine/resources/ResourceManager.h"
 #include "../Engine/scene/SceneManager.h"
+#include "../Engine/utility/UtilityManager.h"
 
 #include "../Engine/info/DebugCamera.h"
 #include "../Engine/info/FrameTracker.h"
@@ -118,6 +119,8 @@ namespace LWP::System {
 		Primitive::Manager* primitive_ = nullptr;
 		// リソース管理
 		Resource::Manager* resource_ = nullptr;
+		// 便利系管理
+		Utility::Manager* utility_ = nullptr;
 
 		// シーンマネージャー
 		std::unique_ptr<Scene::Manager> sceneManager_;

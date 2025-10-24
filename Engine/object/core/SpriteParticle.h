@@ -5,7 +5,7 @@
 
 #include "primitive/2d/planeInterface/Sprite.h"
 #include "collision/Collision2D.h"
-#include "utility/Random.h"
+#include "utility/other/Random.h"
 
 namespace LWP::Object {
 	/// <summary>

@@ -1,6 +1,6 @@
 #include "DXC.h"
 
-#include "utility/MyUtility.h"
+#include "utility/functions/StringFunctions.h"
 #include <format>
 #include <cassert>
 

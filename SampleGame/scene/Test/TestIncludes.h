@@ -5,5 +5,6 @@
 #include "NoneScene.h"
 #include "AudioTest.h"
 #include "ShadowTest.h"
+#include "Collision3DTest.h"
 #include "Collision2DTest.h"
 

@@ -1,5 +1,4 @@
 #include "Skeleton.h"
-#include "utility/MyUtility.h"
 
 using namespace LWP;
 using namespace LWP::Math;

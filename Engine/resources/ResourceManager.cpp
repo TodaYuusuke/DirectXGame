@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 
 #include "math/Math.h"
-#include "utility/ErrorReporter.h"
+#include "utility/other/ErrorReporter.h"
 #include "base/DirectXCommon.h"
 
 #include "component/Resource.h"

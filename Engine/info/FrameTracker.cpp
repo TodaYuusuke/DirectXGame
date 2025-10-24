@@ -1,6 +1,5 @@
 #include "FrameTracker.h"
 #include "Adapter.h"
-#include "../Engine/utility/MyUtility.h"
 #include <thread>
 #pragma comment(lib, "winmm.lib")
 
