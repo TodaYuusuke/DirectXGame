@@ -247,18 +247,19 @@ namespace LWP::Primitive {
 	void Manager::DebugGUI3DPrimitive() {
 		// 指定の種類のPrimitiveを絞り込む選択肢
 		static std::vector<const char*> filterText = {
-			"All", "Cube"
+			"All", "Cube", "Sphere"
 		};
 		static int filterID = 0;
 		// 選択肢の変数
 		static std::vector<const char*> typeText = {
-			"Cube",
+			"Cube", "Sphere"
 		};
 		static int typeID = 0;
 
 		// 新規生成用のインスタンスを作成する関数のリスト
 		static std::vector<std::function<void()>> functions = {
 			[this]() { debug3DPris.push_back(new Cube()); },
+			[this]() { debug3DPris.push_back(new Sphere()); },
 		};
 		static int currentItem = 0;
 

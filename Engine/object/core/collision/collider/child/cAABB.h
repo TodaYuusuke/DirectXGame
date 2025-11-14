@@ -2,8 +2,6 @@
 #include "../ICollider.h"
 #include "primitive/3d/Cube.h"
 
-namespace LWP::Resource { class RigidModel; }
-
 namespace LWP::Object::Collider {
 	/// <summary>
 	/// 当たり判定用のAABBクラス
@@ -21,9 +19,6 @@ namespace LWP::Object::Collider {
 		// コンストラクタ
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
-
-		// コピーコンストラクタ
-		AABB(const AABB&);
 
 		// 固有の更新処理
 		void Update() override;
@@ -44,7 +39,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		LWP::Primitive::Cube cube;
+		LWP::Primitive::Cube dPri;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //
