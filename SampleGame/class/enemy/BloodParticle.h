@@ -35,7 +35,7 @@ protected: // ** 純粋仮想関数のオーバーライド ** //
 		// 地形との当たり判定を生成
 		newData.collider = new LWP::Object::Collision;
 #if DEMO
-		LWP::Object::Collider::Point& p = newData.collider->SetBroadShape(LWP::Object::Collider::Point());
+		LWP::Object::Collider::Point& p = newData.collider->SetBroadShape<LWP::Object::Collider::Point>();
 		p.isShowWireFrame = false;	// Debugがおもすぎるので非表示に
 #endif
 		newData.collider->SetFollow(&newData.m.worldTF);

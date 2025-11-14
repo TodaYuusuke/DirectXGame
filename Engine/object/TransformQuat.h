@@ -39,6 +39,7 @@ namespace LWP::Object {
 
 		// 親となるワールド変換へのポインタ（読み取り専用）
 		Parent parent_; 
+
 	public: // アクセッサ
 		// 親関係を解除
 		void ClearParent();

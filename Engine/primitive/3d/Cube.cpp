@@ -13,7 +13,8 @@ Cube::Cube() {
 }
 void Cube::CreateFromAABB(const Math::Vector3& min, const Math::Vector3& max) {
 	// 各パラメーターからScaleを調整
-	
+	Vector3 length = max - min;
+	worldTF.scale = length / 2.0f;
 	// まずセンターを求める
 	Vector3 center = (min + max) / 2.0f;
 	worldTF.translation = center;

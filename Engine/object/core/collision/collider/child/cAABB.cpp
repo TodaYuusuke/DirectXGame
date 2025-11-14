@@ -15,23 +15,26 @@ AABB::AABB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {}
 AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 	min = min_;
 	max = max_;
+#if DEMO
+	cube.ChangeFillMode();	// ワイヤーフレームに
+	cube.SetAllMaterialLighting(false);
+#endif
 }
 
-AABB::AABB(const AABB& other) {
-	*this = other;
+AABB::AABB(const AABB& src) {
+	*this = src;
 }
 
 void AABB::Update() {
 #if DEMO
-	//Vector3 worldPos = tf_->GetWorldPosition();
-	//Vector3 worldMin = min + worldPos;
-	//Vector3 worldMax = max + worldPos;
-	//cube.CreateVertices(worldMin, worldMax);	// cube再生成
-	////follow_->rotation.Init();
-	//// isActive切り替え
-	//cube.isActive = isShowWireFrame && isActive;
-	//// 色を白に戻す
-	//cube.material.color = Utility::Color(Utility::ColorPattern::WHITE);
+	Vector3 worldPos = tf_->GetWorldPosition();
+	Vector3 worldMin = min + worldPos;
+	Vector3 worldMax = max + worldPos;
+	cube.CreateFromAABB(worldMin, worldMax);
+	// isActive切り替え
+	cube.isActive = isShowWireFrame && isActive;
+	// 色を白に戻す
+	cube.materials["Material0"].color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
@@ -96,7 +99,7 @@ void AABB::DebugGUI() {
 void AABB::Hit() {
 #if DEMO
 	// hitしているときは色を変える
-	//cube.material.color = Utility::Color(Utility::ColorPattern::RED);
+	cube.materials["Material0"].color = Utility::Color(Utility::ColorPattern::RED);
 #endif
 }
 

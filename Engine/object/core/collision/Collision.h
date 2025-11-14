@@ -104,11 +104,10 @@ namespace LWP::Object {
 		/// ブロードフェーズの形状をセットする関数
 		/// </summary>
 		/// <typeparam name="T">IColliderShapeを継承したクラスのみ</typeparam>
-		/// <param name="t">代入する実態</param>
 		/// <returns>代入された実体への参照を返す</returns>
 		template<IsICollider T>
-		T& SetBroadShape(const T& t) {
-			broad = t;
+		T& SetBroadShape() {
+			broad.emplace<T>();
 			GetBasePtr(broad)->SetFollowPtr(&worldTF);
 			return std::get<T>(broad);
 		}

@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include "object/core/collision/Collision.h"
+#include "object/core/collision/CollisionMask.h"
 
 /// --- 設定用の定数 --- ///
 

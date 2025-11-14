@@ -1,5 +1,4 @@
 #pragma once
-
 #include <cstdint>
 
 // 当たり判定マスク用のビット値
