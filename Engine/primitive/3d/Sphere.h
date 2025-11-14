@@ -7,7 +7,7 @@ namespace LWP::Primitive {
 	/// </summary>
 	class Sphere
 		: public IPrimitive3D {
-	public:	// ** パブリックなメンバ変数 ** //
+	public: // ** 関数 ** //
 
 		/// <summary>
 		/// コンストラクタ

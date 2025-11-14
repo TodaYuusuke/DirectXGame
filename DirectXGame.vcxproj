@@ -244,6 +244,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\2d\policy\NormalPolicy.cpp" />
     <ClCompile Include="Engine\primitive\2d\planeInterface\IPlane.cpp" />
     <ClCompile Include="Engine\primitive\2d\policy\SequencePolicy.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
     <ClCompile Include="Engine\primitive\3d\Cube.cpp" />
     <ClCompile Include="Engine\primitive\3d\IPrimitive3D.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
@@ -418,6 +419,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\2d\policy\IPolicy.h" />
     <ClInclude Include="Engine\primitive\2d\policy\SequencePolicy.h" />
     <ClInclude Include="Engine\primitive\3d\3dList.h" />
+    <ClInclude Include="Engine\primitive\3d\Capsule.h" />
     <ClInclude Include="Engine\primitive\3d\Cube.h" />
     <ClInclude Include="Engine\primitive\3d\IPrimitive3D.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
