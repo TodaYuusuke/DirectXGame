@@ -1,14 +1,6 @@
 #pragma once
 #include "../ICollider.h"
-
-#if DEMO
-//#include "primitive/3d/Cube.h"
-#endif
-
-// 前方宣言
-namespace LWP::Resource {
-	class RigidModel;
-}
+#include "primitive/3d/Cube.h"
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -27,8 +19,6 @@ namespace LWP::Object::Collider {
 		// コンストラクタ
 		AABB();
 		AABB(const LWP::Math::Vector3& min, const LWP::Math::Vector3& max);
-		// コピーコンストラクタ
-		AABB(const AABB& other);
 
 		// 固有の更新処理
 		void Update() override;
@@ -49,7 +39,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		//LWP::Primitive::Cube cube;
+		LWP::Primitive::Cube dPri;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

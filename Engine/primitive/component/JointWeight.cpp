@@ -1,6 +1,7 @@
 #include "JointWeight.h"
-#include <assimp/scene.h>
 
+#include <assimp/scene.h>
+#include "math/Math.h"
 #include "base/ImGuiManager.h"
 
 using namespace LWP;
@@ -14,9 +15,9 @@ void JointWeight::Load(aiBone* bone) {
 	aiQuaternion rotate;
 	bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
 	Matrix4x4 bindPoseMatrix = Matrix4x4::CreateAffineMatrix(
-		{ scale.x,scale.y, scale.z },
-		{ rotate.x,-rotate.y, -rotate.z,rotate.w },
-		{ -translate.x,translate.y, translate.z }
+		Vector3{ scale.x,scale.y, scale.z },
+		Quaternion{ rotate.x,-rotate.y, -rotate.z,rotate.w },
+		Vector3{ -translate.x,translate.y, translate.z }
 	);
 	inverseBindPoseMatrix = bindPoseMatrix.Inverse();
 

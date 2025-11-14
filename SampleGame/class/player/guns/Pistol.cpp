@@ -8,7 +8,7 @@ using namespace LWP::Object;
 using namespace LWP::Resource;
 using namespace LWP::Info;
 
-Pistol::Pistol() : capsule_(collision_.SetBroadShape(Collider::Capsule())) {}
+Pistol::Pistol() : capsule_(collision_.SetBroadShape<Collider::Capsule>()) {}
 
 void Pistol::Init(TransformQuat* wtf) {
 	// モデル

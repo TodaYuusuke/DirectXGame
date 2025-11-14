@@ -1,14 +1,6 @@
 #pragma once
 #include "../ICollider.h"
-
-#if DEMO
-//#include "primitive/3d/Sphere.h"
-#endif
-
-// 前方宣言
-namespace LWP::Resource {
-	class RigidModel;
-}
+#include "primitive/3d/Sphere.h"
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -17,20 +9,14 @@ namespace LWP::Object::Collider {
 	class Sphere
 		: public ICollider {
 	public: // ** パブリックなメンバ変数 ** //
-		// 中心座標
-		LWP::Math::Vector3 position;
 		// 半径
-		float radius = 1.0f;
+		float radius = 0.5f;
 
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
 		Sphere();
-		Sphere(const LWP::Math::Vector3& pos);
 		Sphere(const float& rad);
-		Sphere(const LWP::Math::Vector3& pos, const float& rad);
-		// コピーコンストラクタ
-		Sphere(const Sphere& other);
 
 		// 更新時に形状を追従するための処理
 		void Update() override;
@@ -38,9 +24,8 @@ namespace LWP::Object::Collider {
 		void GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) override;
 
 		// 座標を指定して生成
-		void Create(const LWP::Math::Vector3& pos);
-		void Create(const LWP::Math::Vector3& pos, const float& rad);
-		// 形状から包み込む最小のAABBを生成する関数
+		void Create(const float& rad);
+		// 形状から包み込む最小のSphereを生成する関数
 		void Create(LWP::Resource::RigidModel* model);
 
 		// 形状を返す
@@ -51,7 +36,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		//LWP::Primitive::Sphere sphereModel;
+		LWP::Primitive::Sphere dPri;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

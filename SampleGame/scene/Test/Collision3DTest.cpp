@@ -10,13 +10,22 @@ using namespace LWP::Object;
 
 // 初期化
 void Collision3DTest::Initialize() {
+	cube.worldTF.translation.x = -2.0f;
+
+	aabb.SetBroadShape<Collider::AABB>();
+	aabb.worldTF.translation.x = 2.0f;
 }
 
 // 更新
 void Collision3DTest::Update() {
 	ImGui::Begin("Test");
-	//if (ImGui::TreeNode("Rectangle")) {
-	//	ImGui::TreePop();
-	//}
+	if (ImGui::TreeNode("Primitive")) {
+		cube.DebugGUI();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Collision")) {
+		aabb.DebugGUI();
+		ImGui::TreePop();
+	}
 	ImGui::End();
 }

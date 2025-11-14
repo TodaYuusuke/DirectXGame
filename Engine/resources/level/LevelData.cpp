@@ -183,7 +183,7 @@ void LevelData::LoadMesh(const nlohmann::json& data, const std::string& name) {
 void LevelData::LoadCollider(const nlohmann::json& data, const std::string& name, const Object::TransformQuat wtf) {
 	const nlohmann::json& collider = data["collider"];
 	if (collider["type"] == "AABB") {	// AABBコライダーを生成
-		Collider::AABB& aabb = collisions[name].SetBroadShape(Collider::AABB());
+		Collider::AABB& aabb = collisions[name].SetBroadShape<Collider::AABB>();
 		aabb.min = LoadVector3(collider["min"]) * scale;	// 全体のスケールをかける
 		aabb.max = LoadVector3(collider["max"]) * scale;
 

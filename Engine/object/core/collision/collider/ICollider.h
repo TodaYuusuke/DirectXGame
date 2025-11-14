@@ -3,6 +3,7 @@
 
 // 前方宣言
 namespace LWP::Resource {
+	class RigidModel;
 	class SkinningModel;
 }
 

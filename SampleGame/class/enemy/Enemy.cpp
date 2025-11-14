@@ -30,7 +30,7 @@ void Enemy::Init(LWP::Utility::CatmullRom* curve, Player* player, std::function<
 		// 弾のコライダーはオフに
 		c->isActive = false;
 	};
-	Collider::AABB& aabb = collision_.SetBroadShape(Collider::AABB());
+	Collider::AABB& aabb = collision_.SetBroadShape<Collider::AABB>();
 	aabb.min = { -0.2f,0.0f,-0.45f };
 	aabb.max = { 0.2f,1.35f,0.2f };
 }

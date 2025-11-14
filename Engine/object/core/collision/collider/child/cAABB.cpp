@@ -15,23 +15,22 @@ AABB::AABB() : AABB({ -0.5f,-0.5f,-0.5f }, { 0.5f,0.5f,0.5f }) {}
 AABB::AABB(const LWP::Math::Vector3& min_, const LWP::Math::Vector3& max_) {
 	min = min_;
 	max = max_;
-}
-
-AABB::AABB(const AABB& other) {
-	*this = other;
+#if DEMO
+	dPri.ChangeFillMode();	// ワイヤーフレームに
+	dPri.SetAllMaterialLighting(false);
+#endif
 }
 
 void AABB::Update() {
 #if DEMO
-	//Vector3 worldPos = tf_->GetWorldPosition();
-	//Vector3 worldMin = min + worldPos;
-	//Vector3 worldMax = max + worldPos;
-	//cube.CreateVertices(worldMin, worldMax);	// cube再生成
-	////follow_->rotation.Init();
-	//// isActive切り替え
-	//cube.isActive = isShowWireFrame && isActive;
-	//// 色を白に戻す
-	//cube.material.color = Utility::Color(Utility::ColorPattern::WHITE);
+	Vector3 worldPos = tf_->GetWorldPosition();
+	Vector3 worldMin = min + worldPos;
+	Vector3 worldMax = max + worldPos;
+	dPri.CreateFromAABB(worldMin, worldMax);
+	// isActive切り替え
+	dPri.isActive = isShowWireFrame && isActive;
+	// 色を白に戻す
+	dPri.materials["Material0"].color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
 
 	// アクティブがOff -> 早期リターン
@@ -88,6 +87,7 @@ void AABB::Create(const LWP::Resource::RigidModel& model) {
 }
 
 void AABB::DebugGUI() {
+	ImGui::DragFloat3("position", &tf_->translation.x, 0.01f);
 	ImGui::DragFloat3("min", &min.x, 0.01f);
 	ImGui::DragFloat3("max", &max.x, 0.01f);
 	ICollider::DebugGUI();
@@ -96,7 +96,7 @@ void AABB::DebugGUI() {
 void AABB::Hit() {
 #if DEMO
 	// hitしているときは色を変える
-	//cube.material.color = Utility::Color(Utility::ColorPattern::RED);
+	dPri.materials["Material0"].color = Utility::Color(Utility::ColorPattern::RED);
 #endif
 }
 

@@ -11,6 +11,8 @@ namespace LWP::Primitive {
 		// 形状
 		enum Type {
 			Cube,
+			Sphere,
+			Capsule,
 			Count
 		};
 

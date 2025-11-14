@@ -327,6 +327,8 @@
     <ClCompile Include="Engine\utility\other\Singleton.cpp" />
     <ClCompile Include="Engine\utility\child\Timer.cpp" />
     <ClCompile Include="Engine\utility\UtilityManager.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -742,6 +744,8 @@
     <ClInclude Include="Engine\utility\observers\IncludeObservers.h" />
     <ClInclude Include="Engine\utility\other\IncludeOthers.h" />
     <ClInclude Include="Engine\utility\child\IncludeChild.h" />
+    <ClInclude Include="Engine\primitive\3d\Sphere.h" />
+    <ClInclude Include="Engine\primitive\3d\Capsule.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

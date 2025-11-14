@@ -1,66 +1,30 @@
 #pragma once
 #include "Sphere.h"
 
-// 前方宣言
-namespace LWP::Object::Collider {
-	class Capsule;
-}
-
 namespace LWP::Primitive {
 	/// <summary>
 	///	カプセル
 	/// </summary>
 	class Capsule final
-		: public Sphere {
-	public: // ** パブリックなメンバ変数 ** //
-		// 始点
-		LWP::Math::Vector3 start() const { return worldTF.GetWorldPosition(); }
-		// 終点
-		Utility::Observer<LWP::Math::Vector3> end = LWP::Math::Vector3{ 0.0f,0.0f, 0.0f };
-		
-
+		: public IPrimitive3D {
 	public: // ** 関数 ** //
 
-		// 初期化を呼び出す
-		Capsule() { Init(); }
-
-		// ムーブコンストラクタ
-		Capsule(const Capsule& other) {
-			worldTF = other.worldTF;
-			end = other.end;
-			subdivision = other.subdivision;
-			radius = other.radius;
-			Init();
-		}
-
-
-		// カプセルコライダーエラー回避用
-		void Set() {
-			obsTransform = &worldTF;
-		}
-
 		/// <summary>
-		/// 初期化
+		/// コンストラクタ
 		/// </summary>
-		//void Init() override;
-
+		Capsule();
 		/// <summary>
-		/// 頂点を生成する関数（ユーザ呼び出し禁止）
+		/// タイプを返す
 		/// </summary>
-		void CreateVertices() override;
+		Type GetType() { return Type::Capsule; }
 		/// <summary>
-		/// インデックスを生成する関数（ユーザ呼び出し禁止）
+		/// 更新
 		/// </summary>
-		void CreateIndexes() override;
-
+		void Update() override;
 		/// <summary>
-		/// 頂点数を返す関数
+		/// デバッグ用ImGui
 		/// </summary>
-		int GetVertexCount() const override;
-		/// <summary>
-		/// インデックスの数を返す関数
-		/// </summary>
-		int GetIndexCount() const override;
+		void DebugGUI() override;
 
 		/// <summary>
 		/// スフィアコライダーから描画用のスフィアを生成
@@ -69,25 +33,16 @@ namespace LWP::Primitive {
 		void CreateFromCapsuleCol(const Math::Vector3& s, const Math::Vector3& e, const float& r);
 
 
-	private: // ** プライベートな関数 ** //
+	public: // ** パブリックなメンバ変数 ** //
 
-		/// <summary>
-		/// ImGui
-		/// </summary>
-		void DerivedDebugGUI(const std::string& label = "Derived") override;
-
-		// 始点が変わっているかを監視するための変数
-		Utility::Observer<LWP::Object::TransformQuat*> obsTransform = &worldTF;
-
-		/// <summary>
-		/// パラメータが変わっているかを検証
-		/// </summary>
-		/// <returns></returns>
-		bool GetChanged() override;
+		// 始点から終点へのオフセット点
+		LWP::Math::Vector3 localOffset = { 0.0f,0.0f,1.0f };
 
 
-		// スフィアコライダーから描画用のスフィアを生成する関数だが、使用しないので隠蔽
-		using Sphere::CreateFromSphereCol;
-
+	private: // ** メンバ変数 ** //
+		
+		// 始点と終点を示す球
+		LWP::Primitive::Sphere startSphere;
+		LWP::Primitive::Sphere endSphere;
 	};
 }

@@ -16,5 +16,5 @@ public:
 private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Primitive::Cube cube;
-	//LWP::Object::Collision3D aabb;
+	LWP::Object::Collision aabb;
 };
