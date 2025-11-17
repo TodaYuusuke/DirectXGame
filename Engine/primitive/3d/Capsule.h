@@ -1,5 +1,6 @@
 #pragma once
 #include "Sphere.h"
+#include "Cylinder.h"
 
 namespace LWP::Primitive {
 	/// <summary>
@@ -27,6 +28,15 @@ namespace LWP::Primitive {
 		void DebugGUI() override;
 
 		/// <summary>
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
+		/// </summary>
+		void ChangeFillMode() override;
+		/// <summary>
+		/// 全マテリアルのenableLightingを切り替え
+		/// </summary>
+		void SetAllMaterialLighting(bool flag) override;
+
+		/// <summary>
 		/// スフィアコライダーから描画用のスフィアを生成
 		/// </summary>
 		/// <param name="sphere"></param>
@@ -36,13 +46,14 @@ namespace LWP::Primitive {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// 始点から終点へのオフセット点
-		LWP::Math::Vector3 localOffset = { 0.0f,0.0f,1.0f };
+		LWP::Math::Vector3 localOffset = { 0.0f,0.0f,2.0f };
 
 
 	private: // ** メンバ変数 ** //
 		
-		// 始点と終点を示す球
-		LWP::Primitive::Sphere startSphere;
+		// 円柱
+		LWP::Primitive::Cylinder cylinder;
+		// 終点を示す球
 		LWP::Primitive::Sphere endSphere;
 	};
 }

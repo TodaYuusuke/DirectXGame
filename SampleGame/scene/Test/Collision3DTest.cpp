@@ -12,6 +12,7 @@ using namespace LWP::Object;
 void Collision3DTest::Initialize() {
 	cube.worldTF.translation.x = -2.0f;
 
+	// コライダーの形状を指定
 	aabb.SetBroadShape<Collider::AABB>();
 	aabb.worldTF.translation.x = 2.0f;
 }

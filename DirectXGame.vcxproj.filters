@@ -329,6 +329,7 @@
     <ClCompile Include="Engine\utility\UtilityManager.cpp" />
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Cylinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -746,6 +747,7 @@
     <ClInclude Include="Engine\utility\child\IncludeChild.h" />
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\3d\Capsule.h" />
+    <ClInclude Include="Engine\primitive\3d\Cylinder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -254,6 +254,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\primitive\component\Node.cpp" />
     <ClCompile Include="Engine\primitive\component\Skeleton.cpp" />
     <ClCompile Include="Engine\primitive\component\SkinCluster.cpp" />
+    <ClCompile Include="Engine\primitive\3d\Cylinder.cpp" />
     <ClCompile Include="Engine\primitive\component\Vertex.cpp" />
     <ClCompile Include="Engine\primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\resources\level\LevelData.cpp" />
@@ -429,6 +430,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\primitive\component\Node.h" />
     <ClInclude Include="Engine\primitive\component\Skeleton.h" />
     <ClInclude Include="Engine\primitive\component\SkinCluster.h" />
+    <ClInclude Include="Engine\primitive\3d\Cylinder.h" />
     <ClInclude Include="Engine\primitive\IPrimitive.h" />
     <ClInclude Include="Engine\resources\level\LevelData.h" />
     <ClInclude Include="Engine\resources\model\IModel.h" />

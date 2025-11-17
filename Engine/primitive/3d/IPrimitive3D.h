@@ -12,6 +12,7 @@ namespace LWP::Primitive {
 		enum Type {
 			Cube,
 			Sphere,
+			Cylinder,
 			Capsule,
 			Count
 		};
