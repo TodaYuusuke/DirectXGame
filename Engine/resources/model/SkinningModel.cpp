@@ -38,6 +38,7 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 	// スケルトンをコピー
 	skeleton = data->skeleton_.value();
 	skeleton.SetParent();
+	skeleton.Update();		// Updateを呼び出して座標の情報を初期化
 	// スキンクラスターの参照を保持
 	skinCluster = &data->skinCluster_.value();
 

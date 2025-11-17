@@ -50,11 +50,11 @@ namespace LWP::Resource {
 		/// <summary>
 		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
-		void ChangeFillMode();
+		virtual void ChangeFillMode();
 		/// <summary>
 		/// 全マテリアルのenableLightingを切り替え
 		/// </summary>
-		void SetAllMaterialLighting(bool flag);
+		virtual void SetAllMaterialLighting(bool flag);
 
 		/// <summary>
 		/// このモデルのメッシュレット等が格納されたバッファーを返す関数
