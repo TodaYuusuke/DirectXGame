@@ -62,7 +62,11 @@ void Collision::ApplyFixVector(const LWP::Math::Vector3& fixVector) {
 bool Collision::CheckMask(Collision* c) { return mask.CheckBelong(c->mask) && c->mask.CheckBelong(mask); }
 void Collision::CheckCollision(Collision* c) {
 	// お互いがアクティブかつマスクが成立していない -> 早期リターン
-	if (!(isActive && c->isActive && (CheckMask(c)))) { return; }
+	if (!(isActive && c->isActive && (CheckMask(c)))) {
+		// シリアルマップを初期化
+		ResetSerial(c);
+		c->ResetSerial(this);
+	}
 
 	// 埋まっている場合の修正ベクトル
 	Vector3 fixVec = { 0.0f,0.0f,0.0f };
@@ -131,6 +135,10 @@ void Collision::NoHit(Collision* c) {
 	// ヒットフレーム数を0に
 	serialMap[targetIndex] = 0;
 }
+void Collision::ResetSerial(Collision* c) {
+	serialMap[c->GetSerial()] = 0;
+}
+
 
 void Collision::DebugGUI() {
 	// ワールドトランスフォーム

@@ -89,6 +89,8 @@ namespace LWP::Object {
 		void Hit(Collision* c);
 		// ヒットしていなかった時の処理（受け身のとき相手に呼び出してもらうためにpublic）
 		void NoHit(Collision* c);
+		// シリアル番号をリセットする関数
+		void ResetSerial(Collision* c);
 		// シリアル番号をセットする関数
 		void SetSerial(Utility::Index&& s) { serialNum = std::move(s); }
 		// シリアル番号を返す関数
