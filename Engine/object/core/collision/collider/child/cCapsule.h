@@ -1,9 +1,6 @@
 #pragma once
 #include "../ICollider.h"
-
-#if DEMO
-//#include "primitive/3d/Capsule.h"
-#endif
+#include "primitive/3d/Capsule.h"
 
 namespace LWP::Object::Collider {
 	/// <summary>
@@ -12,32 +9,25 @@ namespace LWP::Object::Collider {
 	class Capsule
 		: public ICollider {
 	public: // ** パブリックなメンバ変数 ** //
-		// 始点
-		LWP::Math::Vector3 start = { 0.0f,0.0f,0.0f };
-		// 終点
-		LWP::Math::Vector3 end = { 0.0f,1.0f,0.0f };
+
+		// 始点から終点へのオフセット点
+		LWP::Math::Vector3 localOffset = { 0.0f,0.0f,2.0f };
 		// 半径
-		float radius = 1.0f;
+		float radius = 0.5f;
 
 
 	public: // ** メンバ関数 ** //
 		// コンストラクタ
 		Capsule();
-		Capsule(const LWP::Math::Vector3& start);
-		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
-		Capsule(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
-		// コピーコンストラクタ
-		Capsule(const Capsule& other);
+		Capsule(const LWP::Math::Vector3& offset);
+		Capsule(const float& rad);
+		Capsule(const LWP::Math::Vector3& offset, const float& rad);
 
 		// 固有の更新処理
 		void Update() override;
 		// 自分を囲む最小のAABBを返す関数
 		void GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) override;
 
-		// 座標を指定して生成
-		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end);
-		void Create(const LWP::Math::Vector3& start, const LWP::Math::Vector3& end, const float& rad);
-		
 		// 形状を返す
 		Shape GetShape() override { return Shape::Capsule; }
 		// ImGuiの派生クラス
@@ -47,7 +37,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		//LWP::Primitive::Capsule capsuleModel;
+		LWP::Primitive::Capsule dPri;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

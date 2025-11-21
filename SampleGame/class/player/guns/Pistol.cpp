@@ -44,7 +44,7 @@ void Pistol::Shot(LWP::Math::Vector3 pos, LWP::Math::Vector3 dir) {
 
 	// 射撃地点から遠くまでカプセルコライダーを生成
 	collision_.worldTF.translation = pos;
-	capsule_.end = (dir * 100.0f);
+	capsule_.localOffset = (dir * 100.0f);
 	collision_.isActive = true;
 #if DEMO
 	capsule_.isShowWireFrame = true;

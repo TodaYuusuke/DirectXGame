@@ -21,12 +21,9 @@ void Sphere::Update() {
 	dPri.CreateFromSphereCol(tf_->GetWorldPosition(), radius);	// Sphere再生成
 	// isActive切り替え
 	dPri.isActive = isShowWireFrame && isActive;
-	//// 色を白に戻す
+	// 色を白に戻す
 	dPri.materials["Material0"].color = Utility::Color(Utility::ColorPattern::WHITE);
 #endif
-
-	// アクティブがOff -> 早期リターン
-	//if (!isActive) { return; }
 }
 void Sphere::GetBoundingAABB(Vector3* minPtr, Vector3* maxPtr) {
 	// 中心から半径分移動した地点がminとmax
@@ -35,7 +32,6 @@ void Sphere::GetBoundingAABB(Vector3* minPtr, Vector3* maxPtr) {
 	*maxPtr = center + Vector3{ radius, radius, radius };
 }
 
-void Sphere::Create(const float& rad) { radius = rad; }
 void Sphere::Create(LWP::Resource::RigidModel* model) {
 	// 必要なデータを集める
 	Matrix4x4 matrix = model->worldTF.GetAffineMatrix();	// アフィン変換行列

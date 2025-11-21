@@ -23,8 +23,6 @@ namespace LWP::Object::Collider {
 		// 自分を囲む最小のAABBを返す関数
 		void GetBoundingAABB(LWP::Math::Vector3* minPtr, LWP::Math::Vector3* maxPtr) override;
 
-		// 座標を指定して生成
-		void Create(const float& rad);
 		// 形状から包み込む最小のSphereを生成する関数
 		void Create(LWP::Resource::RigidModel* model);
 
