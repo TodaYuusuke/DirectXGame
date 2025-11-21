@@ -1,5 +1,6 @@
 #pragma once
 #include "Sphere.h"
+#include "Cylinder.h"
 
 namespace LWP::Primitive {
 	/// <summary>
@@ -17,32 +18,35 @@ namespace LWP::Primitive {
 		/// タイプを返す
 		/// </summary>
 		Type GetType() { return Type::Capsule; }
+
 		/// <summary>
-		/// 更新
+		/// 埋め立てかワイヤーフレームで描画するかを切り替える
 		/// </summary>
-		void Update() override;
+		void ChangeFillMode() override;
 		/// <summary>
-		/// デバッグ用ImGui
+		/// 全マテリアルのカラーを変更する
 		/// </summary>
-		void DebugGUI() override;
+		/// <param name="flag"></param>
+		void SetAllMaterialColor(const Utility::Color& color);
+		/// <summary>
+		/// 全マテリアルのenableLightingを切り替え
+		/// </summary>
+		void SetAllMaterialLighting(bool flag) override;
 
 		/// <summary>
 		/// スフィアコライダーから描画用のスフィアを生成
 		/// </summary>
-		/// <param name="sphere"></param>
-		void CreateFromCapsuleCol(const Math::Vector3& s, const Math::Vector3& e, const float& r);
-
-
-	public: // ** パブリックなメンバ変数 ** //
-
-		// 始点から終点へのオフセット点
-		LWP::Math::Vector3 localOffset = { 0.0f,0.0f,1.0f };
+		/// <param name="start">ワールド座標</param>
+		/// <param name="offset">ローカルのオフセット</param>
+		/// <param name="radius">半径</param>
+		void CreateFromCapsuleCol(const Math::Vector3& start, const Math::Vector3& offset, const float& radius);
 
 
 	private: // ** メンバ変数 ** //
 		
-		// 始点と終点を示す球
-		LWP::Primitive::Sphere startSphere;
+		// 円柱
+		LWP::Primitive::Cylinder cylinder;
+		// 終点を示す球
 		LWP::Primitive::Sphere endSphere;
 	};
 }

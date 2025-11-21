@@ -1,9 +1,7 @@
 #pragma once
 #include "../ICollider.h"
 
-#if DEMO
-//#include "primitive/3d/Sphere.h"
-#endif
+#include "primitive/3d/Sphere.h"
 
 // 前方宣言
 namespace LWP::Resource {
@@ -24,8 +22,6 @@ namespace LWP::Object::Collider {
 		// コンストラクタ
 		Point();
 		Point(const LWP::Math::Vector3& pos);
-		// コピーコンストラクタ
-		Point(const Point& other);
 
 		// 固有の更新処理
 		void Update() override;
@@ -40,7 +36,7 @@ namespace LWP::Object::Collider {
 #if DEMO
 	private:
 		// デバッグ用モデル
-		//LWP::Primitive::Sphere sphere;
+		LWP::Primitive::Sphere dPri;
 #endif
 
 	public: // ** 各形状との当たり判定関数 ** //

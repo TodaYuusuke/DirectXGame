@@ -247,12 +247,12 @@ namespace LWP::Primitive {
 	void Manager::DebugGUI3DPrimitive() {
 		// 指定の種類のPrimitiveを絞り込む選択肢
 		static std::vector<const char*> filterText = {
-			"All", "Cube", "Sphere"
+			"All", "Cube", "Sphere", "Cylinder", "Capsule"
 		};
 		static int filterID = 0;
 		// 選択肢の変数
 		static std::vector<const char*> typeText = {
-			"Cube", "Sphere"
+			"Cube", "Sphere", "Cylinder", "Capsule"
 		};
 		static int typeID = 0;
 
@@ -260,6 +260,8 @@ namespace LWP::Primitive {
 		static std::vector<std::function<void()>> functions = {
 			[this]() { debug3DPris.push_back(new Cube()); },
 			[this]() { debug3DPris.push_back(new Sphere()); },
+			[this]() { debug3DPris.push_back(new Cylinder()); },
+			[this]() { debug3DPris.push_back(new Capsule()); },
 		};
 		static int currentItem = 0;
 
