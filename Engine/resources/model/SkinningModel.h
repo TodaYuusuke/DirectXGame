@@ -18,11 +18,6 @@ namespace LWP::Resource {
 		// スキンクラスターのポインタ
 		Primitive::SkinCluster* skinCluster = nullptr;
 		
-		// バッファーに代入するデータ
-		
-		//Base::ConstantBuffer<Base::InstanceSkinData> buffer;
-		//std::unique_ptr<Base::StructuredBuffer<Primitive::WellForGPU>> wellBuffer;
-
 	public: // ** メンバ関数 ** //
 
 		/// <summary>
