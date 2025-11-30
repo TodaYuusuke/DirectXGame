@@ -20,14 +20,19 @@ SkinningModel::~SkinningModel() {
 }
 
 void SkinningModel::LoadFullPath(const std::string& fp) {
-	assert(filePath.empty() && "The model is already loaded.");	// 既に読み込まれている場合はエラー
+	// 再読み込みに対応させる
+	//assert(filePath.empty() && "The model is already loaded.");	// 既に読み込まれている場合はエラー
 
-	// 名前を保持
-	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
-	LoadModel(filePath);
-	// ポインタをエンジンにセット
-	Resource::Manager::GetInstance()->SetPointer(this, filePath);
+	LoadModel(fp);
+
+	// パスが空じゃなかったら一度ポインタを消しに行く
+	if (!filePath.empty()) {
+		Resource::Manager::GetInstance()->DeletePointer(this, filePath);
+	}
+	filePath = fp;	// ここで名前を保持
+	Resource::Manager::GetInstance()->SetPointer(this, filePath);	// エンジンにセット
+
 	ModelData* data = GetModel(filePath);
 	// マテリアルをコピー
 	materials = data->materials_;
@@ -41,10 +46,6 @@ void SkinningModel::LoadFullPath(const std::string& fp) {
 	skeleton.Update();		// Updateを呼び出して座標の情報を初期化
 	// スキンクラスターの参照を保持
 	skinCluster = &data->skinCluster_.value();
-
-	// Wellを初期化
-	//wellBuffer = std::make_unique<Base::StructuredBuffer<Primitive::WellForGPU>>(static_cast<int32_t>(skeleton.joints.size()));
-	//wellBuffer->Init(System::engine->directXCommon_->GetGPUDevice(), System::engine->directXCommon_->GetSRV());
 }
 
 void SkinningModel::Update() {
