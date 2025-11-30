@@ -25,17 +25,21 @@ RigidModel::~RigidModel() {
 }
 
 void RigidModel::LoadFullPath(const std::string& fp) {
-	assert(filePath.empty() && "The model is already loaded.");	// 既に読み込まれている場合はエラー
+	// 再読み込みに対応させる
+	//assert(filePath.empty() && "The model is already loaded.");	// 既に読み込まれている場合はエラー
 
-	// 名前を保持
-	filePath = fp;
 	// リソースマネージャーに読み込んでもらう
-	LoadModel(filePath);
+	LoadModel(fp);
+
+	// パスが空じゃなかったら一度ポインタを消しに行く
+	if (!filePath.empty()) {
+		Resource::Manager::GetInstance()->DeletePointer(this, filePath);
+	}
+	filePath = fp;	// ここで名前を保持
+	Resource::Manager::GetInstance()->SetPointer(this, filePath);	// エンジンにセット
+
 	// マテリアルをコピー
 	materials = GetModel(filePath)->materials_;
-
-	// いちいちcomponent/Resource.hに関数書きにいくのがめんどうなので省略（ポインタセット）
-	Resource::Manager::GetInstance()->SetPointer(this, filePath);
 }
 
 
