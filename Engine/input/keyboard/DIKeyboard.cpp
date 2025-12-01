@@ -20,7 +20,7 @@ void DIKeyboard::Initialize(Base::WinApp* winApp, IDirectInput8* directInput) {
 	// DISCL_NONEXCLUSIVE	... デバイスをこのアプリだけで専有しない
 	// DISCL_NOWINKEY		... Windowsキーを無効にする
 	result = keyboard_->SetCooperativeLevel(
-		winApp->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
+		winApp->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE //| DISCL_NOWINKEY
 	);
 }
 
