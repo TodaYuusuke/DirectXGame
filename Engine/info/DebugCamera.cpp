@@ -8,6 +8,7 @@ using namespace LWP::Utility;
 
 void DebugCamera::Init() {
 	camera_.isActive = false;
+	camera_.name = "DebugCamera";
 }
 void DebugCamera::Update() {
 	// 早期リターン

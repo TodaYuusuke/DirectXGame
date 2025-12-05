@@ -66,6 +66,7 @@ void Collision::CheckCollision(Collision* c) {
 		// シリアルマップを初期化
 		ResetSerial(c);
 		c->ResetSerial(this);
+		return;
 	}
 
 	// 埋まっている場合の修正ベクトル
