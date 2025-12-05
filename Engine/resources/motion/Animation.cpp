@@ -352,10 +352,6 @@ void Animation::UpdateJoint() {
 			joint.localTF.rotation = Interp::SlerpQuaternion(prevTransform.rotation, joint.localTF.rotation, transition_.t);
 			joint.localTF.scale = Interp::Lerp(prevTransform.scale, joint.localTF.scale, transition_.t);
 		}
-
-		joint.localTF.translation = joint.localTF.translation;
-		joint.localTF.rotation = joint.localTF.rotation;
-		joint.localTF.scale = joint.localTF.scale;
 	}
 
 
