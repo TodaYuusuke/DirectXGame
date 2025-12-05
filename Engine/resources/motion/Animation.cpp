@@ -314,7 +314,7 @@ void Animation::UpdateJoint() {
 			mainTF.rotation		= CalculateValue(rootNodeAnimation.rotate.keyframes, mainSeconds).Normalize();
 			mainTF.scale		= CalculateValue(rootNodeAnimation.scale.keyframes, mainSeconds);
 		}
-		// ブレンド用のAnimationがあれば値の適応を行う。（ここが無名アニメーションが用意される原因）
+		// ブレンド用のAnimationがあれば値の適応を行う。
 		if (blendF) {
 			if (auto it = data.at(blendState.playingAnimationName).node.find(joint.name); it != data.at(blendState.playingAnimationName).node.end()) {
 				const NodeAnimation& rootNodeAnimation = (*it).second;
