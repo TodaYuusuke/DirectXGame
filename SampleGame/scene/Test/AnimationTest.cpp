@@ -36,8 +36,6 @@ void AnimationTest::Update() {
 	static float F = 0.0f;
 	static Vector3 V = Vector3();
 
-	ImGui::ShowDemoWindow();
-
 	ImGui::Begin("Test");
 	anim[0].DebugGUI();
 	ImGui::End();

@@ -80,11 +80,6 @@ void Animation::Update() {
 	State& main = tracks_[TrackType::Main];
 	State& blend = tracks_[TrackType::Blend];
 
-	if (data.size() >= 15) {
-		ImGui::Begin("Over!!");
-		ImGui::End();
-	}
-
 	// メインとブレンドどちらもアニメーションを再生しているなら
 	if (main.GetPlaying() && blend.GetPlaying()) {
 		// 綺麗に同期してブレンドするためにアニメーションに合わせて速度スケールを計算
@@ -92,10 +87,13 @@ void Animation::Update() {
 		blend.playbackSpeed = Interp::LerpF(1.0f, blend.totalSeconds / main.totalSeconds, 1.0f - blendT);
 	}
 	// 更新
-	//for()
 	main.Update();
 	blend.Update();
-	
+	// 同時再生更新
+	for (int i = int(TrackType::Multi0); i < int(TrackType::Count); i++) {
+		tracks_[TrackType(i)].Update();
+	}
+
 
 	// Joint更新
 	UpdateJoint();
@@ -187,8 +185,8 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 
 	// 全アニメーションを読み取る
 	for (uint32_t i = 0; i < scene->mNumAnimations; i++) {
-		aiAnimation* animationAssimp = scene->mAnimations[i];	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
-		std::string animationName = scene->mAnimations[i]->mName.C_Str();	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
+		aiAnimation* animationAssimp = scene->mAnimations[i];	// アニメーションを１つ取り出す
+		std::string animationName = scene->mAnimations[i]->mName.C_Str();	// アニメーション名を取得
 		data[animationName].totalTime = static_cast<float>(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);	// 時間の単位を秒に変換
 
 		// assimpでは個々のNodeのAnimationをchannelと呼んでいるので、cahnnelを回してNodeAnimationの情報を取ってくる
@@ -298,25 +296,31 @@ void Animation::UpdateJoint() {
 	// アニメーションの時間
 	float mainSeconds = mainState.totalSeconds * mainState.time;
 	float blendSeconds = blendState.totalSeconds * blendState.time;
-	
 	// トランジション用のtを求める
 	transition_.t += mainState.GetDeltaTime() / transition_.totalTime;	// いったんメインと同じデルタタイムを使う
 	// 1を超えないように
 	if (transition_.t > 1.0f) { transition_.t = 1.0f; }
 
-	Object::TransformQuat mainTF;
-	Object::TransformQuat blendTF;
 	for (Joint& joint : modelPtr_->skeleton.joints) {
-		// 対象のJointのAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
-		if (auto it = data.at(mainState.playingAnimationName).node.find(joint.name); mainF && it != data.at(mainState.playingAnimationName).node.end()) {
-			const NodeAnimation& rootNodeAnimation = (*it).second;
-			mainTF.translation	= CalculateValue(rootNodeAnimation.translate.keyframes, mainSeconds);
-			mainTF.rotation		= CalculateValue(rootNodeAnimation.rotate.keyframes, mainSeconds).Normalize();
-			mainTF.scale		= CalculateValue(rootNodeAnimation.scale.keyframes, mainSeconds);
+		Object::TransformQuat mainTF = joint.localTF;
+		Object::TransformQuat blendTF = mainTF;
+
+		// メイン用のAnimationがあれば値の適応を行う。
+		if (mainF) {
+			AnimationData& mainData = data.at(mainState.playingAnimationName);
+			// 対象のJointのAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+			if (auto it = mainData.node.find(joint.name); it != mainData.node.end()) {
+				const NodeAnimation& rootNodeAnimation = (*it).second;
+				mainTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, mainSeconds);
+				mainTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, mainSeconds).Normalize();
+				mainTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, mainSeconds);
+			}
 		}
 		// ブレンド用のAnimationがあれば値の適応を行う。
 		if (blendF) {
-			if (auto it = data.at(blendState.playingAnimationName).node.find(joint.name); it != data.at(blendState.playingAnimationName).node.end()) {
+			AnimationData& blendData = data.at(blendState.playingAnimationName);
+			// 同じく対象のJointのAnimationがあれば値の適応を行う。
+			if (auto it = blendData.node.find(joint.name); it != blendData.node.end()) {
 				const NodeAnimation& rootNodeAnimation = (*it).second;
 				blendTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, blendSeconds);
 				blendTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, blendSeconds).Normalize();
@@ -341,6 +345,29 @@ void Animation::UpdateJoint() {
 			joint.localTF.translation = blendTF.translation;
 			joint.localTF.rotation = blendTF.rotation;
 			joint.localTF.scale = blendTF.scale;
+		}
+
+		// 同時再生系の処理を行う
+		for (int i = int(TrackType::Multi0); i < int(TrackType::Count); i++) {
+			State& multiState = tracks_[TrackType(i)];
+			// 再生中のアニメーションがあるならば
+			if (multiState.GetPlaying()) {
+				float multiSeconds = multiState.totalSeconds * multiState.time;
+				AnimationData& multiData = data.at(multiState.playingAnimationName);
+				// 対象のJointのAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+				if (auto it = multiData.node.find(joint.name); it != multiData.node.end()) {
+					const NodeAnimation& rootNodeAnimation = (*it).second;
+					Object::TransformQuat multiTF;
+					multiTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, multiSeconds);
+					multiTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, multiSeconds).Normalize();
+					multiTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, multiSeconds);
+
+					// そのジョイントの情報を差し替える
+					joint.localTF.translation = multiTF.translation;
+					joint.localTF.rotation = multiTF.rotation;
+					joint.localTF.scale = multiTF.scale;
+				}
+			}
 		}
 
 		// もしトランジションが有効ならば、処理を行う
