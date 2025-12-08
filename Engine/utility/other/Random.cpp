@@ -33,4 +33,14 @@ namespace LWP::Utility::Random {
 			GenerateFloat(min.z, max.z)
 		};
 	}
+	Math::Vector4 GenerateVector4(Math::Vector4 min, Math::Vector4 max) {
+		assert(min.x <= max.x || min.y <= max.y || min.z <= max.z || min.w <= max.w && "[min] is greater than [max].");
+		// 各成分ごとに乱数を生成してVector3を返す
+		return Math::Vector4{
+			GenerateFloat(min.x, max.x),
+			GenerateFloat(min.y, max.y),
+			GenerateFloat(min.z, max.z),
+			GenerateFloat(min.w, max.w)
+		};
+	}
 }
