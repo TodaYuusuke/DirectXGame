@@ -77,9 +77,17 @@ namespace LWP::System {
 		void EndFrame();
 
 		/// <summary>
-		/// ImGui表示
+		/// デバッグ用のショートカットキー
+		/// </summary>
+		void DebugShortcutKey();
+		/// <summary>
+		/// Debug用のImGui表示
 		/// </summary>
 		void DebugGUI();
+		/// <summary>
+		/// FPS表示
+		/// </summary>
+		void ShowFPS();
 
 		/// <summary>
 		/// ライブラリの終了

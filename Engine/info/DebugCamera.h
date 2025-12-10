@@ -25,6 +25,10 @@ namespace LWP::Information {
 		/// Debugカメラ停止
 		/// </summary>
 		void Disable();
+		/// <summary>
+		/// カメラの有効無効を切り替える
+		/// </summary>
+		void ToggleEnable();
 
 		/// <summary>
 		/// DebugカメラのTransformを適応する関数
