@@ -67,7 +67,10 @@ namespace LWP::Utility {
 		/// インスタンスを破棄する関数
 		/// </summary>
 		static void Destroy() {
-			if (instance_) { delete instance_; }
+			if (instance_) {
+				delete instance_;
+				instance_ = nullptr;
+			}
 			else { assert(false); }		// 生成していないのにDestroyしているのでエラー
 		}
 		/// <summary>

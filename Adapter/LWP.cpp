@@ -237,7 +237,8 @@ void Engine::ShowFPS() {
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoFocusOnAppearing |
 		ImGuiWindowFlags_NoNav |
-		ImGuiWindowFlags_NoMove;
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoBringToFrontOnFocus;
 
 	ImGui::Begin("FPSWindow", nullptr, flags);
 	frameTracker_->TablessDebugGUI();
