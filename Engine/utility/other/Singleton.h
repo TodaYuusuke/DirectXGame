@@ -61,7 +61,7 @@ namespace LWP::Utility {
 		/// </summary>
 		static void Create() {
 			if (!instance_) { instance_ = new T(); }
-			else { assert(false); }		// 生成済みなのにCreateしているのでエラー
+			else { assert(false && "Already Created."); }		// 生成済みなのにCreateしているのでエラー
 		}
 		/// <summary>
 		/// インスタンスを破棄する関数
@@ -71,13 +71,13 @@ namespace LWP::Utility {
 				delete instance_;
 				instance_ = nullptr;
 			}
-			else { assert(false); }		// 生成していないのにDestroyしているのでエラー
+			else { assert(false && "No Exist Instance."); }		// 生成していないのにDestroyしているのでエラー
 		}
 		/// <summary>
 		/// インスタンスのポインタを受け取る関数
 		/// </summary>
 		static T* GetInstance() {
-			assert(instance_);	// インスタンスがないのでエラー
+			assert(instance_ && "No Exist Instance.");	// インスタンスがないのでエラー
 			return instance_;
 		}
 
