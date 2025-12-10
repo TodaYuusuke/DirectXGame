@@ -49,6 +49,12 @@ namespace LWP::Resource {
 		enum class TrackType {
 			Main,	// 通常の再生
 			Blend,	// 通常と合わせてブレンドする用
+			Multi0, // 同時再生スロット1
+			Multi1, // 同時再生スロット2
+			Multi2, // 同時再生スロット3
+			Multi3, // 同時再生スロット4
+			Multi4, // 同時再生スロット5
+			Count, // カウント
 		};
 
 
@@ -179,6 +185,7 @@ namespace LWP::Resource {
 		/// </summary>
 		std::string GetLoadedPath() { return loadedPath; }
 
+
 	private: // ** メンバ変数 ** //
 
 		struct AnimationData {
@@ -235,6 +242,7 @@ namespace LWP::Resource {
 			/// <summary>
 			/// Debug用のImGui
 			/// </summary>
+			/// <returns>変更があったかどうか</returns>
 			bool DebugGUI();
 		};
 		std::map<TrackType, State> tracks_;

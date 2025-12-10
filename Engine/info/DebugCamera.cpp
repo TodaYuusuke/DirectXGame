@@ -32,6 +32,12 @@ void DebugCamera::Disable() {
 	cameraPtr_ = nullptr;
 	camera_.isActive = false;
 }
+void DebugCamera::ToggleEnable() {
+	// オフならオン
+	if (!camera_.isActive) { Enable(); }
+	// オンならオフ
+	else { Disable(); }
+}
 
 void DebugCamera::ApplyTransform() {
 	cameraPtr_->worldTF = camera_.worldTF;

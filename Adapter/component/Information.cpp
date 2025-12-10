@@ -47,6 +47,8 @@ void Information::SetDeltaTimeMultiply(float value) {
 // 実態を定義
 #if DEMO
 bool Information::isDebugGUIVisible = true;
+bool Information::isShowFPS = true;
 #else
 bool Information::isDebugGUIVisible = false;
+bool Information::isShowFPS = false;
 #endif

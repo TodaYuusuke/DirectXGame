@@ -41,6 +41,10 @@ namespace LWP {
 		/// DebugGUIの可視性フラグ
 		/// </summary>
 		extern bool isDebugGUIVisible;
+		/// <summary>
+		/// FPSの可視性フラグ
+		/// </summary>
+		extern bool isShowFPS;
 	};
 	namespace Info = Information;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "math/vector/Vector2.h"
 #include "math/vector/Vector3.h"
+#include "math/vector/Vector4.h"
 #include <random>
 
 namespace LWP::Utility::Random {
@@ -32,6 +33,13 @@ namespace LWP::Utility::Random {
 	/// <param name="max">最大値</param>
 	/// <returns>乱数</returns>
 	Math::Vector3 GenerateVector3(Math::Vector3 min, Math::Vector3 max);
+	/// <summary>
+	/// 最小値から最大値の間のfloat型の値をランダムに生成する関数
+	/// </summary>
+	/// <param name="min">最小値</param>
+	/// <param name="max">最大値</param>
+	/// <returns>乱数</returns>
+	Math::Vector4 GenerateVector4(Math::Vector4 min, Math::Vector4 max);
 
 	/// <summary>
 	/// 乱数生成器

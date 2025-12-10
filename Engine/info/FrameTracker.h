@@ -44,6 +44,8 @@ namespace LWP::Information {
 
 		// ImGuiを用いて情報表示
 		void DebugGUI();
+		// タブ無しのDebug表示
+		void TablessDebugGUI();
 
 		// バッファーのViewを取得
 		D3D12_GPU_VIRTUAL_ADDRESS GetPreFrameBufferView() { return preFrame_.GetGPUView(); }

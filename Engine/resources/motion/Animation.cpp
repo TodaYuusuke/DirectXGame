@@ -26,26 +26,23 @@ Animation::~Animation() {
 }
 
 void Animation::Init() {
-	tracks_[TrackType::Main].Init();
-	tracks_[TrackType::Blend].Init();
+	// 全トラック初期化
+	for (int i = 0; i < int(TrackType::Count); i++) {
+		tracks_[TrackType(i)].Init();
+	}
 }
 
 Animation& Animation::Play(const std::string animName, float transitionTime, float startTime, TrackType type) {
 	// 存在するアニメーションかチェック
 	assert(data.contains(animName) && "animName is Not Found.");
-	
+	// トラックタイプが正常かチェック
+	assert((TrackType::Main <= type && type < TrackType::Count) && "TrackType is Invalid.");
 
 	State& s = tracks_[type];
 	s.playingAnimationName = animName;
 	s.time = startTime;
-	s.totalSeconds = data[animName].totalTime;
+	s.totalSeconds = data.at(animName).totalTime;
 	s.isPause = false;
-
-	// Blendだけの特殊な処理
-	//if (type == TrackType::Blend) {
-	//	//float mainSpeed = tracks_[TrackType::Main].playbackSpeed;
-	//	s.playbackSpeed = s.totalSeconds / tracks_[TrackType::Main].totalSeconds;  // 再生速度で同期する
-	//}
 
 	// トランジション時間が0.0f以上ならば、トランジションを行う
 	transition_.totalTime = transitionTime;
@@ -92,6 +89,11 @@ void Animation::Update() {
 	// 更新
 	main.Update();
 	blend.Update();
+	// 同時再生更新
+	for (int i = int(TrackType::Multi0); i < int(TrackType::Count); i++) {
+		tracks_[TrackType(i)].Update();
+	}
+
 
 	// Joint更新
 	UpdateJoint();
@@ -101,57 +103,76 @@ void Animation::Sync() {
 	tracks_[TrackType::Blend].time = tracks_[TrackType::Main].time;
 }
 void Animation::DebugGUI() {
-	// アニメーション一覧
 	static int currentItem = 0;
-	bool isChanged[2] = { false };
-
+	std::vector<const char*> itemText;
 	if (!data.empty()) {
-		std::vector<const char*> itemText;
 		for (auto itr = data.begin(); itr != data.end(); itr++) {
 			itemText.push_back(itr->first.c_str());
 		}
-		ImGui::ListBox("AnimationList", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
-		static float transitionTime = 0.0f;
-		ImGui::DragFloat("Transition Time", &transitionTime, 0.01f);
-		ImGui::Text("-----------------");
-		ImGui::Text("[ Main ]");
-		ImGui::Text("Playing Animation : %s", tracks_[TrackType::Main].playingAnimationName.c_str());
-		ImGui::Text("TotalTime %f", tracks_[TrackType::Main].totalSeconds);
-		if (ImGui::Button("Play##Main")) { Play(itemText[currentItem], transitionTime); }
-		ImGui::SameLine();
-		if (ImGui::Button("Pause##Main")) { Pause(); }
-		ImGui::SameLine();
-		if (ImGui::Button("Resume##Main")) { Resume(); }
-		ImGui::SameLine();
-		if (ImGui::Button("Stop##Main")) { Stop(); }
-		if (ImGui::TreeNode("Detail##Main")) {
-			isChanged[0] = tracks_[TrackType::Main].DebugGUI();
-			ImGui::TreePop();
-		}
-		ImGui::Text("[ Blend ]");
-		ImGui::Text("Playing Animation : %s", tracks_[TrackType::Blend].playingAnimationName.c_str());
-		ImGui::Text("TotalTime %f", tracks_[TrackType::Blend].totalSeconds);
-		if (ImGui::Button("Play##Blend")) { Play(itemText[currentItem], transitionTime, 0.0f, TrackType::Blend); }
-		ImGui::SameLine();
-		if (ImGui::Button("Pause##Blend")) { Pause(TrackType::Blend); }
-		ImGui::SameLine();
-		if (ImGui::Button("Resume##Blend")) { Resume(TrackType::Blend); }
-		ImGui::SameLine();
-		if (ImGui::Button("Stop##Blend")) { Stop(TrackType::Blend); }
-		if (ImGui::TreeNode("Blend Detail##Blend")) {
-				isChanged[1] = tracks_[TrackType::Blend].DebugGUI();
-				ImGui::TreePop();
-			}
-		ImGui::SliderFloat("Transition T", &transition_.t, 0.0f, 1.0f);
-		ImGui::SliderFloat("Blend T", &blendT, 0.0f, 1.0f);
-		if (ImGui::Button("Sync main & blend")) { Sync(); }
 	}
+
+	// アニメーション一覧
+	ImGui::ListBox("AnimationList", &currentItem, itemText.data(), static_cast<int>(itemText.size()), 4);
+	// 推移に掛かる時間の設定
+	static float transitionTime = 0.0f;
+	ImGui::DragFloat("Transition Time", &transitionTime, 0.01f);
+	ImGui::Text("-----------------");
+
+	// 変更されたかのフラグ
+	bool isChanged = false;
+	// 各トラックごとのGUI表示用関数
+	auto trackGUI = [this, itemText, &isChanged](TrackType type, std::string uniqueTag) {
+		ImGui::Text(("[ " + uniqueTag + " ]").c_str());
+		ImGui::Text("Playing Animation : %s", tracks_[type].playingAnimationName.c_str());
+		ImGui::Text("TotalTime %f", tracks_[type].totalSeconds);
+		if (ImGui::Button("Play")) { Play(itemText[currentItem], transitionTime, {}, type); }
+		ImGui::SameLine();
+		if (ImGui::Button("Pause")) { Pause(type); }
+		ImGui::SameLine();
+		if (ImGui::Button("Resume")) { Resume(type); }
+		ImGui::SameLine();
+		if (ImGui::Button("Stop")) { Stop(type); }
+		isChanged |= tracks_[type].DebugGUI();
+		ImGui::EndTabItem();
+	};
+
+	int kTrackCount = int(TrackType::Count);
+	if (ImGui::BeginTabBar("Tracks", kTrackCount)) {
+		if (ImGui::BeginTabItem("Main")) {
+			trackGUI(TrackType::Main, "Main");
+		}
+		if (ImGui::BeginTabItem("Blend")) {
+			trackGUI(TrackType::Blend, "Blend");
+		}
+		if (ImGui::BeginTabItem("Multi0")) {
+			trackGUI(TrackType::Multi0, "Multi0");
+		}
+		if (ImGui::BeginTabItem("Multi1")) {
+			trackGUI(TrackType::Multi1, "Multi1");
+		}
+		if (ImGui::BeginTabItem("Multi2")) {
+			trackGUI(TrackType::Multi2, "Multi2");
+		}
+		if (ImGui::BeginTabItem("Multi3")) {
+			trackGUI(TrackType::Multi3, "Multi3");
+		}
+		if (ImGui::BeginTabItem("Multi4")) {
+			trackGUI(TrackType::Multi4, "Multi4");
+		}
+		ImGui::EndTabBar();
+	}
+
+	ImGui::Text("-----------------");
+	ImGui::SliderFloat("Transition T", &transition_.t, 0.0f, 1.0f);
+	ImGui::SliderFloat("Blend T", &blendT, 0.0f, 1.0f);
+	if (ImGui::Button("Sync main & blend")) { Sync(); }
+
 	if (modelPtr_ && ImGui::TreeNode("Model")) {
 		modelPtr_->DebugGUI();
 		ImGui::TreePop();
 	}
 
-	if (isChanged[0] || isChanged[1]) { UpdateJoint(); }
+	if (isChanged) { UpdateJoint(); }
 }
 
 void Animation::LoadShortPath(const std::string& filePath, Resource::SkinningModel* ptr) {
@@ -164,14 +185,14 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 
 	// 全アニメーションを読み取る
 	for (uint32_t i = 0; i < scene->mNumAnimations; i++) {
-		aiAnimation* animationAssimp = scene->mAnimations[i];	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
-		std::string animationName = scene->mAnimations[i]->mName.C_Str();	// 最初のアニメーションだけ採用。もちろん複数対応することに超したことはない
+		aiAnimation* animationAssimp = scene->mAnimations[i];	// アニメーションを１つ取り出す
+		std::string animationName = scene->mAnimations[i]->mName.C_Str();	// アニメーション名を取得
 		data[animationName].totalTime = static_cast<float>(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);	// 時間の単位を秒に変換
 
 		// assimpでは個々のNodeのAnimationをchannelと呼んでいるので、cahnnelを回してNodeAnimationの情報を取ってくる
 		for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; channelIndex++) {
 			aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
-			NodeAnimation& nodeAnimation = data[animationName].node[nodeAnimationAssimp->mNodeName.C_Str()];
+			NodeAnimation& nodeAnimation = data.at(animationName).node[nodeAnimationAssimp->mNodeName.C_Str()];
 
 			// position
 			for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; keyIndex++) {
@@ -216,7 +237,7 @@ std::vector<std::string> Animation::GetAnimationNames() const {
 float Animation::GetTotalSeconds(const std::string& animName) {
 	// 存在するアニメーションかチェック
 	assert(data.contains(animName) && "animName is Not Found.");
-	return data[animName].totalTime;
+	return data.at(animName).totalTime;
 }
 
 Vector3 Animation::CalculateValue(const std::vector<Keyframe<Vector3>>& keyframes, float time) {
@@ -275,28 +296,36 @@ void Animation::UpdateJoint() {
 	// アニメーションの時間
 	float mainSeconds = mainState.totalSeconds * mainState.time;
 	float blendSeconds = blendState.totalSeconds * blendState.time;
-	
 	// トランジション用のtを求める
 	transition_.t += mainState.GetDeltaTime() / transition_.totalTime;	// いったんメインと同じデルタタイムを使う
 	// 1を超えないように
 	if (transition_.t > 1.0f) { transition_.t = 1.0f; }
 
-	Object::TransformQuat mainTF;
-	Object::TransformQuat blendTF;
 	for (Joint& joint : modelPtr_->skeleton.joints) {
-		// 対象のJointのAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
-		if (auto it = data[mainState.playingAnimationName].node.find(joint.name); mainF && it != data[mainState.playingAnimationName].node.end()) {
-			const NodeAnimation& rootNodeAnimation = (*it).second;
-			mainTF.translation	= CalculateValue(rootNodeAnimation.translate.keyframes, mainSeconds);
-			mainTF.rotation		= CalculateValue(rootNodeAnimation.rotate.keyframes, mainSeconds).Normalize();
-			mainTF.scale		= CalculateValue(rootNodeAnimation.scale.keyframes, mainSeconds);
+		Object::TransformQuat mainTF = joint.localTF;
+		Object::TransformQuat blendTF = mainTF;
+
+		// メイン用のAnimationがあれば値の適応を行う。
+		if (mainF) {
+			AnimationData& mainData = data.at(mainState.playingAnimationName);
+			// 対象のJointのAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+			if (auto it = mainData.node.find(joint.name); it != mainData.node.end()) {
+				const NodeAnimation& rootNodeAnimation = (*it).second;
+				mainTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, mainSeconds);
+				mainTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, mainSeconds).Normalize();
+				mainTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, mainSeconds);
+			}
 		}
 		// ブレンド用のAnimationがあれば値の適応を行う。
-		if (auto it = data[blendState.playingAnimationName].node.find(joint.name); blendF && it != data[blendState.playingAnimationName].node.end()) {
-			const NodeAnimation& rootNodeAnimation = (*it).second;
-			blendTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, blendSeconds);
-			blendTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, blendSeconds).Normalize();
-			blendTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, blendSeconds);
+		if (blendF) {
+			AnimationData& blendData = data.at(blendState.playingAnimationName);
+			// 同じく対象のJointのAnimationがあれば値の適応を行う。
+			if (auto it = blendData.node.find(joint.name); it != blendData.node.end()) {
+				const NodeAnimation& rootNodeAnimation = (*it).second;
+				blendTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, blendSeconds);
+				blendTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, blendSeconds).Normalize();
+				blendTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, blendSeconds);
+			}
 		}
 
 		// メインとブレンドどちらもアニメーションを再生しているなら
@@ -318,6 +347,29 @@ void Animation::UpdateJoint() {
 			joint.localTF.scale = blendTF.scale;
 		}
 
+		// 同時再生系の処理を行う
+		for (int i = int(TrackType::Multi0); i < int(TrackType::Count); i++) {
+			State& multiState = tracks_[TrackType(i)];
+			// 再生中のアニメーションがあるならば
+			if (multiState.GetPlaying()) {
+				float multiSeconds = multiState.totalSeconds * multiState.time;
+				AnimationData& multiData = data.at(multiState.playingAnimationName);
+				// 対象のJointのAnimationがあれば値の適応を行う。下記のif文はC++17から可能になった初期化つきif文
+				if (auto it = multiData.node.find(joint.name); it != multiData.node.end()) {
+					const NodeAnimation& rootNodeAnimation = (*it).second;
+					Object::TransformQuat multiTF;
+					multiTF.translation = CalculateValue(rootNodeAnimation.translate.keyframes, multiSeconds);
+					multiTF.rotation = CalculateValue(rootNodeAnimation.rotate.keyframes, multiSeconds).Normalize();
+					multiTF.scale = CalculateValue(rootNodeAnimation.scale.keyframes, multiSeconds);
+
+					// そのジョイントの情報を差し替える
+					joint.localTF.translation = multiTF.translation;
+					joint.localTF.rotation = multiTF.rotation;
+					joint.localTF.scale = multiTF.scale;
+				}
+			}
+		}
+
 		// もしトランジションが有効ならば、処理を行う
 		if (transition_.isActive) {
 			// 補完元のスケルトンのトランスフォームを取得	
@@ -327,10 +379,6 @@ void Animation::UpdateJoint() {
 			joint.localTF.rotation = Interp::SlerpQuaternion(prevTransform.rotation, joint.localTF.rotation, transition_.t);
 			joint.localTF.scale = Interp::Lerp(prevTransform.scale, joint.localTF.scale, transition_.t);
 		}
-
-		joint.localTF.translation = joint.localTF.translation;
-		joint.localTF.rotation = joint.localTF.rotation;
-		joint.localTF.scale = joint.localTF.scale;
 	}
 
 
