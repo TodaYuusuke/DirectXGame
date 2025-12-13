@@ -77,8 +77,11 @@ void SkinningModel::DebugGUI() {
 	if (ImGui::Button("Change All Lighting Flag false")) { SetAllMaterialLighting(false); }
 }
 
+bool SkinningModel::FindJoint(const std::string& name) {
+	return skeleton.jointMap.contains(name);	// 結果をそのまま返す
+}
 Primitive::Joint* SkinningModel::GetJoint(const std::string& name) {
-	assert(skeleton.jointMap.contains(name));	// Jointの存在チェック
+	assert(FindJoint(name));	// Jointの存在チェック
 	return &skeleton.joints[skeleton.jointMap[name]];
 }
 Matrix4x4 SkinningModel::GetJointWorldMatrix(const std::string& name) {
