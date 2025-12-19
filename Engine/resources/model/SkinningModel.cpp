@@ -95,7 +95,8 @@ void SkinningModel::ChangeFillMode() {
 	Resource::Manager::GetInstance()->ChangeFillMode(this, filePath);
 }
 
-void SkinningModel::SetAllMaterialLighting(bool flag) {
+void SkinningModel::SetAl
+lMaterialLighting(bool flag) {
 	for (auto itr = materials.begin(); itr != materials.end(); itr++) {
 		itr->second.enableLighting = flag;
 	}
