@@ -396,20 +396,43 @@ void Animation::State::Update() {
 	float t = GetDeltaTime() / totalSeconds;	// こちらはデルタタイム更新
 	if (!isReverse) { time += t; }	// リバースフラグに応じて進行方向を変える
 	else { time -= t; }
+	// フラグを初期化
+	isEndOneLoop = false;
 
 	// ループする場合
 	if (isLoop) {
 		// 最後までいったらリピート再生
-		if (!isReverse) { time = std::fmod(time, 1.0f); }
+		if (!isReverse) {
+			if (time > 1.0f) {
+				isEndOneLoop = true;
+				time -= 1.0f;
+			}
+			time = std::fmod(time, 1.0f);
+		}
 		// リバースするなら0を下回ったら1を足して戻す
-		else { if (time < 0.0f) { time += 1.0f; } }
+		else {
+			if (time < 0.0f) {
+				isEndOneLoop = true;
+				time += 1.0f;
+			}
+		}
 	}
 	// ループしない場合
 	else {
 		// 1を超えないように
-		if (!isReverse) { if (time > 1.0f) { time = 1.0f; } }
+		if (!isReverse) {
+			if (time > 1.0f) {
+				isEndOneLoop = true;
+				time = 1.0f;
+			}
+		}
 		// リバースするなら0を超えないように
-		else { if (time < 0.0f) { time = 0.0f; } }
+		else {
+			if (time < 0.0f) {
+				isEndOneLoop = true;
+				time = 0.0f;
+			}
+		}
 	}
 }
 float Animation::State::GetDeltaTime() {
@@ -449,6 +472,7 @@ bool Animation::State::DebugGUI() {
 	ImGui::Checkbox("isLoop", &isLoop);					// ループフラグ
 	ImGui::Checkbox("isReverse", &isReverse);			// 逆再生フラグ
 	ImGui::Checkbox("isUseTimeScale", &isUseTimeScale);	// タイムスケールフラグ
+	ImGui::Text("isEndOneLoop : %d", isEndOneLoop);	// タイムスケールフラグ
 
 	return temp != time;	// tの値が変わったらJointを更新するため、trueを返す
 }
