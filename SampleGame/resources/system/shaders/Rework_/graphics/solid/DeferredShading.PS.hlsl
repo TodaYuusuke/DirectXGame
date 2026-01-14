@@ -1,4 +1,4 @@
-#include "../../Structs.hlsli"
+    #include "../../Structs.hlsli"
 
 Texture2D<float32_t4> tAlbedo : register(t0);
 Texture2D<float32_t4> tNormal : register(t1);
@@ -37,6 +37,8 @@ float3 DirLightingShadow(float32_t3 worldPosition, float32_t3 normal) {
     float32_t litDepth = lightClip.z / lightClip.w;
    
     float32_t ndcDepth = tDirLightShadowMap.Sample(sDirLightSampler, shadowUV);
+    
+    if(ndcDepth <= 0.0f) { return 1.0f; }
     
     // 比較自体がなにか間違えている？
     return (litDepth - cDirLight.bias < ndcDepth) ? 1.0f : cDirLight.shadowIntensity;

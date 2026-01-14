@@ -181,6 +181,12 @@ namespace LWP::Resource {
 		/// </summary>
 		float GetProgressSeconds(TrackType type = TrackType::Main) { return tracks_[type].totalSeconds * tracks_[type].time; }
 		/// <summary>
+		/// 1ループが終わった瞬間のフレームだけtrueを返す関数
+		/// </summary>
+		/// <returns></returns>
+		bool GetEndOneLoop(TrackType type = TrackType::Main) { return tracks_[type].isEndOneLoop; }
+
+		/// <summary>
 		/// 読み込んだパスを返す関数
 		/// </summary>
 		std::string GetLoadedPath() { return loadedPath; }
@@ -215,6 +221,9 @@ namespace LWP::Resource {
 			bool isReverse = false;
 			// タイムスケールの影響OnOff
 			bool isUseTimeScale = true;
+
+			// 1ループが終わるたびに1フレームだけtrueになるフラグ
+			bool isEndOneLoop = false;
 
 			/// <summary>
 			/// 初期化

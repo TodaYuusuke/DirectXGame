@@ -32,6 +32,14 @@ namespace LWP::Base {
 		RootSignature& AddTableParameter(int registerNum, ShaderVisibility visibility, int space = 0, UINT maxSize = 0);
 		RootSignature& AddUAVParameter(int registerNum, ShaderVisibility visibility, int space = 0, UINT maxSize = 0);
 		RootSignature& AddUAVRWTexture(int registerNum, ShaderVisibility visibility, int space = 0);
+		/// <param name="registerNum">レジスタ番号</param>
+		/// <param name="visibility">シェーダー視認性</param>
+		/// <param name="filter">フィルターの設定</param>
+		/// <param name="func">比較関数</param>
+		/// <param name="address">範囲外のUV座標をどうするか</param>
+		/// <param name="borderColor">addressにBORDERが指定されている場合、境界の色指定</param>
+		/// <param name="maxAnisotropy"></param>
+		/// <returns></returns>
 		RootSignature& AddSampler(int registerNum, ShaderVisibility visibility = SV_Pixel,
 			D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR,	// フィルター（default:バイオリニアフィルタ）
 			D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_NEVER,	// 比較関数（default:比較しない）

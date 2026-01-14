@@ -46,6 +46,12 @@ namespace LWP::Resource {
 		void DebugGUI() override;
 
 		/// <summary>
+		/// 指定した名前のJointが存在するか確認する
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		bool FindJoint(const std::string& name);
+		/// <summary>
 		/// 指定した名前のJointを取得する
 		/// </summary>
 		/// <param name="name"></param>

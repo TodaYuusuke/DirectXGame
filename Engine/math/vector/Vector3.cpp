@@ -51,10 +51,11 @@ Vector3 Vector3::operator*(const Matrix4x4& other) const {
 	result.y = x * other.m[0][1] + y * other.m[1][1] + z * other.m[2][1] + other.m[3][1];
 	result.z = x * other.m[0][2] + y * other.m[1][2] + z * other.m[2][2] + other.m[3][2];
 	float w  = x * other.m[0][3] + y * other.m[1][3] + z * other.m[2][3] + other.m[3][3];
-	assert(w != 0.0f);
-	result.x /= w;
-	result.y /= w;
-	result.z /= w;
+	if (w != 0.0f) {
+		result.x /= w;
+		result.y /= w;
+		result.z /= w;
+	}
 	return result;
 }
 

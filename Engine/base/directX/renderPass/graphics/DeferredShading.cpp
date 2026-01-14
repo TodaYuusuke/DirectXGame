@@ -17,10 +17,13 @@ namespace LWP::Base {
 			.AddCBVParameter(0, SV_Pixel)		// 4 ライト系のメタデータ
 			.AddCBVParameter(1, SV_Pixel)		// 5 平行光源のデータ
 			.AddTableParameter(4, SV_Pixel)		// 6 平行光源のシャドウマップ
-			.AddSampler(1, SV_Pixel, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_POINT,
+			.AddSampler(
+				1, SV_Pixel,
+				D3D12_FILTER_COMPARISON_MIN_MAG_MIP_POINT,
 				D3D12_COMPARISON_FUNC_LESS_EQUAL,
 				D3D12_TEXTURE_ADDRESS_MODE_BORDER,
-				{}, 1
+				D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+				1
 			)			// x 平行光源のシャドウマップ用サンプラー
 			.Build();
 		// パススルー描画の後、遅延ライテイング描画
