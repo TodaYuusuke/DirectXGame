@@ -114,6 +114,10 @@ namespace LWP::Resource {
 		/// アニメーション完全に停止
 		/// </summary>
 		Animation& Stop(TrackType type = TrackType::Main);
+		/// <summary>
+		/// アニメーションの進行時間を直接指定する
+		/// </summary>
+		void SetTime(float second, TrackType type = TrackType::Main);
 
 		/// <summary>
 		/// ループ再生するかのフラグを切り替え

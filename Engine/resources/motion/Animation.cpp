@@ -68,6 +68,16 @@ Animation& Animation::Stop(TrackType type)	{
 	}
 	return *this;
 }
+void Animation::SetTime(float second, TrackType type) {
+	if (tracks_[type].totalSeconds < second) {
+		tracks_[type].time = tracks_[type].totalSeconds;
+	}
+	else {
+		tracks_[type].time = second;
+
+	}
+}
+
 
 Animation& Animation::Loop(TrackType type)					{ tracks_[type].isLoop = !tracks_[type].isLoop;					return *this; }
 Animation& Animation::Loop(bool b, TrackType type)			{ tracks_[type].isLoop = b;										return *this; }

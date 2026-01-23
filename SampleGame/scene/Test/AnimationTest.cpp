@@ -19,12 +19,16 @@ void AnimationTest::Initialize() {
 	
 	mainCamera.worldTF.translation = { 0.0f,6.0f, -50.0f };
 
-	/*
-	anim[0].Play("Walk")
-		.Loop(true);
-	anim[0].Play("Dash", 0.0f, 0.0f, Resource::Animation::TrackType::Blend)
-	 	.Loop(true, Resource::Animation::TrackType::Blend);
-	*/
+	
+	anim[0].Play("Other_Idle")
+		.Loop(true)
+		.Stop();
+	anim[0].Play("Other_Move", 0.0f, 0.0f, Resource::Animation::TrackType::Blend)
+	 	.Loop(true, Resource::Animation::TrackType::Blend)
+		.Stop();
+	anim[0].Play("HandL_PowerShot", 0.0f, 0.0f, Resource::Animation::TrackType::Multi0)
+		.Loop(true, Resource::Animation::TrackType::Multi0);
+
 
 	// 再読み込みテスト
 	//model[0].LoadShortPath("Player/Hinmin/Player.gltf");
@@ -38,7 +42,12 @@ void AnimationTest::Update() {
 
 	ImGui::Begin("Test");
 	anim[0].DebugGUI();
+	ImGui::DragFloat("SetTime Parameter", &F, 0.01f);
+	if(ImGui::Button("SetTime")) {
+		anim[0].SetTime(F, Resource::Animation::TrackType::Blend);
+	}
 	ImGui::End();
+
 
 	// シーン再読み込み
 	if (Keyboard::GetTrigger(DIK_P)) {
