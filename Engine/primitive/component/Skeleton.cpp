@@ -22,9 +22,6 @@ void Skeleton::Update() {
 		//else {
 		//	joint.skeletonSpaceMatrix = local;
 		//}
-
-		Matrix4x4 parentM = joint.localTF.GetAffineMatrix();
-		parentM;
 	}
 }
 
