@@ -50,20 +50,7 @@ void TransformQuat::Init() {
 }
 
 Matrix4x4 TransformQuat::GetAffineMatrix() const {
-	Math::Matrix4x4 result = Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
-	// 親があれば親のワールド行列を掛ける
-	switch (parent_.type) {
-		case LWP::Object::TransformQuat::ParentTargetType::Transform:
-			result = result * parent_.worldTF->GetAffineMatrix();
-			break;
-		case LWP::Object::TransformQuat::ParentTargetType::Joint:
-			result = parent_.localTF->GetAffineMatrix() * result * parent_.worldTF->GetAffineMatrix();
-			break;
-	}
-	return result;
-}
-Matrix4x4 TransformQuat::GetAffineMatrix(Primitive::Node* node) const {
-	Math::Matrix4x4 result = node->GetLocalMatrix() * Math::Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
+	Matrix4x4 result = Matrix4x4::CreateAffineMatrix(scale, rotation, translation);
 	// 親があれば親のワールド行列を掛ける
 	switch (parent_.type) {
 		case LWP::Object::TransformQuat::ParentTargetType::Transform:
@@ -77,50 +64,49 @@ Matrix4x4 TransformQuat::GetAffineMatrix(Primitive::Node* node) const {
 }
 
 Matrix4x4 TransformQuat::GetTranslationMatrix() const {
-	Math::Matrix4x4 result = Math::Matrix4x4::CreateTranslateMatrix(translation);
-	// 親があれば親のワールド行列を掛ける
-	switch (parent_.type) {
-		case LWP::Object::TransformQuat::ParentTargetType::Transform:
-			result = result * parent_.worldTF->GetTranslationMatrix();
-			break;
-		case LWP::Object::TransformQuat::ParentTargetType::Joint:
-			result = parent_.localTF->GetTranslationMatrix() * result * parent_.worldTF->GetTranslationMatrix();
-			break;
-	}
-	return result;
+	return Matrix4x4::CreateTranslateMatrix(GetWorldPosition());
 }
 Vector3 TransformQuat::GetWorldPosition() const {
-	Math::Matrix4x4 worldMatrix = GetAffineMatrix();
+	Matrix4x4 worldMatrix = GetAffineMatrix();
 	return { worldMatrix.m[3][0],worldMatrix.m[3][1],worldMatrix.m[3][2] };
 }
-Matrix4x4 TransformQuat::GetRotateMatrix() const {
-	Math::Matrix4x4 result = Math::Matrix4x4::CreateRotateXYZMatrix(rotation);
+Matrix4x4 TransformQuat::GetWorldRotateMatrix() const {
+	Matrix4x4 result = Matrix4x4::CreateRotateXYZMatrix(rotation);
 	// 親があれば親のワールド行列を掛ける
 	switch (parent_.type) {
 		case LWP::Object::TransformQuat::ParentTargetType::Transform:
-			result = result * parent_.worldTF->GetRotateMatrix();
+			result = result * parent_.worldTF->GetWorldRotateMatrix();
 			break;
 		case LWP::Object::TransformQuat::ParentTargetType::Joint:
-			result = parent_.localTF->GetRotateMatrix() * result * parent_.worldTF->GetRotateMatrix();
+			result = result * parent_.localTF->GetWorldRotateMatrix() * parent_.worldTF->GetWorldRotateMatrix();
+			//result = parent_.localTF->GetAffineMatrix() * result * parent_.worldTF->GetAffineMatrix();
 			break;
 	}
 	return result;
 }
-Matrix4x4 TransformQuat::GetScaleMatrix() const {
-	Math::Matrix4x4 result = Math::Matrix4x4::CreateScaleMatrix(scale);
+Matrix4x4 TransformQuat::GetLocalRotateMatrix() const {
+	return Matrix4x4::CreateRotateXYZMatrix(rotation);
+}
+
+Matrix4x4 TransformQuat::GetWorldScaleMatrix() const {
+	Matrix4x4 result = Matrix4x4::CreateScaleMatrix(scale);
 	// 親があれば親のワールド行列を掛ける
 	switch (parent_.type) {
 		case LWP::Object::TransformQuat::ParentTargetType::Transform:
-			result = result * parent_.worldTF->GetScaleMatrix();
+			result = result * parent_.worldTF->GetWorldScaleMatrix();
 			break;
 		case LWP::Object::TransformQuat::ParentTargetType::Joint:
-			result = parent_.localTF->GetScaleMatrix() * result * parent_.worldTF->GetScaleMatrix();
+			result = result * parent_.localTF->GetWorldScaleMatrix() * parent_.worldTF->GetWorldScaleMatrix();
+			//result = parent_.localTF->GetAffineMatrix() * result * parent_.worldTF->GetAffineMatrix();
 			break;
 	}
 	return result;
+}
+Matrix4x4 TransformQuat::GetLocalScaleMatrix() const {
+	return Matrix4x4::CreateScaleMatrix(scale);
 }
 Vector3 TransformQuat::GetFinalScale() const {
-	Math::Matrix4x4 worldMatrix = GetScaleMatrix();
+	Matrix4x4 worldMatrix = GetWorldScaleMatrix();
 	return { worldMatrix.m[0][0],worldMatrix.m[1][1],worldMatrix.m[2][2] };
 }
 

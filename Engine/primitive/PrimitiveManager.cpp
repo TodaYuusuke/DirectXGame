@@ -75,6 +75,7 @@ namespace LWP::Primitive {
 			if (p->isActive) {
 				IPlane::Type type = p->GetType();
 				PlaneBuffers* b = nullptr;
+				Base::WTFStruct wtf = p->worldTF;
 
 				// スプライト以外の場合（ビルボード系の場合）
 				if (type != IPlane::Type::Sprite) {
@@ -84,6 +85,7 @@ namespace LWP::Primitive {
 					// Zソート用にデータを登録
 					float d = Vector3::Distance(p->GetCenterPosition(), cameraPos);
 					billIndex.push_back({ bI++, d });
+					wtf.rotate = p->worldTF.GetLocalRotateMatrix();	// 回転はローカル回転のみを使う
 				}
 				else {
 					// スプライトのバッファを指定
@@ -95,7 +97,7 @@ namespace LWP::Primitive {
 				// 指定のタイプのバッファにデータを登録
 				for (const Vertex& v : p->vertices) { b->vertices.Add(v); }
 				b->materials.Add(p->material);
-				b->wtf.Add(p->worldTF);
+				b->wtf.Add(wtf);
 				b->count++;
 
 
@@ -150,12 +152,12 @@ namespace LWP::Primitive {
 	void Manager::DebugGUIPlane() {
 		// 指定の種類のPrimitiveを絞り込む選択肢
 		static std::vector<const char*> filterText = {
-			"All", "Sprite", "Surface", "Billboard2D", "HorizontalBillboard", "VerticalBillboard", "StretchedBillboard"
+			"All", "Sprite", "Surface", "Billboard2D", "Billboard3D", "HorizontalBillboard", "VerticalBillboard", "StretchedBillboard"
 		};
 		static int filterID = 0;
 		// 選択肢の変数
 		static std::vector<const char*> typeText = {
-			"Sprite", "Surface", "Billboard2D", "HorizontalBillboard", "VerticalBillboard", "StretchedBillboard",
+			"Sprite", "Surface", "Billboard2D", "Billboard3D", "HorizontalBillboard", "VerticalBillboard", "StretchedBillboard",
 		};
 		static int typeID = 0;
 		static std::vector<const char*> policyText = {
@@ -179,6 +181,11 @@ namespace LWP::Primitive {
 				[this]() { debugPris.push_back(new NormalBillboard2D()); },
 				[this]() { debugPris.push_back(new SequenceBillboard2D()); },
 				[this]() { debugPris.push_back(new ClipBillboard2D()); },
+			},
+			{
+				[this]() { debugPris.push_back(new NormalBillboard3D()); },
+				[this]() { debugPris.push_back(new SequenceBillboard3D()); },
+				[this]() { debugPris.push_back(new ClipBillboard3D()); },
 			},
 			{
 				[this]() { debugPris.push_back(new NormalHorizontalBillboard()); },

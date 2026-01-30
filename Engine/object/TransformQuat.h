@@ -68,10 +68,6 @@ namespace LWP::Object {
 		/// アフィン行列を返す
 		/// </summary>
 		Math::Matrix4x4 GetAffineMatrix() const;
-		/// <summary>
-		/// アフィン行列を返す（Nodeを考慮）
-		/// </summary>
-		Math::Matrix4x4 GetAffineMatrix(Primitive::Node* node) const;
 
 		// 移動だけのワールド行列を返す
 		Math::Matrix4x4 GetTranslationMatrix() const;
@@ -79,12 +75,16 @@ namespace LWP::Object {
 		Math::Vector3 GetWorldPosition() const;
 
 		// 回転だけのワールド行列を返す
-		Math::Matrix4x4 GetRotateMatrix() const;
+		Math::Matrix4x4 GetWorldRotateMatrix() const;
+		// 回転だけのローカル行列を返す
+		Math::Matrix4x4 GetLocalRotateMatrix() const;
 		// 最終的な回転を返す
 		//Math::Vector3 GetFinalRotate() const;
 
 		// 拡大縮小だけのワールド行列を返す
-		Math::Matrix4x4 GetScaleMatrix() const;
+		Math::Matrix4x4 GetWorldScaleMatrix() const;
+		// 拡大縮小だけのローカル行列を返す
+		Math::Matrix4x4 GetLocalScaleMatrix() const;
 		// 最終的なスケールを返す
 		Math::Vector3 GetFinalScale() const;
 

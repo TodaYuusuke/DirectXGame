@@ -88,7 +88,9 @@ namespace LWP::Object {
 
 		// 書き込むリソース
 		Base::GBuffer gBuffer_;
-		// レンダリング結果の画像
+		//																																												レンダリング結果の画像
 		Base::RenderResource textureResource_;
+		// 結果の画像
+		//Base::RenderResource textureResource_;
 	};
 }
