@@ -18,5 +18,10 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 	LWP::Resource::RigidModel cube;
 	LWP::Resource::SkinningModel model[5];
 	LWP::Resource::Animation anim[5];
+
+	LWP::Resource::SkinningModel gun;
+	LWP::Primitive::NormalSurface surface;
+	LWP::Primitive::NormalBillboard2D billboard2D;
+
 	//LWP::Resource::Motion motion[5];
 };

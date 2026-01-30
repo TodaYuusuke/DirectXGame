@@ -21,13 +21,16 @@ VSOutputUnlit main(uint32_t vertexID : SV_VertexID, uint32_t instanceID : SV_Ins
         case 2:     // Billboard2D
             output.position = Billboard2D(v, wtf);
             break;
-        case 3:     // HorizontalBillboard
+        case 3:     // Billboard3D
+            output.position = Billboard3D(v, wtf, index);
+            break;
+        case 4:     // HorizontalBillboard
             output.position = HorizontalBillboard(v, wtf, index);
             break;
-        case 4:     // VerticalBillboard
+        case 5:     // VerticalBillboard
             output.position = VerticalBillboard(v, wtf, index);
             break;
-        case 5:     // StretchedBillboard
+        case 6:     // StretchedBillboard
             output.position = StretchedBillboard(v, wtf, vVelocity[index], index);
             break;
         default:    // Sprite or エラー

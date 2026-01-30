@@ -23,6 +23,16 @@ namespace LWP::Primitive {
 	using NormalBillboard2D = BillboardTemplate<NormalPolicy, IBillboard2D>;
 	using SequenceBillboard2D = BillboardTemplate<SequencePolicy, IBillboard2D>;
 	using ClipBillboard2D = BillboardTemplate<ClipPolicy, IBillboard2D>;
+	/// <summary>
+	/// ビルボード3D（カメラの'中心'を見る）
+	/// </summary>
+	struct IBillboard3D : virtual IPlane {
+		std::string GetName() override { return "Billboard3D"; }
+		IPlane::Type GetType() override { return Type::Billboard3D; }
+	};
+	using NormalBillboard3D = BillboardTemplate<NormalPolicy, IBillboard3D>;
+	using SequenceBillboard3D = BillboardTemplate<SequencePolicy, IBillboard3D>;
+	using ClipBillboard3D = BillboardTemplate<ClipPolicy, IBillboard3D>;
 
 	/// <summary>
 	/// 水平ビルボード（XZ平面に対して水平）

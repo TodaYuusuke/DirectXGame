@@ -68,12 +68,14 @@ float32_t4 Billboard2D(Vertex v, WorldTransform wtf) {
     return mul(mul(v.position, mat), vCamera.m);
 }
 float32_t4 Billboard3D(Vertex v, WorldTransform wtf, int32_t instanceID) {
-    float32_t3 center = GetWorldCenterPosition(instanceID);
+    //float32_t3 center = GetWorldCenterPosition(instanceID);
+    
+    float32_t3 worldPos = mul(v.position, wtf.m).xyz;
     float32_t3 from = normalize(float3(0.0f, 0.0f, -1.0f));
-    float32_t3 to = normalize(vCamera.worldPos - center);
+    float32_t3 to = normalize(vCamera.worldPos - worldPos);
     float32_t4x4 m = DirectionToDirection(from, to);
     
-    return mul(mul(mul(v.position, wtf.m), m), vCamera.m);
+    return mul(mul(mul(v.position, m), wtf.m), vCamera.m);
 }
 float32_t4 HorizontalBillboard(Vertex v, WorldTransform wtf, int32_t instanceID) {
     float32_t3 center = GetWorldCenterPosition(instanceID);

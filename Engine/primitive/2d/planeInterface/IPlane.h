@@ -12,6 +12,7 @@ namespace LWP::Primitive {
 			Sprite,
 			Surface,		// 平面（ビルボードではない）
 			Billboard2D,	// ビルボード2D（カメラの'面'を見る）
+			Billboard3D,	// ビルボード3D（カメラの'中心'を見る）
 			HorizontalBillboard,	// 水平ビルボード（XZ平面に対して水平）
 			VerticalBillboard,		// 垂直ビルボード（XZ平面に対して垂直）
 			StretchedBillboard,		// 伸縮ビルボード

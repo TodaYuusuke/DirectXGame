@@ -14,6 +14,10 @@ struct WorldTransform {
     float32_t4x4 rotate;
     float32_t4x4 scale;
     float32_t4x4 inverse;
+    
+    float32_t3 GetWorldPosition() {
+        return m[3].xyz;
+    }
 };
 struct Material {
     float32_t4x4 uvTransform;

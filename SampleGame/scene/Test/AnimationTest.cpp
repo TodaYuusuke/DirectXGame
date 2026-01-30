@@ -29,7 +29,10 @@ void AnimationTest::Initialize() {
 	anim[0].Play("HandL_PowerShot", 0.0f, 0.0f, Resource::Animation::TrackType::Multi0)
 		.Loop(true, Resource::Animation::TrackType::Multi0);
 
-
+	gun.LoadShortPath("Player/Robot_FL/MachineGun/MachineGun.gltf");
+	gun.worldTF.Parent(&model[0], "WeaponAnchor.L");
+	surface.worldTF.Parent(&gun, "Muzzle");
+	billboard2D.worldTF.Parent(&gun, "Muzzle");
 	// 再読み込みテスト
 	//model[0].LoadShortPath("Player/Hinmin/Player.gltf");
 }

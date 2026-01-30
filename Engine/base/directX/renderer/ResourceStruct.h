@@ -48,8 +48,8 @@ namespace LWP::Base {
 			wtf = value.GetAffineMatrix();
 			//wtf = value.GetAffineMatrix(new Primitive::Node);
 			translate = value.GetTranslationMatrix();
-			rotate = value.GetRotateMatrix();
-			scale = value.GetScaleMatrix();
+			rotate = value.GetWorldRotateMatrix();
+			scale = value.GetWorldScaleMatrix();
 			inverse = value.GetAffineMatrix().Inverse();
 			return *this;
 		}
@@ -57,8 +57,8 @@ namespace LWP::Base {
 		WTFStruct& operator=(Primitive::IPrimitive& value) {
 			wtf = value.worldTF.GetAffineMatrix();
 			translate = value.worldTF.GetTranslationMatrix();
-			rotate = value.worldTF.GetRotateMatrix();
-			scale = value.worldTF.GetScaleMatrix();
+			rotate = value.worldTF.GetWorldRotateMatrix();
+			scale = value.worldTF.GetWorldScaleMatrix();
 			inverse = value.worldTF.GetAffineMatrix().Inverse();
 			return *this;
 		}

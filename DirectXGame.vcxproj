@@ -333,9 +333,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderPass\graphics\IGraphicsPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\ImGuiRender.h" />
     <ClInclude Include="Engine\base\directX\renderPass\graphics\RenderClear.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\postprocess\CustomShaderRender.h" />
     <ClInclude Include="Engine\base\directX\renderPass\RenderingPipeline.h" />
     <ClInclude Include="Engine\base\directX\renderPass\IRenderPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\postprocess\IPostProcessPass.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\postprocess\CustomShaderRender.cpp" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\DirLightShadow.h" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\IShadowPass.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />
