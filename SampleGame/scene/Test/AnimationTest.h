@@ -21,7 +21,7 @@ private: //*** これより先に必要な処理や変数を記述 ***//
 
 	LWP::Resource::SkinningModel gun;
 	LWP::Primitive::NormalSurface surface;
-	LWP::Primitive::NormalBillboard2D billboard2D;
+	LWP::Primitive::NormalStretchedBillboard billboard2D;
 
 	//LWP::Resource::Motion motion[5];
 };

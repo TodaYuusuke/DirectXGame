@@ -79,7 +79,21 @@ bool Point::CheckCollision(Sphere& c, Math::Vector3* fixVec) {
 	*fixVec = { 0.0f,0.0f,0.0f };
 	return result;
 }
-bool Point::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Point::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
+	Point::Data point(*this);
+	Capsule::Data capsule(c);
+
+	Vector3 ba = capsule.end - capsule.start;
+	Vector3 pa = point.position - capsule.start;
+	float h = std::clamp(Vector3::Dot(pa, ba) / Vector3::Dot(ba, ba), 0.0f, 1.0f);
+	float distance = (pa - ba * h).Length();
+
+	bool result = distance <= capsule.radius;
+
+	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
+	return result;
+}
 
 #pragma endregion
 
@@ -208,6 +222,66 @@ bool Sphere::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
 bool Capsule::CheckCollision(Point& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(AABB& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
 bool Capsule::CheckCollision(Sphere& c, Math::Vector3* fixVec) { return c.CheckCollision(*this, fixVec); }
-bool Capsule::CheckCollision(Capsule& c, Math::Vector3* fixVec) { return NotImplementedFunc(this, &c, fixVec); }
+bool Capsule::CheckCollision(Capsule& c, Math::Vector3* fixVec) {
+	Capsule::Data d1(*this);
+	Capsule::Data d2(c);
+
+	Vector3 d1_vec = d1.end - d1.start;
+	Vector3 d2_vec = d2.end - d2.start;
+	Vector3 r = d1.start - d2.start;
+
+	float a = Vector3::Dot(d1_vec, d1_vec);
+	float e = Vector3::Dot(d2_vec, d2_vec);
+	float f = Vector3::Dot(d2_vec, r);
+
+	float s = 0.0f, t = 0.0f;
+
+	if (a <= 1e-6f && e <= 1e-6f) {
+		s = t = 0.0f;
+	}
+	else if (a <= 1e-6f) {
+		s = 0.0f;
+		t = std::clamp(f / e, 0.0f, 1.0f);
+	}
+	else {
+		float c_val = Vector3::Dot(d1_vec, r);
+		if (e <= 1e-6f) {
+			t = 0.0f;
+			s = std::clamp(-c_val / a, 0.0f, 1.0f);
+		}
+		else {
+			float b = Vector3::Dot(d1_vec, d2_vec);
+			float denom = a * e - b * b;
+
+			if (denom != 0.0f) {
+				s = std::clamp((b * f - c_val * e) / denom, 0.0f, 1.0f);
+			}
+			else {
+				s = 0.0f;
+			}
+
+			t = (b * s + f) / e;
+
+			if (t < 0.0f) {
+				t = 0.0f;
+				s = std::clamp(-c_val / a, 0.0f, 1.0f);
+			}
+			else if (t > 1.0f) {
+				t = 1.0f;
+				s = std::clamp((b - c_val) / a, 0.0f, 1.0f);
+			}
+		}
+	}
+
+	Vector3 p1 = d1.start + d1_vec * s;
+	Vector3 p2 = d2.start + d2_vec * t;
+
+	float distance = (p1 - p2).Length();
+	bool result = distance <= (d1.radius + d2.radius);
+
+	CallHit(this, &c, result);
+	*fixVec = { 0.0f,0.0f,0.0f };
+	return result;
+}
 
 #pragma endregion
