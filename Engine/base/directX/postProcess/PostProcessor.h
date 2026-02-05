@@ -8,10 +8,22 @@
 #include "effects/Vignetting.h"
 #include "effects/RadialBlur.h"
 #include "effects/RGBShift.h"
+#include "effects/Glitch.h"
 
+#include "base/directX/resource/data/ConstantBuffer.h"
 #include <fstream>
 
 namespace LWP::Base {
+	/// <summary>
+	/// ポストプロセスの共通パラメータ構造体
+	/// </summary>
+	struct PostProcessParameter {
+		float time;
+		int rWidth;
+		int rHeight;
+		int padding;
+	};
+
 	/// <summary>
 	/// ポストプロセス管理クラス
 	/// <para>HLSLコードをバイナリ形式のGPUシェーダーに変換する</para>
@@ -28,6 +40,7 @@ namespace LWP::Base {
 		PostProcess::GrayScale grayScale;	// グレースケール
 		PostProcess::Vignetting vignetting;	// ビネット
 		PostProcess::RGBShift rgbShift;	// RGBずらし
+		PostProcess::Glitch glitch;		// グリッチ
 		// ここにどんどん種類を増やしていく
 
 
@@ -63,6 +76,9 @@ namespace LWP::Base {
 		RootSignature root_;
 		// PSO
 		PSO pso_;
+
+		// 共通パラメータ
+		Base::ConstantBuffer<PostProcessParameter> commonBuffer_;
 
 		// 処理を行うポストプロセスたち
 		std::vector<PostProcess::IPostProcess*> processes_;
