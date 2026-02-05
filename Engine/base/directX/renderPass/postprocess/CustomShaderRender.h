@@ -2,6 +2,8 @@
 #include "IPostProcessPass.h"
 
 namespace LWP::Base {
+	class BackBuffer;
+
 	/// <summary>
 	/// 任意のカスタムシェーダーを使用したポストプロセスを行うためのパス
 	/// </summary>
@@ -25,6 +27,6 @@ namespace LWP::Base {
 		/// <summary>
 		/// 描画命令を積み込む
 		/// </summary>
-		void PushCommand(ID3D12GraphicsCommandList6* list);
+		void PushCommand(BackBuffer* target, ID3D12GraphicsCommandList6* list);
 	};
 }

@@ -165,8 +165,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Bloom.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\GrayScale.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Glitch.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\OutLine.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\RGBShift.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\copy\Copy.cpp" />
@@ -175,6 +177,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DrawSolid.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\ImGuiRender.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\RenderClear.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\postprocess\CustomShaderRender.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\RenderingPipeline.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\shadow\DirLightShadow.cpp" />
     <ClCompile Include="Engine\base\directX\resource\rendering\BackBuffer.cpp" />
@@ -320,8 +323,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\GrayScale.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Glitch.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\OutLine.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\RadialBlur.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\RGBShift.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
@@ -337,7 +342,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\renderPass\RenderingPipeline.h" />
     <ClInclude Include="Engine\base\directX\renderPass\IRenderPass.h" />
     <ClInclude Include="Engine\base\directX\renderPass\postprocess\IPostProcessPass.h" />
-    <ClInclude Include="Engine\base\directX\renderPass\postprocess\CustomShaderRender.cpp" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\DirLightShadow.h" />
     <ClInclude Include="Engine\base\directX\renderPass\shadow\IShadowPass.h" />
     <ClInclude Include="Engine\base\directX\resource\data\ConstantBuffer.h" />

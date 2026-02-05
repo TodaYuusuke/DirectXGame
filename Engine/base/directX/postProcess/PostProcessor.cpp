@@ -13,6 +13,9 @@ void PostProcessor::Init() {
 	radialBlur.Init();
 	grayScale.Init();
 	vignetting.Init();
+	rgbShift.Init();
+	glitch.Init();
+	commonBuffer_.Init();
 	CreateShaderFile();
 }
 void PostProcessor::Update() {
@@ -21,6 +24,13 @@ void PostProcessor::Update() {
 	radialBlur.Update();
 	grayScale.Update();
 	vignetting.Update();
+	rgbShift.Update();
+	glitch.Update();
+
+	// 共通パラメータの更新
+	commonBuffer_.data_->time = static_cast<float>(Information::FrameTracker::GetInstance()->GetElapsedTimeS());
+	commonBuffer_.data_->rWidth = Config::Window::kResolutionWidth;
+	commonBuffer_.data_->rHeight = Config::Window::kResolutionHeight;
 }
 
 void PostProcessor::CreateShaderFile() {
@@ -33,19 +43,20 @@ void PostProcessor::CreateShaderFile() {
 
 	// ファイルストリームを作成
 	std::ofstream shader;
-	shader.open("resources/system/shaders/postProcess/temp.PS.hlsl", std::ios::trunc);	// ファイルをオープン
+	shader.open("resources/system/shaders/Rework_/postProcess/temp.PS.hlsl", std::ios::trunc);	// ファイルをオープン
 
 	// 最初に必要な定義を行う
 	shader << R"(
+#include "../utility/Random.hlsli"
+
 struct PSInput
 {
     float32_t4 position : SV_POSITION;
     float32_t2 texcoord : TEXCOORD0;
 };
-
 struct Parameter
 {
-    int time;
+    float time;
     int rWidth;
     int rHeight;
 };
@@ -104,8 +115,8 @@ float32_t4 main(PSInput input) : SV_TARGET {
 	// シェーダーファイルを元にPSOを作成
 	pso_.Init(root_)
 		.SetDepthState(false)
-		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
-		.SetSystemPS("postProcess/temp.PS.hlsl")
+		.SetSystemVS("Rework_/postProcess/PassThrough.VS.hlsl")
+		.SetSystemPS("Rework_/postProcess/temp.PS.hlsl")
 		.Build();
 }
 
@@ -138,8 +149,9 @@ void PostProcessor::SetCommands(ID3D12GraphicsCommandList* list) {
 	// RootSignatureとPSOをセット
 	list->SetGraphicsRootSignature(root_);
 	list->SetPipelineState(pso_.GetState());
-	// 共通化してまとめて処理
+	// 共通化したまとめて処理
 	int offset = 2;
+	list->SetGraphicsRootConstantBufferView(0, commonBuffer_.GetGPUView());
 	for (int i = 0; i < processes_.size(); i++) {
 		// 書き込み処理
 		processes_[i]->BindCommand(list, &offset);
@@ -153,6 +165,8 @@ void PostProcessor::DebugGUI() {
 		radialBlur.DebugGUI();
 		grayScale.DebugGUI();
 		vignetting.DebugGUI();
+		rgbShift.DebugGUI();
+		glitch.DebugGUI();
 		ImGui::Text("----------");
 		ImGui::Checkbox("Use", &use);
 		if (use && ImGui::Button("Update Shader")) { CreateShaderFile(); }
@@ -168,6 +182,8 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	result.push_back(&radialBlur);
 	result.push_back(&grayScale);
 	result.push_back(&vignetting);
+	result.push_back(&rgbShift);
+	result.push_back(&glitch);
 
 	return result;
 }

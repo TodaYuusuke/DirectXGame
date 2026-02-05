@@ -10,6 +10,7 @@
 #include "shadow/DirLightShadow.h"
 
 #include "copy/Copy.h"
+#include "postprocess/CustomShaderRender.h"
 
 #include "resources/texture/Texture.h"
 
@@ -77,5 +78,6 @@ namespace LWP::Base {
 		ImGuiRender imguiRender_;	// ImGuiを描画するパス
 
 		DirLightShadow dirShadow_;	// 平行光源のシャドウを描画するパス
+		CustomShaderRender customShaderRender_;	// ポストプロセスを行うパス
 	};
 }
