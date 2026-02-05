@@ -7,6 +7,7 @@
 #include "effects/GrayScale.h"
 #include "effects/Vignetting.h"
 #include "effects/RadialBlur.h"
+#include "effects/RGBShift.h"
 
 #include <fstream>
 
@@ -26,6 +27,7 @@ namespace LWP::Base {
 		PostProcess::RadialBlur radialBlur;	// ラジアルブラー
 		PostProcess::GrayScale grayScale;	// グレースケール
 		PostProcess::Vignetting vignetting;	// ビネット
+		PostProcess::RGBShift rgbShift;	// RGBずらし
 		// ここにどんどん種類を増やしていく
 
 

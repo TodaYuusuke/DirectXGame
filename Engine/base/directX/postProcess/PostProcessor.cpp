@@ -13,6 +13,7 @@ void PostProcessor::Init() {
 	radialBlur.Init();
 	grayScale.Init();
 	vignetting.Init();
+	rgbShift.Init();
 	CreateShaderFile();
 }
 void PostProcessor::Update() {
@@ -21,6 +22,7 @@ void PostProcessor::Update() {
 	radialBlur.Update();
 	grayScale.Update();
 	vignetting.Update();
+	rgbShift.Update();
 }
 
 void PostProcessor::CreateShaderFile() {
@@ -153,6 +155,7 @@ void PostProcessor::DebugGUI() {
 		radialBlur.DebugGUI();
 		grayScale.DebugGUI();
 		vignetting.DebugGUI();
+		rgbShift.DebugGUI();
 		ImGui::Text("----------");
 		ImGui::Checkbox("Use", &use);
 		if (use && ImGui::Button("Update Shader")) { CreateShaderFile(); }
@@ -168,6 +171,7 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	result.push_back(&radialBlur);
 	result.push_back(&grayScale);
 	result.push_back(&vignetting);
+	result.push_back(&rgbShift);
 
 	return result;
 }
