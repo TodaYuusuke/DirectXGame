@@ -47,6 +47,7 @@ namespace LWP::Base {
 		deferredShading_.Init();
 		imguiRender_.Init();
 		dirShadow_.Init();
+		customShaderRender_.Init();
 	}
 	void RenderingPipeline::DrawCall() {
 		// 命令積み込み開始
@@ -72,7 +73,14 @@ namespace LWP::Base {
 
 		// メインカメラの描画をバックバッファーにコピー
 		renderClear_.PushCommand(back, list);
-		copy_.PushCommand(Object::Manager::GetInstance()->GetMainCamera()->GetTextureResource(), back, list);
+		
+		// ポストプロセスの実行
+		customShaderRender_.PushCommand(back, list);
+		// メインカメラのポストプロセスがかかっていない場合はそのままコピー
+		if (!Object::Manager::GetInstance()->GetMainCamera()->pp.use) {
+			copy_.PushCommand(Object::Manager::GetInstance()->GetMainCamera()->GetTextureResource(), back, list);
+		}
+
 		back->ChangeResourceBarrier(D3D12_RESOURCE_STATE_PRESENT, list);	// バリアを元に戻す
 		// ImGuiの描画命令を積み込む
 		imguiRender_.PushCommand(back, list);
