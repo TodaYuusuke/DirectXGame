@@ -7,6 +7,7 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void RadialBlur::Init() {
+	name = "RadialBlur";
 	center = { 0.5f,0.5f };
 	blurWidth = 0.01f;
 	buffer_.Init();
@@ -61,10 +62,7 @@ void RadialBlur::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 }
 
 void RadialBlur::DebugGUI() {
-	if (ImGui::TreeNode("RadialBlur")) {
-		ImGui::DragFloat2("Center", &center.x, 0.01f);
-		ImGui::DragFloat("BlurWidth", &blurWidth, 0.001f);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat2("Center", &center.x, 0.01f);
+	ImGui::DragFloat("BlurWidth", &blurWidth, 0.001f);
+	ImGui::Checkbox("Use", &use);
 }

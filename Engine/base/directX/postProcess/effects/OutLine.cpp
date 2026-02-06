@@ -7,6 +7,7 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void OutLine::Init() {
+	name = "OutLine";
 	threshold = 0.5f;
 	color = Utility::ColorPattern::BLACK;
 	buffer_.Init();
@@ -99,10 +100,7 @@ void OutLine::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 }
 
 void OutLine::DebugGUI() {
-	if (ImGui::TreeNode("OutLine")) {
-		ImGui::DragFloat("Threshold", &threshold, 0.01f);
-		ImGuiManager::ColorEdit4("color", color);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat("Threshold", &threshold, 0.01f);
+	ImGuiManager::ColorEdit4("color", color);
+	ImGui::Checkbox("Use", &use);
 }

@@ -7,6 +7,7 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void Bloom::Init() {
+	name = "Bloom";
 	threshold = 0.95f;
 
 	buffer_.Init();
@@ -130,9 +131,6 @@ void Bloom::PreCommand(ID3D12GraphicsCommandList* list, RenderResource* target) 
 }
 
 void Bloom::DebugGUI() {
-	if (ImGui::TreeNode("Bloom")) {
-		ImGui::DragFloat("Threshold", &threshold, 0.01f);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat("Threshold", &threshold, 0.01f);
+	ImGui::Checkbox("Use", &use);
 }

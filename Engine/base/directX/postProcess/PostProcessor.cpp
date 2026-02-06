@@ -1,31 +1,30 @@
 #include "PostProcessor.h"
 
 #include "component/System.h"
+
+// 全てのエフェクトをインクルード（AddPassのため）
+#include "effects/Bloom.h"
+#include "effects/OutLine.h"
+#include "effects/GrayScale.h"
+#include "effects/Vignetting.h"
+#include "effects/RadialBlur.h"
+#include "effects/RGBShift.h"
+#include "effects/Glitch.h"
+
 #include <vector>
+#include <algorithm>
 
 using namespace LWP;
 using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void PostProcessor::Init() {
-	bloom.Init();
-	outLine.Init();
-	radialBlur.Init();
-	grayScale.Init();
-	vignetting.Init();
-	rgbShift.Init();
-	glitch.Init();
 	commonBuffer_.Init();
-	CreateShaderFile();
 }
 void PostProcessor::Update() {
-	bloom.Update();
-	outLine.Update();
-	radialBlur.Update();
-	grayScale.Update();
-	vignetting.Update();
-	rgbShift.Update();
-	glitch.Update();
+	for (auto& pass : passes_) {
+		pass->Update();
+	}
 
 	// 共通パラメータの更新
 	commonBuffer_.data_->time = static_cast<float>(Information::FrameTracker::GetInstance()->GetElapsedTimeS());
@@ -33,14 +32,86 @@ void PostProcessor::Update() {
 	commonBuffer_.data_->rHeight = Config::Window::kResolutionHeight;
 }
 
+void PostProcessor::PreCommands(ID3D12GraphicsCommandList* list, Base::RenderResource* target) {
+	for (auto& pass : passes_) {
+		if (pass->use) {
+			pass->PreCommand(list, target);
+		}
+	}
+}
+
+void PostProcessor::SetCommands(ID3D12GraphicsCommandList* list) {
+	// RootSignatureとPSOをセット
+	list->SetGraphicsRootSignature(root_);
+	list->SetPipelineState(pso_.GetState());
+	// 共通化したまとめて処理
+	int offset = 2;
+	list->SetGraphicsRootConstantBufferView(0, commonBuffer_.GetGPUView());
+	for (auto& pass : passes_) {
+		// 使用していればBind
+		if (pass->use) {
+			pass->BindCommand(list, &offset);
+		}
+	}
+}
+
+void PostProcessor::DebugGUI() {
+	if (ImGui::TreeNode("PostProcess")) {
+		ImGui::Checkbox("isActive", &isActive);
+		
+		if (ImGui::Button("Add Pass...")) {
+			ImGui::OpenPopup("AddPassPopup");
+		}
+		
+		if (ImGui::BeginPopup("AddPassPopup")) {
+			if (ImGui::MenuItem("Bloom")) { AddPass<Bloom>(); }
+			if (ImGui::MenuItem("OutLine")) { AddPass<OutLine>(); }
+			if (ImGui::MenuItem("GrayScale")) { AddPass<GrayScale>(); }
+			if (ImGui::MenuItem("Vignetting")) { AddPass<Vignetting>(); }
+			if (ImGui::MenuItem("RadialBlur")) { AddPass<RadialBlur>(); }
+			if (ImGui::MenuItem("RGBShift")) { AddPass<RGBShift>(); }
+			if (ImGui::MenuItem("Glitch")) { AddPass<Glitch>(); }
+			ImGui::EndPopup();
+		}
+
+		ImGui::Separator();
+
+		for (int i = 0; i < passes_.size(); ++i) {
+			ImGui::PushID(i);
+			
+			bool opened = ImGui::TreeNodeEx(passes_[i]->name.c_str(), ImGuiTreeNodeFlags_AllowItemOverlap);
+			
+			// 入れ替え・削除ボタン（ノードと同じ行に表示）
+			ImGui::SameLine(ImGui::GetWindowWidth() - 100);
+			if (ImGui::Button("U", ImVec2(20, 0)) && i > 0) {
+				std::swap(passes_[i], passes_[i - 1]);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("D", ImVec2(20, 0)) && i < passes_.size() - 1) {
+				std::swap(passes_[i], passes_[i + 1]);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("X", ImVec2(20, 0))) {
+				passes_.erase(passes_.begin() + i);
+				CreateShaderFile();	// 削除されたのでシェーダー更新
+				ImGui::PopID();
+				if (opened) ImGui::TreePop();
+				break; 
+			}
+
+			if (opened) {
+				passes_[i]->DebugGUI();
+				ImGui::TreePop();
+			}
+			
+			ImGui::PopID();
+		}
+
+		ImGui::TreePop();
+	}
+}
+
 void PostProcessor::CreateShaderFile() {
-	// １つも使用しない場合は帰る
-	//if (!UseFlag()) { return; }
-
-	// 共通化してまとめて処理
-	std::vector<IPostProcess*> vec = GetAllProcess();
-	processes_.clear();
-
 	// ファイルストリームを作成
 	std::ofstream shader;
 	shader.open("resources/system/shaders/Rework_/postProcess/temp.PS.hlsl", std::ios::trunc);	// ファイルをオープン
@@ -77,11 +148,11 @@ SamplerState gPointSampler : register(s1);
 		.AddSampler(1, SV_Pixel, D3D12_FILTER_MIN_MAG_MIP_POINT);	// デプステクスチャのサンプラー
 	// 宣言の書き込み & RootSignature生成
 	int b = 1;	// Binding用の通し番号
-	for (int i = 0; i < vec.size(); i++) {
+	for (auto& pass : passes_) {
 		// 使用するなら
-		if (vec[i]->use) {
+		if (pass->use) {
 			// 書き込み
-			vec[i]->WriteBinding(&shader, &root_, &b);
+			pass->WriteBinding(&shader, &root_, &b);
 		}
 	}
 	// 最後にrootSignatureをビルド
@@ -96,11 +167,10 @@ float32_t4 main(PSInput input) : SV_TARGET {
 )";
 
 	// 処理の書き込み
-	for (int i = 0; i < vec.size(); i++) {
+	for (auto& pass : passes_) {
 		// 使用するなら書き込み処理
-		if (vec[i]->use) {
-			vec[i]->WriteProcess(&shader);
-			processes_.push_back(vec[i]);
+		if (pass->use) {
+			pass->WriteProcess(&shader);
 		}
 	}
 
@@ -109,7 +179,7 @@ float32_t4 main(PSInput input) : SV_TARGET {
 	return output;
 }
 )";
-	
+
 	// シェーダー作成終了
 	shader.close();
 	// シェーダーファイルを元にPSOを作成
@@ -118,72 +188,4 @@ float32_t4 main(PSInput input) : SV_TARGET {
 		.SetSystemVS("Rework_/postProcess/PassThrough.VS.hlsl")
 		.SetSystemPS("Rework_/postProcess/temp.PS.hlsl")
 		.Build();
-}
-
-void PostProcessor::CreatePSO(std::string filePath) {
-	processes_.clear();
-
-	// RootSignature生成
-	root_.AddCBVParameter(0, SV_Pixel)	// レンダリング用のデータ
-		.AddTableParameter(0, SV_Pixel)	// レンダリングに使うテクスチャ
-		.AddTableParameter(1, SV_Pixel)	// レンダリングに使う深度マップ
-		.AddSampler(0, SV_Pixel)	// テクスチャのサンプラー
-		.AddSampler(1, SV_Pixel, D3D12_FILTER_MIN_MAG_MIP_POINT)	// デプステクスチャのサンプラー
-	.Build();
-	// PSO生成
-	pso_.Init(root_)
-		.SetDepthState(false)
-		.SetSystemVS("postProcess/PassThrough.VS.hlsl")
-		.SetSystemPS(filePath)
-		.Build();
-}
-
-void PostProcessor::PreCommands(ID3D12GraphicsCommandList* list, Base::RenderResource* target) {
-	for (int i = 0; i < processes_.size(); i++) {
-		// 書き込み処理
-		processes_[i]->PreCommand(list, target);
-	}
-}
-
-void PostProcessor::SetCommands(ID3D12GraphicsCommandList* list) {
-	// RootSignatureとPSOをセット
-	list->SetGraphicsRootSignature(root_);
-	list->SetPipelineState(pso_.GetState());
-	// 共通化したまとめて処理
-	int offset = 2;
-	list->SetGraphicsRootConstantBufferView(0, commonBuffer_.GetGPUView());
-	for (int i = 0; i < processes_.size(); i++) {
-		// 書き込み処理
-		processes_[i]->BindCommand(list, &offset);
-	}
-}
-
-void PostProcessor::DebugGUI() {
-	if (ImGui::TreeNode("PostProcess")) {
-		bloom.DebugGUI();
-		outLine.DebugGUI();
-		radialBlur.DebugGUI();
-		grayScale.DebugGUI();
-		vignetting.DebugGUI();
-		rgbShift.DebugGUI();
-		glitch.DebugGUI();
-		ImGui::Text("----------");
-		ImGui::Checkbox("Use", &use);
-		if (use && ImGui::Button("Update Shader")) { CreateShaderFile(); }
-		ImGui::TreePop();
-	}
-}
-
-std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
-	// 共通化してまとめて処理
-	std::vector<IPostProcess*> result;
-	result.push_back(&bloom);
-	result.push_back(&outLine);
-	result.push_back(&radialBlur);
-	result.push_back(&grayScale);
-	result.push_back(&vignetting);
-	result.push_back(&rgbShift);
-	result.push_back(&glitch);
-
-	return result;
 }

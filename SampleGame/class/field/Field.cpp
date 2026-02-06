@@ -12,11 +12,6 @@ void Field::Init(LWP::Resource::LevelData* level, LWP::Object::Camera* camera) {
 	level->SetScaleMultiply(10.0f);	// 地形は10倍サイズに
 	level->LoadShortPath("SampleGameScene.json");
 
-	// bloomをON
-	camera->pp.use = true;
-	camera->pp.bloom.use = true;
-	//camera->pp.CreateShaderFile();
-
 	const float s = 1000.0f;
 	skydome.LoadShortPath("skydome/skydome.obj");
 	skydome.worldTF.scale = { s,s,s };

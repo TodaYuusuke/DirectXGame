@@ -330,6 +330,9 @@
     <ClCompile Include="Engine\primitive\3d\Sphere.cpp" />
     <ClCompile Include="Engine\primitive\3d\Capsule.cpp" />
     <ClCompile Include="Engine\primitive\3d\Cylinder.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Glitch.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\RGBShift.cpp" />
+    <ClCompile Include="Engine\base\directX\renderPass\postprocess\CustomShaderRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adapter\Adapter.h">
@@ -557,9 +560,6 @@
     <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h">
       <Filter>Engine\base\directX\postProcess</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h">
-      <Filter>Engine\base\directX\postProcess</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\directX\postProcess\effects\Bloom.h">
       <Filter>Engine\base\directX\postProcess\effects</Filter>
     </ClInclude>
@@ -748,6 +748,10 @@
     <ClInclude Include="Engine\primitive\3d\Sphere.h" />
     <ClInclude Include="Engine\primitive\3d\Capsule.h" />
     <ClInclude Include="Engine\primitive\3d\Cylinder.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Glitch.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\RGBShift.h" />
+    <ClInclude Include="Engine\base\directX\renderPass\postprocess\CustomShaderRender.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

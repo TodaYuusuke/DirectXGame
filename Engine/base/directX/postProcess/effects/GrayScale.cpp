@@ -6,6 +6,7 @@ using namespace LWP;
 using namespace LWP::Base::PostProcess;
 
 void GrayScale::Init() {
+	name = "GrayScale";
 	intensity = 1.0f;
 	buffer_.Init();
 }
@@ -50,9 +51,6 @@ void GrayScale::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 }
 
 void GrayScale::DebugGUI() {
-	if (ImGui::TreeNode("GrayScale")) {
-		ImGui::DragFloat("Intensity", &intensity, 0.01f);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat("Intensity", &intensity, 0.01f);
+	ImGui::Checkbox("Use", &use);
 }

@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "base/directX/postProcess/effects/OutLine.h"
+
 #include "component/Information.h"
 #include "component/System.h"
 
@@ -10,6 +12,7 @@ using namespace LWP::Base;
 using namespace LWP::Object;
 using namespace LWP::Math;
 using namespace LWP::Resource;
+using namespace LWP::Base::PostProcess;
 
 CameraStruct& CameraStruct::operator=(const Object::Camera& value) {
 	viewProjection = value.GetViewProjection();
@@ -43,11 +46,14 @@ void Camera::Init() {}
 void Camera::Update() {
 	// リソースにデータをコピー
 	*constantBuffer_.data_ = *this;
-	if (pp.use) {
+	if (pp.isActive) {
 		// データ更新
 		pp.Update();
-		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 100.0f);
-		pp.outLine.SetProjectionInverse(projectionMatrix.Inverse());
+		// アウトラインがあればプロジェクション行列をセット
+		if (PostProcess::OutLine* outline = pp.GetPass<OutLine>()) {
+			Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 100.0f);
+			outline->SetProjectionInverse(projectionMatrix.Inverse());
+		}
 	}
 }
 
@@ -62,6 +68,13 @@ void Camera::DebugGUI() {
 		ImGui::TreePop();
 	}
 	ImGui::Checkbox("isActive", &isActive);
+}
+
+bool Camera::CheckUsePostProcess() const {
+	return 
+		isActive &&					// カメラがアクティブであること
+		pp.isActive &&				// ポストプロセスがアクティブであること
+		!pp.GetPasses().empty();	// ポストプロセスが一つ以上あること
 }
 
 Matrix4x4 Camera::GetViewProjection() const {

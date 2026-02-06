@@ -6,6 +6,7 @@ using namespace LWP;
 using namespace LWP::Base::PostProcess;
 
 void RGBShift::Init() {
+	name = "RGBShift";
 	shiftR = { 0.005f, 0.0f };
 	shiftG = { 0.0f, 0.0f };
 	shiftB = { -0.005f, 0.0f };
@@ -58,11 +59,8 @@ void RGBShift::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 }
 
 void RGBShift::DebugGUI() {
-	if (ImGui::TreeNode("RGB Shift")) {
-		ImGui::DragFloat2("Shift R", &shiftR.x, 0.001f);
-		ImGui::DragFloat2("Shift G", &shiftG.x, 0.001f);
-		ImGui::DragFloat2("Shift B", &shiftB.x, 0.001f);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat2("Shift R", &shiftR.x, 0.001f);
+	ImGui::DragFloat2("Shift G", &shiftG.x, 0.001f);
+	ImGui::DragFloat2("Shift B", &shiftB.x, 0.001f);
+	ImGui::Checkbox("Use", &use);
 }

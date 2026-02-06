@@ -6,6 +6,7 @@ using namespace LWP;
 using namespace LWP::Base::PostProcess;
 
 void Glitch::Init() {
+	name = "Glitch";
 	strength = 0.5f;
 	buffer_.Init();
 }
@@ -84,9 +85,6 @@ void Glitch::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 }
 
 void Glitch::DebugGUI() {
-	if (ImGui::TreeNode("Glitch")) {
-		ImGui::DragFloat("Strength", &strength, 0.01f, 0.0f, 1.0f);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat("Strength", &strength, 0.01f, 0.0f, 1.0f);
+	ImGui::Checkbox("Use", &use);
 }

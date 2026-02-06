@@ -1,17 +1,13 @@
 #pragma once
 #include "../utility/RootSignature.h"
 #include "../utility/PSO.h"
-
-#include "effects/Bloom.h"
-#include "effects/OutLine.h"
-#include "effects/GrayScale.h"
-#include "effects/Vignetting.h"
-#include "effects/RadialBlur.h"
-#include "effects/RGBShift.h"
-#include "effects/Glitch.h"
+#include "IPostProcess.h"
 
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include <fstream>
+#include <vector>
+#include <memory>
+#include <string>
 
 namespace LWP::Base {
 	/// <summary>
@@ -32,16 +28,7 @@ namespace LWP::Base {
 	public: // ** パブリックなメンバ変数 ** //
 
 		// そもそも行うかフラグ
-		bool use = false;
-
-		PostProcess::Bloom bloom;	// ブルーム
-		PostProcess::OutLine outLine;	// アウトライン
-		PostProcess::RadialBlur radialBlur;	// ラジアルブラー
-		PostProcess::GrayScale grayScale;	// グレースケール
-		PostProcess::Vignetting vignetting;	// ビネット
-		PostProcess::RGBShift rgbShift;	// RGBずらし
-		PostProcess::Glitch glitch;		// グリッチ
-		// ここにどんどん種類を増やしていく
+		bool isActive = false;
 
 
 	public: // ** メンバ関数 ** //
@@ -51,23 +38,45 @@ namespace LWP::Base {
 		// 更新
 		void Update();
 
-		// パラメーターからシェーダーファイルを生成しPSOを生成する関数
-		void CreateShaderFile();
-		// 既存のシェーダーファイルからPSOを生成する関数
-		void CreatePSO(std::string filePath);
-
 		// 描画する前に行わなければならない処理
 		void PreCommands(ID3D12GraphicsCommandList* list, Base::RenderResource* target);
 		// コマンドリストにView当をセットする関数
 		void SetCommands(ID3D12GraphicsCommandList* list);
 
 		/// <summary>
-		/// ImGui
+		/// Debug用のImGui
 		/// </summary>
 		void DebugGUI();
 
-		// 共通化した可変長配列を返す関数
-		std::vector<PostProcess::IPostProcess*> GetAllProcess();
+		// 全てのパスを取得
+		const std::vector<std::shared_ptr<PostProcess::IPostProcess>>& GetPasses() const { return passes_; }
+
+		/// <summary>
+		/// パスを追加する関数
+		/// </summary>
+		template<class T>
+		T* AddPass() {
+			std::shared_ptr<T> pass = std::make_shared<T>();
+			pass->Init();
+			passes_.push_back(pass);
+			CreateShaderFile();	// 追加されたのでシェーダー更新
+			return pass.get();
+		}
+		// 全てのパスをクリア
+		void ClearPasses() { passes_.clear(); }
+
+		/// <summary>
+		/// 指定した型のパスを取得する（先頭のものしか取得できないので注意！）
+		/// </summary>
+		template<class T>
+		T* GetPass() {
+			for (auto& pass : passes_) {
+				if (T* ptr = dynamic_cast<T*>(pass.get())) {
+					return ptr;
+				}
+			}
+			return nullptr;
+		}
 
 
 	private: // ** メンバ変数 ** //
@@ -80,7 +89,13 @@ namespace LWP::Base {
 		// 共通パラメータ
 		Base::ConstantBuffer<PostProcessParameter> commonBuffer_;
 
-		// 処理を行うポストプロセスたち
-		std::vector<PostProcess::IPostProcess*> processes_;
+		// 適用するポストプロセス達
+		std::vector<std::shared_ptr<PostProcess::IPostProcess>> passes_;
+
+
+	private: // ** プライベートなメンバ関数 ** //
+
+		// パラメーターからシェーダーファイルを生成しPSOを生成する関数
+		void CreateShaderFile();
 	};
 }

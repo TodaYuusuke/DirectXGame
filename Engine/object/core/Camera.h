@@ -64,6 +64,8 @@ namespace LWP::Object {
 		// デバッグ用GUI
 		void DebugGUI() override;
 
+		// ポストプロセスを行うか確認する関数
+		bool CheckUsePostProcess() const;
 		// ビュープロジェクションを返す関数
 		Math::Matrix4x4 GetViewProjection() const;
 		// レンダリング結果のテクスチャのポインタを受け取る関数

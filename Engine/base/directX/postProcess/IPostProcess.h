@@ -44,8 +44,10 @@ namespace LWP::Base::PostProcess {
 		
 	public: // ** 共通のメンバ変数 ** //
 
+		// 名前
+		std::string name = "None";
 		// 使用するかフラグ
-		bool use = false;
+		bool use = true;
 		// 自分のbind番号
 		int bindIndex = -1;
 	};

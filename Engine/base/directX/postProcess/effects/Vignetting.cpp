@@ -7,6 +7,7 @@ using namespace LWP::Base;
 using namespace LWP::Base::PostProcess;
 
 void Vignetting::Init() {
+	name = "Vignetting";
 	intensity = 1.0f;
 	buffer_.Init();
 }
@@ -52,9 +53,6 @@ void Vignetting::BindCommand(ID3D12GraphicsCommandList* list, int* offset) {
 }
 
 void Vignetting::DebugGUI() {
-	if (ImGui::TreeNode("Vignetting")) {
-		ImGui::DragFloat("Intensity", &intensity, 0.01f);
-		ImGui::Checkbox("Use", &use);
-		ImGui::TreePop();
-	}
+	ImGui::DragFloat("Intensity", &intensity, 0.01f);
+	ImGui::Checkbox("Use", &use);
 }

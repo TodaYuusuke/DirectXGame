@@ -9,8 +9,7 @@ namespace LWP::Base {
 	void CustomShaderRender::PushCommand(BackBuffer* target, ID3D12GraphicsCommandList6* list) {
 		// 各カメラに対しての描画命令を積み込む
 		for (Object::Camera* camera : Object::Manager::GetInstance()->GetCameras()) {
-			if (!camera->isActive) { continue; }	// カメラがアクティブでない場合はスキップ
-			if (!camera->pp.use) { continue; }		// ポストプロセスを使用しない場合はスキップ
+			if (!camera->CheckUsePostProcess()) { continue; }	// ポストプロセスを実行するか確認
 
 			// 事前に行わなければならない処理を行う
 			camera->pp.PreCommands(list, camera->GetTextureResource());

@@ -77,7 +77,7 @@ namespace LWP::Base {
 		// ポストプロセスの実行
 		customShaderRender_.PushCommand(back, list);
 		// メインカメラのポストプロセスがかかっていない場合はそのままコピー
-		if (!Object::Manager::GetInstance()->GetMainCamera()->pp.use) {
+		if (!Object::Manager::GetInstance()->GetMainCamera()->CheckUsePostProcess()) {
 			copy_.PushCommand(Object::Manager::GetInstance()->GetMainCamera()->GetTextureResource(), back, list);
 		}
 
