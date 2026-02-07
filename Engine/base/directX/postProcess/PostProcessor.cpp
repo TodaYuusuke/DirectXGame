@@ -10,22 +10,22 @@ using namespace LWP::Base::PostProcess;
 void PostProcessor::Init() {
 	bloom.Init();
 	outLine.Init();
-	radialBlur.Init();
 	grayScale.Init();
-	vignetting.Init();
 	rgbShift.Init();
 	glitch.Init();
+	radialBlur.Init();
+	vignetting.Init();
 	commonBuffer_.Init();
 	CreateShaderFile();
 }
 void PostProcessor::Update() {
 	bloom.Update();
 	outLine.Update();
-	radialBlur.Update();
 	grayScale.Update();
-	vignetting.Update();
 	rgbShift.Update();
 	glitch.Update();
+	radialBlur.Update();
+	vignetting.Update();
 
 	// 共通パラメータの更新
 	commonBuffer_.data_->time = static_cast<float>(Information::FrameTracker::GetInstance()->GetElapsedTimeS());
@@ -162,11 +162,11 @@ void PostProcessor::DebugGUI() {
 	if (ImGui::TreeNode("PostProcess")) {
 		bloom.DebugGUI();
 		outLine.DebugGUI();
-		radialBlur.DebugGUI();
 		grayScale.DebugGUI();
-		vignetting.DebugGUI();
 		rgbShift.DebugGUI();
 		glitch.DebugGUI();
+		radialBlur.DebugGUI();
+		vignetting.DebugGUI();
 		ImGui::Text("----------");
 		ImGui::Checkbox("Use", &use);
 		if (use && ImGui::Button("Update Shader")) { CreateShaderFile(); }
@@ -179,11 +179,11 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	std::vector<IPostProcess*> result;
 	result.push_back(&bloom);
 	result.push_back(&outLine);
-	result.push_back(&radialBlur);
 	result.push_back(&grayScale);
-	result.push_back(&vignetting);
 	result.push_back(&rgbShift);
+	result.push_back(&radialBlur);
 	result.push_back(&glitch);
+	result.push_back(&vignetting);
 
 	return result;
 }
