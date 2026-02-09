@@ -187,6 +187,9 @@
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp">
       <Filter>Engine\base\directX\postProcess\effects</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Fog.cpp">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\base\directX\resource\rendering\shadow\SM_Direction.cpp">
       <Filter>Engine\base\directX\resource\rendering\shadow</Filter>
     </ClCompile>
@@ -573,6 +576,9 @@
       <Filter>Engine\base\directX\postProcess\effects</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h">
+      <Filter>Engine\base\directX\postProcess\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Fog.h">
       <Filter>Engine\base\directX\postProcess\effects</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\directX\resource\data\RWStructuredBuffer.h">

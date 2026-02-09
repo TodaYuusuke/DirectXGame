@@ -9,6 +9,7 @@
 #include "effects/RadialBlur.h"
 #include "effects/RGBShift.h"
 #include "effects/Glitch.h"
+#include "effects/Fog.h"
 
 #include "base/directX/resource/data/ConstantBuffer.h"
 #include <fstream>
@@ -41,6 +42,7 @@ namespace LWP::Base {
 		PostProcess::Glitch glitch;		// グリッチ
 		PostProcess::RadialBlur radialBlur;	// ラジアルブラー
 		PostProcess::Vignetting vignetting;	// ビネット
+		PostProcess::Fog fog;			// フォグ
 		// ここにどんどん種類を増やしていく
 
 

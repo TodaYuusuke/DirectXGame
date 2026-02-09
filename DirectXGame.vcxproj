@@ -170,6 +170,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\directX\postProcess\effects\RadialBlur.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\RGBShift.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\effects\Vignetting.cpp" />
+    <ClCompile Include="Engine\base\directX\postProcess\effects\Fog.cpp" />
     <ClCompile Include="Engine\base\directX\postProcess\PostProcessor.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\copy\Copy.cpp" />
     <ClCompile Include="Engine\base\directX\renderPass\graphics\DeferredShading.cpp" />
@@ -328,6 +329,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\directX\postProcess\effects\RadialBlur.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\RGBShift.h" />
     <ClInclude Include="Engine\base\directX\postProcess\effects\Vignetting.h" />
+    <ClInclude Include="Engine\base\directX\postProcess\effects\Fog.h" />
     <ClInclude Include="Engine\base\directX\postProcess\IPostProcess.h" />
     <ClInclude Include="Engine\base\directX\postProcess\PostProcessor.h" />
     <ClInclude Include="Engine\base\directX\renderPass\compute\IComputePass.h" />
