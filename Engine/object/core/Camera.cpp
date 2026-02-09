@@ -46,7 +46,7 @@ void Camera::Update() {
 	if (pp.use) {
 		// データ更新
 		pp.Update();
-		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 100.0f);
+		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), nearClip, farClip);
 		pp.outLine.SetProjectionInverse(projectionMatrix.Inverse());
 		pp.fog.SetProjectionInverse(projectionMatrix.Inverse());
 	}
@@ -58,6 +58,8 @@ void Camera::DebugGUI() {
 	worldTF.DebugGUI();
 	pp.DebugGUI();
 	ImGui::DragFloat("FOV", &fov, 0.01f);
+	ImGui::DragFloat("Near", &nearClip, 0.01f);
+	ImGui::DragFloat("Far", &farClip, 0.01f);
 	if (ImGui::TreeNode("TextureResource")) {
 		ImGuiManager::ShowRenderResource(textureResource_, 0.2f);
 		ImGui::TreePop();
@@ -67,6 +69,6 @@ void Camera::DebugGUI() {
 
 Matrix4x4 Camera::GetViewProjection() const {
 	Matrix4x4 viewMatrix = worldTF.GetAffineMatrix().Inverse();
-	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 300.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), nearClip, farClip);
 	return viewMatrix * projectionMatrix;
 }
