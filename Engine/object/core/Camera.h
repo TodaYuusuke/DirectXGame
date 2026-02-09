@@ -34,6 +34,10 @@ namespace LWP::Object {
 		// ポストプロセス
 		Base::PostProcessor pp;
 
+		// ニアとファーを調整できるように
+		float nearClip = 0.1f;
+		float farClip = 300.0f;
+
 		// -- ポストエフェクトフラグ -- //
 
 		// シェーダー用のパス（作成後は意味をなくすのでいつか再設計）
