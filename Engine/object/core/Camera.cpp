@@ -48,6 +48,7 @@ void Camera::Update() {
 		pp.Update();
 		Matrix4x4 projectionMatrix = Matrix4x4::CreatePerspectiveFovMatrix(fov / 200.0f, Info::GetWindowWidthF() / Info::GetWindowHeightF(), 0.1f, 100.0f);
 		pp.outLine.SetProjectionInverse(projectionMatrix.Inverse());
+		pp.fog.SetProjectionInverse(projectionMatrix.Inverse());
 	}
 }
 

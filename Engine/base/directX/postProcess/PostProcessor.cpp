@@ -15,6 +15,7 @@ void PostProcessor::Init() {
 	glitch.Init();
 	radialBlur.Init();
 	vignetting.Init();
+	fog.Init();
 	commonBuffer_.Init();
 	CreateShaderFile();
 }
@@ -26,6 +27,7 @@ void PostProcessor::Update() {
 	glitch.Update();
 	radialBlur.Update();
 	vignetting.Update();
+	fog.Update();
 
 	// 共通パラメータの更新
 	commonBuffer_.data_->time = static_cast<float>(Information::FrameTracker::GetInstance()->GetElapsedTimeS());
@@ -167,6 +169,7 @@ void PostProcessor::DebugGUI() {
 		glitch.DebugGUI();
 		radialBlur.DebugGUI();
 		vignetting.DebugGUI();
+		fog.DebugGUI();
 		ImGui::Text("----------");
 		ImGui::Checkbox("Use", &use);
 		if (use && ImGui::Button("Update Shader")) { CreateShaderFile(); }
@@ -184,6 +187,7 @@ std::vector<IPostProcess*> PostProcessor::GetAllProcess() {
 	result.push_back(&radialBlur);
 	result.push_back(&glitch);
 	result.push_back(&vignetting);
+	result.push_back(&fog);
 
 	return result;
 }
