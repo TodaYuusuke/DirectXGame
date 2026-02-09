@@ -14,5 +14,9 @@ void AudioTest::Initialize() {
 void AudioTest::Update() {
 	ImGui::Begin("Test");
 	audio.DebugGUI();
+	if (ImGui::Button("Double Stop")) {
+		audio.Stop();
+		audio.Stop();
+	}
 	ImGui::End();
 }

@@ -5,6 +5,10 @@
 using namespace LWP;
 using namespace LWP::Resource;
 
+Audio::~Audio() {
+	Stop();
+}
+
 void Audio::Load(const std::string& path) {
 	ptr_ = LoadAudio(path);
 }
@@ -52,14 +56,11 @@ void Audio::Stop() {
 	// そもそも再生してないなら止めない
 	if (!pSourceVoice_) { return; }
 
-	// 再生中でなければ止めない
-	XAUDIO2_VOICE_STATE state{};
-	pSourceVoice_->GetState(&state);
-	if (state.SamplesPlayed != 0) {
-		pSourceVoice_->DestroyVoice();
-		pSourceVoice_ = nullptr;
-		//pSourceVoice_->Stop();
-	}
+	// 停止、バッファフラッシュ、破棄
+	pSourceVoice_->Stop();
+	pSourceVoice_->FlushSourceBuffers();
+	pSourceVoice_->DestroyVoice();
+	pSourceVoice_ = nullptr;
 }
 
 float Audio::GetVolume() {

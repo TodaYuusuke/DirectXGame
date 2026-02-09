@@ -12,7 +12,14 @@ namespace LWP::Resource {
 		// コンストラクタ
 		Audio() = default;
 		// デストラクタ
-		~Audio() = default;
+		~Audio();
+
+		// コピー禁止
+		Audio(const Audio&) = delete;
+		Audio& operator=(const Audio&) = delete;
+		// ムーブのみ許可（必要であれば）
+		Audio(Audio&&) noexcept = default;
+		Audio& operator=(Audio&&) noexcept = default;
 
 
 		/// <summary>
