@@ -33,7 +33,7 @@ void Sphere::GetBoundingAABB(Vector3* minPtr, Vector3* maxPtr) {
 }
 
 void Sphere::Create(LWP::Resource::RigidModel* model) {
-	// 必要なデータを集める
+            	// 必要なデータを集める
 	Matrix4x4 matrix = model->worldTF.GetAffineMatrix();	// アフィン変換行列
 	std::vector<Primitive::Vertex> vertices = model->GetModelData()->GetVertices();
 	// 初期化
