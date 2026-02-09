@@ -39,6 +39,7 @@ float32_t3 ApplyFog(float32_t2 uv, float32_t3 color) {
 	
 	// 霧の係数を計算（線形）
 	float32_t fogFactor = saturate((viewZ - fogData.fogNear) / (fogData.fogFar - fogData.fogNear));
+	fogFactor *= fogData.color.a;	// アルファ値を強度として使用
 	
 	return lerp(color, fogData.color.rgb, fogFactor);
 }
