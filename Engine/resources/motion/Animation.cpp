@@ -193,6 +193,11 @@ void Animation::LoadFullPath(const std::string& filePath, Resource::SkinningMode
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 	assert(scene->mAnimations != 0); // アニメーションがない
 
+	// アニメーションのデータをクリア
+	data.clear();
+	// 再生中のデータもクリア
+	Init();
+
 	// 全アニメーションを読み取る
 	for (uint32_t i = 0; i < scene->mNumAnimations; i++) {
 		aiAnimation* animationAssimp = scene->mAnimations[i];	// アニメーションを１つ取り出す
