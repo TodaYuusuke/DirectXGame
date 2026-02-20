@@ -48,6 +48,11 @@ void DIMouse::Update() {
 	position_.y = float(temp.y);
 }
 
+void DIMouse::ClearInput() {
+	state_ = {};
+	preState_ = {};
+}
+
 bool DIMouse::None(uint8_t keyID) {
 	IsValidKeyID(keyID);
 	return !state_.rgbButtons[keyID];

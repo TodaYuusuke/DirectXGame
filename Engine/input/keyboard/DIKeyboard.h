@@ -10,6 +10,7 @@
 
 #include <wrl.h>
 #include <stdint.h>
+#include <string>
 
 #pragma region 前方宣言
 
@@ -36,6 +37,11 @@ namespace LWP::Input {
 		/// </summary>
 		void Update();
 
+		/// <summary>
+		/// キー入力情報を初期化
+		/// </summary>
+		void ClearInput();
+
 		// キーが押されていない場合 -> true
 		bool None(uint8_t keyID);
 		// キーが押された瞬間の場合 -> true
@@ -44,6 +50,11 @@ namespace LWP::Input {
 		bool Press(uint8_t keyID);
 		// キーが離された瞬間の場合 -> true
 		bool Release(uint8_t keyID);
+
+		/// <summary>
+		/// Debug用のGUI
+		/// </summary>
+		void DebugGUI();
 
 
 	private: // ** メンバ変数 ** //

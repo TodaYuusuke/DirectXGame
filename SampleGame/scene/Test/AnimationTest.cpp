@@ -12,9 +12,9 @@ using namespace LWP::Object;
 void AnimationTest::Initialize() {
 	cube.LoadCube();
 	for (int i = 0; i < 5; i++) {
-		model[i].LoadShortPath("Player/Robot_FL/Player.gltf");
+		model[i].LoadShortPath("Player/Robot_FL/Enemy.gltf");
 		model[i].worldTF.translation.x = i * 5.5f;
-		anim[i].LoadFullPath("resources/model/Player/Robot_FL/Player.gltf", &model[i]);
+		anim[i].LoadFullPath("resources/model/Player/Robot_FL/Enemy.gltf", &model[i]);
 	}
 	
 	mainCamera.worldTF.translation = { 0.0f,6.0f, -50.0f };

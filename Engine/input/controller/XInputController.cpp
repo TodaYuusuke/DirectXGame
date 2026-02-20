@@ -45,19 +45,18 @@ void Controller::Update() {
 		// カウントは進める
 		afkFrameCount_++;
 	}
-	
-	// stateの中身チェック用コード
-	//ImGui::Begin("XInputController");
-	//ImGui::Text("buttons %d", state_.Gamepad.wButtons);
-	//ImGui::Text("bLeftTrigger %f", GetLT());
-	//ImGui::Text("bRightTrigger %f", GetRT());
-	//ImGui::Text("LStick x,%f y,%f", GetLStick().x, GetLStick().y);
-	//ImGui::Text("RStick x,%f y,%f", GetRStick().x, GetRStick().y);
-	//ImGui::Text("afkFrameCount %d", afkFrameCount_);
-	//ImGui::End();
-
 }
 
+void Controller::ClearInput() {
+	// 全入力データを初期化
+	preState_ = {};
+	state_ = {};
+	afkFrameCount_ = 0;
+	LTFlag_ = false;
+	RTFlag_ = false;
+	preLTFlag_ = false;
+	preRTFlag_ = false;
+}
 
 bool Controller::None(int keyID) {
 	IsValidKeyID(keyID);
@@ -114,4 +113,50 @@ void Controller::SetVibration(float bigVibrationPower, float smallVibrationPower
 		static_cast<WORD>(smallVibrationPower * XBOX_MOTOR_MAXVALUE)
 	};
 	XInputSetState(num_, &vibration);
+}
+
+void Controller::DebugGUI() {
+	if (ImGui::TreeNode("Controller")) {
+		ImGui::Text("A ... %s", GetKeyStateString(XBOX_A).c_str());
+		ImGui::Text("B ... %s", GetKeyStateString(XBOX_B).c_str());
+		ImGui::Text("X ... %s", GetKeyStateString(XBOX_X).c_str());
+		ImGui::Text("Y ... %s", GetKeyStateString(XBOX_Y).c_str());
+		ImGui::Text("LB ... %s", GetKeyStateString(XBOX_LB).c_str());
+		ImGui::Text("RB ... %s", GetKeyStateString(XBOX_RB).c_str());
+		ImGui::Text("----------------------");
+		ImGui::Text("LSTICK Button ... %s", GetKeyStateString(XBOX_LSTICK).c_str());
+		ImGui::Text("RSTICK Button ... %s", GetKeyStateString(XBOX_RSTICK).c_str());
+		ImGui::Text("UP    ... %s", GetKeyStateString(XBOX_DPAD_UP).c_str());
+		ImGui::Text("DOWN  ... %s", GetKeyStateString(XBOX_DPAD_DOWN).c_str());
+		ImGui::Text("LEFT  ... %s", GetKeyStateString(XBOX_DPAD_LEFT).c_str());
+		ImGui::Text("RIGHT ... %s", GetKeyStateString(XBOX_DPAD_RIGHT).c_str());
+		ImGui::Text("----------------------");
+		ImGui::Text("START ... %s", GetKeyStateString(XBOX_START).c_str());
+		ImGui::Text("BACK  ... %s", GetKeyStateString(XBOX_BACK).c_str());
+		ImGui::Text("----------------------");
+		ImGui::Text("bLeftTrigger %f", GetLTValue());
+		ImGui::Text("bRightTrigger %f", GetRTValue());
+		ImGui::Text("LStick x,%f y,%f", GetLStick().x, GetLStick().y);
+		ImGui::Text("RStick x,%f y,%f", GetRStick().x, GetRStick().y);
+		ImGui::Text("afkFrameCount %d", afkFrameCount_);
+		ImGui::TreePop();
+	}
+}
+
+std::string Controller::GetKeyStateString(int keyID) {
+	IsValidKeyID(keyID);
+
+	if (Trigger(keyID)) {
+		return "Trigger";
+	}
+	else if (Press(keyID)) {
+		return "Press";
+	}
+	else if (Release(keyID)) {
+		return "Release";
+	}
+	else if (None(keyID)) {
+		return "None";
+	}
+	return "Error";
 }

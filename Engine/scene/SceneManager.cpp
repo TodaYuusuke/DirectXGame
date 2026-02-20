@@ -42,6 +42,7 @@ void Manager::SceneClear() {
 	Object::Manager::GetInstance()->Init();			// Objectのオブジェクトをクリア
 	Primitive::Manager::GetInstance()->Init();		// Primitiveのオブジェクトをクリア
 	Object::CollisionManager::GetInstance()->Init();// CollisionManagerのオブジェクトをクリア
+	Input::Manager::GetInstance()->ClearInput();	// Inputの入力をクリア
 }
 
 void Manager::DebugGUI() {

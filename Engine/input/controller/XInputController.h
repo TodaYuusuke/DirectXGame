@@ -3,6 +3,7 @@
 
 #include <Windows.h>	// xinputのエラー回避
 
+#include <string>
 #include <xinput.h>
 #pragma comment(lib, "xinput.lib")
 //#pragma comment(lib, "xinput9_1_0.lib")
@@ -62,6 +63,11 @@ namespace LWP::Input::XInput {
 		/// </summary>
 		void Update();
 
+		/// <summary>
+		/// キー入力情報を初期化
+		/// </summary>
+		void ClearInput();
+
 		// キーが押されていない場合 -> true
 		bool None(int keyID);
 		// キーが押された瞬間の場合 -> true
@@ -91,6 +97,12 @@ namespace LWP::Input::XInput {
 		// 無操作フレーム数を受け取る関数
 		UINT GetAFKCount() { return afkFrameCount_; }
 
+		/// <summary>
+		/// Debug用のGUI
+		/// </summary>
+		void DebugGUI();
+
+
 	private: // ** メンバ変数 ** //
 
 		// 自分のコントローラー番号
@@ -112,5 +124,13 @@ namespace LWP::Input::XInput {
 		bool RTFlag_ = false;
 		bool preLTFlag_ = false;
 		bool preRTFlag_ = false;
+
+
+	private: // ** プライベートなメンバ関数 ** //
+
+		/// <summary>
+		/// DebugGUI用にキーのステータスを返す関数
+		/// </summary>
+		std::string GetKeyStateString(int keyID);
 	};
 }

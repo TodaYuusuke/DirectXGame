@@ -38,6 +38,14 @@ void DIKeyboard::Update() {
 	}
 }
 
+void DIKeyboard::ClearInput() {
+	// 全入力データを初期化
+	for (int i = 0; i < 256; i++) {
+		preKeys_[i] = {};
+		keys_[i] = {};
+	}
+}
+
 bool DIKeyboard::None(uint8_t keyID) {
 	IsValidKeyID(keyID);
 	return !keys_[keyID];
@@ -53,4 +61,10 @@ bool DIKeyboard::Press(uint8_t keyID) {
 bool DIKeyboard::Release(uint8_t keyID) {
 	IsValidKeyID(keyID);
 	return preKeys_[keyID] && !keys_[keyID];
+}
+
+void DIKeyboard::DebugGUI() {
+	if (ImGui::TreeNode("Keyboard")) {
+		ImGui::TreePop();
+	}
 }

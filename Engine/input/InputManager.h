@@ -33,6 +33,11 @@ namespace LWP::Input {
 		/// 更新
 		/// </summary>
 		void Update();
+
+		/// <summary>
+		/// 入力機器の情報を初期化
+		/// </summary>
+		void ClearInput();
 		
 		/// <summary>
 		/// Debug用のGUI

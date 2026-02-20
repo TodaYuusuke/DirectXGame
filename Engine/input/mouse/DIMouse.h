@@ -47,6 +47,11 @@ namespace LWP::Input {
 		/// </summary>
 		void Update();
 
+		/// <summary>
+		/// キー入力情報を初期化
+		/// </summary>
+		void ClearInput();
+
 		// キーが押されていない場合 -> true
 		bool None(uint8_t keyID);
 		// キーが押された瞬間の場合 -> true
